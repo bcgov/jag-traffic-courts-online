@@ -17,7 +17,7 @@ namespace TrafficCourts.Workflow.Service.Migrations.VerifyEmailAddressStateMigra
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.13")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -37,7 +37,6 @@ namespace TrafficCourts.Workflow.Service.Migrations.VerifyEmailAddressStateMigra
                         .HasColumnType("bigint");
 
                     b.Property<string>("EmailAddress")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
@@ -45,7 +44,6 @@ namespace TrafficCourts.Workflow.Service.Migrations.VerifyEmailAddressStateMigra
                         .HasColumnType("boolean");
 
                     b.Property<string>("TicketNumber")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
@@ -57,12 +55,6 @@ namespace TrafficCourts.Workflow.Service.Migrations.VerifyEmailAddressStateMigra
 
                     b.Property<DateTimeOffset?>("VerifiedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("CorrelationId");
 

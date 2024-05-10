@@ -1,4 +1,4 @@
-﻿using Divergic.Logging.Xunit;
+﻿using Neovolve.Logging.Xunit;
 using DotNet.Testcontainers.Containers;
 using MassTransit;
 using Microsoft.Extensions.Configuration;

@@ -558,7 +558,7 @@ export class TicketInfoComponent implements OnInit {
     this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
       .subscribe((action?: any) => {
         if (action?.output?.response) {
-          this.disputeService.putDispute(dispute.disputeId, action?.output?.response, tempDispute).subscribe((response: Dispute) => {
+          this.disputeService.putDispute(dispute.disputeId, action?.output?.reason, tempDispute).subscribe((response: Dispute) => {
             this.logger.info(
               'TicketInfoComponent::putDispute response',
               response

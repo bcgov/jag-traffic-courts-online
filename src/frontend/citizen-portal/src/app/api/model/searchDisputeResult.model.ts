@@ -12,6 +12,7 @@
 import { JJDisputeHearingType } from './jJDisputeHearingType.model';
 import { DisputeStatus } from './disputeStatus.model';
 import { JJDisputeStatus } from './jJDisputeStatus.model';
+import { DisputeRequestCourtAppearanceYn } from './disputeRequestCourtAppearanceYn.model';
 
 
 export interface SearchDisputeResult { 
@@ -20,6 +21,7 @@ export interface SearchDisputeResult {
     jjdispute_status?: JJDisputeStatus;
     hearing_type?: JJDisputeHearingType;
     is_email_verified?: boolean | null;
+    request_court_appearance?: DisputeRequestCourtAppearanceYn;
     is_error?: boolean;
 }
 

@@ -4,6 +4,7 @@ import { Meta, Title } from '@angular/platform-browser';
 import { ConfigService } from '@config/config.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SnowplowService } from '@core/services/snowplow.service';
+import { UtilsService } from '@core/services/utils.service';
 
 @Component({
   selector: 'app-root',
@@ -18,9 +19,11 @@ export class AppComponent implements OnInit {
     private metaTagService: Meta,
     private router: Router,
     private snowplow: SnowplowService,
-  ) {
+    private utilService: UtilsService,
+    ) {
     this.router.events.subscribe((evt) => {
       if (evt instanceof NavigationEnd) {
+        this.utilService.scrollTop();
         this.snowplow.trackPageView();
       }
     });

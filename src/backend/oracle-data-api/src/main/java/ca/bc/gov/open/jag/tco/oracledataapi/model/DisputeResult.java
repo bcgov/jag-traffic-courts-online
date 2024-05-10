@@ -26,6 +26,9 @@ public class DisputeResult {
 
 	@Schema(nullable = true, description = "Null if there is no email address, true if the email address has been successfully verified, false otherwise.")
 	private Boolean isEmailAddressVerified;
+	
+	@Schema(nullable = true, description="This represents user's request to appear in court if 'YES' or provide written reasons if 'NO', null if there was no response.")
+	private YesNo requestCourtAppearanceYn;
 
 	/**
 	 * 
@@ -34,11 +37,12 @@ public class DisputeResult {
 	 * @param disputeStatus
 	 * @param isEmailAddressVerified <code>NULL</code> if there is no email address, <code>TRUE</code> if the email address has been successfully verified, <code>FALSE</code> otherwise.
 	 */
-	public DisputeResult(Long disputeId, String noticeOfDisputeGuid, DisputeStatus disputeStatus, Boolean isEmailAddressVerified) {
+	public DisputeResult(Long disputeId, String noticeOfDisputeGuid, DisputeStatus disputeStatus, Boolean isEmailAddressVerified, YesNo requestCourtAppearanceYn) {
 		this.disputeId = disputeId;
 		this.noticeOfDisputeGuid = noticeOfDisputeGuid;
 		this.disputeStatus = disputeStatus;
 		this.isEmailAddressVerified  = isEmailAddressVerified;
+		this.requestCourtAppearanceYn = requestCourtAppearanceYn;
 	}
 
 }

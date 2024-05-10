@@ -60,7 +60,7 @@ small {
   line-height: 1.3em;
 }
 
-.interpreter_language_note {
+.interpreter-language-note {
   display: inline-block;
   vertical-align: top;
   margin-left: 1rem;
@@ -110,21 +110,20 @@ hr {
   width: 200px !important;
 }
 
-.signature-box {
-  margin: 5px 15px;
-}
-
-.custom-column {
-  border-width: 1px;
-  border-style: solid;
-  border-color: rgba(0, 0, 0, 0.12);
-}
-
-.custom-row {
-  margin-top: 10px;
-}
-
 ::ng-deep {
+  app-dispute-stepper {
+    @media (max-width: 767px) {
+      .mat-vertical-content {
+        padding: 0 10px 0px 14px !important;
+      }
+    }
+
+    .mat-radio-label-content {
+      white-space: normal;
+      line-height: 1.3em;
+    }
+  }
+
   .alert-info-text-color .alert-warning {
     color: rgb(255, 136, 0) !important;
     border-left: 2px solid rgb(255, 136, 0) !important;

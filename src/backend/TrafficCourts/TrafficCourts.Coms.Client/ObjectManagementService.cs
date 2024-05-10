@@ -1,10 +1,11 @@
 using Microsoft.Extensions.Logging;
+using System;
 using System.Diagnostics;
 using TrafficCourts.Coms.Client.Monitoring;
 
 namespace TrafficCourts.Coms.Client;
 
-internal class ObjectManagementService : IObjectManagementService
+internal partial class ObjectManagementService : IObjectManagementService
 {
     private readonly IObjectManagementClient _client;
     private readonly IMemoryStreamFactory _memoryStreamFactory;
@@ -123,7 +124,11 @@ internal class ObjectManagementService : IObjectManagementService
                 .ConfigureAwait(false);
 
             string? contentType = GetHeader(response.Headers, "Content-Type");
-            string? fileName = GetHeader(response.Headers, "x-amz-meta-name");
+            string? fileName = response.GetFilename();
+            if (fileName is null)
+            {
+                LogNoFilenameForObject(id);
+            }
 
             // get the metadata and tags for this object
             Dictionary<Guid, IList<DBMetadataKeyValue>> metadataValues = await GetMetadataAsync(id, cancellationToken);
@@ -141,7 +146,7 @@ internal class ObjectManagementService : IObjectManagementService
         }
         catch (ApiException exception) when (exception.StatusCode == /*StatusCodes.Status404NotFound*/ 404) // StatusCodes Class requires Package: Microsoft.AspNetCore.App.Ref v7.0.5, so use constant
         {
-            _logger.LogInformation(exception, "File not found with id {FileId}", id);
+            LogFileNotFound(exception, id);
             throw new FileNotFoundException($"File with {id} not found");
         }
         catch (ApiException exception)
@@ -151,7 +156,7 @@ internal class ObjectManagementService : IObjectManagementService
             // - GetMetadataAsync failed, or
             // - GetTagsAsync failed
             activity?.SetStatus(ActivityStatusCode.Error);
-            _logger.LogInformation(exception, "Could not get file by id, FileId={FileId}", id);
+            LogGetFileError(exception, id);
             throw new ObjectManagementServiceException("API error getting file", exception);
         }
         catch (Exception exception)
@@ -335,6 +340,12 @@ internal class ObjectManagementService : IObjectManagementService
         }
     }
 
+    /// <summary>
+    /// Tries to get the named header.
+    /// </summary>
+    /// <param name="headers"></param>
+    /// <param name="name"></param>
+    /// <returns></returns>
     private static string? GetHeader(IReadOnlyDictionary<string, IEnumerable<string>> headers, string name)
     {
         string? value = null;
@@ -349,22 +360,23 @@ internal class ObjectManagementService : IObjectManagementService
         return value;
     }
 
-    private string GetFileName(Guid id, Dictionary<Guid, IList<DBMetadataKeyValue>> values)
+    /// <summary>
+    /// Gets the filename from the metadata values. Do not use this function to get 
+    /// the filename from headers.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="values"></param>
+    /// <returns></returns>
+    private static string GetFileName(Guid id, Dictionary<Guid, IList<DBMetadataKeyValue>> values)
     {
+        Debug.Assert(values != null);
+
         if (!values.TryGetValue(id, out var items))
         {
             return string.Empty;
         }
 
-        foreach (var item in items)
-        {
-            if (Metadata.IsName(item.Key))
-            {
-                return item.Value;
-            }
-        }
-
-        return string.Empty;
+        return items.FirstOrDefault(item => item.Key == Metadata.Keys.Name)?.Value ?? string.Empty;
     }
 
     /// <summary>
@@ -373,7 +385,7 @@ internal class ObjectManagementService : IObjectManagementService
     /// <param name="results"></param>
     /// <param name="parameters"></param>
     /// <returns></returns>
-    private List<FileSearchResult> FilterSearchResults(List<FileSearchResult> results, FileSearchParameters parameters)
+    private static List<FileSearchResult> FilterSearchResults(List<FileSearchResult> results, FileSearchParameters parameters)
     {
         Debug.Assert(results != null);
         Debug.Assert(parameters != null);
@@ -452,9 +464,7 @@ internal class ObjectManagementService : IObjectManagementService
             return new Dictionary<string, string>();
         }
 
-        return items
-            .Where(_ => !Metadata.IsInternal(_.Key))
-            .ToDictionary(_ => _.Key, _ =>  _.Value);
+        return items.ToDictionary(_ => _.Key, _ =>  _.Value);
     }
 
     private async Task<Dictionary<Guid, IList<DBMetadataKeyValue>>> GetMetadataAsync(Guid id, CancellationToken cancellationToken)
@@ -490,13 +500,57 @@ internal class ObjectManagementService : IObjectManagementService
     {
         // TODO: this should be enhaced to provide better error troubleshooting
 
-        if (exception is ApiException)
+        if (exception is ApiException apiException)
         {
-            _logger.LogError(exception, "API error {operation}", operation);
+            LogComsApiError(apiException, operation);
             return new ObjectManagementServiceException($"API error {operation}", exception);
         }
 
-        _logger.LogError(exception, "Other error {operation}", operation);
+        LogComsOtherError(exception, operation);
         return new ObjectManagementServiceException($"Other error {operation}", exception);
+    }
+
+    [LoggerMessage(EventId = 0, Level = LogLevel.Error, Message = "No filename found for file", EventName = "NoFilenameForObject")]
+    private partial void LogNoFilenameForObject(
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordObjectId), OmitReferenceName = true)]
+        Guid id);
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "File not found", EventName = "FileNotFound")]
+    private partial void LogFileNotFound(
+        ApiException exception,
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordObjectId), OmitReferenceName = true)]
+        Guid id);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Could not get file by id", EventName = "GetFileError")]
+    private partial void LogGetFileError(
+    ApiException exception,
+    [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordObjectId), OmitReferenceName = true)]
+        Guid id);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Error, Message = "API error accessing COMS", EventName = "ComsApiError")]
+    private partial void LogComsApiError(
+        ApiException exception,
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordOperation), OmitReferenceName = true)]
+        string operation);
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Error, Message = "Other error accessing COMS", EventName = "ComsOtherError")]
+    private partial void LogComsOtherError(
+        Exception exception,
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordOperation), OmitReferenceName = true)]
+        string operation);
+
+}
+
+
+public static class TagProvider
+{
+    public static void RecordObjectId(ITagCollector collector, Guid id)
+    {
+        collector.Add("ObjectId", id);
+    }
+
+    public static void RecordOperation(ITagCollector collector, string operation)
+    {
+        collector.Add("Operation", operation);
     }
 }

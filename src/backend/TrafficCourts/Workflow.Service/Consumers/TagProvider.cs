@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using TrafficCourts.Messaging.MessageContracts;
+using TrafficCourts.Workflow.Service.Sagas;
 
 namespace TrafficCourts.Workflow.Service;
 
@@ -8,10 +9,16 @@ namespace TrafficCourts.Workflow.Service;
 /// </summary>
 internal static partial class TagProvider
 {
+    public static void RecordTags(ITagCollector collector, SendEmailVerificationEmail message)
+    {
+        RecordNoticeOfDisputeIdTag(collector, message.NoticeOfDisputeGuid);
+        collector.Add("TicketNumber", message.TicketNumber);
+    }
+
     public static void RecordTags(ITagCollector collector, ConsumeContext<EmailVerificationSuccessful> context)
     {
         RecordTags<EmailVerificationSuccessful>(collector, context);
-        RecordNoticeOfDisputeGuidTag(collector, context.Message.NoticeOfDisputeGuid);
+        RecordNoticeOfDisputeIdTag(collector, context.Message.NoticeOfDisputeGuid);
     }
 
     /// <summary>
@@ -20,7 +27,7 @@ internal static partial class TagProvider
     public static void RecordTags(ITagCollector collector, ConsumeContext<CheckEmailVerificationTokenRequest> context)
     {
         RecordTags<CheckEmailVerificationTokenRequest>(collector, context);
-        RecordNoticeOfDisputeGuidTag(collector, context.Message.NoticeOfDisputeGuid);
+        RecordNoticeOfDisputeIdTag(collector, context.Message.NoticeOfDisputeGuid);
     }
 
     /// <summary>
@@ -30,6 +37,15 @@ internal static partial class TagProvider
     {
         RecordTags<DisputeApproved>(collector, context);
         Logging.TagProvider.RecordTicketNumber(collector, context.Message.TicketFileNumber);
+    }
+
+    /// <summary>
+    /// Records the common consume context properties and the ticket number.
+    /// </summary>
+    public static void RecordTags(ITagCollector collector, ConsumeContext<SubmitNoticeOfDispute> context)
+    {
+        RecordTags<SubmitNoticeOfDispute>(collector, context);
+        Logging.TagProvider.RecordTicketNumber(collector, context.Message.TicketNumber);
     }
 
     public static void RecordTags(ITagCollector collector, Exception exception)
@@ -44,6 +60,21 @@ internal static partial class TagProvider
     public static void RecordCountNumberTag(ITagCollector collector, int count)
     {
         collector.Add("CountNumber", count);
+    }
+
+    public static void RecordTags(ITagCollector collector, VerifyEmailAddressState state)
+    {
+        RecordNoticeOfDisputeIdTag(collector, state.CorrelationId);
+
+        if (!string.IsNullOrEmpty(state.TicketNumber))
+        {
+            collector.Add("TicketNumber", state.TicketNumber);
+        }
+    }
+
+    public static void RecordDisputeIdTag(ITagCollector collector, long disputeId)
+    {
+        collector.Add("DisputeId", disputeId);
     }
 
     /// <summary>
@@ -62,8 +93,8 @@ internal static partial class TagProvider
         collector.Add("SentTime", context.SentTime);
     }
 
-    private static void RecordNoticeOfDisputeGuidTag(ITagCollector collector, Guid noticeOfDisputeGuid)
+    private static void RecordNoticeOfDisputeIdTag(ITagCollector collector, Guid noticeOfDisputeGuid)
     {
-        collector.Add("NoticeOfDisputeGuid", noticeOfDisputeGuid);
+        collector.Add("NoticeOfDisputeId", noticeOfDisputeGuid);
     }
 }

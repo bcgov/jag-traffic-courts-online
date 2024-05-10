@@ -114,10 +114,11 @@ public static class BusConfiguratorExtensions
             // sets the global message try policy
             configure.UseMessageRetry(r =>
             {
+                r.Ignore<ArgumentException>();
                 r.Ignore<ArgumentNullException>();
                 r.Ignore<InvalidOperationException>();
 
-                // other retry options are:
+                // Retry options are:
                 //   Exponential - int retryLimit, TimeSpan minInterval, TimeSpan maxInterval, TimeSpan intervalDelta
                 //   Incremental - int retryLimit, TimeSpan initialInterval, TimeSpan intervalIncrement
                 //   Interval    - int retryCount, TimeSpan interval
@@ -125,7 +126,11 @@ public static class BusConfiguratorExtensions
                 //   Intervals   - int[] intervals
                 //   Immediate   - int retryLimit
                 //   None        -
-                r.Interval(options.Retry.Times, TimeSpan.FromMinutes(options.Retry.Interval));
+                r.Exponential(
+                    options.Retry.Times, 
+                    TimeSpan.Zero, // retry right away 
+                    TimeSpan.FromMilliseconds(2000),
+                    TimeSpan.FromMilliseconds(options.Retry.Interval));
             });
 
             configure.ConfigureEndpoints(context);

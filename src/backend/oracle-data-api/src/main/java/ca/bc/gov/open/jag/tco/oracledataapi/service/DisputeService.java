@@ -424,7 +424,8 @@ public class DisputeService {
 						dispute.getDisputeId(),
 						dispute.getNoticeOfDisputeGuid(),
 						dispute.getStatus(),
-						StringUtils.isBlank(dispute.getEmailAddress()) ? null : dispute.getEmailAddressVerified()));
+						StringUtils.isBlank(dispute.getEmailAddress()) ? null : dispute.getEmailAddressVerified(),
+						dispute.getRequestCourtAppearanceYn()));
 				ticketNumber = dispute.getTicketNumber();
 				issuedTime = dispute.getIssuedTs();
 			}

@@ -108,7 +108,8 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 						dispute.getDisputeId(),
 						dispute.getNoticeOfDisputeGuid(),
 						dispute.getStatus(),
-						StringUtils.isBlank(dispute.getEmailAddress()) ? null : dispute.getEmailAddressVerified()))
+						StringUtils.isBlank(dispute.getEmailAddress()) ? null : dispute.getEmailAddressVerified(),
+						dispute.getRequestCourtAppearanceYn()))
 				.collect(Collectors.toList());
 
 		return disputeResults;
@@ -133,7 +134,8 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 						dispute.getDisputeId(),
 						dispute.getNoticeOfDisputeGuid(),
 						dispute.getStatus(),
-						StringUtils.isBlank(dispute.getEmailAddress()) ? null : dispute.getEmailAddressVerified()))
+						StringUtils.isBlank(dispute.getEmailAddress()) ? null : dispute.getEmailAddressVerified(),
+						dispute.getRequestCourtAppearanceYn()))
 				.collect(Collectors.toList());
 
 		return disputeResults;

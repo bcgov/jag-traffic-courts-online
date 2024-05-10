@@ -24,8 +24,7 @@ public static class Instrumentation
 
         _operationDuration = new Timer(_meter, "clamav.operation.duration", "ms", "Elapsed time spent on an ClamAV operation");
         _operationErrorTotal = _meter.CreateCounter<long>("clamav.operation.errors", "ea", "Number of operations that could not be completed due to an error");
-
-        _infectedFilesTotal = _meter.CreateCounter<long>("files.infected", "ea", "Number of infected files detected");
+        _infectedFilesTotal = _meter.CreateCounter<long>("clamav.files.infected", "ea", "Number of infected files detected");
     }
 
     public static ITimerOperation BeginOperation(string operation)

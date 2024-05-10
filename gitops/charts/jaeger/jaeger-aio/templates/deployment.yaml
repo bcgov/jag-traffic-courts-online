@@ -66,6 +66,10 @@ spec:
               path: /
               port: 14269
             initialDelaySeconds: 5
+            periodSeconds: 15
+            timeoutSeconds: 10
+            successThreshold: 1
+            failureThreshold: 10
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

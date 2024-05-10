@@ -366,10 +366,15 @@ mat-expansion-panel-header {
   border-top-color: theme-palette(grey, light);
 }
 
-.link-button {
+.link-anchor {
   color: #009cde;
   font-size: 1.2em;
   font-weight: 500;
   padding: 16px 0;
   text-align: left;
+}
+
+.link-anchor:hover{
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 5px;
 }

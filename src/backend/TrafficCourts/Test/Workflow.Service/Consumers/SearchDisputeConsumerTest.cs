@@ -70,7 +70,8 @@ public class SearchDisputeConsumerTest
                 NoticeOfDisputeGuid = _mockGuid.ToString(),
                 DisputeStatus = DisputeResultDisputeStatus.VALIDATED,
                 JjDisputeStatus = DisputeResultJjDisputeStatus.IN_PROGRESS,
-                JjDisputeHearingType = DisputeResultJjDisputeHearingType.COURT_APPEARANCE
+                JjDisputeHearingType = DisputeResultJjDisputeHearingType.COURT_APPEARANCE,
+                RequestCourtAppearanceYn = DisputeRequestCourtAppearanceYn.Y
             }
         };
 
@@ -79,6 +80,7 @@ public class SearchDisputeConsumerTest
         _expectedResponse.DisputeStatus = "VALIDATED";
         _expectedResponse.JJDisputeStatus = "IN_PROGRESS";
         _expectedResponse.HearingType = "COURT_APPEARANCE";
+        _expectedResponse.RequestCourtAppearanceYn = "Y";
 
         // Act 
         await _consumer.Consume(_context.Object);
@@ -94,6 +96,7 @@ public class SearchDisputeConsumerTest
                 && a.DisputeStatus == _expectedResponse.DisputeStatus
                 && a.JJDisputeStatus == _expectedResponse.JJDisputeStatus
                 && a.HearingType == _expectedResponse.HearingType
+                && a.RequestCourtAppearanceYn == _expectedResponse.RequestCourtAppearanceYn
                 && a.IsError == _expectedResponse.IsError
             )), Times.Once);
     }
