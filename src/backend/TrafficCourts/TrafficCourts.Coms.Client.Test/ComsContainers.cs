@@ -3,6 +3,7 @@ using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
 using Microsoft.Extensions.Logging;
 using Minio;
+using Minio.DataModel.Args;
 using Npgsql;
 using Testcontainers.Minio;
 using Testcontainers.PostgreSql;
@@ -53,7 +54,7 @@ namespace TrafficCourts.Coms.Client.Test
             var container = new PostgreSqlBuilder()
                 .WithImage("postgres:15.1")
                 .WithHostname("postgres")
-                .WithPortBinding(5432, true)
+                .WithPortBinding(5432, 5432)
                 .WithNetwork(_network)
                 .Build();
 
@@ -81,28 +82,38 @@ namespace TrafficCourts.Coms.Client.Test
             return container;
         }
 
-        private async Task<string> CreateBucket(CancellationToken cancellationToken)
+        private async Task<string> CreateBucket(bool enableVersioning, CancellationToken cancellationToken)
         {
             string bucket = $"bucket-{Guid.NewGuid():n}";
 
             var client = GetMinioClient();
-            var args = new Minio.DataModel.Args.MakeBucketArgs()
+            var args = new MakeBucketArgs()
                 .WithLocation("us-east-1")
                 .WithBucket(bucket);
 
             await client.MakeBucketAsync(args, cancellationToken);
 
+            if (enableVersioning)
+            {
+                var vArgs = new SetVersioningArgs()
+                    .WithVersioningEnabled()
+                    .WithBucket(bucket);
+
+                await client.SetVersioningAsync(vArgs, cancellationToken);
+
+            }
+
             return bucket;
         }
 
-        public async Task BuildAndStartAsync(CancellationToken cancellationToken)
+        public async Task BuildAndStartAsync(bool enableBucketVersioning, CancellationToken cancellationToken)
         {
             _network = await BuildAndCreateNetwork(cancellationToken);
 
             _postgresContainer = await BuildAndStartPostgreSqlContainer(cancellationToken);
 
             _minioContainer = await BuildAndStartMinioContainer(cancellationToken);
-            _bucket = await CreateBucket(cancellationToken);
+            _bucket = await CreateBucket(enableBucketVersioning, cancellationToken);
 
             // run the database migrations
             var initContainer = GetComsContainer(_network, _postgresContainer, _minioContainer)
