@@ -8,6 +8,7 @@ public class SftpService : ISftpService
 {
     private readonly ILogger<SftpService> _logger;
     private readonly SftpClient _client;
+    private bool _disposed;
 
     public SftpService(ILogger<SftpService> logger, SftpClient client)
     {
@@ -17,7 +18,21 @@ public class SftpService : ISftpService
 
     public void Dispose()
     {
-        _client.Dispose();
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (disposing)
+        {
+            _client.Dispose();
+        }
     }
 
     public void UploadFile(MemoryStream data, string path, string filename)
