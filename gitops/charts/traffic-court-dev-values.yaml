@@ -7,14 +7,14 @@ global:
 
 arc-dispute-api:
   image:
-    tag: "2.1.7"
+    tag: "2.1.8"
     pullPolicy: Always
   env: 
     "Swagger__Enabled": "true"
 
 citizen-api:
   image:
-    tag: "2.1.7"
+    tag: "2.1.8"
     pullPolicy: Always
   env:
     "FormRecognizer__ApiVersion": "2022-08-31"
@@ -208,7 +208,7 @@ oracle-data-api:
 
 staff-api:
   image:
-    tag: "2.1.7"
+    tag: "2.1.8"
     pullPolicy: Always
   env:    
     "Jwt__Audience": "staff-api"
@@ -251,7 +251,7 @@ staff-web:
 
 workflow-service:
   image:
-    tag: "2.1.7"
+    tag: "2.1.8"
     pullPolicy: Always
   env:
     "EmailConfiguration__Sender": "DoNotReply@gov.bc.ca"

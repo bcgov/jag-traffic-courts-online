@@ -10,7 +10,7 @@ arc-dispute-api:
   pdb:
     create: true
   image:
-    tag: "2.1.7"
+    tag: "2.1.8"
     pullPolicy: Always
   env: 
     "Swagger__Enabled": "true"
@@ -20,7 +20,7 @@ citizen-api:
   pdb:
     create: true
   image:
-    tag: "2.1.7"
+    tag: "2.1.8"
     pullPolicy: Always
   env:
     "FormRecognizer__ApiVersion": "2022-08-31"
@@ -217,12 +217,13 @@ oracle-data-api:
     "ORDS_API_AUTH_ENABLED": "true"
     "REDIS_CLUSTER_NODES": "redis-headless:6379"
     "REDIS_PORT": "6379"
+
 staff-api:
   replicaCount: 3
   pdb:
     create: true
   image:
-    tag: "2.1.7"
+    tag: "2.1.8"
     pullPolicy: Always
   env:    
     "Jwt__Audience": "staff-api"
@@ -272,7 +273,7 @@ workflow-service:
   pdb:
     create: true
   image:
-    tag: "2.1.7"
+    tag: "2.1.8"
     pullPolicy: Always
   env:
     "EmailConfiguration__Sender": "DoNotReply@gov.bc.ca"
