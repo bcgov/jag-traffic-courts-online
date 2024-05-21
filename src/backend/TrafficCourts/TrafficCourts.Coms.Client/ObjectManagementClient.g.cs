@@ -1232,6 +1232,16 @@ public partial class ObjectManagementClient
                         throw new ApiException<ResponseForbidden>("Forbidden", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                     }
                     else
+                    if (status_ == 404)
+                    {
+                        var objectResponse_ = await ReadObjectResponseAsync<ResponseNotFound>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                        if (objectResponse_.Object == null)
+                        {
+                            throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                        }
+                        throw new ApiException<ResponseNotFound>("NotFound", status_,objectResponse_.Text, headers_, objectResponse_.Object, null);
+                    }
+                    else
                     {
                         var objectResponse_ = await ReadObjectResponseAsync<ResponseError>(response_, headers_, cancellationToken).ConfigureAwait(false);
                         if (objectResponse_.Object == null)
