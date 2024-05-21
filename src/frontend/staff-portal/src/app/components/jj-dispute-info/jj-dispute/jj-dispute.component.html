@@ -108,6 +108,10 @@
               </mat-form-field>
             </span>
             <span class="section-grid-cell">
+              <p class="section-grid-header">Date of Birth</p>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.disputantBirthdate | date: "dd-MMM-yyyy" : "UTC" }}</p>
+            </span>
+            <span class="section-grid-cell">
               <p class="section-grid-header">Location of Offence</p>
               <p class="section-grid-text"> {{ lastUpdatedJJDispute.offenceLocation }}</p>
             </span>
