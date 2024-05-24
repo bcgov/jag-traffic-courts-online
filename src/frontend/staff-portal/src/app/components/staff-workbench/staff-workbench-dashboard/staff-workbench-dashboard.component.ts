@@ -10,7 +10,8 @@ import { DisputeService } from 'app/services/dispute.service';
 import { UpdateRequestInboxComponent } from '../update-request-inbox/update-request-inbox.component';
 import { Store } from '@ngrx/store';
 import { JJDisputeStore } from 'app/store';
-import { BusyService } from '@core/services/busy.service';
+import { AuthService } from 'app/services/auth.service';
+import { UserGroup } from '@shared/enums/user-group.enum';
 
 @Component({
   selector: 'app-staff-workbench-dashboard',
@@ -28,19 +29,31 @@ export class StaffWorkbenchDashboardComponent implements OnInit {
   data$: Observable<JJDispute[]>;
   jjDisputeInfo: JJDispute;
 
+  hasTicketValidationPermission: boolean = false;
+  hasDecisionValidationPermission: boolean = false;
+  hasUpdateRequestsPermission: boolean = false;
+  hasDCFPermission: boolean = false;
+
   @ViewChild(DisputeDecisionInboxComponent) disputeChild: DisputeDecisionInboxComponent;
   @ViewChild(TicketInboxComponent) ticketChild: TicketInboxComponent;
   @ViewChild(UpdateRequestInboxComponent) updateRequestChild: UpdateRequestInboxComponent;
 
   constructor(
+    private authService: AuthService,
     private disputeService: DisputeService,
-    private busyService: BusyService,
     private store: Store
   ) {
   }
   
   ngOnInit(): void {
-    // this.busyService.busy$.subscribe(i => this.busy = i);
+    this.authService.userProfile$.subscribe(userProfile => {
+      if (userProfile) {        
+        this.hasTicketValidationPermission = this.authService.checkRoles([UserGroup.VTC_STAFF, UserGroup.SUPPORT_STAFF]);
+        this.hasDecisionValidationPermission = this.authService.checkRoles([UserGroup.VTC_STAFF, UserGroup.SUPPORT_STAFF]);
+        this.hasUpdateRequestsPermission = this.authService.checkRoles([UserGroup.VTC_STAFF, UserGroup.SUPPORT_STAFF]);
+        this.hasDCFPermission = this.authService.checkRoles([UserGroup.VTC_STAFF, UserGroup.SUPPORT_STAFF]);
+      }
+    });
     this.data$ = this.store.select(JJDisputeStore.Selectors.JJDisputes).pipe(filter(i => !!i));
   }
 

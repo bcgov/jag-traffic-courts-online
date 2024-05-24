@@ -16,7 +16,7 @@ let routes: Routes = [
   {
     path: AppRoutes.STAFF,
     canActivate: [AuthorizationGuard],
-    data: { expectedRole: UserGroup.VTC_STAFF },
+    data: { roles: [UserGroup.VTC_STAFF, UserGroup.SUPPORT_STAFF] },
     children: [
       {
         path: '',
@@ -28,7 +28,7 @@ let routes: Routes = [
   {
     path: AppRoutes.JJ,
     canActivate: [AuthorizationGuard],
-    data: { expectedRole: UserGroup.JUDICIAL_JUSTICE },
+    data: { roles: [UserGroup.JUDICIAL_JUSTICE, UserGroup.ADMIN_JUDICIAL_JUSTICE, UserGroup.SUPPORT_STAFF] },
     children: [
       {
         path: '',
