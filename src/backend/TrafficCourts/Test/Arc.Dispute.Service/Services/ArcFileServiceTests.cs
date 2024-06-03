@@ -360,7 +360,7 @@ ARCUICBC DIM       1           256- 256      Create ARCF0630 Record Flag        
             SftpOptions options = new SftpOptions();
             var arcFileService = new ArcFileService(_mockArcFileService.Object, _memoryStreamManager, options, _logger);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => arcFileService.CreateArcFile(null!, CancellationToken.None));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => arcFileService.CreateArcFileAsync(null!, CancellationToken.None));
         }
 
 
@@ -385,7 +385,7 @@ ARCUICBC DIM       1           256- 256      Create ARCF0630 Record Flag        
             var arcFileService = new ArcFileService(_mockArcFileService.Object, _memoryStreamManager, options, _logger);
 
             // Act
-            await arcFileService.CreateArcFile(records, CancellationToken.None);
+            await arcFileService.CreateArcFileAsync(records, CancellationToken.None);
         }
     }
 }

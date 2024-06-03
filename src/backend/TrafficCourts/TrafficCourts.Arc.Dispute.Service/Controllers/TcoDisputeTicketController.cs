@@ -12,12 +12,17 @@ public class TcoDisputeTicketController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IArcFileService _arcFileService;
+    private readonly ILogger _logger;
 
     // Assign the object in the constructor for dependency injection
-    public TcoDisputeTicketController(IMapper mapper, IArcFileService arcFileService)
+    public TcoDisputeTicketController(
+        IMapper mapper, 
+        IArcFileService arcFileService,
+        ILogger logger)
     {
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _arcFileService = arcFileService ?? throw new ArgumentNullException(nameof(arcFileService));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <summary>
@@ -33,10 +38,39 @@ public class TcoDisputeTicketController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateArcFile([Required][FromBody] TcoDisputeTicket disputeData, CancellationToken cancellationToken)
     {
+        CleanDisputeData(disputeData);
+
+        if (disputeData.TicketDetails.Count == 0)
+        {
+            return BadRequest(); // ?
+        }
+
         var arcFileRecords = _mapper.Map<List<ArcFileRecord>>(disputeData);
 
-        await _arcFileService.CreateArcFile(arcFileRecords, cancellationToken);
+        await _arcFileService.CreateArcFileAsync(arcFileRecords, cancellationToken);
 
         return Ok(arcFileRecords);
+    }
+
+    private void CleanDisputeData(TcoDisputeTicket disputeData)
+    {
+        int removed = disputeData.TicketDetails.RemoveAll(_ => string.IsNullOrWhiteSpace(_.Act));
+
+        if (removed > 0)
+        {
+            if (disputeData.TicketDetails.Count == 0)
+            {
+                _logger.LogWarning("Removed all {RemovedCount} count records on {TicketNumber}. Dispute cant be sent to ARC",
+                    removed,
+                    disputeData.TicketFileNumber);
+            }
+            else
+            {
+                _logger.LogInformation("Removed {RemovedCount} count records on {TicketNumber}. {NumberOfCounts} will be sent to ARC", 
+                    removed, 
+                    disputeData.TicketFileNumber, 
+                    disputeData.TicketDetails.Count);
+            }
+        }
     }
 }

@@ -23,8 +23,13 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
             // Additional minutes between the transaction times since each transaction timestamp for EV and ED must be unique for ARC to process
             var now = GetCurrentDate();
 
+            // TCVP-2873 do not send ANO records if there is no ACT, these should have been filtered prior to this mapping
+            var counts = source.TicketDetails
+                .Where(_ => !string.IsNullOrWhiteSpace(_.Act))
+                .OrderBy(_ => _.Count);
+
             // process each of the ticket counts in "count" order
-            foreach (TicketCount ticket in source.TicketDetails.OrderBy(_ => _.Count))
+            foreach (TicketCount count in counts)
             {
                 AdnotatedTicket adnotated = new();
 
@@ -33,27 +38,27 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                 adnotated.EffectiveDate = source.TicketIssuanceDate;
                 // There has to be two spaces between the 10th character and the "01" at the end for ARC to process the file properly
                 adnotated.FileNumber = source.TicketFileNumber.ToUpper() + "  01";
-                adnotated.CountNumber = ticket.Count.ToString("D3"); // left pad with zeros
+                adnotated.CountNumber = count.Count.ToString("D3"); // left pad with zeros
                 adnotated.MvbClientNumber = DriversLicence.WithCheckDigit(source.DriversLicence);
                 
                 // Map adnotated ticket specific data
                 adnotated.Name = GetName(source);
 
-                if (!string.IsNullOrEmpty(ticket.Section))
+                if (!string.IsNullOrEmpty(count.Section))
                 {
-                    adnotated.Section = ticket.Section.ToUpper();
-                    adnotated.Subsection = ticket.Subsection?.ToUpper() ?? String.Empty;
-                    adnotated.Paragraph = ticket.Paragraph?.ToUpper() ?? String.Empty;
+                    adnotated.Section = count.Section.ToUpper();
+                    adnotated.Subsection = count.Subsection?.ToUpper() ?? String.Empty;
+                    adnotated.Paragraph = count.Paragraph?.ToUpper() ?? String.Empty;
                 } 
                 else
                 {
                     LegalSection? legalSection = null;
 
-                    if (ticket.Section is not null)
+                    if (count.Section is not null)
                     {
                         // really doesn't matter if this is true or false, will default
                         // to empty string could not be parsed.
-                        LegalSection.TryParse(ticket.Section, out legalSection);
+                        LegalSection.TryParse(count.Section, out legalSection);
                     }
 
                     adnotated.Section = legalSection?.Section.ToUpper() ?? String.Empty;
@@ -61,8 +66,8 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                     adnotated.Paragraph = legalSection?.Paragraph.ToUpper() ?? String.Empty;
                 }
 
-                adnotated.Act = ticket.Act?.ToUpper() ?? "MVA";
-                adnotated.OriginalAmount = ticket.Amount;
+                adnotated.Act = count.Act.ToUpper();
+                adnotated.OriginalAmount = count.Amount;
                 adnotated.Organization = source.IssuingOrganization.ToUpper();
                 adnotated.OrganizationLocation = source.IssuingLocation.ToUpper();
                 adnotated.ServiceDate = source.TicketIssuanceDate;
@@ -74,7 +79,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                 {
                     // precondition is that there is no duplicated counts,
                     // this will throw exception if contained duplicate by count number
-                    var disputeCount = source.DisputeCounts.SingleOrDefault(_ => _.Count == ticket.Count);
+                    var disputeCount = source.DisputeCounts.SingleOrDefault(_ => _.Count == count.Count);
                     if (disputeCount is null)
                     {
                         continue;
@@ -147,6 +152,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
         /// Function to get curent date and time, set in unit tests
         /// </summary>
         internal static Func<DateTime> Now = () => DateTime.Now;
+        private readonly ILogger<DisputeTicketToArcFileRecordListConverter> _logger;
 
         private static DateTime GetCurrentDate()
         {
