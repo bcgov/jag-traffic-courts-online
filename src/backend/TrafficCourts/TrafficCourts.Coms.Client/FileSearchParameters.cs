@@ -48,20 +48,29 @@ public class FileSearchParameters
     /// The canonical S3 path string of the object
     /// </summary>
     public string? Path { get; set; }
+    
     /// <summary>
     /// The object MIME Type
     /// </summary>
     public string? MimeType { get; set; }
+
     /// <summary>
     /// Boolean on public status
     /// </summary>
     public bool? Public { get; set; }
+
     /// <summary>
     /// Boolean on active status
     /// </summary>
     public bool? Active { get; set; }
 
+    /// <summary>
+    /// Delete marker
+    /// </summary>
     public bool? DeleteMarker { get; set; }
 
-    public bool? Latest { get; set; }
+    /// <summary>
+    /// Get the latest version. Defaults to <c>true</c>.
+    /// </summary>
+    public bool? Latest { get; set; } = true;
 }
