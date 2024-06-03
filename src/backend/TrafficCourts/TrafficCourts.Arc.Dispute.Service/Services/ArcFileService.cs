@@ -28,7 +28,7 @@ public class ArcFileService : IArcFileService
         _logger = logger;
     }
 
-    public async Task CreateArcFile(List<ArcFileRecord> arcFileData, CancellationToken cancellationToken)
+    public async Task CreateArcFileAsync(List<ArcFileRecord> arcFileData, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(arcFileData);
 
