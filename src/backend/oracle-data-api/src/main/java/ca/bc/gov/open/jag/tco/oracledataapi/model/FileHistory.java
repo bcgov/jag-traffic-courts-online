@@ -65,4 +65,8 @@ public class FileHistory extends Auditable<String> {
 	@Column(length = 240)
 	@Schema(nullable = true)
 	private String actionByApplicationUser;
+	
+	public String determineSchema() {
+		return this.auditLogEntryType.getSchema();
+	}
 }
