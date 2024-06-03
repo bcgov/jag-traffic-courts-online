@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.AuditLogEntryApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.HealthApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.JjDisputeApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.handler.ApiClient;
@@ -43,6 +44,11 @@ public class OrdsTcoApiClientConfiguration {
 	@Bean
 	public JjDisputeApi ordsTcoJjDisputeApi(ApiClient ordsTcoApiClient) {
 		return new JjDisputeApi(ordsTcoApiClient);
+	}
+	
+	@Bean
+	public ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.AuditLogEntryApi tcoAuditLogEntryApi(ApiClient ordsTcoApiClient) {
+		return new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.AuditLogEntryApi(ordsTcoApiClient);
 	}
 
 }
