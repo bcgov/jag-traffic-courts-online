@@ -15,6 +15,8 @@ public class KeycloakAuthorizationOptions
     /// </value>
     public string RequiredScheme { get; set; } = JwtBearerDefaults.AuthenticationScheme;
 
+    public string TokenName { get; set; } = "access_token";
+
     /// <summary>
     /// Gets or sets the token endpoint.
     /// </summary>
