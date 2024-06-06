@@ -79,8 +79,13 @@ public class Mapper
             return [];
         }
 
-        var result = counts
+        var filteredCounts = counts
+            // TCVP-2786 Filter out skipped counts before sending to ARC
+            .Where(_ => _.RequestCourtAppearance != DisputeCountRequestCourtAppearance.N || _.RequestReduction != DisputeCountRequestReduction.N || _.RequestTimeToPay != DisputeCountRequestTimeToPay.N)
             .OrderBy(_ => _.CountNo)
+            .ToList();
+
+        var result = filteredCounts
             .Select(_ => new DisputedCount
             {
                 Count = _.CountNo,
@@ -91,12 +96,21 @@ public class Mapper
         return result;
     }
 
+    /// <summary>
+    /// TCVP-2786 Determines and returns the Dispute Type based on the following criteria:
+    /// If a user selects Written Reasons, each disputed count is dispute type = F (Fine)
+    /// If a user selects Court Hearing, use the following:
+    /// If the user selects that they agree to the offence, that count is dispute type = F (Fine)
+    /// If the users select they do not agree to the offence, that count is dispute type = A (Allegation)
+    /// </summary>
+    /// <param name="count"></param>
+    /// <returns></returns>
     private static string GetArcDisputeType(Domain.Models.DisputeCount count)
     {
         if (count is not null)
         {
-            if (count.RequestReduction == DisputeCountRequestReduction.Y) return "F"; // fine
-            if (count.RequestTimeToPay == DisputeCountRequestTimeToPay.Y) return "F"; // fine
+            if (count.RequestCourtAppearance == DisputeCountRequestCourtAppearance.N) return "F"; // fine
+            if (count.RequestCourtAppearance == DisputeCountRequestCourtAppearance.Y && count.PleaCode == DisputeCountPleaCode.G) return "F"; // fine
         }
 
         return "A"; // allegation

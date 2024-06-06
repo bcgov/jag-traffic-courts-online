@@ -24,7 +24,7 @@ namespace TrafficCourts.Staff.Service.Test.Mappers
 
         [Theory]
         [MemberData(nameof(GetTestCases))]
-        public void dispute_approve_maps_disputed_count_to_dispute_type(int count, DisputeCountRequestReduction reduction, DisputeCountRequestTimeToPay timeToPay, string disputeType)
+        public void dispute_approve_maps_disputed_count_to_dispute_type(int count, string disputeType, DisputeCountRequestCourtAppearance requestCourtAppearance, DisputeCountPleaCode plea)
         {
             Dispute expected = _expected;
 
@@ -32,8 +32,10 @@ namespace TrafficCourts.Staff.Service.Test.Mappers
                     new DisputeCount
                     {
                         CountNo = count,
-                        RequestReduction = reduction,
-                        RequestTimeToPay = timeToPay
+                        RequestReduction = DisputeCountRequestReduction.Y,
+                        RequestTimeToPay = DisputeCountRequestTimeToPay.Y,
+                        RequestCourtAppearance = requestCourtAppearance,
+                        PleaCode = plea
                     }
                 ];
 
@@ -42,6 +44,35 @@ namespace TrafficCourts.Staff.Service.Test.Mappers
 
             var disputeCount = Assert.Single(actual.DisputeCounts);
             Assert.Equal(disputeType, disputeCount.DisputeType);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetTestCases))]
+        public void dispute_approve_does_not_map_skipped_counts(int count, string disputeType, DisputeCountRequestCourtAppearance requestCourtAppearance, DisputeCountPleaCode plea)
+        {
+            Dispute expected = _expected;
+
+            expected.DisputeCounts = [
+                    new DisputeCount
+                    {
+                        CountNo = count,
+                        RequestReduction = DisputeCountRequestReduction.N,
+                        RequestTimeToPay = DisputeCountRequestTimeToPay.N,
+                        RequestCourtAppearance = requestCourtAppearance,
+                        PleaCode = plea
+                    }
+                ];
+
+            var actual = Mapper.ToDisputeApproved(expected);
+            if (requestCourtAppearance == DisputeCountRequestCourtAppearance.N)
+            {
+                Assert.Empty(actual.DisputeCounts);
+            }
+            else
+            {
+                var disputeCount = Assert.Single(actual.DisputeCounts);
+                Assert.Equal(disputeType, disputeCount.DisputeType);
+            }
         }
 
         [Fact]
@@ -91,16 +122,17 @@ namespace TrafficCourts.Staff.Service.Test.Mappers
             {
                 for (int count = 1; count <= 3; count++)
                 {
-                    foreach (var reduction in Enum.GetValues<DisputeCountRequestReduction>())
+                    foreach (var requestCourtAppearance in Enum.GetValues<DisputeCountRequestCourtAppearance>())
                     {
-                        foreach (var timeToPay in Enum.GetValues<DisputeCountRequestTimeToPay>())
+                        foreach (var plea in Enum.GetValues<DisputeCountPleaCode>())
                         {
                             // if either requesting reduction or time to pay, should map to F otherwise A
-                            string disputeType = (reduction == DisputeCountRequestReduction.Y || timeToPay == DisputeCountRequestTimeToPay.Y)
+                            string disputeType = (requestCourtAppearance == DisputeCountRequestCourtAppearance.N ||
+                                (requestCourtAppearance == DisputeCountRequestCourtAppearance.Y && plea == DisputeCountPleaCode.G))
                                 ? "F"   // find
                                 : "A"; // allegation
 
-                            yield return new object[] { count, reduction, timeToPay, disputeType };
+                            yield return new object[] { count, disputeType, requestCourtAppearance, plea};
                         }
                     }
                 }
