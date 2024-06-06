@@ -25,8 +25,8 @@ export class AuthService {
 
   private site: string = "staff-api";
   private roles = [
-    { name: UserGroup.JUDICIAL_JUSTICE, redirectUrl: AppRoutes.JJ },
-    { name: UserGroup.VTC_STAFF, redirectUrl: AppRoutes.STAFF },
+    { name: [UserGroup.JUDICIAL_JUSTICE, UserGroup.ADMIN_JUDICIAL_JUSTICE, UserGroup.SUPPORT_STAFF], redirectUrl: AppRoutes.JJ },
+    { name: [UserGroup.VTC_STAFF, UserGroup.SUPPORT_STAFF], redirectUrl: AppRoutes.STAFF },
   ]
 
   constructor(
@@ -35,8 +35,8 @@ export class AuthService {
     private toastService: ToastService,
     private logger: LoggerService,
     private configService: ConfigService,
-    private lookupsService: LookupsService, // to be moved
-    private store: Store<AppState>, // to be moved
+    private lookupsService: LookupsService,
+    private store: Store<AppState>,
   ) {
     this.keycloak.keycloakEvents$.subscribe({
       next(event) {
@@ -56,24 +56,11 @@ export class AuthService {
       .pipe(
         map((response: boolean) => {
           if (response) {
-            this.loadUserProfile().subscribe(() => { // to be moved
+            this.loadUserProfile().subscribe(() => {
               this._isLoggedIn.next(response);
               if (this.isLoggedIn && this.isInit) {
                 this.userProfile$.pipe(first()).subscribe(() => {
-                  this.isInit = false;
-                  let observables = [
-                    this.loadUsersLists(),
-                    this.lookupsService.init()
-                  ];
-
-                  forkJoin(observables).subscribe({
-                    next: results => {
-                      this.store.dispatch(JJDisputeStore.Actions.Get());
-                    },
-                    error: err => {
-                      this.logger.error("Landing Page Init: Initial data loading failed");
-                    }
-                  });
+                  this.isInit = false;                  
                 })
               }
               return response;
@@ -84,6 +71,22 @@ export class AuthService {
           }
         })
       );
+  }
+
+  loadLookupData(){
+    let observables = [
+      this.loadUsersLists(),
+      this.lookupsService.init()
+    ];
+
+    forkJoin(observables).subscribe({
+      next: results => {
+        this.store.dispatch(JJDisputeStore.Actions.Get());
+      },
+      error: err => {
+        this.logger.error("Landing Page Init: Initial data loading failed");
+      }
+    });
   }
 
   get token(): string {
@@ -176,10 +179,12 @@ export class AuthService {
   getRedirectUrl(): string {
     var result;
     this.roles.forEach(r => {
-      if (this.keycloak.isUserInRole(r.name, this.site)) {
-        result = r.redirectUrl;
-      }
-    })
+      r.name.forEach(n => {
+        if (this.keycloak.isUserInRole(n, this.site)) {
+          result = r.redirectUrl;
+        }
+      });
+    });
     if (!result) {
       result = AppRoutes.UNAUTHORIZED;
     }
