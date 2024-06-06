@@ -390,11 +390,12 @@
             Approve and submit to ARC
           </button>
           <button class="large" mat-flat-button type="button" color="primary" style="background-color: red;"
-            [disabled]="lastUpdatedDispute.status !== DispStatus.New || this.form.invalid || this.form.touched"
             (click)="reject()">
             Reject
           </button>
-          <button class="large" mat-flat-button type="button" color="primary" (click)="cancel()">
+          <button class="large" mat-flat-button type="button" color="primary"
+            [disabled]="lastUpdatedDispute.status !== DispStatus.Processing"
+            (click)="cancel()">
             Cancel
           </button>
         </div>

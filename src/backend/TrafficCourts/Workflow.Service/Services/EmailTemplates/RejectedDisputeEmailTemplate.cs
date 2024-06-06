@@ -13,9 +13,11 @@ public class RejectedDisputeEmailTemplate : EmailTemplate<DisputeRejected>, IRej
             To = data.Email,
             Subject = $"Ticket Dispute for {data.TicketNumber} rejected.",
             TextContent = $@"
-This is to advise you that your online dispute for ticket {data.TicketNumber} has been rejected. Do not reply to this email.
+This is to advise you that your online dispute for ticket {data.TicketNumber} has been rejected.
+The staff member who reviewed your dispute has provided the following message:
+    {data.Reason}
 
-If you have any questions, please email Courts.TCO@gov.bc.ca."
+Do not reply to this email. If you have any questions, please email Courts.TCO@gov.bc.ca."
         };
 
         return email;
