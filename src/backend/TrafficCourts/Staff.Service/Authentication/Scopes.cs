@@ -21,4 +21,6 @@ public static class Scopes
     public const string Update = "update";
     public const string UpdateAdmin = "update-admin";
     public const string Delete = "delete";
+
+    public const string View = "view";
 }

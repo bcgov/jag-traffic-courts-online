@@ -25,6 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FastEndpoints" Version="5.26.0" />
+    <PackageReference Include="FastEndpoints.Swagger.Swashbuckle" Version="2.3.0" />
     <PackageReference Include="MediatR" Version="12.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
     <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="8.0.4">
