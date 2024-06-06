@@ -82,8 +82,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Configuration
             if (!string.IsNullOrEmpty(SshPrivateKey))
             {
                 var bytes = Encoding.ASCII.GetBytes(SshPrivateKey);
-                MemoryStream stream = new MemoryStream(bytes);
-
+                using MemoryStream stream = new(bytes);
                 PrivateKeyFile privateKey = new(stream); // throws SshException if the private key is not well formed
                 return privateKey;
             }

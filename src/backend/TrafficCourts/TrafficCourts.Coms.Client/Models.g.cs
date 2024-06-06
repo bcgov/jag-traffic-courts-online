@@ -911,7 +911,7 @@ namespace TrafficCourts.Coms.Client
         [System.Text.Json.Serialization.JsonPropertyName("s3VersionId")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public int S3VersionId { get; set; } = default!;
+        public string S3VersionId { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -1018,7 +1018,7 @@ namespace TrafficCourts.Coms.Client
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Status { get; set; } = default!;
+        public int Status { get; set; } = default!;
 
         /// <summary>
         /// Short description of why this problem was raised.
@@ -1027,7 +1027,7 @@ namespace TrafficCourts.Coms.Client
         [System.Text.Json.Serialization.JsonPropertyName("detail")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public string Detail { get; set; } = default!;
+        public object Detail { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("errors")]
 
