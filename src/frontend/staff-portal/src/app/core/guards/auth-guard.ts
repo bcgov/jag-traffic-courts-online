@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
+import { AppRoutes } from 'app/app.routes';
 import { AuthService } from 'app/services/auth.service';
 import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
 
@@ -17,20 +18,40 @@ export class AuthorizationGuard extends KeycloakAuthGuard {
 
   public async isAccessAllowed(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     // Force the user to log in if currently unauthenticated.
+    let permission;
     if (!this.authenticated) {
       this.authService.login();
     }
-
 
     // Get the roles required from the route.
     const requiredRoles = route.data.roles;
 
     // Allow the user to to proceed if no additional roles are required to access the route.
-    if (!(requiredRoles instanceof Array) || requiredRoles.length === 0) {
-      return true;
+    if (!requiredRoles || requiredRoles.length === 0) {
+      permission = true;
+    } else {
+      if (!this.roles || this.roles.length === 0) {
+        permission = false;
+      }
+      // Allow the user to proceed if any of the required role(s) is/are present.
+      if (requiredRoles.some((role) => this.roles.indexOf(role) > -1))
+      {
+        permission = true;
+      } else {
+        permission = false;
+      };
     }
 
-    // Allow the user to proceed if all the required roles are present.
-    return requiredRoles.some(role => this.roles.includes(role));
+    if(!permission){
+      let application;
+      if(state.url.indexOf(AppRoutes.JJ) > -1) {
+        application = "JJ";
+      } else {
+        application = "Staff";
+      }
+      this.router.navigate([AppRoutes.UNAUTHORIZED], {queryParams: {application: application}});
+    }
+
+    return permission;
   }
 }

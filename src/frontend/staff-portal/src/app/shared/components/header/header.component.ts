@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NavigationEnd, Router, Scroll } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { AppRoutes } from 'app/app.routes';
 import { AppConfigService } from 'app/services/app-config.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 import { filter } from 'rxjs';
@@ -54,6 +55,9 @@ export class HeaderComponent implements OnInit {
       this.authService.isLoggedIn$.subscribe(isLoggedIn => {
         this.isLoggedIn = isLoggedIn;
         this.fullName = this.authService.userProfile?.fullName;
+        if(this.router.url.indexOf(AppRoutes.UNAUTHORIZED) === -1){
+          this.authService.loadLookupData();
+        }
       })
     })
   }
