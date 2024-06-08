@@ -57,7 +57,7 @@ public class CommonMethods {
     public static void skip2ndCount(WebDriver driver, WebDriverWait driverWait) throws InterruptedException {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         WebElement element = driverWait.until(ExpectedConditions
-                .presenceOfElementLocated(By.cssSelector("#mat-checkbox-5 .mat-checkbox-inner-container")));
+                .presenceOfElementLocated(By.cssSelector("#mat-checkbox-7 .mat-checkbox-inner-container")));
         js.executeScript("arguments[0].click();", element);
 
         System.out.println("I would like to plead guilty and request time to pay on this count.- selected for 2nd count");
@@ -75,7 +75,7 @@ public class CommonMethods {
     public static void skip3rdCount(WebDriver driver, WebDriverWait driverWait) throws InterruptedException {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         WebElement element = driverWait.until(ExpectedConditions
-                .presenceOfElementLocated(By.cssSelector("#mat-checkbox-8 .mat-checkbox-inner-container")));
+                .presenceOfElementLocated(By.cssSelector("#mat-checkbox-10 .mat-checkbox-inner-container")));
         js.executeScript("arguments[0].click();", element);
 
         System.out.println("Skip this count, no action required.- selected for 3rd count");

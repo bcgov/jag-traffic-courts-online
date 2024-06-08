@@ -20,6 +20,7 @@ public class TestSuiteImageTickets {
 
     @Test
     public void test() throws Exception {
+
     }
 
 }

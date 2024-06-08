@@ -12,6 +12,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
+import static ca.bc.gov.open.cto.TicketInfo.E_TICKET_NUMBER;
+
 public class SubmitToStaffWorkbenchCancel {
 
     private WebDriver driver;
@@ -31,11 +33,12 @@ public class SubmitToStaffWorkbenchCancel {
     public void test() throws Exception {
         driver = CustomWebDriverManager.getDriver();
         WebDriverWait driverWait = CustomWebDriverManager.getDriverWait();
-        WebElement element = CustomWebDriverManager.getElement();
         CustomWebDriverManager.getElements();
 
         SubmitToStaffWorkbench dispute = new SubmitToStaffWorkbench();
         dispute.test();
+
+        approveAndOpenInProcessingState(driver);
 
         SubmitToStaffWorkbenchCancel cancel = new SubmitToStaffWorkbenchCancel();
         cancel.cancelRequest(driverWait, driver);
@@ -90,6 +93,49 @@ public class SubmitToStaffWorkbenchCancel {
                         .presenceOfElementLocated(By.xpath("//*[contains(text(), '" + DisputeTicketOptionsPickerByMail.getUser() + "')]")))
                 .click();
 
+    }
+
+    public void approveAndOpenInProcessingState(WebDriver driver) throws Exception {
+
+
+        Thread.sleep(5000);
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions
+                        .presenceOfElementLocated(By.xpath("//*[contains(text(), ' Approve and submit to ARC ')]")))
+                .click();
+
+        Thread.sleep(3000);
+
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions
+                        .presenceOfElementLocated(By.xpath("//*[contains(text(), ' Approve and send request ')]")))
+                .click();
+
+        Thread.sleep(3000);
+
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions
+                        .presenceOfElementLocated(By.xpath("//mat-select")))
+                .click();
+
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions
+                        .presenceOfElementLocated(By.xpath("//mat-option//span[contains(text(), 'PROCESSING')]")))
+                .click();
+
+        new WebDriverWait(driver, Duration.ofSeconds(50))
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td/span[contains(text(), 'PROCESSING')]")));
+
+//		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("ticketNumber")));
+//		element.sendKeys(TICKET_NUMBER);
+
+//		new WebDriverWait(driver, Duration.ofSeconds(50)).until(ExpectedConditions.presenceOfElementLocated(
+//				By.xpath("//*[contains(text(), '" + IMAGE_TICKET_NAME + "')]")));
+
+        new WebDriverWait(driver, Duration.ofSeconds(30))
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath(
+                        "//a[contains(text(), '" + E_TICKET_NUMBER + "')]")))
+                .click();
     }
 
 }

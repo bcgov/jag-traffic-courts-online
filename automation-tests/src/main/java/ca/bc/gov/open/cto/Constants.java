@@ -40,4 +40,5 @@ public class Constants {
 	public static final String CONTACT_NAME_XPATH = "//input[@formcontrolname='contact_given_names']";
 	public static final String CONTACT_SURNAME_XPATH = "//input[@formcontrolname='contact_surname']";
 	public static final String FINE_REDUCTION_REASON_XPATH = "//input[@formcontrolname='fine_reduction_reason']";
+	public static final String TIME_TO_PAY_REASON_XPATH = "//input[@formcontrolname='time_to_pay_reason']";
 }
