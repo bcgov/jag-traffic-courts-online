@@ -2,6 +2,8 @@ package ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.ords;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -16,7 +18,6 @@ import ca.bc.gov.open.jag.tco.oracledataapi.mapper.AuditLogEntryMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.FileHistory;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.AuditLogEntryApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
-import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.AuditLogEntryListResponse;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.AuditLogEntryResponseResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.FileHistoryRepository;
 import net.logstash.logback.argument.StructuredArguments;
@@ -37,33 +38,47 @@ public class FileHistoryRepositoryImpl implements FileHistoryRepository{
 		this.occamAuditLogEntryApi = auditLogEntryApi;
 		this.tcoAuditLogEntryApi = tcoAuditLogEntryApi;
 	}
-
+	
+	
 	@Override
 	public List<FileHistory> findByTicketNumber(String ticketNumber) {
-		
-		List<FileHistory> fileHistoriesToReturn = new ArrayList<FileHistory>();
+	    List<FileHistory> fileHistoriesToReturn = new ArrayList<>();
 
-		AuditLogEntryListResponse occamResponse = occamAuditLogEntryApi.v1AuditLogEntryListGet(ticketNumber);
-		
-		if (occamResponse != null && !occamResponse.getAuditLogEntries().isEmpty()) {
-			logger.debug("Successfully returned occam audit log entries from ORDS");
+	    // Fetch audit log entries in parallel
+	    CompletableFuture<ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.AuditLogEntryListResponse> occamFuture = CompletableFuture.supplyAsync(() -> 
+	        occamAuditLogEntryApi.v1AuditLogEntryListGet(ticketNumber)
+	    );
+	    
+	    CompletableFuture<ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.AuditLogEntryListResponse> tcoFuture = CompletableFuture.supplyAsync(() -> 
+	        tcoAuditLogEntryApi.v1AuditLogEntryListGet(ticketNumber)
+	    );
 
-			fileHistoriesToReturn = occamResponse.getAuditLogEntries().stream()
-					.map(auditLog -> AuditLogEntryMapper.INSTANCE.convert(auditLog))
-					.collect(Collectors.toList());
-		}
-		
-		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.AuditLogEntryListResponse tcoResponse = tcoAuditLogEntryApi.v1AuditLogEntryListGet(ticketNumber);
-		
-		if (tcoResponse != null && !tcoResponse.getAuditLogEntries().isEmpty()) {
-			logger.debug("Successfully returned tco audit log entries from ORDS");
+	    try {
+	        // Wait for both responses to complete
+	        ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.AuditLogEntryListResponse occamResponse = occamFuture.get();
+	        ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.AuditLogEntryListResponse tcoResponse = tcoFuture.get();
 
-			fileHistoriesToReturn = tcoResponse.getAuditLogEntries().stream()
-					.map(auditLog -> AuditLogEntryMapper.INSTANCE.convert(auditLog))
-					.collect(Collectors.toList());
-		}
+	        // Process occamResponse
+	        if (occamResponse != null && !occamResponse.getAuditLogEntries().isEmpty()) {
+	            List<FileHistory> occamFileHistories = occamResponse.getAuditLogEntries().stream()
+	                .map(auditLog -> AuditLogEntryMapper.INSTANCE.convert(auditLog))
+	                .collect(Collectors.toList());
+	            fileHistoriesToReturn.addAll(occamFileHistories);
+	        }
 
-		return fileHistoriesToReturn;
+	        // Process tcoResponse
+	        if (tcoResponse != null && !tcoResponse.getAuditLogEntries().isEmpty()) {
+	            List<FileHistory> tcoFileHistories = tcoResponse.getAuditLogEntries().stream()
+	                .map(auditLog -> AuditLogEntryMapper.INSTANCE.convert(auditLog))
+	                .collect(Collectors.toList());
+	            fileHistoriesToReturn.addAll(tcoFileHistories);
+	        }
+
+	    } catch (InterruptedException | ExecutionException | ApiException | ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.handler.ApiException e) {
+	    	logger.error("Error fetching audit log entries for ticket number: " + ticketNumber, e);
+	    }
+	    
+	    return fileHistoriesToReturn;
 	}
 
 	@Override
@@ -72,7 +87,7 @@ public class FileHistoryRepositoryImpl implements FileHistoryRepository{
 			throw new IllegalArgumentException("FileHistory body is null.");
 		}
 		
-		if (fileHistory.determineSchema().equals("OCCAM")) {
+		if ("OCCAM".equals(fileHistory.determineSchema())) {
 			ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.AuditLogEntry auditLogEntry = AuditLogEntryMapper.INSTANCE.convertToOccamAuditLogEntry(fileHistory);
 			try {
 				AuditLogEntryResponseResult result = assertNoExceptions(() -> occamAuditLogEntryApi.v1ProcessAuditLogEntryPost(auditLogEntry));
