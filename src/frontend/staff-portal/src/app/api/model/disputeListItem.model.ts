@@ -36,6 +36,7 @@ export interface DisputeListItem {
     violationDate?: string | null;
     jjDisputeStatus?: DisputeListItemJjDisputeStatus;
     jjAssignedTo?: string | null;
+    decisionMadeBy?: string | null;
     jjDecisionDate?: string | null;
     courtAgenId?: string | null;
     additionalProperties?: { [key: string]: any; } | null;

@@ -1144,6 +1144,8 @@ components:
           type: string
         jj_assigned_to:
           type: string
+        most_recent_decision_made_by:
+          type: string
         jj_decision_dt:
           type: string
           format: date-time

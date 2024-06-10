@@ -65,6 +65,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		String emailAddress = "someone@somewhere.com";
 		String fineReductionReasonTxt = "just because";
 		String jjAssignedTo = "jjAssignedTo";
+		String decisionMadeBy = "jjSomeone";
 		Date jjDecisionDt = RandomUtil.randomDate();
 		String justinRccId = "12345";
 		Date icbcReceivedDt = RandomUtil.randomDate();
@@ -130,6 +131,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		source.setEmailAddressTxt(emailAddress);
 		source.setFineReductionReasonTxt(fineReductionReasonTxt);
 		source.setJjAssignedTo(jjAssignedTo);
+		source.setDecisionMadeBy(decisionMadeBy);
 		source.setJjDecisionDt(jjDecisionDt);
 		source.setJustinRccId(justinRccId);
 		source.setIcbcReceivedDt(icbcReceivedDt);
@@ -190,6 +192,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(emailAddress, target.getEmailAddress());
 		assertEquals(fineReductionReasonTxt, target.getFineReductionReason());
 		assertEquals(jjAssignedTo, target.getJjAssignedTo());
+		assertEquals(decisionMadeBy, target.getDecisionMadeBy());
 		assertEquals(jjDecisionDt, target.getJjDecisionDate());
 		assertEquals(justinRccId, target.getJustinRccId());
 		assertEquals(icbcReceivedDt, target.getIcbcReceivedDate());

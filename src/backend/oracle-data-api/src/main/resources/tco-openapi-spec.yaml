@@ -524,6 +524,9 @@ components:
         jjAssignedTo:
           type: string
           format: nullable
+        decisionMadeBy:
+          type: string
+          format: nullable
         jjDecisionDt:
           type: string
           format: date-time

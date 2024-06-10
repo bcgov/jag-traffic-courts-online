@@ -162,6 +162,9 @@ namespace TrafficCourts.Domain.Models
         [Newtonsoft.Json.JsonProperty("jjAssignedTo", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string JjAssignedTo { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("decisionMadeBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string DecisionMadeBy { get; set; }
+
         [Newtonsoft.Json.JsonProperty("jjDecisionDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTimeOffset? JjDecisionDate { get; set; }
 
@@ -1351,6 +1354,9 @@ namespace TrafficCourts.Domain.Models
 
         [Newtonsoft.Json.JsonProperty("jjAssignedTo", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string JjAssignedTo { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("decisionMadeBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string DecisionMadeBy { get; set; }
 
         [Newtonsoft.Json.JsonProperty("jjDecisionDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTimeOffset? JjDecisionDate { get; set; }

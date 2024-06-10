@@ -157,6 +157,7 @@ public abstract class DisputeMapper extends BaseMapper {
 	@Mapping(source = "violationDt", target = "violationDate")
 	@Mapping(source = "tcoDisputeStatus", target = "jjDisputeStatus", qualifiedByName="mapJJDisputeStatus")
 	@Mapping(source = "jjAssignedTo", target = "jjAssignedTo")
+	@Mapping(source = "mostRecentDecisionMadeBy", target = "decisionMadeBy")
 	@Mapping(source = "jjDecisionDt", target = "jjDecisionDate")
 	@Mapping(source = "courtAgenId", target = "courtAgenId")
 	public abstract DisputeListItem convertDisputeListItemDtoToDisputeListItem (ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.DisputeListItem disputeListItemDto);
