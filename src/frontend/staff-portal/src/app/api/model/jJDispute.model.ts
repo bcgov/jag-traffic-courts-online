@@ -70,6 +70,7 @@ export interface JJDispute {
     courthouseLocation?: string | null;
     offenceLocation?: string | null;
     jjAssignedTo?: string | null;
+    decisionMadeBy?: string | null;
     jjDecisionDate?: string | null;
     vtcAssignedTo?: string | null;
     vtcAssignedTs?: string | null;

@@ -5464,6 +5464,10 @@
             "type": "string",
             "nullable": true
           },
+          "decisionMadeBy": {
+            "type": "string",
+            "nullable": true
+          },
           "jjDecisionDate": {
             "type": "string",
             "format": "date-time",
@@ -6287,6 +6291,10 @@
             "nullable": true
           },
           "jjAssignedTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "decisionMadeBy": {
             "type": "string",
             "nullable": true
           },
