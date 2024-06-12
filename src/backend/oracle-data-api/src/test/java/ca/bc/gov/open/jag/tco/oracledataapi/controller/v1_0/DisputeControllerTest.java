@@ -217,12 +217,13 @@ class DisputeControllerTest extends BaseTestSuite {
 	public void testCancelDispute_400() throws Exception {
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
+		dispute.setStatus(DisputeStatus.PROCESSING);		
 		Long disputeId = saveDispute(dispute);
 
 		// Retrieve it from the controller's endpoint
 		dispute = getDispute(disputeId, true);
 		assertEquals(disputeId, dispute.getDisputeId());
-		assertEquals(DisputeStatus.NEW, dispute.getStatus());
+		assertEquals(DisputeStatus.PROCESSING, dispute.getStatus());
 
 		// try using an empty reason (should fail with 400 error)
 		cancelDispute(disputeId, "")
