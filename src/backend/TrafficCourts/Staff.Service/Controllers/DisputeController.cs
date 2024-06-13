@@ -251,7 +251,7 @@ public class DisputeController : StaffControllerBase
     /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires dispute:reject permission.</response>
     /// <response code="404">Dispute record not found. Update failed.</response>
-    /// <response code="405">A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, VALIDATED or REJECTED and the rejected reason must be &lt;= 256 characters. Update failed.</response>
+    /// <response code="405">A Dispute status can only be set to REJECTED iff status is NEW, VALIDATED or PROCESSING and the rejected reason must be &lt;= 256 characters. Update failed.</response>
     /// <response code="409">The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("{disputeId}/reject")]
@@ -372,7 +372,7 @@ public class DisputeController : StaffControllerBase
     /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires dispute:cancel permission.</response>
     /// <response code="404">Dispute record not found. Update failed.</response>
-    /// <response code="405">A Dispute status can only be set to CANCELLED iff status is NEW, VALIDATED, REJECTED or PROCESSING.Update failed.</response>
+    /// <response code="405">A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING.Update failed.</response>
     /// <response code="409">The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("{disputeId}/cancel")]
@@ -486,7 +486,7 @@ public class DisputeController : StaffControllerBase
     /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires dispute:submit permission.</response>
     /// <response code="404">Dispute record not found. Update failed.</response>
-    /// <response code="405">A Dispute can only be submitted if the status is NEW or is already set to PROCESSING. Update failed.</response>
+    /// <response code="405">A Dispute can only be submitted if the status is NEW or VALIDATED. Update failed.</response>
     /// <response code="409">The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("{disputeId}/submit")]
