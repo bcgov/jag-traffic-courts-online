@@ -205,7 +205,7 @@ oracle-data-api:
   pdb:
     create: true
   image:
-    tag: "2.1.7"
+    tag: "2.2.1"
     pullPolicy: Always
   env:
     "JAVA_OPTS": ""
