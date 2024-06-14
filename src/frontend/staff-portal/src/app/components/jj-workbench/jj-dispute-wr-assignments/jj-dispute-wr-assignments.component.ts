@@ -63,51 +63,11 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.getAll(this.currentTeam);
-    // override the default sortData with our custom sort function
-    this.dataSource.sortData = this.customSortData('jjAssignedTo');
   }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
     this.dataSource.sort.active = 'ticketNumber';
-  }
-
-  // custom sort function
-  customSortData(firstKey: string) {
-    let sortFunction = (items: JJDispute[], sort: MatSort): JJDispute[] => {
-      if (!sort.active || sort.direction === '') {
-        return items;
-      }
-      return this.sortDataByTwoKeys(
-        items,
-        firstKey,
-        sort.active,
-        sort.direction
-      );
-    };
-    return sortFunction;
-  }
-
-  // Compare logic
-  sortDataByTwoKeys(
-    data: JJDispute[],
-    firstKey: string,
-    secondKey: string,
-    orderBy: 'asc' | 'desc' = 'asc'
-  ) {
-    return data.sort((item1, item2) => {
-      if (((item1[firstKey] === this.valueOfUnassigned || !item1[firstKey]) && (item2[firstKey] === this.valueOfUnassigned || !item2[firstKey]))
-        || (item1[firstKey] !== this.valueOfUnassigned && item2[firstKey] !== this.valueOfUnassigned)) {
-
-        if (orderBy === 'asc' && item1[secondKey] <= item2[secondKey]) return -1;
-        if (orderBy === 'asc' && item1[secondKey] > item2[secondKey]) return 1;
-        if (orderBy === 'desc' && item1[secondKey] < item2[secondKey]) return 1;
-        if (orderBy === 'desc' && item1[secondKey] < item2[secondKey]) return -1;
-      }
-      let firstKeyResult = 1;
-      if (item1[firstKey] == this.valueOfUnassigned || !item1[firstKey]) firstKeyResult = -1;
-      return firstKeyResult;
-    });
   }
 
   backWorkbench(element) {
@@ -161,10 +121,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
     });
 
     this.dataSource.data = this.data;
-    this.dataSource.sort = this.sort;
-
     this.resetCounts();
-
     this.filterByTeam(team); // initialize
   }
 
