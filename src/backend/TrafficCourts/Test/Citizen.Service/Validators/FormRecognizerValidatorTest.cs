@@ -196,5 +196,28 @@ public class FormRecognizerValidatorTest
         Assert.Equal(" some_text ", violationTicket.Fields[OcrViolationTicket.HearingLocation].Value);
         Assert.Equal(" some_text ", violationTicket.Fields[OcrViolationTicket.ViolationTicketTitle].Value);
     }    
+
+    // Given a Violation Ticket with a count that has a Ticket Amount field with a trailing hyphen, ensure the hyphen is removed
+    [Fact]
+    public async void TestSanitize_TicketAmountStripHyphens()
+    {
+        // Given
+        var _statuteLookupService = new Mock<IStatuteLookupService>();
+        var _logger = new Mock<ILogger<FormRecognizerValidator>>();
+        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
+
+        OcrViolationTicket violationTicket = new();
+        violationTicket.Fields.Add(OcrViolationTicket.Count1TicketAmount, new Field("10 0-"));
+        violationTicket.Fields.Add(OcrViolationTicket.Count2TicketAmount, new Field("2-22-"));
+        violationTicket.Fields.Add(OcrViolationTicket.Count3TicketAmount, new Field("-3 33"));
+
+        // When
+        await formRecognizerValidator.SanitizeAsync(violationTicket);
+
+        // Then
+        Assert.Equal("100", violationTicket.Fields[OcrViolationTicket.Count1TicketAmount].Value);
+        Assert.Equal("222", violationTicket.Fields[OcrViolationTicket.Count2TicketAmount].Value);
+        Assert.Equal("333", violationTicket.Fields[OcrViolationTicket.Count3TicketAmount].Value);
+    }
     
 }
