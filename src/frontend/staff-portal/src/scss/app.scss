@@ -111,3 +111,19 @@ table td {
   display: flex;
   align-items: center;
 }
+
+::-webkit-scrollbar {
+  width: 1rem;
+  height: 1rem;
+}
+
+::-webkit-scrollbar-track {
+  background: none;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 1rem;
+  background-color: #38598a;
+  background-clip: content-box;
+  border: .25rem solid transparent;
+}

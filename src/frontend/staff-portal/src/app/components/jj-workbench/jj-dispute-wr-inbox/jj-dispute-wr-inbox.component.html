@@ -1,9 +1,9 @@
-<h3><b>Violation Ticket Inbox</b> ({{data.length}} results)</h3>
-<div class="row" style="overflow: auto;">
+<div class="overflow-auto">
+  <h3><b>Violation Ticket Inbox</b> ({{data.length}} results)</h3>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
     <ng-container matColumnDef="ticketNumber">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        &nbsp;&nbsp;VT NUMBER
+        <span class="text-start">VT NUMBER</span>
       </th>
       <td mat-cell *matCellDef="let element">&nbsp;&nbsp;
         <span *ngIf="element.isEditable"><a (click)="backWorkbench(element)" href="javascript:void(0)">{{
@@ -14,7 +14,7 @@
 
     <ng-container matColumnDef="submittedTs">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        SUBMITTED DATE
+        <span class="text-start">SUBMITTED DATE</span>
       </th>
       <td mat-cell *matCellDef="let element">
         <span>{{ element.submittedTs | date: "dd-MMM-yyyy" }}</span>
@@ -23,7 +23,7 @@
 
     <ng-container matColumnDef="violationDate">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        VIOLATION DATE
+        <span class="text-start">VIOLATION DATE</span>
       </th>
       <td mat-cell *matCellDef="let element">
         <span>{{ element.violationDate | date: "dd-MMM-yyyy" }}</span>
@@ -32,7 +32,7 @@
 
     <ng-container matColumnDef="occamDisputantName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        SURNAME, GIVEN NAME(S)
+        <span class="text-start">SURNAME, GIVEN NAME(S)</span>
       </th>
       <td mat-cell *matCellDef="let element">
         <span>{{ element.occamDisputantName }}</span>
@@ -41,7 +41,7 @@
 
     <ng-container matColumnDef="courthouseLocation">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        COURT HOUSE
+        <span class="text-start">COURT HOUSE</span>
       </th>
       <td mat-cell *matCellDef="let element">
         <span>{{ element.courthouseLocation }}</span>
@@ -50,7 +50,7 @@
 
     <ng-container matColumnDef="policeDetachment">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        ENFORCEMENT AGENCY
+        <span class="text-start">ENFORCEMENT AGENCY</span>
       </th>
       <td mat-cell *matCellDef="let element">
         <span>{{ element.policeDetachment }}</span>
@@ -58,10 +58,10 @@
     </ng-container>
 
     <ng-container matColumnDef="accidentYn">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="centerColumn">
-        Accident
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <span class="text-start">Accident</span>
       </th>
-      <td mat-cell *matCellDef="let element" class="centerColumn">
+      <td mat-cell *matCellDef="let element">
         <mat-checkbox [checked]="element.accidentYn === Accident.Y"
           [disabled]="true"></mat-checkbox>
       </td>
@@ -69,7 +69,7 @@
 
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        STATUS
+        <span class="text-start">STATUS</span>
       </th>
       <td mat-cell *matCellDef="let element">
         <span *ngIf="element.status==='NEW'"><button mat-rounded-button
