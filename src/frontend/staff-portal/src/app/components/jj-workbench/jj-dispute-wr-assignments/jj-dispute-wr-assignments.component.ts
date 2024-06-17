@@ -32,11 +32,11 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   dataSource: MatTableDataSource<JJDispute> = new MatTableDataSource();
   displayedColumns: string[] = [
     "assignedIcon",
-    "jjAssignedTo",
+    "jjAssignedToName",
     "bulkAssign",
     "ticketNumber",
     "submittedTs",
-    "occamDisputantName",
+    "occamDisputantSurnameNm",
     "courthouseLocation",
     "policeDetachment",
     "timeToPayReason",
@@ -68,6 +68,14 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
     this.dataSource.sort.active = 'ticketNumber';
+
+    // custom sorting on columns
+    this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: string): string => {
+      if (typeof data[sortHeaderId] === 'string') {
+        return data[sortHeaderId].toLocaleLowerCase();
+      }    
+      return data[sortHeaderId];
+    };
   }
 
   backWorkbench(element) {
