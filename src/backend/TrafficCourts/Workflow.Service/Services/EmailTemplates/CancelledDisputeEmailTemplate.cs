@@ -13,9 +13,11 @@ public class CancelledDisputeEmailTemplate : EmailTemplate<DisputeCancelled>, IC
             To = data.Email,
             Subject = $"Ticket Dispute for {data.TicketNumber} cancelled.",
             TextContent = $@"
-Your ticket has been canceled and will no longer be disputed.
+This is to advise you that your online dispute for ticket {data.TicketNumber} has been cancelled.
+The staff member who reviewed your dispute has provided the following message:
+    {data.Reason}
 
-If you need more help, contact the {ViolationTicketCentreContact}."
+Do not reply to this email. If you have any questions, please email Courts.TCO@gov.bc.ca."
         };
 
         return email;
