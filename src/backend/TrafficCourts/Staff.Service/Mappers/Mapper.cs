@@ -185,11 +185,14 @@ public class Mapper
 
     public static DisputeCancelled ToDisputeCancelled(Dispute dispute)
     {
-        DisputeCancelled disputeCancelled = new();
-        disputeCancelled.Id = dispute.DisputeId;
-        disputeCancelled.Email = dispute.EmailAddress;
-        disputeCancelled.TicketNumber = dispute.TicketNumber;
-        disputeCancelled.NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid);
+        DisputeCancelled disputeCancelled = new()
+        {
+            Id = dispute.DisputeId,
+            Email = dispute.EmailAddress,
+            TicketNumber = dispute.TicketNumber,
+            NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid),
+            Reason = dispute.RejectedReason,
+        };        
         return disputeCancelled;
     }
 }
