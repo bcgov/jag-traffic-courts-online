@@ -28,7 +28,7 @@
   </div>
   <div class="overflow-auto">
     <table mat-table [dataSource]="dataSource" matSort>
-      <ng-container matColumnDef="jjAssignedTo">
+      <ng-container matColumnDef="jjAssignedToName">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           <span class="text-start">ASSIGNED TO</span>
         </th>
@@ -84,7 +84,7 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="duration">
+      <ng-container matColumnDef="mostRecentCourtAppearance.duration">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           <span class="text-start">DURATION (min)</span>
         </th>
@@ -93,7 +93,7 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="room">
+      <ng-container matColumnDef="mostRecentCourtAppearance.room">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           <span class="text-start">COURT ROOM</span>
         </th>

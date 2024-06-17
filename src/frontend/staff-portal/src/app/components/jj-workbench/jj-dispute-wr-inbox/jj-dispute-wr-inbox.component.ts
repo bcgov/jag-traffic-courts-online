@@ -30,7 +30,7 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
     "ticketNumber",
     "submittedTs",
     "violationDate",
-    "occamDisputantName",
+    "occamDisputantSurnameNm",
     "courthouseLocation",
     "policeDetachment",
     "accidentYn",
@@ -62,6 +62,14 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
+
+    // custom sorting on columns
+    this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: string): string => {
+      if (typeof data[sortHeaderId] === 'string') {
+        return data[sortHeaderId].toLocaleLowerCase();
+      }    
+      return data[sortHeaderId];
+    };
   }
 
   backWorkbench(element) {
