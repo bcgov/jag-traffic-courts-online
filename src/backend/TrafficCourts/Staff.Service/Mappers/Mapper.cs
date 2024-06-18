@@ -183,7 +183,7 @@ public class Mapper
         return fileHistoryRecord;
     }
 
-    public static DisputeCancelled ToDisputeCancelled(Dispute dispute)
+    public static DisputeCancelled ToDisputeCancelled(Dispute dispute, string cancelledReason)
     {
         DisputeCancelled disputeCancelled = new()
         {
@@ -191,7 +191,7 @@ public class Mapper
             Email = dispute.EmailAddress,
             TicketNumber = dispute.TicketNumber,
             NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid),
-            Reason = dispute.RejectedReason,
+            Reason = cancelledReason,
         };        
         return disputeCancelled;
     }
