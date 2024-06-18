@@ -285,7 +285,7 @@ public class DisputeService : IDisputeService,
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         // Publish cancel event (consumer(s) will generate email, etc)
-        DisputeCancelled cancelledEvent = Mapper.ToDisputeCancelled(dispute);
+        DisputeCancelled cancelledEvent = Mapper.ToDisputeCancelled(dispute, cancelledReason);
         await _bus. PublishWithLog(_logger, cancelledEvent, cancellationToken);
     }
 
