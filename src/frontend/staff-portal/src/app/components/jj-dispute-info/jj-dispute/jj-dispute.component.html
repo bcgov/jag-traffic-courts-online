@@ -78,34 +78,11 @@
           <div style="display: grid; grid-template-columns: auto auto auto auto">
             <span class="section-grid-cell">
               <p class="section-grid-header">{{ "label.surname" | translate }}</p>
-              <p class="section-grid-text" *ngIf="!isSSEditMode">{{ lastUpdatedJJDispute.occamDisputantSurnameNm }}</p>
-              <mat-form-field appearance="outline" *ngIf="isSSEditMode">
-                <input matInput formControlName="occamDisputantSurnameNm">
-                <mat-error *ngIf="ticketInformationForm.controls.occamDisputantSurnameNm.hasError('maxlength')">{{
-                  "error.max_length" | translate }}30</mat-error>
-              </mat-form-field>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.disputantSurname }}</p>
             </span>
             <span class="section-grid-cell">
-              <p class="section-grid-header" *ngIf="!isSSEditMode">{{ "label.given_names" | translate }}</p>
-              <p class="section-grid-text" *ngIf="!isSSEditMode">{{ lastUpdatedJJDispute.occamDisputantGivenNames }}</p>
-              <p class="section-grid-header" *ngIf="isSSEditMode">{{ "label.given_name_1" | translate }}</p>
-              <mat-form-field appearance="outline" *ngIf="isSSEditMode">
-                <input matInput formControlName="occamDisputantGiven1Nm">
-                <mat-error *ngIf="ticketInformationForm.controls.occamDisputantGiven1Nm.hasError('maxlength')">{{
-                  "error.max_length" | translate }}30</mat-error>
-              </mat-form-field>
-              <p class="section-grid-header" *ngIf="isSSEditMode">{{ "label.given_name_2" | translate }}</p>
-              <mat-form-field appearance="outline" *ngIf="isSSEditMode">
-                <input matInput formControlName="occamDisputantGiven2Nm">
-                <mat-error *ngIf="ticketInformationForm.controls.occamDisputantGiven2Nm.hasError('maxlength')">{{
-                  "error.max_length" | translate }}30</mat-error>
-              </mat-form-field>
-              <p class="section-grid-header" *ngIf="isSSEditMode">{{ "label.given_name_3" | translate }}</p>
-              <mat-form-field appearance="outline" *ngIf="isSSEditMode">
-                <input matInput formControlName="occamDisputantGiven3Nm">
-                <mat-error *ngIf="ticketInformationForm.controls.occamDisputantGiven3Nm.hasError('maxlength')">{{
-                  "error.max_length" | translate }}30</mat-error>
-              </mat-form-field>
+              <p class="section-grid-header">{{ "label.given_names" | translate }}</p>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.ticketDisputantGivenNames }}</p>
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Date of Birth</p>
