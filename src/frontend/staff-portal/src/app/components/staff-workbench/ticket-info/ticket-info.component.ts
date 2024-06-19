@@ -705,7 +705,7 @@ export class TicketInfoComponent implements OnInit {
           delete tempDispute.violationTicket.violationTicketImage;
 
           // udate the reason entered, cancel dispute and return to TRM home since this will be filtered out
-          this.disputeService.cancelDispute(this.lastUpdatedDispute.disputeId, action.output.response).subscribe({
+          this.disputeService.cancelDispute(this.lastUpdatedDispute.disputeId, action.output.reason).subscribe({
             next: response => {
               this.lastUpdatedDispute.status = this.DispStatus.Cancelled;
               this.lastUpdatedDispute.rejectedReason = action.output.reason;
