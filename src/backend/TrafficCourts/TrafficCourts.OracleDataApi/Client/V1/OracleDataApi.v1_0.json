@@ -82,8 +82,8 @@
               }
             }
           },
-          "405": {
-            "description": "An invalid JJ Dispute status is provided. Update failed.",
+          "404": {
+            "description": "JJDispute record not found. Update failed.",
             "content": {
               "*/*": {
                 "schema": {
@@ -180,8 +180,8 @@
               }
             }
           },
-          "405": {
-            "description": "A JJDispute status can only be set to REVIEW if status is CONFIRMED and the remark must be \u003C= 256 characters OR if the status ACCEPTED, CONFIRMED or CONCLUDED and DCF's current hearing date = today's date. Update failed.",
+          "404": {
+            "description": "JJDispute record not found. Update failed.",
             "content": {
               "*/*": {
                 "schema": {
@@ -261,8 +261,8 @@
               }
             }
           },
-          "405": {
-            "description": "A JJDispute status can only be set to REQUIRE_COURT_HEARING iff status is one of the following: NEW, IN_PROGRESS, REVIEW, REQUIRE_COURT_HEARING and the remark must be \u003C= 256 characters. Update failed.",
+          "404": {
+            "description": "JJDispute record not found. Update failed.",
             "content": {
               "*/*": {
                 "schema": {
@@ -332,8 +332,8 @@
               }
             }
           },
-          "405": {
-            "description": "A JJDispute status can only be set to CONFIRMED iff status is one of the following: REVIEW, NEW, HEARING_SCHEDULED, IN_PROGRESS, CONFIRMED. Update failed.",
+          "404": {
+            "description": "JJDispute record not found. Update failed.",
             "content": {
               "*/*": {
                 "schema": {
@@ -411,8 +411,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "JJDispute record not found. Update failed.",
             "content": {
               "*/*": {
                 "schema": {
@@ -500,8 +500,8 @@
               }
             }
           },
-          "405": {
-            "description": "An invalid JJ Dispute status is provided. Update failed.",
+          "404": {
+            "description": "JJDispute record not found. Update failed.",
             "content": {
               "*/*": {
                 "schema": {
@@ -579,8 +579,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "JJDispute record not found. Update failed.",
             "content": {
               "*/*": {
                 "schema": {
@@ -667,8 +667,8 @@
               }
             }
           },
-          "405": {
-            "description": "A JJDispute status can only be set to ACCEPTED iff status is CONFIRMED. Update failed.",
+          "404": {
+            "description": "JJDispute record not found. Update failed.",
             "content": {
               "*/*": {
                 "schema": {
@@ -749,8 +749,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "JJDispute record(s) not found. Update failed.",
             "content": {
               "*/*": {
                 "schema": {
@@ -824,8 +824,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": {
               "*/*": {
                 "schema": {
@@ -904,8 +904,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Dispute record not found. Delete failed.",
             "content": {
               "*/*": {
                 "schema": {
@@ -969,8 +969,8 @@
               }
             }
           },
-          "405": {
-            "description": "A Dispute status can only be set to VALIDATED iff status is NEW. Update failed.",
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": {
               "*/*": {
                 "schema": {
@@ -1051,8 +1051,8 @@
               }
             }
           },
-          "405": {
-            "description": "A Dispute status can only be set to PROCESSING iff status is NEW or VALIDATED. Update failed.",
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": {
               "*/*": {
                 "schema": {
@@ -1145,8 +1145,8 @@
               }
             }
           },
-          "405": {
-            "description": "A Dispute status can only be set to REJECTED iff status is NEW, VALIDATED or PROCESSING and the rejected reason must be \u003C= 256 characters. Update failed.",
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": {
               "*/*": {
                 "schema": {
@@ -1228,8 +1228,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Dispute with specified id not found",
             "content": {
               "*/*": {
                 "schema": {
@@ -1305,8 +1305,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Dispute with specified id not found",
             "content": {
               "*/*": {
                 "schema": {
@@ -1389,8 +1389,8 @@
               }
             }
           },
-          "405": {
-            "description": "A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING. Update failed.",
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": {
               "*/*": {
                 "schema": {
@@ -1488,8 +1488,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "DisputeUpdateRequest could not be found.",
             "content": {
               "*/*": {
                 "schema": {
@@ -1559,8 +1559,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "An invalid file history record provided. Insert failed.",
             "content": {
               "*/*": {
                 "schema": {
@@ -1631,8 +1631,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "An invalid email history record provided. Insert failed.",
             "content": {
               "*/*": {
                 "schema": {
@@ -1702,8 +1702,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": {
               "*/*": {
                 "schema": {
@@ -1785,8 +1785,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Dispute could not be found.",
             "content": {
               "*/*": {
                 "schema": {
@@ -1868,8 +1868,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": {
               "*/*": {
                 "schema": {
@@ -1950,8 +1950,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": {
               "*/*": {
                 "schema": {
@@ -2033,8 +2033,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": {
               "*/*": {
                 "schema": {
@@ -2104,8 +2104,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": {
               "*/*": {
                 "schema": {
@@ -2178,8 +2178,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": {
               "*/*": {
                 "schema": {
@@ -2274,8 +2274,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": {
               "*/*": {
                 "schema": {
@@ -2339,8 +2339,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": {
               "*/*": {
                 "schema": {
@@ -2411,8 +2411,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": {
               "*/*": {
                 "schema": {
@@ -2500,8 +2500,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": {
               "*/*": {
                 "schema": {
@@ -2615,8 +2615,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": {
               "*/*": {
                 "schema": {
@@ -2690,8 +2690,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Dispute could not be found.",
             "content": {
               "*/*": {
                 "schema": {
@@ -2752,8 +2752,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": {
               "*/*": {
                 "schema": {
@@ -2829,8 +2829,8 @@
               }
             }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": {
               "*/*": {
                 "schema": {
@@ -2916,6 +2916,26 @@
           "disputantBirthdate": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          },
+          "disputantSurname": {
+            "type": "string",
+            "description": "Surname of the disputant on violation ticket.",
+            "nullable": true
+          },
+          "disputantGivenName1": {
+            "type": "string",
+            "description": "First given name of the disputant on violation ticket.",
+            "nullable": true
+          },
+          "disputantGivenName2": {
+            "type": "string",
+            "description": "Second given name of the disputant on violation ticket.",
+            "nullable": true
+          },
+          "disputantGivenName3": {
+            "type": "string",
+            "description": "Third given name of the disputant on violation ticket.",
             "nullable": true
           },
           "driversLicenceNumber": {
