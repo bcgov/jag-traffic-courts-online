@@ -336,16 +336,13 @@ export class ViolationTicketService {
         this.router.navigate([AppRoutes.ticketPath(AppRoutes.SUMMARY)], {
           queryParams: params,
         });
-      } else if (dateDiff > 30 && this.ticketType === TicketTypes.HANDWRITTEN_TICKET) {
-        let errMsg = "Issued " + dateDiff.toString() + "days ago on " + this.ocrTicket?.fields["service_date"].value.toString();
+      } else if (dateDiff > 30 && this.ticketType === TicketTypes.HANDWRITTEN_TICKET) {        
         this.logger.error("ViolationTicketService::goToInitiateResolution ticket too old has occurred", dateDiff);
         this.openInValidHandwrittenTicketDateDialog();
       } else if (dateDiff > 30 && this.ticketType === TicketTypes.ELECTRONIC_TICKET) {
-        let errMsg = "Issued " + dateDiff.toString() + "days ago on " + this.ticket.issued_date.toString();
         this.logger.error("ViolationTicketService::goToInitiateResolution ticket too old has occurred", dateDiff);
         this.openInValidETicketDateDialog();
       } else if (dateDiff > 45 && this.ticketType === TicketTypes.CAMERA_TICKET) {
-        let errMsg = "Issued " + dateDiff.toString() + "days ago on " + this.ticket.issued_date.toString();
         this.logger.error("ViolationTicketService::goToInitiateResolution ticket too old has occurred", dateDiff);
         this.openInValidISCTicketDateDialog();
       }
