@@ -330,28 +330,21 @@ export class ViolationTicketService {
         dateDiff = this.dateDiff(this.ocrTicket?.fields["service_date"].value);
       }
       // handwritten tickets are additionally checked in the analyze ticket API but cheked again here for <=30 days
-      // e-tickets can be <=30 days and camera tickets <=45
-      // TODO:  temporarily turned off checking dates for e-tickets for testing needs to be turned bacxk on by uncommenting next two lines
-      // and deleting following two lines AND uncommenting lines for electronic ticket erorr check and camera ticket error check below
-      // if ((dateDiff <= 30 && (this.ticketType === TicketTypes.ELECTRONIC_TICKET || this.ticketType === TicketTypes.HANDWRITTEN_TICKET))
-      // || (dateDiff <= 45 && this.ticketType === TicketTypes.CAMERA_TICKET)) {
-      if ((dateDiff <= 30 && this.ticketType === TicketTypes.HANDWRITTEN_TICKET)
-        || this.ticketType === TicketTypes.ELECTRONIC_TICKET || this.ticketType === TicketTypes.CAMERA_TICKET) {
+      // e-tickets can be <=30 days and camera tickets <=45      
+      if ((dateDiff <= 30 && (this.ticketType === TicketTypes.ELECTRONIC_TICKET || this.ticketType === TicketTypes.HANDWRITTEN_TICKET))
+      || (dateDiff <= 45 && this.ticketType === TicketTypes.CAMERA_TICKET)) {
         this.router.navigate([AppRoutes.ticketPath(AppRoutes.SUMMARY)], {
           queryParams: params,
         });
-      } else if (dateDiff > 30 && this.ticketType === TicketTypes.HANDWRITTEN_TICKET) {
-        let errMsg = "Issued " + dateDiff.toString() + "days ago on " + this.ocrTicket?.fields["service_date"].value.toString();
+      } else if (dateDiff > 30 && this.ticketType === TicketTypes.HANDWRITTEN_TICKET) {        
         this.logger.error("ViolationTicketService::goToInitiateResolution ticket too old has occurred", dateDiff);
         this.openInValidHandwrittenTicketDateDialog();
-      // } else if (dateDiff > 30 && this.ticketType === TicketTypes.ELECTRONIC_TICKET) {
-      //   let errMsg = "Issued " + dateDiff.toString() + "days ago on " + this.ticket.issued_date.toString();
-      //   this.logger.error("ViolationTicketService::goToInitiateResolution ticket too old has occurred", dateDiff);
-      //   this.openInValidETicketDateDialog();
-      // } else if (dateDiff > 45 && this.ticketType === TicketTypes.CAMERA_TICKET) {
-      //   let errMsg = "Issued " + dateDiff.toString() + "days ago on " + this.ticket.issued_date.toString();
-      //   this.logger.error("ViolationTicketService::goToInitiateResolution ticket too old has occurred", dateDiff);
-      //   this.openInValidISCTicketDateDialog();
+      } else if (dateDiff > 30 && this.ticketType === TicketTypes.ELECTRONIC_TICKET) {
+        this.logger.error("ViolationTicketService::goToInitiateResolution ticket too old has occurred", dateDiff);
+        this.openInValidETicketDateDialog();
+      } else if (dateDiff > 45 && this.ticketType === TicketTypes.CAMERA_TICKET) {
+        this.logger.error("ViolationTicketService::goToInitiateResolution ticket too old has occurred", dateDiff);
+        this.openInValidISCTicketDateDialog();
       }
     } else {
       this.goToFind();
