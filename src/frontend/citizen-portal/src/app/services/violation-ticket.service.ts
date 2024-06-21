@@ -461,11 +461,11 @@ export class ViolationTicketService {
   }
 
   private openInValidETicketDateDialog() {
-    return this.openImageTicketNotFoundDialog(`Your ticket is over 30 days old`, "error5");
+    return this.openImageTicketNotFoundDialog(`Your ticket is past the allowable dispute time period`, "error5");
   }
 
   private openInValidISCTicketDateDialog() {
-    return this.openImageTicketNotFoundDialog(`Your ticket is over 45 days old`, "error6");
+    return this.openImageTicketNotFoundDialog(`Your ticket is past the allowable dispute time period`, "error6");
   }
 
   private dateDiff(givenDate: string) {
