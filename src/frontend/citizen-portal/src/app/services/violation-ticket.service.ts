@@ -330,22 +330,19 @@ export class ViolationTicketService {
         dateDiff = this.dateDiff(this.ocrTicket?.fields["service_date"].value);
       }
       // handwritten tickets are additionally checked in the analyze ticket API but cheked again here for <=30 days
-      // e-tickets can be <=30 days and camera tickets <=45
+      // e-tickets can be <=30 days and camera tickets <=45      
       if ((dateDiff <= 30 && (this.ticketType === TicketTypes.ELECTRONIC_TICKET || this.ticketType === TicketTypes.HANDWRITTEN_TICKET))
-        || (dateDiff <= 45 && this.ticketType === TicketTypes.CAMERA_TICKET)) {
+      || (dateDiff <= 45 && this.ticketType === TicketTypes.CAMERA_TICKET)) {
         this.router.navigate([AppRoutes.ticketPath(AppRoutes.SUMMARY)], {
           queryParams: params,
         });
-      } else if (dateDiff > 30 && this.ticketType === TicketTypes.HANDWRITTEN_TICKET) {
-        let errMsg = "Issued " + dateDiff.toString() + "days ago on " + this.ocrTicket?.fields["service_date"].value.toString();
+      } else if (dateDiff > 30 && this.ticketType === TicketTypes.HANDWRITTEN_TICKET) {        
         this.logger.error("ViolationTicketService::goToInitiateResolution ticket too old has occurred", dateDiff);
         this.openInValidHandwrittenTicketDateDialog();
       } else if (dateDiff > 30 && this.ticketType === TicketTypes.ELECTRONIC_TICKET) {
-        let errMsg = "Issued " + dateDiff.toString() + "days ago on " + this.ticket.issued_date.toString();
         this.logger.error("ViolationTicketService::goToInitiateResolution ticket too old has occurred", dateDiff);
         this.openInValidETicketDateDialog();
       } else if (dateDiff > 45 && this.ticketType === TicketTypes.CAMERA_TICKET) {
-        let errMsg = "Issued " + dateDiff.toString() + "days ago on " + this.ticket.issued_date.toString();
         this.logger.error("ViolationTicketService::goToInitiateResolution ticket too old has occurred", dateDiff);
         this.openInValidISCTicketDateDialog();
       }
@@ -465,11 +462,11 @@ export class ViolationTicketService {
   }
 
   private openInValidETicketDateDialog() {
-    return this.openImageTicketNotFoundDialog(`Your ticket is over 30 days old`, "error5");
+    return this.openImageTicketNotFoundDialog(`Your ticket is past the allowable dispute time period`, "error5");
   }
 
   private openInValidISCTicketDateDialog() {
-    return this.openImageTicketNotFoundDialog(`Your ticket is over 45 days old`, "error6");
+    return this.openImageTicketNotFoundDialog(`Your ticket is past the allowable dispute time period`, "error6");
   }
 
   private dateDiff(givenDate: string) {
