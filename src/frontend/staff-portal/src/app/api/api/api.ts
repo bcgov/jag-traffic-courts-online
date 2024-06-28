@@ -14,4 +14,6 @@ export * from './keycloak.service';
 import { KeycloakService } from './keycloak.service';
 export * from './lookup.service';
 import { LookupService } from './lookup.service';
-export const APIS = [DisputeService, DisputeLockService, DocumentService, EmailHistoryService, FileHistoryService, JJService, KeycloakService, LookupService];
+export * from './permissions.service';
+import { PermissionsService } from './permissions.service';
+export const APIS = [DisputeService, DisputeLockService, DocumentService, EmailHistoryService, FileHistoryService, JJService, KeycloakService, LookupService, PermissionsService];

@@ -73,6 +73,7 @@ export * from './language.model';
 export * from './lock.model';
 export * from './ocrViolationTicket.model';
 export * from './pagedDisputeListItemCollection.model';
+export * from './permission.model';
 export * from './point.model';
 export * from './problemDetails.model';
 export * from './province.model';

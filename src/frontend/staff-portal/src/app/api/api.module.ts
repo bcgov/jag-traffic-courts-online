@@ -10,6 +10,7 @@ import { FileHistoryService } from './api/fileHistory.service';
 import { JJService } from './api/jJ.service';
 import { KeycloakService } from './api/keycloak.service';
 import { LookupService } from './api/lookup.service';
+import { PermissionsService } from './api/permissions.service';
 
 @NgModule({
   imports:      [],

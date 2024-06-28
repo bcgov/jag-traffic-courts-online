@@ -44,6 +44,10 @@ export interface JJDispute {
     addressProvince?: string | null;
     addressCountry?: string | null;
     addressPostalCode?: string | null;
+    disputantSurname?: string | null;
+    disputantGivenName1?: string | null;
+    disputantGivenName2?: string | null;
+    disputantGivenName3?: string | null;
     disputantBirthdate?: string | null;
     driversLicenceNumber?: string | null;
     drvLicIssuedProvSeqNo?: string | null;
