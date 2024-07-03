@@ -12,13 +12,13 @@ public class TcoDisputeTicketController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IArcFileService _arcFileService;
-    private readonly ILogger _logger;
+    private readonly ILogger<TcoDisputeTicketController> _logger;
 
     // Assign the object in the constructor for dependency injection
     public TcoDisputeTicketController(
         IMapper mapper, 
         IArcFileService arcFileService,
-        ILogger logger)
+        ILogger<TcoDisputeTicketController> logger)
     {
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _arcFileService = arcFileService ?? throw new ArgumentNullException(nameof(arcFileService));
