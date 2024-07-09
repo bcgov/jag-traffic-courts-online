@@ -1,4 +1,4 @@
-import { Component, OnChanges, ViewChild, Input, OnDestroy } from '@angular/core';
+import { Component, ViewChild, Input, OnDestroy } from '@angular/core';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { MatSort } from '@angular/material/sort';
 import { FileHistory, JJDisputeRemark } from 'app/api';
@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './jj-dispute-remarks.component.html',
   styleUrls: ['./jj-dispute-remarks.component.scss'],
 })
-export class JJDisputeRemarksComponent implements OnChanges, OnDestroy {
+export class JJDisputeRemarksComponent implements OnDestroy {
   @Input() data: JJDisputeRemark[];
   @ViewChild(MatSort) sort = new MatSort();
 
@@ -30,10 +30,6 @@ export class JJDisputeRemarksComponent implements OnChanges, OnDestroy {
     }));
   }
 
-  ngOnChanges(): void {
-    this.refreshData();
-  }
-
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
@@ -43,11 +39,13 @@ export class JJDisputeRemarksComponent implements OnChanges, OnDestroy {
   refreshData(): void {
     // Add ticket validation saving remarks
     this.historyRecordService.FileHistories?.filter(i => i.auditLogEntryType === "FRMK").forEach((fileHistory: FileHistory) => {
-      this.data.push(<JJDisputeRemark>{
-        createdTs: fileHistory.createdTs,
-        userFullName: fileHistory.actionByApplicationUser,
-        note: fileHistory.comment
-      })
+      if(this.data){
+        this.data.push(<JJDisputeRemark>{
+          createdTs: fileHistory.createdTs,
+          userFullName: fileHistory.actionByApplicationUser,
+          note: fileHistory.comment
+        })
+      }      
     })
 
     this.data = this.data?.sort((a: JJDisputeRemark, b: JJDisputeRemark) => {
