@@ -39,28 +39,30 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     /// <summary>
     /// Renders the digital case file for a given dispute based on ticket number. This really should be using the tco_dispute.dispute_id.
     /// </summary>
-    public async Task<RenderedReport> PrintDigitalCaseFileAsync(string ticketNumber, string timeZoneId, CancellationToken cancellationToken)
+    public async Task<RenderedReport> PrintDigitalCaseFileAsync(string ticketNumber, string timeZoneId, DcfTemplateType type, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(ticketNumber);
         ArgumentNullException.ThrowIfNull(timeZoneId);
 
         // generate the digital case file model
         DigitalCaseFile digitalCaseFile = await GetDigitalCaseFileAsync(ticketNumber, timeZoneId, cancellationToken);
+        var json = Newtonsoft.Json.JsonConvert.SerializeObject(digitalCaseFile);
 
-        var report = await RenderReportAsync(digitalCaseFile, cancellationToken);
+        var report = await RenderReportAsync(digitalCaseFile, type, cancellationToken);
 
         return report;
     }
 
-    public async Task<RenderedReport> PrintTicketValidationViewAsync(long disputeId, string timeZoneId, CancellationToken cancellationToken)
+    public async Task<RenderedReport> PrintTicketValidationViewAsync(long disputeId, string timeZoneId, DcfTemplateType type, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(disputeId);
         ArgumentNullException.ThrowIfNull(timeZoneId);
 
         // generate the digital case file model
         DigitalCaseFile digitalCaseFile = await GetDigitalCaseFileAsync(disputeId, timeZoneId, cancellationToken);
+        var json = Newtonsoft.Json.JsonConvert.SerializeObject(digitalCaseFile);
 
-        var report = await RenderReportAsync(digitalCaseFile, cancellationToken);
+        var report = await RenderReportAsync(digitalCaseFile, type, cancellationToken);
 
         return report;
     }
@@ -92,6 +94,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         ticket.Number = dispute.ViolationTicket.TicketNumber;
         ticket.Surname = dispute.ViolationTicket.DisputantSurname;
         ticket.GivenNames = dispute.ViolationTicket.DisputantGivenNames;
+        ticket.DateOfBirth = new FormattedDateOnly(dispute.DisputantBirthdate);
         ticket.PoliceDetachment = dispute.ViolationTicket.DetachmentLocation;
         ticket.Issued = new FormattedDateTime(dispute.ViolationTicket.IssuedTs);
         ticket.Submitted = new FormattedDateOnly(dispute.SubmittedTs);
@@ -129,11 +132,16 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         switch (dispute.SignatoryType)
         {
             case DisputeSignatoryType.D:
-                writtenReasons.DisputantSignature = dispute.SignatoryName;
+                writtenReasons.SignatureType = "Disputant";
                 break;
             case DisputeSignatoryType.A:
-                writtenReasons.AgentSignature = dispute.SignatoryName;
+                writtenReasons.SignatureType = "Agent";
                 break;
+        }
+        writtenReasons.Signature = dispute.SignatoryName;
+        if (dispute.SignatoryName != null)
+        {
+            writtenReasons.SubmissionTs = new FormattedDateTime(dispute.SubmittedTs);
         }
 
         // set the counts
@@ -177,10 +185,19 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         return digitalCaseFile;
     }
 
-    private async Task<RenderedReport> RenderReportAsync(DigitalCaseFile digitalCaseFile, CancellationToken cancellationToken)
+    private async Task<RenderedReport> RenderReportAsync(DigitalCaseFile digitalCaseFile, DcfTemplateType type, CancellationToken cancellationToken)
     {
+        // get the template file name based on the type
+        string templateFileName = type switch
+        {
+            DcfTemplateType.DcfTemplate => "template_DigitalCaseFile.docx",
+            DcfTemplateType.HrDcfTemplate => "template_HR_DigitalCaseFile.docx",
+            DcfTemplateType.WrDcfTemplate => "template_WR_DigitalCaseFile.docx",
+            _ => throw new ArgumentOutOfRangeException(nameof(type), $"Not expected template type value: {type}"),
+        };
+
         // get the template
-        Stream template = GetTemplate("template_DigitalCaseFile.docx");
+        Stream template = GetTemplate(templateFileName);
         var templateType = TemplateType.Word;
 
         var convertTo = ConvertTo.Pdf;
@@ -254,6 +271,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         ticket.Number = dispute.TicketNumber;
         ticket.Surname = dispute.OccamDisputantSurnameNm;
         ticket.GivenNames = ConcatenateWithSpaces(dispute.OccamDisputantGiven1Nm, dispute.OccamDisputantGiven2Nm, dispute.OccamDisputantGiven3Nm);
+        ticket.DateOfBirth = new FormattedDateOnly(dispute.DisputantBirthdate);
         ticket.OffenceLocation = dispute.OffenceLocation;
         ticket.PoliceDetachment = dispute.PoliceDetachment;
         ticket.Issued = new FormattedDateTime(dispute.IssuedTs);
@@ -297,12 +315,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         SetFields(appearance, currentAppearance, jjDisplayName);
 
         // set the court appearance history
-        var appearanceHistory = digitalCaseFile.AppearanceHistory;
-        foreach (var rop in dispute.JjDisputeCourtAppearanceRoPs.Where(_ => _ != currentAppearance).OrderByDescending(a => a.AppearanceTs))
-        {
-            // TODO: how do we know the current appearance vs historical ones?
-            appearanceHistory.Add(SetFields(new Appearance(), rop, null));
-        }
+        SetAppearanceHistory(digitalCaseFile, dispute, currentAppearance);  
 
         // set written reasons
         var writtenReasons = digitalCaseFile.WrittenReasons;
@@ -312,11 +325,16 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         switch (dispute.SignatoryType)
         {
             case JJDisputeSignatoryType.D:
-                writtenReasons.DisputantSignature = dispute.SignatoryName;
+                writtenReasons.SignatureType = "Disputant";
                 break;
             case JJDisputeSignatoryType.A:
-                writtenReasons.AgentSignature = dispute.SignatoryName;
+                writtenReasons.SignatureType = "Agent";
                 break;
+        }
+        writtenReasons.Signature = dispute.SignatoryName;
+        if (dispute.SignatoryName != null)
+        {
+            writtenReasons.SubmissionTs = new FormattedDateTime(dispute.SubmittedTs);
         }
 
         // set the counts
@@ -811,4 +829,26 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     {
         return !(disputedCount.RevisedDueDate is null || disputedCount.RevisedDueDate == disputedCount.DueDate);
     }
+
+    private void SetAppearanceHistory(DigitalCaseFile digitalCaseFile, JJDispute dispute, JJDisputeCourtAppearanceRoP currentAppearance)
+    {
+        var appearanceHistory = digitalCaseFile.AppearanceHistory;
+
+        // Get the sorted list of court appearances, excluding the most recent one (first record after sorting)
+        var courtAppearanceHistory = dispute.JjDisputeCourtAppearanceRoPs
+                                        .Where(_ => _ != currentAppearance)
+                                        .OrderByDescending(a => a.AppearanceTs)
+                                        .ToList();
+
+        // Check if there are any court appearance history records
+        if (courtAppearanceHistory.Any())
+        {
+            digitalCaseFile.ShowAppearanceHistory = true;
+            foreach (var rop in courtAppearanceHistory)
+            {
+                appearanceHistory.Add(SetFields(new Appearance(), rop, null));
+            }
+        }
+    }
+
 }
