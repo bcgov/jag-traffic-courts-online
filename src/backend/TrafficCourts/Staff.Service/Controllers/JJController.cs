@@ -10,6 +10,7 @@ using TrafficCourts.Common.Errors;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.Exceptions;
 using TrafficCourts.Staff.Service.Authentication;
+using TrafficCourts.Staff.Service.Models.DigitalCaseFiles.Print;
 using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
@@ -1012,6 +1013,7 @@ public partial class JJController : StaffControllerBase
     /// </summary>
     /// <param name="ticketNumber">The ticket number to print. This really should be using the tco_dispute.dispute_id</param>
     /// <param name="timeZone">The IANA timze zone id</param>
+    /// <param name="type">The type of template to generate</param>
     /// <param name="cancellationToken"></param>
     /// <response code="200">Generated Document.</response>
     /// <response code="400">The </response>
@@ -1025,7 +1027,7 @@ public partial class JJController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
-    public async Task<IActionResult> PrintDisputeAsync([Required] string ticketNumber, [Required] string timeZone, CancellationToken cancellationToken)
+    public async Task<IActionResult> PrintDisputeAsync([Required] string ticketNumber, [Required] string timeZone, DcfTemplateType type, CancellationToken cancellationToken)
     {
         // TODO: can we use model binding to validate the timezone?
         if (!TimeZoneInfo.TryFindSystemTimeZoneById(timeZone, out TimeZoneInfo? timeZoneInfo))

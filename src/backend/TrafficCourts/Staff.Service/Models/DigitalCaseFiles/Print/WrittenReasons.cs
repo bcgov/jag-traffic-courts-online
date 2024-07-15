@@ -10,9 +10,12 @@ public class WrittenReasons
     [JsonProperty("timeToPay")]
     public string TimeToPay { get; set; } = string.Empty;
 
-    [JsonProperty("disputantSignature")]
-    public string DisputantSignature { get; set; } = string.Empty;
+    [JsonProperty("signature")]
+    public string Signature { get; set; } = string.Empty;
 
-    [JsonProperty("agentSignature")]
-    public string AgentSignature { get; set; } = string.Empty;
+    [JsonProperty("signatureType")]
+    public string SignatureType { get; set; } = string.Empty;
+
+    [JsonProperty("submissionTs")]
+    public FormattedDateTime SubmissionTs { get; set; } = FormattedDateTime.Empty;
 }
