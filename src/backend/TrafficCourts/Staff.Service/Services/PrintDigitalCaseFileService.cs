@@ -121,6 +121,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         contact.DriversLicence.Province = driversLicenceProvince?.ProvAbbreviationCd ?? string.Empty;
         contact.DriversLicence.Number = dispute.DriversLicenceNumber;
         contact.Email = dispute.EmailAddress;
+        contact.PhoneNumber = dispute.HomePhoneNumber ?? dispute.WorkPhoneNumber;
 
         // set written reasons
         var writtenReasons = digitalCaseFile.WrittenReasons;
@@ -264,8 +265,8 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         // set the ticket information
         var ticket = digitalCaseFile.Ticket;
         ticket.Number = dispute.TicketNumber;
-        ticket.Surname = dispute.OccamDisputantSurnameNm;
-        ticket.GivenNames = ConcatenateWithSpaces(dispute.OccamDisputantGiven1Nm, dispute.OccamDisputantGiven2Nm, dispute.OccamDisputantGiven3Nm);
+        ticket.Surname = dispute.DisputantSurname;
+        ticket.GivenNames = ConcatenateWithSpaces(dispute.DisputantGivenName1, dispute.DisputantGivenName2, dispute.DisputantGivenName3);
         ticket.DateOfBirth = new FormattedDateOnly(dispute.DisputantBirthdate);
         ticket.OffenceLocation = dispute.OffenceLocation;
         ticket.PoliceDetachment = dispute.PoliceDetachment;
@@ -288,6 +289,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         contact.DriversLicence.Province = driversLicenceProvince?.ProvAbbreviationCd ?? string.Empty;
         contact.DriversLicence.Number = dispute.DriversLicenceNumber;
         contact.Email = dispute.EmailAddress;
+        contact.PhoneNumber = dispute.OccamDisputantPhoneNumber;
 
         // set the court options
         var options = digitalCaseFile.CourtOptions;

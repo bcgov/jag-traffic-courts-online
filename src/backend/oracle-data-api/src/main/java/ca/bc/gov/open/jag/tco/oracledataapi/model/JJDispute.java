@@ -185,6 +185,12 @@ public class JJDispute extends Auditable<String> {
 	@Column(length = 30)
 	@Schema(nullable = true)
 	private String occamDisputantSurnameNm;
+	
+	/**
+	 * Disputant's home or work phone number provided on submission.
+	 */
+	@Schema(description = "Disputant's home or work phone number provided on submission.", nullable = true)
+	private String occamDisputantPhoneNumber;
 
 	@Schema(nullable = false)
 	private Long occamDisputeId;
