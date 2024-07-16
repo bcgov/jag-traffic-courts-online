@@ -462,6 +462,10 @@ export class JJCountComponent implements OnInit, OnChanges {
     this.form.controls.latestPleaUpdateTs.setValue(this.datePipe.transform(new Date(value), "YYYY-MM-dd HH:mm"));
   }
 
+  isEmpty(value) {
+    return (value == null || (typeof value === "string" && value.trim().length === 0));
+  }
+
 }
 
 
