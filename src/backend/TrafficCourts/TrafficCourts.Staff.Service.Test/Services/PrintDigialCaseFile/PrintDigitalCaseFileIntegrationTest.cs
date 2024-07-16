@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NSubstitute;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -88,7 +89,9 @@ namespace TrafficCourts.Staff.Service.Test.Services.PrintDigialCaseFile
 
             _mapper.Map<JJDispute>(oracle).Returns(jjDispute);
 
-            Models.DigitalCaseFiles.Print.DigitalCaseFile dcf = await _sut.GetDigitalCaseFileAsync("EA03148599", "Pacific Standard Time", CancellationToken.None);
+            TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+
+            Models.DigitalCaseFiles.Print.DigitalCaseFile dcf = await _sut.GetDigitalCaseFileAsync("EA03148599", timeZone, CancellationToken.None);
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(dcf);
 
             Assert.True(true);
@@ -106,7 +109,9 @@ namespace TrafficCourts.Staff.Service.Test.Services.PrintDigialCaseFile
 
             _mapper.Map<Dispute>(oracle).Returns(dispute);
 
-            Models.DigitalCaseFiles.Print.DigitalCaseFile dcf = await _sut.GetDigitalCaseFileAsync(3354, "Pacific Standard Time", CancellationToken.None);
+            TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+
+            Models.DigitalCaseFiles.Print.DigitalCaseFile dcf = await _sut.GetDigitalCaseFileAsync(3354, timeZone, CancellationToken.None);
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(dcf);
 
             Assert.True(true);
