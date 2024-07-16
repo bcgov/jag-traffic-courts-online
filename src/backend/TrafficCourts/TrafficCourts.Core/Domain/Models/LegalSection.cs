@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace TrafficCourts.Common
+namespace TrafficCourts.Domain.Models
 {
     /// <summary>
     /// Represents a Legistics Paragraphing.

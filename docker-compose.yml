@@ -88,6 +88,7 @@ services:
       SERILOG__WRITETO__0__ARGS__THEME: Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console
       SERILOG__WRITETO__0__NAME: Console
       SERILOG__MINIMUMLEVEL__DEFAULT: ${SERILOG__MINIMUMLEVEL__DEFAULT:-Information} 
+      TICKETSEARCH__SEARCHTYPE: ${TICKETSEARCH__SEARCHTYPE:-Mock}
       CDOGS__CLIENTID: ${CDOGS__CLIENTID:-cdogs}
       CDOGS__CLIENTSECRET: ${CDOGS__CLIENTSECRET:-}
       CDOGS__ENDPOINT: ${CDOGS__ENDPOINT:-https://cdogs-dev.api.gov.bc.ca/api}
