@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
@@ -1019,7 +1019,6 @@ public partial class JJController : StaffControllerBase
     /// <response code="403">Forbidden.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A generated document</returns>
-    [AllowAnonymous]
     [HttpGet("{ticketNumber}/print")]
     [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK, "application/octet-stream")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -1028,11 +1027,17 @@ public partial class JJController : StaffControllerBase
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
     public async Task<IActionResult> PrintDisputeAsync([Required] string ticketNumber, [Required] string timeZone, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Rendering print version of dispute {ticketNumber} in timezone {timeZone}. This really should be using the tco_dispute.dispute_id", ticketNumber, timeZone);
+        // TODO: can we use model binding to validate the timezone?
+        if (!TimeZoneInfo.TryFindSystemTimeZoneById(timeZone, out TimeZoneInfo? timeZoneInfo))
+        {
+            return BadRequest("Invalid time zone. Time zone must be a valid IANA or Windows time zone id.");
+        }
+
+        _logger.LogDebug("Rendering print version of dispute {ticketNumber} in timezone {timeZone}. This really should be using the tco_dispute.dispute_id", ticketNumber, timeZoneInfo);
 
         try
         {
-            RenderedReport report = await _printService.PrintDigitalCaseFileAsync(ticketNumber, timeZone, cancellationToken);
+            RenderedReport report = await _printService.PrintDigitalCaseFileAsync(ticketNumber, timeZoneInfo, type, cancellationToken);
             return File(report.Content, "application/pdf", report.ReportName);
         }
         catch (Exception e)
