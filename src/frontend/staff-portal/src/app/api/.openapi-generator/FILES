@@ -54,6 +54,7 @@ model/fileHistory.model.ts
 model/fileHistoryAuditLogEntryType.model.ts
 model/fileMetadata.model.ts
 model/getDisputeCountResponse.model.ts
+model/icbcNameDetail.model.ts
 model/jJDispute.model.ts
 model/jJDisputeAccidentYn.model.ts
 model/jJDisputeAppearInCourt.model.ts

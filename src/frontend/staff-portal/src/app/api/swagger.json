@@ -722,7 +722,7 @@
             }
           },
           "405": {
-            "description": "A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, VALIDATED or REJECTED and the rejected reason must be \u003C= 256 characters. Update failed.",
+            "description": "A Dispute status can only be set to REJECTED iff status is NEW, VALIDATED or PROCESSING and the rejected reason must be <= 256 characters. Update failed.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -1062,7 +1062,7 @@
             }
           },
           "405": {
-            "description": "A Dispute status can only be set to CANCELLED iff status is NEW, VALIDATED, REJECTED or PROCESSING.Update failed.",
+            "description": "A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING.Update failed.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -1315,7 +1315,7 @@
             }
           },
           "405": {
-            "description": "A Dispute can only be submitted if the status is NEW or is already set to PROCESSING. Update failed.",
+            "description": "A Dispute can only be submitted if the status is NEW or VALIDATED. Update failed.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4798,6 +4798,32 @@
           }
         }
       }
+    },
+    "/api/permissions": {
+      "get": {
+        "tags": [
+          "Permissions"
+        ],
+        "operationId": "TrafficCourtsStaffServiceFeaturesPermissionsPermissionsEndpoint",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Permission"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -4929,9 +4955,7 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": {
-
-            },
+            "additionalProperties": { },
             "nullable": true
           }
         },
@@ -4946,6 +4970,9 @@
               "$ref": "#/components/schemas/FileMetadata"
             },
             "nullable": true
+          },
+          "icbcName": {
+            "$ref": "#/components/schemas/IcbcNameDetail"
           },
           "createdBy": {
             "type": "string",
@@ -5266,9 +5293,7 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": {
-
-            },
+            "additionalProperties": { },
             "nullable": true
           }
         },
@@ -5331,9 +5356,7 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": {
-
-            },
+            "additionalProperties": { },
             "nullable": true
           }
         },
@@ -5479,9 +5502,7 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": {
-
-            },
+            "additionalProperties": { },
             "nullable": true
           }
         },
@@ -5641,9 +5662,7 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": {
-
-            },
+            "additionalProperties": { },
             "nullable": true
           }
         },
@@ -5848,9 +5867,7 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": {
-
-            },
+            "additionalProperties": { },
             "nullable": true
           }
         },
@@ -5893,9 +5910,7 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": {
-
-            },
+            "additionalProperties": { },
             "nullable": true
           }
         },
@@ -5982,9 +5997,7 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": {
-
-            },
+            "additionalProperties": { },
             "nullable": true
           }
         },
@@ -6111,6 +6124,24 @@
         },
         "additionalProperties": false
       },
+      "IcbcNameDetail": {
+        "type": "object",
+        "properties": {
+          "surname": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstGivenName": {
+            "type": "string",
+            "nullable": true
+          },
+          "secondGivenName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "JJDispute": {
         "type": "object",
         "properties": {
@@ -6187,6 +6218,22 @@
             "nullable": true
           },
           "addressPostalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputantSurname": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputantGivenName1": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputantGivenName2": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputantGivenName3": {
             "type": "string",
             "nullable": true
           },
@@ -6422,9 +6469,7 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": {
-
-            },
+            "additionalProperties": { },
             "nullable": true
           }
         },
@@ -6522,9 +6567,7 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": {
-
-            },
+            "additionalProperties": { },
             "nullable": true
           }
         },
@@ -6648,9 +6691,7 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": {
-
-            },
+            "additionalProperties": { },
             "nullable": true
           }
         },
@@ -6779,9 +6820,7 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": {
-
-            },
+            "additionalProperties": { },
             "nullable": true
           }
         },
@@ -6919,9 +6958,7 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": {
-
-            },
+            "additionalProperties": { },
             "nullable": true
           }
         },
@@ -7096,6 +7133,22 @@
         },
         "additionalProperties": false
       },
+      "Permission": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The permission name.",
+            "nullable": true
+          },
+          "has": {
+            "type": "boolean",
+            "description": "A flag indicating if the user has this permission."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a single permission."
+      },
       "Point": {
         "type": "object",
         "properties": {
@@ -7135,9 +7188,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": {
-
-        }
+        "additionalProperties": { }
       },
       "Province": {
         "type": "object",
@@ -7178,9 +7229,7 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": {
-
-            },
+            "additionalProperties": { },
             "nullable": true
           }
         },
@@ -7263,9 +7312,7 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": {
-
-            },
+            "additionalProperties": { },
             "nullable": true
           }
         },
@@ -7310,9 +7357,7 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": {
-
-            },
+            "additionalProperties": { },
             "nullable": true
           }
         },
@@ -7469,9 +7514,7 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": {
-
-            },
+            "additionalProperties": { },
             "nullable": true
           }
         },
@@ -7622,9 +7665,7 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": {
-
-            },
+            "additionalProperties": { },
             "nullable": true
           },
           "violationTicketImage": {
@@ -7711,9 +7752,7 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": {
-
-            },
+            "additionalProperties": { },
             "nullable": true
           }
         },
@@ -7801,7 +7840,7 @@
   },
   "security": [
     {
-      "Bearer": []
+      "Bearer": [ ]
     }
   ]
 }
