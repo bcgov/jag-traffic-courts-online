@@ -38,6 +38,7 @@ export * from './fileHistory.model';
 export * from './fileHistoryAuditLogEntryType.model';
 export * from './fileMetadata.model';
 export * from './getDisputeCountResponse.model';
+export * from './icbcNameDetail.model';
 export * from './jJDispute.model';
 export * from './jJDisputeAccidentYn.model';
 export * from './jJDisputeAppearInCourt.model';
