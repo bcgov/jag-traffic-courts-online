@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+  ,using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -643,7 +643,6 @@ public class DisputeController : StaffControllerBase
     /// <response code="403">Forbidden.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A generated document</returns>
-    [AllowAnonymous]
     [HttpGet("{disputeId}/print")]
     [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK, "application/octet-stream")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -652,11 +651,17 @@ public class DisputeController : StaffControllerBase
     [KeycloakAuthorize(Resources.Dispute, Scopes.Read)]
     public async Task<IActionResult> PrintDisputeAsync([Required] long disputeId, [Required] string timeZone, DcfTemplateType type, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Rendering print version of ticket validation view for dispute {disputeId} in timezone {timeZone}.", disputeId, timeZone);
+        // TODO: can we use model binding to validate the timezone?
+        if (!TimeZoneInfo.TryFindSystemTimeZoneById(timeZone, out TimeZoneInfo? timeZoneInfo))
+        {
+            return BadRequest("Invalid time zone. Time zone must be a valid IANA or Windows time zone id.");
+        }
+
+        _logger.LogDebug("Rendering print version of ticket validation view for dispute {disputeId} in timezone {timeZone}.", disputeId, timeZoneInfo);
 
         try
         {
-            RenderedReport report = await _printService.PrintTicketValidationViewAsync(disputeId, timeZone, type, cancellationToken);
+            RenderedReport report = await _printService.PrintTicketValidationViewAsync(disputeId, timeZoneInfo, type, cancellationToken);
             return File(report.Content, "application/pdf", report.ReportName);
         }
         catch (Exception e)
