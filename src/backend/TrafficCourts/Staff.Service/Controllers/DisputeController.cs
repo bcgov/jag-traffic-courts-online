@@ -127,7 +127,8 @@ public class DisputeController : StaffControllerBase
 
         try
         {
-            Dispute dispute = await _disputeService.GetDisputeAsync(disputeId, true, cancellationToken);
+            var options = new GetDisputeOptions { DisputeId = disputeId, Assign = true, GetNameFromIcbc = true };
+            Dispute dispute = await _disputeService.GetDisputeAsync(options, cancellationToken);
             return Ok(dispute);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -633,6 +634,8 @@ public class DisputeController : StaffControllerBase
     /// </summary>
     /// <param name="disputeId">Dispute Id</param>
     /// <param name="timeZone">The IANA timze zone id</param>
+
+    /// <param name="type">The type of template to generate</param>
     /// <param name="cancellationToken"></param>
     /// <response code="200">Generated Document.</response>
     /// <response code="400">The </response>
