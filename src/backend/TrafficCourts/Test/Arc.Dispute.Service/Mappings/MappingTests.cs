@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TrafficCourts.Arc.Dispute.Service.Mappings;
 using TrafficCourts.Arc.Dispute.Service.Models;
 using TrafficCourts.Common;
+using TrafficCourts.Domain.Models;
 using Xunit;
 
 namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
@@ -40,7 +41,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
 
             for (int i = 0; i < disputeCount; i++)
             {
-                dispute.DisputeCounts.Add(new DisputeCount { Count = i + 1 });
+                dispute.DisputeCounts.Add(new TrafficCourts.Arc.Dispute.Service.Models.DisputeCount { Count = i + 1 });
             }
 
             return dispute;

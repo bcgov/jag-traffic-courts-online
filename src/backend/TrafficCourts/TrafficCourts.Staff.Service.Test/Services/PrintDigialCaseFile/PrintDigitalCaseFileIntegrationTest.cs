@@ -16,6 +16,7 @@ using TrafficCourts.Coms.Client;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.OracleDataApi;
 using TrafficCourts.Staff.Service.Services;
+using TrafficCourts.TicketSearch;
 using Xunit;
 using ZiggyCreatures.Caching.Fusion;
 using Oracle = TrafficCourts.OracleDataApi.Client.V1;
@@ -61,6 +62,7 @@ namespace TrafficCourts.Staff.Service.Test.Services.PrintDigialCaseFile
                 Mock.Of<IAgencyLookupService>(),
                 Mock.Of<IProvinceLookupService>(),
                 mock.Object,
+                Substitute.For<ITicketSearchService>(),
                 Mock.Of<IFusionCache>(),
                 Mock.Of<ILogger<DisputeService>>());
 

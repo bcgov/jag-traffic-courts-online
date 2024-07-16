@@ -2,6 +2,7 @@
 using System.Text;
 using TrafficCourts.Arc.Dispute.Service.Models;
 using TrafficCourts.Common;
+using TrafficCourts.Domain.Models;
 
 namespace TrafficCourts.Arc.Dispute.Service.Mappings
 {

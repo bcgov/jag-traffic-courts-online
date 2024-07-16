@@ -71,6 +71,8 @@ public static class Startup
         builder.Services.AddRecyclableMemoryStreams();
         builder.Services.AddMassTransit(Diagnostics.Source.Name, builder.Configuration, logger);
 
+        builder.Services.UseTicketSearch(builder.Configuration, logger);
+
         // Render enums as strings rather than ints
         builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 

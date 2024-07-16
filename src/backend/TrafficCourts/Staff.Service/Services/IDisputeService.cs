@@ -38,6 +38,14 @@ public interface IDisputeService
     /// <exception cref="ApiException">A server side error occurred.</exception>
     Task<long> SaveDisputeAsync(Dispute dispute, CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Gets a dispute by id. Additional information is returned based on the options provided.
+    /// </summary>
+    /// <param name="options"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<Dispute> GetDisputeAsync(GetDisputeOptions options, CancellationToken cancellationToken);
+
     /// <summary>Returns a specific dispute from the database.</summary>
     /// <param name="id">Unique identifier of a Dispute record.</param>
     /// <param name="isAssign">Whether or not to assign a staff member</param>
