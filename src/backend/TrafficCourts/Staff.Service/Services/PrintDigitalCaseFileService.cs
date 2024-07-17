@@ -74,7 +74,9 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     /// <returns></returns>
     internal async Task<DigitalCaseFile> GetDigitalCaseFileAsync(long disputeId, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
-        var dispute = await _disputeService.GetDisputeAsync(disputeId, false, cancellationToken);
+        GetDisputeOptions options = new GetDisputeOptions {  DisputeId = disputeId, Assign = false };
+
+        var dispute = await _disputeService.GetDisputeAsync(options, cancellationToken);
 
         Domain.Models.Province? driversLicenceProvince = null;
         if (dispute.DriversLicenceIssuedProvinceSeqNo is not null && dispute.DriversLicenceIssuedCountryId is not null)

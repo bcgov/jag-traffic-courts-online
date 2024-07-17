@@ -1,10 +1,11 @@
 ﻿using MassTransit;
-using System.Collections.ObjectModel;
+using MediatR;
 using System.Security.Claims;
 using System.Text.Json;
 using TrafficCourts.Collections;
 using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Coms.Client;
+using TrafficCourts.Domain.Events;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.Interfaces;
 using TrafficCourts.Messaging.MessageContracts;
@@ -12,25 +13,26 @@ using TrafficCourts.Staff.Service.Caching;
 using TrafficCourts.Staff.Service.Mappers;
 using TrafficCourts.Staff.Service.Models;
 using TrafficCourts.Staff.Service.Models.Disputes;
-using OcrViolationTicket = TrafficCourts.Domain.Models.OcrViolationTicket;
-using ZiggyCreatures.Caching.Fusion;
-using MediatR;
-using TrafficCourts.Domain.Events;
 using TrafficCourts.TicketSearch;
-using Microsoft.Extensions.Logging;
-using System.Threading;
-using TrafficCourts.Staff.Service.Models.DigitalCaseFiles.Print;
+using ZiggyCreatures.Caching.Fusion;
+using OcrViolationTicket = TrafficCourts.Domain.Models.OcrViolationTicket;
 
 namespace TrafficCourts.Staff.Service.Services;
 
 public record GetDisputeOptions
 {
+    /// <summary>
+    /// The dispute to fetch.
+    /// </summary>
     public long DisputeId { get; init; }
 
+    /// <summary>
+    /// If <c>true</c> the dispute will be assigned to the current user when fetching.
+    /// </summary>
     public bool Assign { get; init; }
 
     /// <summary>
-    /// If true, the service will attempt to retrieve the Disputant's name from ICBC.
+    /// If <c>true</c>, the service will attempt to retrieve the Disputant's name from ICBC.
     /// </summary>
     public bool GetNameFromIcbc { get; init; }
 }
@@ -131,15 +133,6 @@ public class DisputeService : IDisputeService,
         await GetOcrImageAndResults(dispute, cancellationToken);
         await GetFileAttachments(dispute, cancellationToken);
         await GetIcbcTicketInformation(dispute, options, cancellationToken);
-
-        return dispute;
-    }
-
-    public async Task<Dispute> GetDisputeAsync(long disputeId, bool isAssign, CancellationToken cancellationToken)
-    {
-        var options = new GetDisputeOptions { DisputeId = disputeId, Assign = isAssign };
-
-        Dispute dispute = await GetDisputeAsync(options, cancellationToken);
 
         return dispute;
     }
