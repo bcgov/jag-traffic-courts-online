@@ -45,27 +45,25 @@
         <!-- Ticket number, violation date, time-->
         <br />
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <span class="BC-Gov-15px-black-text">Ticket #:</span>&nbsp;<span class="text">{{
               lastUpdatedDispute.ticketNumber }}</span>
           </div>
-          <div class="col-md-4">
-            <span class="BC-Gov-15px-black-text">Violation Date:</span>&nbsp;<span class="text">{{ violationDate
-              }}</span>
-          </div>
-          <div class="col-md-4">
-            <span class="BC-Gov-15px-black-text">Surname:</span>&nbsp;
-            <span *ngIf="lastUpdatedDispute.icbcName && lastUpdatedDispute.icbcName.surname" class="text">{{ lastUpdatedDispute.icbcName.surname }}</span>
-          </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             <span class="BC-Gov-15px-black-text">Ticket Type:</span>&nbsp;<span class="text">{{
               lastUpdatedDispute.ticketNumber.substring(0,1) === 'E' ? "Electronic Ticket" : "Intersection safety camera ticket" }}</span>
           </div>
-          <div class="col-md-4">
-            <span class="BC-Gov-15px-black-text">Violation Time:</span>&nbsp;<span class="text">{{ violationTime
-              }}</span>
+          <div class="col-md-3">
+            <span class="BC-Gov-15px-black-text">Violation Date:</span>&nbsp;<span class="text">{{ violationDate }}</span>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
+            <span class="BC-Gov-15px-black-text">Violation Time:</span>&nbsp;<span class="text">{{ violationTime }}</span>
+          </div>
+          <div class="col-md-3">
+            <span class="BC-Gov-15px-black-text">Surname:</span>&nbsp;
+            <span *ngIf="lastUpdatedDispute.icbcName && lastUpdatedDispute.icbcName.surname" class="text">{{ lastUpdatedDispute.icbcName.surname }}</span>
+          </div>
+          <div class="col-md-3">
             <span class="BC-Gov-15px-black-text">Given Name(s):</span>&nbsp;
             <span *ngIf="lastUpdatedDispute.icbcName && lastUpdatedDispute.icbcName.firstGivenName" class="text">{{ lastUpdatedDispute.icbcName.firstGivenName }} </span>
             <span *ngIf="lastUpdatedDispute.icbcName && lastUpdatedDispute.icbcName.secondGivenName" class="text">{{ lastUpdatedDispute.icbcName.secondGivenName }}</span>
