@@ -1,4 +1,3 @@
-  ,using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -634,7 +633,8 @@ public class DisputeController : StaffControllerBase
     /// Returns generated document.
     /// </summary>
     /// <param name="disputeId">Dispute Id</param>
-    /// <param name="timeZone">The IANA timze zone id</param>
+    /// <param name="timeZone">The IANA timze zone id</param>
+
     /// <param name="type">The type of template to generate</param>
     /// <param name="cancellationToken"></param>
     /// <response code="200">Generated Document.</response>
