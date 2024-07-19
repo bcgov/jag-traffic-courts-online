@@ -9,6 +9,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Arc.Dispute.Service\Data\statutes-test.csv" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="AutoFixture.AutoMoq" Version="4.18.1" />
 		<PackageReference Include="AutoFixture.Xunit2" Version="4.18.1" />
 		<PackageReference Include="coverlet.msbuild" Version="6.0.2">
@@ -42,6 +46,9 @@
 	</ItemGroup>
 	<ItemGroup>
 		<AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Include="Arc.Dispute.Service\Data\statutes-test.csv" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Workflow.Service\Features\" />

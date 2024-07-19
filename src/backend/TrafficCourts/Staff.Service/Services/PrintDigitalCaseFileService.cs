@@ -39,26 +39,26 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     /// <summary>
     /// Renders the digital case file for a given dispute based on ticket number. This really should be using the tco_dispute.dispute_id.
     /// </summary>
-    public async Task<RenderedReport> PrintDigitalCaseFileAsync(string ticketNumber, string timeZoneId, DcfTemplateType type, CancellationToken cancellationToken)
+    public async Task<RenderedReport> PrintDigitalCaseFileAsync(string ticketNumber, TimeZoneInfo timeZone, DcfTemplateType type, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(ticketNumber);
-        ArgumentNullException.ThrowIfNull(timeZoneId);
+        ArgumentNullException.ThrowIfNull(timeZone);
 
         // generate the digital case file model
-        DigitalCaseFile digitalCaseFile = await GetDigitalCaseFileAsync(ticketNumber, timeZoneId, cancellationToken);
+        DigitalCaseFile digitalCaseFile = await GetDigitalCaseFileAsync(ticketNumber, timeZone, cancellationToken);
 
         var report = await RenderReportAsync(digitalCaseFile, type, cancellationToken);
 
         return report;
     }
 
-    public async Task<RenderedReport> PrintTicketValidationViewAsync(long disputeId, string timeZoneId, DcfTemplateType type, CancellationToken cancellationToken)
+    public async Task<RenderedReport> PrintTicketValidationViewAsync(long disputeId, TimeZoneInfo timeZone, DcfTemplateType type, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(disputeId);
-        ArgumentNullException.ThrowIfNull(timeZoneId);
+        ArgumentNullException.ThrowIfNull(timeZone);
 
         // generate the digital case file model
-        DigitalCaseFile digitalCaseFile = await GetDigitalCaseFileAsync(disputeId, timeZoneId, cancellationToken);
+        DigitalCaseFile digitalCaseFile = await GetDigitalCaseFileAsync(disputeId, timeZone, cancellationToken);
 
         var report = await RenderReportAsync(digitalCaseFile, type, cancellationToken);
 
@@ -69,15 +69,14 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     /// Fetches the <see cref="DigitalCaseFile"/> based on OCCAM disputeId. This is for printing ticket validation view in DCF template (TCVP-2865).
     /// </summary>
     /// <param name="disputeId"></param>
-    /// <param name="timeZoneId"></param>
+    /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    internal async Task<DigitalCaseFile> GetDigitalCaseFileAsync(long disputeId, string timeZoneId, CancellationToken cancellationToken)
+    internal async Task<DigitalCaseFile> GetDigitalCaseFileAsync(long disputeId, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
-        // get the user's time zone
-        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+        GetDisputeOptions options = new GetDisputeOptions {  DisputeId = disputeId, Assign = false };
 
-        var dispute = await _disputeService.GetDisputeAsync(disputeId, false, cancellationToken);
+        var dispute = await _disputeService.GetDisputeAsync(options, cancellationToken);
 
         Domain.Models.Province? driversLicenceProvince = null;
         if (dispute.DriversLicenceIssuedProvinceSeqNo is not null && dispute.DriversLicenceIssuedCountryId is not null)
@@ -248,14 +247,11 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     /// <summary>
     /// Fetches the <see cref="DigitalCaseFile"/> based on ticket number. This really should be using the tco_dispute.dispute_id.
     /// </summary>
-    internal async Task<DigitalCaseFile> GetDigitalCaseFileAsync(string ticketNumber, string timeZoneId, CancellationToken cancellationToken)
+    internal async Task<DigitalCaseFile> GetDigitalCaseFileAsync(string ticketNumber, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
         // JavaScript: Intl.DateTimeFormat().resolvedOptions().timeZone
         // Time Zone from the browser is either a time zone identifier from the IANA Time Zone Database or a UTC offset in ISO 8601 extended format.
         // https://tc39.es/ecma402/#sec-properties-of-intl-datetimeformat-instances
-
-        // get the user's time zone
-        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
 
         var dispute = await _jjDisputeService.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
 

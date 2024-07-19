@@ -1,14 +1,12 @@
-﻿using Azure.Core.Serialization;
-using FlatFiles;
-using FlatFiles.TypeMapping;
+﻿using FlatFiles.TypeMapping;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
-using TrafficCourts.Citizen.Service.Services.Tickets.Search.Common;
-using TrafficCourts.Common;
+using TrafficCourts.TicketSearch.Common;
 
-namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock
+namespace TrafficCourts.TicketSearch.Mock
 {
     public class MockTicketSearchService : ITicketInvoiceSearchService
     {
@@ -30,7 +28,7 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock
 
         public Task<IList<Invoice>> SearchAsync(string ticketNumber, TimeOnly issuedTime, CancellationToken cancellationToken)
         {
-            using var activity = Diagnostics.Source.StartActivity("mock ticket search");
+            using var activity = TrafficCourts.TicketSearch.Instrumentation.Diagnostics.Source.StartActivity("mock ticket search");
 
             IList<Invoice> invoices = Array.Empty<Invoice>();
 
@@ -109,7 +107,7 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock
             }
 
             using var reader = new StreamReader(stream);
-            var options = new DelimitedOptions() { IsFirstRecordSchema = true };
+            var options = new FlatFiles.DelimitedOptions() { IsFirstRecordSchema = true };
             var data = mapper.Read(reader, options);
 
             // make sure there are no duplicate in invoice numbers
@@ -175,7 +173,7 @@ public static class Extensions
         mapper.Property(accessor).ColumnName(columnName);
     }
 
-    private static string GetColumnName<TEntity,TProperty>(Expression<Func<TEntity, TProperty>> accessor)
+    private static string GetColumnName<TEntity, TProperty>(Expression<Func<TEntity, TProperty>> accessor)
     {
         var memberExpression = (MemberExpression)accessor.Body;
         var jsonPropertyName = memberExpression.Member.GetCustomAttribute<System.Text.Json.Serialization.JsonPropertyNameAttribute>(false);

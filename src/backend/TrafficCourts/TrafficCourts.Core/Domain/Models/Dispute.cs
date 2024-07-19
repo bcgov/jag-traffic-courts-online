@@ -9,5 +9,8 @@ public partial class Dispute
     /// List of file metadata that contain ID and Filename of all the uploaded documents related to this particular Dispute
     /// </summary>
     public List<FileMetadata>? FileData { get; set; }
+
+    public IcbcNameDetail? IcbcName { get; set; }
 }
 
+public record IcbcNameDetail(string Surname, string FirstGivenName, string SecondGivenName);

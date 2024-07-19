@@ -60,7 +60,7 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), true, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetDisputeAsync(It.Is<GetDisputeOptions>(_ => _.DisputeId == id && _.Assign == true), It.IsAny<CancellationToken>()))
             .ReturnsAsync(dispute);
         var mockLogger = new Mock<ILogger<DisputeController>>();
         var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
@@ -85,7 +85,7 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), true, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetDisputeAsync(It.Is<GetDisputeOptions>(_ => _.DisputeId == id && _.Assign == true), It.IsAny<CancellationToken>()))
             .Throws(new TrafficCourts.Exceptions.ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
@@ -110,7 +110,7 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), true, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetDisputeAsync(It.Is<GetDisputeOptions>(_ => _.DisputeId == id && _.Assign == true), It.IsAny<CancellationToken>()))
             .Throws(new TrafficCourts.Exceptions.ApiException("msg", StatusCodes.Status404NotFound, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
@@ -349,7 +349,7 @@ public class DisputeControllerTest
         DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         disputeService
-            .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), true, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetDisputeAsync(It.Is<GetDisputeOptions>(_ => _.DisputeId == id && _.Assign == true), It.IsAny<CancellationToken>()))
             .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
 
         // Act

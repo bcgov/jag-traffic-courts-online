@@ -66,6 +66,7 @@
     <ProjectReference Include="..\TrafficCourts.Coms.Client\TrafficCourts.Coms.Client.csproj" />
     <ProjectReference Include="..\TrafficCourts.Cdogs.Client\TrafficCourts.Cdogs.Client.csproj" />
     <ProjectReference Include="..\TrafficCourts.OracleDataApi\TrafficCourts.OracleDataApi.csproj" />
+    <ProjectReference Include="..\TrafficCourts.TicketSearch\TrafficCourts.TicketSearch.csproj" />
   </ItemGroup>
 
 	<ItemGroup>

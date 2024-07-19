@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TrafficCourts.Arc.Dispute.Service.Mappings;
 using TrafficCourts.Arc.Dispute.Service.Models;
 using TrafficCourts.Common;
+using TrafficCourts.Domain.Models;
 using Xunit;
 
 namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
@@ -40,7 +41,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
 
             for (int i = 0; i < disputeCount; i++)
             {
-                dispute.DisputeCounts.Add(new DisputeCount { Count = i + 1 });
+                dispute.DisputeCounts.Add(new TrafficCourts.Arc.Dispute.Service.Models.DisputeCount { Count = i + 1 });
             }
 
             return dispute;
@@ -239,7 +240,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
         /// <param name="section"></param>
         /// <param name="description"></param>
         [Theory]
-        [CsvData(@"../../../Arc.Dispute.Service/Data/statutes-test.csv")]
+        [CsvEmbeddedResourceData("TrafficCourts.Test.Arc.Dispute.Service.Data.statutes-test.csv")]
 #pragma warning disable xUnit1026 // Theory methods should use all of their parameters
         public void can_parse_LegalSection(int code, string act, string section, string description)
 #pragma warning restore xUnit1026 // Theory methods should use all of their parameters

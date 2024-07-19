@@ -76,6 +76,7 @@ public class OracleDomainModelMappingProfile : AutoMapper.Profile
         // classes
         CreateMap<Oracle.Dispute, DomainModel.Dispute>()
             .ForMember(dest => dest.FileData, opt => opt.Ignore())
+            .ForMember(dest => dest.IcbcName, opt => opt.Ignore())
             .ReverseMap();
         CreateMap<Oracle.DisputeCount, DomainModel.DisputeCount>().ReverseMap();
         CreateMap<Oracle.DisputeListItem, DomainModel.DisputeListItem>().ReverseMap();
