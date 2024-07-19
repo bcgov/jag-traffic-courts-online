@@ -84,8 +84,11 @@ public partial class TicketSearchService : ITicketSearchService
 
         if (DateTime.TryParseExact(invoices[0].ViolationDateTime, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out DateTime violationDateTime))
         {
-            ticket.Issued = DateTime.SpecifyKind(violationDateTime, DateTimeKind.Unspecified);
+            ticket.Issued = DateTime.SpecifyKind(violationDateTime, DateTimeKind.Unspecified);            
         }
+        ticket.Surname = invoices[0].PartySurname ?? string.Empty;
+        ticket.FirstGivenName = invoices[0].PartyFirstGivenName ?? string.Empty;
+        ticket.SecondGivenName = invoices[0].PartySecondGivenName ?? string.Empty;
 
         foreach (var invoice in invoices)
         {
