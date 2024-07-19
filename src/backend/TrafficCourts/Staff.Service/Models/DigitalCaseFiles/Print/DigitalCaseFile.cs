@@ -23,6 +23,9 @@ public class DigitalCaseFile
     [JsonProperty("appearance")]
     public Appearance Appearance { get; set; } = new Appearance();
 
+    [JsonProperty("showAppearanceHistory")]
+    public bool ShowAppearanceHistory { get; set; } = false;
+
     [JsonProperty("pastAppearances")]
     public List<Appearance> AppearanceHistory { get; set; } = new List<Appearance>();
 

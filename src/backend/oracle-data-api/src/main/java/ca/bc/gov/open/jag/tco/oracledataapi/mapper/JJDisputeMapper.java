@@ -36,6 +36,7 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "detachmentLocationTxt", target = "policeDetachment")
 	@Mapping(source = "disputantBirthDt", target = "disputantBirthdate")
 	@Mapping(source = "disputantDrvLicNumberTxt", target = "driversLicenceNumber")
+	@Mapping(source = "disputantPhoneNumberTxt", target = "occamDisputantPhoneNumber")
 	@Mapping(source = "disputantSurnameTxt", target = "disputantSurname")
 	@Mapping(source = "disputantGiven1Nm", target = "disputantGivenName1")
 	@Mapping(source = "disputantGiven2Nm", target = "disputantGivenName2")
@@ -108,6 +109,7 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(target = "disputantGiven1Nm", ignore = true) // ignore back reference mapping
 	@Mapping(target = "disputantGiven2Nm", ignore = true) // ignore back reference mapping
 	@Mapping(target = "disputantGiven3Nm", ignore = true) // ignore back reference mapping
+	@Mapping(target = "disputantPhoneNumberTxt", ignore = true) // ignore back reference mapping
 	@Mapping(source = "driversLicenceNumber", target = "disputantDrvLicNumberTxt")
 	@Mapping(source = "drvLicIssuedCtryId", target = "drvLicIssuedCtryId")
 	@Mapping(source = "drvLicIssuedProvSeqNo", target = "drvLicIssuedProvSeqNo")

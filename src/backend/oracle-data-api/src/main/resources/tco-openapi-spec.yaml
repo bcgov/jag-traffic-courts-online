@@ -494,6 +494,9 @@ components:
         disputantSurnameTxt:
           type: string
           format: nullable
+        disputantPhoneNumberTxt:
+          type: string
+          format: nullable
         disputeCounts:
           type: array
           items:

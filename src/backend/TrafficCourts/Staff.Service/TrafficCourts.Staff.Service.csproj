@@ -19,6 +19,8 @@
 
   <ItemGroup>
     <None Remove="Models\DigitalCaseFiles\Print\Templates\template_DigitalCaseFile.docx" />
+    <None Remove="Models\DigitalCaseFiles\Print\Templates\template_WR_DigitalCaseFile.docx" />
+	<None Remove="Models\DigitalCaseFiles\Print\Templates\template_HR_DigitalCaseFile.docx" />
     <None Remove="Models\DigitalCaseFiles\Print\tmpFF54.pdf" />
     <None Remove="Services\RedisLua\Extend.lua" />
     <None Remove="Services\RedisLua\Unlock.lua" />

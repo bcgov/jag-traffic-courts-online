@@ -149,6 +149,12 @@ namespace TrafficCourts.Domain.Models
         [Newtonsoft.Json.JsonProperty("occamDisputantSurnameNm", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string OccamDisputantSurnameNm { get; set; }
 
+        /// <summary>
+        /// Disputant's home or work phone number provided on submission.
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("occamDisputantPhoneNumber", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OccamDisputantPhoneNumber { get; set; }
+
         [Newtonsoft.Json.JsonProperty("occamDisputeId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long OccamDisputeId { get; set; }
 

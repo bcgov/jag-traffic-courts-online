@@ -19,6 +19,9 @@ public class TicketSummary
     [JsonProperty("address")]
     public string Address { get; set; } = string.Empty;
 
+    [JsonProperty("dateOfBirth")]
+    public FormattedDateOnly DateOfBirth { get; set; } = FormattedDateOnly.Empty;
+
     [JsonProperty("issued")]
     public FormattedDateTime Issued { get; set; } = FormattedDateTime.Empty;
 
