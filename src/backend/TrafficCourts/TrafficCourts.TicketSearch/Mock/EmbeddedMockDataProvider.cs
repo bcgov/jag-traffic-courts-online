@@ -6,7 +6,7 @@ namespace TrafficCourts.TicketSearch.Mock
 {
     public class EmbeddedMockDataProvider : IMockDataProvider
     {
-        private const string mockDataPath = "Services.Tickets.Search.Mock.test-ticket-data.csv";
+        private const string mockDataPath = "Mock.test-ticket-data.csv";
         private readonly ILogger<EmbeddedMockDataProvider> _logger;
 
         public EmbeddedMockDataProvider(ILogger<EmbeddedMockDataProvider> logger)
