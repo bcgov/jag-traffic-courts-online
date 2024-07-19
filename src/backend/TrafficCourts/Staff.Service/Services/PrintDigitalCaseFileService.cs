@@ -45,7 +45,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         ArgumentNullException.ThrowIfNull(timeZone);
 
         // generate the digital case file model
-        DigitalCaseFile digitalCaseFile = await GetDigitalCaseFileAsync(ticketNumber, timeZone, type, cancellationToken);
+        DigitalCaseFile digitalCaseFile = await GetDigitalCaseFileAsync(ticketNumber, timeZone, cancellationToken);
 
         var report = await RenderReportAsync(digitalCaseFile, cancellationToken);
 
@@ -58,7 +58,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         ArgumentNullException.ThrowIfNull(timeZone);
 
         // generate the digital case file model
-        DigitalCaseFile digitalCaseFile = await GetDigitalCaseFileAsync(disputeId, timeZone, type, cancellationToken);
+        DigitalCaseFile digitalCaseFile = await GetDigitalCaseFileAsync(disputeId, timeZone, cancellationToken);
 
         var report = await RenderReportAsync(digitalCaseFile, cancellationToken);
 

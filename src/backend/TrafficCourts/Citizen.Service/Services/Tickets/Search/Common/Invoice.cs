@@ -18,6 +18,25 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Common
         [JsonPropertyName("party_name")]
         public string? PartyName { get; set; }
 
+        /// <summary>
+        /// The party's surname.
+        /// </summary>
+        [JsonPropertyName("party_surname")]
+        public string? PartySurname { get; set; }
+
+        /// <summary>
+        /// The party's first given name.
+        /// </summary>
+        [JsonPropertyName("party_given_name1")]
+        public string? PartyFirstGivenName { get; set; }
+
+        /// <summary>
+        /// The party's second given name.
+        /// </summary>
+        [JsonPropertyName("party_given_name2")]
+        public string? PartySecondGivenName { get; set; }
+
+
         [JsonPropertyName("account_number")]
         public string? AccountNumber { get; set; }
 
