@@ -234,7 +234,7 @@ staff-api:
     "MassTransit__Transport": "RabbitMq"
     "RabbitMq__UseQuorumQueues": "true"
     "COMS__BASEURL": "http://common-object-management-service:3000"
-
+    "TicketSearch__SearchType": "RoadSafety"
 staff-web:
   replicaCount: 3
   pdb:
