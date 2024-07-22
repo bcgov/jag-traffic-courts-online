@@ -21,7 +21,6 @@
           <button mat-menu-item (click)="goTo('fileHistory')">File History</button>
           <button mat-menu-item (click)="goTo('fileRemarks')">File Remarks</button>
         </mat-menu>
-        <button mat-raised-button (click)="onPrint()">Print</button>
         <button mat-raised-button [matMenuTriggerFor]="printMenu">Print Options</button>&nbsp;
         <mat-menu #printMenu="matMenu" yPosition="below">
           <button mat-menu-item (click)="onPrint(true)">Complete Version</button>

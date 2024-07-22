@@ -8,7 +8,7 @@ import { FormControlValidators } from '@core/validators/form-control.validators'
 import { Dispute, DisputeService } from '../../../services/dispute.service';
 import { CountryCodeValue, ProvinceCodeValue } from '@config/config.model';
 import { ConfigService } from '@config/config.service';
-import { DisputeContactTypeCd, ViolationTicket, ViolationTicketCount, ViolationTicketCountIsAct, ViolationTicketCountIsRegulation, DisputeStatus } from 'app/api';
+import { DisputeContactTypeCd, ViolationTicket, ViolationTicketCount, ViolationTicketCountIsAct, ViolationTicketCountIsRegulation, DisputeStatus, DcfTemplateType } from 'app/api';
 import { LookupsService, Statute } from 'app/services/lookups.service';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
@@ -895,7 +895,9 @@ export class TicketInfoComponent implements OnInit {
   }
 
   onPrint() {
-    this.disputeService.apiTicketValidationPrintGet(this.lastUpdatedDispute.disputeId).subscribe(result => {
+    var type = DcfTemplateType.DcfTemplate;
+    
+    this.disputeService.apiTicketValidationPrintGet(this.lastUpdatedDispute.disputeId, type).subscribe(result => {
       if (result) {
         var url = URL.createObjectURL(result);
         window.open(url);
