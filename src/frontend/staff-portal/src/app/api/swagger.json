@@ -722,7 +722,7 @@
             }
           },
           "405": {
-            "description": "A Dispute status can only be set to REJECTED iff status is NEW, VALIDATED or PROCESSING and the rejected reason must be <= 256 characters. Update failed.",
+            "description": "A Dispute status can only be set to REJECTED iff status is NEW, VALIDATED or PROCESSING and the rejected reason must be \u003C= 256 characters. Update failed.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -1616,6 +1616,14 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "The type of template to generate",
+            "schema": {
+              "$ref": "#/components/schemas/DcfTemplateType"
             }
           }
         ],
@@ -4496,6 +4504,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "The type of template to generate",
+            "schema": {
+              "$ref": "#/components/schemas/DcfTemplateType"
+            }
           }
         ],
         "responses": {
@@ -4955,11 +4971,21 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {
+
+            },
             "nullable": true
           }
         },
         "additionalProperties": false
+      },
+      "DcfTemplateType": {
+        "enum": [
+          "DcfTemplate",
+          "HrDcfTemplate",
+          "WrDcfTemplate"
+        ],
+        "type": "string"
       },
       "Dispute": {
         "type": "object",
@@ -5293,7 +5319,9 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {
+
+            },
             "nullable": true
           }
         },
@@ -5356,7 +5384,9 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {
+
+            },
             "nullable": true
           }
         },
@@ -5502,7 +5532,9 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {
+
+            },
             "nullable": true
           }
         },
@@ -5662,7 +5694,9 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {
+
+            },
             "nullable": true
           }
         },
@@ -5867,7 +5901,9 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {
+
+            },
             "nullable": true
           }
         },
@@ -5910,7 +5946,9 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {
+
+            },
             "nullable": true
           }
         },
@@ -5997,7 +6035,9 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {
+
+            },
             "nullable": true
           }
         },
@@ -6290,6 +6330,10 @@
             "type": "string",
             "nullable": true
           },
+          "occamDisputantPhoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
           "occamDisputeId": {
             "type": "integer",
             "format": "int64"
@@ -6469,7 +6513,9 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {
+
+            },
             "nullable": true
           }
         },
@@ -6567,7 +6613,9 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {
+
+            },
             "nullable": true
           }
         },
@@ -6691,7 +6739,9 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {
+
+            },
             "nullable": true
           }
         },
@@ -6820,7 +6870,9 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {
+
+            },
             "nullable": true
           }
         },
@@ -6958,7 +7010,9 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {
+
+            },
             "nullable": true
           }
         },
@@ -7188,7 +7242,9 @@
             "nullable": true
           }
         },
-        "additionalProperties": { }
+        "additionalProperties": {
+
+        }
       },
       "Province": {
         "type": "object",
@@ -7229,7 +7285,9 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {
+
+            },
             "nullable": true
           }
         },
@@ -7312,7 +7370,9 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {
+
+            },
             "nullable": true
           }
         },
@@ -7357,7 +7417,9 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {
+
+            },
             "nullable": true
           }
         },
@@ -7514,7 +7576,9 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {
+
+            },
             "nullable": true
           }
         },
@@ -7665,7 +7729,9 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {
+
+            },
             "nullable": true
           },
           "violationTicketImage": {
@@ -7752,7 +7818,9 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {
+
+            },
             "nullable": true
           }
         },
@@ -7840,7 +7908,7 @@
   },
   "security": [
     {
-      "Bearer": [ ]
+      "Bearer": []
     }
   ]
 }

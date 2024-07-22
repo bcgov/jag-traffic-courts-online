@@ -19,6 +19,8 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
+import { DcfTemplateType } from '../model/dcfTemplateType.model';
+// @ts-ignore
 import { DocumentType } from '../model/documentType.model';
 // @ts-ignore
 import { JJDispute } from '../model/jJDispute.model';
@@ -643,13 +645,14 @@ export class JJService {
      * Returns generated document. This really should be using the tco_dispute.dispute_id.
      * @param ticketNumber The ticket number to print. This really should be using the tco_dispute.dispute_id
      * @param timeZone The IANA timze zone id
+     * @param type The type of template to generate
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketNumberPrintGet(ticketNumber: string, timeZone: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
-    public apiJjTicketNumberPrintGet(ticketNumber: string, timeZone: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
-    public apiJjTicketNumberPrintGet(ticketNumber: string, timeZone: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
-    public apiJjTicketNumberPrintGet(ticketNumber: string, timeZone: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiJjTicketNumberPrintGet(ticketNumber: string, timeZone: string, type?: DcfTemplateType, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiJjTicketNumberPrintGet(ticketNumber: string, timeZone: string, type?: DcfTemplateType, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiJjTicketNumberPrintGet(ticketNumber: string, timeZone: string, type?: DcfTemplateType, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiJjTicketNumberPrintGet(ticketNumber: string, timeZone: string, type?: DcfTemplateType, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberPrintGet.');
         }
@@ -661,6 +664,10 @@ export class JJService {
         if (timeZone !== undefined && timeZone !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>timeZone, 'timeZone');
+        }
+        if (type !== undefined && type !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>type, 'type');
         }
 
         let localVarHeaders = this.defaultHeaders;

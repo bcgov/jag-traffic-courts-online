@@ -12,7 +12,7 @@ import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { CountryCodeValue, ProvinceCodeValue } from '@config/config.model';
-import { DisputeContactTypeCd, DisputeStatus } from 'app/api';
+import { DcfTemplateType, DisputeContactTypeCd, DisputeStatus } from 'app/api';
 
 @Component({
   selector: 'app-contact-info',
@@ -379,7 +379,9 @@ export class ContactInfoComponent implements OnInit {
   }
 
   onPrint() {
-    this.disputeService.apiTicketValidationPrintGet(this.lastUpdatedDispute.disputeId).subscribe(result => {
+    var type = DcfTemplateType.DcfTemplate;
+
+    this.disputeService.apiTicketValidationPrintGet(this.lastUpdatedDispute.disputeId, type).subscribe(result => {
       if (result) {
         var url = URL.createObjectURL(result);
         window.open(url);
