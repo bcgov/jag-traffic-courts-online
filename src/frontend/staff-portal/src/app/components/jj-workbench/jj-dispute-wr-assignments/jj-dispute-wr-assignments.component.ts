@@ -71,7 +71,9 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
 
     // custom sorting on columns
     this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: string): string => {
-      if (typeof data[sortHeaderId] === 'string') {
+      if (sortHeaderId === 'timeToPayReason'){
+        return this.getType(data);
+      } else if (typeof data[sortHeaderId] === 'string') {
         return data[sortHeaderId].toLocaleLowerCase();
       }    
       return data[sortHeaderId];

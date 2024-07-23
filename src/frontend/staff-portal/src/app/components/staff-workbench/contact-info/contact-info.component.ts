@@ -238,7 +238,7 @@ export class ContactInfoComponent implements OnInit {
       actionType: "warn",
       cancelTextKey: "Go back",
       icon: "error_outline",
-      message: this.form.get('rejectedReason').value
+      message: ""
     };
     this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
       .subscribe((action?: any) => {
@@ -269,7 +269,7 @@ export class ContactInfoComponent implements OnInit {
       actionType: "warn",
       cancelTextKey: "Go back",
       icon: "error_outline",
-      message: this.form.get('rejectedReason').value
+      message: ""
     };
     this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
       .subscribe((action?: any) => {

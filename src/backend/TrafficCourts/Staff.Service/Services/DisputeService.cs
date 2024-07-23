@@ -190,13 +190,17 @@ public class DisputeService : IDisputeService,
             GetUserName(user));
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
-        // Publish file history of cancellation email
-        fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.EMCA;
-        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
+        // Publish file history for cancelled remarks
+        SaveFileHistoryRecord fileHistoryRecordRemark = Mapper.ToFileHistoryWithNoticeOfDisputeId(
+            dispute.NoticeOfDisputeGuid,
+            FileHistoryAuditLogEntryType.FRMK,
+            GetUserName(user),
+            cancelledReason);
+        await _bus.PublishWithLog(_logger, fileHistoryRecordRemark, cancellationToken);
 
         // Publish cancel event (consumer(s) will generate email, etc)
         DisputeCancelled cancelledEvent = Mapper.ToDisputeCancelled(dispute);
-        await _bus. PublishWithLog(_logger, cancelledEvent, cancellationToken);
+        await _bus.PublishWithLog(_logger, cancelledEvent, cancellationToken);
     }
 
     public async Task RejectDisputeAsync(long disputeId, string rejectedReason, ClaimsPrincipal user, CancellationToken cancellationToken)
@@ -214,7 +218,15 @@ public class DisputeService : IDisputeService,
             GetUserName(user));
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
-        // Publish submit event (consumer(s) will generate email, etc)
+        // Publish file history for rejected remarks
+        SaveFileHistoryRecord fileHistoryRecordRemark = Mapper.ToFileHistoryWithNoticeOfDisputeId(
+            dispute.NoticeOfDisputeGuid,
+            FileHistoryAuditLogEntryType.FRMK,
+            GetUserName(user),
+            rejectedReason);
+        await _bus.PublishWithLog(_logger, fileHistoryRecordRemark, cancellationToken);
+
+        // Publish reject event (consumer(s) will generate email, etc)
         DisputeRejected rejectedEvent = Mapper.ToDisputeRejected(dispute);
         await _bus.PublishWithLog(_logger, rejectedEvent, cancellationToken);
     }
