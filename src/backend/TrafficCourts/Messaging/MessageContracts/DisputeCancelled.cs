@@ -6,5 +6,6 @@
         public string? Email { get; set; }
         public string? TicketNumber { get; set; }
         public Guid NoticeOfDisputeGuid {  get; set; }
+        public string? Reason { get; set; }
     }
 }

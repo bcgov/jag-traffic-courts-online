@@ -238,7 +238,7 @@ export class ContactInfoComponent implements OnInit {
       actionType: "warn",
       cancelTextKey: "Go back",
       icon: "error_outline",
-      message: this.form.get('rejectedReason').value
+      message: ""
     };
     this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
       .subscribe((action?: any) => {
@@ -269,7 +269,7 @@ export class ContactInfoComponent implements OnInit {
       actionType: "warn",
       cancelTextKey: "Go back",
       icon: "error_outline",
-      message: this.form.get('rejectedReason').value
+      message: ""
     };
     this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
       .subscribe((action?: any) => {
@@ -376,5 +376,16 @@ export class ContactInfoComponent implements OnInit {
 
   public handleCollapse(name: string) {
     this.collapseObj[name] = !this.collapseObj[name]
+  }
+
+  onPrint() {
+    this.disputeService.apiTicketValidationPrintGet(this.lastUpdatedDispute.disputeId).subscribe(result => {
+      if (result) {
+        var url = URL.createObjectURL(result);
+        window.open(url);
+      } else {
+        alert("File contents not found");
+      }
+    });
   }
 }

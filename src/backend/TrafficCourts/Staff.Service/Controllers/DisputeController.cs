@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using TrafficCourts.Cdogs.Client;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
 using TrafficCourts.Domain.Models;
@@ -9,24 +11,26 @@ using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Models;
 using TrafficCourts.Staff.Service.Models.Disputes;
 using TrafficCourts.Staff.Service.Services;
-using X.PagedList;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
 public class DisputeController : StaffControllerBase
 {
     private readonly IDisputeService _disputeService;
+    private readonly IPrintDigitalCaseFileService _printService;
     private readonly ILogger<DisputeController> _logger;
 
     /// <summary>
     /// Default Constructor
     /// </summary>
     /// <param name="disputeService"></param>
+    /// <param name="printService"></param>
     /// <param name="logger"></param>
     /// <exception cref="ArgumentNullException"><paramref name="logger"/> is null.</exception>
-    public DisputeController(IDisputeService disputeService, ILogger<DisputeController> logger)
+    public DisputeController(IDisputeService disputeService, IPrintDigitalCaseFileService printService, ILogger<DisputeController> logger)
     {
         _disputeService = disputeService ?? throw new ArgumentNullException(nameof(disputeService));
+        _printService = printService ?? throw new ArgumentNullException(nameof(printService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -247,7 +251,7 @@ public class DisputeController : StaffControllerBase
     /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires dispute:reject permission.</response>
     /// <response code="404">Dispute record not found. Update failed.</response>
-    /// <response code="405">A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, VALIDATED or REJECTED and the rejected reason must be &lt;= 256 characters. Update failed.</response>
+    /// <response code="405">A Dispute status can only be set to REJECTED iff status is NEW, VALIDATED or PROCESSING and the rejected reason must be &lt;= 256 characters. Update failed.</response>
     /// <response code="409">The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("{disputeId}/reject")]
@@ -368,7 +372,7 @@ public class DisputeController : StaffControllerBase
     /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires dispute:cancel permission.</response>
     /// <response code="404">Dispute record not found. Update failed.</response>
-    /// <response code="405">A Dispute status can only be set to CANCELLED iff status is NEW, VALIDATED, REJECTED or PROCESSING.Update failed.</response>
+    /// <response code="405">A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING.Update failed.</response>
     /// <response code="409">The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("{disputeId}/cancel")]
@@ -482,7 +486,7 @@ public class DisputeController : StaffControllerBase
     /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires dispute:submit permission.</response>
     /// <response code="404">Dispute record not found. Update failed.</response>
-    /// <response code="405">A Dispute can only be submitted if the status is NEW or is already set to PROCESSING. Update failed.</response>
+    /// <response code="405">A Dispute can only be submitted if the status is NEW or VALIDATED. Update failed.</response>
     /// <response code="409">The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("{disputeId}/submit")]
@@ -620,6 +624,41 @@ public class DisputeController : StaffControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Error retrieving Dispute update requests for a dispute from oracle-data-api");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Returns generated document.
+    /// </summary>
+    /// <param name="disputeId">Dispute Id</param>
+    /// <param name="timeZone">The IANA timze zone id</param>
+    /// <param name="cancellationToken"></param>
+    /// <response code="200">Generated Document.</response>
+    /// <response code="400">The </response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
+    /// <response code="403">Forbidden.</response>
+    /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
+    /// <returns>A generated document</returns>
+    [AllowAnonymous]
+    [HttpGet("{disputeId}/print")]
+    [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK, "application/octet-stream")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.Dispute, Scopes.Read)]
+    public async Task<IActionResult> PrintDisputeAsync([Required] long disputeId, [Required] string timeZone, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Rendering print version of ticket validation view for dispute {disputeId} in timezone {timeZone}.", disputeId, timeZone);
+
+        try
+        {
+            RenderedReport report = await _printService.PrintTicketValidationViewAsync(disputeId, timeZone, cancellationToken);
+            return File(report.Content, "application/pdf", report.ReportName);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error when generating print version of dispute");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }

@@ -31,7 +31,7 @@
         Signed By
       </th>
       <td mat-cell *matCellDef="let element">
-        <span>{{ element.jjAssignedToName }}</span>
+        <span>{{ element.decisionMadeBy }}</span>
       </td>
     </ng-container>
 
@@ -44,7 +44,7 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="fullName">
+    <ng-container matColumnDef="occamDisputantName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Surname, Given Name(s)
       </th>

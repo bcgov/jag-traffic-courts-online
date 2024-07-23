@@ -5,22 +5,22 @@
         <div class="content">
           <mat-tab-group class="dashTabs" mat-align-tabs="start" [selectedIndex]="tabSelected.value"
             (selectedIndexChange)="tabSelected.setValue($event)">
-            <mat-tab>
+            <mat-tab *ngIf="hasTicketValidationPermission">
               <ng-template mat-tab-label>
                 <h2>Ticket Validation</h2>
               </ng-template>
             </mat-tab>
-            <mat-tab>
+            <mat-tab *ngIf="hasDecisionValidationPermission">
               <ng-template mat-tab-label>
                 <h2>Decision Validation</h2>
               </ng-template>
             </mat-tab>
-            <mat-tab>
+            <mat-tab *ngIf="hasUpdateRequestsPermission">
               <ng-template mat-tab-label>
                 <h2>Update Requests</h2>
               </ng-template>
             </mat-tab>
-            <mat-tab #DCF>
+            <mat-tab #DCF *ngIf="hasDCFPermission">
               <ng-template mat-tab-label>
                 <h2>DCF</h2>
               </ng-template>

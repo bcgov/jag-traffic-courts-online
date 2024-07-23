@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
@@ -75,7 +75,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Features\Mail\Model\" />
 	  <Folder Include="OpenAPIs\Keycloak\v22_0\template\" />
 	</ItemGroup>
 </Project>

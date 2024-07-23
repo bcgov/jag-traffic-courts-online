@@ -78,8 +78,8 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
         public string? Paragraph { get; set; }
         
         [JsonProperty("act")]
-        public string Act { get; set; } = "MVA";
-        
+        public string Act { get; set; } = String.Empty;
+
         [JsonProperty("amount")]
         [JsonRequired]
         public decimal Amount { get; set; }

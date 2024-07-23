@@ -660,7 +660,7 @@ export class TicketInfoComponent implements OnInit {
       actionType: "warn",
       cancelTextKey: "Go back",
       icon: "error_outline",
-      message: this.form.get('rejectedReason').value
+      message: ""
     };
     this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
       .subscribe((action?: any) => {
@@ -692,7 +692,7 @@ export class TicketInfoComponent implements OnInit {
       actionType: "warn",
       cancelTextKey: "Go back",
       icon: "error_outline",
-      message: this.form.get('rejectedReason').value
+      message: ""
     };
     this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
       .subscribe((action?: any) => {
@@ -705,7 +705,7 @@ export class TicketInfoComponent implements OnInit {
           delete tempDispute.violationTicket.violationTicketImage;
 
           // udate the reason entered, cancel dispute and return to TRM home since this will be filtered out
-          this.disputeService.cancelDispute(this.lastUpdatedDispute.disputeId, action.output.response).subscribe({
+          this.disputeService.cancelDispute(this.lastUpdatedDispute.disputeId, action.output.reason).subscribe({
             next: response => {
               this.lastUpdatedDispute.status = this.DispStatus.Cancelled;
               this.lastUpdatedDispute.rejectedReason = action.output.reason;
@@ -892,5 +892,16 @@ export class TicketInfoComponent implements OnInit {
 
   public onValidateClick(): void {
     this.validateClicked = true;
+  }
+
+  onPrint() {
+    this.disputeService.apiTicketValidationPrintGet(this.lastUpdatedDispute.disputeId).subscribe(result => {
+      if (result) {
+        var url = URL.createObjectURL(result);
+        window.open(url);
+      } else {
+        alert("File contents not found");
+      }
+    });
   }
 }

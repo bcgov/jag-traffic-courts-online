@@ -229,22 +229,24 @@
                 </div>
               </div>
 
-              <hr *ngIf="count?.form.value.__skip === false" />
-              <div class="row">
-                <mat-checkbox formControlName="__skip" color="primary" class="w-100 mt-4"
-                  (change)="onSkipChecked(count?.form, $event.value)">
-                  Skip this count, no action required.
-                </mat-checkbox>
-              </div>
+              <ng-container *ngIf="counts.length > 1">
+                <hr *ngIf="count?.form.value.__skip === false" />
+                <div class="row">
+                  <mat-checkbox formControlName="__skip" color="primary" class="w-100 mt-4"
+                    (change)="onSkipChecked(count?.form, $event.value)">
+                    Skip this count, no action required.
+                  </mat-checkbox>
+                </div>
+              </ng-container>
             </section>
           </form>
 
         </app-page>
       </mat-card><br />
     </ng-container>
-    <app-stepper-footer [disableSave]="!isCountFormsValid()" (save)="disputeStepper.next()"
-      (back)="onStepBack()" [secondaryActionButtonIcon]="previousButtonIcon"
-      [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
+    <app-stepper-footer [disableSave]="!isCountFormsValid()" (save)="disputeStepper.next()" (back)="onStepBack()"
+      [secondaryActionButtonIcon]="previousButtonIcon" [secondaryActionButtonKey]="'stepper.back'"
+      [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
     </app-stepper-footer>
   </mat-step>
 
@@ -521,9 +523,9 @@
           </div>
         </div>
       </form>
-      <app-stepper-footer [disableSave]="!isAdditionalFormValid()" (save)="disputeStepper.next()"
-        (back)="onStepBack()" [secondaryActionButtonIcon]="previousButtonIcon"
-        [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
+      <app-stepper-footer [disableSave]="!isAdditionalFormValid()" (save)="disputeStepper.next()" (back)="onStepBack()"
+        [secondaryActionButtonIcon]="previousButtonIcon" [secondaryActionButtonKey]="'stepper.back'"
+        [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
       </app-stepper-footer>
     </app-page>
   </mat-step>

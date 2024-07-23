@@ -115,6 +115,13 @@ public class FormRecognizerValidator : IFormRecognizerValidator
                 violationTicket.Fields[sectionKey].Value = newValue;
             }
 
+            // sanitize ticket amount, remove whitespace and [trailing] hypens
+            if (violationTicket.Fields.ContainsKey(ticketAmount))
+            {
+                string ticketAmountValue = violationTicket.Fields[ticketAmount].Value ?? "";
+                violationTicket.Fields[ticketAmount].Value = Regex.Replace(ticketAmountValue, @"\s", "").Replace("-", "");
+            }
+
             // If the description is populated but the section and ticketAmount fields are blank, clear out the description as it was probably misread from the vertical text on the ticket image.
             if (violationTicket.Fields.ContainsKey(descKey) && violationTicket.Fields[descKey].IsPopulated() 
                 && violationTicket.Fields.ContainsKey(sectionKey) && !violationTicket.Fields[sectionKey].IsPopulated()

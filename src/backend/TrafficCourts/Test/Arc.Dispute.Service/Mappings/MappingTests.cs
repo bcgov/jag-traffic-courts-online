@@ -1,7 +1,10 @@
 ﻿using AutoFixture;
 using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using TrafficCourts.Arc.Dispute.Service.Mappings;
 using TrafficCourts.Arc.Dispute.Service.Models;
 using TrafficCourts.Common;
@@ -32,7 +35,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
 
             for (int i = 0; i < ticketCount; i++)
             {
-                dispute.TicketDetails.Add(new TicketCount { Count = i + 1 });
+                dispute.TicketDetails.Add(new TicketCount { Count = i + 1, Act = "MVA" });
             }
 
             for (int i = 0; i < disputeCount; i++)
@@ -291,4 +294,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
 
         }
     }
+
+
+
 }

@@ -28,9 +28,9 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
   dataSource: MatTableDataSource<JJDispute> = new MatTableDataSource();
   displayedColumns: string[] = [
     "ticketNumber",
-    "dateSubmitted",
+    "submittedTs",
     "violationDate",
-    "fullName",
+    "occamDisputantSurnameNm",
     "courthouseLocation",
     "policeDetachment",
     "accidentYn",
@@ -62,6 +62,14 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
+
+    // custom sorting on columns
+    this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: string): string => {
+      if (typeof data[sortHeaderId] === 'string') {
+        return data[sortHeaderId].toLocaleLowerCase();
+      }    
+      return data[sortHeaderId];
+    };
   }
 
   backWorkbench(element) {

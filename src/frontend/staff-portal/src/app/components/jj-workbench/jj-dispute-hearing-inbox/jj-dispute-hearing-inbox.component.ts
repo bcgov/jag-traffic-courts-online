@@ -38,14 +38,14 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   data: JJDispute[] = [];
   dataSource: MatTableDataSource<JJDispute> = new MatTableDataSource();
   displayedColumns: string[] = [
-    "jjAssignedTo",
+    "jjAssignedToName",
     "ticketNumber",
-    "dateSubmitted",
+    "submittedTs",
     "violationDate",
     "courthouseLocation",
-    "appearanceTs",
-    "duration",
-    "room",
+    "mostRecentCourtAppearance.appearanceTs",
+    "mostRecentCourtAppearance.duration",
+    "mostRecentCourtAppearance.room",
     "accidentYn",
     "multipleOfficersYn",
     "status",
@@ -103,6 +103,20 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     }
 
     this.dataSource.sort = this.sort;
+
+    // custom sorting on columns
+    this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: string): string => {
+      if (sortHeaderId === 'mostRecentCourtAppearance.appearanceTs') {
+        return data.mostRecentCourtAppearance?.appearanceTs;
+      } else if (sortHeaderId === 'mostRecentCourtAppearance.duration') {
+        return data.mostRecentCourtAppearance?.duration;
+      } else if (sortHeaderId === 'mostRecentCourtAppearance.room') {
+        return data.mostRecentCourtAppearance?.room;
+      } else if (typeof data[sortHeaderId] === 'string') {
+        return data[sortHeaderId].toLocaleLowerCase();
+      }    
+      return data[sortHeaderId];
+    };
   }
 
   backWorkbench(element) {

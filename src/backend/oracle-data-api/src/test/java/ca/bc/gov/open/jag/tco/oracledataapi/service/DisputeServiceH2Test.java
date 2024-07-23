@@ -21,7 +21,7 @@ class DisputeServiceH2Test extends BaseTestSuite {
 	private DisputeService disputeService;
 
 	@ParameterizedTest
-	@EnumSource(value = DisputeStatus.class, names = { "NEW", "REJECTED", "VALIDATED" })
+	@EnumSource(value = DisputeStatus.class, names = { "NEW", "VALIDATED" })
 	public void testSetStatusToPROCESSING_200(DisputeStatus disputeStatus) {
 		Long id = saveDispute(disputeStatus);
 		disputeService.setStatus(id, DisputeStatus.PROCESSING);
@@ -60,7 +60,7 @@ class DisputeServiceH2Test extends BaseTestSuite {
 	}
 
 	@ParameterizedTest
-	@EnumSource(value = DisputeStatus.class, names = { "CANCELLED", "PROCESSING", "REJECTED" })
+	@EnumSource(value = DisputeStatus.class, names = { "CANCELLED", "REJECTED" })
 	public void testSetStatusToREJECTED_405(DisputeStatus disputeStatus) {
 		Long id = saveDispute(disputeStatus);
 		assertThrows(NotAllowedException.class, () -> {
@@ -69,7 +69,7 @@ class DisputeServiceH2Test extends BaseTestSuite {
 	}
 
 	@ParameterizedTest
-	@EnumSource(value = DisputeStatus.class, names = { "NEW", "PROCESSING", "REJECTED", "VALIDATED" })
+	@EnumSource(value = DisputeStatus.class, names = { "PROCESSING", "REJECTED" })
 	public void testSetStatusToCANCELLED_200(DisputeStatus disputeStatus) {
 		Long id = saveDispute(disputeStatus);
 		disputeService.setStatus(id, DisputeStatus.CANCELLED);

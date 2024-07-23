@@ -11,8 +11,10 @@
         <span class="section-grid-cell" style="grid-column: span 2">
           <p class="section-grid-header">{{ "label.disputant_statement" | translate }}</p>
           <p class="section-grid-text" *ngIf="!jjDisputedCount">&nbsp;</p>
-          <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.plea === Plea.G">{{ 'label.plea_guilty' | translate }}</p>
-          <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.plea !== Plea.G">{{ 'label.plea_not_guilty' | translate }}</p>
+          <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.plea === Plea.G">{{ 'label.plea_guilty'
+            | translate }}</p>
+          <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.plea !== Plea.G">{{
+            'label.plea_not_guilty' | translate }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Offence Date</p>
@@ -506,7 +508,7 @@
             <p class="section-jj-grid-text">&nbsp;</p>
           </span>
           <span class="section-grid-cell">
-            <p class="section-grid-header">Offence Amt</p>
+            <p class="section-grid-header">Fine Amount</p>
             <p class="section-jj-grid-text">
               {{ jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}<br /><br />
               <span
@@ -626,14 +628,16 @@
               formControlName="ssProbationCheckbox" (change)="onSuspSentenceCheck($event.checked)">
               <span class="count-text" style="font-size: small"><b>Suspended Sentence</b></span>
             </mat-checkbox>
-            <br />
-            <div style="padding-left: 0.75rem;">
-              <mat-label class="section-grid-header">Probation</mat-label><br />
-              <input matInput (placeholder)="isViewOnly ? '' : 'duration'"
-                formControlName="ssProbationDuration" /><br />
-              <mat-label class="section-grid-header">Conditions</mat-label><br />
-              <textarea matInput formControlName="ssProbationConditions" maxlength="500" rows="5"></textarea>
-            </div>
+            <ng-container *ngIf="form?.controls.jjDisputedCountRoP?.controls.ssProbationCheckbox.value">
+              <br />
+              <div style="padding-left: 0.75rem;">
+                <mat-label class="section-grid-header">Probation</mat-label><br />
+                <input matInput (placeholder)="isViewOnly ? '' : 'duration'"
+                  formControlName="ssProbationDuration" /><br />
+                <mat-label class="section-grid-header">Conditions</mat-label><br />
+                <textarea matInput formControlName="ssProbationConditions" maxlength="500" rows="5"></textarea>
+              </div>
+            </ng-container>
           </span>
           <!-- Jail -->
           <span class="section-grid-cell" style="grid-column: span 3">
@@ -641,16 +645,18 @@
               (change)="onJailCheck($event.checked)">
               <span class="count-text" style="font-size: small"><b>Jail</b></span>
             </mat-checkbox>
-            <br />
-            <div style="padding-left: 0.75rem;">
-              <mat-label class="section-grid-header">Duration</mat-label><br />
-              <input matInput formControlName="jailDuration" /><br />
-              <mat-checkbox
-                [checked]="form.get('jjDisputedCountRoP').get('jailIntermittent').value === JailIntermittent.Y"
-                color="primary" (change)="onJailIntermittentChange($event.checked)"
-                [disabled]="isViewOnly || form.get('jjDisputedCountRoP').get('jailCheckbox').value !== true || !jjDisputedCount"><span
-                  class="section-grid-header">Intermittent</span></mat-checkbox>
-            </div>
+            <ng-container *ngIf="form?.controls.jjDisputedCountRoP?.controls.jailCheckbox.value">
+              <br />
+              <div style="padding-left: 0.75rem;">
+                <mat-label class="section-grid-header">Duration</mat-label><br />
+                <input matInput formControlName="jailDuration" /><br />
+                <mat-checkbox
+                  [checked]="form.get('jjDisputedCountRoP').get('jailIntermittent').value === JailIntermittent.Y"
+                  color="primary" (change)="onJailIntermittentChange($event.checked)"
+                  [disabled]="isViewOnly || form.get('jjDisputedCountRoP').get('jailCheckbox').value !== true || !jjDisputedCount"><span
+                    class="section-grid-header">Intermittent</span></mat-checkbox>
+              </div>
+            </ng-container>
           </span>
           <!-- Probation -->
           <span class="section-grid-cell" style="grid-column: span 3">
@@ -658,13 +664,16 @@
               (change)="onProbationCheck($event.checked)">
               <span class="count-text" style="font-size: small"><b>Probation</b></span>
             </mat-checkbox>
-            <br />
-            <div style="padding-left: 0.75rem;">
-              <mat-label class="section-grid-header">Duration</mat-label><br />
-              <input matInput (placeholder)="isViewOnly ? '' : 'duration'" formControlName="probationDuration" /><br />
-              <mat-label class="section-grid-header">Conditions</mat-label><br />
-              <textarea matInput formControlName="probationConditions" maxlength="500" rows="5"></textarea>
-            </div>
+            <ng-container *ngIf="form?.controls.jjDisputedCountRoP?.controls.probationCheckbox.value">
+              <br />
+              <div style="padding-left: 0.75rem;">
+                <mat-label class="section-grid-header">Duration</mat-label><br />
+                <input matInput (placeholder)="isViewOnly ? '' : 'duration'"
+                  formControlName="probationDuration" /><br />
+                <mat-label class="section-grid-header">Conditions</mat-label><br />
+                <textarea matInput formControlName="probationConditions" maxlength="500" rows="5"></textarea>
+              </div>
+            </ng-container>
           </span>
           <!-- Driving Prohibition -->
           <span class="section-grid-cell" style="grid-column: span 3">
@@ -718,8 +727,10 @@
               (change)="onOtherCheck($event.checked)">
               <span class="count-text" style="font-size: small"><b>Other</b></span>
             </mat-checkbox>
-            <br />
-            <input matInput formControlName="other" /><br />
+            <ng-container *ngIf="form?.controls.jjDisputedCountRoP?.controls.otherCheckbox.value">
+              <br />
+              <input matInput formControlName="other" /><br />
+            </ng-container>
           </span>
         </ng-container>
         <!-- Remarks -->

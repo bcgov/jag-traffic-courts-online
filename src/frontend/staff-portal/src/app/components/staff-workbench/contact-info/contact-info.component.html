@@ -1,8 +1,17 @@
 <app-page>
+  <ng-container stickyToolBar>
+    <div class="app-width" style="padding-top: 1.5vh; padding-bottom: 1.5vh;" fxLayout="row">
+      <div fxFlex>
+        <a (click)="onBack()" style="color: #48afe5">
+          <mat-icon inline="true">arrow_back</mat-icon> Back to TRM home
+        </a>
+      </div>
+      <div>
+        <button mat-raised-button (click)="onPrint()">Print</button>
+      </div>
+    </div>
+  </ng-container>
   <div class="contact-info">
-    <a (click)="onBack()" style="color: #48afe5">
-      <mat-icon inline="true">arrow_back</mat-icon> Back to TRM home
-    </a>
     <app-ticket-status [dispute]="lastUpdatedDispute" *ngIf="lastUpdatedDispute"></app-ticket-status>
     <div *ngIf="conflict === true">
       <span>
@@ -376,16 +385,19 @@
         <app-upload [disputeInfo]="lastUpdatedDispute"></app-upload>
         <div style="float: right; width: 100%;">
           <button class="large" mat-flat-button type="button" color="primary"
-            [disabled]="(lastUpdatedDispute.status !== DispStatus.New && lastUpdatedDispute.status !== DispStatus.Rejected) || this.form.invalid || this.form.touched"
+            [disabled]="lastUpdatedDispute.status !== DispStatus.New || this.form.invalid || this.form.touched"
             (click)="approve()" style="background-color:  #2ba242;">
             Approve and submit to ARC
           </button>
           <button class="large" mat-flat-button type="button" color="primary" style="background-color: red;"
-            [disabled]="lastUpdatedDispute.status !== DispStatus.New || this.form.invalid || this.form.touched"
+            [disabled]="lastUpdatedDispute.status === DispStatus.Rejected || lastUpdatedDispute.status === DispStatus.Cancelled"
             (click)="reject()">
             Reject
           </button>
-          <button class="large" mat-flat-button type="button" color="primary" (click)="cancel()">
+          <button class="large" mat-flat-button type="button" color="primary"
+            [disabled]="lastUpdatedDispute.status === DispStatus.New || lastUpdatedDispute.status === DispStatus.Validated ||
+            lastUpdatedDispute.status === DispStatus.Cancelled"
+            (click)="cancel()">
             Cancel
           </button>
         </div>

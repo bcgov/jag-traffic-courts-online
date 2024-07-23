@@ -338,6 +338,45 @@ paths:
           $ref: '#/components/responses/Unauthorized'
       tags:
         - JJDispute
+  /v1/processAuditLogEntry:
+    post:
+      requestBody:
+        description: body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuditLogEntry'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogEntryResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - Audit Log Entry
+  /v1/auditLogEntryList:
+    get:
+      parameters:
+        - name: ticketNumber
+          in: query
+          description: ''
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogEntryListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - Audit Log Entry
 components:
   securitySchemes:
     basicAuth:
@@ -363,6 +402,24 @@ components:
         updUserId:
           type: string
           format: nullable
+    AuditLogEntry:
+      type: object
+      properties:
+        auditLogEntryId:
+          type: string
+        disputeId:
+          type: string
+        auditLogEntryTypeCd:
+          type: string
+        auditLogEntryTypeDsc:
+          type: string
+        actionByApplicationUser:
+          type: string
+        commentTxt:
+          type: string
+          format: nullable
+      allOf:
+        - $ref: '#/components/schemas/AuditBase'
     JJDispute:
       type: object
       properties:
@@ -465,6 +522,9 @@ components:
           type: string
           format: nullable
         jjAssignedTo:
+          type: string
+          format: nullable
+        decisionMadeBy:
           type: string
           format: nullable
         jjDecisionDt:
@@ -808,6 +868,24 @@ components:
         exception:
           type: string
           format: nullable
+    AuditLogEntryResponseResult:
+      type: object
+      properties:
+        status:
+          type: string
+        auditLogEntryId:
+          type: string
+          format: nullable
+        exception:
+          type: string
+          format: nullable
+    AuditLogEntryListResponse:
+      type: object
+      properties:
+        auditLogEntries:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditLogEntry'
     # Schema for error response body
     Error:
       type: object

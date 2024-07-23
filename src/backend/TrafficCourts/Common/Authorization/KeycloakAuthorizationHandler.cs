@@ -62,7 +62,7 @@ public partial class KeycloakAuthorizationHandler : AuthorizationHandler<Keycloa
             return;
         }
 
-        var token = await httpContext.GetTokenAsync(_options.RequiredScheme, "access_token");
+        var token = await httpContext.GetTokenAsync(_options.RequiredScheme, _options.TokenName);
         if (token is null)
         {
             NotAuthorized(scope, "No access token");

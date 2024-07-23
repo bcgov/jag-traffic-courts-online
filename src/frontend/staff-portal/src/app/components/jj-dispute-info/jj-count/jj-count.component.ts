@@ -161,12 +161,16 @@ export class JJCountComponent implements OnInit, OnChanges {
       this.timeToPay = this.jjDisputedCount ? (this.jjDisputedCount.dueDate != this.jjDisputedCount.revisedDueDate ? "yes" : "no") : "";
       this.updateInclSurcharge(this.inclSurcharge);
 
+      // TCVP-2467
       if (!this.isViewOnly &&
         (this.jjDisputedCount.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.NotGuilty
           || this.jjDisputedCount.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.Cancelled)) {
         this.form.controls.lesserOrGreaterAmount.setValue(null);
         this.form.controls.totalFineAmount.setValue(null);
         this.form.controls.revisedDueDate.setValue(null);
+        this.jjDisputedCount.lesserOrGreaterAmount = null;
+        this.jjDisputedCount.revisedDueDate = null;
+        this.jjDisputedCount.totalFineAmount = null;
       }
 
       // Make sure the date hint label is shown if there is a revised date/time
@@ -426,12 +430,13 @@ export class JJCountComponent implements OnInit, OnChanges {
     // surcharge is always 15%
     if (eventValue == "yes") {
       this.form.get('totalFineAmount').setValue(Math.round(this.form.get('lesserOrGreaterAmount').value));
-      this.lesserOrGreaterAmount = Math.round(this.form.get('lesserOrGreaterAmount').value / 1.15);
-      this.surcharge = Math.round(0.15 * this.lesserOrGreaterAmount);
+      this.lesserOrGreaterAmount = this.form.get('lesserOrGreaterAmount').value / 1.15;
+      this.surcharge = 0.15 * this.lesserOrGreaterAmount;
     } else {
       const lesserOrGreaterAmountValue = this.form.get('lesserOrGreaterAmount').value;
       if (lesserOrGreaterAmountValue !== null && lesserOrGreaterAmountValue > 0) {
-        var newTotalFineAmount = Math.round(lesserOrGreaterAmountValue * 1.15)
+        var surcharge = Math.round(lesserOrGreaterAmountValue * 0.15);
+        var newTotalFineAmount = lesserOrGreaterAmountValue + surcharge;
         this.form.get('totalFineAmount').setValue(newTotalFineAmount);
       } else {
         this.form.get('totalFineAmount').setValue(this.jjDisputedCount?.totalFineAmount);

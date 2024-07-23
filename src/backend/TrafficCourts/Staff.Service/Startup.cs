@@ -12,6 +12,7 @@ using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Services;
 using TrafficCourts.Caching;
 using ZiggyCreatures.Caching.Fusion;
+using FastEndpoints;
 
 namespace TrafficCourts.Staff.Service;
 
@@ -49,6 +50,8 @@ public static class Startup
                 .AddMassTransitInstrumentation()
                 .AddOracleDataApiInstrumentation();
         });
+
+        builder.Services.AddFastEndpoints();
 
         var redisConnectionString = builder.AddRedis();
 
@@ -147,6 +150,8 @@ public static class Startup
                     }
                 });
 
+                c.CustomSchemaIds(RemoveDtoSuffix);
+
                 c.EnableAnnotations();
 
                 // Set the comments path for the Swagger JSON and UI.
@@ -155,5 +160,11 @@ public static class Startup
                 c.IncludeXmlComments(xmlPath);
             });
         }
+    }
+
+    private static string RemoveDtoSuffix(Type type)
+    {
+        string name = type.Name;
+        return name.EndsWith("Dto") ? name[..^3] : name;
     }
 }

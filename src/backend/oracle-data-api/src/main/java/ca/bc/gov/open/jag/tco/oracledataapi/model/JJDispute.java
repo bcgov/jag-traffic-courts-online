@@ -261,6 +261,13 @@ public class JJDispute extends Auditable<String> {
 	@Column
 	@Schema(nullable = true)
 	private String jjAssignedTo;
+	
+	/**
+	 * The ID of the JJ who made a decision.
+	 */
+	@Column
+	@Schema(nullable = true)
+	private String decisionMadeBy;
 
 	/**
 	 * The date that JJ made a decision
