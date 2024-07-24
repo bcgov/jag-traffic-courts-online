@@ -13,6 +13,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     private readonly IJJDisputeService _jjDisputeService;
     private readonly IOracleDataApiService _oracleDataApi;
     private readonly IProvinceLookupService _provinceLookupService;
+    private readonly IAgencyLookupService _agencyLookupService;
     private readonly ICountryLookupService _countryLookupService;
     private readonly IDocumentGenerationService _documentGeneration;
     private readonly IDisputeService _disputeService;
@@ -22,6 +23,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         IJJDisputeService jjDisputeService,
         IOracleDataApiService oracleDataApi,
         IProvinceLookupService provinceLookupService,
+        IAgencyLookupService agencyLookupService,
         ICountryLookupService countryLookupService,
         IDocumentGenerationService documentGeneration,
         IDisputeService disputeService,
@@ -30,6 +32,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         _jjDisputeService = jjDisputeService ?? throw new ArgumentNullException(nameof(jjDisputeService));
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _provinceLookupService = provinceLookupService ?? throw new ArgumentNullException(nameof(provinceLookupService));
+        _agencyLookupService = agencyLookupService ?? throw new ArgumentNullException(nameof(agencyLookupService));
         _countryLookupService = countryLookupService ?? throw new ArgumentNullException(nameof(countryLookupService));
         _documentGeneration = documentGeneration ?? throw new ArgumentNullException(nameof(documentGeneration));
         _disputeService = disputeService ?? throw new ArgumentNullException(nameof(disputeService));
@@ -245,6 +248,22 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     }
 
     /// <summary>
+    /// Returns Agency (Courthouse Location) based on the provided agencyId through agencyLookupService.
+    /// </summary>
+    /// <param name="agencyId"></param>
+    /// <returns></returns>
+    private async Task<Agency?> GetCourthouseLocationAsync(string agencyId)
+    {
+        Domain.Models.Agency? courthouseLocation = null;
+        if (agencyId is not null)
+        {
+            courthouseLocation = await _agencyLookupService.GetByIdAsync(agencyId);
+        }
+
+        return courthouseLocation;
+    }
+
+    /// <summary>
     /// Fetches the <see cref="DigitalCaseFile"/> based on ticket number. This really should be using the tco_dispute.dispute_id.
     /// </summary>
     internal async Task<DigitalCaseFile> GetDigitalCaseFileAsync(string ticketNumber, TimeZoneInfo timeZone, CancellationToken cancellationToken)
@@ -256,6 +275,9 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         var dispute = await _jjDisputeService.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
 
         Domain.Models.Province? driversLicenceProvince = await GetDriversLicenceProvinceAsync(dispute.DrvLicIssuedProvSeqNo, dispute.DrvLicIssuedCtryId);
+
+        // Get courthouse location data from the courthouse location lookup service based on CourtAgenId provided from the dispute
+        Agency? courthouseLocation = await GetCourthouseLocationAsync(dispute.CourtAgenId);
 
         var digitalCaseFile = new DigitalCaseFile();
 
@@ -273,7 +295,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         ticket.Submitted = new FormattedDateOnly(dispute.SubmittedTs);
         ticket.IcbcReceived = new FormattedDateOnly(dispute.IcbcReceivedDate);
         ticket.CourtAgenyId = dispute.CourtAgenId;
-        ticket.CourtHouse = dispute.CourthouseLocation;
+        ticket.CourtHouse = courthouseLocation?.Name ?? string.Empty;
 
         // set the contact information
         var contact = digitalCaseFile.Contact;
