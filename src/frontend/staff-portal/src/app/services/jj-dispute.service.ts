@@ -6,7 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import { HttpClient, HttpContext, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { JJService, JJDispute as JJDisputeBase, JJDisputeStatus, JJDisputeRemark, DocumentType, JJDisputeCourtAppearanceRoP } from 'app/api';
+import { JJService, JJDispute as JJDisputeBase, JJDisputeStatus, JJDisputeRemark, DocumentType, JJDisputeCourtAppearanceRoP, DcfTemplateType } from 'app/api';
 import { AuthService } from './auth.service';
 import { cloneDeep } from "lodash";
 import { Store } from '@ngrx/store';
@@ -397,9 +397,9 @@ export class JJDisputeService {
     return jjDispute;
   }
 
-  public apiJjTicketNumberPrintGet(ticketNumber: string, timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone): Observable<any> {
+  public apiJjTicketNumberPrintGet(ticketNumber: string, type: DcfTemplateType, timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone): Observable<any> {
     return this.http
-    .get(`/api/jj/${ticketNumber}/print?timeZone=${timeZone}`, {
+    .get(`/api/jj/${ticketNumber}/print?timeZone=${timeZone}&type=${type}`, {
       observe: 'response',
       responseType: 'blob',
       context: new HttpContext(),
