@@ -99,7 +99,7 @@
   <section *ngIf="type !== 'ticket' && jjDisputeInfo.hearingType === HearingType.WrittenReasons && !isViewOnly">
     <ng-container subHeader>
       <span class="count-text">
-        <h3>JJ decision</h3>
+        <h3>{{ "label.jj_decision" | translate }}</h3>
       </span>
     </ng-container>
     <form [formGroup]="form" novalidate>
@@ -121,7 +121,7 @@
         <span class="section-grid-cell">
           <p class="section-grid-header">Offence Amt</p>
           <p class="section-jj-grid-text">
-            {{ jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0'}}<br /><br />
+            {{ jjDisputedCount?.totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0'}}<br /><br />
             <span
               [hidden]="!(fineReduction==='yes' && !(form.get('lesserOrGreaterAmount').hasError('min') || form.get('lesserOrGreaterAmount').hasError('max')))"
               class="section-grid-header">Lesser/Greater<br /></span>
@@ -205,58 +205,56 @@
   </section>
 
   <!-- JJ Decision (read only for normal staff - not staff-support) for Written Reasons -->
-  <section>
+  <section *ngIf="(type === 'ticket' || isViewOnly) && jjDisputeInfo.hearingType === HearingType.WrittenReasons && !(isSSEditMode && jjDisputedCount)">
+    <ng-container subHeader>
+      <span class="count-text">
+        <h3>{{ "label.jj_decision" | translate }}</h3>
+      </span>
+    </ng-container>
+    <div class="section-grid-header">Fine calculation</div>
     <div
-      *ngIf="(type === 'ticket' || isViewOnly) && jjDisputeInfo.hearingType === HearingType.WrittenReasons && !(isSSEditMode && jjDisputedCount)"
-      fxLayout="column" style="padding: 0 0.2rem;">
-      <h3 style="padding-left: 0.2rem;">JJ decision</h3>
-
-      <div class="section-grid-header">Fine calculation</div>
-      <div
-        *ngIf="(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')"
-        style="font-size: small;">
-        <span class="section-grid-text">Ticketed amount: </span>
-        {{ jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}
-      </div>
-      <div
-        *ngIf="!(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')"
-        style="font-size: small;">
-        <span class="section-grid-text">Lesser/greater amount: </span>
-        {{ jjDisputedCount?.lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}
-      </div>
-
-      <div class="section-grid-header" style="padding-top: 1rem !important;">Includes surcharge</div>
-      <div style="font-size: small;">
-        <span class="section-grid-text">{{ jjDisputedCount?.includesSurcharge === IncludesSurcharge.Y ? "Yes" : "No"
-          }}</span>
-        <span style="padding-left: 0.5rem;"
-          *ngIf="(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')">{{
-          jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
-        <span style="padding-left: 0.5rem;"
-          *ngIf="!(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')">{{
-          jjDisputedCount?.lesserOrGreaterAmount | currency: 'CAD' : 'symbol' : '1.0-0' }}</span>
-        <span style="color: #33BBFF !important;"> + <i>({{ surcharge |
-            currency:'CAD':'symbol-narrow':'1.0-0'}})</i></span>
-      </div>
-
-      <div class="section-grid-header" style="padding-top: 1rem !important;">Time to pay</div>
-      <div style="font-size: small;">
-        <span class="section-grid-text">{{ (jjDisputedCount?.revisedDueDate === jjDisputedCount?.dueDate) ? "No" : "Yes"
-          }}</span>
-        <span style="padding-left: 0.5rem;">{{ jjDisputedCount?.revisedDueDate | date: "dd-MMM-yyyy" : "UTC" }}</span>
-      </div>
-
-      <div class="section-grid-header" style="padding-top: 1rem !important;">Comments</div>
-      <mat-label class="small-note">
-        <i><span style="color:red;">*</span> These comments will be shared to disputants</i>
-      </mat-label>
-      <div class="section-grid-text" style="padding-bottom: 2rem !important;">{{ jjDisputedCount?.comments }}</div>
+      *ngIf="(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')"
+      style="font-size: small;">
+      <span class="section-grid-text">Ticketed amount: </span>
+      {{ jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}
     </div>
+    <div
+      *ngIf="!(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')"
+      style="font-size: small;">
+      <span class="section-grid-text">Lesser/greater amount: </span>
+      {{ jjDisputedCount?.lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}
+    </div>
+
+    <div class="section-grid-header" style="padding-top: 1rem !important;">Includes surcharge</div>
+    <div style="font-size: small;">
+      <span class="section-grid-text">{{ jjDisputedCount?.includesSurcharge === IncludesSurcharge.Y ? "Yes" : "No"
+        }}</span>
+      <span style="padding-left: 0.5rem;"
+        *ngIf="(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')">{{
+        jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
+      <span style="padding-left: 0.5rem;"
+        *ngIf="!(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')">{{
+        jjDisputedCount?.lesserOrGreaterAmount | currency: 'CAD' : 'symbol' : '1.0-0' }}</span>
+      <span style="color: #33BBFF !important;"> + <i>({{ surcharge |
+          currency:'CAD':'symbol-narrow':'1.0-0'}})</i></span>
+    </div>
+
+    <div class="section-grid-header" style="padding-top: 1rem !important;">Time to pay</div>
+    <div style="font-size: small;">
+      <span class="section-grid-text">{{ (jjDisputedCount?.revisedDueDate === jjDisputedCount?.dueDate) ? "No" : "Yes"
+        }}</span>
+      <span style="padding-left: 0.5rem;">{{ jjDisputedCount?.revisedDueDate | date: "dd-MMM-yyyy" : "UTC" }}</span>
+    </div>
+
+    <div class="section-grid-header" style="padding-top: 1rem !important;">Comments</div>
+    <mat-label class="small-note">
+      <i><span style="color:red;">*</span> These comments will be shared to disputants</i>
+    </mat-label>
+    <div class="section-grid-text" style="padding-bottom: 2rem !important;">{{ jjDisputedCount?.comments }}</div>
   </section>  
 
   <!-- JJ Decision (admin edit mode for support staff) for Written Reasons -->
-  <section
-    *ngIf="type === 'ticket' && jjDisputeInfo.hearingType === HearingType.WrittenReasons && (isSSEditMode && jjDisputedCount)">
+  <section *ngIf="type === 'ticket' && jjDisputeInfo.hearingType === HearingType.WrittenReasons && (isSSEditMode && jjDisputedCount)">
     <ng-container subHeader>
       <span class="count-text">
         <h3>{{ "label.jj_decision" | translate }}</h3>
@@ -318,10 +316,12 @@
   </section>
 
   <!-- JJ Latest Change Plea -->
-  <section [formGroup]="form"
-    *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && !(isSSEditMode && jjDisputedCount)"
-    style="padding: 0 0.2rem;">
-    <br>
+  <section [formGroup]="form" *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && !(isSSEditMode && jjDisputedCount)">
+    <ng-container subHeader>
+      <span class="count-text">
+        <h3>{{ "label.jj_decision" | translate }}</h3>
+      </span>
+    </ng-container>
     <div class="row">
       <div class="col-md-4">
         <span class="section-grid-header">{{ "label.plea" | translate }}</span>
@@ -352,12 +352,15 @@
         </ng-template>
       </div>
     </div>
-    <br>
-    <hr style="margin: 0 0 0 0" />
   </section>
 
   <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && (isSSEditMode && jjDisputedCount)">
     <form [formGroup]="countForm">
+      <ng-container subHeader>
+        <span class="count-text">
+          <h3>{{ "label.jj_decision" | translate }}</h3>
+        </span>
+      </ng-container>
       <!-- Change Plea -->
       <div class="row">
         <label class="col-4">{{ "label.change_plea" | translate }}</label>
@@ -375,11 +378,10 @@
   </section>
 
   <!-- JJ RoP for Court Appearance -->
-  <section *ngIf="type !== 'ticket' && jjDisputeInfo.hearingType === HearingType.CourtAppearance && !isSSEditMode"
-    style="padding: 0 0.2rem;">
+  <section *ngIf="type !== 'ticket' && jjDisputeInfo.hearingType === HearingType.CourtAppearance && !isSSEditMode">
     <ng-container subHeader>
       <span class="count-text">
-        <h3>Findings</h3>
+        <h3>{{ "label.findings" | translate }}</h3>
       </span>
     </ng-container>
     <div [formGroup]="form?.get('jjDisputedCountRoP')">
@@ -393,8 +395,10 @@
           Not guilty as charged but guilty of lesser / included / other offence
         </mat-option>
       </mat-select>
-      <div *ngIf="isViewOnly && jjDisputedCount" style="margin-left:20px;"><span
-          class="section-grid-header">Finding:<br /></span>
+      <div *ngIf="isViewOnly" style="margin-left:20px;">
+        <span class="section-grid-header">Finding:<br /></span>
+      </div>
+      <div *ngIf="isViewOnly && jjDisputedCount" style="margin-left:20px;">
         <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.Guilty"
           class="section-grid-text">Guilty as charged</span>
         <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty"
@@ -408,7 +412,9 @@
           other offence</span>
         <span *ngIf="!form?.get('jjDisputedCountRoP').get('finding').value">&nbsp;</span>
       </div>
-      <div *ngIf="!jjDisputedCount"><span class="section-grid-header">&nbsp;<br /></span></div>
+      <div *ngIf="!jjDisputedCount">
+        <span class="section-grid-header">&nbsp;<br /></span>
+      </div>
       <div style="width:90%; margin-left: 20px">
         <input matInput (placeholder)="isViewOnly ? '' : 'start typing section, then select'"
           formControlName="lesserDescription" [matAutocomplete]="auto" (keyup)="onLesserDescriptionKeyup()"
@@ -419,16 +425,13 @@
             {{ statute.__statuteString }}</mat-option>
         </mat-autocomplete><br />
         <mat-tooltip style="font-size:x-small">Hover over section to see full description</mat-tooltip>
-      </div><br />
+      </div>
     </div>
-    <br>
-    <hr style="margin: 0 0 0 0" />
   </section>
-  <section *ngIf="type === 'ticket' && jjDisputeInfo.hearingType === HearingType.CourtAppearance && !isSSEditMode"
-    style="padding: 0 0.2rem;">
+  <section *ngIf="type === 'ticket' && jjDisputeInfo.hearingType === HearingType.CourtAppearance && !isSSEditMode">
     <ng-container subHeader>
       <span class="count-text">
-        <h3>Findings</h3>
+        <h3>{{ "label.findings" | translate }}</h3>
       </span>
     </ng-container>
     <div [formGroup]="form?.get('jjDisputedCountRoP')">
@@ -962,20 +965,27 @@
 
     <div style="display: grid; grid-template-columns: 49% 49%">
       <span class="section-jj-grid-cell">
-        <p><span
+        <p>
+          <span
             style="font-size:small; color: #707070; font-weight: bold; margin: 0 !important; padding-right: 10px; float: right;">Due
             date</span><br />
-          <span style="font-weight: bold; font-size: small; float: right; padding-right: 10px;">{{
-            jjDisputedCount?.revisedDueDate | date: "yyyy" : "UTC" }}</span><br />
-          <span style="font-weight: bold; float: right !important; padding-right: 10px;">{{
-            jjDisputedCount?.revisedDueDate | date: "MMM dd" : "UTC" }}</span>
+          <ng-container *ngIf="jjDisputeInfo.status == DisputeStatus.Confirmed || jjDisputeInfo.status == DisputeStatus.Review ||
+            jjDisputeInfo.status == DisputeStatus.RequireCourtHearing || jjDisputeInfo.status == DisputeStatus.Concluded">
+            <span style="font-weight: bold; font-size: small; float: right; padding-right: 10px;">{{
+              jjDisputedCount?.revisedDueDate | date: "yyyy" : "UTC" }}</span><br />
+            <span style="font-weight: bold; float: right !important; padding-right: 10px;">{{
+              jjDisputedCount?.revisedDueDate | date: "MMM dd" : "UTC" }}</span>
+          </ng-container>          
         </p>
       </span>
       <span class="section-grid-cell">
-        <p><span
+        <p>
+          <span
             style="font-size:small; color: #707070; font-weight: bold; margin: 0 !important; padding-right: 10px; float: right;">Fine amount</span><br />
           <span style="font-weight: bold; font-size: small; float: right; padding-right: 10px; color: #707070;">incl. surcharge</span><br />
-          <span style="font-weight: bold; float: right !important; padding-right: 10px;">
+          <span *ngIf="jjDisputeInfo.status == DisputeStatus.Confirmed || jjDisputeInfo.status == DisputeStatus.Review ||
+            jjDisputeInfo.status == DisputeStatus.RequireCourtHearing || jjDisputeInfo.status == DisputeStatus.Concluded" 
+            style="font-weight: bold; float: right !important; padding-right: 10px;">
             {{ jjDisputedCount ? ( jjDisputedCount.totalFineAmount ? (jjDisputedCount.totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0') : '&nbsp;') :
             '&nbsp;' }}</span>
         </p>

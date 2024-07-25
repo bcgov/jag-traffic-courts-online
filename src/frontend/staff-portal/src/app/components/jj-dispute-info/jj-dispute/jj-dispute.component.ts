@@ -36,6 +36,7 @@ export class JJDisputeComponent implements OnInit {
   printOptions: PrintOptions = new PrintOptions();
   isSupportStaff: boolean = false;
   isSSEditMode: boolean = false;
+  isJJ: boolean = false;
 
   RequestTimeToPay = JJDisputedCountRequestTimeToPay;
   Finding = JJDisputedCountRoPFinding;
@@ -143,6 +144,7 @@ export class JJDisputeComponent implements OnInit {
     });
 
     this.isSupportStaff = this.enableStaffSupport && this.authService.checkRole(UserGroup.SUPPORT_STAFF);
+    this.isJJ = this.authService.checkRoles([UserGroup.JUDICIAL_JUSTICE, UserGroup.ADMIN_JUDICIAL_JUSTICE]);
     this.provinces = this.lookupsService.provinces;
     this.languages = this.lookupsService.languages;
   }
@@ -230,7 +232,8 @@ export class JJDisputeComponent implements OnInit {
       actionTextKey: "Confirm",
       actionType: "primary",
       cancelTextKey: "Go back",
-      icon: ""
+      icon: "",
+      data: this.lastUpdatedJJDispute.jjDisputedCounts
     };
     this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action: any) => {

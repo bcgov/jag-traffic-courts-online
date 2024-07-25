@@ -645,7 +645,7 @@
           Save & Finish Later
         </button>
         <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConfirm()"
-          *ngIf="[DisputeStatus.New, DisputeStatus.HearingScheduled, DisputeStatus.InProgress, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) >= 0 && concludeStatusOnly === false && cancelStatusOnly === false">
+          *ngIf="[DisputeStatus.New, DisputeStatus.HearingScheduled, DisputeStatus.InProgress, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) >= 0 && concludeStatusOnly === false && cancelStatusOnly === false && isJJ">
           Confirm
         </button>
         <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConcluded()"
