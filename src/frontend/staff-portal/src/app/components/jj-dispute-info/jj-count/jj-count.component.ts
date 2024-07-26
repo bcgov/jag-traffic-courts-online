@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { JJDispute } from '../../../services/jj-dispute.service';
-import { JJDisputedCount, JJDisputedCountAppearInCourt, JJDisputedCountIncludesSurcharge, JJDisputedCountLatestPlea, JJDisputedCountPlea, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputedCountRoPAbatement, JJDisputedCountRoPDismissed, JJDisputedCountRoPFinding, JJDisputedCountRoPForWantOfProsecution, JJDisputedCountRoPJailIntermittent, JJDisputedCountRoPWithdrawn, JJDisputeHearingType } from 'app/api';
+import { JJDisputedCount, JJDisputedCountAppearInCourt, JJDisputedCountIncludesSurcharge, JJDisputedCountLatestPlea, JJDisputedCountPlea, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputedCountRoPAbatement, JJDisputedCountRoPDismissed, JJDisputedCountRoPFinding, JJDisputedCountRoPForWantOfProsecution, JJDisputedCountRoPJailIntermittent, JJDisputedCountRoPWithdrawn, JJDisputeHearingType, JJDisputeStatus } from 'app/api';
 import { MatLegacyRadioChange as MatRadioChange } from '@angular/material/legacy-radio';
 import { LookupsService, Statute } from 'app/services/lookups.service';
 import { CustomDatePipe } from '@shared/pipes/custom-date.pipe';
@@ -74,6 +74,7 @@ export class JJCountComponent implements OnInit, OnChanges {
   surcharge: number = 0;
   lesserDescriptionFilteredStatutes: Statute[];
   drivingProhibitionFilteredStatutes: Statute[];
+  DisputeStatus = JJDisputeStatus;
 
   constructor(
     private lookupsService: LookupsService,
@@ -138,10 +139,7 @@ export class JJCountComponent implements OnInit, OnChanges {
     if (this.jjDisputedCount && this.form) {
       if (this.jjDisputedCount.totalFineAmount != null && this.jjDisputedCount.totalFineAmount > 0) {
         this.surcharge = this.jjDisputedCount.totalFineAmount / 1.15 * 0.15;
-      } else {
-        this.jjDisputedCount.totalFineAmount = this.jjDisputedCount.ticketedFineAmount;
       }
-      if (!this.jjDisputedCount.revisedDueDate) this.jjDisputedCount.revisedDueDate = this.jjDisputedCount.dueDate;
 
       if (this.isViewOnly &&
         (this.jjDisputedCount.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.NotGuilty
@@ -156,9 +154,12 @@ export class JJCountComponent implements OnInit, OnChanges {
       // initialize form, radio buttons
       this.form.patchValue(this.jjDisputedCount);
       this.jjDisputedCount.lesserOrGreaterAmount === null ?? this.form.controls.lesserOrGreaterAmount.setValue(this.jjDisputedCount.ticketedFineAmount);
-      this.inclSurcharge = this.jjDisputedCount ? (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.Y ? "yes" : "no") : "";
-      this.fineReduction = this.jjDisputedCount ? (this.jjDisputedCount.totalFineAmount != this.jjDisputedCount.ticketedFineAmount ? "yes" : "no") : "";
-      this.timeToPay = this.jjDisputedCount ? (this.jjDisputedCount.dueDate != this.jjDisputedCount.revisedDueDate ? "yes" : "no") : "";
+      this.inclSurcharge = this.jjDisputedCount ? (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.Y ? "yes" : 
+        (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.N ? "no" : "")) : "";
+      this.fineReduction = this.jjDisputedCount ? (this.jjDisputedCount.totalFineAmount ? 
+        (this.jjDisputedCount.totalFineAmount != this.jjDisputedCount.ticketedFineAmount ? "yes" : "no") : "") : "";
+      this.timeToPay = this.jjDisputedCount ? (this.jjDisputedCount.revisedDueDate ? 
+        (this.jjDisputedCount.dueDate != this.jjDisputedCount.revisedDueDate ? "yes" : "no") : "") : "";
       this.updateInclSurcharge(this.inclSurcharge);
 
       // TCVP-2467
