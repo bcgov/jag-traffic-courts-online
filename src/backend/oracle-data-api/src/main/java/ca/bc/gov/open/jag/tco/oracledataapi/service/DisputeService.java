@@ -506,5 +506,15 @@ public class DisputeService {
 	public void deleteDisputeUpdateRequest(Long id) {
 		disputeUpdateRequestRepository.deleteById(id);
 	}
+	
+	/**
+	 * This method is used to delete a ViolationTicketCount entity from the
+	 * database.
+	 *
+	 * @param id The ID of the ViolationTicketCount entity to be deleted.
+	 */
+	public void deleteViolationTicketCount(Long id) {
+		disputeRepository.deleteViolationTicketCountById(id);
+	}
 
 }
