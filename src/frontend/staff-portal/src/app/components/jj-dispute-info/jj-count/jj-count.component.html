@@ -18,7 +18,7 @@
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Due Date</p>
-          <p class="section-grid-text">{{ jjDisputedCount ? (jjDisputedCount.dueDate ? (jjDisputedCount.dueDate | date: "dd-MMM-yyyy" : "UTC") : '&nbsp;' ) : '&nbsp;' }}</p>
+          <p class="section-grid-text">{{ jjDisputedCount ? (jjDisputedCount.dueDate ? (jjDisputedCount.dueDate | date: "dd-MMM-yyyy") : '&nbsp;' ) : '&nbsp;' }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Fine amount</p>
@@ -119,7 +119,7 @@
           <p class="section-jj-grid-text">&nbsp;</p>
         </span>
         <span class="section-grid-cell">
-          <p class="section-grid-header">Offence Amt</p>
+          <p class="section-grid-header">Fine amount</p>
           <p class="section-jj-grid-text">
             {{ jjDisputedCount?.totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0'}}<br /><br />
             <span
@@ -239,12 +239,12 @@
           currency:'CAD':'symbol-narrow':'1.0-0'}})</i></span>
     </div>
 
-    <div class="section-grid-header" style="padding-top: 1rem !important;">Time to pay</div>
-    <div style="font-size: small;">
-      <span class="section-grid-text">{{ (jjDisputedCount?.revisedDueDate === jjDisputedCount?.dueDate) ? "No" : "Yes"
-        }}</span>
-      <span style="padding-left: 0.5rem;">{{ jjDisputedCount?.revisedDueDate | date: "dd-MMM-yyyy" : "UTC" }}</span>
-    </div>
+      <div class="section-grid-header" style="padding-top: 1rem !important;">Time to pay</div>
+      <div style="font-size: small;">
+        <span class="section-grid-text">{{ (jjDisputedCount?.revisedDueDate === jjDisputedCount?.dueDate) ? "No" : "Yes"
+          }}</span>
+        <span style="padding-left: 0.5rem;">{{ jjDisputedCount?.revisedDueDate | date: "dd-MMM-yyyy" }}</span>
+      </div>
 
     <div class="section-grid-header" style="padding-top: 1rem !important;">Comments</div>
     <mat-label class="small-note">
@@ -292,10 +292,10 @@
           <mat-form-field appearance="outline" class="datetime-picker">
             <!-- FIXME: This appears to be off by 1 day, likely a timezone issue. -->
             <input matInput formControlName="revisedDueDate" [matDatetimepicker]="ttpPicker" autocomplete="false"
-              placeholder="mm/dd/yyyy" />
+              placeholder="dd-MMM-yyyy" />
             <mat-datetimepicker-toggle [for]="ttpPicker" matSuffix></mat-datetimepicker-toggle>
             <mat-datetimepicker #ttpPicker type="date" openOnFocus="true" timeInterval="5"> </mat-datetimepicker>
-            <mat-hint>mm/dd/yyyy</mat-hint>
+            <mat-hint>dd-MMM-yyyy</mat-hint>
           </mat-form-field>
         </div>
       </div>
@@ -348,7 +348,7 @@
           <input type="datetime-local" formControlName="latestPleaUpdateTs" class="section-grid-text latest-plea-text">
         </div>
         <ng-template #view_plea_date_content>
-          <span class="section-grid-text">{{ jjDisputedCount?.latestPleaUpdateTs | date: "dd-MMM-yyyy HH:mm" : "UTC" }}</span>
+          <span class="section-grid-text">{{ jjDisputedCount?.latestPleaUpdateTs | date: "dd-MMM-yyyy HH:mm" }}</span>
         </ng-template>
       </div>
     </div>
@@ -614,8 +614,7 @@
             <span class="section-grid-text">{{ (jjDisputedCount?.revisedDueDate === jjDisputedCount?.dueDate) ? "No" :
               "Yes"
               }}</span>
-            <span style="padding-left: 0.5rem;">{{ jjDisputedCount?.revisedDueDate | date: "dd-MMM-yyyy" : "UTC"
-              }}</span>
+            <span style="padding-left: 0.5rem;">{{ jjDisputedCount?.revisedDueDate | date: "dd-MMM-yyyy" }}</span>
           </div>
         </div>
         <span class="section-grid-cell">
@@ -967,25 +966,17 @@
       <span class="section-jj-grid-cell">
         <p>
           <span
-            style="font-size:small; color: #707070; font-weight: bold; margin: 0 !important; padding-right: 10px; float: right;">Due
-            date</span><br />
-          <ng-container *ngIf="jjDisputeInfo.status == DisputeStatus.Confirmed || jjDisputeInfo.status == DisputeStatus.Review ||
-            jjDisputeInfo.status == DisputeStatus.RequireCourtHearing || jjDisputeInfo.status == DisputeStatus.Concluded">
-            <span style="font-weight: bold; font-size: small; float: right; padding-right: 10px;">{{
-              jjDisputedCount?.revisedDueDate | date: "yyyy" : "UTC" }}</span><br />
-            <span style="font-weight: bold; float: right !important; padding-right: 10px;">{{
-              jjDisputedCount?.revisedDueDate | date: "MMM dd" : "UTC" }}</span>
-          </ng-container>          
+            style="font-size:small; color: #707070; font-weight: bold; margin: 0 !important; padding-right: 10px; float: right;">
+            Due date</span><br />
+          <span style="font-weight: bold; font-size: small; float: right; padding-right: 10px;">{{
+            jjDisputedCount?.revisedDueDate | date: "dd-MMM-yyyy" }}</span><br />
         </p>
       </span>
       <span class="section-grid-cell">
-        <p>
-          <span
-            style="font-size:small; color: #707070; font-weight: bold; margin: 0 !important; padding-right: 10px; float: right;">Fine amount</span><br />
-          <span style="font-weight: bold; font-size: small; float: right; padding-right: 10px; color: #707070;">incl. surcharge</span><br />
-          <span *ngIf="jjDisputeInfo.status == DisputeStatus.Confirmed || jjDisputeInfo.status == DisputeStatus.Review ||
-            jjDisputeInfo.status == DisputeStatus.RequireCourtHearing || jjDisputeInfo.status == DisputeStatus.Concluded" 
-            style="font-weight: bold; float: right !important; padding-right: 10px;">
+        <p><span
+            style="font-size:small; color: #707070; font-weight: bold; margin: 0 !important; padding-right: 10px; float: right;">
+            Fine amount incl. surcharge</span><br />
+          <span style="font-weight: bold; float: right !important; padding-right: 10px;">
             {{ jjDisputedCount ? ( jjDisputedCount.totalFineAmount ? (jjDisputedCount.totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0') : '&nbsp;') :
             '&nbsp;' }}</span>
         </p>
