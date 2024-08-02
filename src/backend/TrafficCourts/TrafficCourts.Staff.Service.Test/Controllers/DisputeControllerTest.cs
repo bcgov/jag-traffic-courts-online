@@ -361,4 +361,22 @@ public class DisputeControllerTest
         Assert.Equal((int)HttpStatusCode.InternalServerError, problemDetails.Status);
         Assert.True(problemDetails?.Title?.Contains("Error Invoking COMS"));
     }
+
+    [Fact]
+    public async void TestDeleteViolationTicketCountAsync()
+    {
+        // Arrange
+        int violationTicketCountId = 1;
+        var disputeService = new Mock<IDisputeService>();
+        var mockLogger = new Mock<ILogger<DisputeController>>();
+        var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
+        DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
+
+        // Act
+        IActionResult? result = await disputeController.DeleteViolationTicketCountAsync(violationTicketCountId, CancellationToken.None);
+
+        // Assert
+        var noContentResult = Assert.IsType<NoContentResult>(result);
+        Assert.Equal(StatusCodes.Status204NoContent, noContentResult.StatusCode);
+    }
 }

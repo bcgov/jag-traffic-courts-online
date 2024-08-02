@@ -930,6 +930,23 @@ internal partial class OracleDataApiService : IOracleDataApiService
         var response = await InsertEmailHistoryAsync(emailHistory, cancellationToken).ConfigureAwait(false);
         return response;
     }
+
+    public async Task DeleteViolationTicketCountAsync(long id, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _client.DeleteViolationTicketCountAsync(id, cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            var ex = ToOracleDataApiServiceException(exception);
+            if (ex != exception)
+            {
+                throw ex;
+            }
+            throw; // throw the original
+        }
+    }
     #endregion
 
     /// <summary>
