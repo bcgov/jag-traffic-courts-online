@@ -293,6 +293,15 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 		return null;
 	}
+	
+	@Override
+	public void deleteViolationTicketCountById(Long violationTicketCountId) {
+		if (violationTicketCountId == null) {
+			throw new IllegalArgumentException("violationTicketCountId is null.");
+		}
+
+		assertNoExceptions(() -> violationTicketApi.violationTicketCountDelete(violationTicketCountId, EmptyObject.instance));
+	}
 
 	@Override
 	public void flushAndClear() {

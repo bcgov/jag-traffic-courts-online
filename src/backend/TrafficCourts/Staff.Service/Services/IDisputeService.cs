@@ -139,4 +139,13 @@ public interface IDisputeService
     /// <returns>A collection of DisputeUpdateRequest objects</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
     Task<ICollection<DisputeUpdateRequest>> GetDisputeUpdateRequestsAsync(long disputeId, CancellationToken cancellationToken);
+    
+    /// <summary>
+    /// Deletes a violation ticket count record from the database for a given violation ticket count id.
+    /// </summary>
+    /// <param name="violationTicketCountId">Violation Ticket Count Id</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns></returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    Task DeleteViolationTicketCountAsync(long violationTicketCountId, CancellationToken cancellationToken);
 }

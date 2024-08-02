@@ -670,4 +670,32 @@ public class DisputeController : StaffControllerBase
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }
+
+    /// <summary>
+    /// Deletes a violation ticket count asynchronously.
+    /// </summary>
+    /// <param name="violationTicketCountId">The ID of the violation ticket count to delete.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>An <see cref="IActionResult"/> representing the result of the asynchronous operation.</returns>
+    [HttpDelete("violationTicketCount/{violationTicketCountId}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.Dispute, Scopes.Update)]
+    public async Task<IActionResult> DeleteViolationTicketCountAsync([Required] int violationTicketCountId, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Attempting to delete violation ticket count with ID {violationTicketCountId}.", violationTicketCountId);
+
+        try
+        {
+            await _disputeService.DeleteViolationTicketCountAsync(violationTicketCountId, cancellationToken);
+            _logger.LogDebug("Successfully deleted violation ticket count with ID {violationTicketCountId}.", violationTicketCountId);
+
+            return NoContent(); // 204 No Content
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error when deleting violation ticket count with ID {violationTicketCountId}.", violationTicketCountId);
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
 }

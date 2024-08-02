@@ -115,5 +115,12 @@ public interface DisputeRepository {
 	 * @return the updated entity
 	 */
 	public Dispute update(Dispute dispute);
-
+	
+	
+	/**
+	 * Deletes the ViolationTicketCount entity with the given id.
+	 * 
+	 * @param violationTicketCountId
+	 */
+	public void deleteViolationTicketCountById(Long violationTicketCountId);
 }

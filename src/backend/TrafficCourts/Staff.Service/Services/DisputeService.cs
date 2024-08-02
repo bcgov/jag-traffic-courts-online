@@ -388,6 +388,13 @@ public class DisputeService : IDisputeService,
         return result;
     }
 
+    public async Task DeleteViolationTicketCountAsync(long violationTicketCountId, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Violation ticket count deleted with id {ViolationTicketCountId}", violationTicketCountId);
+        
+        await _oracleDataApi.DeleteViolationTicketCountAsync(violationTicketCountId, cancellationToken);
+    }
+
     private async Task SetHearingDateAsync(DisputeWithUpdates dispute, CancellationToken cancellationToken)
     {
         // Check for future court hearing date
