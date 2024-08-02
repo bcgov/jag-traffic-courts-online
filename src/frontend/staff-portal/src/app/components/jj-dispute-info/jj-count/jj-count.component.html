@@ -968,7 +968,9 @@
           <span
             style="font-size:small; color: #707070; font-weight: bold; margin: 0 !important; padding-right: 10px; float: right;">
             Due date</span><br />
-          <span style="font-weight: bold; font-size: small; float: right; padding-right: 10px;">{{
+          <span style="font-weight: bold; font-size: small; float: right; padding-right: 10px;"
+            *ngIf="jjDisputeInfo.status == DisputeStatus.Confirmed || jjDisputeInfo.status == DisputeStatus.Review ||
+            jjDisputeInfo.status == DisputeStatus.RequireCourtHearing || jjDisputeInfo.status == DisputeStatus.Concluded" >{{
             jjDisputedCount?.revisedDueDate | date: "dd-MMM-yyyy" }}</span><br />
         </p>
       </span>
@@ -976,7 +978,9 @@
         <p><span
             style="font-size:small; color: #707070; font-weight: bold; margin: 0 !important; padding-right: 10px; float: right;">
             Fine amount incl. surcharge</span><br />
-          <span style="font-weight: bold; float: right !important; padding-right: 10px;">
+          <span style="font-weight: bold; float: right !important; padding-right: 10px;"
+            *ngIf="jjDisputeInfo.status == DisputeStatus.Confirmed || jjDisputeInfo.status == DisputeStatus.Review ||
+            jjDisputeInfo.status == DisputeStatus.RequireCourtHearing || jjDisputeInfo.status == DisputeStatus.Concluded" >
             {{ jjDisputedCount ? ( jjDisputedCount.totalFineAmount ? (jjDisputedCount.totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0') : '&nbsp;') :
             '&nbsp;' }}</span>
         </p>
