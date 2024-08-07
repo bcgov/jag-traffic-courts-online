@@ -4,7 +4,7 @@ namespace TrafficCourts.Staff.Service.Models.DigitalCaseFiles.Print;
 
 public class FormattedDateOnly
 {
-    private const string DateFormat = "MM\\/dd\\/yyyy";
+    private const string DateFormat = "dd-MMM-yyyy";
 
     public static FormattedDateOnly Empty = new FormattedDateOnly();
 
