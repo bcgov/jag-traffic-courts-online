@@ -11,20 +11,22 @@
  */
 import { DisputeContactTypeCd } from './disputeContactTypeCd.model';
 import { DisputeSignatoryType } from './disputeSignatoryType.model';
-import { DisputeRepresentedByLawyer } from './disputeRepresentedByLawyer.model';
 import { DisputeSystemDetectedOcrIssues } from './disputeSystemDetectedOcrIssues.model';
-import { DisputeInterpreterRequired } from './disputeInterpreterRequired.model';
 import { FileMetadata } from './fileMetadata.model';
 import { DisputeStatus } from './disputeStatus.model';
-import { DisputeDisputantDetectedOcrIssues } from './disputeDisputantDetectedOcrIssues.model';
 import { DisputeAppearanceLessThan14DaysYn } from './disputeAppearanceLessThan14DaysYn.model';
-import { ViolationTicket } from './violationTicket.model';
 import { DisputeCount } from './disputeCount.model';
 import { DisputeRequestCourtAppearanceYn } from './disputeRequestCourtAppearanceYn.model';
+import { DisputeRepresentedByLawyer } from './disputeRepresentedByLawyer.model';
+import { DisputeInterpreterRequired } from './disputeInterpreterRequired.model';
+import { IcbcNameDetail } from './icbcNameDetail.model';
+import { DisputeDisputantDetectedOcrIssues } from './disputeDisputantDetectedOcrIssues.model';
+import { ViolationTicket } from './violationTicket.model';
 
 
 export interface Dispute { 
     fileData?: Array<FileMetadata> | null;
+    icbcName?: IcbcNameDetail;
     createdBy?: string | null;
     createdTs?: string;
     modifiedBy?: string | null;

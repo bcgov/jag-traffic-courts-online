@@ -21,7 +21,7 @@ citizen-api:
     "FormRecognizer__ModelId": "ViolationTicket"
     "FormRecognizer__Endpoint": "https://acs-forms-recognizer-0198bb-dev.apps.silver.devops.gov.bc.ca/"
     "Swagger__Enabled": "true"
-    "TicketSearch__SearchType": "Mock"
+    "TicketSearch__SearchType": "RoadSafety"
     "MassTransit__Transport": "RabbitMq"
     "COMS__BASEURL": "http://common-object-management-service:3000"
     "JWT__AUTHORITY": "https://idtest.gov.bc.ca/login"  
@@ -219,7 +219,7 @@ staff-api:
     "Swagger__Enabled": "true"
     "MassTransit__Transport": "RabbitMq"
     "COMS__BASEURL": "http://common-object-management-service:3000"
-
+    "TicketSearch__SearchType": "RoadSafety"
 staff-web:
   image:
     tag: "2.2.12"

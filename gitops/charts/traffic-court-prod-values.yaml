@@ -250,6 +250,7 @@ staff-api:
     "MassTransit__Transport": "RabbitMq"
     "RabbitMq__UseQuorumQueues": "true"
     "COMS__BASEURL": "http://common-object-management-service:3000"
+    "TicketSearch__SearchType": "RoadSafety"
   resources:
     limits:
       cpu: 500m
@@ -257,7 +258,6 @@ staff-api:
     requests:
       cpu: 100m
       memory: 256Mi
-
 staff-web:
   replicaCount: 3
   pdb:

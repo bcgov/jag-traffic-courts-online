@@ -10,6 +10,7 @@ api/fileHistory.service.ts
 api/jJ.service.ts
 api/keycloak.service.ts
 api/lookup.service.ts
+api/permissions.service.ts
 configuration.ts
 encoder.ts
 git_push.sh
@@ -18,6 +19,7 @@ model/agency.model.ts
 model/boundingBox.model.ts
 model/country.model.ts
 model/credentialRepresentation.model.ts
+model/dcfTemplateType.model.ts
 model/dispute.model.ts
 model/disputeAppearanceLessThan14DaysYn.model.ts
 model/disputeContactTypeCd.model.ts
@@ -54,6 +56,7 @@ model/fileHistory.model.ts
 model/fileHistoryAuditLogEntryType.model.ts
 model/fileMetadata.model.ts
 model/getDisputeCountResponse.model.ts
+model/icbcNameDetail.model.ts
 model/jJDispute.model.ts
 model/jJDisputeAccidentYn.model.ts
 model/jJDisputeAppearInCourt.model.ts
@@ -90,6 +93,7 @@ model/lock.model.ts
 model/models.ts
 model/ocrViolationTicket.model.ts
 model/pagedDisputeListItemCollection.model.ts
+model/permission.model.ts
 model/point.model.ts
 model/problemDetails.model.ts
 model/province.model.ts

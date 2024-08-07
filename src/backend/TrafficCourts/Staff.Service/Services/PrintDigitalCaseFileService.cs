@@ -13,6 +13,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     private readonly IJJDisputeService _jjDisputeService;
     private readonly IOracleDataApiService _oracleDataApi;
     private readonly IProvinceLookupService _provinceLookupService;
+    private readonly IAgencyLookupService _agencyLookupService;
     private readonly ICountryLookupService _countryLookupService;
     private readonly IDocumentGenerationService _documentGeneration;
     private readonly IDisputeService _disputeService;
@@ -22,6 +23,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         IJJDisputeService jjDisputeService,
         IOracleDataApiService oracleDataApi,
         IProvinceLookupService provinceLookupService,
+        IAgencyLookupService agencyLookupService,
         ICountryLookupService countryLookupService,
         IDocumentGenerationService documentGeneration,
         IDisputeService disputeService,
@@ -30,6 +32,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         _jjDisputeService = jjDisputeService ?? throw new ArgumentNullException(nameof(jjDisputeService));
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _provinceLookupService = provinceLookupService ?? throw new ArgumentNullException(nameof(provinceLookupService));
+        _agencyLookupService = agencyLookupService ?? throw new ArgumentNullException(nameof(agencyLookupService));
         _countryLookupService = countryLookupService ?? throw new ArgumentNullException(nameof(countryLookupService));
         _documentGeneration = documentGeneration ?? throw new ArgumentNullException(nameof(documentGeneration));
         _disputeService = disputeService ?? throw new ArgumentNullException(nameof(disputeService));
@@ -39,28 +42,28 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     /// <summary>
     /// Renders the digital case file for a given dispute based on ticket number. This really should be using the tco_dispute.dispute_id.
     /// </summary>
-    public async Task<RenderedReport> PrintDigitalCaseFileAsync(string ticketNumber, string timeZoneId, CancellationToken cancellationToken)
+    public async Task<RenderedReport> PrintDigitalCaseFileAsync(string ticketNumber, TimeZoneInfo timeZone, DcfTemplateType type, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(ticketNumber);
-        ArgumentNullException.ThrowIfNull(timeZoneId);
+        ArgumentNullException.ThrowIfNull(timeZone);
 
         // generate the digital case file model
-        DigitalCaseFile digitalCaseFile = await GetDigitalCaseFileAsync(ticketNumber, timeZoneId, cancellationToken);
+        DigitalCaseFile digitalCaseFile = await GetDigitalCaseFileAsync(ticketNumber, timeZone, cancellationToken);
 
-        var report = await RenderReportAsync(digitalCaseFile, cancellationToken);
+        var report = await RenderReportAsync(digitalCaseFile, type, cancellationToken);
 
         return report;
     }
 
-    public async Task<RenderedReport> PrintTicketValidationViewAsync(long disputeId, string timeZoneId, CancellationToken cancellationToken)
+    public async Task<RenderedReport> PrintTicketValidationViewAsync(long disputeId, TimeZoneInfo timeZone, DcfTemplateType type, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(disputeId);
-        ArgumentNullException.ThrowIfNull(timeZoneId);
+        ArgumentNullException.ThrowIfNull(timeZone);
 
         // generate the digital case file model
-        DigitalCaseFile digitalCaseFile = await GetDigitalCaseFileAsync(disputeId, timeZoneId, cancellationToken);
+        DigitalCaseFile digitalCaseFile = await GetDigitalCaseFileAsync(disputeId, timeZone, cancellationToken);
 
-        var report = await RenderReportAsync(digitalCaseFile, cancellationToken);
+        var report = await RenderReportAsync(digitalCaseFile, type, cancellationToken);
 
         return report;
     }
@@ -69,15 +72,14 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     /// Fetches the <see cref="DigitalCaseFile"/> based on OCCAM disputeId. This is for printing ticket validation view in DCF template (TCVP-2865).
     /// </summary>
     /// <param name="disputeId"></param>
-    /// <param name="timeZoneId"></param>
+    /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    internal async Task<DigitalCaseFile> GetDigitalCaseFileAsync(long disputeId, string timeZoneId, CancellationToken cancellationToken)
+    internal async Task<DigitalCaseFile> GetDigitalCaseFileAsync(long disputeId, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
-        // get the user's time zone
-        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+        GetDisputeOptions options = new GetDisputeOptions {  DisputeId = disputeId, Assign = false };
 
-        var dispute = await _disputeService.GetDisputeAsync(disputeId, false, cancellationToken);
+        var dispute = await _disputeService.GetDisputeAsync(options, cancellationToken);
 
         Domain.Models.Province? driversLicenceProvince = null;
         if (dispute.DriversLicenceIssuedProvinceSeqNo is not null && dispute.DriversLicenceIssuedCountryId is not null)
@@ -92,6 +94,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         ticket.Number = dispute.ViolationTicket.TicketNumber;
         ticket.Surname = dispute.ViolationTicket.DisputantSurname;
         ticket.GivenNames = dispute.ViolationTicket.DisputantGivenNames;
+        ticket.DateOfBirth = new FormattedDateOnly(dispute.DisputantBirthdate);
         ticket.PoliceDetachment = dispute.ViolationTicket.DetachmentLocation;
         ticket.Issued = new FormattedDateTime(dispute.ViolationTicket.IssuedTs);
         ticket.Submitted = new FormattedDateOnly(dispute.SubmittedTs);
@@ -120,6 +123,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         contact.DriversLicence.Province = driversLicenceProvince?.ProvAbbreviationCd ?? string.Empty;
         contact.DriversLicence.Number = dispute.DriversLicenceNumber;
         contact.Email = dispute.EmailAddress;
+        contact.PhoneNumber = dispute.HomePhoneNumber ?? dispute.WorkPhoneNumber;
 
         // set written reasons
         var writtenReasons = digitalCaseFile.WrittenReasons;
@@ -129,11 +133,16 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         switch (dispute.SignatoryType)
         {
             case DisputeSignatoryType.D:
-                writtenReasons.DisputantSignature = dispute.SignatoryName;
+                writtenReasons.SignatureType = "Disputant";
                 break;
             case DisputeSignatoryType.A:
-                writtenReasons.AgentSignature = dispute.SignatoryName;
+                writtenReasons.SignatureType = "Agent";
                 break;
+        }
+        writtenReasons.Signature = dispute.SignatoryName;
+        if (dispute.SignatoryName != null)
+        {
+            writtenReasons.SubmissionTs = new FormattedDateTime(dispute.SubmittedTs);
         }
 
         // set the counts
@@ -177,10 +186,19 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         return digitalCaseFile;
     }
 
-    private async Task<RenderedReport> RenderReportAsync(DigitalCaseFile digitalCaseFile, CancellationToken cancellationToken)
+    private async Task<RenderedReport> RenderReportAsync(DigitalCaseFile digitalCaseFile, DcfTemplateType type, CancellationToken cancellationToken)
     {
+        // get the template file name based on the type
+        string templateFileName = type switch
+        {
+            DcfTemplateType.DcfTemplate => "template_DigitalCaseFile.docx",
+            DcfTemplateType.HrDcfTemplate => "template_HR_DigitalCaseFile.docx",
+            DcfTemplateType.WrDcfTemplate => "template_WR_DigitalCaseFile.docx",
+            _ => throw new ArgumentOutOfRangeException(nameof(type), $"Not expected template type value: {type}"),
+        };
+
         // get the template
-        Stream template = GetTemplate("template_DigitalCaseFile.docx");
+        Stream template = GetTemplate(templateFileName);
         var templateType = TemplateType.Word;
 
         var convertTo = ConvertTo.Pdf;
@@ -230,20 +248,36 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     }
 
     /// <summary>
+    /// Returns Agency (Courthouse Location) based on the provided agencyId through agencyLookupService.
+    /// </summary>
+    /// <param name="agencyId"></param>
+    /// <returns></returns>
+    private async Task<Agency?> GetCourthouseLocationAsync(string agencyId)
+    {
+        Domain.Models.Agency? courthouseLocation = null;
+        if (agencyId is not null)
+        {
+            courthouseLocation = await _agencyLookupService.GetByIdAsync(agencyId);
+        }
+
+        return courthouseLocation;
+    }
+
+    /// <summary>
     /// Fetches the <see cref="DigitalCaseFile"/> based on ticket number. This really should be using the tco_dispute.dispute_id.
     /// </summary>
-    internal async Task<DigitalCaseFile> GetDigitalCaseFileAsync(string ticketNumber, string timeZoneId, CancellationToken cancellationToken)
+    internal async Task<DigitalCaseFile> GetDigitalCaseFileAsync(string ticketNumber, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
         // JavaScript: Intl.DateTimeFormat().resolvedOptions().timeZone
         // Time Zone from the browser is either a time zone identifier from the IANA Time Zone Database or a UTC offset in ISO 8601 extended format.
         // https://tc39.es/ecma402/#sec-properties-of-intl-datetimeformat-instances
 
-        // get the user's time zone
-        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
-
         var dispute = await _jjDisputeService.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
 
         Domain.Models.Province? driversLicenceProvince = await GetDriversLicenceProvinceAsync(dispute.DrvLicIssuedProvSeqNo, dispute.DrvLicIssuedCtryId);
+
+        // Get courthouse location data from the courthouse location lookup service based on CourtAgenId provided from the dispute
+        Agency? courthouseLocation = await GetCourthouseLocationAsync(dispute.CourtAgenId);
 
         var digitalCaseFile = new DigitalCaseFile();
 
@@ -252,15 +286,16 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         // set the ticket information
         var ticket = digitalCaseFile.Ticket;
         ticket.Number = dispute.TicketNumber;
-        ticket.Surname = dispute.OccamDisputantSurnameNm;
-        ticket.GivenNames = ConcatenateWithSpaces(dispute.OccamDisputantGiven1Nm, dispute.OccamDisputantGiven2Nm, dispute.OccamDisputantGiven3Nm);
+        ticket.Surname = dispute.DisputantSurname;
+        ticket.GivenNames = ConcatenateWithSpaces(dispute.DisputantGivenName1, dispute.DisputantGivenName2, dispute.DisputantGivenName3);
+        ticket.DateOfBirth = new FormattedDateOnly(dispute.DisputantBirthdate);
         ticket.OffenceLocation = dispute.OffenceLocation;
         ticket.PoliceDetachment = dispute.PoliceDetachment;
         ticket.Issued = new FormattedDateTime(dispute.IssuedTs);
         ticket.Submitted = new FormattedDateOnly(dispute.SubmittedTs);
         ticket.IcbcReceived = new FormattedDateOnly(dispute.IcbcReceivedDate);
         ticket.CourtAgenyId = dispute.CourtAgenId;
-        ticket.CourtHouse = dispute.CourthouseLocation;
+        ticket.CourtHouse = courthouseLocation?.Name ?? string.Empty;
 
         // set the contact information
         var contact = digitalCaseFile.Contact;
@@ -274,6 +309,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         contact.DriversLicence.Province = driversLicenceProvince?.ProvAbbreviationCd ?? string.Empty;
         contact.DriversLicence.Number = dispute.DriversLicenceNumber;
         contact.Email = dispute.EmailAddress;
+        contact.PhoneNumber = dispute.OccamDisputantPhoneNumber;
 
         // set the court options
         var options = digitalCaseFile.CourtOptions;
@@ -297,12 +333,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         SetFields(appearance, currentAppearance, jjDisplayName);
 
         // set the court appearance history
-        var appearanceHistory = digitalCaseFile.AppearanceHistory;
-        foreach (var rop in dispute.JjDisputeCourtAppearanceRoPs.Where(_ => _ != currentAppearance).OrderByDescending(a => a.AppearanceTs))
-        {
-            // TODO: how do we know the current appearance vs historical ones?
-            appearanceHistory.Add(SetFields(new Appearance(), rop, null));
-        }
+        SetAppearanceHistory(digitalCaseFile, dispute, currentAppearance);  
 
         // set written reasons
         var writtenReasons = digitalCaseFile.WrittenReasons;
@@ -312,11 +343,16 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         switch (dispute.SignatoryType)
         {
             case JJDisputeSignatoryType.D:
-                writtenReasons.DisputantSignature = dispute.SignatoryName;
+                writtenReasons.SignatureType = "Disputant";
                 break;
             case JJDisputeSignatoryType.A:
-                writtenReasons.AgentSignature = dispute.SignatoryName;
+                writtenReasons.SignatureType = "Agent";
                 break;
+        }
+        writtenReasons.Signature = dispute.SignatoryName;
+        if (dispute.SignatoryName != null)
+        {
+            writtenReasons.SubmissionTs = new FormattedDateTime(dispute.SubmittedTs);
         }
 
         // set the counts
@@ -811,4 +847,26 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     {
         return !(disputedCount.RevisedDueDate is null || disputedCount.RevisedDueDate == disputedCount.DueDate);
     }
+
+    private void SetAppearanceHistory(DigitalCaseFile digitalCaseFile, JJDispute dispute, JJDisputeCourtAppearanceRoP currentAppearance)
+    {
+        var appearanceHistory = digitalCaseFile.AppearanceHistory;
+
+        // Get the sorted list of court appearances, excluding the most recent one (first record after sorting)
+        var courtAppearanceHistory = dispute.JjDisputeCourtAppearanceRoPs
+                                        .Where(_ => _ != currentAppearance)
+                                        .OrderByDescending(a => a.AppearanceTs)
+                                        .ToList();
+
+        // Check if there are any court appearance history records
+        if (courtAppearanceHistory.Any())
+        {
+            digitalCaseFile.ShowAppearanceHistory = true;
+            foreach (var rop in courtAppearanceHistory)
+            {
+                appearanceHistory.Add(SetFields(new Appearance(), rop, null));
+            }
+        }
+    }
+
 }

@@ -21,21 +21,10 @@
           <button mat-menu-item (click)="goTo('fileHistory')">File History</button>
           <button mat-menu-item (click)="goTo('fileRemarks')">File Remarks</button>
         </mat-menu>
-        <button mat-raised-button (click)="onPrint()">Print</button>
         <button mat-raised-button [matMenuTriggerFor]="printMenu">Print Options</button>&nbsp;
         <mat-menu #printMenu="matMenu" yPosition="below">
-          <button mat-menu-item (click)="printOptions.disputeDetails=!printOptions.disputeDetails"><mat-icon
-              *ngIf="printOptions.disputeDetails">check</mat-icon><mat-icon
-              *ngIf="!printOptions.disputeDetails">close</mat-icon>Dispute Details</button>
-          <button mat-menu-item (click)="printOptions.uploadedDocuments=!printOptions.uploadedDocuments"><mat-icon
-              *ngIf="printOptions.uploadedDocuments">check</mat-icon><mat-icon
-              *ngIf="!printOptions.uploadedDocuments">close</mat-icon>Uploaded Documents</button>
-          <button mat-menu-item (click)="printOptions.fileHistory=!printOptions.fileHistory"><mat-icon
-              *ngIf="printOptions.fileHistory">check</mat-icon><mat-icon
-              *ngIf="!printOptions.fileHistory">close</mat-icon>File History</button>
-          <button mat-menu-item (click)="printOptions.fileRemarks=!printOptions.fileRemarks"><mat-icon
-              *ngIf="printOptions.fileRemarks">check</mat-icon><mat-icon
-              *ngIf="!printOptions.fileRemarks">close</mat-icon>File Remarks</button>
+          <button mat-menu-item (click)="onPrint(false)">JJ Version</button>
+          <button mat-menu-item (click)="onPrint(true)">Complete Version</button>
         </mat-menu>
       </div>
     </div>
@@ -68,52 +57,29 @@
           <span class="ticket-number">Ticket Number: {{ lastUpdatedJJDispute.ticketNumber }}</span>
         </span>
       </div> <br /><br />
-      <section>
+      <section class="section-sticky">
         <ng-container subHeader>
           <span>
-            <h3>Ticket Information / Dispute History</h3>
+            <h3>Violation Ticket Information<span class="medium-note"><i> (source Ticket & ICBC)</i></span></h3>
           </span>
         </ng-container>
         <form [formGroup]="ticketInformationForm">
           <div style="display: grid; grid-template-columns: auto auto auto auto">
             <span class="section-grid-cell">
               <p class="section-grid-header">{{ "label.surname" | translate }}</p>
-              <p class="section-grid-text" *ngIf="!isSSEditMode">{{ lastUpdatedJJDispute.occamDisputantSurnameNm }}</p>
-              <mat-form-field appearance="outline" *ngIf="isSSEditMode">
-                <input matInput formControlName="occamDisputantSurnameNm">
-                <mat-error *ngIf="ticketInformationForm.controls.occamDisputantSurnameNm.hasError('maxlength')">{{
-                  "error.max_length" | translate }}30</mat-error>
-              </mat-form-field>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.disputantSurname }}</p>
             </span>
             <span class="section-grid-cell">
-              <p class="section-grid-header" *ngIf="!isSSEditMode">{{ "label.given_names" | translate }}</p>
-              <p class="section-grid-text" *ngIf="!isSSEditMode">{{ lastUpdatedJJDispute.occamDisputantGivenNames }}</p>
-              <p class="section-grid-header" *ngIf="isSSEditMode">{{ "label.given_name_1" | translate }}</p>
-              <mat-form-field appearance="outline" *ngIf="isSSEditMode">
-                <input matInput formControlName="occamDisputantGiven1Nm">
-                <mat-error *ngIf="ticketInformationForm.controls.occamDisputantGiven1Nm.hasError('maxlength')">{{
-                  "error.max_length" | translate }}30</mat-error>
-              </mat-form-field>
-              <p class="section-grid-header" *ngIf="isSSEditMode">{{ "label.given_name_2" | translate }}</p>
-              <mat-form-field appearance="outline" *ngIf="isSSEditMode">
-                <input matInput formControlName="occamDisputantGiven2Nm">
-                <mat-error *ngIf="ticketInformationForm.controls.occamDisputantGiven2Nm.hasError('maxlength')">{{
-                  "error.max_length" | translate }}30</mat-error>
-              </mat-form-field>
-              <p class="section-grid-header" *ngIf="isSSEditMode">{{ "label.given_name_3" | translate }}</p>
-              <mat-form-field appearance="outline" *ngIf="isSSEditMode">
-                <input matInput formControlName="occamDisputantGiven3Nm">
-                <mat-error *ngIf="ticketInformationForm.controls.occamDisputantGiven3Nm.hasError('maxlength')">{{
-                  "error.max_length" | translate }}30</mat-error>
-              </mat-form-field>
+              <p class="section-grid-header">{{ "label.given_names" | translate }}</p>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.ticketDisputantGivenNames }}</p>
             </span>
             <span class="section-grid-cell">
-              <p class="section-grid-header">Location of Offence</p>
-              <p class="section-grid-text"> {{ lastUpdatedJJDispute.offenceLocation }}</p>
+              <p class="section-grid-header">Date of Birth</p>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.disputantBirthdate | date: "dd-MMM-yyyy" : "UTC" }}</p>
             </span>
             <span class="section-grid-cell">
-              <p class="section-grid-header">Organization/Detachment/Location</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.policeDetachment }}</p>
+              <p class="section-grid-header">Driver's Licence Number</p>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceNumber }}</p>
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Violation Date</p>
@@ -142,19 +108,35 @@
                 <p class="section-grid-text">{{ lastUpdatedJJDispute.courthouseLocation }}</p>
               </span>
             </ng-container>
+            <span class="section-grid-cell">
+              <p class="section-grid-header">Location of Offence</p>
+              <p class="section-grid-text"> {{ lastUpdatedJJDispute.offenceLocation }}</p>
+            </span>
+            <span class="section-grid-cell">
+              <p class="section-grid-header">Organization/Detachment/Location</p>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.policeDetachment }}</p>
+            </span>
           </div>
         </form>
-      </section><br />
-      <section>
+      </section>
+      <section class="section-sticky">
         <ng-container subHeader>
           <span>
-            <h3>Contact Information</h3>
+            <h3>Disputant Entered Information <span class="medium-note"><i>(source online portal)</i></span></h3>
           </span>
+          <span class="section-grid-header">Contact Type: </span>
+          <span class="section-grid-text" *ngIf="lastUpdatedJJDispute.contactType === ContactType.Individual">Disputant</span>
+          <span class="section-grid-text" *ngIf="lastUpdatedJJDispute.contactType === ContactType.Lawyer">Lawyer</span>
+          <span class="section-grid-text" *ngIf="lastUpdatedJJDispute.contactType === ContactType.Other">Agent/Other</span>
         </ng-container>
         <form [formGroup]="contactInformationForm">
           <div style="display: grid; grid-template-columns: auto auto auto auto">
             <span class="section-grid-cell">
-              <p class="section-grid-header">{{ "label.surname" | translate }}</p>
+              <p class="section-grid-header">
+                <span class="section-grid-header" *ngIf="lastUpdatedJJDispute.contactType === ContactType.Lawyer">Lawyer's </span>
+                <span class="section-grid-header" *ngIf="lastUpdatedJJDispute.contactType === ContactType.Other">Agent's </span>
+                {{ "label.surname" | translate }}
+              </p>
               <p class="section-grid-text"
                 *ngIf="!(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">{{
                 lastUpdatedJJDispute.contactType === ContactType.Individual ?
@@ -168,8 +150,11 @@
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header"
-                *ngIf="!(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">{{
-                "label.given_names" | translate }}</p>
+                *ngIf="!(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">
+                <span class="section-grid-header" *ngIf="lastUpdatedJJDispute.contactType === ContactType.Lawyer">Lawyer's </span>
+                <span class="section-grid-header" *ngIf="lastUpdatedJJDispute.contactType === ContactType.Other">Agent's </span>
+                {{ "label.given_names" | translate }}
+              </p>
               <p class="section-grid-text"
                 *ngIf="!(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">{{
                 lastUpdatedJJDispute.contactType === ContactType.Individual ?
@@ -202,33 +187,33 @@
                   "error.max_length" | translate }}30</mat-error>
               </mat-form-field>
             </span>
-            <span class="section-grid-cell" style="grid-column: span 2">
-              <p class="section-grid-header">Address</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.address }}</p>
-            </span>
             <span class="section-grid-cell">
-              <p class="section-grid-header">Prov / State of DL</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceProvince }}</p>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">Driver's Licence #</p>
+              <p class="section-grid-header">Driver's Licence Number</p>
               <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceNumber }}</p>
             </span>
             <span class="section-grid-cell">
-              <p class="section-grid-header">Email</p>
+              <p class="section-grid-header">Prov / State of Driver's Licence</p>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceProvince }}</p>
+            </span>
+            <span class="section-grid-cell" style="grid-column: span 3">
+              <p class="section-grid-header">Contact Mailing Address</p>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.address }}</p>
+            </span>
+            <span class="section-grid-cell">
+              <p class="section-grid-header">Contact Email</p>
               <p class="section-grid-text">{{ lastUpdatedJJDispute.emailAddress }}</p>
             </span>
           </div>
         </form>
-      </section><br />
-      <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance">
+      </section>
+      <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance" class="section-sticky">
         <ng-container subHeader>
           <span>
             <h3>Court Options</h3>
           </span>
         </ng-container>
         <form [formGroup]="courtOptionsForm">
-          <div style="display: grid; grid-template-columns: auto auto auto">
+          <div style="display: grid; grid-template-columns: auto auto auto auto">
             <span class="section-grid-cell">
               <p class="section-grid-header" *ngIf="!isSSEditMode">{{ "label.legal_counsel_name" | translate }}</p>
               <p class="section-grid-text" *ngIf="!isSSEditMode">
@@ -295,31 +280,10 @@
                 </mat-select>
               </mat-form-field>
             </span>
-            <span class="section-grid-cell">
-              <!-- Comment out this field for now as BA thinks it may not be necessary and is not really used. -->
-              <!--                
-              <p class="section-grid-header">Disputant Attendance Type</p>
-              <p class="section-grid-text" *ngIf="!isSSEditMode">{{ lastUpdatedJJDispute.disputantAttendanceType }}</p>
-              <mat-form-field appearance="outline" *ngIf="isSSEditMode">
-                <mat-select formControlName="disputantAttendanceType" placeholder="Attendance">
-                  <mat-option [value]="AttendanceType.InPerson">{{ "attendanceType.in_person" | translate }}</mat-option>
-                  <mat-option [value]="AttendanceType.MsteamsAudio">{{ "attendanceType.msteams_audio" | translate }}</mat-option>
-                  <mat-option [value]="AttendanceType.MsteamsVideo">{{ "attendanceType.msteams_video" | translate }}</mat-option>
-                  <mat-option [value]="AttendanceType.TelephoneConference">{{ "attendanceType.telephone_conference" | translate }}</mat-option>
-                  <mat-option [value]="AttendanceType.WrittenReasons">{{ "attendanceType.written_reasons" | translate }}</mat-option>
-                  <mat-option [value]="AttendanceType.VideoConference">{{ "attendanceType.video_conference" | translate }}</mat-option>
-                </mat-select>
-              </mat-form-field>
-              -->
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">&nbsp;</p>
-              <p class="section-grid-text">&nbsp;</p>
-            </span>
           </div>
         </form>
-      </section><br />
-      <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance">
+      </section>
+      <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance" class="section-sticky">
         <ng-container subHeader>
           <span>
             <h3>Court Appearance</h3>
@@ -452,8 +416,8 @@
             </span>
           </div>
         </form>
-      </section><br />
-      <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance">
+      </section>
+      <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance" class="section-sticky">
         <ng-container subHeader>
           <span>
             <h3>Court Appearances History</h3>
@@ -462,22 +426,28 @@
         <app-jj-dispute-court-appearances [data]="lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs">
         </app-jj-dispute-court-appearances>
       </section>
-      <section>
+      <section *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons" class="section-sticky">
         <ng-container subHeader>
           <span>
-            <h3>Written Reasons</h3>
+            <h3>Disputant Statement</h3>
           </span>
         </ng-container>
         <!-- Signature Panel -->
-        <h4 *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons">{{ "label.signature" | translate }}</h4>
-        <div class="container signature-box" *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons">
+        <h4>{{ "label.signature" | translate }} - 
+          {{ "label.signature_subheading" | translate }}
+        </h4>
+        <div class="container signature-box">
           <div class="row justify-content-start custom-row">
             <div class="col-2 custom-column">
               <strong>{{ "label.signatory_option_1" | translate }}</strong>
             </div>
             <div class="col-4 custom-column">
-              <span *ngIf="lastUpdatedJJDispute.signatoryType === SignatoryType.D" style="font-size: small">{{
-                lastUpdatedJJDispute.signatoryName }}</span>
+              <span *ngIf="lastUpdatedJJDispute.signatoryType === SignatoryType.D" style="font-size: small">
+                {{ lastUpdatedJJDispute.signatoryName }}</span>
+            </div>
+            <div class="col-4 custom-column">
+              <span *ngIf="lastUpdatedJJDispute.signatoryType === SignatoryType.D" style="font-size: small">
+                {{ lastUpdatedJJDispute.submittedTs | date: "dd-MMM-yyyy HH:mm" : "UTC" }}</span>
             </div>
           </div>
           <div class="row justify-content-start">
@@ -485,12 +455,23 @@
               <strong>{{ "label.signatory_option_2" | translate }}</strong>
             </div>
             <div class="col-4 custom-column">
-              <span *ngIf="lastUpdatedJJDispute.signatoryType === SignatoryType.A" style="font-size: small">{{
-                lastUpdatedJJDispute.signatoryName }}</span>
+              <span *ngIf="lastUpdatedJJDispute.signatoryType === SignatoryType.A" style="font-size: small">
+                {{ lastUpdatedJJDispute.signatoryName }}</span>
+            </div>
+            <div class="col-4 custom-column">
+              <span *ngIf="lastUpdatedJJDispute.signatoryType === SignatoryType.A" style="font-size: small">
+                {{ lastUpdatedJJDispute.submittedTs | date: "dd-MMM-yyyy HH:mm" : "UTC" }}</span>
             </div>
           </div>
         </div>
         <!-- Signature Panel End -->
+      </section>
+      <section class="section-sticky">
+        <ng-container subHeader>
+          <span>
+            <h3>Written Reasons</h3>
+          </span>
+        </ng-container>
         <div>
           <h4><b>Fine Reduction</b>
             <span *ngIf="fineReductionCountsHeading.length>0">&nbsp;-&nbsp;{{ fineReductionCountsHeading }}</span>
@@ -504,39 +485,37 @@
           </h4>
           <span style="font-size: small">{{ lastUpdatedJJDispute.timeToPayReason }}</span>
         </div>
-      </section><br />
-      <section>
-        <ng-container subHeader>
-          <span>
-            <h3>Count(s)</h3>
-          </span>
-        </ng-container>
+      </section>
+      <section class="section-sticky">
         <div style="display: grid; grid-template-columns: 33% 33% 33%">
-          <span *ngFor="let i of [1,2,3]" style="border:1px solid black; ">
+          <span *ngFor="let i of [1,2,3]">
             <app-jj-count [count]="i" [jjDisputeInfo]="lastUpdatedJJDispute" [jjDisputedCount]="getJJDisputedCount(i)"
               (jjDisputedCountUpdate)="updateFinalDispositionCount($event)" [type]="type" [isViewOnly]="isViewOnly"
               [isSSEditMode]="isSSEditMode">
             </app-jj-count>
           </span>
         </div>
-      </section><br />
-      <div fxLayout="row" *ngIf="type === 'ticket'" style="padding-bottom: 2rem;">
-        <div fxFlex="40">
-          <div fxFlex>
-            <h3>Signed By</h3>
-            <div>{{ lastUpdatedJJDispute.decisionMadeBy }}</div>
-          </div>
-          <div fxFlex></div>
-          <div fxFlex>
-            <h3>Date Signed</h3>
-            <div>{{ lastUpdatedJJDispute.jjDecisionDate | date: "MMM dd, yyyy" }}</div>
+      </section>
+
+      <section *ngIf="type === 'ticket'" class="section-sticky">
+        <div fxLayout="row" style="padding-bottom: 2rem;">
+          <div fxFlex="40">
+            <div fxFlex>
+              <h3>Signed By</h3>
+              <div>{{ lastUpdatedJJDispute.decisionMadeBy }}</div>
+            </div>
+            <div fxFlex></div>
+            <div fxFlex>
+              <h3>Date Signed</h3>
+              <div>{{ lastUpdatedJJDispute.jjDecisionDate | date: "MMM dd, yyyy" }}</div>
+            </div>
           </div>
         </div>
-      </div>
+      </section>      
 
       <span #uploadedDocuments></span>
       <mat-accordion multi [togglePosition]="'before'" class="info-expansion-panel">
-        <mat-expansion-panel [expanded]="true" hideToggle>
+        <mat-expansion-panel [expanded]="true">
           <mat-expansion-panel-header>
             <mat-panel-title>
               <span style="color: black;"><b>Documents</b></span>
@@ -579,10 +558,10 @@
         </mat-expansion-panel>
 
         <span #fileHistory></span>
-        <mat-expansion-panel [expanded]="true" hideToggle>
+        <mat-expansion-panel>
           <mat-expansion-panel-header>
             <mat-panel-title>
-              <span style="color: black;"><b>File History </b></span>
+              <span style="color: black;"><b>Administrative Activity </b></span>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <div>
@@ -591,7 +570,7 @@
         </mat-expansion-panel>
 
         <span #disputantUpdates></span>
-        <mat-expansion-panel [expanded]="true" hideToggle>
+        <mat-expansion-panel [expanded]="true">
           <mat-expansion-panel-header>
             <mat-panel-title>
               <span style="color: black;"><b>{{ "label.disputant_updates" | translate }}</b></span>
@@ -603,7 +582,7 @@
         </mat-expansion-panel>
 
         <span #fileRemarks></span>
-        <mat-expansion-panel [expanded]="true" id="file-remarks" hideToggle>
+        <mat-expansion-panel [expanded]="true" id="file-remarks">
           <mat-expansion-panel-header>
             <mat-panel-title>
               <span style="color: black;"><b>File Remarks </b></span>
@@ -620,7 +599,7 @@
           </div>
         </mat-expansion-panel>
       </mat-accordion>
-      <section style="padding-top: 2rem;" *ngIf="!isViewOnly">
+      <section *ngIf="!isViewOnly" class="section-sticky">
         <ng-container subHeader>
           <span>
             <h3>Add Remarks<br />
