@@ -18,7 +18,7 @@
         <mat-menu #gotoMenu="matMenu" yPosition="below">
           <button mat-menu-item (click)="goTo('disputeDetails')">Dispute Details</button>
           <button mat-menu-item (click)="goTo('uploadedDocuments')">Uploaded Documents</button>
-          <button mat-menu-item (click)="goTo('fileHistory')">File History</button>
+          <button mat-menu-item (click)="goTo('fileHistory')">Administrative Activity</button>
           <button mat-menu-item (click)="goTo('fileRemarks')">File Remarks</button>
         </mat-menu>
         <button mat-raised-button [matMenuTriggerFor]="printMenu">Print Options</button>&nbsp;
@@ -121,7 +121,7 @@
       <section class="section-sticky">
         <ng-container subHeader>
           <span>
-            <h3>Disputant Entered Information <span class="medium-note"><i>(source online portal)</i></span></h3>
+            <h3>Disputant Entered Information <span class="medium-note"><i>(source Online Portal)</i></span></h3>
           </span>
           <span class="section-grid-header">Contact Type: </span>
           <span class="section-grid-text" *ngIf="lastUpdatedJJDispute.contactType === ContactType.Individual">Disputant</span>
@@ -187,11 +187,11 @@
               </mat-form-field>
             </span>
             <span class="section-grid-cell">
-              <p class="section-grid-header">Driver's Licence Number</p>
+              <p class="section-grid-header">Disputant's Driver's Licence Number</p>
               <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceNumber }}</p>
             </span>
             <span class="section-grid-cell">
-              <p class="section-grid-header">Prov / State of Driver's Licence</p>
+              <p class="section-grid-header">Disputant's Prov / State of Driver's Licence</p>
               <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceProvince }}</p>
             </span>
             <span class="section-grid-cell" style="grid-column: span 3">

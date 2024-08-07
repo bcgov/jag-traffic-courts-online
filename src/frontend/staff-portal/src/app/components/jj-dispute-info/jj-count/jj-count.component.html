@@ -17,7 +17,7 @@
           <p class="section-grid-text">{{ jjDisputedCount ? (isEmpty(jjDisputedCount.description) ? '&nbsp;' : jjDisputedCount.description) : '&nbsp;' }}</p>
         </span>
         <span class="section-grid-cell">
-          <p class="section-grid-header">Due Date</p>
+          <p class="section-grid-header">Deadline to Dispute</p>
           <p class="section-grid-text">{{ jjDisputedCount ? (jjDisputedCount.dueDate ? (jjDisputedCount.dueDate | date: "dd-MMM-yyyy") : '&nbsp;' ) : '&nbsp;' }}</p>
         </span>
         <span class="section-grid-cell">
@@ -32,7 +32,7 @@
   <section class="section-sticky">
     <ng-container subHeader>
       <span class="count-text">
-        <h3>Disputant Request <span class="medium-note"><i>(source online portal)</i></span></h3>
+        <h3>Disputant Request <span class="medium-note"><i>(source Online Portal)</i></span></h3>
       </span>
     </ng-container>
     <form [formGroup]="countForm">
@@ -99,7 +99,7 @@
   <section *ngIf="type !== 'ticket' && jjDisputeInfo.hearingType === HearingType.WrittenReasons && !isViewOnly">
     <ng-container subHeader>
       <span class="count-text">
-        <h3>{{ "label.jj_decision" | translate }}</h3>
+        <h3>{{ "label.jj_decision" | translate }} - {{ count }}</h3>
       </span>
     </ng-container>
     <form [formGroup]="form" novalidate>
@@ -208,7 +208,7 @@
   <section *ngIf="(type === 'ticket' || isViewOnly) && jjDisputeInfo.hearingType === HearingType.WrittenReasons && !(isSSEditMode && jjDisputedCount)">
     <ng-container subHeader>
       <span class="count-text">
-        <h3>{{ "label.jj_decision" | translate }}</h3>
+        <h3>{{ "label.jj_decision" | translate }} - {{ count }}</h3>
       </span>
     </ng-container>
     <div class="section-grid-header">Fine calculation</div>
@@ -257,7 +257,7 @@
   <section *ngIf="type === 'ticket' && jjDisputeInfo.hearingType === HearingType.WrittenReasons && (isSSEditMode && jjDisputedCount)">
     <ng-container subHeader>
       <span class="count-text">
-        <h3>{{ "label.jj_decision" | translate }}</h3>
+        <h3>{{ "label.jj_decision" | translate }} - {{ count }}</h3>
       </span>
     </ng-container>
     <form [formGroup]="countForm">
@@ -319,7 +319,7 @@
   <section [formGroup]="form" *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && !(isSSEditMode && jjDisputedCount)">
     <ng-container subHeader>
       <span class="count-text">
-        <h3>{{ "label.jj_decision" | translate }}</h3>
+        <h3>{{ "label.jj_decision" | translate }} - {{ count }}</h3>
       </span>
     </ng-container>
     <div class="row">
@@ -358,7 +358,7 @@
     <form [formGroup]="countForm">
       <ng-container subHeader>
         <span class="count-text">
-          <h3>{{ "label.jj_decision" | translate }}</h3>
+          <h3>{{ "label.jj_decision" | translate }} - {{ count }}</h3>
         </span>
       </ng-container>
       <!-- Change Plea -->
