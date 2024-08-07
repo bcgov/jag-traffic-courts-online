@@ -99,6 +99,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
         // set the contact information
         var contact = digitalCaseFile.Contact;
+        contact.ContactType = ToString(dispute.ContactTypeCd);
         contact.Surname = dispute.DisputantSurname ?? ticket.Surname;
         contact.GivenNames = ConcatenateWithSpaces(dispute.DisputantGivenName1, dispute.DisputantGivenName2, dispute.DisputantGivenName3);
         if (string.IsNullOrEmpty(contact.GivenNames))
@@ -260,6 +261,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
         // set the contact information
         var contact = digitalCaseFile.Contact;
+        contact.ContactType = ToString(dispute.ContactType);
         contact.Surname = dispute.ContactSurname ?? ticket.Surname;
         contact.GivenNames = ConcatenateWithSpaces(dispute.ContactGivenName1, dispute.ContactGivenName2, dispute.ContactGivenName3);
         if (string.IsNullOrEmpty(contact.GivenNames))
@@ -724,6 +726,36 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         if (value is not null && value != JJDisputedCountRoPAbatement.UNKNOWN)
         {
             return value.Value.ToString();
+        }
+
+        return string.Empty;
+    }
+
+    private string ToString(DisputeContactTypeCd? value)
+    {
+        if (value is not null && value != DisputeContactTypeCd.UNKNOWN)
+        {
+            switch (value)
+            {
+                case DisputeContactTypeCd.INDIVIDUAL: return "Disputant";
+                case DisputeContactTypeCd.LAWYER: return "Lawyer";
+                case DisputeContactTypeCd.OTHER: return "Agent/Other";
+            }
+        }
+
+        return string.Empty;
+    }
+
+    private string ToString(JJDisputeContactType? value)
+    {
+        if (value is not null && value != JJDisputeContactType.UNKNOWN)
+        {
+            switch (value)
+            {
+                case JJDisputeContactType.INDIVIDUAL: return "Disputant";
+                case JJDisputeContactType.LAWYER: return "Lawyer";
+                case JJDisputeContactType.OTHER: return "Agent/Other";
+            }
         }
 
         return string.Empty;

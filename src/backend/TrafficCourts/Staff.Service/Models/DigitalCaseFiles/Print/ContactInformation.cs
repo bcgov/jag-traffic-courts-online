@@ -4,6 +4,9 @@ namespace TrafficCourts.Staff.Service.Models.DigitalCaseFiles.Print;
 
 public class ContactInformation
 {
+    [JsonProperty("contactType")]
+    public string ContactType { get; set; } = string.Empty;
+    
     [JsonProperty("surname")]
     public string Surname { get; set; } = string.Empty;
     [JsonProperty("givenNames")]

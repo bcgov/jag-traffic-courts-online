@@ -24,18 +24,7 @@
         <button mat-raised-button (click)="onPrint()">Print</button>
         <button mat-raised-button [matMenuTriggerFor]="printMenu">Print Options</button>&nbsp;
         <mat-menu #printMenu="matMenu" yPosition="below">
-          <button mat-menu-item (click)="printOptions.disputeDetails=!printOptions.disputeDetails"><mat-icon
-              *ngIf="printOptions.disputeDetails">check</mat-icon><mat-icon
-              *ngIf="!printOptions.disputeDetails">close</mat-icon>Dispute Details</button>
-          <button mat-menu-item (click)="printOptions.uploadedDocuments=!printOptions.uploadedDocuments"><mat-icon
-              *ngIf="printOptions.uploadedDocuments">check</mat-icon><mat-icon
-              *ngIf="!printOptions.uploadedDocuments">close</mat-icon>Uploaded Documents</button>
-          <button mat-menu-item (click)="printOptions.fileHistory=!printOptions.fileHistory"><mat-icon
-              *ngIf="printOptions.fileHistory">check</mat-icon><mat-icon
-              *ngIf="!printOptions.fileHistory">close</mat-icon>File History</button>
-          <button mat-menu-item (click)="printOptions.fileRemarks=!printOptions.fileRemarks"><mat-icon
-              *ngIf="printOptions.fileRemarks">check</mat-icon><mat-icon
-              *ngIf="!printOptions.fileRemarks">close</mat-icon>File Remarks</button>
+          <button mat-menu-item (click)="onPrint(true)">Complete Version</button>
         </mat-menu>
       </div>
     </div>

@@ -14,6 +14,9 @@ public class DigitalCaseFile
     [JsonProperty("ticket")]
     public TicketSummary Ticket { get; set; } = new TicketSummary();
 
+    [JsonProperty("contactType")]
+    public string ContactType { get; set; } = string.Empty;
+
     [JsonProperty("contact")]
     public ContactInformation Contact { get; set; } = new ContactInformation();
 
