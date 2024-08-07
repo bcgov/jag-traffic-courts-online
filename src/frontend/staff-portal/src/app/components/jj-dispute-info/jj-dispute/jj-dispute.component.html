@@ -23,7 +23,6 @@
         </mat-menu>
         <button mat-raised-button [matMenuTriggerFor]="printMenu">Print Options</button>&nbsp;
         <mat-menu #printMenu="matMenu" yPosition="below">
-          <button mat-menu-item (click)="onPrint(false)">JJ Version</button>
           <button mat-menu-item (click)="onPrint(true)">Complete Version</button>
         </mat-menu>
       </div>
