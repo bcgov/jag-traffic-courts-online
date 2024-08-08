@@ -5,7 +5,7 @@ namespace TrafficCourts.TicketSearch.Rsi
 {
     public interface IRoadSafetyTicketSearchApi
     {
-        [Get("/api/v1/ticket/")]
+        [Get("/api/v1/ticket")]
         Task<RawTicketSearchResponse> GetTicket(GetTicketParams ticketParams, CancellationToken cancellationToken);
 
         [Get("/api/v1/ticket/{invoiceNumber}")]
