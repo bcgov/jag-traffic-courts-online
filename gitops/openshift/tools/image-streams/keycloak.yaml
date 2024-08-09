@@ -9,6 +9,33 @@ spec:
   lookupPolicy:
     local: true
   tags:
+    - name: '25.0.2-debian-12-r2'
+      from:
+        kind: DockerImage
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/bitnami/keycloak:25.0.2-debian-12-r2'
+        imagePullSecret: 'artifacts-default-gpffbq'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
+    - name: '24.0.5-debian-12-r8'
+      from:
+        kind: DockerImage
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/bitnami/keycloak:24.0.5-debian-12-r8'
+        imagePullSecret: 'artifacts-default-gpffbq'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
+    - name: '23.0.7-debian-12-r5'
+      from:
+        kind: DockerImage
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/bitnami/keycloak:23.0.7-debian-12-r5'
+        imagePullSecret: 'artifacts-default-gpffbq'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
     - name: '23.0.7-debian-12-r4'
       from:
         kind: DockerImage
