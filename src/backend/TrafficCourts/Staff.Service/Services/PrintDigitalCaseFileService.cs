@@ -435,7 +435,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         {
             remarks.Add(new FileRemark
             {
-                When = new FormattedDateTime(remark.RemarksMadeTs),
+                When = new FormattedDateTime(remark.CreatedTs),
                 Username = remark.UserFullName,
                 Note = remark.Note,
             });
