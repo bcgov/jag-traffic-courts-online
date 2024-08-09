@@ -18,3 +18,12 @@ spec:
         scheduled: true
       referencePolicy:
         type: Source
+    - name: '1'
+      from:
+        kind: DockerImage
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/jaegertracing/all-in-one:1'
+        imagePullSecret: 'artifacts-default-gpffbq'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
