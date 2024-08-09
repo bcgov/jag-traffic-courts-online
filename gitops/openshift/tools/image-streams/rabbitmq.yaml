@@ -9,6 +9,15 @@ spec:
   lookupPolicy:
     local: true
   tags:
+    - name: '3.13.6-debian-12-r1'
+      from:
+        kind: DockerImage
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/bitnami/rabbitmq:3.13.6-debian-12-r1'
+        imagePullSecret: 'artifacts-default-gpffbq'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
     - name: '3.12.13-debian-12-r2'
       from:
         kind: DockerImage
