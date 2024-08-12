@@ -341,10 +341,10 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
                 offenseCount.RoundLesserOrGreaterAmount = disputedCount.LesserOrGreaterAmount != null
                     ? Math.Round((decimal)disputedCount.LesserOrGreaterAmount / (offenseCount.IncludesSurcharge == "Y" ? 1.15M : 1M))
                     : null;
-                offenseCount.TotalFineAmount = (decimal?)(disputedCount.TotalFineAmount ?? disputedCount.TicketedFineAmount);
+                offenseCount.TotalFineAmount = GetTotalFineAmount(disputedCount, dispute.Status);
                 offenseCount.IsDueDateRevised = IsDueDateRevised(disputedCount);
                 offenseCount.RevisedDue = IsDueDateRevised(disputedCount) ? new FormattedDateOnly(disputedCount.RevisedDueDate) : FormattedDateOnly.Empty;
-                offenseCount.FinalDue = disputedCount.RevisedDueDate != null ? new FormattedDateOnly(disputedCount.RevisedDueDate) : new FormattedDateOnly(disputedCount.DueDate);
+                offenseCount.FinalDue = GetFinalDueDate(disputedCount, dispute.Status);
                 offenseCount.Surcharge = offenseCount.RoundLesserOrGreaterAmount != null
                     ? Math.Round((decimal)offenseCount.RoundLesserOrGreaterAmount * 0.15M) : 0;
                 offenseCount.Comments = disputedCount.Comments;
@@ -839,4 +839,48 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     {
         return !(disputedCount.RevisedDueDate is null || disputedCount.RevisedDueDate == disputedCount.DueDate);
     }
+
+    private void SetAppearanceHistory(DigitalCaseFile digitalCaseFile, JJDispute dispute, JJDisputeCourtAppearanceRoP currentAppearance)
+    {
+        var appearanceHistory = digitalCaseFile.AppearanceHistory;
+
+        // Get the sorted list of court appearances, excluding the most recent one (first record after sorting)
+        var courtAppearanceHistory = dispute.JjDisputeCourtAppearanceRoPs
+                                        .Where(_ => _ != currentAppearance)
+                                        .OrderByDescending(a => a.AppearanceTs)
+                                        .ToList();
+
+        // Check if there are any court appearance history records
+        if (courtAppearanceHistory.Any())
+        {
+            digitalCaseFile.ShowAppearanceHistory = true;
+            foreach (var rop in courtAppearanceHistory)
+            {
+                appearanceHistory.Add(SetFields(new Appearance(), rop, null));
+            }
+        }
+    }
+
+    private FormattedDateOnly GetFinalDueDate(JJDisputedCount disputedCount, JJDisputeStatus jjDisputeStatus)
+    {
+        if (jjDisputeStatus == JJDisputeStatus.CONFIRMED || jjDisputeStatus == JJDisputeStatus.REVIEW || 
+            jjDisputeStatus == JJDisputeStatus.CONCLUDED || jjDisputeStatus == JJDisputeStatus.REQUIRE_COURT_HEARING)
+        {
+            return disputedCount.RevisedDueDate != null ? new FormattedDateOnly(disputedCount.RevisedDueDate) : new FormattedDateOnly(disputedCount.DueDate);
+        } else {
+            return FormattedDateOnly.Empty;
+        }
+    }
+
+    private decimal? GetTotalFineAmount(JJDisputedCount disputedCount, JJDisputeStatus jjDisputeStatus)
+    {
+        if (jjDisputeStatus == JJDisputeStatus.CONFIRMED || jjDisputeStatus == JJDisputeStatus.REVIEW || 
+            jjDisputeStatus == JJDisputeStatus.CONCLUDED || jjDisputeStatus == JJDisputeStatus.REQUIRE_COURT_HEARING)
+        {
+            return (decimal?)(disputedCount.TotalFineAmount ?? disputedCount.TicketedFineAmount);
+        } else {
+            return null;
+        }
+    }
+
 }
