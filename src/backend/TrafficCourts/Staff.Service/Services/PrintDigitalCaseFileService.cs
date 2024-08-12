@@ -376,14 +376,14 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
                 offenseCount.RequestFineReduction = ToString(disputedCount.RequestReduction);
                 offenseCount.RequestTimeToPay = ToString(disputedCount.RequestTimeToPay);
                 offenseCount.ReviseFine = SetReviseFine(disputedCount);
-                offenseCount.LesserOrGreaterAmount = (decimal?)(disputedCount.LesserOrGreaterAmount);
+                offenseCount.LesserOrGreaterAmount = offenseCount.ReviseFine ? (decimal?)(disputedCount.LesserOrGreaterAmount) : null;
                 offenseCount.IncludesSurcharge = ToString(disputedCount.IncludesSurcharge);
                 offenseCount.RoundLesserOrGreaterAmount = disputedCount.LesserOrGreaterAmount != null
                     ? Math.Round((decimal)disputedCount.LesserOrGreaterAmount / (offenseCount.IncludesSurcharge == "Y" ? 1.15M : 1M))
                     : null;
                 offenseCount.TotalFineAmount = (decimal?)(disputedCount.TotalFineAmount ?? disputedCount.TicketedFineAmount);
                 offenseCount.IsDueDateRevised = IsDueDateRevised(disputedCount);
-                offenseCount.RevisedDue = IsDueDateRevised(disputedCount) ? new FormattedDateOnly(disputedCount.RevisedDueDate) : new FormattedDateOnly(disputedCount.DueDate);
+                offenseCount.RevisedDue = IsDueDateRevised(disputedCount) ? new FormattedDateOnly(disputedCount.RevisedDueDate) : FormattedDateOnly.Empty;
                 offenseCount.FinalDue = disputedCount.RevisedDueDate != null ? new FormattedDateOnly(disputedCount.RevisedDueDate) : new FormattedDateOnly(disputedCount.DueDate);
                 offenseCount.Surcharge = offenseCount.RoundLesserOrGreaterAmount != null
                     ? Math.Round((decimal)offenseCount.RoundLesserOrGreaterAmount * 0.15M) : 0;
