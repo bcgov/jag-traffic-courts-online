@@ -42,7 +42,7 @@ public class OffenseCount
     public string LesserDescription { get; set; } = string.Empty;
 
     [JsonProperty("reviseFine")]
-    public bool ReviseFine { get; set; }
+    public bool? ReviseFine { get; set; }
 
     [JsonProperty("lesserOrGreaterAmt")]
     public decimal? LesserOrGreaterAmount { get; set; }
@@ -57,7 +57,7 @@ public class OffenseCount
     public decimal? TotalFineAmount { get; set; }
 
     [JsonProperty("isDueDateRevised")]
-    public bool IsDueDateRevised { get; set; }
+    public bool? IsDueDateRevised { get; set; }
 
     [JsonProperty("revisedDue")]
     public FormattedDateOnly RevisedDue { get; set; } = FormattedDateOnly.Empty;
