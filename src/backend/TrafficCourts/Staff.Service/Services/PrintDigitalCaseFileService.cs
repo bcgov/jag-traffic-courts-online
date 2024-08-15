@@ -918,8 +918,9 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
     private FormattedDateOnly GetFinalDueDate(JJDisputedCount disputedCount, JJDisputeStatus jjDisputeStatus)
     {
-        if (jjDisputeStatus == JJDisputeStatus.CONFIRMED || jjDisputeStatus == JJDisputeStatus.REVIEW || 
-            jjDisputeStatus == JJDisputeStatus.CONCLUDED || jjDisputeStatus == JJDisputeStatus.REQUIRE_COURT_HEARING)
+        if (disputedCount.JjDisputedCountRoP.Finding != JJDisputedCountRoPFinding.NOT_GUILTY && 
+            (jjDisputeStatus == JJDisputeStatus.CONFIRMED || jjDisputeStatus == JJDisputeStatus.REVIEW || 
+                jjDisputeStatus == JJDisputeStatus.CONCLUDED || jjDisputeStatus == JJDisputeStatus.REQUIRE_COURT_HEARING))
         {
             return disputedCount.RevisedDueDate != null ? new FormattedDateOnly(disputedCount.RevisedDueDate) : new FormattedDateOnly(disputedCount.DueDate);
         } else {
@@ -929,11 +930,19 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
     private decimal? GetTotalFineAmount(JJDisputedCount disputedCount, JJDisputeStatus jjDisputeStatus)
     {
-        if (jjDisputeStatus == JJDisputeStatus.CONFIRMED || jjDisputeStatus == JJDisputeStatus.REVIEW || 
-            jjDisputeStatus == JJDisputeStatus.CONCLUDED || jjDisputeStatus == JJDisputeStatus.REQUIRE_COURT_HEARING)
+        if (disputedCount.JjDisputedCountRoP.Finding == JJDisputedCountRoPFinding.NOT_GUILTY && 
+            (jjDisputeStatus == JJDisputeStatus.CONFIRMED || jjDisputeStatus == JJDisputeStatus.REVIEW || 
+                jjDisputeStatus == JJDisputeStatus.CONCLUDED || jjDisputeStatus == JJDisputeStatus.REQUIRE_COURT_HEARING))
+        {
+            return 0;
+        }
+        else if (jjDisputeStatus == JJDisputeStatus.CONFIRMED || jjDisputeStatus == JJDisputeStatus.REVIEW || 
+                jjDisputeStatus == JJDisputeStatus.CONCLUDED || jjDisputeStatus == JJDisputeStatus.REQUIRE_COURT_HEARING)
         {
             return (decimal?)(disputedCount.TotalFineAmount ?? disputedCount.TicketedFineAmount);
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
