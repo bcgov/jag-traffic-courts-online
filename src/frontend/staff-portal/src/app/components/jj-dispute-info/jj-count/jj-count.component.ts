@@ -147,8 +147,8 @@ export class JJCountComponent implements OnInit, OnChanges {
       this.jjDisputedCount.lesserOrGreaterAmount === null ?? this.form.controls.lesserOrGreaterAmount.setValue(this.jjDisputedCount.ticketedFineAmount);
       this.inclSurcharge = this.jjDisputedCount ? (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.Y ? "yes" : 
         (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.N ? "no" : "")) : "";
-      this.fineReduction = this.jjDisputedCount ? (this.jjDisputedCount.totalFineAmount ? 
-        (this.jjDisputedCount.totalFineAmount != this.jjDisputedCount.ticketedFineAmount ? "yes" : "no") : "") : "";
+      this.fineReduction = this.jjDisputedCount ? (this.jjDisputedCount.totalFineAmount || this.jjDisputedCount.lesserOrGreaterAmount ? 
+        (this.jjDisputedCount.lesserOrGreaterAmount !== null && this.jjDisputedCount.lesserOrGreaterAmount != this.jjDisputedCount.ticketedFineAmount ? "yes" : "no") : "") : "";
       this.timeToPay = this.jjDisputedCount ? (this.jjDisputedCount.revisedDueDate ? 
         (this.jjDisputedCount.dueDate != this.jjDisputedCount.revisedDueDate ? "yes" : "no") : "") : "";
       this.updateInclSurcharge(this.inclSurcharge);
@@ -390,6 +390,23 @@ export class JJCountComponent implements OnInit, OnChanges {
     } else {
       this.form.get('jjDisputedCountRoP').get('lesserDescription').setValue(null);
       this.form.get('jjDisputedCountRoP').get('lesserDescription').disable();
+      // TCVP-2986 - set total fine amount and due date to null if not guilty
+      if (value == this.Finding.NotGuilty) {
+        this.form.get('totalFineAmount').setValue(null);
+        this.form.get('lesserOrGreaterAmount').setValue(null);
+        this.form.get('revisedDueDate').setValue(null);
+        this.inclSurcharge = "";
+        this.fineReduction = "";
+        this.timeToPay = "";
+        this.surcharge = 0;
+        this.lesserOrGreaterAmount = 0;
+      } else {
+        this.form.get('totalFineAmount').setValue(this.jjDisputedCount?.ticketedFineAmount);
+        this.form.get('lesserOrGreaterAmount').setValue(this.jjDisputedCount?.ticketedFineAmount);
+        this.form.get('revisedDueDate').setValue(this.jjDisputedCount?.revisedDueDate);
+        this.inclSurcharge = this.jjDisputedCount?.includesSurcharge == this.IncludesSurcharge.Y ? "yes" : "no";
+        this.updateInclSurcharge(this.inclSurcharge);
+      }
     }
   }
 

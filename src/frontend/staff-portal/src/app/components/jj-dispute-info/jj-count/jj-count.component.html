@@ -291,7 +291,9 @@
           <span class="section-grid-cell">
             <p class="section-grid-header">Fine Amount</p>
             <p class="section-jj-grid-text">
-              {{ jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}<br /><br />
+              <span
+                [hidden]="(fineReduction==='' || !jjDisputedCount.totalFineAmount)">
+                {{ jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}<br /><br /></span>
               <span
                 [hidden]="!(fineReduction==='yes' && !(form.get('lesserOrGreaterAmount').hasError('min') || form.get('lesserOrGreaterAmount').hasError('max')))"
                 class="section-grid-header">Lesser/Greater<br /></span>
@@ -306,7 +308,7 @@
             </p>
           </span>
           <span class="section-jj-grid-cell">
-            <p class="section-grid-header"><span *ngIf="fineReduction==='yes'">Includes surcharge</span></p>
+            <p class="section-grid-header"><span *ngIf="fineReduction==='yes'">Includes Surcharge</span></p>
             <p class="section-grid-header"><span
                 *ngIf="fineReduction==='no' || !fineReduction">&nbsp;<br /><br /></span>
             </p>
@@ -375,7 +377,7 @@
             {{ jjDisputedCount?.lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0'}}
           </div>
 
-          <div class="section-grid-header" style="padding-top: 1rem !important;">Includes surcharge</div>
+          <div class="section-grid-header" style="padding-top: 1rem !important;">Includes Surcharge</div>
           <div style="font-size: small;">
             <span class="section-grid-text">{{ jjDisputedCount?.includesSurcharge === IncludesSurcharge.Y ? "Yes" : "No"
               }}</span>
@@ -391,8 +393,8 @@
 
           <div class="section-grid-header" style="padding-top: 1rem !important;">Time to pay</div>
           <div style="font-size: small;">
-            <span class="section-grid-text">{{ (jjDisputedCount?.revisedDueDate === jjDisputedCount?.dueDate) ? "No" :
-              "Yes"
+            <span class="section-grid-text">{{ (jjDisputedCount?.revisedDueDate && jjDisputedCount?.revisedDueDate !== jjDisputedCount?.dueDate) ? "Yes" :
+              "No"
               }}</span>
             <span style="padding-left: 0.5rem;">{{ jjDisputedCount?.revisedDueDate | date: "dd-MMM-yyyy" }}</span>
           </div>

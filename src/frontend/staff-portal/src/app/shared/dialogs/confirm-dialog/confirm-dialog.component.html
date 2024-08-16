@@ -25,13 +25,19 @@
             <h3>Count {{i+1}}</h3>
           </span>
           <span class="section-jj-grid-cell">
-            <span class="section-grid-header">Fine Amount Inc. Surcharge: </span>
+            <span class="section-grid-header">Fine Amount Includes Surcharge: </span>
             <span class="section-grid-text">{{ (options.data[i].totalFineAmount ? 
-              (options.data[i].totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0') : '&nbsp;') }}</span>
+              (options.data[i].totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0') : '$0') }}</span>
           </span>
           <span class="section-jj-grid-cell">
             <span class="section-grid-header">Due Date: </span>
-            <span class="section-grid-text">{{ options.data[i].revisedDueDate ?? options.data[i].dueDate | date: "dd-MMM-yyyy" }}</span>
+            <span class="section-grid-text">
+              {{
+                options.data[i].jjDisputedCountRoP.finding === 'NOT_GUILTY' ? '' :
+                (options.data[i].revisedDueDate ? (options.data[i].revisedDueDate | date: "dd-MMM-yyyy") :
+                (options.data[i].dueDate ? (options.data[i].dueDate | date: "dd-MMM-yyyy") : ''))
+              }}
+            </span>
           </span>
         </div>
       </ng-container>

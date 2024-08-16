@@ -376,14 +376,16 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
                 offenseCount.RequestFineReduction = ToString(disputedCount.RequestReduction);
                 offenseCount.RequestTimeToPay = ToString(disputedCount.RequestTimeToPay);
                 offenseCount.ReviseFine = SetReviseFine(disputedCount);
-                offenseCount.LesserOrGreaterAmount = offenseCount.ReviseFine ? (decimal?)(disputedCount.LesserOrGreaterAmount) : null;
+                bool reviseFine = offenseCount.ReviseFine ?? false;
+                offenseCount.LesserOrGreaterAmount = reviseFine ? (decimal?)(disputedCount.LesserOrGreaterAmount) : null;
                 offenseCount.IncludesSurcharge = ToString(disputedCount.IncludesSurcharge);
                 offenseCount.RoundLesserOrGreaterAmount = disputedCount.LesserOrGreaterAmount != null
                     ? Math.Round((decimal)disputedCount.LesserOrGreaterAmount / (offenseCount.IncludesSurcharge == "Y" ? 1.15M : 1M))
                     : null;
                 offenseCount.TotalFineAmount = GetTotalFineAmount(disputedCount, dispute.Status);
                 offenseCount.IsDueDateRevised = IsDueDateRevised(disputedCount);
-                offenseCount.RevisedDue = IsDueDateRevised(disputedCount) ? new FormattedDateOnly(disputedCount.RevisedDueDate) : FormattedDateOnly.Empty;
+                bool reviseDue = IsDueDateRevised(disputedCount) ?? false;
+                offenseCount.RevisedDue = reviseDue ? new FormattedDateOnly(disputedCount.RevisedDueDate) : FormattedDateOnly.Empty;
                 offenseCount.FinalDue = GetFinalDueDate(disputedCount, dispute.Status);
                 offenseCount.Surcharge = offenseCount.RoundLesserOrGreaterAmount != null
                     ? Math.Round((decimal)offenseCount.RoundLesserOrGreaterAmount * 0.15M) : 0;
@@ -718,7 +720,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
             return value.Value.ToString();
         }
 
-        return JJDisputedCountIncludesSurcharge.N.ToString();
+        return string.Empty;
     }
 
     private string ToString(JJDisputedCountRoPJailIntermittent? value)
@@ -870,14 +872,27 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         return builder.ToString();
     }
 
-    private bool SetReviseFine(JJDisputedCount disputedCount)
+    private bool? SetReviseFine(JJDisputedCount disputedCount)
     {
-        return !(disputedCount.LesserOrGreaterAmount is null || disputedCount.LesserOrGreaterAmount == 0);
+        if (disputedCount.TotalFineAmount != null || disputedCount.LesserOrGreaterAmount != null)
+        {
+            if (disputedCount.LesserOrGreaterAmount != null && disputedCount.LesserOrGreaterAmount != disputedCount.TicketedFineAmount)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        return null;
     }
 
-    private bool IsDueDateRevised(JJDisputedCount disputedCount)
+    private bool? IsDueDateRevised(JJDisputedCount disputedCount)
     {
-        return !(disputedCount.RevisedDueDate is null || disputedCount.RevisedDueDate == disputedCount.DueDate);
+        if (disputedCount.RevisedDueDate is null)
+        {
+            return null;
+        }
+        return !(disputedCount.RevisedDueDate == disputedCount.DueDate);
     }
 
     private void SetAppearanceHistory(DigitalCaseFile digitalCaseFile, JJDispute dispute, JJDisputeCourtAppearanceRoP currentAppearance)
@@ -903,8 +918,9 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
     private FormattedDateOnly GetFinalDueDate(JJDisputedCount disputedCount, JJDisputeStatus jjDisputeStatus)
     {
-        if (jjDisputeStatus == JJDisputeStatus.CONFIRMED || jjDisputeStatus == JJDisputeStatus.REVIEW || 
-            jjDisputeStatus == JJDisputeStatus.CONCLUDED || jjDisputeStatus == JJDisputeStatus.REQUIRE_COURT_HEARING)
+        if (disputedCount.JjDisputedCountRoP.Finding != JJDisputedCountRoPFinding.NOT_GUILTY && 
+            (jjDisputeStatus == JJDisputeStatus.CONFIRMED || jjDisputeStatus == JJDisputeStatus.REVIEW || 
+                jjDisputeStatus == JJDisputeStatus.CONCLUDED || jjDisputeStatus == JJDisputeStatus.REQUIRE_COURT_HEARING))
         {
             return disputedCount.RevisedDueDate != null ? new FormattedDateOnly(disputedCount.RevisedDueDate) : new FormattedDateOnly(disputedCount.DueDate);
         } else {
@@ -914,11 +930,19 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
     private decimal? GetTotalFineAmount(JJDisputedCount disputedCount, JJDisputeStatus jjDisputeStatus)
     {
-        if (jjDisputeStatus == JJDisputeStatus.CONFIRMED || jjDisputeStatus == JJDisputeStatus.REVIEW || 
-            jjDisputeStatus == JJDisputeStatus.CONCLUDED || jjDisputeStatus == JJDisputeStatus.REQUIRE_COURT_HEARING)
+        if (disputedCount.JjDisputedCountRoP.Finding == JJDisputedCountRoPFinding.NOT_GUILTY && 
+            (jjDisputeStatus == JJDisputeStatus.CONFIRMED || jjDisputeStatus == JJDisputeStatus.REVIEW || 
+                jjDisputeStatus == JJDisputeStatus.CONCLUDED || jjDisputeStatus == JJDisputeStatus.REQUIRE_COURT_HEARING))
+        {
+            return 0;
+        }
+        else if (jjDisputeStatus == JJDisputeStatus.CONFIRMED || jjDisputeStatus == JJDisputeStatus.REVIEW || 
+                jjDisputeStatus == JJDisputeStatus.CONCLUDED || jjDisputeStatus == JJDisputeStatus.REQUIRE_COURT_HEARING)
         {
             return (decimal?)(disputedCount.TotalFineAmount ?? disputedCount.TicketedFineAmount);
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
