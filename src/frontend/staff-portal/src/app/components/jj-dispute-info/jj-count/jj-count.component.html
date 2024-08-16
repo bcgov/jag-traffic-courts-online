@@ -308,7 +308,7 @@
             </p>
           </span>
           <span class="section-jj-grid-cell">
-            <p class="section-grid-header"><span *ngIf="fineReduction==='yes'">Includes surcharge</span></p>
+            <p class="section-grid-header"><span *ngIf="fineReduction==='yes'">Includes Surcharge</span></p>
             <p class="section-grid-header"><span
                 *ngIf="fineReduction==='no' || !fineReduction">&nbsp;<br /><br /></span>
             </p>
@@ -377,7 +377,7 @@
             {{ jjDisputedCount?.lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0'}}
           </div>
 
-          <div class="section-grid-header" style="padding-top: 1rem !important;">Includes surcharge</div>
+          <div class="section-grid-header" style="padding-top: 1rem !important;">Includes Surcharge</div>
           <div style="font-size: small;">
             <span class="section-grid-text">{{ jjDisputedCount?.includesSurcharge === IncludesSurcharge.Y ? "Yes" : "No"
               }}</span>
