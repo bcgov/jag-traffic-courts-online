@@ -167,13 +167,9 @@
     <div [formGroup]="form?.get('jjDisputedCountRoP')">
       <mat-select #matSelectFindings [matTooltip]="matSelectFindings.triggerValue" formControlName="finding"
         (selectionChange)="onFindingChange($event.value)" class="section-grid-text"
-        *ngIf="!isViewOnly && jjDisputedCount && jjDisputeInfo.hearingType !== this.HearingType.WrittenReasons" style="margin-left:20px !important; width:85%; background:#fffee6">
+        *ngIf="!isViewOnly && jjDisputedCount" style="margin-left:20px !important; width:85%; background:#fffee6">
         <mat-option [value]="Finding.Guilty" matTooltip="Guilty as charged">Guilty as charged</mat-option>
         <mat-option [value]="Finding.NotGuilty" matTooltip="Not guilty">Not guilty</mat-option>
-        <mat-option [value]="Finding.GuiltyLesser"
-          matTooltip="Not guilty as charged but guilty of lesser / included / other offence">
-          Not guilty as charged but guilty of lesser / included / other offence
-        </mat-option>
       </mat-select>
       <div *ngIf="isViewOnly" style="margin-left:20px;">
         <span class="section-grid-header">Finding:<br /></span>
@@ -192,19 +188,8 @@
           other offence</span>
         <span *ngIf="!form?.get('jjDisputedCountRoP').get('finding').value">&nbsp;</span>
       </div>
-      <div *ngIf="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons">
-        <span class="section-grid-header">&nbsp;<br /></span>
-      </div>
-      <div style="width:90%; margin-left: 20px">
-        <input matInput (placeholder)="isViewOnly ? '' : 'start typing section, then select'"
-          formControlName="lesserDescription" [matAutocomplete]="auto" (keyup)="onLesserDescriptionKeyup()"
-          [matTooltip]="form.get('jjDisputedCountRoP').get('lesserDescription').value" />
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let statute of lesserDescriptionFilteredStatutes" [matTooltip]="statute.__statuteString"
-            [value]="statute.__statuteString">
-            {{ statute.__statuteString }}</mat-option>
-        </mat-autocomplete><br />
-        <mat-tooltip style="font-size:x-small">Hover over section to see full description</mat-tooltip>
+      <div *ngIf="!jjDisputedCount">
+        <span>&nbsp;</span>
       </div>
     </div>
   </section>
@@ -229,10 +214,6 @@
           other offence</span>
         <span *ngIf="!form?.get('jjDisputedCountRoP').get('finding').value">&nbsp;</span>
       </div>
-      <div *ngIf="form?.get('jjDisputedCountRoP').get('lesserDescription').value">
-        <span class="section-grid-header">MVA Section&nbsp;</span>
-        <span class="section-jj-grid-text">{{ form.get('jjDisputedCountRoP').get('lesserDescription').value }}</span>
-      </div>
     </div>
   </section>
 
@@ -248,7 +229,7 @@
     <div>
       <div class="section-grid-header">{{ "label.finding" | translate }}</div>
       <form [formGroup]="countRoPForm">
-        <mat-form-field appearance="outline" *ngIf="jjDisputedCount && jjDisputeInfo.hearingType !== this.HearingType.WrittenReasons">
+        <mat-form-field appearance="outline" *ngIf="jjDisputedCount">
           <mat-select formControlName="finding">
             <mat-option [value]="Finding.Guilty">{{ "findingType.guilty" | translate }}</mat-option>
             <mat-option [value]="Finding.GuiltyLesser">{{ "findingType.guilty_lesser" | translate }}</mat-option>

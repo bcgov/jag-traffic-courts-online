@@ -98,7 +98,7 @@ export class JJCountComponent implements OnInit, OnChanges {
         latestPlea: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
         latestPleaUpdateTs: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
         jjDisputedCountRoP: this.formBuilder.group({
-          finding: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+          finding: [{ value: null, disabled: !this.jjDisputedCount }],
           lesserDescription: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
           id: [{ value: null }],
           ssProbationCheckbox: [{ value: false, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
