@@ -17,17 +17,33 @@ public class Mapper
             target.NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid);
         }
 
-        target.Surname = dispute.ViolationTicket?.DisputantSurname ?? dispute.DisputantSurname;
-        var (givenName1, givenName2, givenName3) = SplitGivenNames(dispute.ViolationTicket?.DisputantGivenNames);
-        if (givenName1 is null)
+        if (dispute.IcbcName is not null)
         {
-            target.GivenName1 = dispute.DisputantGivenName1;
-            target.GivenName2 = dispute.DisputantGivenName2;
-            target.GivenName3 = dispute.DisputantGivenName3;
+            target.Surname = dispute.IcbcName.Surname ?? dispute.DisputantSurname;
+            if (dispute.IcbcName.FirstGivenName is not null)
+            {
+                target.GivenName1 = dispute.IcbcName?.FirstGivenName;
+                target.GivenName2 = dispute.IcbcName?.SecondGivenName;
+            } else {
+                target.GivenName1 = dispute.DisputantGivenName1;
+                target.GivenName2 = dispute.DisputantGivenName2;
+                target.GivenName3 = dispute.DisputantGivenName3;
+            }
+            target.GivenName1 = dispute.IcbcName?.FirstGivenName;
+            target.GivenName2 = dispute.IcbcName?.SecondGivenName;
         } else {
-            target.GivenName1 = givenName1;
-            target.GivenName2 = givenName2;
-            target.GivenName3 = givenName3;
+            target.Surname = dispute.ViolationTicket?.DisputantSurname ?? dispute.DisputantSurname;
+            var (givenName1, givenName2, givenName3) = SplitGivenNames(dispute.ViolationTicket?.DisputantGivenNames);
+            if (givenName1 is null)
+            {
+                target.GivenName1 = dispute.DisputantGivenName1;
+                target.GivenName2 = dispute.DisputantGivenName2;
+                target.GivenName3 = dispute.DisputantGivenName3;
+            } else {
+                target.GivenName1 = givenName1;
+                target.GivenName2 = givenName2;
+                target.GivenName3 = givenName3;
+            }
         }
 
         target.TicketIssuanceDate = dispute.IssuedTs?.DateTime;
