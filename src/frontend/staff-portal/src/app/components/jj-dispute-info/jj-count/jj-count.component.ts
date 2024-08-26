@@ -95,8 +95,8 @@ export class JJCountComponent implements OnInit, OnChanges {
         lesserOrGreaterAmount: [null, [Validators.max(9999), Validators.min(0)]],
         revisedDueDate: [null],
         comments: [{ value: null, disabled: !this.jjDisputedCount }],
-        latestPlea: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
-        latestPleaUpdateTs: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+        latestPlea: [{ value: null, disabled: !this.jjDisputedCount }],
+        latestPleaUpdateTs: [{ value: null, disabled: !this.jjDisputedCount }],
         jjDisputedCountRoP: this.formBuilder.group({
           finding: [{ value: null, disabled: !this.jjDisputedCount }],
           lesserDescription: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
@@ -219,16 +219,16 @@ export class JJCountComponent implements OnInit, OnChanges {
         } else {
           this.form.get('jjDisputedCountRoP').get('other').disable();
         }
+      }
 
-        // Latest Plea
-        if (this.jjDisputedCount?.latestPlea) {
-          this.bindLatestPlea(this.jjDisputedCount.latestPlea);
-        }
+      // Latest Plea
+      if (this.jjDisputedCount?.latestPlea) {
+        this.bindLatestPlea(this.jjDisputedCount.latestPlea);
+      }
 
-        // Latest Plea UpdatedTs
-        if (this.jjDisputedCount?.latestPleaUpdateTs) {
-          this.bindLatestPleaUpdateTs(this.jjDisputedCount.latestPleaUpdateTs);
-        }
+      // Latest Plea UpdatedTs
+      if (this.jjDisputedCount?.latestPleaUpdateTs) {
+        this.bindLatestPleaUpdateTs(this.jjDisputedCount.latestPleaUpdateTs);
       }
 
       if (this.isViewOnly || !this.jjDisputedCount) {
