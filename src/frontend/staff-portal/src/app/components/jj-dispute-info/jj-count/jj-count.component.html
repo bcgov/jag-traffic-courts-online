@@ -109,7 +109,7 @@
       </div>
       <div class="col-md-8" *ngIf="jjDisputedCount">
         <mat-select class="section-grid-text" formControlName="latestPlea"
-          *ngIf="type !== 'ticket' && !isViewOnly && jjDisputeInfo.hearingType !== this.HearingType.WrittenReasons; else view_plea_content" style="width:75%; background:#fffee6">
+          *ngIf="type !== 'ticket' && !isViewOnly; else view_plea_content" style="width:75%; background:#fffee6">
           <mat-option [value]="LatestPlea.G">Guilty</mat-option>
           <mat-option [value]="LatestPlea.N">Not guilty</mat-option>
         </mat-select>
@@ -124,11 +124,11 @@
         <span class="section-grid-header">Date/Time</span>
       </div>
       <div class="col-md-8" *ngIf="jjDisputedCount">
-        <div *ngIf="type !== 'ticket' && !isViewOnly && jjDisputeInfo.hearingType !== this.HearingType.WrittenReasons; else view_plea_date_content ">
+        <div *ngIf="type !== 'ticket' && !isViewOnly; else view_plea_date_content ">
           <input type="datetime-local" formControlName="latestPleaUpdateTs" class="section-grid-text latest-plea-text">
         </div>
         <ng-template #view_plea_date_content>
-          <span class="section-grid-text">{{ jjDisputedCount?.latestPleaUpdateTs | date: "dd-MMM-yyyy HH:mm" }}</span>
+          <span class="section-grid-text">{{ jjDisputedCount?.latestPleaUpdateTs | date: "YYYY-MM-dd HH:mm" }}</span>
         </ng-template>
       </div>
     </div>
