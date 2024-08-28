@@ -250,6 +250,10 @@ public class DisputeService : IDisputeService,
         // Status to PROCESSING
         dispute = await _oracleDataApi.SubmitDisputeAsync(disputeId, cancellationToken);
 
+        // TCVP-2977: Get disputant name data from ICBC RSI ticket search and update dispute's IcbcNameDetail
+        GetDisputeOptions options = new() {  DisputeId = disputeId, Assign = false, GetNameFromIcbc = true };
+        await GetIcbcTicketInformation(dispute, options, cancellationToken);
+
         // set AddressProvince to 2 character abbreviation code if prov seq no & ctry id present
         if (dispute.AddressProvinceSeqNo != null)
         {
