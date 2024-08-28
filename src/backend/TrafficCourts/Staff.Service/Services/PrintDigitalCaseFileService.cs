@@ -392,6 +392,23 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
                 offenseCount.Comments = disputedCount.Comments;
                 // set jjDisputedCountRoP data for this count
                 offenseCount.Finding = ToString(disputedCount.JjDisputedCountRoP.Finding);
+                offenseCount.LatestPlea = ToString(disputedCount.LatestPlea);
+                if (disputedCount.LatestPleaUpdateTs.HasValue)
+                {
+                    // Assuming disputedCount.LatestPleaUpdateTs is in UTC
+                    DateTimeOffset utcDateTimeOffset = disputedCount.LatestPleaUpdateTs.Value;
+                    // Retrieve the local time zone
+                    TimeZoneInfo localTimeZone = TimeZoneInfo.Local;
+                    // Check if the local time zone is UTC
+                    if (localTimeZone.BaseUtcOffset == TimeSpan.Zero)
+                    {
+                        // Fall back to a specific time zone if local time zone is UTC
+                        localTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                    }
+                    // Convert the UTC DateTimeOffset to the local DateTimeOffset
+                    DateTimeOffset localDateTimeOffset = TimeZoneInfo.ConvertTime(utcDateTimeOffset, localTimeZone);
+                    offenseCount.LatestPleaUpdate = new FormattedDateTime(localDateTimeOffset);
+                }
                 offenseCount.LesserDescription = disputedCount.JjDisputedCountRoP.LesserDescription;
                 offenseCount.SsProbationDuration = disputedCount.JjDisputedCountRoP.SsProbationDuration;
                 offenseCount.SsProbationConditions = disputedCount.JjDisputedCountRoP.SsProbationConditions;
@@ -678,6 +695,16 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     private string ToString(JJDisputedCountRoPFinding? value)
     {
         if (value is not null && value != JJDisputedCountRoPFinding.UNKNOWN)
+        {
+            return value.Value.ToString();
+        }
+
+        return string.Empty;
+    }
+
+    private string ToString(JJDisputedCountLatestPlea? value)
+    {
+        if (value is not null && value != JJDisputedCountLatestPlea.UNKNOWN)
         {
             return value.Value.ToString();
         }
