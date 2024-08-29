@@ -35,6 +35,12 @@ public class OffenseCount
     [JsonProperty("requestTimeToPay")]
     public string RequestTimeToPay { get; set; } = string.Empty;
 
+    [JsonProperty("latestPlea")]
+    public string LatestPlea { get; set; } = string.Empty;
+
+    [JsonProperty("latestPleaUpdate")]
+    public FormattedDateTime LatestPleaUpdate { get; set; } = FormattedDateTime.Empty;
+
     [JsonProperty("finding")]
     public string Finding { get; set; } = string.Empty;
 
