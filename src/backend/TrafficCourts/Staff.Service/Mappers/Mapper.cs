@@ -17,16 +17,41 @@ public class Mapper
             target.NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid);
         }
 
-        target.Surname = dispute.DisputantSurname;
-        target.GivenName1 = dispute.DisputantGivenName1;
-        target.GivenName2 = dispute.DisputantGivenName2;
-        target.GivenName3 = dispute.DisputantGivenName3;
+        if (dispute.IcbcName is not null)
+        {
+            target.Surname = dispute.IcbcName.Surname ?? dispute.DisputantSurname;
+            if (dispute.IcbcName.FirstGivenName is not null)
+            {
+                target.GivenName1 = dispute.IcbcName?.FirstGivenName;
+                target.GivenName2 = dispute.IcbcName?.SecondGivenName;
+            } else {
+                target.GivenName1 = dispute.DisputantGivenName1;
+                target.GivenName2 = dispute.DisputantGivenName2;
+                target.GivenName3 = dispute.DisputantGivenName3;
+            }
+            target.GivenName1 = dispute.IcbcName?.FirstGivenName;
+            target.GivenName2 = dispute.IcbcName?.SecondGivenName;
+        } else {
+            target.Surname = dispute.ViolationTicket?.DisputantSurname ?? dispute.DisputantSurname;
+            var (givenName1, givenName2, givenName3) = SplitGivenNames(dispute.ViolationTicket?.DisputantGivenNames);
+            if (givenName1 is null)
+            {
+                target.GivenName1 = dispute.DisputantGivenName1;
+                target.GivenName2 = dispute.DisputantGivenName2;
+                target.GivenName3 = dispute.DisputantGivenName3;
+            } else {
+                target.GivenName1 = givenName1;
+                target.GivenName2 = givenName2;
+                target.GivenName3 = givenName3;
+            }
+        }
+
         target.TicketIssuanceDate = dispute.IssuedTs?.DateTime;
         target.TicketFileNumber = dispute.TicketNumber;
 
         // TCVP-2793 - issuing organziation should always be police (POL) and issuing location is the detachment location
         target.IssuingOrganization = "POL";
-        target.IssuingLocation = dispute.ViolationTicket.DetachmentLocation;
+        target.IssuingLocation = dispute.ViolationTicket?.DetachmentLocation ?? String.Empty;
 
         // If DL Province is out of province, do not send drivers licence
         if (dispute.DriversLicenceNumber is not null && dispute.DriversLicenceIssuedProvinceSeqNo == 1 && dispute.DriversLicenceIssuedCountryId == 1)
@@ -34,7 +59,7 @@ public class Mapper
         else target.DriversLicence = "";
 
         target.DisputeCounts = Map(dispute.DisputeCounts);
-        target.ViolationTicketCounts = Map(dispute.ViolationTicket.ViolationTicketCounts);
+        target.ViolationTicketCounts = Map(dispute.ViolationTicket?.ViolationTicketCounts);
 
         // TODO: Lookup address province seq no and country id and set addressprovince to abbreviation code
         if (dispute.AddressProvinceSeqNo is not null) target.Province = dispute.AddressProvince;
@@ -144,6 +169,26 @@ public class Mapper
         Append(dispute.AddressLine3);
 
         return buffer.ToString();
+    }
+
+    /// <summary>
+    /// Splits a full name into three given names.
+    /// </summary>
+    /// <param name="fullName">The full name to be split.</param>
+    /// <returns>A tuple containing three given names. If the full name is null or empty, all given names will be null.</returns>
+    private static (string? GivenName1, string? GivenName2, string? GivenName3) SplitGivenNames(string? fullName)
+    {
+        if (string.IsNullOrWhiteSpace(fullName))
+        {
+            return (null, null, null);
+        }
+
+        string[] parts = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        string? givenName1 = parts.Length > 0 ? parts[0] : null;
+        string? givenName2 = parts.Length > 1 ? parts[1] : null;
+        string? givenName3 = parts.Length > 2 ? parts[2] : null;
+
+        return (givenName1, givenName2, givenName3);
     }
 
     public static DisputeRejected ToDisputeRejected(Dispute dispute)
