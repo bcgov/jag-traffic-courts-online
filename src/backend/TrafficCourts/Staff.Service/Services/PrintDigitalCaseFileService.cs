@@ -391,7 +391,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
                     ? Math.Round((decimal)offenseCount.RoundLesserOrGreaterAmount * 0.15M) : 0;
                 offenseCount.Comments = disputedCount.Comments;
                 // set jjDisputedCountRoP data for this count
-                offenseCount.Finding = ToString(disputedCount.JjDisputedCountRoP.Finding);
+                offenseCount.Finding = ToString(disputedCount.JjDisputedCountRoP?.Finding);
                 offenseCount.LatestPlea = ToString(disputedCount.LatestPlea);
                 if (disputedCount.LatestPleaUpdateTs.HasValue)
                 {
@@ -409,21 +409,23 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
                     DateTimeOffset localDateTimeOffset = TimeZoneInfo.ConvertTime(utcDateTimeOffset, localTimeZone);
                     offenseCount.LatestPleaUpdate = new FormattedDateTime(localDateTimeOffset);
                 }
-                offenseCount.LesserDescription = disputedCount.JjDisputedCountRoP.LesserDescription;
-                offenseCount.SsProbationDuration = disputedCount.JjDisputedCountRoP.SsProbationDuration;
-                offenseCount.SsProbationConditions = disputedCount.JjDisputedCountRoP.SsProbationConditions;
-                offenseCount.JailDuration = disputedCount.JjDisputedCountRoP.JailDuration;
-                offenseCount.JailIntermittent = ToString(disputedCount.JjDisputedCountRoP.JailIntermittent);
-                offenseCount.ProbationDuration = disputedCount.JjDisputedCountRoP.ProbationDuration;
-                offenseCount.ProbationConditions = disputedCount.JjDisputedCountRoP.ProbationConditions;
-                offenseCount.DrivingProhibitionDuration = disputedCount.JjDisputedCountRoP.DrivingProhibition;
-                offenseCount.DrivingProhibitionMVA = disputedCount.JjDisputedCountRoP.DrivingProhibitionMVASection;
-                offenseCount.Dismissed = ToString(disputedCount.JjDisputedCountRoP.Dismissed);
-                offenseCount.WantOfProsecution = ToString(disputedCount.JjDisputedCountRoP.ForWantOfProsecution);
-                offenseCount.Withdrawn = ToString(disputedCount.JjDisputedCountRoP.Withdrawn);
-                offenseCount.Abatement = ToString(disputedCount.JjDisputedCountRoP.Abatement);
-                offenseCount.StayOfProceedingsBy = disputedCount.JjDisputedCountRoP.StayOfProceedingsBy;
-                offenseCount.Other = disputedCount.JjDisputedCountRoP.Other;
+                if (disputedCount.JjDisputedCountRoP is not null) {
+                    offenseCount.LesserDescription = disputedCount.JjDisputedCountRoP.LesserDescription ?? string.Empty;
+                    offenseCount.SsProbationDuration = disputedCount.JjDisputedCountRoP.SsProbationDuration;
+                    offenseCount.SsProbationConditions = disputedCount.JjDisputedCountRoP.SsProbationConditions;
+                    offenseCount.JailDuration = disputedCount.JjDisputedCountRoP.JailDuration;
+                    offenseCount.JailIntermittent = ToString(disputedCount.JjDisputedCountRoP.JailIntermittent);
+                    offenseCount.ProbationDuration = disputedCount.JjDisputedCountRoP.ProbationDuration;
+                    offenseCount.ProbationConditions = disputedCount.JjDisputedCountRoP.ProbationConditions;
+                    offenseCount.DrivingProhibitionDuration = disputedCount.JjDisputedCountRoP.DrivingProhibition;
+                    offenseCount.DrivingProhibitionMVA = disputedCount.JjDisputedCountRoP.DrivingProhibitionMVASection;
+                    offenseCount.Dismissed = ToString(disputedCount.JjDisputedCountRoP.Dismissed);
+                    offenseCount.WantOfProsecution = ToString(disputedCount.JjDisputedCountRoP.ForWantOfProsecution);
+                    offenseCount.Withdrawn = ToString(disputedCount.JjDisputedCountRoP.Withdrawn);
+                    offenseCount.Abatement = ToString(disputedCount.JjDisputedCountRoP.Abatement);
+                    offenseCount.StayOfProceedingsBy = disputedCount.JjDisputedCountRoP.StayOfProceedingsBy;
+                    offenseCount.Other = disputedCount.JjDisputedCountRoP.Other;
+                }               
             }
 
             counts.Add(offenseCount);
@@ -945,7 +947,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
     private FormattedDateOnly GetFinalDueDate(JJDisputedCount disputedCount, JJDisputeStatus jjDisputeStatus)
     {
-        if (disputedCount.JjDisputedCountRoP.Finding != JJDisputedCountRoPFinding.NOT_GUILTY && 
+        if (disputedCount.JjDisputedCountRoP?.Finding != JJDisputedCountRoPFinding.NOT_GUILTY && 
             (jjDisputeStatus == JJDisputeStatus.CONFIRMED || jjDisputeStatus == JJDisputeStatus.REVIEW || 
                 jjDisputeStatus == JJDisputeStatus.CONCLUDED || jjDisputeStatus == JJDisputeStatus.REQUIRE_COURT_HEARING))
         {
@@ -957,7 +959,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
     private decimal? GetTotalFineAmount(JJDisputedCount disputedCount, JJDisputeStatus jjDisputeStatus)
     {
-        if (disputedCount.JjDisputedCountRoP.Finding == JJDisputedCountRoPFinding.NOT_GUILTY && 
+        if (disputedCount.JjDisputedCountRoP?.Finding == JJDisputedCountRoPFinding.NOT_GUILTY && 
             (jjDisputeStatus == JJDisputeStatus.CONFIRMED || jjDisputeStatus == JJDisputeStatus.REVIEW || 
                 jjDisputeStatus == JJDisputeStatus.CONCLUDED || jjDisputeStatus == JJDisputeStatus.REQUIRE_COURT_HEARING))
         {
