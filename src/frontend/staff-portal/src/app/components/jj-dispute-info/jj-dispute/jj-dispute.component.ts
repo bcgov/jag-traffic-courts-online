@@ -85,7 +85,6 @@ export class JJDisputeComponent implements OnInit {
     duration: [null],
     reason: [null],
     noAppTs: [null],
-    _noAppTs: [null],
     clerkRecord: [null, Validators.maxLength(100)],
     defenceCounsel: [null, Validators.maxLength(100)],
     crown: [null],
@@ -190,7 +189,10 @@ export class JJDisputeComponent implements OnInit {
           this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.jjIDIR).subscribe(response => { }); // assign JJ who opened it
         }
         // }
-        this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.mostRecentCourtAppearance);
+        const mostRecentCourtAppearance = { ...this.lastUpdatedJJDispute.mostRecentCourtAppearance };
+        delete mostRecentCourtAppearance.noAppTs;
+        this.courtAppearanceForm.patchValue(mostRecentCourtAppearance);
+        this.bindNoAppTs(this.lastUpdatedJJDispute.mostRecentCourtAppearance.noAppTs);
         this.determineIfConcludeOrCancel();
       }
 
@@ -291,15 +293,11 @@ export class JJDisputeComponent implements OnInit {
   }
 
   updateNoAppTs(date: Date) {
-    this.courtAppearanceForm.controls.noAppTs.setValue(date.toISOString());
+    this.courtAppearanceForm.controls.noAppTs.setValue(date);
   }
 
   updateNoAppTsToNow() {
     this.updateNoAppTs(new Date());
-  }
-
-  updateNoAppDateTime(value) {
-    this.updateNoAppTs(new Date(value));
   }
 
   onSave(): void {
@@ -615,5 +613,9 @@ export class JJDisputeComponent implements OnInit {
   // to release the lock
   releaseLock(lockId: string) {
     this.disputeLockService.apiDisputelockLockIdDelete(lockId).subscribe(response => { });
+  }
+
+  bindNoAppTs(value){
+    this.courtAppearanceForm.controls.noAppTs.setValue(value ? new Date(value) : null);
   }
 }

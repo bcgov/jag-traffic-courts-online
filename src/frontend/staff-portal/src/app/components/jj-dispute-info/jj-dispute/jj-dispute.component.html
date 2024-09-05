@@ -328,14 +328,9 @@
                   {{ courtAppearanceForm?.value.noAppTs | date: "dd-MMM-yyyy HH:mm" }}
                 </span>
                 <span *ngIf="(!isViewOnly || isSSEditMode) && isNoAppEnabled">
-                  <mat-form-field appearance="outline" class="datetime-picker">
-                    <mat-hint>dd-MMM-yyyy HH:mm</mat-hint>
-                    <mat-datetimepicker-toggle [for]="datetimePicker" matSuffix></mat-datetimepicker-toggle>
-                    <mat-datetimepicker #datetimePicker type="datetime" openOnFocus="true" timeInterval="5">
-                    </mat-datetimepicker>
-                    <input matInput formControlName="noAppTs" [matDatetimepicker]="datetimePicker"
-                      autocomplete="false" />
-                  </mat-form-field>
+                  <input type="text" formControlName="noAppTs" class="p-2 section-grid-text latest-plea-text"
+                    bsDatepicker placeholder="DD-MMM-YYYY HH:mm" [bsConfig]="{ withTimepicker: true, keepDatepickerOpened: true, 
+                    dateInputFormat: 'DD-MMM-YYYY HH:mm', containerClass: 'theme-dark-blue', isAnimated: true }">
                   <button mat-raised-button class="form-button-secondary" (click)="updateNoAppTsToNow()">Now</button>
                 </span>
               </p>

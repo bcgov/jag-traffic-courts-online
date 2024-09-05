@@ -46,6 +46,10 @@ export class TableFiltersComponent implements OnInit {
 
   // called on keyup in filter field
   onApplyFilter(filterName: string, value: string) {
+    if (value === undefined) {
+      return;
+    }
+
     const filterValue = value;
     this.dataFilters[filterName] = filterValue;
     this.tableFilterService.tableFilters[this.tabIndex] = this.dataFilters;

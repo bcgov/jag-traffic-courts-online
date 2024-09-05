@@ -6,15 +6,17 @@
     <div fxFlex>
       <mat-form-field *ngIf="tableFilterConfigs.dateSubmittedFrom" appearance="outline" class="dateField">
         <mat-label><span class="BC-Gov-15px-blue-text"><b>From:</b></span></mat-label>
-        <input matInput [(ngModel)]="dataFilters.dateSubmittedFrom" type="date" placeholder="yyyy-MM-DD"
-          (keyup)="onApplyFilter('dateSubmittedFrom', $event.target.value)"
-          (change)="onApplyFilter('dateSubmittedFrom', $event.target.value)" autocomplete="off" />
+        <input matInput [(ngModel)]="dataFilters.dateSubmittedFrom" type="text" placeholder="DD-MMM-YYYY"
+          (blur)="onApplyFilter('dateSubmittedFrom', $event.target.value)" bsDatepicker
+          (bsValueChange)="onApplyFilter('dateSubmittedFrom', $event)" autocomplete="off"
+          [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true }" />
       </mat-form-field>
       <mat-form-field *ngIf="tableFilterConfigs.dateSubmittedTo" appearance="outline" class="dateField">
         <mat-label><span class="BC-Gov-15px-blue-text"><b>To:</b></span></mat-label>
-        <input matInput [(ngModel)]="dataFilters.dateSubmittedTo" type="date" placeholder="yyyy-MM-DD"
-          (keyup)="onApplyFilter('dateSubmittedTo', $event.target.value)"
-          (change)="onApplyFilter('dateSubmittedTo', $event.target.value)" autocomplete="off" />
+        <input matInput [(ngModel)]="dataFilters.dateSubmittedTo" type="text" placeholder="DD-MMM-YYYY"
+          (blur)="onApplyFilter('dateSubmittedTo', $event.target.value)" bsDatepicker
+          (bsValueChange)="onApplyFilter('dateSubmittedTo', $event)" autocomplete="off"
+          [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true }" />
       </mat-form-field>
     </div>
   </div>
@@ -25,15 +27,17 @@
     <div fxFlex>
       <mat-form-field *ngIf="tableFilterConfigs.decisionDateFrom" appearance="outline" class="dateField">
         <mat-label><span class="BC-Gov-15px-blue-text"><b>From:</b></span></mat-label>
-        <input matInput [(ngModel)]="dataFilters.decisionDateFrom" type="date" placeholder="yyyy-MM-DD"
-          (keyup)="onApplyFilter('decisionDateFrom', $event.target.value)"
-          (change)="onApplyFilter('decisionDateFrom', $event.target.value)" autocomplete="off" />
+        <input matInput [(ngModel)]="dataFilters.decisionDateFrom" type="text" placeholder="DD-MMM-YYYY"
+          (blur)="onApplyFilter('decisionDateFrom', $event.target.value)" bsDatepicker
+          (bsValueChange)="onApplyFilter('decisionDateFrom', $event)" autocomplete="off"
+          [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true }" />
       </mat-form-field>
       <mat-form-field *ngIf="tableFilterConfigs.decisionDateTo" appearance="outline" class="dateField">
         <mat-label><span class="BC-Gov-15px-blue-text"><b>To:</b></span></mat-label>
-        <input matInput [(ngModel)]="dataFilters.decisionDateTo" type="date" placeholder="yyyy-MM-DD"
-          (keyup)="onApplyFilter('decisionDateTo', $event.target.value)"
-          (change)="onApplyFilter('decisionDateTo', $event.target.value)" autocomplete="off" />
+        <input matInput [(ngModel)]="dataFilters.decisionDateTo" type="text" placeholder="DD-MMM-YYYY"
+          (blur)="onApplyFilter('decisionDateTo', $event.target.value)" bsDatepicker
+          (bsValueChange)="onApplyFilter('decisionDateTo', $event)" autocomplete="off"
+          [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true }" />
       </mat-form-field>
     </div>
   </div>
