@@ -54,6 +54,7 @@
     "luxon": "^3.4.3",
     "ng-busy": "^16.1.1",
     "ng2-currency-mask": "^13.0.3",
+    "ngx-bootstrap": "^18.0.2",
     "ngx-mask": "^16.3.9",
     "ngx-material-timepicker": "^13.1.1",
     "ngx-progressbar": "^11.1.0",

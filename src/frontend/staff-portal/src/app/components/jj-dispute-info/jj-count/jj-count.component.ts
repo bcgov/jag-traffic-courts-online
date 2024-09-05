@@ -69,7 +69,6 @@ export class JJCountComponent implements OnInit, OnChanges {
   timeToPay: string = "";
   fineReduction: string = "";
   inclSurcharge: string = "";
-  showDateHint: boolean = true;
   lesserOrGreaterAmount: number = 0;
   surcharge: number = 0;
   lesserDescriptionFilteredStatutes: Statute[];
@@ -143,14 +142,24 @@ export class JJCountComponent implements OnInit, OnChanges {
       }
 
       // initialize form, radio buttons
-      this.form.patchValue(this.jjDisputedCount);
+      // Assuming `this.jjDisputedCount` is the object you want to patch
+      const jjDisputedCountCopy = { ...this.jjDisputedCount };
+
+      // Exclude specific properties
+      delete jjDisputedCountCopy.latestPleaUpdateTs;
+      delete jjDisputedCountCopy.revisedDueDate;
+
+      // Patch the form with the modified object
+      this.form.patchValue(jjDisputedCountCopy);
       this.jjDisputedCount.lesserOrGreaterAmount === null ?? this.form.controls.lesserOrGreaterAmount.setValue(this.jjDisputedCount.ticketedFineAmount);
       this.inclSurcharge = this.jjDisputedCount ? (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.Y ? "yes" : 
         (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.N ? "no" : "")) : "";
       this.fineReduction = this.jjDisputedCount ? (this.jjDisputedCount.totalFineAmount || this.jjDisputedCount.lesserOrGreaterAmount ? 
         (this.jjDisputedCount.lesserOrGreaterAmount !== null && this.jjDisputedCount.lesserOrGreaterAmount != this.jjDisputedCount.ticketedFineAmount ? "yes" : "no") : "") : "";
       this.timeToPay = this.jjDisputedCount ? (this.jjDisputedCount.revisedDueDate ? 
-        (this.jjDisputedCount.dueDate != this.jjDisputedCount.revisedDueDate ? "yes" : "no") : "") : "";
+        (new Date(this.jjDisputedCount.dueDate).getTime() != new Date(this.jjDisputedCount.revisedDueDate).getTime() 
+        ? "yes" : "no") : "") : "";
+      this.bindRevisedDueDate(this.jjDisputedCount.revisedDueDate);
       this.updateInclSurcharge(this.inclSurcharge);
 
       // TCVP-2467
@@ -164,9 +173,6 @@ export class JJCountComponent implements OnInit, OnChanges {
         this.jjDisputedCount.revisedDueDate = null;
         this.jjDisputedCount.totalFineAmount = null;
       }
-
-      // Make sure the date hint label is shown if there is a revised date/time
-      this.showDateHint = this.timeToPay === "yes";
 
       if (this.jjDisputeInfo.hearingType === this.HearingType.CourtAppearance) {
         // Finding
@@ -235,7 +241,14 @@ export class JJCountComponent implements OnInit, OnChanges {
         this.form.disable();
       }
 
-      this.countForm.patchValue(this.jjDisputedCount);
+      const jjDisputedCountFormCopy = { ...this.jjDisputedCount };
+
+      // Exclude specific properties
+      delete jjDisputedCountFormCopy.revisedDueDate;
+
+      // Patch the form with the modified object
+      this.countForm.patchValue(jjDisputedCountFormCopy);
+      this.countForm.controls.revisedDueDate.setValue(this.jjDisputedCount.revisedDueDate ? new Date(this.jjDisputedCount.revisedDueDate) : null);
 
       if (this.jjDisputedCount.jjDisputedCountRoP) {
         this.countRoPForm.patchValue(this.jjDisputedCount.jjDisputedCountRoP);
@@ -258,12 +271,18 @@ export class JJCountComponent implements OnInit, OnChanges {
         if (this.jjDisputedCount.latestPleaUpdateTs) {
           this.jjDisputedCount.latestPleaUpdateTs = new Date(this.jjDisputedCount.latestPleaUpdateTs).toISOString();
         }
+        if (this.jjDisputedCount.revisedDueDate) {
+          this.jjDisputedCount.revisedDueDate = new Date(this.jjDisputedCount.revisedDueDate).toISOString();
+        }
         this.jjDisputedCount.includesSurcharge = (this.inclSurcharge === "yes" ? this.IncludesSurcharge.Y : this.IncludesSurcharge.N);
         this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
       });
 
       this.countForm.valueChanges.subscribe(() => {
         this.jjDisputedCount = { ...this.jjDisputedCount, ...this.countForm.value };
+        if (this.jjDisputedCount.revisedDueDate) {
+          this.jjDisputedCount.revisedDueDate = new Date(this.jjDisputedCount.revisedDueDate).toISOString();
+        }
         this.inclSurcharge = (this.jjDisputedCount.includesSurcharge === this.IncludesSurcharge.Y ? "yes" : "no");
         this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
       });
@@ -403,7 +422,7 @@ export class JJCountComponent implements OnInit, OnChanges {
       } else {
         this.form.get('totalFineAmount').setValue(this.jjDisputedCount?.ticketedFineAmount);
         this.form.get('lesserOrGreaterAmount').setValue(this.jjDisputedCount?.ticketedFineAmount);
-        this.form.get('revisedDueDate').setValue(this.jjDisputedCount?.revisedDueDate);
+        this.bindRevisedDueDate(this.jjDisputedCount.revisedDueDate);
         this.inclSurcharge = this.jjDisputedCount?.includesSurcharge == this.IncludesSurcharge.Y ? "yes" : "no";
         this.updateInclSurcharge(this.inclSurcharge);
       }
@@ -458,17 +477,24 @@ export class JJCountComponent implements OnInit, OnChanges {
   updateRevisedDueDate(event: MatRadioChange) {
     // if they select no set it back to passed in due date
     if (event.value == "no") {
-      this.form.get('revisedDueDate').setValue(this.jjDisputedCount?.dueDate);
+      const revisedDueDate = new Date(this.jjDisputedCount?.dueDate);
+      revisedDueDate.setDate(revisedDueDate.getDate() + 1);
+      this.form.controls.revisedDueDate.setValue(revisedDueDate);
     }
   }
 
-  //Latest Plea
+  // Latest Plea
   bindLatestPlea(value) {
     this.form.controls.latestPlea.setValue(value);
   }
 
   bindLatestPleaUpdateTs(value) {
-    this.form.controls.latestPleaUpdateTs.setValue(this.datePipe.transform(new Date(value), "YYYY-MM-dd HH:mm"));
+    this.form.controls.latestPleaUpdateTs.setValue(new Date(value));
+  }
+
+  // Revised Due Date
+  bindRevisedDueDate(value){
+    this.form.controls.revisedDueDate.setValue(value ? new Date(value) : null);
   }
 
   isEmpty(value) {
@@ -476,5 +502,3 @@ export class JJCountComponent implements OnInit, OnChanges {
   }
 
 }
-
-

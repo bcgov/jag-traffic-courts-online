@@ -18,7 +18,7 @@
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Deadline to Dispute</p>
-          <p class="section-grid-text">{{ jjDisputedCount ? (jjDisputedCount.dueDate ? (jjDisputedCount.dueDate | date: "dd-MMM-yyyy") : '&nbsp;' ) : '&nbsp;' }}</p>
+          <p class="section-grid-text">{{ jjDisputedCount ? (jjDisputedCount.dueDate ? (jjDisputedCount.dueDate | date: "dd-MMM-yyyy" : "UTC") : '&nbsp;' ) : '&nbsp;' }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Fine amount</p>
@@ -125,10 +125,12 @@
       </div>
       <div class="col-md-8" *ngIf="jjDisputedCount">
         <div *ngIf="type !== 'ticket' && !isViewOnly; else view_plea_date_content ">
-          <input type="datetime-local" formControlName="latestPleaUpdateTs" class="section-grid-text latest-plea-text">
+          <input type="text" formControlName="latestPleaUpdateTs" class="section-grid-text latest-plea-text"
+            bsDatepicker placeholder="DD-MMM-YYYY HH:mm" [bsConfig]="{ withTimepicker: true, keepDatepickerOpened: true, 
+            dateInputFormat: 'DD-MMM-YYYY HH:mm', containerClass: 'theme-dark-blue', isAnimated: true }">
         </div>
         <ng-template #view_plea_date_content>
-          <span class="section-grid-text">{{ jjDisputedCount?.latestPleaUpdateTs | date: "YYYY-MM-dd HH:mm" }}</span>
+          <span class="section-grid-text">{{ jjDisputedCount?.latestPleaUpdateTs | date: "dd-MMM-YYYY HH:mm" }}</span>
         </ng-template>
       </div>
     </div>
@@ -334,12 +336,9 @@
           <span class="section-jj-grid-cell">
             <p class="section-grid-header">&nbsp;</p>
             <p class="section-jj-grid-text">
-              <input formControlName="revisedDueDate" type="date" [hidden]="!(timeToPay==='yes')"
-                (change)="showDateHint=false"
-                style="background-color:#e4f2ff; width: 100%; font-size: smaller; border: 0"
-                [value]="jjDisputedCount?.revisedDueDate">
-              <mat-hint style="font-size:x-small">{{ jjDisputedCount?.revisedDueDate && showDateHint && timeToPay
-                ==='yes' ? jjDisputedCount?.revisedDueDate.substring(0,10) : "" }}</mat-hint>
+              <input formControlName="revisedDueDate" type="text" [hidden]="!(timeToPay==='yes')"
+                bsDatepicker class="revised-due-date" placeholder="DD-MMM-YYYY"
+                [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true }">
             </p>
           </span>
         </ng-container>
@@ -538,14 +537,9 @@
         <div class="row">
           <label class="col-4">{{ "label.time_to_pay" | translate }}</label>
           <div class="col-8">
-            <mat-form-field appearance="outline" class="datetime-picker">
-              <!-- FIXME: This appears to be off by 1 day, likely a timezone issue. -->
-              <input matInput formControlName="revisedDueDate" [matDatetimepicker]="ttpPicker" autocomplete="false"
-                placeholder="mm/dd/yyyy" />
-              <mat-datetimepicker-toggle [for]="ttpPicker" matSuffix></mat-datetimepicker-toggle>
-              <mat-datetimepicker #ttpPicker type="date" openOnFocus="true" timeInterval="5"> </mat-datetimepicker>
-              <mat-hint>mm/dd/yyyy</mat-hint>
-            </mat-form-field>
+            <input formControlName="revisedDueDate" type="text"
+              bsDatepicker class="revised-due-date" placeholder="DD-MMM-YYYY"
+              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true }">             
           </div>
         </div>
       </form>
@@ -734,7 +728,7 @@
           <span style="font-weight: bold; font-size: small; float: right; padding-right: 10px;"
             *ngIf="jjDisputeInfo.status == DisputeStatus.Confirmed || jjDisputeInfo.status == DisputeStatus.Review ||
             jjDisputeInfo.status == DisputeStatus.RequireCourtHearing || jjDisputeInfo.status == DisputeStatus.Concluded" >{{
-            jjDisputedCount?.revisedDueDate | date: "dd-MMM-yyyy" }}</span><br />
+            jjDisputedCount?.revisedDueDate | date: "dd-MMM-yyyy" : "UTC" }}</span><br />
         </p>
       </span>
       <span class="section-grid-cell">
