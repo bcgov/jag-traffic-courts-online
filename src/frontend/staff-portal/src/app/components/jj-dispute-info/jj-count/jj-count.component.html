@@ -127,7 +127,7 @@
         <div *ngIf="type !== 'ticket' && !isViewOnly; else view_plea_date_content ">
           <input type="text" formControlName="latestPleaUpdateTs" class="section-grid-text latest-plea-text"
             bsDatepicker placeholder="DD-MMM-YYYY HH:mm" [bsConfig]="{ withTimepicker: true, keepDatepickerOpened: true, 
-            dateInputFormat: 'DD-MMM-YYYY HH:mm', containerClass: 'theme-dark-blue', isAnimated: true }">
+            dateInputFormat: 'DD-MMM-YYYY HH:mm', containerClass: 'theme-dark-blue', isAnimated: true, showWeekNumbers: false }">
         </div>
         <ng-template #view_plea_date_content>
           <span class="section-grid-text">{{ jjDisputedCount?.latestPleaUpdateTs | date: "dd-MMM-YYYY HH:mm" }}</span>
@@ -338,7 +338,8 @@
             <p class="section-jj-grid-text">
               <input formControlName="revisedDueDate" type="text" [hidden]="!(timeToPay==='yes')"
                 bsDatepicker class="revised-due-date" placeholder="DD-MMM-YYYY"
-                [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true }">
+                [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true,
+                showWeekNumbers: false }">
             </p>
           </span>
         </ng-container>
@@ -539,7 +540,8 @@
           <div class="col-8">
             <input formControlName="revisedDueDate" type="text"
               bsDatepicker class="revised-due-date" placeholder="DD-MMM-YYYY"
-              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true }">             
+              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true, 
+              showWeekNumbers: false }">             
           </div>
         </div>
       </form>
