@@ -274,7 +274,8 @@ export class JJCountComponent implements OnInit, OnChanges {
         if (this.jjDisputedCount.revisedDueDate) {
           this.jjDisputedCount.revisedDueDate = new Date(this.jjDisputedCount.revisedDueDate).toISOString();
         }
-        this.jjDisputedCount.includesSurcharge = (this.inclSurcharge === "yes" ? this.IncludesSurcharge.Y : this.IncludesSurcharge.N);
+        this.jjDisputedCount.includesSurcharge = (this.inclSurcharge === "yes" ? this.IncludesSurcharge.Y : 
+          (this.inclSurcharge === "no" ? this.IncludesSurcharge.N : this.IncludesSurcharge.Unknown));
         this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
       });
 
@@ -283,7 +284,7 @@ export class JJCountComponent implements OnInit, OnChanges {
         if (this.jjDisputedCount.revisedDueDate) {
           this.jjDisputedCount.revisedDueDate = new Date(this.jjDisputedCount.revisedDueDate).toISOString();
         }
-        this.inclSurcharge = (this.jjDisputedCount.includesSurcharge === this.IncludesSurcharge.Y ? "yes" : "no");
+        this.inclSurcharge = (this.jjDisputedCount.includesSurcharge === this.IncludesSurcharge.N ? "no" : "yes");
         this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
       });
 
@@ -423,7 +424,7 @@ export class JJCountComponent implements OnInit, OnChanges {
         this.form.get('totalFineAmount').setValue(this.jjDisputedCount?.ticketedFineAmount);
         this.form.get('lesserOrGreaterAmount').setValue(this.jjDisputedCount?.ticketedFineAmount);
         this.bindRevisedDueDate(this.jjDisputedCount.revisedDueDate);
-        this.inclSurcharge = this.jjDisputedCount?.includesSurcharge == this.IncludesSurcharge.Y ? "yes" : "no";
+        this.inclSurcharge = this.jjDisputedCount?.includesSurcharge == this.IncludesSurcharge.N ? "no" : "yes";
         this.updateInclSurcharge(this.inclSurcharge);
       }
     }

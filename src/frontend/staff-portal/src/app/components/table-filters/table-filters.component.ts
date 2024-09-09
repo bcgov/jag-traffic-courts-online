@@ -30,6 +30,10 @@ export class TableFiltersComponent implements OnInit {
     })
     this.dataFilters = this.tableFilterService.tableFilters[this.tabIndex];
     this.dataFilters.status = this.dataFilters.status ?? "";
+    this.dataFilters.decisionDateFrom = this.dataFilters.decisionDateFrom ?? "";
+    this.dataFilters.decisionDateTo = this.dataFilters.decisionDateTo ?? "";
+    this.dataFilters.dateSubmittedFrom = this.dataFilters.dateSubmittedFrom ?? "";
+    this.dataFilters.dateSubmittedTo = this.dataFilters.dateSubmittedTo ?? "";
   }
 
   resetSearchFilters() {
@@ -45,9 +49,9 @@ export class TableFiltersComponent implements OnInit {
   }
 
   // called on keyup in filter field
-  onApplyFilter(filterName: string, value) {
-    if (value === undefined) {
-      return;
+  onApplyFilter(filterName: string, value: string) {
+    if (value === undefined && filterName.toUpperCase().includes('DATE')) {
+      value = "";
     }
 
     const filterValue = value;
