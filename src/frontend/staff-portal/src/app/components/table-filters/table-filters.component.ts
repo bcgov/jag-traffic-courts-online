@@ -45,7 +45,7 @@ export class TableFiltersComponent implements OnInit {
   }
 
   // called on keyup in filter field
-  onApplyFilter(filterName: string, value: string) {
+  onApplyFilter(filterName: string, value) {
     if (value === undefined) {
       return;
     }
