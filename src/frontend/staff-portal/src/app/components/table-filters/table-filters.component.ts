@@ -30,10 +30,6 @@ export class TableFiltersComponent implements OnInit {
     })
     this.dataFilters = this.tableFilterService.tableFilters[this.tabIndex];
     this.dataFilters.status = this.dataFilters.status ?? "";
-    this.dataFilters.decisionDateFrom = this.dataFilters.decisionDateFrom ?? "";
-    this.dataFilters.decisionDateTo = this.dataFilters.decisionDateTo ?? "";
-    this.dataFilters.dateSubmittedFrom = this.dataFilters.dateSubmittedFrom ?? "";
-    this.dataFilters.dateSubmittedTo = this.dataFilters.dateSubmittedTo ?? "";
   }
 
   resetSearchFilters() {
