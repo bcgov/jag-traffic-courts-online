@@ -46,7 +46,7 @@ spec:
               readOnly: true
               subPath: app.config.json
             {{- if .Values.courtHouseDataConfig }}
-            - name: court-house-data
+            - name: configuration
               mountPath: /usr/share/nginx/html/assets/courthouse-data.json
               readOnly: true
               subPath: courthouse-data.json
