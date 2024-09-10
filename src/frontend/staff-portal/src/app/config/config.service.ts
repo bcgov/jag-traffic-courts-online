@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Config, Configuration, CountryCodeValue, ProvinceCodeValue } from '@config/config.model';
 import { SortWeight, UtilsService } from '@core/services/utils.service';
 import { AppConfigService } from 'app/services/app-config.service';
-import { BehaviorSubject, catchError, map, Observable, of, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, first, map, Observable, of, tap, throwError } from 'rxjs';
 import CanadaProvincesJSON from 'assets/canada_provinces_list.json';
 import USStatesJSON from 'assets/us_states_list.json';
 import CountriesListJSON from 'assets/countries_list.json';
@@ -246,6 +246,7 @@ export class ConfigService {
   private loadCourthouseData(): void {
     this.http.get<{ courthouses: CourthouseTeam[] }>('/assets/courthouse-data.json')
       .pipe(
+        first(),
         map(response => response.courthouses),
         tap(courthouses => this._courthouses = courthouses),
         catchError(error => {
