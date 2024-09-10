@@ -81,6 +81,16 @@ appConfig: ""
 ##
 keycloakConfig: ""
 
+## @param court house data configuration file
+## courtHouseDataConfig: | -
+##   {
+##     "courthouses": [
+##        { "id": "10264.0007", "name": "100 Mile House Law Courts", "typeCode": "CTH", "__team": "D"},
+##        { "id": "9393.0007", "name": "Abbotsford Provincial Court", "typeCode": "CTH", "__team": "C"}
+##     ]
+##   }
+##
+courtHouseDataConfig: ""
 
 ## Pod Disruption Budget configuration
 ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
