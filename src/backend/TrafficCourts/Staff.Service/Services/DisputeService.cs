@@ -130,9 +130,13 @@ public class DisputeService : IDisputeService,
     {
         Dispute dispute = await _oracleDataApi.GetDisputeAsync(options.DisputeId, options.Assign, cancellationToken);
 
-        await GetOcrImageAndResults(dispute, cancellationToken);
-        await GetFileAttachments(dispute, cancellationToken);
-        await GetIcbcTicketInformation(dispute, options, cancellationToken);
+        // this should be safe since are updating different parts of the dispute in each of these calls
+        var ocrTask = GetOcrImageAndResults(dispute, cancellationToken);
+        var fileTask = GetFileAttachments(dispute, cancellationToken);
+        var icbcTask = GetIcbcTicketInformation(dispute, options, cancellationToken);
+
+        // wait for them all to complete
+        await Task.WhenAll(ocrTask, fileTask, icbcTask);
 
         return dispute;
     }

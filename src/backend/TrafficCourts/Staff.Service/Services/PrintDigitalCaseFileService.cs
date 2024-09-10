@@ -77,7 +77,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     /// <returns></returns>
     internal async Task<DigitalCaseFile> GetDigitalCaseFileAsync(long disputeId, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
-        GetDisputeOptions options = new GetDisputeOptions {  DisputeId = disputeId, Assign = false };
+        GetDisputeOptions options = new GetDisputeOptions {  DisputeId = disputeId, Assign = false, GetNameFromIcbc = true };
 
         var dispute = await _disputeService.GetDisputeAsync(options, cancellationToken);
 
