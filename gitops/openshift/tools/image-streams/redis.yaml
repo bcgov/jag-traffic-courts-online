@@ -9,6 +9,15 @@ spec:
   lookupPolicy:
     local: true
   tags:
+    - name: '7.4.0-debian-12-r0'
+      from:
+        kind: DockerImage
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/bitnami/redis:7.4.0-debian-12-r0'
+        imagePullSecret: 'artifacts-default-gpffbq'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
     - name: '7.2.4-debian-12-r10'
       from:
         kind: DockerImage
