@@ -100,7 +100,7 @@ jobs:
 
       # Upload JSON for debugging purposes
       - name: Upload JSON for debugging purposes
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: citizen-portal-coverage-report
           path: coverage/citizen-portal-codeclimate.json
@@ -167,7 +167,7 @@ jobs:
 
       # Upload JSON for debugging purposes
       - name: Upload JSON for debugging purposes
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: backend-coverage-report
           path: coverage/backend-codeclimate.json
@@ -254,7 +254,7 @@ jobs:
 
       # Upload JSON for debugging purposes
       - name: Upload JSON for debugging purposes
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: summed-total-coverage-report
           path: coverage-reports/total-codeclimate.json
