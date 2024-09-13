@@ -222,7 +222,7 @@ jobs:
 
       # Download Citizen Portal coverage report
       - name: Download javascript coverage report
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4
         with:
           name: citizen-portal-coverage-report
 
@@ -238,7 +238,7 @@ jobs:
 
       # Download Backend coverage report
       - name: Download Backend coverage report
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4
         with:
           name: backend-coverage-report
 
