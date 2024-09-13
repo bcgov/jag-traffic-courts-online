@@ -100,7 +100,7 @@ jobs:
 
       # Upload JSON for debugging purposes
       - name: Upload JSON for debugging purposes
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: citizen-portal-coverage-report
           path: coverage/citizen-portal-codeclimate.json
@@ -167,7 +167,7 @@ jobs:
 
       # Upload JSON for debugging purposes
       - name: Upload JSON for debugging purposes
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: backend-coverage-report
           path: coverage/backend-codeclimate.json
@@ -222,9 +222,10 @@ jobs:
 
       # Download Citizen Portal coverage report
       - name: Download javascript coverage report
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: citizen-portal-coverage-report
+          path: citizen-portal-coverage-report
 
       # See what is inside
       - name: List items inside citizen portal coverage report object
@@ -238,7 +239,7 @@ jobs:
 
       # Download Backend coverage report
       - name: Download Backend coverage report
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: backend-coverage-report
 
@@ -254,7 +255,7 @@ jobs:
 
       # Upload JSON for debugging purposes
       - name: Upload JSON for debugging purposes
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: summed-total-coverage-report
           path: coverage-reports/total-codeclimate.json
