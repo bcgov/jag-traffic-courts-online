@@ -242,6 +242,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: backend-coverage-report
+          path: backend-coverage-report
 
       # Copy total java to outside directory
       - name: Copy .NET Coverage to directory
