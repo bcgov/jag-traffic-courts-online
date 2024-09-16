@@ -32,6 +32,11 @@ services:
       RABBITMQ__PASSWORD: ${RABBITMQ__PASSWORD:-guest}
       REDIS__CONNECTIONSTRING: ${REDIS__CONNECTIONSTRING:-redis:6379,password=password}
       TICKETSEARCH__SEARCHTYPE: ${TICKETSEARCH__SEARCHTYPE:-Mock}
+      TICKETSEARCH__CLIENTID: ${TICKETSEARCH__CLIENTID:-}
+      TICKETSEARCH__CLIENTSECRET: ${TICKETSEARCH__CLIENTSECRET:-}
+      TICKETSEARCH__TOKENENDPOINT: ${TICKETSEARCH__TOKENENDPOINT:-https://wsgw.test.jag.gov.bc.ca/auth/oauth/v2/token}
+      TICKETSEARCH__RESOURCEURL: ${TICKETSEARCH__RESOURCEURL:-https://wsgw.test.jag.gov.bc.ca/ride/paybc/paymentsvc}
+      TICKETSEARCH__BASEADDRESS: ${TICKETSEARCH__BASEADDRESS:-https://wsgw.test.jag.gov.bc.ca}
       JWT__AUTHORITY: ${JWT__AUTHORITY:-https://idtest.gov.bc.ca/login}     
       JWT__AUDIENCE: ${JWT__AUDIENCE:-ca.bc.gov.ag.tco.dev}
       OAuth__USERINFOENDPOINT: ${OAuth__USERINFOENDPOINT:-https://idtest.gov.bc.ca/oauth2/userinfo}
@@ -88,6 +93,12 @@ services:
       SERILOG__WRITETO__0__ARGS__THEME: Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console
       SERILOG__WRITETO__0__NAME: Console
       SERILOG__MINIMUMLEVEL__DEFAULT: ${SERILOG__MINIMUMLEVEL__DEFAULT:-Information} 
+      TICKETSEARCH__SEARCHTYPE: ${TICKETSEARCH__SEARCHTYPE:-Mock}
+      TICKETSEARCH__CLIENTID: ${TICKETSEARCH__CLIENTID:-}
+      TICKETSEARCH__CLIENTSECRET: ${TICKETSEARCH__CLIENTSECRET:-}
+      TICKETSEARCH__TOKENENDPOINT: ${TICKETSEARCH__TOKENENDPOINT:-https://wsgw.test.jag.gov.bc.ca/auth/oauth/v2/token}
+      TICKETSEARCH__RESOURCEURL: ${TICKETSEARCH__RESOURCEURL:-https://wsgw.test.jag.gov.bc.ca/ride/paybc/paymentsvc}
+      TICKETSEARCH__BASEADDRESS: ${TICKETSEARCH__BASEADDRESS:-https://wsgw.test.jag.gov.bc.ca}
       CDOGS__CLIENTID: ${CDOGS__CLIENTID:-cdogs}
       CDOGS__CLIENTSECRET: ${CDOGS__CLIENTSECRET:-}
       CDOGS__ENDPOINT: ${CDOGS__ENDPOINT:-https://cdogs-dev.api.gov.bc.ca/api}

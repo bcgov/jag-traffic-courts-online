@@ -46,6 +46,10 @@ input[name="ticketNumber"] {
             line-height: 18px !important;
           }
 
+          input::placeholder {
+            font-size: 0.813rem;
+          }
+
           .mat-select-arrow-wrapper {
             transform: translate(-15px, 0px);
           }

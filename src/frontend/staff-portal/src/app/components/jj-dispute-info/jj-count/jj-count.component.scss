@@ -166,8 +166,7 @@ p {
   margin-bottom: 5px;
 
   section {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
+    padding: 0.625rem;
   }
 
   .contact-info {
@@ -268,4 +267,28 @@ p {
   width: 75%;
   background-color: #fffee6;
   border: none;
+}
+
+.medium-note {
+  font-size: medium;
+  color: #707070;
+  font-weight: normal;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.section-sticky{
+  margin-bottom: 16px; 
+  border: 1px solid black;
+}
+
+section{
+  border: 1px solid black;
+}
+
+.revised-due-date{
+  background-color:#e4f2ff; 
+  width: 100%; 
+  font-size: smaller; 
+  border: 0
 }

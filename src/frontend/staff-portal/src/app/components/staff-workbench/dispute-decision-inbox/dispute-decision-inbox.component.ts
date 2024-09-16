@@ -104,7 +104,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
         }
         return false;
       }
-      else {
+      else if (record[field]) {
         return record[field].toLocaleLowerCase().indexOf(value.trim().toLocaleLowerCase()) != -1;
       }
     });

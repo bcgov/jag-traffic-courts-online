@@ -19,6 +19,8 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
+import { DcfTemplateType } from '../model/dcfTemplateType.model';
+// @ts-ignore
 import { Dispute } from '../model/dispute.model';
 // @ts-ignore
 import { DisputeStatus } from '../model/disputeStatus.model';
@@ -341,13 +343,14 @@ export class DisputeService {
      * Returns generated document.
      * @param disputeId Dispute Id
      * @param timeZone The IANA timze zone id
+     * @param type The type of template to generate
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDisputeDisputeIdPrintGet(disputeId: number, timeZone: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
-    public apiDisputeDisputeIdPrintGet(disputeId: number, timeZone: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
-    public apiDisputeDisputeIdPrintGet(disputeId: number, timeZone: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
-    public apiDisputeDisputeIdPrintGet(disputeId: number, timeZone: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiDisputeDisputeIdPrintGet(disputeId: number, timeZone: string, type?: DcfTemplateType, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiDisputeDisputeIdPrintGet(disputeId: number, timeZone: string, type?: DcfTemplateType, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiDisputeDisputeIdPrintGet(disputeId: number, timeZone: string, type?: DcfTemplateType, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiDisputeDisputeIdPrintGet(disputeId: number, timeZone: string, type?: DcfTemplateType, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (disputeId === null || disputeId === undefined) {
             throw new Error('Required parameter disputeId was null or undefined when calling apiDisputeDisputeIdPrintGet.');
         }
@@ -359,6 +362,10 @@ export class DisputeService {
         if (timeZone !== undefined && timeZone !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>timeZone, 'timeZone');
+        }
+        if (type !== undefined && type !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>type, 'type');
         }
 
         let localVarHeaders = this.defaultHeaders;

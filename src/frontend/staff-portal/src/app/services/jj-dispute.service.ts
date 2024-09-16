@@ -6,7 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import { HttpClient, HttpContext, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { JJService, JJDispute as JJDisputeBase, JJDisputeStatus, JJDisputeRemark, DocumentType, JJDisputeCourtAppearanceRoP } from 'app/api';
+import { JJService, JJDispute as JJDisputeBase, JJDisputeStatus, JJDisputeRemark, DocumentType, JJDisputeCourtAppearanceRoP, DcfTemplateType } from 'app/api';
 import { AuthService } from './auth.service';
 import { cloneDeep } from "lodash";
 import { Store } from '@ngrx/store';
@@ -355,6 +355,7 @@ export class JJDisputeService {
     jjDispute.contactGivenNames = jjDispute.contactGivenName1 + (jjDispute.contactGivenName2 ? " " + jjDispute.contactGivenName2 : "") + (jjDispute.contactGivenName3 ? " " + jjDispute.contactGivenName3 : "");
     jjDispute.occamDisputantName = jjDispute.occamDisputantSurnameNm + (jjDispute.occamDisputantGiven1Nm || jjDispute.occamDisputantGiven2Nm || jjDispute.occamDisputantGiven3Nm ? "," : "") + (jjDispute.occamDisputantGiven1Nm ? " " + jjDispute.occamDisputantGiven1Nm : "") + (jjDispute.occamDisputantGiven2Nm ? " " + jjDispute.occamDisputantGiven2Nm : "") + (jjDispute.occamDisputantGiven3Nm ? " " + jjDispute.occamDisputantGiven3Nm : "");
     jjDispute.occamDisputantGivenNames = jjDispute.occamDisputantGiven1Nm + (jjDispute.occamDisputantGiven2Nm ? " " + jjDispute.occamDisputantGiven2Nm : "") + (jjDispute.occamDisputantGiven3Nm ? " " + jjDispute.occamDisputantGiven3Nm : "");
+    jjDispute.ticketDisputantGivenNames = jjDispute.disputantGivenName1 + (jjDispute.disputantGivenName2 ? " " + jjDispute.disputantGivenName2 : "") + (jjDispute.disputantGivenName3 ? " " + jjDispute.disputantGivenName3 : "");
     jjDispute.isEditable = this.jjDisputeStatusEditable.indexOf(jjDispute.status) > -1;
     jjDispute.isCompleted = this.jjDisputeStatusComplete.indexOf(jjDispute.status) > -1;
     jjDispute.bulkAssign = false;
@@ -396,9 +397,9 @@ export class JJDisputeService {
     return jjDispute;
   }
 
-  public apiJjTicketNumberPrintGet(ticketNumber: string, timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone): Observable<any> {
+  public apiJjTicketNumberPrintGet(ticketNumber: string, type: DcfTemplateType, timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone): Observable<any> {
     return this.http
-    .get(`/api/jj/${ticketNumber}/print?timeZone=${timeZone}`, {
+    .get(`/api/jj/${ticketNumber}/print?timeZone=${timeZone}&type=${type}`, {
       observe: 'response',
       responseType: 'blob',
       context: new HttpContext(),
@@ -426,6 +427,7 @@ export interface JJDispute extends JJDisputeBase {
   contactGivenNames?: string;
   occamDisputantName?: string;
   occamDisputantGivenNames?: string;
+  ticketDisputantGivenNames?: string;
   address?: string;
   interpreterLanguage?: string;
   driversLicenceProvince?: string;

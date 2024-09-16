@@ -39,6 +39,7 @@ TestResult.xml
 
 # Docker Environment Files
 .env
+docker-compose.override.yml
 
 # code coverage files
 **/coverage.info

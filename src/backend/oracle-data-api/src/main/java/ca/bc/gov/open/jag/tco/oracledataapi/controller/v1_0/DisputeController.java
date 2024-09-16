@@ -476,5 +476,17 @@ public class DisputeController {
 		DisputeUpdateRequest disputeUpdateRequest = disputeService.updateDisputeUpdateRequest(updateRequestId, disputeUpdateRequestStatus);
 		return new ResponseEntity<DisputeUpdateRequest>(disputeUpdateRequest, HttpStatus.OK);
 	}
+	
+	@Operation(summary = "Deletes a particular ViolationTicketCount record.")
+	@ApiResponses({ @ApiResponse(responseCode = "200", description = "Ok. ViolationTicketCount record deleted."),
+	@ApiResponse(responseCode = "400", description = "Bad Request."),
+	@ApiResponse(responseCode = "404", description = "ViolationTicketCount record not found. Delete failed."),
+	@ApiResponse(responseCode = "500", description = "Internal Server Error. Delete failed.") })
+	@DeleteMapping("/violationTicketCount/{id}")
+	public ResponseEntity<Void> deleteViolationTicketCount(@PathVariable Long id) {
+		logger.debug("DELETE /violationTicketCount/{} called", StructuredArguments.value("violationTicketCountId", id));
+		disputeService.deleteViolationTicketCount(id);
+		return ResponseEntity.ok().build();
+	}
 
 }

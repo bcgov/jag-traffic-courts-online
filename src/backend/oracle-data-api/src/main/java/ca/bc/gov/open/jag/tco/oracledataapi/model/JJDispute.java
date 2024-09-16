@@ -115,6 +115,30 @@ public class JJDispute extends Auditable<String> {
 	@Temporal(TemporalType.DATE)
 	@Schema(nullable = true)
 	private Date disputantBirthdate;
+	
+	/**
+	 * Surname of the disputant on violation ticket. Data source for this field is justin_participant_profiles.prof_surname_nm
+	 */
+	@Schema(description = "Surname of the disputant on violation ticket.", nullable = true)
+	private String disputantSurname;
+	
+	/**
+	 * First given name of the disputant on violation ticket. Data source for this field is justin_participant_profiles.prof_given_1_nm
+	 */
+	@Schema(description = "First given name of the disputant on violation ticket.", nullable = true)
+	private String disputantGivenName1;
+	
+	/**
+	 * Second given name of the disputant on violation ticket. Data source for this field is justin_participant_profiles.prof_given_2_nm
+	 */
+	@Schema(description = "Second given name of the disputant on violation ticket.", nullable = true)
+	private String disputantGivenName2;
+	
+	/**
+	 * Third given name of the disputant on violation ticket. Data source for this field is justin_participant_profiles.prof_given_3_nm
+	 */
+	@Schema(description = "Third given name of the disputant on violation ticket.", nullable = true)
+	private String disputantGivenName3;
 
 	/**
 	 * The drivers licence number from reconciled ticket data.
@@ -185,6 +209,12 @@ public class JJDispute extends Auditable<String> {
 	@Column(length = 30)
 	@Schema(nullable = true)
 	private String occamDisputantSurnameNm;
+	
+	/**
+	 * Disputant's home or work phone number provided on submission.
+	 */
+	@Schema(description = "Disputant's home or work phone number provided on submission.", nullable = true)
+	private String occamDisputantPhoneNumber;
 
 	@Schema(nullable = false)
 	private Long occamDisputeId;

@@ -11,11 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Services\Tickets\Search\Mock\test-ticket-data.csv" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Services\Tickets\Search\Mock\test-ticket-data.csv" />
+    <EmbeddedResource Include="..\TrafficCourts.TicketSearch\Mock\test-ticket-data.csv" Link="Services\Tickets\Search\Mock\test-ticket-data.csv" />
   </ItemGroup>
 
   <ItemGroup>

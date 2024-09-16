@@ -44,6 +44,10 @@ export interface JJDispute {
     addressProvince?: string | null;
     addressCountry?: string | null;
     addressPostalCode?: string | null;
+    disputantSurname?: string | null;
+    disputantGivenName1?: string | null;
+    disputantGivenName2?: string | null;
+    disputantGivenName3?: string | null;
     disputantBirthdate?: string | null;
     driversLicenceNumber?: string | null;
     drvLicIssuedProvSeqNo?: string | null;
@@ -58,6 +62,7 @@ export interface JJDispute {
     occamDisputantGiven2Nm?: string | null;
     occamDisputantGiven3Nm?: string | null;
     occamDisputantSurnameNm?: string | null;
+    occamDisputantPhoneNumber?: string | null;
     occamDisputeId?: number;
     occamViolationTicketUpldId?: string | null;
     submittedTs?: string | null;

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { JJDispute } from '../../../services/jj-dispute.service';
-import { JJDisputedCount, JJDisputedCountAppearInCourt, JJDisputedCountIncludesSurcharge, JJDisputedCountLatestPlea, JJDisputedCountPlea, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputedCountRoPAbatement, JJDisputedCountRoPDismissed, JJDisputedCountRoPFinding, JJDisputedCountRoPForWantOfProsecution, JJDisputedCountRoPJailIntermittent, JJDisputedCountRoPWithdrawn, JJDisputeHearingType } from 'app/api';
+import { JJDisputedCount, JJDisputedCountAppearInCourt, JJDisputedCountIncludesSurcharge, JJDisputedCountLatestPlea, JJDisputedCountPlea, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputedCountRoPAbatement, JJDisputedCountRoPDismissed, JJDisputedCountRoPFinding, JJDisputedCountRoPForWantOfProsecution, JJDisputedCountRoPJailIntermittent, JJDisputedCountRoPWithdrawn, JJDisputeHearingType, JJDisputeStatus } from 'app/api';
 import { MatLegacyRadioChange as MatRadioChange } from '@angular/material/legacy-radio';
 import { LookupsService, Statute } from 'app/services/lookups.service';
 import { CustomDatePipe } from '@shared/pipes/custom-date.pipe';
@@ -69,11 +69,11 @@ export class JJCountComponent implements OnInit, OnChanges {
   timeToPay: string = "";
   fineReduction: string = "";
   inclSurcharge: string = "";
-  showDateHint: boolean = true;
   lesserOrGreaterAmount: number = 0;
   surcharge: number = 0;
   lesserDescriptionFilteredStatutes: Statute[];
   drivingProhibitionFilteredStatutes: Statute[];
+  DisputeStatus = JJDisputeStatus;
 
   constructor(
     private lookupsService: LookupsService,
@@ -89,16 +89,7 @@ export class JJCountComponent implements OnInit, OnChanges {
   }
 
   private initForm() {
-    this.form = this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons ?
-      this.formBuilder.group({
-        totalFineAmount: [null, [Validators.required, Validators.max(9999), Validators.min(0)]],
-        lesserOrGreaterAmount: [null, [Validators.required, Validators.max(9999), Validators.min(0)]],
-        revisedDueDate: [null, [Validators.required]],
-        comments: [{ value: null, disabled: !this.jjDisputedCount }],
-        latestPlea: [{ value: null, disabled: !this.jjDisputedCount }],
-        latestPleaUpdateTs: [{ value: null, disabled: !this.jjDisputedCount }],
-      }) :
-      this.formBuilder.group({
+    this.form = this.formBuilder.group({
         totalFineAmount: [null, [Validators.max(9999), Validators.min(0)]],
         lesserOrGreaterAmount: [null, [Validators.max(9999), Validators.min(0)]],
         revisedDueDate: [null],
@@ -107,28 +98,28 @@ export class JJCountComponent implements OnInit, OnChanges {
         latestPleaUpdateTs: [{ value: null, disabled: !this.jjDisputedCount }],
         jjDisputedCountRoP: this.formBuilder.group({
           finding: [{ value: null, disabled: !this.jjDisputedCount }],
-          lesserDescription: [{ value: null, disabled: !this.jjDisputedCount }],
+          lesserDescription: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
           id: [{ value: null }],
-          ssProbationCheckbox: [{ value: false, disabled: !this.jjDisputedCount }],
-          ssProbationDuration: [{ value: null, disabled: !this.jjDisputedCount }],
-          ssProbationConditions: [{ value: null, disabled: !this.jjDisputedCount }],
-          jailCheckbox: [{ value: false, disabled: !this.jjDisputedCount }],
-          jailDuration: [{ value: null, disabled: !this.jjDisputedCount }],
-          jailIntermittent: [{ value: null, disabled: !this.jjDisputedCount }],
-          probationCheckbox: [{ value: false, disabled: !this.jjDisputedCount }],
-          probationDuration: [{ value: null, disabled: !this.jjDisputedCount }],
-          probationConditions: [{ value: null, disabled: !this.jjDisputedCount }],
-          drivingProhibitionCheckbox: [{ value: false, disabled: !this.jjDisputedCount }],
-          drivingProhibition: [{ value: null, disabled: !this.jjDisputedCount }],
-          drivingProhibitionMVASection: [{ value: null, disabled: !this.jjDisputedCount }],
-          dismissed: [{ value: null, disabled: !this.jjDisputedCount }],
-          forWantOfProsecution: [{ value: null, disabled: !this.jjDisputedCount }],
-          withdrawn: [{ value: null, disabled: !this.jjDisputedCount }],
-          abatement: [{ value: null, disabled: !this.jjDisputedCount }],
-          stayOfProceedingsByCheckbox: [{ value: false, disabled: !this.jjDisputedCount }],
-          stayOfProceedingsBy: [{ value: null, disabled: !this.jjDisputedCount }],
-          otherCheckbox: [{ value: false, disabled: !this.jjDisputedCount }],
-          other: [{ value: null, disabled: !this.jjDisputedCount }],
+          ssProbationCheckbox: [{ value: false, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+          ssProbationDuration: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+          ssProbationConditions: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+          jailCheckbox: [{ value: false, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+          jailDuration: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+          jailIntermittent: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+          probationCheckbox: [{ value: false, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+          probationDuration: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+          probationConditions: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+          drivingProhibitionCheckbox: [{ value: false, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+          drivingProhibition: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+          drivingProhibitionMVASection: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+          dismissed: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+          forWantOfProsecution: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+          withdrawn: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+          abatement: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+          stayOfProceedingsByCheckbox: [{ value: false, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+          stayOfProceedingsBy: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+          otherCheckbox: [{ value: false, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+          other: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
         })
       });
   }
@@ -138,10 +129,7 @@ export class JJCountComponent implements OnInit, OnChanges {
     if (this.jjDisputedCount && this.form) {
       if (this.jjDisputedCount.totalFineAmount != null && this.jjDisputedCount.totalFineAmount > 0) {
         this.surcharge = this.jjDisputedCount.totalFineAmount / 1.15 * 0.15;
-      } else {
-        this.jjDisputedCount.totalFineAmount = this.jjDisputedCount.ticketedFineAmount;
       }
-      if (!this.jjDisputedCount.revisedDueDate) this.jjDisputedCount.revisedDueDate = this.jjDisputedCount.dueDate;
 
       if (this.isViewOnly &&
         (this.jjDisputedCount.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.NotGuilty
@@ -154,11 +142,24 @@ export class JJCountComponent implements OnInit, OnChanges {
       }
 
       // initialize form, radio buttons
-      this.form.patchValue(this.jjDisputedCount);
+      // Assuming `this.jjDisputedCount` is the object you want to patch
+      const jjDisputedCountCopy = { ...this.jjDisputedCount };
+
+      // Exclude specific properties
+      delete jjDisputedCountCopy.latestPleaUpdateTs;
+      delete jjDisputedCountCopy.revisedDueDate;
+
+      // Patch the form with the modified object
+      this.form.patchValue(jjDisputedCountCopy);
       this.jjDisputedCount.lesserOrGreaterAmount === null ?? this.form.controls.lesserOrGreaterAmount.setValue(this.jjDisputedCount.ticketedFineAmount);
-      this.inclSurcharge = this.jjDisputedCount ? (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.Y ? "yes" : "no") : "";
-      this.fineReduction = this.jjDisputedCount ? (this.jjDisputedCount.totalFineAmount != this.jjDisputedCount.ticketedFineAmount ? "yes" : "no") : "";
-      this.timeToPay = this.jjDisputedCount ? (this.jjDisputedCount.dueDate != this.jjDisputedCount.revisedDueDate ? "yes" : "no") : "";
+      this.inclSurcharge = this.jjDisputedCount ? (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.Y ? "yes" : 
+        (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.N ? "no" : "")) : "";
+      this.fineReduction = this.jjDisputedCount ? (this.jjDisputedCount.totalFineAmount || this.jjDisputedCount.lesserOrGreaterAmount ? 
+        (this.jjDisputedCount.lesserOrGreaterAmount !== null && this.jjDisputedCount.lesserOrGreaterAmount != this.jjDisputedCount.ticketedFineAmount ? "yes" : "no") : "") : "";
+      this.timeToPay = this.jjDisputedCount ? (this.jjDisputedCount.revisedDueDate ? 
+        (new Date(this.jjDisputedCount.dueDate).getTime() != new Date(this.jjDisputedCount.revisedDueDate).getTime() 
+        ? "yes" : "no") : "") : "";
+      this.bindRevisedDueDate(this.jjDisputedCount.revisedDueDate);
       this.updateInclSurcharge(this.inclSurcharge);
 
       // TCVP-2467
@@ -172,9 +173,6 @@ export class JJCountComponent implements OnInit, OnChanges {
         this.jjDisputedCount.revisedDueDate = null;
         this.jjDisputedCount.totalFineAmount = null;
       }
-
-      // Make sure the date hint label is shown if there is a revised date/time
-      this.showDateHint = this.timeToPay === "yes";
 
       if (this.jjDisputeInfo.hearingType === this.HearingType.CourtAppearance) {
         // Finding
@@ -227,23 +225,30 @@ export class JJCountComponent implements OnInit, OnChanges {
         } else {
           this.form.get('jjDisputedCountRoP').get('other').disable();
         }
+      }
 
-        // Latest Plea
-        if (this.jjDisputedCount?.latestPlea) {
-          this.bindLatestPlea(this.jjDisputedCount.latestPlea);
-        }
+      // Latest Plea
+      if (this.jjDisputedCount?.latestPlea) {
+        this.bindLatestPlea(this.jjDisputedCount.latestPlea);
+      }
 
-        // Latest Plea UpdatedTs
-        if (this.jjDisputedCount?.latestPleaUpdateTs) {
-          this.bindLatestPleaUpdateTs(this.jjDisputedCount.latestPleaUpdateTs);
-        }
+      // Latest Plea UpdatedTs
+      if (this.jjDisputedCount?.latestPleaUpdateTs) {
+        this.bindLatestPleaUpdateTs(this.jjDisputedCount.latestPleaUpdateTs);
       }
 
       if (this.isViewOnly || !this.jjDisputedCount) {
         this.form.disable();
       }
 
-      this.countForm.patchValue(this.jjDisputedCount);
+      const jjDisputedCountFormCopy = { ...this.jjDisputedCount };
+
+      // Exclude specific properties
+      delete jjDisputedCountFormCopy.revisedDueDate;
+
+      // Patch the form with the modified object
+      this.countForm.patchValue(jjDisputedCountFormCopy);
+      this.countForm.controls.revisedDueDate.setValue(this.jjDisputedCount.revisedDueDate ? new Date(this.jjDisputedCount.revisedDueDate) : null);
 
       if (this.jjDisputedCount.jjDisputedCountRoP) {
         this.countRoPForm.patchValue(this.jjDisputedCount.jjDisputedCountRoP);
@@ -266,13 +271,20 @@ export class JJCountComponent implements OnInit, OnChanges {
         if (this.jjDisputedCount.latestPleaUpdateTs) {
           this.jjDisputedCount.latestPleaUpdateTs = new Date(this.jjDisputedCount.latestPleaUpdateTs).toISOString();
         }
-        this.jjDisputedCount.includesSurcharge = (this.inclSurcharge === "yes" ? this.IncludesSurcharge.Y : this.IncludesSurcharge.N);
+        if (this.jjDisputedCount.revisedDueDate) {
+          this.jjDisputedCount.revisedDueDate = new Date(this.jjDisputedCount.revisedDueDate).toISOString();
+        }
+        this.jjDisputedCount.includesSurcharge = (this.inclSurcharge === "yes" ? this.IncludesSurcharge.Y : 
+          (this.inclSurcharge === "no" ? this.IncludesSurcharge.N : this.IncludesSurcharge.Unknown));
         this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
       });
 
       this.countForm.valueChanges.subscribe(() => {
         this.jjDisputedCount = { ...this.jjDisputedCount, ...this.countForm.value };
-        this.inclSurcharge = (this.jjDisputedCount.includesSurcharge === this.IncludesSurcharge.Y ? "yes" : "no");
+        if (this.jjDisputedCount.revisedDueDate) {
+          this.jjDisputedCount.revisedDueDate = new Date(this.jjDisputedCount.revisedDueDate).toISOString();
+        }
+        this.inclSurcharge = (this.jjDisputedCount.includesSurcharge === this.IncludesSurcharge.N ? "no" : "yes");
         this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
       });
 
@@ -398,6 +410,23 @@ export class JJCountComponent implements OnInit, OnChanges {
     } else {
       this.form.get('jjDisputedCountRoP').get('lesserDescription').setValue(null);
       this.form.get('jjDisputedCountRoP').get('lesserDescription').disable();
+      // TCVP-2986 - set total fine amount and due date to null if not guilty
+      if (value == this.Finding.NotGuilty) {
+        this.form.get('totalFineAmount').setValue(null);
+        this.form.get('lesserOrGreaterAmount').setValue(null);
+        this.form.get('revisedDueDate').setValue(null);
+        this.inclSurcharge = "";
+        this.fineReduction = "";
+        this.timeToPay = "";
+        this.surcharge = 0;
+        this.lesserOrGreaterAmount = 0;
+      } else {
+        this.form.get('totalFineAmount').setValue(this.jjDisputedCount?.ticketedFineAmount);
+        this.form.get('lesserOrGreaterAmount').setValue(this.jjDisputedCount?.ticketedFineAmount);
+        this.bindRevisedDueDate(this.jjDisputedCount.revisedDueDate);
+        this.inclSurcharge = this.jjDisputedCount?.includesSurcharge == this.IncludesSurcharge.N ? "no" : "yes";
+        this.updateInclSurcharge(this.inclSurcharge);
+      }
     }
   }
 
@@ -449,19 +478,28 @@ export class JJCountComponent implements OnInit, OnChanges {
   updateRevisedDueDate(event: MatRadioChange) {
     // if they select no set it back to passed in due date
     if (event.value == "no") {
-      this.form.get('revisedDueDate').setValue(this.jjDisputedCount?.dueDate);
+      const revisedDueDate = new Date(this.jjDisputedCount?.dueDate);
+      revisedDueDate.setDate(revisedDueDate.getDate() + 1);
+      this.form.controls.revisedDueDate.setValue(revisedDueDate);
     }
   }
 
-  //Latest Plea
+  // Latest Plea
   bindLatestPlea(value) {
     this.form.controls.latestPlea.setValue(value);
   }
 
   bindLatestPleaUpdateTs(value) {
-    this.form.controls.latestPleaUpdateTs.setValue(this.datePipe.transform(new Date(value), "YYYY-MM-dd HH:mm"));
+    this.form.controls.latestPleaUpdateTs.setValue(new Date(value));
+  }
+
+  // Revised Due Date
+  bindRevisedDueDate(value){
+    this.form.controls.revisedDueDate.setValue(value ? new Date(value) : null);
+  }
+
+  isEmpty(value) {
+    return (value == null || (typeof value === "string" && value.trim().length === 0));
   }
 
 }
-
-

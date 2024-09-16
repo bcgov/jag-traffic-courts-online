@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -9,6 +8,7 @@ using TrafficCourts.Domain.Models;
 using TrafficCourts.Exceptions;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Models;
+using TrafficCourts.Staff.Service.Models.DigitalCaseFiles.Print;
 using TrafficCourts.Staff.Service.Models.Disputes;
 using TrafficCourts.Staff.Service.Services;
 
@@ -127,7 +127,8 @@ public class DisputeController : StaffControllerBase
 
         try
         {
-            Dispute dispute = await _disputeService.GetDisputeAsync(disputeId, true, cancellationToken);
+            var options = new GetDisputeOptions { DisputeId = disputeId, Assign = true, GetNameFromIcbc = true };
+            Dispute dispute = await _disputeService.GetDisputeAsync(options, cancellationToken);
             return Ok(dispute);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -633,6 +634,8 @@ public class DisputeController : StaffControllerBase
     /// </summary>
     /// <param name="disputeId">Dispute Id</param>
     /// <param name="timeZone">The IANA timze zone id</param>
+
+    /// <param name="type">The type of template to generate</param>
     /// <param name="cancellationToken"></param>
     /// <response code="200">Generated Document.</response>
     /// <response code="400">The </response>
@@ -640,25 +643,58 @@ public class DisputeController : StaffControllerBase
     /// <response code="403">Forbidden.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A generated document</returns>
-    [AllowAnonymous]
     [HttpGet("{disputeId}/print")]
     [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK, "application/octet-stream")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.Dispute, Scopes.Read)]
-    public async Task<IActionResult> PrintDisputeAsync([Required] long disputeId, [Required] string timeZone, CancellationToken cancellationToken)
+    public async Task<IActionResult> PrintDisputeAsync([Required] long disputeId, [Required] string timeZone, DcfTemplateType type, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Rendering print version of ticket validation view for dispute {disputeId} in timezone {timeZone}.", disputeId, timeZone);
+        // TODO: can we use model binding to validate the timezone?
+        if (!TimeZoneInfo.TryFindSystemTimeZoneById(timeZone, out TimeZoneInfo? timeZoneInfo))
+        {
+            return BadRequest("Invalid time zone. Time zone must be a valid IANA or Windows time zone id.");
+        }
+
+        _logger.LogDebug("Rendering print version of ticket validation view for dispute {disputeId} in timezone {timeZone}.", disputeId, timeZoneInfo);
 
         try
         {
-            RenderedReport report = await _printService.PrintTicketValidationViewAsync(disputeId, timeZone, cancellationToken);
+            RenderedReport report = await _printService.PrintTicketValidationViewAsync(disputeId, timeZoneInfo, type, cancellationToken);
             return File(report.Content, "application/pdf", report.ReportName);
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Error when generating print version of dispute");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Deletes a violation ticket count asynchronously.
+    /// </summary>
+    /// <param name="violationTicketCountId">The ID of the violation ticket count to delete.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>An <see cref="IActionResult"/> representing the result of the asynchronous operation.</returns>
+    [HttpDelete("violationTicketCount/{violationTicketCountId}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.Dispute, Scopes.Update)]
+    public async Task<IActionResult> DeleteViolationTicketCountAsync([Required] int violationTicketCountId, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Attempting to delete violation ticket count with ID {violationTicketCountId}.", violationTicketCountId);
+
+        try
+        {
+            await _disputeService.DeleteViolationTicketCountAsync(violationTicketCountId, cancellationToken);
+            _logger.LogDebug("Successfully deleted violation ticket count with ID {violationTicketCountId}.", violationTicketCountId);
+
+            return NoContent(); // 204 No Content
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error when deleting violation ticket count with ID {violationTicketCountId}.", violationTicketCountId);
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }

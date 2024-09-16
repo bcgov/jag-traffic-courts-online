@@ -1,5 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.config;
 
+import java.time.Duration;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,8 +11,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.util.CollectionUtils;
+
+import io.lettuce.core.cluster.ClusterClientOptions;
+import io.lettuce.core.cluster.ClusterTopologyRefreshOptions;
 
 @Configuration
 public class RedisConfig {
@@ -45,7 +51,22 @@ public class RedisConfig {
 			if(redisProperties.getCluster().getMaxRedirects() != null)
 				config.setMaxRedirects(redisProperties.getCluster().getMaxRedirects());
 			
-			return new LettuceConnectionFactory(config);
+			// Enable adaptive topology refreshing
+			ClusterClientOptions clientOptions = ClusterClientOptions.builder()
+				    .topologyRefreshOptions(ClusterTopologyRefreshOptions.builder()
+			    		// The MOVED_REDIRECT trigger causes a topology refresh when the client receives a MOVED redirect from a Redis server.
+			            // The PERSISTENT_RECONNECTS trigger causes a topology refresh when the client cannot reconnect to a Redis server for a certain period of time.
+				        .enableAdaptiveRefreshTrigger(ClusterTopologyRefreshOptions.RefreshTrigger.MOVED_REDIRECT, ClusterTopologyRefreshOptions.RefreshTrigger.PERSISTENT_RECONNECTS)
+				        // If a topology refresh is triggered, the client will wait for this period of time before triggering another topology refresh.
+				        .adaptiveRefreshTriggersTimeout(Duration.ofSeconds(30)) // default is 30 seconds
+				        .build())
+				    .build();
+
+	        LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
+	                .clientOptions(clientOptions)
+	                .build();
+
+	        return new LettuceConnectionFactory(config, clientConfig);
 		}
 		// Standalone mode (for local development)
 		else {

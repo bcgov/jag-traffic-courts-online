@@ -60,7 +60,7 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), true, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetDisputeAsync(It.Is<GetDisputeOptions>(_ => _.DisputeId == id && _.Assign == true), It.IsAny<CancellationToken>()))
             .ReturnsAsync(dispute);
         var mockLogger = new Mock<ILogger<DisputeController>>();
         var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
@@ -85,7 +85,7 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), true, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetDisputeAsync(It.Is<GetDisputeOptions>(_ => _.DisputeId == id && _.Assign == true), It.IsAny<CancellationToken>()))
             .Throws(new TrafficCourts.Exceptions.ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
@@ -110,7 +110,7 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), true, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetDisputeAsync(It.Is<GetDisputeOptions>(_ => _.DisputeId == id && _.Assign == true), It.IsAny<CancellationToken>()))
             .Throws(new TrafficCourts.Exceptions.ApiException("msg", StatusCodes.Status404NotFound, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
@@ -349,7 +349,7 @@ public class DisputeControllerTest
         DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         disputeService
-            .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), true, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetDisputeAsync(It.Is<GetDisputeOptions>(_ => _.DisputeId == id && _.Assign == true), It.IsAny<CancellationToken>()))
             .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
 
         // Act
@@ -360,5 +360,23 @@ public class DisputeControllerTest
         var problemDetails = Assert.IsType<ProblemDetails>(objectResult.Value);
         Assert.Equal((int)HttpStatusCode.InternalServerError, problemDetails.Status);
         Assert.True(problemDetails?.Title?.Contains("Error Invoking COMS"));
+    }
+
+    [Fact]
+    public async void TestDeleteViolationTicketCountAsync()
+    {
+        // Arrange
+        int violationTicketCountId = 1;
+        var disputeService = new Mock<IDisputeService>();
+        var mockLogger = new Mock<ILogger<DisputeController>>();
+        var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
+        DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
+
+        // Act
+        IActionResult? result = await disputeController.DeleteViolationTicketCountAsync(violationTicketCountId, CancellationToken.None);
+
+        // Assert
+        var noContentResult = Assert.IsType<NoContentResult>(result);
+        Assert.Equal(StatusCodes.Status204NoContent, noContentResult.StatusCode);
     }
 }

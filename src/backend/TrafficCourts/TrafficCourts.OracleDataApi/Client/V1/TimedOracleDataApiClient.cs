@@ -1,4 +1,5 @@
-﻿namespace TrafficCourts.OracleDataApi.Client.V1;
+﻿
+namespace TrafficCourts.OracleDataApi.Client.V1;
 
 /// <summary>
 /// Generated type to wrap the true <see cref="IOracleDataApiClient"/> implementation.
@@ -1125,6 +1126,38 @@ internal class TimedOracleDataApiClient : IOracleDataApiClient
         try
         {
             await _inner.VerifyDisputeEmailAsync(id, cancellationToken).ConfigureAwait(false);
+            return;
+        }
+        catch (global::System.Exception exception)
+        {
+            operation.Error(exception);
+            throw;
+        }
+    }
+
+    public async global::System.Threading.Tasks.Task DeleteViolationTicketCountAsync(long id)
+    {
+        using var operation = _metrics.BeginOperation();
+
+        try
+        {
+            await _inner.DeleteViolationTicketCountAsync(id).ConfigureAwait(false);
+            return;
+        }
+        catch (global::System.Exception exception)
+        {
+            operation.Error(exception);
+            throw;
+        }
+    }
+
+    public async global::System.Threading.Tasks.Task DeleteViolationTicketCountAsync(long id, CancellationToken cancellationToken)
+    {
+        using var operation = _metrics.BeginOperation();
+
+        try
+        {
+            await _inner.DeleteViolationTicketCountAsync(id, cancellationToken).ConfigureAwait(false);
             return;
         }
         catch (global::System.Exception exception)

@@ -133,6 +133,9 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock
             mapper.JsonProperty(_ => _.PbcRefNumber);
             mapper.JsonProperty(_ => _.PartyNumber);
             mapper.JsonProperty(_ => _.PartyName);
+            mapper.JsonProperty(_ => _.PartySurname);
+            mapper.JsonProperty(_ => _.PartyFirstGivenName);
+            mapper.JsonProperty(_ => _.PartySecondGivenName);
             mapper.JsonProperty(_ => _.AccountNumber);
             mapper.JsonProperty(_ => _.SiteNumber);
             mapper.JsonProperty(_ => _.InvoiceType);

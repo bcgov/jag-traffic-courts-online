@@ -14,6 +14,9 @@ public class DigitalCaseFile
     [JsonProperty("ticket")]
     public TicketSummary Ticket { get; set; } = new TicketSummary();
 
+    [JsonProperty("contactType")]
+    public string ContactType { get; set; } = string.Empty;
+
     [JsonProperty("contact")]
     public ContactInformation Contact { get; set; } = new ContactInformation();
 
@@ -22,6 +25,9 @@ public class DigitalCaseFile
 
     [JsonProperty("appearance")]
     public Appearance Appearance { get; set; } = new Appearance();
+
+    [JsonProperty("showAppearanceHistory")]
+    public bool ShowAppearanceHistory { get; set; } = false;
 
     [JsonProperty("pastAppearances")]
     public List<Appearance> AppearanceHistory { get; set; } = new List<Appearance>();

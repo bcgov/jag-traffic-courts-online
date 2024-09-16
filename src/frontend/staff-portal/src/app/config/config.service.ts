@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { Config, Configuration, CountryCodeValue, ProvinceCodeValue } from '@config/config.model';
 import { SortWeight, UtilsService } from '@core/services/utils.service';
 import { AppConfigService } from 'app/services/app-config.service';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, catchError, first, map, Observable, of, tap, throwError } from 'rxjs';
 import CanadaProvincesJSON from 'assets/canada_provinces_list.json';
 import USStatesJSON from 'assets/us_states_list.json';
 import CountriesListJSON from 'assets/countries_list.json';
-import CourthouseDataJSON from 'assets/courthouse-data.json';
 import { CourthouseTeam } from 'app/services/lookups.service';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -44,6 +44,7 @@ export class ConfigService {
   constructor(
     protected utilsService: UtilsService,
     protected appConfigService: AppConfigService,
+    protected http: HttpClient
   ) {
     // import countries
     this._countries = [];
@@ -60,8 +61,8 @@ export class ConfigService {
       i++;
     })
 
-    // import courthouses
-    this._courthouses = CourthouseDataJSON.courthouses;
+    // Load courthouses
+    this.loadCourthouseData();
 
     // import states
     USStatesJSON.provinceCodeValues.forEach(x => {
@@ -167,10 +168,6 @@ export class ConfigService {
     return [...this._countries];
   }
 
-  public get courthouses(): CourthouseTeam[] {
-    return [...this._courthouses];
-  }
-
   public get bcCodeValue(): ProvinceCodeValue {
     return this._bcCodeValue;
   }
@@ -244,5 +241,23 @@ export class ConfigService {
   ) => SortWeight {
     return (a: Config<number | string>, b: Config<number | string>) =>
       this.utilsService.sortByKey<Config<number | string>>(a, b, 'name');
+  }
+
+  private loadCourthouseData(): void {
+    this.http.get<{ courthouses: CourthouseTeam[] }>('/assets/courthouse-data.json')
+      .pipe(
+        first(),
+        map(response => response.courthouses),
+        tap(courthouses => this._courthouses = courthouses),
+        catchError(error => {
+          console.error('Error loading courthouse data:', error);
+          return throwError(() => new Error(error));
+        })
+      )
+      .subscribe();
+  }
+
+  public get courthouses(): CourthouseTeam[] {
+    return this._courthouses;
   }
 }

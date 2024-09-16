@@ -27,3 +27,30 @@ a {
   color: theme-palette(blue, light);
   text-decoration: underline;
 }
+
+h3 {
+  font-weight: bold;
+  color: #1d4a77 !important;
+  margin-bottom: 5px;
+}
+
+.section-grid-header {
+  font-size: small;
+  color: #707070;
+  font-weight: bold;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.section-grid-text {
+  font-size: small;
+  font-weight: bold;
+  color: #003366 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.section-grid-cell {
+  border: none;
+  padding-bottom: 15px;
+}

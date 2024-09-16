@@ -40,6 +40,7 @@ public interface IOracleDataApiService
     Task<JJDispute> UpdateJJDisputeCascadeAsync(string ticketNumber, bool checkVTCAssigned, JJDispute body, CancellationToken cancellationToken);
     Task<Dispute> ValidateDisputeAsync(long id, CancellationToken cancellationToken);
     Task VerifyDisputeEmailAsync(long id, CancellationToken cancellationToken);
+    Task DeleteViolationTicketCountAsync(long id, CancellationToken cancellationToken);
     #endregion
 
     #region Non Oracle Data API signatures

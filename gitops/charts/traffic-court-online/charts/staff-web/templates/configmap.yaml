@@ -14,3 +14,7 @@ data:
       client_max_body_size 10M;
     }
     error_log stderr warn;
+  {{ if .Values.courtHouseDataConfig }}
+  courthouse-data.json: |-
+{{ include "staff-web.tplvalues.render" ( dict "value" .Values.courtHouseDataConfig "context" $ ) | indent 4 }}
+  {{- end }}

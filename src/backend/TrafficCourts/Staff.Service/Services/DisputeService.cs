@@ -1,10 +1,11 @@
 ﻿using MassTransit;
-using System.Collections.ObjectModel;
+using MediatR;
 using System.Security.Claims;
 using System.Text.Json;
 using TrafficCourts.Collections;
 using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Coms.Client;
+using TrafficCourts.Domain.Events;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.Interfaces;
 using TrafficCourts.Messaging.MessageContracts;
@@ -12,12 +13,29 @@ using TrafficCourts.Staff.Service.Caching;
 using TrafficCourts.Staff.Service.Mappers;
 using TrafficCourts.Staff.Service.Models;
 using TrafficCourts.Staff.Service.Models.Disputes;
-using OcrViolationTicket = TrafficCourts.Domain.Models.OcrViolationTicket;
+using TrafficCourts.TicketSearch;
 using ZiggyCreatures.Caching.Fusion;
-using MediatR;
-using TrafficCourts.Domain.Events;
+using OcrViolationTicket = TrafficCourts.Domain.Models.OcrViolationTicket;
 
 namespace TrafficCourts.Staff.Service.Services;
+
+public record GetDisputeOptions
+{
+    /// <summary>
+    /// The dispute to fetch.
+    /// </summary>
+    public long DisputeId { get; init; }
+
+    /// <summary>
+    /// If <c>true</c> the dispute will be assigned to the current user when fetching.
+    /// </summary>
+    public bool Assign { get; init; }
+
+    /// <summary>
+    /// If <c>true</c>, the service will attempt to retrieve the Disputant's name from ICBC.
+    /// </summary>
+    public bool GetNameFromIcbc { get; init; }
+}
 
 /// <summary>
 /// Summary description for Class1
@@ -36,6 +54,7 @@ public class DisputeService : IDisputeService,
     private readonly IOracleDataApiService _oracleDataApi;
     private readonly IProvinceLookupService _provinceLookupService;
     private readonly IStaffDocumentService _documentService;
+    private readonly ITicketSearchService _ticketSearchService;
 
     public DisputeService(
         IOracleDataApiService oracleDataApi,
@@ -44,6 +63,7 @@ public class DisputeService : IDisputeService,
         IAgencyLookupService agencyLookupService,
         IProvinceLookupService provinceLookupService,
         IStaffDocumentService documentService,
+        ITicketSearchService ticketSearchService,
         IFusionCache cache,
         ILogger<DisputeService> logger)
     {
@@ -53,6 +73,7 @@ public class DisputeService : IDisputeService,
         _objectManagementService = objectManagementService ?? throw new ArgumentNullException(nameof(objectManagementService));
         _provinceLookupService = provinceLookupService ?? throw new ArgumentNullException(nameof(provinceLookupService));
         _documentService = documentService ?? throw new ArgumentNullException(nameof(documentService));
+        _ticketSearchService = ticketSearchService ?? throw new ArgumentNullException(nameof(ticketSearchService));
         _cache = cache ?? throw new ArgumentNullException(nameof(cache));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
@@ -105,127 +126,20 @@ public class DisputeService : IDisputeService,
         return await _oracleDataApi.SaveDisputeAsync(dispute, cancellationToken);
     }
 
-    public async Task<Dispute> GetDisputeAsync(long disputeId, bool isAssign, CancellationToken cancellationToken)
+    public async Task<Dispute> GetDisputeAsync(GetDisputeOptions options, CancellationToken cancellationToken)
     {
-        Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, isAssign, cancellationToken);
+        Dispute dispute = await _oracleDataApi.GetDisputeAsync(options.DisputeId, options.Assign, cancellationToken);
 
-        dispute.ViolationTicket.OcrViolationTicket = await GetOcrResultsAsync(dispute, cancellationToken);
+        // this should be safe since are updating different parts of the dispute in each of these calls
+        var ocrTask = GetOcrImageAndResults(dispute, cancellationToken);
+        var fileTask = GetFileAttachments(dispute, cancellationToken);
+        var icbcTask = GetIcbcTicketInformation(dispute, options, cancellationToken);
 
-        // If OcrViolationTicket != null, then this Violation Ticket was scanned using the Azure OCR Form Recognizer at one point.
-        // If so, retrieve the image from object storage and return it as well.
-        dispute.ViolationTicket.ViolationTicketImage = await GetViolationTicketImageAsync(dispute, cancellationToken);
-
-        List<FileMetadata>? disputeFiles = null;
-
-        // search by notice of dispute guid
-        if (dispute.NoticeOfDisputeGuid is not null && Guid.TryParse(dispute.NoticeOfDisputeGuid, out Guid noticeOfDisputeId))
-        {
-            // create new search properties
-            DocumentProperties properties = new DocumentProperties { NoticeOfDisputeId = noticeOfDisputeId };
-            disputeFiles = await _documentService.FindFilesAsync(properties, cancellationToken);
-        }
-
-        dispute.FileData = disputeFiles;
-
-        // TCVP-2878 Filter files that are corrupt in COMS (missing attributes)
-        if (dispute.FileData is not null)
-        {
-            int count = dispute.FileData.Count;
-            // If there is a missing fileName, remove it from the list as we can't display such an object in the UI.
-            dispute.FileData = dispute.FileData.Where(x => x.FileName is not null).ToList();
-
-            if (count != dispute.FileData.Count)
-            {
-                // This should never happen, but if it does, it means that there is bad data in COMS (an application error)
-                _logger.LogError("COMS has files with missing filenames (bad data). Excluded {count} files from search results", count - dispute.FileData.Count);
-            }
-        }
+        // wait for them all to complete
+        await Task.WhenAll(ocrTask, fileTask, icbcTask);
 
         return dispute;
     }
-
-    private async Task<OcrViolationTicket?> GetOcrResultsAsync(Dispute dispute, CancellationToken cancellationToken)
-    {
-        Coms.Client.File? file = await GetFileAsync(dispute, InternalFileProperties.DocumentTypes.OcrResult, cancellationToken);
-        if (file is null)
-        {
-            return null;
-        }
-
-        // deserialize
-        var result = JsonSerializer.Deserialize<OcrViolationTicket>(file.Data);
-        return result;
-    }
-
-    /// <summary>
-    /// Retrieves a image from the object store with the given imageFilename.
-    /// </summary>
-    /// <param name="dispute"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    private async Task<ViolationTicketImage?> GetViolationTicketImageAsync(Dispute dispute, CancellationToken cancellationToken)
-    {
-        Coms.Client.File? file = await GetFileAsync(dispute, InternalFileProperties.DocumentTypes.TicketImage, cancellationToken);
-        if (file is null)
-        {
-            return null;
-        }
-
-        MemoryStream stream = new MemoryStream(); // todo: use memory stream manager
-        file.Data.CopyTo(stream);
-
-        return new ViolationTicketImage(stream.ToArray(), file.ContentType ?? "application/octet-stream");
-    }
-
-
-    private async Task<Coms.Client.File?> GetFileAsync(Dispute dispute, string documentType, CancellationToken cancellationToken)
-    {
-        if (dispute?.NoticeOfDisputeGuid is null)
-        {
-            _logger.LogInformation("Cannot get dispute {DocumentType}. There is no NoticeOfDisputeGuid", documentType);
-            return null;
-        }
-
-        if (!Guid.TryParse(dispute.NoticeOfDisputeGuid, out Guid noticeOfDisputeId))
-        {
-            _logger.LogInformation("Cannot get dispute {DocumentType}. The NoticeOfDisputeGuid value '{NoticeOfDisputeGuid}' is not valid", documentType, dispute.NoticeOfDisputeGuid);
-            return null;
-        }
-
-        InternalFileProperties properties = new()
-        {
-            NoticeOfDisputeId = noticeOfDisputeId,
-            DocumentType = documentType
-        };
-
-        var metadata = properties.ToMetadata();
-        var tags = properties.ToTags();
-
-        FileSearchParameters parameters = new FileSearchParameters(null, metadata, tags);
-
-        IList<FileSearchResult> searchResults = await _objectManagementService.FileSearchAsync(parameters, cancellationToken);
-
-        if (searchResults.Count == 0)
-        {
-            _logger.LogInformation("Cannot get dispute {DocumentType}. No files found with NoticeOfDisputeGuid value '{NoticeOfDisputeGuid}'", documentType, dispute.NoticeOfDisputeGuid);
-            return null;
-        }
-
-        FileSearchResult searchResult = searchResults[0];
-        if (searchResults.Count > 1)
-        {
-            // more than one? that is a problem
-            _logger.LogInformation("Found {Count} {DocumentType} for {NoticeOfDisputeId}, expected only one. Returning the last created item",
-                searchResults.Count, documentType, noticeOfDisputeId);
-
-            searchResult = searchResults.OrderByDescending(_ => _.CreatedAt).First();
-        }
-
-        // get the document
-        Coms.Client.File file = await _objectManagementService.GetFileAsync(searchResult.Id, cancellationToken);
-        return file;
-    }
-
 
     public async Task<Dispute> UpdateDisputeAsync(long disputeId, ClaimsPrincipal user, string? staffComment, Dispute dispute, CancellationToken cancellationToken)
     {
@@ -340,6 +254,10 @@ public class DisputeService : IDisputeService,
         // Status to PROCESSING
         dispute = await _oracleDataApi.SubmitDisputeAsync(disputeId, cancellationToken);
 
+        // TCVP-2977: Get disputant name data from ICBC RSI ticket search and update dispute's IcbcNameDetail
+        GetDisputeOptions options = new() {  DisputeId = disputeId, Assign = false, GetNameFromIcbc = true };
+        await GetIcbcTicketInformation(dispute, options, cancellationToken);
+
         // set AddressProvince to 2 character abbreviation code if prov seq no & ctry id present
         if (dispute.AddressProvinceSeqNo != null)
         {
@@ -428,89 +346,120 @@ public class DisputeService : IDisputeService,
     /// <returns></returns>
     public async Task<ICollection<DisputeWithUpdates>> GetAllDisputesWithPendingUpdateRequestsAsync(CancellationToken cancellationToken)
     {
-        ICollection<DisputeWithUpdates> disputesWithUpdates = new Collection<DisputeWithUpdates>();
         ICollection<Domain.Models.DisputeUpdateRequest> pendingDisputeUpdateRequests = await _oracleDataApi.GetDisputeUpdateRequestsAsync(null, Status.PENDING, cancellationToken);
 
-        foreach (Domain.Models.DisputeUpdateRequest disputeUpdateRequest in pendingDisputeUpdateRequests)
+        Dictionary<long, DisputeWithUpdates> disputesWithUpdates = [];
+
+        foreach (Domain.Models.DisputeUpdateRequest disputeUpdateRequest in pendingDisputeUpdateRequests.OrderBy(_ => _.DisputeId))
         {
-            DisputeWithUpdates? disputeWithUpdates = new DisputeWithUpdates();
-            if (disputesWithUpdates.FirstOrDefault(x => x.DisputeId == disputeUpdateRequest.DisputeId) is null)
+            // check if we have already loaded this dispute
+            if (!disputesWithUpdates.TryGetValue(disputeUpdateRequest.DisputeId, out DisputeWithUpdates? disputeWithUpdates))
             {
                 try
                 {
+
                     Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeUpdateRequest.DisputeId, false, cancellationToken);
 
                     // Fill in record to return
-                    disputeWithUpdates.DisputeId = dispute.DisputeId;
-                    disputeWithUpdates.DisputantGivenName1 = dispute.DisputantGivenName1;
-                    disputeWithUpdates.DisputantGivenName2 = dispute.DisputantGivenName2;
-                    disputeWithUpdates.DisputantGivenName3 = dispute.DisputantGivenName3;
-                    disputeWithUpdates.DisputantSurname = dispute.DisputantSurname;
-                    disputeWithUpdates.UserAssignedTo = dispute.UserAssignedTo;
-                    disputeWithUpdates.UserAssignedTs = dispute.UserAssignedTs;
-                    disputeWithUpdates.Status = dispute.Status;
-                    disputeWithUpdates.TicketNumber = dispute.TicketNumber;
-                    disputeWithUpdates.SubmittedTs = dispute.SubmittedTs;
-                    disputeWithUpdates.EmailAddress = dispute.EmailAddress;
-                    disputeWithUpdates.EmailAddressVerified = dispute.EmailAddressVerified; 
-
-                    // Check for future court hearing date
-                    disputeWithUpdates.HearingDate = null;
-                    ICollection<JJDispute> jjDisputes = await _oracleDataApi.GetJJDisputesAsync(null, dispute.TicketNumber, cancellationToken);
-                    if (jjDisputes != null && jjDisputes.Count > 0)
+                    disputeWithUpdates = new DisputeWithUpdates
                     {
-                        // review first one
-                        foreach(var jjDispute in jjDisputes)
-                        {
-                            if (jjDispute.JjDisputeCourtAppearanceRoPs.Count() > 0)
-                            {
-                                foreach (var courtAppearance in jjDispute.JjDisputeCourtAppearanceRoPs)
-                                {
-                                    if (courtAppearance.AppearanceTs > DateTimeOffset.Now && (disputeWithUpdates.HearingDate is null || disputeWithUpdates.HearingDate > courtAppearance.AppearanceTs))
-                                    {
-                                        disputeWithUpdates.HearingDate = courtAppearance.AppearanceTs;
-                                    }
-                                }
+                        DisputeId = dispute.DisputeId,
+                        DisputantGivenName1 = dispute.DisputantGivenName1,
+                        DisputantGivenName2 = dispute.DisputantGivenName2,
+                        DisputantGivenName3 = dispute.DisputantGivenName3,
+                        DisputantSurname = dispute.DisputantSurname,
+                        UserAssignedTo = dispute.UserAssignedTo,
+                        UserAssignedTs = dispute.UserAssignedTs,
+                        Status = dispute.Status,
+                        TicketNumber = dispute.TicketNumber,
+                        SubmittedTs = dispute.SubmittedTs,
+                        EmailAddress = dispute.EmailAddress,
+                        EmailAddressVerified = dispute.EmailAddressVerified
+                    };
 
-                            }
-                        }
-                    }
+                    await SetHearingDateAsync(disputeWithUpdates, cancellationToken);
 
-                    disputesWithUpdates.Add(disputeWithUpdates);
+                    disputesWithUpdates.Add(disputeWithUpdates.DisputeId, disputeWithUpdates);
                 }
-                catch {  
+                catch (Exception exception)
+                {
                     // dont crash carry on
-                }
-            } else
-            {
-                disputeWithUpdates = disputesWithUpdates.FirstOrDefault(x => x.DisputeId == disputeUpdateRequest.DisputeId);
-            }
-            // check whether this udpate request is for an adjournment document
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            disputeWithUpdates.AdjournmentDocument = false;
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-            if (disputeUpdateRequest.UpdateType == DisputeUpdateRequestUpdateType.DISPUTANT_DOCUMENT)
-            {
-                DocumentUpdateJSON? documentUpdateJSON = JsonSerializer.Deserialize<DocumentUpdateJSON>(disputeUpdateRequest.UpdateJson);
-                if (documentUpdateJSON is not null && documentUpdateJSON.DocumentType == "Application for Adjournment") 
-                {
-                    disputeWithUpdates.AdjournmentDocument = true;
+                    _logger.LogInformation(exception, "Error getting pending dispute for {DisputeId}", disputeUpdateRequest.DisputeId);
                 }
             }
 
-            // check whether this update request is for a change of plea
-            disputeWithUpdates.ChangeOfPlea = false;
-            if (disputeUpdateRequest.UpdateType == DisputeUpdateRequestUpdateType.COUNT)
-            {
-                CountUpdateJSON? countUpdateJSON = JsonSerializer.Deserialize<CountUpdateJSON>(disputeUpdateRequest.UpdateJson);
-                if (countUpdateJSON is not null && countUpdateJSON.pleaCode is not null)
-                {
-                    disputeWithUpdates.ChangeOfPlea = true;
-                }
-            }
+            SetAdjournmentDocumentFlag(disputeWithUpdates, disputeUpdateRequest);
+            SetChangeOfPleaFlag(disputeWithUpdates, disputeUpdateRequest);
         }
 
-        return disputesWithUpdates;
+        var result = disputesWithUpdates.Values.ToList();
+        return result;
+    }
+
+    public async Task DeleteViolationTicketCountAsync(long violationTicketCountId, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Violation ticket count deleted with id {ViolationTicketCountId}", violationTicketCountId);
+        
+        await _oracleDataApi.DeleteViolationTicketCountAsync(violationTicketCountId, cancellationToken);
+    }
+
+    private async Task SetHearingDateAsync(DisputeWithUpdates dispute, CancellationToken cancellationToken)
+    {
+        // Check for future court hearing date
+        dispute.HearingDate = null;
+
+        ICollection<JJDispute> jjDisputes = await _oracleDataApi.GetJJDisputesAsync(null, dispute.TicketNumber, cancellationToken);
+
+        if (jjDisputes is not null)
+        {
+            var now = DateTimeOffset.Now;
+
+            // find the first future court appearance date that is after right now
+            dispute.HearingDate = jjDisputes
+                .SelectMany(_ => _.JjDisputeCourtAppearanceRoPs)
+                .Where(_ => _.AppearanceTs > now)
+                .OrderBy(_ => _.AppearanceTs)
+                .Select(_ => _.AppearanceTs)
+                .FirstOrDefault();
+        }
+    }
+
+    private void SetAdjournmentDocumentFlag(DisputeWithUpdates? dispute, Domain.Models.DisputeUpdateRequest disputeUpdateRequest)
+    {
+        if (dispute is null)
+        {
+            return;
+        }
+
+        // check whether this udpate request is for an adjournment document
+        dispute.AdjournmentDocument = false;
+        if (disputeUpdateRequest.UpdateType == DisputeUpdateRequestUpdateType.DISPUTANT_DOCUMENT)
+        {
+            DocumentUpdateJSON? documentUpdateJSON = JsonSerializer.Deserialize<DocumentUpdateJSON>(disputeUpdateRequest.UpdateJson, ModelJsonSerializerContext.Default.DocumentUpdateJSON);
+            if (documentUpdateJSON is not null && documentUpdateJSON.DocumentType == "Application for Adjournment")
+            {
+                dispute.AdjournmentDocument = true;
+            }
+        }
+    }
+
+    private void SetChangeOfPleaFlag(DisputeWithUpdates? dispute, Domain.Models.DisputeUpdateRequest disputeUpdateRequest)
+    {
+        if (dispute is null)
+        {
+            return;
+        }
+
+        // check whether this update request is for a change of plea
+        dispute.ChangeOfPlea = false;
+        if (disputeUpdateRequest.UpdateType == DisputeUpdateRequestUpdateType.COUNT)
+        {
+            CountUpdateJSON? countUpdateJSON = JsonSerializer.Deserialize<CountUpdateJSON>(disputeUpdateRequest.UpdateJson, ModelJsonSerializerContext.Default.CountUpdateJSON);
+            if (countUpdateJSON is not null && countUpdateJSON.pleaCode is not null)
+            {
+                dispute.ChangeOfPlea = true;
+            }
+        }
     }
 
     /// <summary>
@@ -542,6 +491,145 @@ public class DisputeService : IDisputeService,
     public async Task Handle(DisputesUnassignedEvent notification, CancellationToken cancellationToken)
     {
         await ClearCachedDisputeListItemsAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<OcrViolationTicket?> GetOcrResultsAsync(Dispute dispute, CancellationToken cancellationToken)
+    {
+        Coms.Client.File? file = await GetFileAsync(dispute, InternalFileProperties.DocumentTypes.OcrResult, cancellationToken);
+        if (file is null)
+        {
+            return null;
+        }
+
+        // deserialize
+        var result = JsonSerializer.Deserialize<OcrViolationTicket>(file.Data);
+        return result;
+    }
+
+    private async Task GetOcrImageAndResults(Dispute dispute, CancellationToken cancellationToken)
+    {
+        dispute.ViolationTicket.OcrViolationTicket = await GetOcrResultsAsync(dispute, cancellationToken);
+
+        // If OcrViolationTicket != null, then this Violation Ticket was scanned using the Azure OCR Form Recognizer at one point.
+        // If so, retrieve the image from object storage and return it as well.
+        dispute.ViolationTicket.ViolationTicketImage = await GetViolationTicketImageAsync(dispute, cancellationToken);
+    }
+
+    private async Task GetFileAttachments(Dispute dispute, CancellationToken cancellationToken)
+    {
+        List<FileMetadata>? disputeFiles = null;
+
+        // search by notice of dispute guid
+        if (dispute.NoticeOfDisputeGuid is not null && Guid.TryParse(dispute.NoticeOfDisputeGuid, out Guid noticeOfDisputeId))
+        {
+            // create new search properties
+            DocumentProperties properties = new DocumentProperties { NoticeOfDisputeId = noticeOfDisputeId };
+            disputeFiles = await _documentService.FindFilesAsync(properties, cancellationToken);
+        }
+
+        dispute.FileData = disputeFiles;
+
+        // TCVP-2878 Filter files that are corrupt in COMS (missing attributes)
+        if (dispute.FileData is not null)
+        {
+            int count = dispute.FileData.Count;
+            // If there is a missing fileName, remove it from the list as we can't display such an object in the UI.
+            dispute.FileData = dispute.FileData.Where(x => x.FileName is not null).ToList();
+
+            if (count != dispute.FileData.Count)
+            {
+                // This should never happen, but if it does, it means that there is bad data in COMS (an application error)
+                _logger.LogError("COMS has files with missing filenames (bad data). Excluded {count} files from search results", count - dispute.FileData.Count);
+            }
+        }
+    }
+
+    private async Task GetIcbcTicketInformation(Dispute dispute, GetDisputeOptions options, CancellationToken cancellationToken)
+    {
+        if (options.GetNameFromIcbc && dispute.IssuedTs is not null)
+        {
+            TimeOnly timeOfDay = TimeOnly.FromTimeSpan(dispute.IssuedTs.Value.TimeOfDay);
+            try
+            {
+                Ticket? ticket = await _ticketSearchService.SearchAsync(dispute.TicketNumber, timeOfDay, cancellationToken);
+                if (ticket is not null)
+                {
+                    dispute.IcbcName = new IcbcNameDetail(ticket.Surname, ticket.FirstGivenName, ticket.SecondGivenName);
+                }
+            }
+            catch (TicketSearchErrorException exception)
+            {
+                _logger.LogInformation(exception, "Cannot get ICBC name for dispute {DisputeId}", dispute.DisputeId);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Retrieves a image from the object store with the given imageFilename.
+    /// </summary>
+    /// <param name="dispute"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    private async Task<ViolationTicketImage?> GetViolationTicketImageAsync(Dispute dispute, CancellationToken cancellationToken)
+    {
+        Coms.Client.File? file = await GetFileAsync(dispute, InternalFileProperties.DocumentTypes.TicketImage, cancellationToken);
+        if (file is null)
+        {
+            return null;
+        }
+
+        MemoryStream stream = new MemoryStream(); // todo: use memory stream manager
+        file.Data.CopyTo(stream);
+
+        return new ViolationTicketImage(stream.ToArray(), file.ContentType ?? "application/octet-stream");
+    }
+
+    private async Task<Coms.Client.File?> GetFileAsync(Dispute dispute, string documentType, CancellationToken cancellationToken)
+    {
+        if (dispute?.NoticeOfDisputeGuid is null)
+        {
+            _logger.LogInformation("Cannot get dispute {DocumentType}. There is no NoticeOfDisputeGuid", documentType);
+            return null;
+        }
+
+        if (!Guid.TryParse(dispute.NoticeOfDisputeGuid, out Guid noticeOfDisputeId))
+        {
+            _logger.LogInformation("Cannot get dispute {DocumentType}. The NoticeOfDisputeGuid value '{NoticeOfDisputeGuid}' is not valid", documentType, dispute.NoticeOfDisputeGuid);
+            return null;
+        }
+
+        InternalFileProperties properties = new()
+        {
+            NoticeOfDisputeId = noticeOfDisputeId,
+            DocumentType = documentType
+        };
+
+        var metadata = properties.ToMetadata();
+        var tags = properties.ToTags();
+
+        FileSearchParameters parameters = new FileSearchParameters(null, metadata, tags);
+
+        IList<FileSearchResult> searchResults = await _objectManagementService.FileSearchAsync(parameters, cancellationToken);
+
+        if (searchResults.Count == 0)
+        {
+            _logger.LogInformation("Cannot get dispute {DocumentType}. No files found with NoticeOfDisputeGuid value '{NoticeOfDisputeGuid}'", documentType, dispute.NoticeOfDisputeGuid);
+            return null;
+        }
+
+        FileSearchResult searchResult = searchResults[0];
+        if (searchResults.Count > 1)
+        {
+            // more than one? that is a problem
+            _logger.LogInformation("Found {Count} {DocumentType} for {NoticeOfDisputeId}, expected only one. Returning the last created item",
+                searchResults.Count, documentType, noticeOfDisputeId);
+
+            searchResult = searchResults.OrderByDescending(_ => _.CreatedAt).First();
+        }
+
+        // get the document
+        Coms.Client.File file = await _objectManagementService.GetFileAsync(searchResult.Id, cancellationToken);
+        return file;
     }
 
     private string GetUserName(ClaimsPrincipal user) => user.Identity?.Name ?? string.Empty;

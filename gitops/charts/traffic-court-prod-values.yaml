@@ -10,7 +10,7 @@ arc-dispute-api:
   pdb:
     create: true
   image:
-    tag: "2.2.12"
+    tag: "2.3.16"
     pullPolicy: Always
   env: 
     "Swagger__Enabled": "false"
@@ -20,7 +20,7 @@ citizen-api:
   pdb:
     create: true
   image:
-    tag: "2.2.12"
+    tag: "2.3.16"
     pullPolicy: Always
   env:
     "FormRecognizer__ApiVersion": "2022-08-31"
@@ -39,13 +39,13 @@ citizen-web:
   pdb:
     create: true
   image:
-    tag: "2.2.12"
+    tag: "2.3.16"
     pullPolicy: Always
   appConfig: |
     {
         "production": true,
         "environment": "prod",
-        "version": "2.2.12",
+        "version": "2.3.16",
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "understandYourTicketLink": "https://understandmyticket.gov.bc.ca/",
@@ -221,7 +221,7 @@ oracle-data-api:
   pdb:
     create: true
   image:
-    tag: "2.2.12"
+    tag: "2.3.16"
     pullPolicy: Always
   env:
     "JAVA_OPTS": ""
@@ -238,7 +238,7 @@ staff-api:
   pdb:
     create: true
   image:
-    tag: "2.2.12"
+    tag: "2.3.16"
     pullPolicy: Always
   env:    
     "Jwt__Audience": "staff-api"
@@ -250,13 +250,20 @@ staff-api:
     "MassTransit__Transport": "RabbitMq"
     "RabbitMq__UseQuorumQueues": "true"
     "COMS__BASEURL": "http://common-object-management-service:3000"
-
+    "TicketSearch__SearchType": "RoadSafety"
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
 staff-web:
   replicaCount: 3
   pdb:
     create: true
   image:
-    tag: "2.2.12"
+    tag: "2.3.16"
     pullPolicy: Always
   route:
     # https://test.jag.gov.bc.ca
@@ -275,20 +282,132 @@ staff-web:
     {
         "production": true,
         "environment": "prod",
-        "version": "2.2.12",
+        "version": "2.3.16",
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "features": {
           "dispute":true
         }
       }
+  courtHouseDataConfig: |
+    {
+      "courthouses": [
+        { "id": "10264.0007", "name": "100 Mile House Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "9393.0007", "name": "Abbotsford Law Courts", "typeCode": "CTH", "__team": "C" },
+        { "id": "104.0007", "name": "Alexis Creek Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "105.0007", "name": "Anahim Lake Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "50764.0009", "name": "Anvil Centre", "typeCode": "CTH", "__team": "D" },
+        { "id": "106.0007", "name": "Atlin Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "10244.0007", "name": "Bella Bella Provincial Court", "typeCode": "CTH", "__team": "C" },
+        { "id": "10245.0007", "name": "Bella Coola Provincial Court", "typeCode": "CTH", "__team": "C" },
+        { "id": "107.0007", "name": "Burns Lake Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "9067.0007", "name": "Campbell River Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "23.0007", "name": "Castlegar Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "109.0007", "name": "Chetwynd Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "51064.0009", "name": "Chilliwack Cultural Centre", "typeCode": "CTH", "__team": "C" },
+        { "id": "8824.0007", "name": "Chilliwack Law Courts", "typeCode": "CTH", "__team": "C" },
+        { "id": "28.0007", "name": "Clearwater Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "51514.0009", "name": "Coast Kamloops Hotel & Conference Centre", "typeCode": "CTH", "__team": "D" },
+        { "id": "9068.0007", "name": "Courtenay Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "51316.0009", "name": "Cowichan Community Centre", "typeCode": "CTH", "__team": "D" },
+        { "id": "29.0007", "name": "Cranbrook Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "77.0007", "name": "Creston Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "10266.0007", "name": "Daajing Giids Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "110.0007", "name": "Dawson Creek Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "111.0007", "name": "Dease Lake Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "33414.0007", "name": "Downtown Community Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "10231.0007", "name": "Duncan Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "52214.0009", "name": "Erwin Stege Community Centre", "typeCode": "CTH", "__team": "D" },
+        { "id": "50814.0009", "name": "Evergreen Hall", "typeCode": "CTH", "__team": "D" },
+        { "id": "78.0007", "name": "Fernie Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "112.0007", "name": "Fort Nelson Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "113.0007", "name": "Fort St James Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "114.0007", "name": "Fort St John Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "115.0007", "name": "Fraser Lake Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "10232.0007", "name": "Ganges Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "10233.0007", "name": "Gold River Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "79.0007", "name": "Golden Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "108.0007", "name": "Good Hope Lake Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "80.0007", "name": "Grand Forks Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "124.0007", "name": "Hazelton Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "116.0007", "name": "Houston Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "117.0007", "name": "Hudson's Hope Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "51464.0009", "name": "Inn at the Quay", "typeCode": "CTH", "__team": "D" },
+        { "id": "81.0007", "name": "Invermere Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "20263.0007", "name": "Justice Centre (Judicial)", "typeCode": "CTH", "__team": "D" },
+        { "id": "82.0007", "name": "Kamloops Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "51164.0009", "name": "Kamloops Thompson River University", "typeCode": "CTH", "__team": "D" },
+        { "id": "83.0007", "name": "Kelowna Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "118.0007", "name": "Kitimat Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "51714.0009", "name": "Kiwanis Performing Arts Centre", "typeCode": "CTH", "__team": "D" },
+        { "id": "16988.0007", "name": "Klemtu Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "10257.0007", "name": "Kwadacha Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "52114.0009", "name": "Lillooet Elks Hall", "typeCode": "CTH", "__team": "D" },
+        { "id": "85.0007", "name": "Lillooet Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "119.0007", "name": "Lower Post Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "120.0007", "name": "Mackenzie Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "121.0007", "name": "Masset Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "122.0007", "name": "McBride Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "51264.0009", "name": "Merritt Civic Centre", "typeCode": "CTH", "__team": "D" },
+        { "id": "87.0007", "name": "Merritt Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "51214.0009", "name": "Nakusp & District Sports Complex", "typeCode": "CTH", "__team": "D" },
+        { "id": "88.0007", "name": "Nakusp Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "8805.0007", "name": "Nanaimo Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "50864.0009", "name": "Nelson Capitol Theatre", "typeCode": "CTH", "__team": "D" },
+        { "id": "89.0007", "name": "Nelson Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "123.0007", "name": "New Aiyansh Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "8839.0007", "name": "New Westminster Law Courts", "typeCode": "CTH", "__team": "C" },
+        { "id": "9064.0007", "name": "North Vancouver Provincial Court", "typeCode": "CTH", "__team": "B" },
+        { "id": "29464.0007", "name": "Office of the Chief Judge", "typeCode": "CTH", "__team": "D" },
+        { "id": "10246.0007", "name": "Pemberton Provincial Court", "typeCode": "CTH", "__team": "B" },
+        { "id": "91.0007", "name": "Penticton Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "52465.0009", "name": "Penticton Seniors Centre", "typeCode": "CTH", "__team": "D" },
+        { "id": "10235.0007", "name": "Port Alberni Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "8834.0007", "name": "Port Coquitlam Law Courts", "typeCode": "CTH", "__team": "C" },
+        { "id": "10236.0007", "name": "Port Hardy Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "10237.0007", "name": "Powell River Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "8844.0007", "name": "Prince George Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "9075.0007", "name": "Prince Rupert Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "92.0007", "name": "Princeton Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "9074.0007", "name": "Quesnel Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "93.0007", "name": "Revelstoke Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "9062.0007", "name": "Richmond Provincial Court", "typeCode": "CTH", "__team": "B" },
+        { "id": "10250.0007", "name": "Robson Square Provincial Court", "typeCode": "CTH", "__team": "A" },
+        { "id": "94.0007", "name": "Rossland Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "95.0007", "name": "Salmon Arm Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "10248.0007", "name": "Sechelt Provincial Court", "typeCode": "CTH", "__team": "B" },
+        { "id": "10238.0007", "name": "Sidney Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "9073.0007", "name": "Smithers Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "10256.0007", "name": "Sparwood Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "10267.0007", "name": "Stewart Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "8841.0007", "name": "Surrey Provincial Court", "typeCode": "CTH", "__team": "B" },
+        { "id": "10239.0007", "name": "Tahsis Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "9072.0007", "name": "Terrace Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "51364.0009", "name": "Terrace Sportsplex", "typeCode": "CTH", "__team": "D" },
+        { "id": "10240.0007", "name": "Tofino Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "10258.0007", "name": "Tsay Keh Dene Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "10268.0007", "name": "Tumbler Ridge Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "10241.0007", "name": "Ucluelet Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "9144.0007", "name": "Valemount Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "8816.0007", "name": "Vancouver Law Courts", "typeCode": "CTH", "__team": "A" },
+        { "id": "8813.0007", "name": "Vancouver Provincial Court", "typeCode": "CTH", "__team": "A" },
+        { "id": "9071.0007", "name": "Vanderhoof Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "96.0007", "name": "Vernon Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "8807.0007", "name": "Victoria Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "31964.0007", "name": "Violation Ticket Centre", "typeCode": "CTH", "__team": "A" },
+        { "id": "10243.0007", "name": "Western Communities Provincial Court", "typeCode": "CTH", "__team": "D" },
+        { "id": "51365.0009", "name": "Williams Lake Elks Hall", "typeCode": "CTH", "__team": "D" },
+        { "id": "9070.0007", "name": "Williams Lake Law Courts", "typeCode": "CTH", "__team": "D" },
+        { "id": "52615.0009", "name": "Williams Lake MacKinnon Hall", "typeCode": "CTH", "__team": "D" },
+      ]
+    }
 
 workflow-service:
   replicaCount: 3
   pdb:
     create: true
   image:
-    tag: "2.2.12"
+    tag: "2.3.16"
     pullPolicy: Always
   env:
     "EmailConfiguration__Sender": "DoNotReply@gov.bc.ca"

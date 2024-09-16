@@ -699,6 +699,17 @@ internal partial class OracleDataApiService : IOracleDataApiService
     {
         try
         {
+            // TCVP-2977: If the dispute has an IcbcName, update the Violation Ticket's DisputantSurname and DisputantGivenNames
+            if (body.IcbcName is { Surname: not null, FirstGivenName: not null })
+            {
+                body.ViolationTicket.DisputantSurname = body.IcbcName.Surname;
+                body.ViolationTicket.DisputantGivenNames = body.IcbcName.FirstGivenName;
+            
+                if (body.IcbcName.SecondGivenName is not null)
+                {
+                    body.ViolationTicket.DisputantGivenNames = $"{body.ViolationTicket.DisputantGivenNames} {body.IcbcName.SecondGivenName}";
+                }
+            }
             Oracle.Dispute oracleBody = _mapper.Map<Oracle.Dispute>(body);
 
             Oracle.Dispute oracle = await _client.UpdateDisputeAsync(id, oracleBody, cancellationToken);
@@ -929,6 +940,23 @@ internal partial class OracleDataApiService : IOracleDataApiService
     {
         var response = await InsertEmailHistoryAsync(emailHistory, cancellationToken).ConfigureAwait(false);
         return response;
+    }
+
+    public async Task DeleteViolationTicketCountAsync(long id, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _client.DeleteViolationTicketCountAsync(id, cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            var ex = ToOracleDataApiServiceException(exception);
+            if (ex != exception)
+            {
+                throw ex;
+            }
+            throw; // throw the original
+        }
     }
     #endregion
 

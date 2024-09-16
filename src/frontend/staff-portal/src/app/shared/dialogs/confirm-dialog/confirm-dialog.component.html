@@ -13,6 +13,36 @@
 <mat-dialog-content>
   <p *ngIf="options.messageKey">{{ options.messageKey | translate }}</p>
   <ng-template appDialogContent></ng-template>
+  <section *ngIf="options.data">
+    <ng-container subHeader>
+      <h3>{{ "label.final_disposition" | translate }}</h3>
+    </ng-container>
+    <div style="display: grid;" 
+      [ngStyle]="{ 'grid-template-columns' : options.data.length == 3 ? '33% 33% 33%' : (options.data.length == 2 ? '50% 50%' : '100%')}">
+      <ng-container *ngFor="let i of [0,1,2]">
+        <div *ngIf="options.data[i]" style="display: grid; grid-template-columns: 100%">
+          <span class="section-jj-grid-cell">
+            <h3>Count {{i+1}}</h3>
+          </span>
+          <span class="section-jj-grid-cell">
+            <span class="section-grid-header">Fine Amount includes Surcharge: </span>
+            <span class="section-grid-text">{{ (options.data[i].totalFineAmount ? 
+              (options.data[i].totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0') : '$0') }}</span>
+          </span>
+          <span class="section-jj-grid-cell">
+            <span class="section-grid-header">Due Date: </span>
+            <span class="section-grid-text">
+              {{
+                options.data[i].jjDisputedCountRoP.finding === 'NOT_GUILTY' ? '' :
+                (options.data[i].revisedDueDate ? (options.data[i].revisedDueDate | date: "dd-MMM-yyyy") :
+                (options.data[i].dueDate ? (options.data[i].dueDate | date: "dd-MMM-yyyy") : ''))
+              }}
+            </span>
+          </span>
+        </div>
+      </ng-container>
+    </div>
+  </section>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button *ngIf="!options.cancelHide" mat-stroked-button color="primary" [mat-dialog-close]="false" cdkFocusInitial

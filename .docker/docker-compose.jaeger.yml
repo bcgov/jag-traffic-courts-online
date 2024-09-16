@@ -1,5 +1,4 @@
 # Use Jaeger tracing for services
-version: "3.9"
 
 services:
   #############################################################################################
@@ -18,16 +17,21 @@ services:
       - "14268:14268"
       - "14269:14269"
       - "9411:9411"
+      - "4317:4317"
 
   citizen-api:
     environment:
-      OTEL_EXPORTER_JAEGER_ENDPOINT: http://jaeger:14268/api/traces
-      OTEL_EXPORTER_JAEGER_PROTOCOL: http/thrift.binary
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://jaeger:4317
     depends_on: [jaeger]
 
   oracle-data-api:
     environment:
       OTEL_EXPORTER_JAEGER_ENDPOINT: ${OTEL_EXPORTER_JAEGER_ENDPOINT:-http://jaeger:14250}
       SPRING_SLEUTH_ENABLED: ${SPRING_SLEUTH_ENABLED:-true}
+    depends_on: [jaeger]
+
+  staff-api:
+    environment:
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://jaeger:4317
     depends_on: [jaeger]
 

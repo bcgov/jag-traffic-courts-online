@@ -76,6 +76,30 @@ namespace TrafficCourts.Domain.Models
         [Newtonsoft.Json.JsonProperty("addressPostalCode", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string AddressPostalCode { get; set; }
 
+        /// <summary>
+        /// Surname of the disputant on violation ticket.
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("disputantSurname", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string DisputantSurname { get; set; }
+
+        /// <summary>
+        /// First given name of the disputant on violation ticket.
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("disputantGivenName1", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string DisputantGivenName1 { get; set; }
+
+        /// <summary>
+        /// Second given name of the disputant on violation ticket.
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("disputantGivenName2", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string DisputantGivenName2 { get; set; }
+
+        /// <summary>
+        /// Third given name of the disputant on violation ticket.
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("disputantGivenName3", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string DisputantGivenName3 { get; set; }
+
         [Newtonsoft.Json.JsonProperty("disputantBirthdate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTimeOffset? DisputantBirthdate { get; set; }
 
@@ -124,6 +148,12 @@ namespace TrafficCourts.Domain.Models
 
         [Newtonsoft.Json.JsonProperty("occamDisputantSurnameNm", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string OccamDisputantSurnameNm { get; set; }
+
+        /// <summary>
+        /// Disputant's home or work phone number provided on submission.
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("occamDisputantPhoneNumber", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OccamDisputantPhoneNumber { get; set; }
 
         [Newtonsoft.Json.JsonProperty("occamDisputeId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long OccamDisputeId { get; set; }
