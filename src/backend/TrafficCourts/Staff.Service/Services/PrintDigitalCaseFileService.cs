@@ -77,7 +77,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     /// <returns></returns>
     internal async Task<DigitalCaseFile> GetDigitalCaseFileAsync(long disputeId, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
-        GetDisputeOptions options = new GetDisputeOptions {  DisputeId = disputeId, Assign = false };
+        GetDisputeOptions options = new GetDisputeOptions {  DisputeId = disputeId, Assign = false, GetNameFromIcbc = true };
 
         var dispute = await _disputeService.GetDisputeAsync(options, cancellationToken);
 
@@ -103,6 +103,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
         // set the contact information
         var contact = digitalCaseFile.Contact;
+        contact.ContactType = ToString(dispute.ContactTypeCd);
         contact.Surname = dispute.DisputantSurname ?? ticket.Surname;
         contact.GivenNames = ConcatenateWithSpaces(dispute.DisputantGivenName1, dispute.DisputantGivenName2, dispute.DisputantGivenName3);
         if (string.IsNullOrEmpty(contact.GivenNames))
@@ -299,6 +300,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
         // set the contact information
         var contact = digitalCaseFile.Contact;
+        contact.ContactType = ToString(dispute.ContactType);
         contact.Surname = dispute.ContactSurname ?? ticket.Surname;
         contact.GivenNames = ConcatenateWithSpaces(dispute.ContactGivenName1, dispute.ContactGivenName2, dispute.ContactGivenName3);
         if (string.IsNullOrEmpty(contact.GivenNames))
@@ -374,35 +376,56 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
                 offenseCount.RequestFineReduction = ToString(disputedCount.RequestReduction);
                 offenseCount.RequestTimeToPay = ToString(disputedCount.RequestTimeToPay);
                 offenseCount.ReviseFine = SetReviseFine(disputedCount);
-                offenseCount.LesserOrGreaterAmount = (decimal?)(disputedCount.LesserOrGreaterAmount);
+                bool reviseFine = offenseCount.ReviseFine ?? false;
+                offenseCount.LesserOrGreaterAmount = reviseFine ? (decimal?)(disputedCount.LesserOrGreaterAmount) : null;
                 offenseCount.IncludesSurcharge = ToString(disputedCount.IncludesSurcharge);
                 offenseCount.RoundLesserOrGreaterAmount = disputedCount.LesserOrGreaterAmount != null
                     ? Math.Round((decimal)disputedCount.LesserOrGreaterAmount / (offenseCount.IncludesSurcharge == "Y" ? 1.15M : 1M))
                     : null;
-                offenseCount.TotalFineAmount = (decimal?)(disputedCount.TotalFineAmount ?? disputedCount.TicketedFineAmount);
+                offenseCount.TotalFineAmount = GetTotalFineAmount(disputedCount, dispute.Status);
                 offenseCount.IsDueDateRevised = IsDueDateRevised(disputedCount);
-                offenseCount.RevisedDue = IsDueDateRevised(disputedCount) ? new FormattedDateOnly(disputedCount.RevisedDueDate) : new FormattedDateOnly(disputedCount.DueDate);
-                offenseCount.FinalDue = disputedCount.RevisedDueDate != null ? new FormattedDateOnly(disputedCount.RevisedDueDate) : new FormattedDateOnly(disputedCount.DueDate);
+                bool reviseDue = IsDueDateRevised(disputedCount) ?? false;
+                offenseCount.RevisedDue = reviseDue ? new FormattedDateOnly(disputedCount.RevisedDueDate) : FormattedDateOnly.Empty;
+                offenseCount.FinalDue = GetFinalDueDate(disputedCount, dispute.Status);
                 offenseCount.Surcharge = offenseCount.RoundLesserOrGreaterAmount != null
                     ? Math.Round((decimal)offenseCount.RoundLesserOrGreaterAmount * 0.15M) : 0;
                 offenseCount.Comments = disputedCount.Comments;
                 // set jjDisputedCountRoP data for this count
-                offenseCount.Finding = ToString(disputedCount.JjDisputedCountRoP.Finding);
-                offenseCount.LesserDescription = disputedCount.JjDisputedCountRoP.LesserDescription;
-                offenseCount.SsProbationDuration = disputedCount.JjDisputedCountRoP.SsProbationDuration;
-                offenseCount.SsProbationConditions = disputedCount.JjDisputedCountRoP.SsProbationConditions;
-                offenseCount.JailDuration = disputedCount.JjDisputedCountRoP.JailDuration;
-                offenseCount.JailIntermittent = ToString(disputedCount.JjDisputedCountRoP.JailIntermittent);
-                offenseCount.ProbationDuration = disputedCount.JjDisputedCountRoP.ProbationDuration;
-                offenseCount.ProbationConditions = disputedCount.JjDisputedCountRoP.ProbationConditions;
-                offenseCount.DrivingProhibitionDuration = disputedCount.JjDisputedCountRoP.DrivingProhibition;
-                offenseCount.DrivingProhibitionMVA = disputedCount.JjDisputedCountRoP.DrivingProhibitionMVASection;
-                offenseCount.Dismissed = ToString(disputedCount.JjDisputedCountRoP.Dismissed);
-                offenseCount.WantOfProsecution = ToString(disputedCount.JjDisputedCountRoP.ForWantOfProsecution);
-                offenseCount.Withdrawn = ToString(disputedCount.JjDisputedCountRoP.Withdrawn);
-                offenseCount.Abatement = ToString(disputedCount.JjDisputedCountRoP.Abatement);
-                offenseCount.StayOfProceedingsBy = disputedCount.JjDisputedCountRoP.StayOfProceedingsBy;
-                offenseCount.Other = disputedCount.JjDisputedCountRoP.Other;
+                offenseCount.Finding = ToString(disputedCount.JjDisputedCountRoP?.Finding);
+                offenseCount.LatestPlea = ToString(disputedCount.LatestPlea);
+                if (disputedCount.LatestPleaUpdateTs.HasValue)
+                {
+                    // Assuming disputedCount.LatestPleaUpdateTs is in UTC
+                    DateTimeOffset utcDateTimeOffset = disputedCount.LatestPleaUpdateTs.Value;
+                    // Retrieve the local time zone
+                    TimeZoneInfo localTimeZone = TimeZoneInfo.Local;
+                    // Check if the local time zone is UTC
+                    if (localTimeZone.BaseUtcOffset == TimeSpan.Zero)
+                    {
+                        // Fall back to a specific time zone if local time zone is UTC
+                        localTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                    }
+                    // Convert the UTC DateTimeOffset to the local DateTimeOffset
+                    DateTimeOffset localDateTimeOffset = TimeZoneInfo.ConvertTime(utcDateTimeOffset, localTimeZone);
+                    offenseCount.LatestPleaUpdate = new FormattedDateTime(localDateTimeOffset);
+                }
+                if (disputedCount.JjDisputedCountRoP is not null) {
+                    offenseCount.LesserDescription = disputedCount.JjDisputedCountRoP.LesserDescription ?? string.Empty;
+                    offenseCount.SsProbationDuration = disputedCount.JjDisputedCountRoP.SsProbationDuration;
+                    offenseCount.SsProbationConditions = disputedCount.JjDisputedCountRoP.SsProbationConditions;
+                    offenseCount.JailDuration = disputedCount.JjDisputedCountRoP.JailDuration;
+                    offenseCount.JailIntermittent = ToString(disputedCount.JjDisputedCountRoP.JailIntermittent);
+                    offenseCount.ProbationDuration = disputedCount.JjDisputedCountRoP.ProbationDuration;
+                    offenseCount.ProbationConditions = disputedCount.JjDisputedCountRoP.ProbationConditions;
+                    offenseCount.DrivingProhibitionDuration = disputedCount.JjDisputedCountRoP.DrivingProhibition;
+                    offenseCount.DrivingProhibitionMVA = disputedCount.JjDisputedCountRoP.DrivingProhibitionMVASection;
+                    offenseCount.Dismissed = ToString(disputedCount.JjDisputedCountRoP.Dismissed);
+                    offenseCount.WantOfProsecution = ToString(disputedCount.JjDisputedCountRoP.ForWantOfProsecution);
+                    offenseCount.Withdrawn = ToString(disputedCount.JjDisputedCountRoP.Withdrawn);
+                    offenseCount.Abatement = ToString(disputedCount.JjDisputedCountRoP.Abatement);
+                    offenseCount.StayOfProceedingsBy = disputedCount.JjDisputedCountRoP.StayOfProceedingsBy;
+                    offenseCount.Other = disputedCount.JjDisputedCountRoP.Other;
+                }               
             }
 
             counts.Add(offenseCount);
@@ -433,7 +456,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         {
             remarks.Add(new FileRemark
             {
-                When = new FormattedDateTime(remark.RemarksMadeTs),
+                When = new FormattedDateTime(remark.CreatedTs),
                 Username = remark.UserFullName,
                 Note = remark.Note,
             });
@@ -681,6 +704,16 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         return string.Empty;
     }
 
+    private string ToString(JJDisputedCountLatestPlea? value)
+    {
+        if (value is not null && value != JJDisputedCountLatestPlea.UNKNOWN)
+        {
+            return value.Value.ToString();
+        }
+
+        return string.Empty;
+    }
+
     private string ToString(JJDisputedCountAppearInCourt? value)
     {
         if (value is not null && value != JJDisputedCountAppearInCourt.UNKNOWN)
@@ -716,7 +749,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
             return value.Value.ToString();
         }
 
-        return JJDisputedCountIncludesSurcharge.N.ToString();
+        return string.Empty;
     }
 
     private string ToString(JJDisputedCountRoPJailIntermittent? value)
@@ -764,6 +797,36 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         if (value is not null && value != JJDisputedCountRoPAbatement.UNKNOWN)
         {
             return value.Value.ToString();
+        }
+
+        return string.Empty;
+    }
+
+    private string ToString(DisputeContactTypeCd? value)
+    {
+        if (value is not null && value != DisputeContactTypeCd.UNKNOWN)
+        {
+            switch (value)
+            {
+                case DisputeContactTypeCd.INDIVIDUAL: return "Disputant";
+                case DisputeContactTypeCd.LAWYER: return "Lawyer";
+                case DisputeContactTypeCd.OTHER: return "Agent/Other";
+            }
+        }
+
+        return string.Empty;
+    }
+
+    private string ToString(JJDisputeContactType? value)
+    {
+        if (value is not null && value != JJDisputeContactType.UNKNOWN)
+        {
+            switch (value)
+            {
+                case JJDisputeContactType.INDIVIDUAL: return "Disputant";
+                case JJDisputeContactType.LAWYER: return "Lawyer";
+                case JJDisputeContactType.OTHER: return "Agent/Other";
+            }
         }
 
         return string.Empty;
@@ -838,14 +901,27 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         return builder.ToString();
     }
 
-    private bool SetReviseFine(JJDisputedCount disputedCount)
+    private bool? SetReviseFine(JJDisputedCount disputedCount)
     {
-        return !(disputedCount.LesserOrGreaterAmount is null || disputedCount.LesserOrGreaterAmount == 0);
+        if (disputedCount.TotalFineAmount != null || disputedCount.LesserOrGreaterAmount != null)
+        {
+            if (disputedCount.LesserOrGreaterAmount != null && disputedCount.LesserOrGreaterAmount != disputedCount.TicketedFineAmount)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        return null;
     }
 
-    private bool IsDueDateRevised(JJDisputedCount disputedCount)
+    private bool? IsDueDateRevised(JJDisputedCount disputedCount)
     {
-        return !(disputedCount.RevisedDueDate is null || disputedCount.RevisedDueDate == disputedCount.DueDate);
+        if (disputedCount.RevisedDueDate is null)
+        {
+            return null;
+        }
+        return !(disputedCount.RevisedDueDate == disputedCount.DueDate);
     }
 
     private void SetAppearanceHistory(DigitalCaseFile digitalCaseFile, JJDispute dispute, JJDisputeCourtAppearanceRoP currentAppearance)
@@ -866,6 +942,37 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
             {
                 appearanceHistory.Add(SetFields(new Appearance(), rop, null));
             }
+        }
+    }
+
+    private FormattedDateOnly GetFinalDueDate(JJDisputedCount disputedCount, JJDisputeStatus jjDisputeStatus)
+    {
+        if (disputedCount.JjDisputedCountRoP?.Finding != JJDisputedCountRoPFinding.NOT_GUILTY && 
+            (jjDisputeStatus == JJDisputeStatus.CONFIRMED || jjDisputeStatus == JJDisputeStatus.REVIEW || 
+                jjDisputeStatus == JJDisputeStatus.CONCLUDED || jjDisputeStatus == JJDisputeStatus.REQUIRE_COURT_HEARING))
+        {
+            return disputedCount.RevisedDueDate != null ? new FormattedDateOnly(disputedCount.RevisedDueDate) : new FormattedDateOnly(disputedCount.DueDate);
+        } else {
+            return FormattedDateOnly.Empty;
+        }
+    }
+
+    private decimal? GetTotalFineAmount(JJDisputedCount disputedCount, JJDisputeStatus jjDisputeStatus)
+    {
+        if (disputedCount.JjDisputedCountRoP?.Finding == JJDisputedCountRoPFinding.NOT_GUILTY && 
+            (jjDisputeStatus == JJDisputeStatus.CONFIRMED || jjDisputeStatus == JJDisputeStatus.REVIEW || 
+                jjDisputeStatus == JJDisputeStatus.CONCLUDED || jjDisputeStatus == JJDisputeStatus.REQUIRE_COURT_HEARING))
+        {
+            return 0;
+        }
+        else if (jjDisputeStatus == JJDisputeStatus.CONFIRMED || jjDisputeStatus == JJDisputeStatus.REVIEW || 
+                jjDisputeStatus == JJDisputeStatus.CONCLUDED || jjDisputeStatus == JJDisputeStatus.REQUIRE_COURT_HEARING)
+        {
+            return (decimal?)(disputedCount.TotalFineAmount ?? disputedCount.TicketedFineAmount);
+        }
+        else
+        {
+            return null;
         }
     }
 

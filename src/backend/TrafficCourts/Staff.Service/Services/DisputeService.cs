@@ -130,9 +130,13 @@ public class DisputeService : IDisputeService,
     {
         Dispute dispute = await _oracleDataApi.GetDisputeAsync(options.DisputeId, options.Assign, cancellationToken);
 
-        await GetOcrImageAndResults(dispute, cancellationToken);
-        await GetFileAttachments(dispute, cancellationToken);
-        await GetIcbcTicketInformation(dispute, options, cancellationToken);
+        // this should be safe since are updating different parts of the dispute in each of these calls
+        var ocrTask = GetOcrImageAndResults(dispute, cancellationToken);
+        var fileTask = GetFileAttachments(dispute, cancellationToken);
+        var icbcTask = GetIcbcTicketInformation(dispute, options, cancellationToken);
+
+        // wait for them all to complete
+        await Task.WhenAll(ocrTask, fileTask, icbcTask);
 
         return dispute;
     }
@@ -249,6 +253,10 @@ public class DisputeService : IDisputeService,
  
         // Status to PROCESSING
         dispute = await _oracleDataApi.SubmitDisputeAsync(disputeId, cancellationToken);
+
+        // TCVP-2977: Get disputant name data from ICBC RSI ticket search and update dispute's IcbcNameDetail
+        GetDisputeOptions options = new() {  DisputeId = disputeId, Assign = false, GetNameFromIcbc = true };
+        await GetIcbcTicketInformation(dispute, options, cancellationToken);
 
         // set AddressProvince to 2 character abbreviation code if prov seq no & ctry id present
         if (dispute.AddressProvinceSeqNo != null)
@@ -386,6 +394,13 @@ public class DisputeService : IDisputeService,
 
         var result = disputesWithUpdates.Values.ToList();
         return result;
+    }
+
+    public async Task DeleteViolationTicketCountAsync(long violationTicketCountId, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Violation ticket count deleted with id {ViolationTicketCountId}", violationTicketCountId);
+        
+        await _oracleDataApi.DeleteViolationTicketCountAsync(violationTicketCountId, cancellationToken);
     }
 
     private async Task SetHearingDateAsync(DisputeWithUpdates dispute, CancellationToken cancellationToken)

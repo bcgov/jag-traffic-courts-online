@@ -2,7 +2,7 @@
   <span>
     <span><b>Counts ({{ disputantUpdateRequest.status }})</b></span>
     <span style="float:right">
-      {{ disputantUpdateRequest.createdTs | date: "MMMM dd, yyyy" }}
+      {{ disputantUpdateRequest.createdTs | date: "dd-MMM-yyyy" }}
     </span>
   </span><br /><br />
    <div *ngFor="let disputeCount of updateRequested.DisputeCounts">

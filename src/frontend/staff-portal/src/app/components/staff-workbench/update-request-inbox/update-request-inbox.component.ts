@@ -92,7 +92,7 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
       else if ("dateSubmittedTo" === field) {
         return !DateUtil.isValid(value) || DateUtil.isDateOnOrBefore(record.submittedTs, value);
       }
-      else {
+      else if (record[field]) {
         return record[field].toLocaleLowerCase().indexOf(value.trim().toLocaleLowerCase()) != -1;
       }
     });

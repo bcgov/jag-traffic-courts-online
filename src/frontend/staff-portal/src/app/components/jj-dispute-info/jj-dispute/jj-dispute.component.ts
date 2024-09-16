@@ -36,6 +36,7 @@ export class JJDisputeComponent implements OnInit {
   printOptions: PrintOptions = new PrintOptions();
   isSupportStaff: boolean = false;
   isSSEditMode: boolean = false;
+  isJJ: boolean = false;
 
   RequestTimeToPay = JJDisputedCountRequestTimeToPay;
   Finding = JJDisputedCountRoPFinding;
@@ -84,7 +85,6 @@ export class JJDisputeComponent implements OnInit {
     duration: [null],
     reason: [null],
     noAppTs: [null],
-    _noAppTs: [null],
     clerkRecord: [null, Validators.maxLength(100)],
     defenceCounsel: [null, Validators.maxLength(100)],
     crown: [null],
@@ -143,6 +143,7 @@ export class JJDisputeComponent implements OnInit {
     });
 
     this.isSupportStaff = this.enableStaffSupport && this.authService.checkRole(UserGroup.SUPPORT_STAFF);
+    this.isJJ = this.authService.checkRoles([UserGroup.JUDICIAL_JUSTICE, UserGroup.ADMIN_JUDICIAL_JUSTICE]);
     this.provinces = this.lookupsService.provinces;
     this.languages = this.lookupsService.languages;
   }
@@ -188,7 +189,10 @@ export class JJDisputeComponent implements OnInit {
           this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.jjIDIR).subscribe(response => { }); // assign JJ who opened it
         }
         // }
-        this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.mostRecentCourtAppearance);
+        const mostRecentCourtAppearance = { ...this.lastUpdatedJJDispute.mostRecentCourtAppearance };
+        delete mostRecentCourtAppearance.noAppTs;
+        this.courtAppearanceForm.patchValue(mostRecentCourtAppearance);
+        this.bindNoAppTs(this.lastUpdatedJJDispute.mostRecentCourtAppearance.noAppTs);
         this.determineIfConcludeOrCancel();
       }
 
@@ -230,7 +234,8 @@ export class JJDisputeComponent implements OnInit {
       actionTextKey: "Confirm",
       actionType: "primary",
       cancelTextKey: "Go back",
-      icon: ""
+      icon: "",
+      data: this.lastUpdatedJJDispute.jjDisputedCounts
     };
     this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action: any) => {
@@ -288,15 +293,11 @@ export class JJDisputeComponent implements OnInit {
   }
 
   updateNoAppTs(date: Date) {
-    this.courtAppearanceForm.controls.noAppTs.setValue(date.toISOString());
+    this.courtAppearanceForm.controls.noAppTs.setValue(date);
   }
 
   updateNoAppTsToNow() {
     this.updateNoAppTs(new Date());
-  }
-
-  updateNoAppDateTime(value) {
-    this.updateNoAppTs(new Date(value));
   }
 
   onSave(): void {
@@ -420,6 +421,7 @@ export class JJDisputeComponent implements OnInit {
         jjDisputedCount.requestReduction = updatedJJDisputedCount.requestReduction;
         jjDisputedCount.requestTimeToPay = updatedJJDisputedCount.requestTimeToPay;
         jjDisputedCount.latestPlea = updatedJJDisputedCount.latestPlea;
+        jjDisputedCount.latestPleaUpdateTs = updatedJJDisputedCount.latestPleaUpdateTs;
         jjDisputedCount.lesserOrGreaterAmount = updatedJJDisputedCount.lesserOrGreaterAmount;
         jjDisputedCount.totalFineAmount = updatedJJDisputedCount.totalFineAmount;
         jjDisputedCount.includesSurcharge = updatedJJDisputedCount.includesSurcharge;
@@ -611,5 +613,9 @@ export class JJDisputeComponent implements OnInit {
   // to release the lock
   releaseLock(lockId: string) {
     this.disputeLockService.apiDisputelockLockIdDelete(lockId).subscribe(response => { });
+  }
+
+  bindNoAppTs(value){
+    this.courtAppearanceForm.controls.noAppTs.setValue(value ? new Date(value) : null);
   }
 }

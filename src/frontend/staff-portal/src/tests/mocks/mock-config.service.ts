@@ -5,6 +5,7 @@ import { UtilsService } from '@core/services/utils.service';
 import { AppConfigService } from 'app/services/app-config.service';
 import { Observable } from 'rxjs';
 import { MockConfig } from './mock-config';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -12,9 +13,10 @@ import { MockConfig } from './mock-config';
 export class MockConfigService extends ConfigService {
   constructor(
     protected utilsService: UtilsService,
-    protected appConfigService: AppConfigService
+    protected appConfigService: AppConfigService,
+    protected http: HttpClient
   ) {
-    super(utilsService, appConfigService);
+    super(utilsService, appConfigService, http);
 
     // Load the runtime configuration
     this.load().subscribe();

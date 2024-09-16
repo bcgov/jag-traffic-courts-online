@@ -45,7 +45,7 @@
       </th>
       <td mat-cell *matCellDef="let element">
         <span [style.font-weight]="isNew(element) ? 'bold' : 'none'">
-          {{ element.submittedTs | date: "yyyy-MM-dd" : "UTC" }}
+          {{ element.submittedTs | date: "dd-MMM-yyyy" }}
         </span>
       </td>
     </ng-container>
@@ -130,7 +130,7 @@
       </th>
       <td mat-cell *matCellDef="let element">
         <span [style.font-weight]="isNew(element) ? 'bold' : 'none'"
-          title="{{ element.userAssignedTs | date: 'yyyy-MM-dd' : 'UTC' }}">{{
+          title="{{ element.userAssignedTs | date: 'dd-MMM-yyyy' }}">{{
           element.userAssignedTo ? element.userAssignedTo : "Unassigned" }}</span>
       </td>
     </ng-container>

@@ -3,6 +3,8 @@ package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
@@ -611,6 +613,19 @@ class DisputeControllerTest extends BaseTestSuite {
 		assertEquals(disputeUpdateRequest.getDisputeUpdateRequestId(), result.getDisputeUpdateRequestId());
 		assertEquals(DisputeUpdateRequestStatus.ACCEPTED, result.getStatus());
 		assertEquals(controllerResponse.getStatusCode().value(), HttpStatus.OK.value());
+	}
+	
+	@Test 
+	public void testDeleteViolationTicketCount_200() throws Exception { 
+	    Long id = 1L;
+	    // Assume that the service will successfully delete the ViolationTicketCount
+	    doNothing().when(service).deleteViolationTicketCount(anyLong());
+	  
+	    // Perform the DELETE request
+	    mvc.perform(MockMvcRequestBuilders
+	            .delete("/api/v1.0/violationTicketCount/{id}", id)
+	            .principal(getPrincipal()))
+	            .andExpect(status().isOk());
 	}
 
 	/** Issue a POST request to /api/v1.0/dispute. The appropriate controller is automatically called by the DispatchServlet */

@@ -18,12 +18,11 @@
         <mat-menu #gotoMenu="matMenu" yPosition="below">
           <button mat-menu-item (click)="goTo('disputeDetails')">Dispute Details</button>
           <button mat-menu-item (click)="goTo('uploadedDocuments')">Uploaded Documents</button>
-          <button mat-menu-item (click)="goTo('fileHistory')">File History</button>
+          <button mat-menu-item (click)="goTo('fileHistory')">Administrative Activity</button>
           <button mat-menu-item (click)="goTo('fileRemarks')">File Remarks</button>
         </mat-menu>
         <button mat-raised-button [matMenuTriggerFor]="printMenu">Print Options</button>&nbsp;
         <mat-menu #printMenu="matMenu" yPosition="below">
-          <button mat-menu-item (click)="onPrint(false)">JJ Version</button>
           <button mat-menu-item (click)="onPrint(true)">Complete Version</button>
         </mat-menu>
       </div>
@@ -83,7 +82,7 @@
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Violation Date</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "MMM dd, yyyy HH:mm" : "UTC" }}</p>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "dd-MMM-yyyy" : "UTC" }}</p>
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Violation Time</p>
@@ -91,11 +90,11 @@
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Online Submission Date</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.submittedTs | date: "MMM dd, yyyy" : "UTC" }}</p>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.submittedTs | date: "dd-MMM-yyyy" }}</p>
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Date Received from ICBC</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.icbcReceivedDate | date: "MMM dd, yyyy" : "UTC" }}
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.icbcReceivedDate | date: "dd-MMM-yyyy" }}
               </p>
             </span>
             <ng-container *ngIf="type !== 'ticket'">
@@ -122,7 +121,7 @@
       <section class="section-sticky">
         <ng-container subHeader>
           <span>
-            <h3>Disputant Entered Information <span class="medium-note"><i>(source online portal)</i></span></h3>
+            <h3>Disputant Entered Information <span class="medium-note"><i>(source Online Portal)</i></span></h3>
           </span>
           <span class="section-grid-header">Contact Type: </span>
           <span class="section-grid-text" *ngIf="lastUpdatedJJDispute.contactType === ContactType.Individual">Disputant</span>
@@ -188,11 +187,11 @@
               </mat-form-field>
             </span>
             <span class="section-grid-cell">
-              <p class="section-grid-header">Driver's Licence Number</p>
+              <p class="section-grid-header">Disputant's Driver's Licence Number</p>
               <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceNumber }}</p>
             </span>
             <span class="section-grid-cell">
-              <p class="section-grid-header">Prov / State of Driver's Licence</p>
+              <p class="section-grid-header">Disputant's Province / State of Driver's Licence</p>
               <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceProvince }}</p>
             </span>
             <span class="section-grid-cell" style="grid-column: span 3">
@@ -295,7 +294,7 @@
             <span class="section-grid-cell">
               <p class="section-grid-header">Appearance Date/Time</p>
               <p class="section-grid-text">
-                {{ lastUpdatedJJDispute.mostRecentCourtAppearance?.appearanceTs | date: "MM/dd/YYYY HH:mm" : "UTC" }}
+                {{ lastUpdatedJJDispute.mostRecentCourtAppearance?.appearanceTs | date: "dd-MMM-yyyy HH:mm" }}
               </p>
             </span>
             <span class="section-grid-cell">
@@ -326,17 +325,13 @@
               <p class="section-grid-header">No APP</p>
               <p class="section-grid-text">
                 <span *ngIf="((isViewOnly && !isSSEditMode) || !isNoAppEnabled) && courtAppearanceForm.value.noAppTs">
-                  {{ courtAppearanceForm?.value.noAppTs | date: "yyyy-MM-dd HH:mm" }}
+                  {{ courtAppearanceForm?.value.noAppTs | date: "dd-MMM-yyyy HH:mm" }}
                 </span>
                 <span *ngIf="(!isViewOnly || isSSEditMode) && isNoAppEnabled">
-                  <mat-form-field appearance="outline" class="datetime-picker">
-                    <mat-hint>mm/dd/yyyy, hh:mm</mat-hint>
-                    <mat-datetimepicker-toggle [for]="datetimePicker" matSuffix></mat-datetimepicker-toggle>
-                    <mat-datetimepicker #datetimePicker type="datetime" openOnFocus="true" timeInterval="5">
-                    </mat-datetimepicker>
-                    <input matInput formControlName="noAppTs" [matDatetimepicker]="datetimePicker"
-                      autocomplete="false" />
-                  </mat-form-field>
+                  <input type="text" formControlName="noAppTs" class="p-2 section-grid-text latest-plea-text"
+                    bsDatepicker placeholder="DD-MMM-YYYY HH:mm" [bsConfig]="{ withTimepicker: true, keepDatepickerOpened: true, 
+                    dateInputFormat: 'DD-MMM-YYYY HH:mm', containerClass: 'theme-dark-blue', isAnimated: true, 
+                    showWeekNumbers: false, adaptivePosition: true }">
                   <button mat-raised-button class="form-button-secondary" (click)="updateNoAppTsToNow()">Now</button>
                 </span>
               </p>
@@ -447,7 +442,7 @@
             </div>
             <div class="col-4 custom-column">
               <span *ngIf="lastUpdatedJJDispute.signatoryType === SignatoryType.D" style="font-size: small">
-                {{ lastUpdatedJJDispute.submittedTs | date: "dd-MMM-yyyy HH:mm" : "UTC" }}</span>
+                {{ lastUpdatedJJDispute.submittedTs | date: "dd-MMM-yyyy HH:mm" }}</span>
             </div>
           </div>
           <div class="row justify-content-start">
@@ -460,7 +455,7 @@
             </div>
             <div class="col-4 custom-column">
               <span *ngIf="lastUpdatedJJDispute.signatoryType === SignatoryType.A" style="font-size: small">
-                {{ lastUpdatedJJDispute.submittedTs | date: "dd-MMM-yyyy HH:mm" : "UTC" }}</span>
+                {{ lastUpdatedJJDispute.submittedTs | date: "dd-MMM-yyyy HH:mm" }}</span>
             </div>
           </div>
         </div>
@@ -507,7 +502,7 @@
             <div fxFlex></div>
             <div fxFlex>
               <h3>Date Signed</h3>
-              <div>{{ lastUpdatedJJDispute.jjDecisionDate | date: "MMM dd, yyyy" }}</div>
+              <div>{{ lastUpdatedJJDispute.jjDecisionDate | date: "dd-MMM-yyyy" }}</div>
             </div>
           </div>
         </div>
@@ -645,7 +640,7 @@
           Save & Finish Later
         </button>
         <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConfirm()"
-          *ngIf="[DisputeStatus.New, DisputeStatus.HearingScheduled, DisputeStatus.InProgress, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) >= 0 && concludeStatusOnly === false && cancelStatusOnly === false">
+          *ngIf="[DisputeStatus.New, DisputeStatus.HearingScheduled, DisputeStatus.InProgress, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) >= 0 && concludeStatusOnly === false && cancelStatusOnly === false && isJJ">
           Confirm
         </button>
         <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConcluded()"

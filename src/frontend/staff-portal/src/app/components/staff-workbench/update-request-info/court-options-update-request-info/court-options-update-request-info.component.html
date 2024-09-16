@@ -2,7 +2,7 @@
   <span>
     <span><b>Court Options ({{ disputantUpdateRequest.status }})</b></span>
     <span style="float:right">
-      {{ disputantUpdateRequest.createdTs | date: "MMMM dd, yyyy" }}
+      {{ disputantUpdateRequest.createdTs | date: "dd-MMM-yyyy" }}
     </span>
   </span><br /><br />
   <div style="display: grid; grid-template-columns: auto auto auto" *ngIf="requestReadable === true && disputantUpdateRequest.status === 'PENDING'">

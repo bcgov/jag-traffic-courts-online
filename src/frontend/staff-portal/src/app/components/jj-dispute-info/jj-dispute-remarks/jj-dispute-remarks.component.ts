@@ -39,7 +39,7 @@ export class JJDisputeRemarksComponent implements OnDestroy {
   refreshData(): void {
     // Add ticket validation saving remarks
     this.historyRecordService.FileHistories?.filter(i => i.auditLogEntryType === "FRMK").forEach((fileHistory: FileHistory) => {
-      if(this.data){
+      if(this.data && fileHistory.comment) {
         this.data.push(<JJDisputeRemark>{
           createdTs: fileHistory.createdTs,
           userFullName: fileHistory.actionByApplicationUser,

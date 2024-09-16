@@ -41,7 +41,8 @@
             ],
             "styles": [
               "./node_modules/bootstrap/scss/bootstrap.scss",
-              "src/scss/app.scss"
+              "src/scss/app.scss",
+              "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [

@@ -49,5 +49,12 @@ public interface DisputeRepositoryImpl extends DisputeRepository, JpaRepository<
 	@Override
 	@Query("from ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeListItem")
 	public List<DisputeListItem> getDisputeList();
+	
+	@Override
+	@Modifying
+	@Query("delete from ViolationTicketCount vtc where vtc.violationTicketCountId = :violationTicketCountId")
+	@Transactional
+	public void deleteViolationTicketCountById(
+			@Param(value = "violationTicketCountId") Long violationTicketCountId);
 
 }

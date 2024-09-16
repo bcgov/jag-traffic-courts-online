@@ -59,6 +59,7 @@ import { TableFiltersComponent } from '@components/table-filters/table-filters.c
 import { JjDisputeUpdatesComponent } from './components/jj-dispute-info/jj-dispute-updates/jj-dispute-updates.component';
 import { PagingComponent } from '@components/paging/paging.component';
 import { UploadComponent } from './components/staff-workbench/upload/upload.component';
+import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -137,6 +138,7 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     }),
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([JJDisputeStore.Effects]),
+    BsDatepickerModule.forRoot()
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   exports: [NgBusyModule, TranslateModule],
@@ -155,6 +157,7 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
       provide: STEPPER_GLOBAL_OPTIONS,
       useValue: { showError: true }
     },
+    BsDatepickerConfig,
   ],
   bootstrap: [AppComponent]
 })

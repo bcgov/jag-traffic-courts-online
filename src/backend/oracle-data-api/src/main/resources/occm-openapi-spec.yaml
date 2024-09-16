@@ -631,6 +631,35 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
       tags:
+        - Violation Ticket		
+  /v1/deleteViolationTicketCount:
+    delete:
+      operationId: violationTicketCountDelete
+      parameters:
+        - name: violationTicketCountId
+          in: query
+          required: true
+          description: ''
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Empty body required by ORDS for DELETE request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyObject'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
         - Violation Ticket
 components:
   securitySchemes:

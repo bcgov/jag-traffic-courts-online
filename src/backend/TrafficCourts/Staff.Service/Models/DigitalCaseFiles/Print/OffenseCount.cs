@@ -35,6 +35,12 @@ public class OffenseCount
     [JsonProperty("requestTimeToPay")]
     public string RequestTimeToPay { get; set; } = string.Empty;
 
+    [JsonProperty("latestPlea")]
+    public string LatestPlea { get; set; } = string.Empty;
+
+    [JsonProperty("latestPleaUpdate")]
+    public FormattedDateTime LatestPleaUpdate { get; set; } = FormattedDateTime.Empty;
+
     [JsonProperty("finding")]
     public string Finding { get; set; } = string.Empty;
 
@@ -42,7 +48,7 @@ public class OffenseCount
     public string LesserDescription { get; set; } = string.Empty;
 
     [JsonProperty("reviseFine")]
-    public bool ReviseFine { get; set; }
+    public bool? ReviseFine { get; set; }
 
     [JsonProperty("lesserOrGreaterAmt")]
     public decimal? LesserOrGreaterAmount { get; set; }
@@ -57,7 +63,7 @@ public class OffenseCount
     public decimal? TotalFineAmount { get; set; }
 
     [JsonProperty("isDueDateRevised")]
-    public bool IsDueDateRevised { get; set; }
+    public bool? IsDueDateRevised { get; set; }
 
     [JsonProperty("revisedDue")]
     public FormattedDateOnly RevisedDue { get; set; } = FormattedDateOnly.Empty;

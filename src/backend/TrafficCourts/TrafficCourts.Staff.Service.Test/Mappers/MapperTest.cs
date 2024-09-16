@@ -92,10 +92,10 @@ namespace TrafficCourts.Staff.Service.Test.Mappers
             var actual = Mapper.ToDisputeApproved(_expected);
             Assert.NotNull(actual);
 
-            Assert.Equal(_expected.DisputantSurname, actual.Surname);
-            Assert.Equal(_expected.DisputantGivenName1, actual.GivenName1);
-            Assert.Equal(_expected.DisputantGivenName2, actual.GivenName2);
-            Assert.Equal(_expected.DisputantGivenName3, actual.GivenName3);
+            Assert.Equal(_expected.IcbcName?.Surname, actual.Surname);
+            Assert.Equal(_expected.IcbcName?.FirstGivenName, actual.GivenName1);
+            Assert.Equal(_expected.IcbcName?.SecondGivenName, actual.GivenName2);
+            Assert.Equal(null!, actual.GivenName3);
         }
 
         [Fact]

@@ -45,6 +45,12 @@ spec:
               mountPath: /usr/share/nginx/html/assets/app.config.json
               readOnly: true
               subPath: app.config.json
+            {{- if .Values.courtHouseDataConfig }}
+            - name: configuration
+              mountPath: /usr/share/nginx/html/assets/courthouse-data.json
+              readOnly: true
+              subPath: courthouse-data.json
+            {{- end }}
             - name: configuration
               mountPath: /usr/share/nginx/html/assets/config/keycloak.config.json
               readOnly: true
@@ -60,6 +66,10 @@ spec:
             items:
               - key: app.config.json
                 path: app.config.json
+              {{- if .Values.courtHouseDataConfig }}
+              - key: courthouse-data.json
+                path: courthouse-data.json
+              {{- end }}
               - key: keycloak.config.json
                 path: keycloak.config.json
               - key: nginx-api-proxy-pass.conf
