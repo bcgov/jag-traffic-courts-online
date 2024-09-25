@@ -54,10 +54,10 @@
               lastUpdatedDispute.ticketNumber.substring(0,1) === 'E' ? "Electronic Ticket" : "Intersection safety camera ticket" }}</span>
           </div>
           <div class="col-md-3">
-            <span class="BC-Gov-15px-black-text">Violation Date:</span>&nbsp;<span class="text">{{ violationDate | date: "dd-MMM-yyyy" }}</span>
+            <span class="BC-Gov-15px-black-text">Violation Date:</span>&nbsp;<span class="text">{{ lastUpdatedDispute.violationTicket.issuedTs| date: "dd-MMM-yyyy" : "UTC" }}</span>
           </div>
           <div class="col-md-3">
-            <span class="BC-Gov-15px-black-text">Violation Time:</span>&nbsp;<span class="text">{{ violationTime }}</span>
+            <span class="BC-Gov-15px-black-text">Violation Time:</span>&nbsp;<span class="text">{{ lastUpdatedDispute.violationTicket.issuedTs | date: "HH:mm" : "UTC" }}</span>
           </div>
           <div class="col-md-3">
             <span class="BC-Gov-15px-black-text">Surname:</span>&nbsp;

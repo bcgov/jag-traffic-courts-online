@@ -94,10 +94,13 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         ticket.Number = dispute.ViolationTicket.TicketNumber;
         ticket.Surname = dispute.ViolationTicket.DisputantSurname;
         ticket.GivenNames = dispute.ViolationTicket.DisputantGivenNames;
-        ticket.DateOfBirth = new FormattedDateOnly(dispute.DisputantBirthdate);
+        ticket.DateOfBirth = dispute.ViolationTicket.DisputantBirthdate?.ToString("yyyy-MM-ddTHH:mm:ss.fffK") == "0001-01-01T08:00:00.000+00:00" ? FormattedDateOnly.Empty : new FormattedDateOnly(dispute.DisputantBirthdate);
         ticket.PoliceDetachment = dispute.ViolationTicket.DetachmentLocation;
         ticket.Issued = new FormattedDateTime(dispute.ViolationTicket.IssuedTs);
-        ticket.Submitted = new FormattedDateOnly(dispute.SubmittedTs);
+        if (dispute.SubmittedTs.HasValue)
+        {
+            ticket.Submitted = ConvertToFormattedLocalDateTime(dispute.SubmittedTs.Value, timeZone.Id);
+        }
         ticket.CourtAgenyId = dispute.CourtAgenId;
         ticket.CourtHouse = dispute.ViolationTicket.CourtLocation;
 
@@ -141,9 +144,9 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
                 break;
         }
         writtenReasons.Signature = dispute.SignatoryName;
-        if (dispute.SignatoryName != null)
+        if (dispute.SignatoryName != null && dispute.SubmittedTs.HasValue)
         {
-            writtenReasons.SubmissionTs = new FormattedDateTime(dispute.SubmittedTs);
+            writtenReasons.SubmissionTs = ConvertToFormattedLocalDateTime(dispute.SubmittedTs.Value, timeZone.Id);
         }
 
         // set the counts
@@ -289,11 +292,14 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         ticket.Number = dispute.TicketNumber;
         ticket.Surname = dispute.DisputantSurname;
         ticket.GivenNames = ConcatenateWithSpaces(dispute.DisputantGivenName1, dispute.DisputantGivenName2, dispute.DisputantGivenName3);
-        ticket.DateOfBirth = new FormattedDateOnly(dispute.DisputantBirthdate);
+        ticket.DateOfBirth = dispute.DisputantBirthdate?.ToString("yyyy-MM-ddTHH:mm:ss.fffK") == "0001-01-01T08:00:00.000+00:00" ? FormattedDateOnly.Empty : new FormattedDateOnly(dispute.DisputantBirthdate);
         ticket.OffenceLocation = dispute.OffenceLocation;
         ticket.PoliceDetachment = dispute.PoliceDetachment;
         ticket.Issued = new FormattedDateTime(dispute.IssuedTs);
-        ticket.Submitted = new FormattedDateOnly(dispute.SubmittedTs);
+        if (dispute.SubmittedTs.HasValue)
+        {
+            ticket.Submitted = ConvertToFormattedLocalDateTime(dispute.SubmittedTs.Value, timeZone.Id);
+        }   
         ticket.IcbcReceived = new FormattedDateOnly(dispute.IcbcReceivedDate);
         ticket.CourtAgenyId = dispute.CourtAgenId;
         ticket.CourtHouse = courthouseLocation?.Name ?? string.Empty;
@@ -301,12 +307,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         // set the contact information
         var contact = digitalCaseFile.Contact;
         contact.ContactType = ToString(dispute.ContactType);
-        contact.Surname = dispute.ContactSurname ?? ticket.Surname;
-        contact.GivenNames = ConcatenateWithSpaces(dispute.ContactGivenName1, dispute.ContactGivenName2, dispute.ContactGivenName3);
-        if (string.IsNullOrEmpty(contact.GivenNames))
-        {
-            contact.GivenNames = ticket.GivenNames;
-        }
+        SetContactNames(dispute, contact);
         contact.Address = FormatAddress(dispute);
         contact.DriversLicence.Province = driversLicenceProvince?.ProvAbbreviationCd ?? string.Empty;
         contact.DriversLicence.Number = dispute.DriversLicenceNumber;
@@ -352,9 +353,9 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
                 break;
         }
         writtenReasons.Signature = dispute.SignatoryName;
-        if (dispute.SignatoryName != null)
+        if (dispute.SignatoryName != null && dispute.SubmittedTs.HasValue)
         {
-            writtenReasons.SubmissionTs = new FormattedDateTime(dispute.SubmittedTs);
+            writtenReasons.SubmissionTs = ConvertToFormattedLocalDateTime(dispute.SubmittedTs.Value, timeZone.Id);
         }
 
         // set the counts
@@ -397,17 +398,8 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
                 {
                     // Assuming disputedCount.LatestPleaUpdateTs is in UTC
                     DateTimeOffset utcDateTimeOffset = disputedCount.LatestPleaUpdateTs.Value;
-                    // Retrieve the local time zone
-                    TimeZoneInfo localTimeZone = TimeZoneInfo.Local;
-                    // Check if the local time zone is UTC
-                    if (localTimeZone.BaseUtcOffset == TimeSpan.Zero)
-                    {
-                        // Fall back to a specific time zone if local time zone is UTC
-                        localTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
-                    }
                     // Convert the UTC DateTimeOffset to the local DateTimeOffset
-                    DateTimeOffset localDateTimeOffset = TimeZoneInfo.ConvertTime(utcDateTimeOffset, localTimeZone);
-                    offenseCount.LatestPleaUpdate = new FormattedDateTime(localDateTimeOffset);
+                    offenseCount.LatestPleaUpdate = ConvertToFormattedLocalDateTime(utcDateTimeOffset, timeZone.Id);
                 }
                 if (disputedCount.JjDisputedCountRoP is not null) {
                     offenseCount.LesserDescription = disputedCount.JjDisputedCountRoP.LesserDescription ?? string.Empty;
@@ -974,6 +966,45 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         {
             return null;
         }
+    }
+
+    private void SetContactNames(JJDispute dispute, ContactInformation contact)
+    {
+        switch (dispute.ContactType)
+        {
+            case JJDisputeContactType.INDIVIDUAL:
+                contact.Surname = dispute.OccamDisputantSurnameNm;
+                contact.GivenNames = ConcatenateWithSpaces(dispute.OccamDisputantGiven1Nm, dispute.OccamDisputantGiven2Nm, dispute.OccamDisputantGiven3Nm);
+                break;
+            case JJDisputeContactType.LAWYER:
+                contact.Surname = dispute.LawyerSurname;
+                contact.GivenNames = ConcatenateWithSpaces(dispute.LawyerGivenName1, dispute.LawyerGivenName2, dispute.LawyerGivenName3);
+                break;
+            // Other contact name
+            default:
+                contact.Surname = dispute.ContactSurname;
+                contact.GivenNames = ConcatenateWithSpaces(dispute.ContactGivenName1, dispute.ContactGivenName2, dispute.ContactGivenName3);
+                break;
+        }   
+    }
+
+    private static FormattedDateTime ConvertToFormattedLocalDateTime(DateTimeOffset utcDateTimeOffset, string fallbackTimeZoneId = "Pacific Standard Time")
+    {
+        // Retrieve the local time zone
+        TimeZoneInfo localTimeZone = TimeZoneInfo.Local;
+
+        // Check if the local time zone is UTC
+        if (localTimeZone.BaseUtcOffset == TimeSpan.Zero)
+        {
+            // Fall back to a specific time zone if local time zone is UTC
+            localTimeZone = TimeZoneInfo.FindSystemTimeZoneById(fallbackTimeZoneId);
+        }
+
+        // Convert the UTC DateTimeOffset to the local DateTimeOffset
+        DateTimeOffset localDateTimeOffset = TimeZoneInfo.ConvertTime(utcDateTimeOffset, localTimeZone);
+
+        // Return the FormattedDateTime object
+        return new FormattedDateTime(localDateTimeOffset);
     }
 
 }
