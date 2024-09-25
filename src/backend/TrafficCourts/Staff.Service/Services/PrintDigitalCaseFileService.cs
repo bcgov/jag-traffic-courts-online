@@ -99,7 +99,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         ticket.Issued = new FormattedDateTime(dispute.ViolationTicket.IssuedTs);
         if (dispute.SubmittedTs.HasValue)
         {
-            ticket.Submitted = ConvertToFormattedLocalDateTime(dispute.SubmittedTs.Value);
+            ticket.Submitted = ConvertToFormattedLocalDateTime(dispute.SubmittedTs.Value, timeZone.Id);
         }
         ticket.CourtAgenyId = dispute.CourtAgenId;
         ticket.CourtHouse = dispute.ViolationTicket.CourtLocation;
@@ -146,7 +146,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         writtenReasons.Signature = dispute.SignatoryName;
         if (dispute.SignatoryName != null && dispute.SubmittedTs.HasValue)
         {
-            writtenReasons.SubmissionTs = ConvertToFormattedLocalDateTime(dispute.SubmittedTs.Value);
+            writtenReasons.SubmissionTs = ConvertToFormattedLocalDateTime(dispute.SubmittedTs.Value, timeZone.Id);
         }
 
         // set the counts
@@ -298,7 +298,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         ticket.Issued = new FormattedDateTime(dispute.IssuedTs);
         if (dispute.SubmittedTs.HasValue)
         {
-            ticket.Submitted = ConvertToFormattedLocalDateTime(dispute.SubmittedTs.Value);
+            ticket.Submitted = ConvertToFormattedLocalDateTime(dispute.SubmittedTs.Value, timeZone.Id);
         }   
         ticket.IcbcReceived = new FormattedDateOnly(dispute.IcbcReceivedDate);
         ticket.CourtAgenyId = dispute.CourtAgenId;
@@ -355,7 +355,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         writtenReasons.Signature = dispute.SignatoryName;
         if (dispute.SignatoryName != null && dispute.SubmittedTs.HasValue)
         {
-            writtenReasons.SubmissionTs = ConvertToFormattedLocalDateTime(dispute.SubmittedTs.Value);
+            writtenReasons.SubmissionTs = ConvertToFormattedLocalDateTime(dispute.SubmittedTs.Value, timeZone.Id);
         }
 
         // set the counts
@@ -399,7 +399,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
                     // Assuming disputedCount.LatestPleaUpdateTs is in UTC
                     DateTimeOffset utcDateTimeOffset = disputedCount.LatestPleaUpdateTs.Value;
                     // Convert the UTC DateTimeOffset to the local DateTimeOffset
-                    offenseCount.LatestPleaUpdate = ConvertToFormattedLocalDateTime(utcDateTimeOffset);
+                    offenseCount.LatestPleaUpdate = ConvertToFormattedLocalDateTime(utcDateTimeOffset, timeZone.Id);
                 }
                 if (disputedCount.JjDisputedCountRoP is not null) {
                     offenseCount.LesserDescription = disputedCount.JjDisputedCountRoP.LesserDescription ?? string.Empty;
