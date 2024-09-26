@@ -94,7 +94,11 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         ticket.Number = dispute.ViolationTicket.TicketNumber;
         ticket.Surname = dispute.ViolationTicket.DisputantSurname;
         ticket.GivenNames = dispute.ViolationTicket.DisputantGivenNames;
-        ticket.DateOfBirth = dispute.ViolationTicket.DisputantBirthdate?.ToString("yyyy-MM-ddTHH:mm:ss.fffK") == "0001-01-01T08:00:00.000+00:00" ? FormattedDateOnly.Empty : new FormattedDateOnly(dispute.DisputantBirthdate);
+        ticket.DateOfBirth = 
+            dispute.ViolationTicket.DisputantBirthdate == null || 
+            dispute.ViolationTicket.DisputantBirthdate?.ToString("yyyy-MM-ddTHH:mm:ss.fffK") == "0001-01-01T08:00:00.000+00:00" 
+            ? FormattedDateOnly.Empty 
+            : new FormattedDateOnly(dispute.DisputantBirthdate);
         ticket.PoliceDetachment = dispute.ViolationTicket.DetachmentLocation;
         ticket.Issued = new FormattedDateTime(dispute.ViolationTicket.IssuedTs);
         if (dispute.SubmittedTs.HasValue)
@@ -292,7 +296,11 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         ticket.Number = dispute.TicketNumber;
         ticket.Surname = dispute.DisputantSurname;
         ticket.GivenNames = ConcatenateWithSpaces(dispute.DisputantGivenName1, dispute.DisputantGivenName2, dispute.DisputantGivenName3);
-        ticket.DateOfBirth = dispute.DisputantBirthdate?.ToString("yyyy-MM-ddTHH:mm:ss.fffK") == "0001-01-01T08:00:00.000+00:00" ? FormattedDateOnly.Empty : new FormattedDateOnly(dispute.DisputantBirthdate);
+        ticket.DateOfBirth = 
+            dispute.DisputantBirthdate == null || 
+            dispute.DisputantBirthdate?.ToString("yyyy-MM-ddTHH:mm:ss.fffK") == "0001-01-01T08:00:00.000+00:00" 
+            ? FormattedDateOnly.Empty 
+            : new FormattedDateOnly(dispute.DisputantBirthdate);
         ticket.OffenceLocation = dispute.OffenceLocation;
         ticket.PoliceDetachment = dispute.PoliceDetachment;
         ticket.Issued = new FormattedDateTime(dispute.IssuedTs);

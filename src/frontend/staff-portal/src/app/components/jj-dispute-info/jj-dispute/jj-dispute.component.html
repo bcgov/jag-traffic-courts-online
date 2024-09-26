@@ -94,7 +94,7 @@
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Date Received from ICBC</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.icbcReceivedDate | date: "dd-MMM-yyyy" }}
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.icbcReceivedDate | date: "dd-MMM-yyyy" : "UTC" }}
               </p>
             </span>
             <ng-container *ngIf="type !== 'ticket'">
