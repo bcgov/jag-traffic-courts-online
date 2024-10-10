@@ -27,14 +27,14 @@ public static class Startup
         builder.Services.AddAutoMapper(assembly);
         builder.Services.AddRecyclableMemoryStreams();
 
-        builder.Services.AddTransient<IArcFileService, ArcFileService>();
+        builder.Services.AddScoped<IArcFileService, ArcFileService>();
 
         builder.Services.UseConfigurationValidation();
 
         builder.Services.ConfigureValidatableSetting<SftpConnectionOptions>(builder.Configuration.GetRequiredSection(SftpConnectionOptions.Section));
         builder.Services.ConfigureValidatableSetting<SftpOptions>(builder.Configuration.GetRequiredSection(SftpOptions.Section));
 
-        builder.Services.AddTransient<ISftpService, SftpService>();
+        builder.Services.AddScoped<ISftpService, SftpService>();
 
         builder.Services.AddTransient<SftpClient>(serviceProvider =>
         {
