@@ -131,7 +131,7 @@ export class JJCountComponent implements OnInit, OnChanges {
         this.surcharge = this.jjDisputedCount.totalFineAmount / 1.15 * 0.15;
       }
 
-      if (this.isViewOnly &&
+      if (this.isViewOnly && this.jjDisputedCount.jjDisputedCountRoP?.finding &&
         (this.jjDisputedCount.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.NotGuilty
           || this.jjDisputedCount.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.Cancelled)) {
         this.jjDisputedCount.ticketedFineAmount = null;
@@ -163,7 +163,7 @@ export class JJCountComponent implements OnInit, OnChanges {
       this.updateInclSurcharge(this.inclSurcharge);
 
       // TCVP-2467
-      if (!this.isViewOnly &&
+      if (!this.isViewOnly && this.jjDisputedCount.jjDisputedCountRoP?.finding &&
         (this.jjDisputedCount.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.NotGuilty
           || this.jjDisputedCount.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.Cancelled)) {
         this.form.controls.lesserOrGreaterAmount.setValue(null);

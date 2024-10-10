@@ -161,7 +161,12 @@ public class JJDisputeService {
 		}
 		// Add updated ticket counts
 		jjDisputeToUpdate.addJJDisputedCounts(jjDispute.getJjDisputedCounts());
-
+		
+		// TCVP-3074: Set all UNKNOWN includesSurcharge to null since database field does not allow more than 1 character
+		jjDisputeToUpdate.getJjDisputedCounts().stream()
+	    	.filter(jjDisputedCount -> YesNo.UNKNOWN.equals(jjDisputedCount.getIncludesSurcharge()))
+	    	.forEach(jjDisputedCount -> jjDisputedCount.setIncludesSurcharge(null));
+		
 		// Remove all existing jj dispute court appearances that are associated to this jj dispute
 		if (jjDisputeToUpdate.getJjDisputeCourtAppearanceRoPs() != null) {
 			jjDisputeToUpdate.getJjDisputeCourtAppearanceRoPs().clear();

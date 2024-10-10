@@ -67,14 +67,15 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
     let searchTerms = JSON.parse(filter);
     return Object.entries(searchTerms).every(([field, value]: [string, string]) => {
       if ("dateSubmittedFrom" === field) {
-        return !DateUtil.isValid(value) || DateUtil.isDateOnOrAfter(record.submittedTs, value);
+        return !value || !DateUtil.isValid(value) || DateUtil.isDateOnOrAfter(record.submittedTs, value);
       }
       else if ("dateSubmittedTo" === field) {
-        return !DateUtil.isValid(value) || DateUtil.isDateOnOrBefore(record.submittedTs, value);
+        return !value || !DateUtil.isValid(value) || DateUtil.isDateOnOrBefore(record.submittedTs, value);
       }
       else if (record[field]) {
         return record[field].toLocaleLowerCase().indexOf(value.trim().toLocaleLowerCase()) != -1;
       }
+      return true;
     });
   };
 }

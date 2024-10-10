@@ -90,10 +90,10 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     let searchTerms = JSON.parse(filter);
     return Object.entries(searchTerms).every(([field, value]: [string, string]) => {
       if ("decisionDateFrom" === field) {
-        return !DateUtil.isValid(value) || DateUtil.isDateOnOrAfter(record.jjDecisionDate, value);
+        return !value || !DateUtil.isValid(value) || DateUtil.isDateOnOrAfter(record.jjDecisionDate, value);
       }
       else if ("decisionDateTo" === field) {
-        return !DateUtil.isValid(value) || DateUtil.isDateOnOrBefore(record.jjDecisionDate, value);
+        return !value || !DateUtil.isValid(value) || DateUtil.isDateOnOrBefore(record.jjDecisionDate, value);
       }
       else if ("team" === field) {
         if (value === '' || value === "All") {
@@ -107,6 +107,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
       else if (record[field]) {
         return record[field].toLocaleLowerCase().indexOf(value.trim().toLocaleLowerCase()) != -1;
       }
+      return true;
     });
   }.bind(this);
 

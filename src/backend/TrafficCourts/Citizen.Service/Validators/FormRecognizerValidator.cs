@@ -359,11 +359,12 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         }
         rules.Add(new DateOfServiceLT30Rule(violationTicket.Fields[OcrViolationTicket.DateOfService]));
 
-        // LRAFED-2650 Only tickets that have MVA or MVAR checked are permitted.
+        // TCVP-3052 OCR process no longer requires rejecting images when it cannot determine if the MVA or MVR check boxes are checked.
+        /* // LRAFED-2650 Only tickets that have MVA or MVAR checked are permitted.
         if (ViolationTicketVersion.VT2.Equals(violationTicket.TicketVersion))
         {
             rules.Add(new DidCommitIsMVA(violationTicket.Fields[OcrViolationTicket.OffenceIsMVA], violationTicket));
-        }
+        } */
 
         // Run each rule and aggregate the results
         foreach (var rule in rules)
