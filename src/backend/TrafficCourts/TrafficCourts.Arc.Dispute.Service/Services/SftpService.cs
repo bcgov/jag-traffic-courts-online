@@ -4,7 +4,7 @@ using Renci.SshNet.Sftp;
 
 namespace TrafficCourts.Arc.Dispute.Service.Services;
 
-public class SftpService : ISftpService
+public class SftpService : ISftpService, IDisposable
 {
     private readonly ILogger<SftpService> _logger;
     private readonly SftpClient _client;
