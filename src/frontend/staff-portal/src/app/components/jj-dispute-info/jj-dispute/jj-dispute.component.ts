@@ -456,8 +456,8 @@ export class JJDisputeComponent implements OnInit {
     let paidPriorToAppearancCount = 0;
     this.lastUpdatedJJDispute.jjDisputedCounts.forEach(jjDisputedCount => {
       countCount++;
-      if (jjDisputedCount.jjDisputedCountRoP.finding === this.Finding.Cancelled) cancelledCount++;
-      if (jjDisputedCount.jjDisputedCountRoP.finding === this.Finding.PaidPriorToAppearance) paidPriorToAppearancCount++;
+      if (jjDisputedCount.jjDisputedCountRoP?.finding && jjDisputedCount.jjDisputedCountRoP.finding === this.Finding.Cancelled) cancelledCount++;
+      if (jjDisputedCount.jjDisputedCountRoP?.finding && jjDisputedCount.jjDisputedCountRoP.finding === this.Finding.PaidPriorToAppearance) paidPriorToAppearancCount++;
     });
     if (cancelledCount === countCount && countCount > 0) this.cancelStatusOnly = true;
     else if (cancelledCount + paidPriorToAppearancCount >= countCount && countCount > 0) this.concludeStatusOnly = true;
