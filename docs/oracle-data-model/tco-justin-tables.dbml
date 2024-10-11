@@ -1,0 +1,708 @@
+Table justin.justin_rccs {
+rcc_id number(15,4) [not null]
+//rcc_state_cd varchar2(3) [not null]
+//rcc_state_chg_dt date [not null]
+//rcc_org_creation_dt date [not null]
+//rcc_pma_cd varchar2(1) [not null]
+//rcc_ent_dt date [not null]
+//rcc_ent_user_id varchar2(30) [not null]
+//rcc_agency_file_no varchar2(12)
+//rcc_category_cd varchar2(3)
+//rcc_sub_category_cd varchar2(6)
+//rcc_most_recent_build_dt date
+//rcc_most_recent_submit_dt date
+//rcc_most_recent_reject_dt date
+//rcc_decision_dt date
+//rcc_rejecting_user_id varchar2(30)
+//rcc_accept_dt date
+//rcc_accepting_user_id varchar2(30)
+//rcc_publication_ban_yn varchar2(1)
+//rcc_locked_down_yn varchar2(1)
+//rcc_crown_cvws_yn varchar2(1)
+//rcc_upd_dt date
+//rcc_upd_user_id varchar2(30)
+rcc_file_folder_home_agen_id number(15,4)
+//rcc_priority_cd varchar2(3)
+//proposed_crt_loc_agen_id number(15,4)
+//rcc_security_clearance_lvl_no number(2)
+//part_subm_approved_by_id number(15,4)
+//part_approved_by_id number(15,4)
+//part_initiated_by_id number(15,4)
+//rcc_decision_cd varchar2(3)
+//rcc_decision_crown_part_id number(15,4)
+//rcc_decision_locn_agen_id number(15,4)
+//vcss_service_state_cd varchar2(3)
+//approval_officer_part_id number(15,4)
+//jurisdiction_agen_id number(15,4)
+//rcc_probation_access_yn varchar2(1)
+//rcct_rcc_type_cd varchar2(3)
+//rcc_intimate_relationship_yn varchar2(1)
+//clearance_paas_agen_id number(15,4)
+//clearance_paas_part_id number(15,4)
+//clearance_paas_seq_no number(3)
+//fla_order_breach_yn varchar2(1)
+//cfc_order_breach_yn varchar2(1)
+//file_designation_cd varchar2(4)
+//fra_order_breach_yn varchar2(1)
+//other_order_breach_yn varchar2(1)
+//order_breach_reviewed_yn varchar2(1)
+//afterhours_process_yn varchar2(1)
+//initial_charge_asmt_agen_id number(15,4)
+//pol_designated_hate_crime_yn varchar2(1)
+  Indexes {
+    (rcc_id) [pk]
+    //(proposed_crt_loc_agen_id)
+    //(rcc_decision_locn_agen_id)
+    //(jurisdiction_agen_id)
+    //(initial_charge_asmt_agen_id)
+    //(file_designation_cd)
+    //(clearance_paas_agen_id,clearance_paas_part_id,clearance_paas_seq_no)
+    //(part_approved_by_id)
+    //(part_initiated_by_id)
+    //(part_subm_approved_by_id)
+    //(rcc_decision_crown_part_id)
+    //(approval_officer_part_id)
+    //(rcc_agency_file_no)
+    //(rcc_state_cd)
+    //(rcc_most_recent_submit_dt,rcc_decision_locn_agen_id)
+    //(rcc_decision_dt,rcc_decision_locn_agen_id)
+    //(rcc_file_folder_home_agen_id,rcc_agency_file_no,rcc_id) [unique]
+    //(rcc_decision_locn_agen_id,rcc_state_cd)
+    //(rcc_file_folder_home_agen_id,rcc_state_cd)
+  }
+}
+//Ref: justin.justin_agencies.agen_id < justin.justin_rccs.proposed_crt_loc_agen_id
+//Ref: justin.justin_agencies.agen_id < justin.justin_rccs.rcc_file_folder_home_agen_id
+//Ref: justin.justin_agencies.agen_id < justin.justin_rccs.rcc_decision_locn_agen_id
+//Ref: justin.justin_agencies.agen_id < justin.justin_rccs.jurisdiction_agen_id
+//Ref: justin.justin_agencies.agen_id < justin.justin_rccs.initial_charge_asmt_agen_id
+//Ref: justin.justin_file_designations.file_designation_cd < justin.justin_rccs.file_designation_cd
+//Ref: justin.justin_partic_assignments.(agen_id,part_id,paas_seq_no) < justin.justin_rccs.(clearance_paas_agen_id,clearance_paas_part_id,clearance_paas_seq_no)
+//Ref: justin.justin_participants.part_id < justin.justin_rccs.part_approved_by_id
+//Ref: justin.justin_participants.part_id < justin.justin_rccs.part_initiated_by_id
+//Ref: justin.justin_participants.part_id < justin.justin_rccs.part_subm_approved_by_id
+//Ref: justin.justin_participants.part_id < justin.justin_rccs.rcc_decision_crown_part_id
+//Ref: justin.justin_participants.part_id < justin.justin_rccs.approval_officer_part_id
+//Ref: justin.justin_cd_rcc_access_lvls.ralv_rcc_access_lvl_cd < justin.justin_rccs.rcc_security_clearance_lvl_no
+//Ref: justin.justin_cd_rcc_types.rcct_rcc_type_cd < justin.justin_rccs.rcct_rcc_type_cd
+//Ref: justin.justin_cd_rcc_decisions.rcde_rcc_decision_cd < justin.justin_rccs.rcc_decision_cd
+//Ref: justin.justin_cd_rcc_priorities.rcpr_rcc_priority_cd < justin.justin_rccs.rcc_priority_cd
+//Ref: justin.justin_cd_vcsr_service_states.vcss_service_state_cd < justin.justin_rccs.vcss_service_state_cd
+
+
+Table justin.justin_agencies {
+agen_id number(15,4) [not null]
+agen_agency_nm varchar2(150) [not null]
+//agen_ent_dt date [not null]
+//agen_ent_user_id varchar2(30) [not null]
+//city_ctry_id number(8) [not null]
+//city_seq_no number(4) [not null]
+//agen_address_line_1_txt varchar2(40) [not null]
+//cdat_agency_type_cd varchar2(3) [not null]
+//agen_agency_short_nm varchar2(150)
+//agen_agency_identifier_cd varchar2(4)
+//agen_address_line_2_txt varchar2(40)
+//agen_address_line_3_txt varchar2(40)
+//agen_postal_code_txt varchar2(10)
+//agen_contact_name varchar2(40)
+//agen_contact_phone varchar2(13)
+//agen_upd_dt date
+//agen_upd_user_id varchar2(30)
+//agen_contact_fax_no varchar2(13)
+//agen_wit_notif_unit_phone_no varchar2(13)
+//agen_justin_site_yn varchar2(1)
+//agsb_agency_subtype_cd varchar2(3)
+//agen_active_yn varchar2(1) [not null]
+//agen_email_address_txt varchar2(100)
+//time_zone_cd varchar2(1)
+//mailing_address_txt varchar2(100)
+//delivery_method_cd varchar2(4)
+//receive_fax_cover_page_yn varchar2(1)
+//rcmp_division_cd varchar2(4)
+//crown_region_cd varchar2(4)
+//file_designation_mandatory_yn varchar2(1)
+//agen_observes_dst_yn varchar2(1) [not null]
+//dflt_phys_ticket_series_txt varchar2(4)
+  Indexes {
+    (agen_id) [pk]
+    //(city_ctry_id,city_seq_no)
+    //(crown_region_cd)
+    //(rcmp_division_cd)
+    //(cdat_agency_type_cd,agen_agency_identifier_cd) [unique]
+  }
+}
+//Ref: justin.justin_cd_agency_subtypes.(cdat_agency_type_cd,agsb_agency_subtype_cd) < justin.justin_agencies.(cdat_agency_type_cd,agsb_agency_subtype_cd)
+//Ref: justin.justin_cd_agency_types.cdat_agency_type_cd < justin.justin_agencies.cdat_agency_type_cd
+//Ref: justin.justin_cities.(ctry_id,city_seq_no) < justin.justin_agencies.(city_ctry_id,city_seq_no)
+//Ref: justin.justin_crown_regions.crown_region_cd < justin.justin_agencies.crown_region_cd
+//Ref: justin.justin_delivery_methods.delivery_method_cd < justin.justin_agencies.delivery_method_cd
+//Ref: justin.justin_rcmp_divisions.rcmp_division_cd < justin.justin_agencies.rcmp_division_cd
+
+Table justin.justin_matters {
+rcc_id number(15,4) [not null]
+matt_seq_no number(3) [not null]
+matt_type varchar2(10) [not null]
+matt_pma_cd varchar2(1) [not null]
+matt_ent_dt date [not null]
+matt_ent_user_id varchar2(30) [not null]
+matt_offence_dt date
+matt_offence_end_dt date
+matt_category_cd varchar2(3)
+matt_synopsis varchar2(500)
+matt_fpred_complete_yn varchar2(1)
+matt_search_warrant_used_yn varchar2(1)
+matt_exhibits_involved_yn varchar2(1)
+matt_application_detail_txt varchar2(2000)
+matt_upd_dt date
+matt_upd_user_id varchar2(30)
+stat_id number(8)
+matt_precedence_no number(8)
+matt_nature_cd varchar2(3)
+display_order_nbr number(4)
+  Indexes {
+    (rcc_id,matt_seq_no) [pk]
+    (stat_id,matt_precedence_no)
+    (stat_id)
+  }
+}
+//Ref: justin.justin_charge_precedents.(stat_id,chgp_seq_no) < justin.justin_matters.(stat_id,matt_precedence_no)
+//Ref: justin.justin_cd_matter_natures.mana_nature_cd < justin.justin_matters.matt_nature_cd
+Ref: justin.justin_rccs.rcc_id < justin.justin_matters.rcc_id
+//Ref: justin.justin_statutes.stat_id < justin.justin_matters.stat_id
+
+Table justin.justin_offence_locations {
+matt_rcc_id number(15,4) [not null]
+matt_seq_no number(3) [not null]
+offence_location_seq_no number(4) [not null]
+city_ctry_id number(8)
+city_seq_no number(4)
+detail_txt varchar2(255)
+ent_dtm date [not null]
+ent_user_id varchar2(30) [not null]
+upd_dtm date
+upd_user_id varchar2(30)
+display_order_nbr number(4) [not null]
+  Indexes {
+    (matt_rcc_id,matt_seq_no,offence_location_seq_no) [pk]
+    (city_ctry_id,city_seq_no)
+    (matt_rcc_id,matt_seq_no)
+  }
+}
+Ref: justin.justin_cities.(ctry_id,city_seq_no) < justin.justin_offence_locations.(city_ctry_id,city_seq_no)
+Ref: justin.justin_matters.(rcc_id,matt_seq_no) < justin.justin_offence_locations.(matt_rcc_id,matt_seq_no)
+
+Table justin.justin_cities {
+ctry_id number(8) [not null]
+city_seq_no number(4) [not null]
+city_long_nm varchar2(100) [not null]
+city_short_nm varchar2(4) [not null]
+//city_ent_dt date [not null]
+//city_ent_user_id varchar2(30) [not null]
+prov_ctry_id number(8)
+prov_seq_no number(4)
+//city_upd_dt date
+//city_upd_user_id varchar2(30)
+city_deactivated_dt date
+  Indexes {
+    (ctry_id,city_seq_no) [pk]
+    (ctry_id)
+    (prov_ctry_id,prov_seq_no)
+  }
+}
+Ref: justin.justin_countries.ctry_id < justin.justin_cities.ctry_id
+Ref: justin.justin_provinces.(ctry_id,prov_seq_no) < justin.justin_cities.(prov_ctry_id,prov_seq_no)
+
+
+Table justin.justin_countries {
+ctry_id number(8) [not null]
+ctry_long_nm varchar2(30) [not null]
+ctry_short_nm varchar2(5)
+ctry_ent_dt date [not null]
+ctry_ent_user_id varchar2(30) [not null]
+ctry_upd_dt date
+ctry_upd_user_id varchar2(30)
+  Indexes {
+    (ctry_id) [pk]
+    (ctry_long_nm) [unique]
+    (ctry_short_nm) [unique]
+  }
+}
+
+Table justin.justin_provinces {
+ctry_id number(8) [not null]
+prov_seq_no number(4) [not null]
+prov_nm varchar2(30) [not null]
+prov_abbreviation_cd varchar2(2) [not null]
+prov_ent_dt date [not null]
+prov_ent_user_id varchar2(30) [not null]
+prov_upd_dt date
+prov_upd_user_id varchar2(30)
+  Indexes {
+    (ctry_id,prov_seq_no) [pk]
+    (ctry_id)
+  }
+}
+Ref: justin.justin_countries.ctry_id < justin.justin_provinces.ctry_id
+
+
+Table justin.justin_physical_files {
+phys_id number(15,4) [not null]
+//phys_ent_dt date [not null]
+//phys_ent_user_id varchar2(30) [not null]
+//phys_file_folder_no number(12) [not null]
+//phys_file_folder_no_char varchar2(12) [not null]
+//phys_court_class_cd varchar2(3) [not null]
+//phys_court_division_cd varchar2(3) [not null]
+//phys_court_level_cd varchar2(3) [not null]
+phys_file_folder_home_location number(15,4) [not null]
+//phys_file_opening_dt date
+//phys_ticket_series_txt varchar2(4)
+//phys_upd_dt date
+//phys_upd_user_id varchar2(30)
+//ccas_case_no number(15,4)
+rcc_id number(15,4)
+//phys_sheriff_security_reqd_yn varchar2(1)
+  Indexes {
+    (phys_id) [pk]
+    (phys_file_folder_home_location)
+    //(ccas_case_no)
+    (rcc_id)
+    //(phys_court_class_cd,phys_court_level_cd,phys_court_division_cd,phys_file_folder_home_location,phys_ticket_series_txt,phys_file_folder_no,phys_id) [unique]
+    //(phys_file_folder_home_location,phys_file_folder_no,phys_court_division_cd,phys_court_level_cd,phys_court_class_cd,phys_ticket_series_txt) [unique]
+  }
+}
+Ref: justin.justin_agencies.agen_id < justin.justin_physical_files.phys_file_folder_home_location
+//Ref: justin.justin_court_cases.ccas_case_no < justin.justin_physical_files.ccas_case_no
+//Ref: justin.justin_cd_lvl_div_class_xrefs.(ldcx_court_level_cd,ldcx_court_division_cd,ldcx_court_class_cd) < justin.justin_physical_files.(phys_court_level_cd,phys_court_division_cd,phys_court_class_cd)
+Ref: justin.justin_rccs.rcc_id < justin.justin_physical_files.rcc_id
+
+Table justin.justin_matter_docs {
+mdoc_justin_no number(12) [not null]
+//mdoc_justin_no_char varchar2(12) [not null]
+//mdoc_pma_cd varchar2(1) [not null]
+mdoc_info_seq_no number(4) [not null]
+//mdoc_sworn_or_filed_yn varchar2(1) [not null]
+//mdoc_ent_dt date [not null]
+//mdoc_ent_user_id varchar2(30) [not null]
+phys_id number(15,4) [not null]
+//mdoc_document_cd varchar2(3) [not null]
+//creating_agen_id number(15,4) [not null]
+//mdoc_printed_yn varchar2(1)
+//mdoc_ref_type_cd varchar2(6)
+//mdoc_process_issued_dt date
+//mdoc_sworn_dt date
+//mdoc_approval_dt date
+//mdoc_filed_dt date
+//mdoc_filed_by_txt varchar2(30)
+//mdoc_presenter_occupation_txt varchar2(240)
+//mdoc_adap_seq_no number(4)
+//mdoc_crown_election_dt date
+//mdoc_document_amended_yn varchar2(1)
+//mdoc_disclosure_court_yn varchar2(1)
+//mdoc_case_estimated_length_qty number(5,2)
+//mdoc_category_cd varchar2(3)
+//mdoc_sub_category_cd varchar2(6)
+//mdoc_approving_part_id number(15,4)
+//mdoc_approving_locn_agen_id number(15,4)
+//mdoc_presenting_part_id number(15,4)
+//mdoc_amendment_detail_txt varchar2(4000)
+//mdoc_ticket_issue_dt date
+//mdoc_ticket_complete_dt date
+//mdoc_upd_dt date
+//mdoc_upd_user_id varchar2(30)
+//mdoc_presenting_agen_id number(15,4)
+//mdoc_sworn_by_part_id number(15,4)
+//mdoc_crown_election_cd varchar2(3)
+//mdoc_case_estimated_length_cd varchar2(4)
+//tril_id number(15,4)
+//cidf_document_form_cd varchar2(3)
+//mdoc_crown_comment_txt varchar2(2000)
+//sworn_at_agen_id number(15,4)
+accident_yn varchar2(1)
+//significant_status_start_dtm date
+//significant_status_expiry_dtm date
+//significant_status_comment_txt varchar2(4000)
+//submission_means_cd varchar2(4)
+//locking_agen_id number(15,4)
+//locking_part_id number(15,4)
+//locking_paas_seq_no number(3)
+//locking_court_agen_id number(15,4)
+//locking_ctrm_room_cd varchar2(6)
+//file_designation_cd varchar2(4)
+//ticket_dispute_filed_dt date
+primary_rcc_id number(15,4)
+  Indexes {
+    (mdoc_justin_no) [pk]
+    //(creating_agen_id)
+    //(mdoc_approving_locn_agen_id)
+    //(mdoc_presenting_agen_id)
+    //(sworn_at_agen_id)
+    //(locking_court_agen_id,locking_ctrm_room_cd)
+    //(file_designation_cd)
+    //(locking_agen_id,locking_part_id,locking_paas_seq_no)
+    //(mdoc_sworn_by_part_id)
+    //(mdoc_approving_part_id)
+    //(mdoc_presenting_part_id)
+    //(primary_rcc_id)
+    //(phys_id,mdoc_sworn_or_filed_yn)
+    //(mdoc_approving_locn_agen_id,mdoc_approval_dt)
+    //(mdoc_approving_locn_agen_id,mdoc_approval_dt,mdoc_sworn_or_filed_yn,mdoc_ref_type_cd,mdoc_info_seq_no,phys_id,mdoc_justin_no)
+    //(phys_id,mdoc_ref_type_cd,mdoc_document_cd,mdoc_justin_no,mdoc_info_seq_no,mdoc_sworn_dt,mdoc_filed_dt) [unique]
+    //(significant_status_start_dtm)
+    //(submission_means_cd)
+    //(tril_id)
+  }
+}
+//Ref: justin.justin_agencies.agen_id < justin.justin_matter_docs.creating_agen_id
+//Ref: justin.justin_agencies.agen_id < justin.justin_matter_docs.mdoc_approving_locn_agen_id
+//Ref: justin.justin_agencies.agen_id < justin.justin_matter_docs.mdoc_presenting_agen_id
+//Ref: justin.justin_agencies.agen_id < justin.justin_matter_docs.sworn_at_agen_id
+//Ref: justin.justin_cd_crim_init_doc_forms.(crid_document_cd,cidf_document_form_cd) < justin.justin_matter_docs.(mdoc_document_cd,cidf_document_form_cd)
+//Ref: justin.justin_cd_crown_elections.crel_crown_election_cd < justin.justin_matter_docs.mdoc_crown_election_cd
+//Ref: justin.justin_cd_crim_init_doc_types.crid_document_cd < justin.justin_matter_docs.mdoc_document_cd
+//Ref: justin.justin_court_rooms.(agen_id,ctrm_room_cd) < justin.justin_matter_docs.(locking_court_agen_id,locking_ctrm_room_cd)
+//Ref: justin.justin_file_designations.file_designation_cd < justin.justin_matter_docs.file_designation_cd
+//Ref: justin.justin_partic_assignments.(agen_id,part_id,paas_seq_no) < justin.justin_matter_docs.(locking_agen_id,locking_part_id,locking_paas_seq_no)
+//Ref: justin.justin_participants.part_id < justin.justin_matter_docs.mdoc_sworn_by_part_id
+//Ref: justin.justin_participants.part_id < justin.justin_matter_docs.mdoc_approving_part_id
+//Ref: justin.justin_participants.part_id < justin.justin_matter_docs.mdoc_presenting_part_id
+Ref: justin.justin_physical_files.phys_id < justin.justin_matter_docs.phys_id
+Ref: justin.justin_rccs.rcc_id < justin.justin_matter_docs.primary_rcc_id
+//Ref: justin.justin_trials.tril_id < justin.justin_matter_docs.tril_id
+//Ref: justin.justin_cd_unit_types.unty_unit_type_cd < justin.justin_matter_docs.mdoc_case_estimated_length_cd
+
+
+Table justin.justin_participant_profiles {
+part_id number(15,4) [not null]
+prof_seq_no number(10) [not null]
+//prof_ent_dt date [not null]
+//prof_ent_user_id varchar2(30) [not null]
+//prof_association_cd varchar2(3) [not null]
+//prof_rcc_part_id number(15,4)
+rcc_id number(15,4)
+//prof_info_part_id number(15,4)
+//prof_tombstone_static_yn varchar2(1)
+prof_surname_nm varchar2(30)
+//prof_surname_upper_nm varchar2(30)
+prof_given_1_nm varchar2(30)
+//prof_upper_given_1_nm varchar2(30)
+prof_given_2_nm varchar2(30)
+prof_given_3_nm varchar2(30)
+prof_birth_dt date
+//prof_deceased_yn varchar2(1)
+//prof_deceased_dt date
+//prof_interpreter_required_yn varchar2(1)
+prof_drv_lic_number_txt varchar2(30)
+mdoc_justin_no number(12)
+//prof_drv_lic_suspended_yn varchar2(1)
+//prof_drv_lic_issue_dt date
+//prof_drv_lic_expiry_dt date
+//prof_passport_number_txt varchar2(30)
+//prof_statement_taken_yn varchar2(1)
+//prof_ac_height_primary_val number(3)
+//prof_ac_weight_val number(3)
+//prof_ac_duration_area_val number(6,2)
+//prof_ac_cc_section_10a_yn varchar2(1)
+//prof_ac_cc_section_10b_yn varchar2(1)
+//prof_ac_release_cond_txt varchar2(500)
+//prof_ac_proposed_appearance_dt date
+//prof_ac_in_custody_yn varchar2(1)
+//prof_ac_visen_not_known_yn varchar2(1)
+//prof_ac_visen_violent_yn varchar2(1)
+//prof_ac_visen_infectious_yn varchar2(2)
+//prof_ac_visen_suicidal_yn varchar2(1)
+//prof_ac_visen_escapee_yn varchar2(1)
+//prof_ac_visen_as_normal_yn varchar2(1)
+//prof_ac_visen_drug_user_yn varchar2(1)
+//prof_ac_visen_mental_unstbl_yn varchar2(1)
+//prof_ac_gang_member_yn varchar2(1)
+//prof_ac_young_offender_yn varchar2(1)
+//prof_ac_criminal_record_yn varchar2(1)
+//prof_ac_driving_record_yn varchar2(1)
+//prof_ac_fingerprinted_yn varchar2(1)
+//prof_ac_ica_yn varchar2(1)
+//prof_ac_pardoned_yn varchar2(1)
+//prof_ac_pardoned_dt date
+//prof_ac_current_bail_proc_txt varchar2(3)
+//prof_ac_print_name_yn varchar2(1)
+//prof_ac_psychiatic_exam_yn varchar2(1)
+//prof_na_sin_no number(9)
+//prof_na_willing_id_accused_yn varchar2(1)
+//prof_na_photo_lineup_given_yn varchar2(1)
+//prof_na_related_to_accused_yn varchar2(1)
+//prof_na_related_to_notified_yn varchar2(1)
+//prof_na_victim_services_req_yn varchar2(1)
+//prof_na_refer_to_vic_ser_yn varchar2(1)
+//prof_na_notified_vic_ser_yn varchar2(1)
+//prof_na_notified_vic_yn varchar2(1)
+//prof_na_recvd_impact_stmt_yn varchar2(1)
+//prof_na_requested_amt number(10,2)
+//prof_na_req_compensation_amt number(6,2)
+//prof_na_victim_svcs_set_dt date
+//prof_witness_confidential_yn varchar2(1)
+//prof_witness_required_yn varchar2(1)
+//prof_witness_not_required_yn varchar2(1)
+//prof_witness_notified_yn varchar2(1)
+//prof_witness_pers_service_yn varchar2(1)
+//prof_witness_confirmed_yn varchar2(1)
+//prof_witness_confirmed_dt date
+//prof_crown_decision_dt date
+//prof_doc_produced_yn varchar2(1)
+//prof_comment_txt varchar2(4000)
+//prof_medical_disorder_txt varchar2(2000)
+//prof_ac_location_txt varchar2(40)
+//prof_org_nm varchar2(150)
+//prof_upper_org_nm varchar2(150)
+//prof_upd_dt date
+//prof_upd_user_id varchar2(30)
+//prof_crown_decision_agen_id number(15,4)
+//prof_gender_cd varchar2(3)
+//cdcx_complexion_cd varchar2(3)
+//cdhr_hair_colour_cd varchar2(3)
+//cdnm_name_title_cd varchar2(3)
+//prof_default_notif_method_cd varchar2(3)
+//cdbt_business_type_cd varchar2(3)
+//prof_crown_decision_cd varchar2(3)
+//cdbl_build_cd varchar2(3)
+//cdrc_race_cd varchar2(3)
+//prof_marital_status_cd varchar2(3)
+//cdcz_citizen_cd varchar2(3)
+//cdey_eye_colour_cd varchar2(3)
+//cdln_language_cd varchar2(3)
+//cdco_cooperation_cd varchar2(3)
+//cdpr_process_type_cd varchar2(3)
+//prof_ac_duration_area_unit_cd varchar2(4)
+//prof_ac_height_primary_unit_cd varchar2(4)
+//prof_ac_weight_unit_cd varchar2(4)
+//passport_issued_ctry_id number(8)
+//prof_crown_decision_part_id number(15,4)
+driver_lic_issue_ctry_id number(8)
+driver_lic_issue_prov_seq_no number(4)
+//dacl_access_level_no number(2)
+//police_witness_agen_id number(15,4)
+//police_witness_paas_seq_no number(3)
+//prof_style_of_cause_seq_no number(3)
+//prof_prelim_inquiry_yn varchar2(1)
+//prof_birth_place_txt varchar2(150)
+//prof_occupation_txt varchar2(50)
+//prof_diversion_exists_yn varchar2(1)
+//seal_dt date
+//seal_type_cd varchar2(4)
+//astp_asset_type_cd varchar2(3)
+//exclude_from_dna_processing_yn varchar2(1)
+//french_trial_granted_yn varchar2(1)
+//exclude_from_sor_processing_yn varchar2(1)
+//crown_decision_upd_agen_id number(15,4)
+//crown_decision_upd_part_id number(15,4)
+//crown_decision_upd_paas_seq_no number(3)
+//potential_do_lto_yn varchar2(1)
+//hroip_referral_yn varchar2(1)
+//eligible_for_ycja_seal_dt date
+//eligible_for_ycja_seal_type_cd varchar2(4)
+  Indexes {
+    (part_id,prof_seq_no) [pk]
+    //(prof_crown_decision_agen_id)
+    //(passport_issued_ctry_id)
+    (driver_lic_issue_ctry_id)
+    //(police_witness_agen_id,part_id,police_witness_paas_seq_no)
+    //(crown_decision_upd_agen_id,crown_decision_upd_part_id,crown_decision_upd_paas_seq_no)
+    //(prof_crown_decision_part_id)
+    (driver_lic_issue_ctry_id,driver_lic_issue_prov_seq_no)
+    (mdoc_justin_no)
+    (rcc_id)
+    //(prof_crown_decision_cd)
+    //(prof_surname_upper_nm,prof_upper_given_1_nm,mdoc_justin_no,prof_ac_pardoned_yn)
+    //(prof_upper_org_nm,mdoc_justin_no,prof_ac_pardoned_yn)
+    //(mdoc_justin_no,prof_info_part_id,part_id,prof_seq_no) [unique]
+    //(prof_ac_pardoned_yn,seal_dt)
+    //(seal_type_cd)
+    //(eligible_for_ycja_seal_type_cd)
+    //(prof_info_part_id,mdoc_justin_no) [unique]
+    //(prof_rcc_part_id,rcc_id) [unique]
+  }
+}
+//Ref: justin.justin_agencies.agen_id < justin.justin_participant_profiles.prof_crown_decision_agen_id
+//Ref: justin.justin_cd_asset_types.astp_asset_type_cd < justin.justin_participant_profiles.astp_asset_type_cd
+//Ref: justin.justin_cd_builds.cdbl_build_cd < justin.justin_participant_profiles.cdbl_build_cd
+//Ref: justin.justin_cd_business_types.cdbt_business_type_cd < justin.justin_participant_profiles.cdbt_business_type_cd
+//Ref: justin.justin_cd_cooperations.cdco_cooperation_cd < justin.justin_participant_profiles.cdco_cooperation_cd
+//Ref: justin.justin_cd_complexions.cdcx_complexion_cd < justin.justin_participant_profiles.cdcx_complexion_cd
+//Ref: justin.justin_cd_citizens.cdcz_citizen_cd < justin.justin_participant_profiles.cdcz_citizen_cd
+//Ref: justin.justin_cd_eye_colours.cdey_eye_colour_cd < justin.justin_participant_profiles.cdey_eye_colour_cd
+//Ref: justin.justin_cd_hair_colours.cdhr_hair_colour_cd < justin.justin_participant_profiles.cdhr_hair_colour_cd
+//Ref: justin.justin_cd_languages.cdln_language_cd < justin.justin_participant_profiles.cdln_language_cd
+//Ref: justin.justin_cd_name_titles.cdnm_name_title_cd < justin.justin_participant_profiles.cdnm_name_title_cd
+//Ref: justin.justin_cd_process_types.cdpr_process_type_cd < justin.justin_participant_profiles.cdpr_process_type_cd
+//Ref: justin.justin_cd_races.cdrc_race_cd < justin.justin_participant_profiles.cdrc_race_cd
+//Ref: justin.justin_cd_crown_decisions.crde_cd < justin.justin_participant_profiles.prof_crown_decision_cd
+//Ref: justin.justin_countries.ctry_id < justin.justin_participant_profiles.passport_issued_ctry_id
+Ref: justin.justin_countries.ctry_id < justin.justin_participant_profiles.driver_lic_issue_ctry_id
+//Ref: justin.justin_cd_data_access_levels.dacl_access_level_no < justin.justin_participant_profiles.dacl_access_level_no
+//Ref: justin.justin_cd_genders.gndr_gender_cd < justin.justin_participant_profiles.prof_gender_cd
+//Ref: justin.justin_cd_marital_statuses.mast_marital_status_cd < justin.justin_participant_profiles.prof_marital_status_cd
+Ref: justin.justin_matter_docs.mdoc_justin_no < justin.justin_participant_profiles.mdoc_justin_no
+//Ref: justin.justin_cd_notify_methods.nome_notify_method_cd < justin.justin_participant_profiles.prof_default_notif_method_cd
+//Ref: justin.justin_partic_assignments.(agen_id,part_id,paas_seq_no) < justin.justin_participant_profiles.(police_witness_agen_id,part_id,police_witness_paas_seq_no)
+//Ref: justin.justin_partic_assignments.(agen_id,part_id,paas_seq_no) < justin.justin_participant_profiles.(crown_decision_upd_agen_id,crown_decision_upd_part_id,crown_decision_upd_paas_seq_no)
+//Ref: justin.justin_participants.part_id < justin.justin_participant_profiles.part_id
+//Ref: justin.justin_participants.part_id < justin.justin_participant_profiles.prof_crown_decision_part_id
+Ref: justin.justin_provinces.(ctry_id,prov_seq_no) < justin.justin_participant_profiles.(driver_lic_issue_ctry_id,driver_lic_issue_prov_seq_no)
+Ref: justin.justin_rccs.rcc_id < justin.justin_participant_profiles.rcc_id
+//Ref: justin.justin_cd_seal_types.seal_type_cd < justin.justin_participant_profiles.seal_type_cd
+//Ref: justin.justin_cd_seal_types.seal_type_cd < justin.justin_participant_profiles.eligible_for_ycja_seal_type_cd
+//Ref: justin.justin_cd_unit_types.unty_unit_type_cd < justin.justin_participant_profiles.prof_ac_height_primary_unit_cd
+//Ref: justin.justin_cd_unit_types.unty_unit_type_cd < justin.justin_participant_profiles.prof_ac_weight_unit_cd
+//Ref: justin.justin_cd_unit_types.unty_unit_type_cd < justin.justin_participant_profiles.prof_ac_duration_area_unit_cd
+
+Table justin.justin_participant_roles {
+prof_part_id number(15,4) [not null]
+prof_seq_no number(10) [not null]
+prlt_role_type_cd varchar2(3) [not null]
+prol_pma_cd varchar2(1) [not null]
+prol_ent_dt date [not null]
+prol_ent_user_id varchar2(30) [not null]
+prol_upd_dt date
+prol_upd_user_id varchar2(30)
+srlt_subrole_type_cd varchar2(3)
+expert_witness_yn varchar2(1)
+  Indexes {
+    (prof_part_id,prof_seq_no,prlt_role_type_cd) [pk]
+  }
+}
+//Ref: justin.justin_cd_part_role_types.prlt_role_type_cd < justin.justin_participant_roles.prlt_role_type_cd
+Ref: justin.justin_participant_profiles.(part_id,prof_seq_no) < justin.justin_participant_roles.(prof_part_id,prof_seq_no)
+//Ref: justin.justin_cd_part_subrole_types.(prlt_role_type_cd,srlt_subrole_type_cd) < justin.justin_participant_roles.(prlt_role_type_cd,srlt_subrole_type_cd)
+
+Table justin.justin_addresses {
+part_id number(15,4) [not null]
+adrs_seq_no number(4) [not null]
+cdad_address_type_cd varchar2(3) [not null]
+adrs_confidential_yn varchar2(1) [not null]
+adrs_start_dt date [not null]
+adrs_ent_dt date [not null]
+adrs_ent_user_id varchar2(30) [not null]
+adrs_address_line_1_txt varchar2(40)
+adrs_address_line_2_txt varchar2(40)
+adrs_address_line_3_txt varchar2(40)
+adrs_postal_code_txt varchar2(10)
+city_ctry_id number(8)
+city_seq_no number(4)
+prov_ctry_id number(8)
+ctry_id number(8)
+prov_seq_no number(4)
+adrs_contact_nm varchar2(40)
+adrs_phone varchar2(13)
+adrs_upd_dt date
+adrs_upd_user_id varchar2(30)
+adrs_end_dt date
+prof_seq_no number(10)
+  Indexes {
+    (part_id,adrs_seq_no) [pk]
+    (city_ctry_id,city_seq_no)
+    (ctry_id)
+    (part_id,prof_seq_no)
+    (prov_ctry_id,prov_seq_no)
+  }
+}
+//Ref: justin.justin_cd_address_types.cdad_address_type_cd < justin.justin_addresses.cdad_address_type_cd
+Ref: justin.justin_cities.(ctry_id,city_seq_no) < justin.justin_addresses.(city_ctry_id,city_seq_no)
+Ref: justin.justin_countries.ctry_id < justin.justin_addresses.ctry_id
+//Ref: justin.justin_participants.part_id < justin.justin_addresses.part_id
+Ref: justin.justin_participant_profiles.(part_id,prof_seq_no) < justin.justin_addresses.(part_id,prof_seq_no)
+Ref: justin.justin_provinces.(ctry_id,prov_seq_no) < justin.justin_addresses.(prov_ctry_id,prov_seq_no)
+
+Table justin.justin_images {
+image_id number(15,4) [not null]
+//object_guid varchar2(100) [not null]
+//current_version_yn varchar2(1) [not null]
+//scanned_image_yn varchar2(1) [not null]
+//signed_image_yn varchar2(1)
+//document_page_qty number(4)
+ent_dtm date [not null]
+//ent_user_id varchar2(30) [not null]
+//upd_dtm date
+//upd_user_id varchar2(30)
+//docm_id number(15,4)
+mdoc_justin_no number(12)
+//pdf_version_txt varchar2(5)
+//noti_prof_part_id number(15,4)
+//noti_prof_seq_no number(10)
+//noti_mdoc_justin_no number(12)
+//noti_seq_no number(3)
+//tele_information_id number(15)
+//image_content_xml_txt clob
+//auto_generated_yn varchar2(1)
+  Indexes {
+    (image_id) [pk]
+    //(docm_id)
+    //(mdoc_justin_no)
+    //(noti_prof_part_id,noti_prof_seq_no,noti_mdoc_justin_no,noti_seq_no)
+    //(tele_information_id)
+    //(object_guid) [unique]
+  }
+}
+//Ref: justin.justin_documents.docm_id < justin.justin_images.docm_id
+Ref: justin.justin_matter_docs.mdoc_justin_no < justin.justin_images.mdoc_justin_no
+//Ref: justin.justin_notifications.(prof_part_id,prof_seq_no,mdoc_justin_no,noti_seq_no) < justin.justin_images.(noti_prof_part_id,noti_prof_seq_no,noti_mdoc_justin_no,noti_seq_no)
+//Ref: justin.justin_tele_informations.tele_information_id < justin.justin_images.tele_information_id
+
+Table justin.justin_matter_doc_counts {
+mdoc_justin_no number(12) [not null]
+mdct_seq_no number(3) [not null]
+//mdct_ent_dt date [not null]
+//mdct_ent_user_id varchar2(30) [not null]
+matt_rcc_id number(15,4) [not null]
+matt_seq_no number(3) [not null]
+//mdct_print_seq_no number(3)
+//mdct_dispute_allegation_yn varchar2(1)
+//mdct_dispute_fine_yn varchar2(1)
+//mdct_upd_dt date
+//mdct_upd_user_id varchar2(30)
+//fpr_matt_rcc_id number(15,4)
+//fpr_matt_seq_no number(3)
+//fpr_seq_no number(4)
+//mdct_ticket_amt number(7,2)
+  Indexes {
+    (mdoc_justin_no,mdct_seq_no) [pk]
+    //(fpr_matt_rcc_id,fpr_matt_seq_no,fpr_seq_no)
+    (matt_rcc_id,matt_seq_no)
+    (matt_rcc_id)
+    //(fpr_matt_rcc_id)
+    (matt_rcc_id,matt_seq_no,mdoc_justin_no,mdct_seq_no)
+    //(mdoc_justin_no,mdct_seq_no,matt_rcc_id,matt_seq_no,mdct_print_seq_no)
+  }
+}
+//Ref: justin.justin_fpreds.(matt_rcc_id,matt_seq_no,fpr_seq_no) < justin.justin_matter_doc_counts.(fpr_matt_rcc_id,fpr_matt_seq_no,fpr_seq_no)
+Ref: justin.justin_matters.(rcc_id,matt_seq_no) < justin.justin_matter_doc_counts.(matt_rcc_id,matt_seq_no)
+Ref: justin.justin_matter_docs.mdoc_justin_no < justin.justin_matter_doc_counts.mdoc_justin_no
+
+
+Table justin.justin_mdpr_counts {
+mdct_justin_no number(12) [not null]
+mdct_seq_no number(3) [not null]
+mdpr_seq_no number(3) [not null]
+mdpr_ent_dt date [not null]
+mdpr_ent_user_id varchar2(30) [not null]
+prof_part_id number(15,4) [not null]
+prof_seq_no number(10) [not null]
+mdpr_print_seq_no number(3)
+mdpr_upd_dt date
+mdpr_upd_user_id varchar2(30)
+lesser_included_stat_id number(8)
+mana_nature_cd varchar2(3)
+public_access_restricted_yn varchar2(1) [not null]
+sentence_end_dt date
+eligible_for_ycja_seal_dt date
+  Indexes {
+    (mdct_justin_no,mdct_seq_no,mdpr_seq_no) [pk]
+    (prof_part_id,prof_seq_no,mdct_justin_no,mdct_seq_no,mdpr_seq_no) [unique]
+    (mdct_justin_no,mdct_seq_no,mdpr_seq_no,prof_part_id,prof_seq_no,lesser_included_stat_id)
+    (mdct_justin_no,public_access_restricted_yn,prof_part_id,prof_seq_no,mdct_seq_no)
+    (lesser_included_stat_id)
+  }
+}
+//Ref: justin.justin_cd_matter_natures.mana_nature_cd < justin.justin_mdpr_counts.mana_nature_cd
+Ref: justin.justin_matter_doc_counts.(mdoc_justin_no,mdct_seq_no) < justin.justin_mdpr_counts.(mdct_justin_no,mdct_seq_no)
+Ref: justin.justin_participant_profiles.(part_id,prof_seq_no) < justin.justin_mdpr_counts.(prof_part_id,prof_seq_no)
+//Ref: justin.justin_statutes.stat_id < justin.justin_mdpr_counts.lesser_included_stat_id
+
