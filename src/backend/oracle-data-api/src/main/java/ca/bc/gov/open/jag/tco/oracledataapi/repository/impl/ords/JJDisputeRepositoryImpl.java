@@ -8,10 +8,9 @@ import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.InternalServerErrorException;
+import jakarta.ws.rs.InternalServerErrorException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.cfg.NotYetImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +80,7 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 
 	@Override
 	public void deleteAll() {
-		throw new NotYetImplementedException();
+		// no-op. Not needed for ORDS.
 	}
 
 	@Override

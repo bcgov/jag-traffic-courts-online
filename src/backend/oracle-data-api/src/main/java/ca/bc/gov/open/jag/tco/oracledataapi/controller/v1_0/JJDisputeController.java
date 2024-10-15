@@ -3,8 +3,8 @@ package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 import java.security.Principal;
 import java.util.List;
 
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

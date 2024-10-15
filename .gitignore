@@ -26,6 +26,12 @@ bin/
 .vs/
 .vscode/
 
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
 # Visual Studio 2017 auto generated files
 Generated\ Files/
 

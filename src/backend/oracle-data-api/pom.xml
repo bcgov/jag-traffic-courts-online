@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.4</version>
+		<version>3.3.4</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ca.bc.gov.open.jag</groupId>
@@ -15,7 +15,7 @@
 	<name>oracle-data-api</name>
 	<description>Project for dispute ticket api and ords interface</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 		<log4j2.version>2.17.1</log4j2.version>
 		<release.train.version>2021.0.4</release.train.version>
 		<org.mapstruct.version>1.6.2</org.mapstruct.version>
@@ -91,12 +91,6 @@
 		    <artifactId>lettuce-core</artifactId>
 		</dependency>
 
-		<!-- JPA dependencies -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-
 		<!-- Lombok code generator -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -120,8 +114,8 @@
 		<!-- Swagger UI -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>1.8.0</version>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.2.0</version>
 		</dependency>
 
 		<!-- CSV reader - TODO: remove once data is read from Oracle instead -->
@@ -210,14 +204,6 @@
 		</dependency>
 		-->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-aop</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aop</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjweaver</artifactId>
 		</dependency>
@@ -228,12 +214,17 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>test</scope>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.1</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<finalName>oracle-data-api</finalName>
@@ -321,6 +312,9 @@
 							<configOptions>
 								<useTags>true</useTags>
 								<useRuntimeException>true</useRuntimeException>
+								<validateSpec>false</validateSpec>
+								<useSpringBoot3>true</useSpringBoot3>
+								<useJakartaEe>true</useJakartaEe>
 							</configOptions>
 							<library>jersey2</library>
 							<apiPackage>${occam-package}.api</apiPackage>
@@ -343,6 +337,9 @@
 							<configOptions>
 								<useTags>true</useTags>
 								<useRuntimeException>true</useRuntimeException>
+								<validateSpec>false</validateSpec>
+								<useSpringBoot3>true</useSpringBoot3>
+								<useJakartaEe>true</useJakartaEe>
 							</configOptions>
 							<library>jersey2</library>
 							<apiPackage>${tco-package}.api</apiPackage>

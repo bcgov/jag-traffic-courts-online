@@ -8,8 +8,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-import javax.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolationException;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -130,7 +129,6 @@ public class JJDisputeService {
 	 * @param {@link JJDispute}
 	 * @return
 	 */
-	@Transactional
 	public JJDispute updateJJDispute(String ticketNumber, JJDispute jjDispute, Principal principal) {
 		JJDispute jjDisputeToUpdate = findByTicketNumberUnique(ticketNumber).orElseThrow();
 
@@ -226,7 +224,6 @@ public class JJDisputeService {
 	 * @param {@link JJDispute}
 	 * @return
 	 */
-	@Transactional
 	public JJDispute updateJJDisputeCascade(String ticketNumber, JJDispute jjDispute, Principal principal) {
 
 		// TCVP-1981 Update certain fields on the related OCCAM Dispute as well.
