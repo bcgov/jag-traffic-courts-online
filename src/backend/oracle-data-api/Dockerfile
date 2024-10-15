@@ -4,7 +4,7 @@ ARG RUNTIME_IMAGE=eclipse-temurin
 #############################################################################################
 ###              Stage where Docker is building spring boot app using maven               ###
 #############################################################################################
-FROM $BUILD_IMAGE:3.8.6-jdk-11 as build
+FROM $BUILD_IMAGE:3.8.6-eclipse-temurin-17 as build
 
 ARG SKIP_TESTS=true
 
@@ -18,16 +18,16 @@ RUN mvn verify clean --fail-never
 COPY . .
 RUN mvn -B clean package \
 		-Dtarget.fileName=oracle-data-api \
-        -Dmaven.test.skip=${SKIP_TESTS} 
+        -Dmaven.test.skip=${SKIP_TESTS}
 
 #############################################################################################
 
 #############################################################################################
 ### Stage where Docker is running a java process to run a service built in previous stage ###
 #############################################################################################
-FROM $RUNTIME_IMAGE:11
-ARG PROMETHEUS_AGENT_VERSION=0.18.0
-ARG OPENTELEMETRY_AGENT_VERSION=1.26.0
+FROM $RUNTIME_IMAGE:17-jre-jammy
+ARG PROMETHEUS_AGENT_VERSION=1.0.1
+ARG OPENTELEMETRY_AGENT_VERSION=2.8.0
 
 # Optional Git Version arguments
 ARG GIT_COMMIT_DATE=not-set
