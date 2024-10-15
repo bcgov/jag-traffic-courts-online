@@ -2,9 +2,6 @@ package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.EmailHistory;
@@ -13,8 +10,11 @@ import ca.bc.gov.open.jag.tco.oracledataapi.repository.EmailHistoryRepository;
 @Service
 public class EmailHistoryService {
 
-	@Autowired
 	EmailHistoryRepository emailHistoryRepository;
+
+	public EmailHistoryService(EmailHistoryRepository emailHistoryRepository) {
+		this.emailHistoryRepository = emailHistoryRepository;
+	}
 
 	/**
 	 * Retrieves {@link EmailHistory} records by Ticket Number, delegating to CrudRepository
@@ -31,7 +31,6 @@ public class EmailHistoryService {
 	 * @param {@link EmailHistory}
 	 * @return
 	 */
-	@Transactional
 	public Long insertEmailHistory(EmailHistory emailHistory) {
 		return emailHistoryRepository.save(emailHistory);
 	}

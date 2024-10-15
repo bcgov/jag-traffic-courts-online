@@ -45,8 +45,8 @@ public class RetryAspect {
 			catch (ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.handler.ApiException e) {
 				handleException(pjp, i, e);
 			} 			
-			// javax.ws.rs.InternalServerErrorException is thrown when there is a database error (no point retrying these)
-			//catch (javax.ws.rs.InternalServerErrorException e) {
+			// jakarta.ws.rs.InternalServerErrorException is thrown when there is a database error (no point retrying these)
+			//catch (jakarta.ws.rs.InternalServerErrorException e) {
 			//	handleException(pjp, i, e);
 			//}
 		}

@@ -1,16 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
 import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -26,39 +17,29 @@ import lombok.Setter;
  * Represents a note/comment on a JJ dispute that is for internal use of JJs.
  *
  */
-@Entity
-//defining class name as Table name
-@Table
 @Getter
 @Setter
 @NoArgsConstructor
 public class JJDisputeRemark extends Auditable<String> {
 
 	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
-	@Id
-	@GeneratedValue
-    private Long id;
+	private Long id;
 
 	/**
 	 * Name and surname of the JJ/Staff who adds the remark for the dispute.
 	 */
-	@Column
-    private String userFullName;
+	private String userFullName;
 
 	/**
 	 * JJ's remark notes that will be added to the dispute.
 	 */
 	@Size(max = 4000)
-	@Column(length = 4000)
 	@Schema(maxLength = 4000)
 	private String note;
 
-	@Column
 	private Date remarksMadeTs;
 
 	@JsonBackReference
-	@ManyToOne(targetEntity=JJDispute.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "jj_dispute_id")
 	@Schema(hidden = true)
 	private JJDispute jjDispute;
 

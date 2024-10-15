@@ -27,10 +27,12 @@ import net.logstash.logback.argument.StructuredArguments;
 @RequestMapping("/api/v1.0")
 public class EmailHistoryController {
 
-	@Autowired
 	private EmailHistoryService emailHistoryService;
-
 	private Logger logger = LoggerFactory.getLogger(EmailHistoryController.class);
+
+	public EmailHistoryController(EmailHistoryService emailHistoryService) {
+		this.emailHistoryService = emailHistoryService;
+	}
 
 	/**
 	 * GET endpoint that retrieves all the emails optionally filtered by ticketNumber from the database

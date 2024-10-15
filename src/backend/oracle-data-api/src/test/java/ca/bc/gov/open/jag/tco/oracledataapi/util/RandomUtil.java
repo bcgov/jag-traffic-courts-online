@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.OutgoingEmail;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -516,6 +517,25 @@ public class RandomUtil {
 		disputeUpdateRequest.setUpdateType(type);
 		disputeUpdateRequest.setUpdateJson("{\"email_address\":\"someone@somewhere.com\",\"disputant_given_name1\":\"fname1\",\"disputant_given_name2\":\"fname2\",\"disputant_given_name3\":\"fname3\",\"disputant_surname\":\"lname\",\"address_line1\":\"addr1\",\"address_line2\":\"addr2\",\"address_line3\":\"addr3\",\"address_city\":\"city\",\"address_province\":\"prov\",\"address_province_country_id\":1,\"address_province_seq_no\":1,\"address_country_id\":1,\"postal_code\":\"v9a1l8\",\"home_phone_number\":\"2505556666\"}");
 		return disputeUpdateRequest;
+	}
+
+	public static OutgoingEmail createOutgoingEmail() {
+		OutgoingEmail email = new OutgoingEmail();
+		email.setOutgoingEmailId("3583");
+		email.setDisputeId("3697");
+		email.setEmailSentDtm(new Date());
+		email.setEmailSubjectTxt("A");
+		email.setFromEmailAddress("DoNotReply.TCO@gov.bc.ca");
+		email.setToEmailAddress("colm.ohiggins@nttdata.com");
+		email.setSuccessfullySentYn("Y");
+		email.setPlainTextContent("A");
+		email.setEntUserId("OCCAMORDS");
+		email.setSuccessfullySentYn("Y");
+		email.setHtmlContent("A");
+		email.setPlainTextContent("A");
+		email.setEntDtm(new Date());
+		email.setUpdDtm(new Date());
+		return email;
 	}
 
 }
