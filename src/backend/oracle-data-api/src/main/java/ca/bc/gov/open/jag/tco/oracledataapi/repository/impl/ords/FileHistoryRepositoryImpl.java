@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.InternalServerErrorException;
+import jakarta.ws.rs.InternalServerErrorException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

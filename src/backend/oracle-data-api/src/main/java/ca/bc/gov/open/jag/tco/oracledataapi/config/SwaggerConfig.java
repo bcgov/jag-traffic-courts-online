@@ -1,6 +1,6 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.config;
 
-import org.springdoc.core.GroupedOpenApi;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,13 +29,13 @@ public class SwaggerConfig {
 				.info(new Info().title("Oracle Data Api").version("1.0.0"))
 
 				// Create an x-username header that can be set in Swagger via the "Authorize" button.
-                .components(new Components()
-                        .addSecuritySchemes("x-username", new SecurityScheme()
-                                .type(SecurityScheme.Type.APIKEY)
-                                .in(SecurityScheme.In.HEADER)
-                                .name("x-username")))
+				.components(new Components()
+						.addSecuritySchemes("x-username", new SecurityScheme()
+								.type(SecurityScheme.Type.APIKEY)
+								.in(SecurityScheme.In.HEADER)
+								.name("x-username")))
 
-                // AddSecurityItem section applies created scheme globally
-                .addSecurityItem(new SecurityRequirement().addList("x-username"));
+				// AddSecurityItem section applies created scheme globally
+				.addSecurityItem(new SecurityRequirement().addList("x-username"));
 	}
 }
