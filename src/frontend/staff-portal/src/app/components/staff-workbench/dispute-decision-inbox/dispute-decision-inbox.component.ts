@@ -40,6 +40,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     "violationDate",
     "occamDisputantName",
     "courthouseLocation",
+    "mostRecentCourtAppearance.room",
     "status",
     "vtcAssignedTo"
   ];
