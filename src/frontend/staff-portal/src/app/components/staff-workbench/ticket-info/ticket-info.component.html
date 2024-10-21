@@ -219,13 +219,22 @@
                           </mat-form-field>
                         </div>
                         <!-- Violation Ticket Count 1 Fine Amount -->
-                        <div class="col-lg-4">
+                        <div class="col-lg-3">
                           <mat-form-field class="w-100"
                             [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_1.ticketed_amount'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_1.ticketed_amount')}">
                             <mat-label>Fine amount ($)</mat-label>
                             <input matInput formControlName="ticketedAmount" [readonly]="isTicketInformationReadOnly" />
                             <mat-error *ngIf="!isTicketInformationReadOnly">{{ "error.required" | translate }}</mat-error>
                           </mat-form-field>
+                        </div>
+                        <div class="col-lg-1">
+                          <button type="button" class="count-delete"
+                            (click)="onDeleteViolationTicketCount(1)"
+                            *ngIf="lastUpdatedDispute.status === DispStatus.New && 
+                            (this.form.get('violationTicket').get('violationTicketCount1').get('fullDescription').value ||
+                            this.form.get('violationTicket').get('violationTicketCount1').get('ticketedAmount').value > 0)">
+                            <mat-icon>delete</mat-icon>
+                          </button>
                         </div>
                       </div>
                     </section>
@@ -259,13 +268,22 @@
                           </mat-form-field>
                         </div>
                         <!-- Violation Ticket Count 2 Fine Amount -->
-                        <div class="col-lg-4">
+                        <div class="col-lg-3">
                           <mat-form-field class="w-100"
                             [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_2.ticketed_amount'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_2.ticketed_amount')}">
                             <mat-label>Fine amount ($)</mat-label>
                             <input matInput formControlName="ticketedAmount" [readonly]="isTicketInformationReadOnly" />
                             <mat-error *ngIf="!isTicketInformationReadOnly">{{ "error.required" | translate }}</mat-error>
                           </mat-form-field>
+                        </div>
+                        <div class="col-lg-1">
+                          <button type="button" class="count-delete"
+                            (click)="onDeleteViolationTicketCount(2)"
+                            *ngIf="lastUpdatedDispute.status === DispStatus.New && 
+                            (this.form.get('violationTicket').get('violationTicketCount2').get('fullDescription').value ||
+                            this.form.get('violationTicket').get('violationTicketCount2').get('ticketedAmount').value > 0)">
+                            <mat-icon>delete</mat-icon>
+                          </button>
                         </div>
                       </div>
                     </section>
@@ -299,13 +317,22 @@
                           </mat-form-field>
                         </div>
                         <!-- Violation Ticket Count 3 Ticketed Amount -->
-                        <div class="col-lg-4">
+                        <div class="col-lg-3">
                           <mat-form-field class="w-100"
                             [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_3.ticketed_amount'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_3.ticketed_amount')}">
                             <mat-label>Fine amount ($)</mat-label>
                             <input matInput formControlName="ticketedAmount" [readonly]="isTicketInformationReadOnly" />
                             <mat-error *ngIf="!isTicketInformationReadOnly">{{ "error.required" | translate }}</mat-error>
                           </mat-form-field>
+                        </div>
+                        <div class="col-lg-1">
+                          <button type="button" class="count-delete" 
+                            (click)="onDeleteViolationTicketCount(3)"
+                            *ngIf="lastUpdatedDispute.status === DispStatus.New && 
+                            (this.form.get('violationTicket').get('violationTicketCount3').get('fullDescription').value ||
+                            this.form.get('violationTicket').get('violationTicketCount3').get('ticketedAmount').value > 0)">
+                            <mat-icon>delete</mat-icon>
+                          </button>
                         </div>
                       </div>
                     </section>
@@ -343,6 +370,10 @@
                   <button class="large" mat-flat-button type="submit" color="primary"
                     [disabled]="!(form.get('violationTicket').touched) || form.get('violationTicket').invalid || !isStatuteValid(1) || !isStatuteValid(2) || !isStatuteValid(3)">
                     Save
+                  </button>
+                  <button class="large" mat-flat-button type="submit" color="primary" (click)="onCancelChanges()"
+                    *ngIf="isViolationTicketCountDeleted" >
+                    Cancel Changes
                   </button>
                 </div>
               </form>

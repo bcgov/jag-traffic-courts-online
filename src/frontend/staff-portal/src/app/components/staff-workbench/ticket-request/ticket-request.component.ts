@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DisputeCount, DisputeCountPleaCode, DisputeRequestCourtAppearanceYn, DisputeCountRequestReduction, DisputeCountRequestTimeToPay, DisputeRepresentedByLawyer, Language } from 'app/api';
 import { Dispute } from 'app/services/dispute.service';
@@ -10,7 +10,7 @@ import { ViolationTicketService } from 'app/services/violation-ticket.service';
   templateUrl: './ticket-request.component.html',
   styleUrls: ['./ticket-request.component.scss']
 })
-export class TicketRequestComponent implements OnInit {
+export class TicketRequestComponent implements OnInit, OnChanges {
   @Input() disputeInfo: Dispute;
   public countsActions: any;
   public collapseObj: any = {
@@ -92,6 +92,13 @@ export class TicketRequestComponent implements OnInit {
     this.setDisputeCount(3);
 
     this.countsActions = this.getCountsActions(this.disputeInfo.disputeCounts);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.disputeInfo.currentValue && changes.disputeInfo.previousValue) {
+      this.disputeCounts.clear();
+      this.ngOnInit();
+    }
   }
 
   public handleCollapse(name: string) {
