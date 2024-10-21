@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig } from '@angular/material/legacy-dialog';
 import { ActivatedRoute } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
@@ -53,6 +53,7 @@ export class TicketInfoComponent implements OnInit {
   public ContactType = DisputeContactTypeCd;
   public DispStatus = DisputeStatus;
   public isTicketInformationReadOnly: boolean = false;
+  public isViolationTicketCountDeleted: boolean = false;
 
   /**
    * @description
@@ -75,7 +76,7 @@ export class TicketInfoComponent implements OnInit {
     public violationTicketService: ViolationTicketService,
     private disputeService: DisputeService,
     public config: ConfigService,
-    public lookupsService: LookupsService,
+    public lookupsService: LookupsService
   ) {
     const today = new Date();
 
@@ -256,7 +257,9 @@ export class TicketInfoComponent implements OnInit {
   // is the statute valid? on the form
   public isStatuteValid(countNo: number): boolean {
     let countForm = this.form.get('violationTicket').get('violationTicketCount' + countNo.toString());
-    if (countForm.get('fullDescription').value && !countForm.get('section').value && countForm.get('fullDescription').value !== " ") return false;
+    if (countForm.get('fullDescription').value && !countForm.get('section').value && 
+      countForm.get('fullDescription').value !== " ") 
+      return false;
     return true;
   }
 
@@ -563,7 +566,7 @@ export class TicketInfoComponent implements OnInit {
               'TicketInfoComponent::putDispute response',
               response
             );
-
+            this.isViolationTicketCountDeleted = false;
             if (!isSubmittingNoticeOfDispute) {
               // markAsUntouched form group
               this.form.get('violationTicket').markAsUntouched();
@@ -773,7 +776,7 @@ export class TicketInfoComponent implements OnInit {
         let courtFound = this.lookupsService.courthouseAgencies.filter(x => x.name === this.initialDisputeValues.violationTicket.courtLocation);
         if (courtFound?.length > 0) this.initialDisputeValues.courtAgenId = courtFound[0].id;
 
-        this.lastUpdatedDispute = this.initialDisputeValues;
+        this.lastUpdatedDispute = JSON.parse(JSON.stringify(this.initialDisputeValues));
         this.form.patchValue(this.initialDisputeValues);
         this.form.get('driversLicenceProvinceSeqNo').setValue(this.initialDisputeValues.driversLicenceIssuedProvinceSeqNo);
         this.form.get('driversLicenceCountryId').setValue(this.initialDisputeValues.driversLicenceIssuedCountryId);
@@ -804,31 +807,7 @@ export class TicketInfoComponent implements OnInit {
         this.flagsForm.get('disputantOcrIssues').setValue(response.disputantOcrIssues);
 
         // set counts 1,2,3 of violation ticket
-        this.initialDisputeValues.violationTicket.violationTicketCounts.forEach(violationTicketCount => {
-          let countForm = this.form.get('violationTicket').get('violationTicketCount' + violationTicketCount.countNo.toString());
-          countForm.get('ticketedAmount').setValue(violationTicketCount.ticketedAmount);
-          let fullDesc = this.getCountLegalParagraphing(violationTicketCount.countNo, this.initialDisputeValues.violationTicket);
-          countForm
-            .get('fullDescription')
-            .setValue(fullDesc);
-          countForm.get('description').setValue(violationTicketCount.description);
-
-          // lookup legal statute
-          let actCode = violationTicketCount.actOrRegulationNameCode;
-          if (!actCode) {
-            actCode = violationTicketCount.isAct === ViolationTicketCountIsAct.Y ? "MVA" : "MVR";
-          }
-          const sectionCode = this.getSectionText(violationTicketCount);
-          let foundStatute = this.lookupsService.statutes?.find(x => StringUtils.nullSafeCompare(x.actCode, actCode) && StringUtils.nullSafeCompare(x.code, sectionCode));
-          if (foundStatute) {
-            countForm.get('actOrRegulationNameCode').setValue(foundStatute.actCode);
-            countForm.get('section').setValue(foundStatute.sectionText);
-            countForm.get('subsection').setValue(foundStatute.subsectionText);
-            countForm.get('paragraph').setValue(foundStatute.paragraphText);
-            countForm.get('subparagraph').setValue(foundStatute.subparagraphText);
-          }
-          countForm.updateValueAndValidity();
-        });
+        this.assignViolationTicketCountForm();
 
         this.violationTicketService.getAllOCRMessages(this.lastUpdatedDispute.violationTicket.ocrViolationTicket);
 
@@ -877,6 +856,35 @@ export class TicketInfoComponent implements OnInit {
       });
   }
 
+  assignViolationTicketCountForm(){
+    this.initialDisputeValues.violationTicket.violationTicketCounts.forEach(violationTicketCount => {
+      let countForm = this.form.get('violationTicket').get('violationTicketCount' + violationTicketCount.countNo.toString());
+      countForm.markAsUntouched();
+      countForm.get('ticketedAmount').setValue(violationTicketCount.ticketedAmount);
+      let fullDesc = this.getCountLegalParagraphing(violationTicketCount.countNo, this.initialDisputeValues.violationTicket);
+      countForm
+        .get('fullDescription')
+        .setValue(fullDesc);
+      countForm.get('description').setValue(violationTicketCount.description);
+
+      // lookup legal statute
+      let actCode = violationTicketCount.actOrRegulationNameCode;
+      if (!actCode) {
+        actCode = violationTicketCount.isAct === ViolationTicketCountIsAct.Y ? "MVA" : "MVR";
+      }
+      const sectionCode = this.getSectionText(violationTicketCount);
+      let foundStatute = this.lookupsService.statutes?.find(x => StringUtils.nullSafeCompare(x.actCode, actCode) && StringUtils.nullSafeCompare(x.code, sectionCode));
+      if (foundStatute) {
+        countForm.get('actOrRegulationNameCode').setValue(foundStatute.actCode);
+        countForm.get('section').setValue(foundStatute.sectionText);
+        countForm.get('subsection').setValue(foundStatute.subsectionText);
+        countForm.get('paragraph').setValue(foundStatute.paragraphText);
+        countForm.get('subparagraph').setValue(foundStatute.subparagraphText);
+      }
+      countForm.updateValueAndValidity();
+    });
+  }
+
   /**
    * Returns the full section text from a ViolationTicketCount, ie 44(3)(a)(iii)
    * @param vtc 
@@ -905,5 +913,55 @@ export class TicketInfoComponent implements OnInit {
         alert("File contents not found");
       }
     });
+  }
+
+  onDeleteViolationTicketCount(countNumber: number) {
+    let violationTicketCounts = this.lastUpdatedDispute.violationTicket.violationTicketCounts;
+    let count = violationTicketCounts.find(x => x.countNo == countNumber);
+    const data: DialogOptions = {
+      titleKey: "Delete Violation Ticket Count?",
+      messageKey: "Are you sure you want to delete this violation ticket count?",
+      actionTextKey: "Delete",
+      actionType: "warn",
+      cancelTextKey: "Cancel",
+      icon: "delete"
+    };
+    this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
+      .subscribe((action: any) => {
+        if (action) {
+          var countForm = this.form.get('violationTicket').get('violationTicketCount' + countNumber.toString());
+          countForm.reset();
+          countForm.get('ticketedAmount').reset();
+          countForm.get('fullDescription').reset();
+          countForm.get('description').reset();
+          countForm.get('actOrRegulationNameCode').reset();
+          countForm.get('section').reset();
+          countForm.get('subsection').reset();
+          countForm.get('paragraph').reset();
+          countForm.get('subparagraph').reset();
+          countForm.updateValueAndValidity();
+          countForm.markAsTouched();
+          count.ticketedAmount = null;
+          count.description = null;
+          count.actOrRegulationNameCode = null;
+          count.section = null;
+          count.subsection = null;
+          count.paragraph = null;
+          count.subparagraph = null;
+          this.lastUpdatedDispute.violationTicket.violationTicketCounts = violationTicketCounts.filter(x => x.countNo != countNumber);
+          this.lastUpdatedDispute.violationTicket.violationTicketCounts.splice(countNumber - 1, 0, count);
+          this.isViolationTicketCountDeleted = true;
+          this.lastUpdatedDispute = { ...this.lastUpdatedDispute };
+        }
+      });
+  }
+
+  onCancelChanges() {
+    this.assignViolationTicketCountForm();
+    this.lastUpdatedDispute.violationTicket.violationTicketCounts = 
+      JSON.parse(JSON.stringify(this.initialDisputeValues.violationTicket.violationTicketCounts));
+    this.lastUpdatedDispute = { ...this.lastUpdatedDispute };
+    this.validateClicked = false;
+    this.isViolationTicketCountDeleted = false;
   }
 }

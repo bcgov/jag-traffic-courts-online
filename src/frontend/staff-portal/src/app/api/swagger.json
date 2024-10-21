@@ -1680,6 +1680,34 @@
         }
       }
     },
+    "/api/dispute/violationticketcount/{violationTicketCountId}": {
+      "delete": {
+        "tags": [
+          "Dispute"
+        ],
+        "summary": "Deletes a violation ticket count asynchronously.",
+        "parameters": [
+          {
+            "name": "violationTicketCountId",
+            "in": "path",
+            "description": "The ID of the violation ticket count to delete.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
     "/api/disputelock": {
       "get": {
         "tags": [
