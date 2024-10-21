@@ -424,6 +424,31 @@ export class DisputeService implements IDisputeService {
       );
   }
 
+  /**
+  * delete the violation ticket count
+  *
+  * @param violationTicketCountId
+  */
+  public deleteViolationTicketCount(violationTicketCountId: number): Observable<string> {
+    return this.disputeApiService.apiDisputeViolationticketcountViolationTicketCountIdDelete(violationTicketCountId)
+      .pipe(
+        map((response: any) => {
+          this.logger.info('DisputeService::deleteViolationTicketCount', response)
+          return response ? response : null
+        }),
+        catchError((error: any) => {
+          var errorMsg = error.error.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'DisputeService::deleteViolationTicketCount error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
+
   public splitDisputantGivenNames(Dispute: Dispute): Dispute {
     let dispute = Dispute;
 

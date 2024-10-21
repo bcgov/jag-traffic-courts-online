@@ -111,6 +111,17 @@ div.container {
         }
       }
     }
+
+    .count-delete {
+      width:50px; 
+      border:none; 
+      background-color:white;
+      vertical-align: top;
+
+      mat-icon {
+          color: red;
+      }
+    }
   }
 
   .systemFlagList {
