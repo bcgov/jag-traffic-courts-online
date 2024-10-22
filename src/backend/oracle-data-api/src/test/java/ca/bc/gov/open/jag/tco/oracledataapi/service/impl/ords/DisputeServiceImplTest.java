@@ -1,517 +1,519 @@
-//package ca.bc.gov.open.jag.tco.oracledataapi.service.impl.ords;
-//
-//import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertThrows;
-//import static org.mockito.ArgumentMatchers.any;
-//
-//import java.util.ArrayList;
-//import java.util.Date;
-//import java.util.List;
-//import java.util.NoSuchElementException;
-//
-//import jakarta.ws.rs.InternalServerErrorException;
-//
-//import org.apache.commons.lang3.time.DateFormatUtils;
-//import org.apache.commons.lang3.time.DateUtils;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.mockito.Mock;
-//import org.mockito.Mockito;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
-//import ca.bc.gov.open.jag.tco.oracledataapi.mapper.DisputeMapper;
-//import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
-//import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
-//import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
-//import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
-//import ca.bc.gov.open.jag.tco.oracledataapi.model.EmptyObject;
-//import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.ViolationTicketApi;
-//import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
-//import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.DisputeListItem;
-//import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.DisputeListResponse;
-//import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ResponseResult;
-//import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicket;
-//import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicketListResponse;
-//import ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.ords.DisputeRepositoryImpl;
-//import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
-//
-//
-//class DisputeServiceImplTest extends BaseTestSuite {
-//
-//	@Autowired
-//	DisputeMapper disputeMapper;
-//
-//	@Mock
-//	private ViolationTicketApi violationTicketApi;
-//	private DisputeRepositoryImpl repository;
-//
-//	@Override
-//	@BeforeEach
-//	public void beforeEach() {
-//		repository = new DisputeRepositoryImpl(violationTicketApi, disputeMapper);
-//	}
-//
-//	@Test
-//	public void testAssignExpect200() throws Exception {
-//		Long disputeId = Long.valueOf(1);
-//		String userName = "testUser";
-//		ResponseResult response = new ResponseResult();
-//		response.setStatus("1");
-//
-//		Mockito.when(violationTicketApi.assignViolationTicketPost(disputeId, userName, EmptyObject.instance)).thenReturn(response);
-//
-//		assertDoesNotThrow(() -> {
-//			repository.assignDisputeToUser(disputeId, userName);
-//		});
-//	}
-//
-//	@Test
-//	public void testAssignExpect500_ApiException() throws Exception {
-//		Long disputeId = Long.valueOf(1);
-//		String userName = "testUser";
-//
-//		Mockito.when(violationTicketApi.assignViolationTicketPost(disputeId, userName, EmptyObject.instance)).thenThrow(ApiException.class);
-//
-//		assertThrows(ApiException.class, () -> {
-//			repository.assignDisputeToUser(disputeId, userName);
-//		});
-//	}
-//
-//	@Test
-//	public void testAssignExpect500_noErrorMsg() throws Exception {
-//		Long disputeId = Long.valueOf(1);
-//		String userName = "testUser";
-//		ResponseResult response = new ResponseResult();
-//		response.setStatus("0"); // 0 status (meaning failure)
-//
-//		Mockito.when(violationTicketApi.assignViolationTicketPost(disputeId, userName, EmptyObject.instance)).thenReturn(response);
-//
-//		assertThrows(InternalServerErrorException.class, () -> {
-//			repository.assignDisputeToUser(disputeId, userName);
-//		});
-//	}
-//
-//	@Test
-//	public void testAssignExpect500_nullResponse() throws Exception {
-//		Long disputeId = Long.valueOf(1);
-//		String userName = "testUser";
-//
-//		Mockito.when(violationTicketApi.assignViolationTicketPost(disputeId, userName, EmptyObject.instance)).thenReturn(null);
-//
-//		assertThrows(InternalServerErrorException.class, () -> {
-//			repository.assignDisputeToUser(disputeId, userName);
-//		});
-//	}
-//
-//	@Test
-//	public void testAssignExpect500_withErrorMsg() throws Exception {
-//		Long disputeId = Long.valueOf(1);
-//		String userName = "testUser";
-//		ResponseResult response = new ResponseResult();
-//		response.setStatus("0"); // 0 status (meaning failure)
-//		response.setException("some failure cause");
-//
-//		Mockito.when(violationTicketApi.assignViolationTicketPost(disputeId, userName, EmptyObject.instance)).thenReturn(response);
-//
-//		assertThrows(InternalServerErrorException.class, () -> {
-//			repository.assignDisputeToUser(disputeId, userName);
-//		});
-//	}
-//
-//	@Test
-//	public void testDeleteExpect200() throws ApiException {
-//		Long disputeId = Long.valueOf(1);
-//		ResponseResult response = new ResponseResult();
-//		response.setStatus("1");
-//
-//		Mockito.when(violationTicketApi.violationTicketDelete(disputeId, EmptyObject.instance)).thenReturn(response);
-//
-//		assertDoesNotThrow(() -> {
-//			repository.deleteById(disputeId);
-//		});
-//	}
-//
-//	@Test
-//	public void testDeleteExpect400() throws ApiException {
-//		Long disputeId = null;
-//
-//		assertThrows(IllegalArgumentException.class, () -> {
-//			repository.deleteById(disputeId);
-//		});
-//	}
-//
-//	@Test
-//	public void testDeleteExpect404() throws ApiException {
-//		Long disputeId = Long.valueOf(1);
-//		ResponseResult response = new ResponseResult();
-//		response.setStatus("0");
-//		response.setException("ORA-01403: no data found");
-//
-//		Mockito.when(violationTicketApi.violationTicketDelete(disputeId, EmptyObject.instance)).thenReturn(response);
-//
-//		assertThrows(NoSuchElementException.class, () -> {
-//			repository.deleteById(disputeId);
-//		});
-//	}
-//
-//	@Test
-//	public void testDeleteExpect500_ApiException() throws Exception {
-//		Long disputeId = Long.valueOf(1);
-//
-//		Mockito.when(violationTicketApi.violationTicketDelete(disputeId, EmptyObject.instance)).thenThrow(ApiException.class);
-//
-//		assertThrows(ApiException.class, () -> {
-//			repository.deleteById(disputeId);
-//		});
-//	}
-//
-//	@Test
-//	public void testDeleteExpect500_noErrorMessage() throws ApiException {
-//		Long disputeId = Long.valueOf(1);
-//		ResponseResult response = new ResponseResult();
-//		response.setStatus("0"); // 0 status (meaning failure) and no message
-//
-//		Mockito.when(violationTicketApi.violationTicketDelete(disputeId, EmptyObject.instance)).thenReturn(response);
-//
-//		assertThrows(InternalServerErrorException.class, () -> {
-//			repository.deleteById(disputeId);
-//		});
-//	}
-//
-//	@Test
-//	public void testDeleteExpect500_nullReponse() throws ApiException {
-//		Long disputeId = Long.valueOf(1);
-//
-//		Mockito.when(violationTicketApi.violationTicketDelete(disputeId, EmptyObject.instance)).thenReturn(null);
-//
-//		assertThrows(InternalServerErrorException.class, () -> {
-//			repository.deleteById(disputeId);
-//		});
-//	}
-//
-//	@Test
-//	public void testDeleteExpect500_withErrorMessage() throws ApiException {
-//		Long disputeId = Long.valueOf(1);
-//		ResponseResult response = new ResponseResult();
-//		response.setStatus("0"); // 0 status (meaning failure) and no message
-//		response.setException("some failure cause");
-//
-//		Mockito.when(violationTicketApi.violationTicketDelete(disputeId, EmptyObject.instance)).thenReturn(response);
-//
-//		assertThrows(InternalServerErrorException.class, () -> {
-//			repository.deleteById(disputeId);
-//		});
-//	}
-//
-//	@Test
-//	public void testSetStatusExpect200() throws Exception {
-//		Long disputeId = Long.valueOf(1);
-//		DisputeStatus disputeStatus = DisputeStatus.NEW;
-//		String rejectedReason = "just because";
-//		ResponseResult response = new ResponseResult();
-//		response.setStatus("1");
-//
-//		Mockito.when(violationTicketApi.violationTicketStatusPost(EmptyObject.instance, disputeId, disputeStatus.toShortName(), rejectedReason)).thenReturn(response);
-//
-//		assertDoesNotThrow(() -> {
-//			repository.setStatus(disputeId, disputeStatus, rejectedReason);
-//		});
-//	}
-//
-//	@Test
-//	public void testSetStatusExpect500_ApiException() throws Exception {
-//		Long disputeId = Long.valueOf(1);
-//		DisputeStatus disputeStatus = DisputeStatus.NEW;
-//		String rejectedReason = "just because";
-//
-//		Mockito.when(violationTicketApi.violationTicketStatusPost(EmptyObject.instance, disputeId, disputeStatus.toShortName(), rejectedReason)).thenThrow(ApiException.class);
-//
-//		assertThrows(ApiException.class, () -> {
-//			repository.setStatus(disputeId, disputeStatus, rejectedReason);
-//		});
-//	}
-//
-//	@Test
-//	public void testSetStatusExpect500_noErrorMsg() throws Exception {
-//		Long disputeId = Long.valueOf(1);
-//		DisputeStatus disputeStatus = DisputeStatus.NEW;
-//		String rejectedReason = "just because";
-//		ResponseResult response = new ResponseResult();
-//		response.setStatus("0"); // 0 status (meaning failure) and no message
-//
-//		Mockito.when(violationTicketApi.violationTicketStatusPost(EmptyObject.instance, disputeId, disputeStatus.toShortName(), rejectedReason)).thenReturn(response);
-//
-//		assertThrows(InternalServerErrorException.class, () -> {
-//			repository.setStatus(disputeId, disputeStatus, rejectedReason);
-//		});
-//	}
-//
-//	@Test
-//	public void testSetStatusExpect500_nullReponse() throws Exception {
-//		Long disputeId = Long.valueOf(1);
-//		DisputeStatus disputeStatus = DisputeStatus.NEW;
-//		String rejectedReason = "just because";
-//
-//		Mockito.when(violationTicketApi.violationTicketStatusPost(EmptyObject.instance, disputeId, disputeStatus.toShortName(), rejectedReason)).thenReturn(null);
-//
-//		assertThrows(InternalServerErrorException.class, () -> {
-//			repository.setStatus(disputeId, disputeStatus, rejectedReason);
-//		});
-//	}
-//
-//	@Test
-//	public void testSetStatusExpect500_withErrorMsg() throws Exception {
-//		Long disputeId = Long.valueOf(1);
-//		DisputeStatus disputeStatus = DisputeStatus.NEW;
-//		String rejectedReason = "just because";
-//		ResponseResult response = new ResponseResult();
-//		response.setStatus("0"); // 0 status (meaning failure)
-//		response.setException("some failure cause");
-//
-//		Mockito.when(violationTicketApi.violationTicketStatusPost(EmptyObject.instance, disputeId, disputeStatus.toShortName(), rejectedReason)).thenReturn(response);
-//
-//		assertThrows(InternalServerErrorException.class, () -> {
-//			repository.setStatus(disputeId, disputeStatus, rejectedReason);
-//		});
-//	}
-//
-//	@Test
-//	public void testUnassignExpect200() throws Exception {
-//		Date now = new Date();
-//		String assignedBeforeTs = dateToString(now, DateUtil.DATE_TIME_FORMAT);
-//		ResponseResult response = new ResponseResult();
-//		response.setStatus("1");
-//
-//		Mockito.when(violationTicketApi.unassignViolationTicketPost(EmptyObject.instance, assignedBeforeTs)).thenReturn(response);
-//
-//		assertDoesNotThrow(() -> {
-//			repository.unassignDisputes(now);
-//		});
-//	}
-//
-//	@Test
-//	public void testUnassignExpect500_ApiException() throws Exception {
-//		Date now = new Date();
-//		String assignedBeforeTs = dateToString(now, DateUtil.DATE_TIME_FORMAT);
-//
-//		Mockito.when(violationTicketApi.unassignViolationTicketPost(EmptyObject.instance, assignedBeforeTs)).thenThrow(ApiException.class);
-//
-//		assertThrows(ApiException.class, () -> {
-//			repository.unassignDisputes(now);
-//		});
-//	}
-//
-//	@Test
-//	public void testUnassignExpect500_noErrorMsg() throws Exception {
-//		Date now = new Date();
-//		String assignedBeforeTs = dateToString(now, DateUtil.DATE_TIME_FORMAT);
-//		ResponseResult response = new ResponseResult();
-//		response.setStatus("0"); // 0 status (meaning failure) and no message
-//
-//		Mockito.when(violationTicketApi.unassignViolationTicketPost(EmptyObject.instance, assignedBeforeTs)).thenReturn(response);
-//
-//		assertThrows(InternalServerErrorException.class, () -> {
-//			repository.unassignDisputes(now);
-//		});
-//	}
-//
-//	@Test
-//	public void testUnassignExpect500_nullReponse() throws Exception {
-//		Date now = new Date();
-//		String assignedBeforeTs = dateToString(now, DateUtil.DATE_TIME_FORMAT);
-//
-//		Mockito.when(violationTicketApi.unassignViolationTicketPost(EmptyObject.instance, assignedBeforeTs)).thenReturn(null);
-//
-//		assertThrows(InternalServerErrorException.class, () -> {
-//			repository.unassignDisputes(now);
-//		});
-//	}
-//
-//	@Test
-//	public void testUnassignExpect500_withErrorMsg() throws Exception {
-//		Date now = new Date();
-//		String assignedBeforeTs = dateToString(now, DateUtil.DATE_TIME_FORMAT);
-//		ResponseResult response = new ResponseResult();
-//		response.setStatus("0"); // 0 status (meaning failure)
-//		response.setException("some failure cause");
-//
-//		Mockito.when(violationTicketApi.unassignViolationTicketPost(EmptyObject.instance, assignedBeforeTs)).thenReturn(response);
-//
-//		assertThrows(InternalServerErrorException.class, () -> {
-//			repository.unassignDisputes(now);
-//		});
-//	}
-//
-//	@Test
-//	public void testFindByTicketNumberAndTime200() throws Exception {
-//		Long disputeId = Long.valueOf(1001L);
-//		DisputeStatus disputeStatus = DisputeStatus.PROCESSING;
-//		String ticketNumber = "AX00000000";
-//		String issuedDateStr = "13:54";
-//		Date issuedDate = DateUtils.parseDate(issuedDateStr, DateUtil.TIME_FORMAT);
-//
-//		ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Dispute dispute = new ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Dispute();
-//		dispute.setDisputeId(disputeId.toString());
-//		dispute.setDisputeStatusTypeCd(disputeStatus.toShortName());
-//
-//		ViolationTicket violationTicket = new ViolationTicket();
-//		violationTicket.setDispute(dispute);
-//		violationTicket.setTicketNumberTxt(ticketNumber);
-//		violationTicket.setIssuedDt(new java.util.Date(issuedDate.getTime()));
-//
-//		ViolationTicketListResponse validResponse = new ViolationTicketListResponse();
-//		validResponse.setViolationTickets(new ArrayList<ViolationTicket>());
-//		validResponse.getViolationTickets().add(violationTicket);
-//
-//		ViolationTicketListResponse emptyResponse = new ViolationTicketListResponse();
-//		emptyResponse.setViolationTickets(new ArrayList<ViolationTicket>());
-//
-//		Mockito.when(violationTicketApi.violationTicketListGet(null, null, ticketNumber, null, issuedDateStr)).thenReturn(validResponse);
-//
-//		List<DisputeResult> disputeResults = repository.findByTicketNumberAndTime(ticketNumber, issuedDate);
-//		assertEquals(1, disputeResults.size());
-//		assertEquals(disputeId, disputeResults.get(0).getDisputeId());
-//		assertEquals(disputeStatus, disputeResults.get(0).getDisputeStatus());
-//
-//		disputeResults = repository.findByTicketNumberAndTime("AX", issuedDate);
-//		assertEquals(0, disputeResults.size());
-//
-//		disputeResults = repository.findByTicketNumberAndTime(ticketNumber, DateUtils.parseDate("13:55", DateUtil.TIME_FORMAT));
-//		assertEquals(0, disputeResults.size());
-//	}
-//
-//	@Test
-//	public void testFindByTicketNumberAndTime500() throws Exception {
-//		Mockito.when(violationTicketApi.violationTicketListGet(any(), any(), any(), any(), any())).thenThrow(ApiException.class);
-//
-//		assertThrows(ApiException.class, () -> {
-//			repository.findByTicketNumberAndTime("AX00000000", new Date());
-//		});
-//	}
-//
-//	@Test
-//	public void testGetAllDisputesExpect200() throws Exception {
-//		Date now = new Date();
-//		String newerThanDate = dateToString(now, DateUtil.DATE_FORMAT);
-//		DisputeStatus excludedStatus = DisputeStatus.CANCELLED;
-//		String noticeOfDisputeGuid = java.util.UUID.randomUUID().toString();
-//		DisputeListResponse response = new DisputeListResponse();
-//		List<DisputeListItem> disputeListItems = new ArrayList<DisputeListItem>();
-//		response.setDisputeListItems(disputeListItems);
-//
-//		Mockito.when(violationTicketApi.disputeListGet(newerThanDate, excludedStatus.toShortName(), null, noticeOfDisputeGuid, null)).thenReturn(response);
-//
-//		assertDoesNotThrow(() -> {
-//			repository.findByStatusNotAndCreatedTsAfterAndNoticeOfDisputeGuid(excludedStatus, now, noticeOfDisputeGuid);
-//		});
-//	}
-//
-//	@Test
-//	public void testGetAllDisputesExpect500_InternalServerError() throws Exception {
-//		Date now = new Date();
-//		String newerThanDate = dateToString(now, DateUtil.DATE_FORMAT);
-//		DisputeStatus excludedStatus = DisputeStatus.CANCELLED;
-//		String noticeOfDisputeGuid = java.util.UUID.randomUUID().toString();
-//		DisputeListResponse response = new DisputeListResponse();
-//		List<DisputeListItem> disputeListItems = new ArrayList<DisputeListItem>();
-//		response.setDisputeListItems(disputeListItems);
-//
-//		Mockito.when(violationTicketApi.disputeListGet(newerThanDate, excludedStatus.toShortName(), null, noticeOfDisputeGuid, null)).thenThrow(ApiException.class);
-//
-//		assertThrows(InternalServerErrorException.class, () -> {
-//			repository.findByStatusNotAndCreatedTsAfterAndNoticeOfDisputeGuid(excludedStatus, now, noticeOfDisputeGuid);
-//		});
-//	}
-//
-//	@Test
-//	public void testUpdateDisputeExpect200() throws Exception {
-//		Long disputeId = Long.valueOf(1);
-//		ResponseResult response = new ResponseResult();
-//		response.setStatus("1");
-//
-//		Dispute disputeToUpdate = new Dispute();
-//		disputeToUpdate.setDisputeId(disputeId);
-//		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
-//		disputeToUpdate.setContactTypeCd(ContactType.INDIVIDUAL);
-//
-//		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenReturn(response);
-//
-//		assertDoesNotThrow(() -> {
-//			repository.update(disputeToUpdate);
-//		});
-//	}
-//
-//	@Test
-//	public void testUpdateDisputeExpect500_InternalServerError() throws Exception {
-//		Long disputeId = Long.valueOf(1);
-//
-//		Dispute disputeToUpdate = new Dispute();
-//		disputeToUpdate.setDisputeId(disputeId);
-//		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
-//		disputeToUpdate.setContactTypeCd(ContactType.INDIVIDUAL);
-//
-//		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenThrow(ApiException.class);
-//
-//		assertThrows(InternalServerErrorException.class, () -> {
-//			repository.update(disputeToUpdate);
-//		});
-//	}
-//
-//	@Test
-//	public void testUpdateDisputeExpect500_noErrorMsg() throws Exception {
-//		Long disputeId = Long.valueOf(1);
-//		ResponseResult response = new ResponseResult();
-//		response.setStatus("0"); // 0 status (meaning failure) and no message
-//
-//		Dispute disputeToUpdate = new Dispute();
-//		disputeToUpdate.setDisputeId(disputeId);
-//		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
-//		disputeToUpdate.setContactTypeCd(ContactType.INDIVIDUAL);
-//
-//		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenReturn(response);
-//
-//		assertThrows(InternalServerErrorException.class, () -> {
-//			repository.update(disputeToUpdate);
-//		});
-//	}
-//
-//	@Test
-//	public void testUpdateDisputeExpect500_nullResponse() throws Exception {
-//		Long disputeId = Long.valueOf(1);
-//		Dispute disputeToUpdate = new Dispute();
-//		disputeToUpdate.setDisputeId(disputeId);
-//		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
-//		disputeToUpdate.setContactTypeCd(ContactType.INDIVIDUAL);
-//
-//		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenReturn(null);
-//
-//		assertThrows(InternalServerErrorException.class, () -> {
-//			repository.update(disputeToUpdate);
-//		});
-//	}
-//
-//	@Test
-//	public void testUpdateDisputeExpect500_withErrorMsg() throws Exception {
-//		Long disputeId = Long.valueOf(1);
-//		ResponseResult response = new ResponseResult();
-//		response.setStatus("0"); // 0 status (meaning failure)
-//		response.setException("some failure cause");
-//
-//		Dispute disputeToUpdate = new Dispute();
-//		disputeToUpdate.setDisputeId(disputeId);
-//		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
-//		disputeToUpdate.setContactTypeCd(ContactType.INDIVIDUAL);
-//
-//		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenReturn(response);
-//
-//		assertThrows(InternalServerErrorException.class, () -> {
-//			repository.update(disputeToUpdate);
-//		});
-//	}
-//
-//	private String dateToString(Date date, String format) {
-//		return DateFormatUtils.formatUTC(date, format);
-//	}
-//
-//}
+package ca.bc.gov.open.jag.tco.oracledataapi.service.impl.ords;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import ca.bc.gov.open.jag.tco.oracledataapi.mapper.DisputeMapperImpl;
+import jakarta.ws.rs.InternalServerErrorException;
+
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.EmptyObject;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.ViolationTicketApi;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.DisputeListItem;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.DisputeListResponse;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ResponseResult;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicket;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicketListResponse;
+import ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.ords.DisputeRepositoryImpl;
+import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
+
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class DisputeServiceImplTest  {
+
+    DisputeMapperImpl disputeMapper;
+
+    @Mock
+	private ViolationTicketApi violationTicketApi;
+    @InjectMocks
+	private DisputeRepositoryImpl repository;
+
+	@BeforeEach
+	public void beforeEach() {
+        MockitoAnnotations.openMocks(this);
+        disputeMapper = new DisputeMapperImpl();
+		repository = new DisputeRepositoryImpl(violationTicketApi, disputeMapper);
+	}
+
+	@Test
+	public void testAssignExpect200() throws Exception {
+		Long disputeId = Long.valueOf(1);
+		String userName = "testUser";
+		ResponseResult response = new ResponseResult();
+		response.setStatus("1");
+
+		Mockito.when(violationTicketApi.assignViolationTicketPost(disputeId, userName, EmptyObject.instance)).thenReturn(response);
+
+		assertDoesNotThrow(() -> {
+			repository.assignDisputeToUser(disputeId, userName);
+		});
+	}
+
+	@Test
+	public void testAssignExpect500_ApiException() throws Exception {
+		Long disputeId = Long.valueOf(1);
+		String userName = "testUser";
+
+		Mockito.when(violationTicketApi.assignViolationTicketPost(disputeId, userName, EmptyObject.instance)).thenThrow(ApiException.class);
+
+		assertThrows(ApiException.class, () -> {
+			repository.assignDisputeToUser(disputeId, userName);
+		});
+	}
+
+	@Test
+	public void testAssignExpect500_noErrorMsg() throws Exception {
+		Long disputeId = Long.valueOf(1);
+		String userName = "testUser";
+		ResponseResult response = new ResponseResult();
+		response.setStatus("0"); // 0 status (meaning failure)
+
+		Mockito.when(violationTicketApi.assignViolationTicketPost(disputeId, userName, EmptyObject.instance)).thenReturn(response);
+
+		assertThrows(InternalServerErrorException.class, () -> {
+			repository.assignDisputeToUser(disputeId, userName);
+		});
+	}
+
+	@Test
+	public void testAssignExpect500_nullResponse() throws Exception {
+		Long disputeId = Long.valueOf(1);
+		String userName = "testUser";
+
+		Mockito.when(violationTicketApi.assignViolationTicketPost(disputeId, userName, EmptyObject.instance)).thenReturn(null);
+
+		assertThrows(InternalServerErrorException.class, () -> {
+			repository.assignDisputeToUser(disputeId, userName);
+		});
+	}
+
+	@Test
+	public void testAssignExpect500_withErrorMsg() throws Exception {
+		Long disputeId = Long.valueOf(1);
+		String userName = "testUser";
+		ResponseResult response = new ResponseResult();
+		response.setStatus("0"); // 0 status (meaning failure)
+		response.setException("some failure cause");
+
+		Mockito.when(violationTicketApi.assignViolationTicketPost(disputeId, userName, EmptyObject.instance)).thenReturn(response);
+
+		assertThrows(InternalServerErrorException.class, () -> {
+			repository.assignDisputeToUser(disputeId, userName);
+		});
+	}
+
+	@Test
+	public void testDeleteExpect200() throws ApiException {
+		Long disputeId = Long.valueOf(1);
+		ResponseResult response = new ResponseResult();
+		response.setStatus("1");
+
+		Mockito.when(violationTicketApi.violationTicketDelete(disputeId, EmptyObject.instance)).thenReturn(response);
+
+		assertDoesNotThrow(() -> {
+			repository.deleteById(disputeId);
+		});
+	}
+
+	@Test
+	public void testDeleteExpect400() throws ApiException {
+		Long disputeId = null;
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			repository.deleteById(disputeId);
+		});
+	}
+
+	@Test
+	public void testDeleteExpect404() throws ApiException {
+		Long disputeId = Long.valueOf(1);
+		ResponseResult response = new ResponseResult();
+		response.setStatus("0");
+		response.setException("ORA-01403: no data found");
+
+		Mockito.when(violationTicketApi.violationTicketDelete(disputeId, EmptyObject.instance)).thenReturn(response);
+
+		assertThrows(NoSuchElementException.class, () -> {
+			repository.deleteById(disputeId);
+		});
+	}
+
+	@Test
+	public void testDeleteExpect500_ApiException() throws Exception {
+		Long disputeId = Long.valueOf(1);
+
+		Mockito.when(violationTicketApi.violationTicketDelete(disputeId, EmptyObject.instance)).thenThrow(ApiException.class);
+
+		assertThrows(ApiException.class, () -> {
+			repository.deleteById(disputeId);
+		});
+	}
+
+	@Test
+	public void testDeleteExpect500_noErrorMessage() throws ApiException {
+		Long disputeId = Long.valueOf(1);
+		ResponseResult response = new ResponseResult();
+		response.setStatus("0"); // 0 status (meaning failure) and no message
+
+		Mockito.when(violationTicketApi.violationTicketDelete(disputeId, EmptyObject.instance)).thenReturn(response);
+
+		assertThrows(InternalServerErrorException.class, () -> {
+			repository.deleteById(disputeId);
+		});
+	}
+
+	@Test
+	public void testDeleteExpect500_nullReponse() throws ApiException {
+		Long disputeId = Long.valueOf(1);
+
+		Mockito.when(violationTicketApi.violationTicketDelete(disputeId, EmptyObject.instance)).thenReturn(null);
+
+		assertThrows(InternalServerErrorException.class, () -> {
+			repository.deleteById(disputeId);
+		});
+	}
+
+	@Test
+	public void testDeleteExpect500_withErrorMessage() throws ApiException {
+		Long disputeId = Long.valueOf(1);
+		ResponseResult response = new ResponseResult();
+		response.setStatus("0"); // 0 status (meaning failure) and no message
+		response.setException("some failure cause");
+
+		Mockito.when(violationTicketApi.violationTicketDelete(disputeId, EmptyObject.instance)).thenReturn(response);
+
+		assertThrows(InternalServerErrorException.class, () -> {
+			repository.deleteById(disputeId);
+		});
+	}
+
+	@Test
+	public void testSetStatusExpect200() throws Exception {
+		Long disputeId = Long.valueOf(1);
+		DisputeStatus disputeStatus = DisputeStatus.NEW;
+		String rejectedReason = "just because";
+		ResponseResult response = new ResponseResult();
+		response.setStatus("1");
+
+		Mockito.when(violationTicketApi.violationTicketStatusPost(EmptyObject.instance, disputeId, disputeStatus.toShortName(), rejectedReason)).thenReturn(response);
+
+		assertDoesNotThrow(() -> {
+			repository.setStatus(disputeId, disputeStatus, rejectedReason);
+		});
+	}
+
+	@Test
+	public void testSetStatusExpect500_ApiException() throws Exception {
+		Long disputeId = Long.valueOf(1);
+		DisputeStatus disputeStatus = DisputeStatus.NEW;
+		String rejectedReason = "just because";
+
+		Mockito.when(violationTicketApi.violationTicketStatusPost(EmptyObject.instance, disputeId, disputeStatus.toShortName(), rejectedReason)).thenThrow(ApiException.class);
+
+		assertThrows(ApiException.class, () -> {
+			repository.setStatus(disputeId, disputeStatus, rejectedReason);
+		});
+	}
+
+	@Test
+	public void testSetStatusExpect500_noErrorMsg() throws Exception {
+		Long disputeId = Long.valueOf(1);
+		DisputeStatus disputeStatus = DisputeStatus.NEW;
+		String rejectedReason = "just because";
+		ResponseResult response = new ResponseResult();
+		response.setStatus("0"); // 0 status (meaning failure) and no message
+
+		Mockito.when(violationTicketApi.violationTicketStatusPost(EmptyObject.instance, disputeId, disputeStatus.toShortName(), rejectedReason)).thenReturn(response);
+
+		assertThrows(InternalServerErrorException.class, () -> {
+			repository.setStatus(disputeId, disputeStatus, rejectedReason);
+		});
+	}
+
+	@Test
+	public void testSetStatusExpect500_nullReponse() throws Exception {
+		Long disputeId = Long.valueOf(1);
+		DisputeStatus disputeStatus = DisputeStatus.NEW;
+		String rejectedReason = "just because";
+
+		Mockito.when(violationTicketApi.violationTicketStatusPost(EmptyObject.instance, disputeId, disputeStatus.toShortName(), rejectedReason)).thenReturn(null);
+
+		assertThrows(InternalServerErrorException.class, () -> {
+			repository.setStatus(disputeId, disputeStatus, rejectedReason);
+		});
+	}
+
+	@Test
+	public void testSetStatusExpect500_withErrorMsg() throws Exception {
+		Long disputeId = Long.valueOf(1);
+		DisputeStatus disputeStatus = DisputeStatus.NEW;
+		String rejectedReason = "just because";
+		ResponseResult response = new ResponseResult();
+		response.setStatus("0"); // 0 status (meaning failure)
+		response.setException("some failure cause");
+
+		Mockito.when(violationTicketApi.violationTicketStatusPost(EmptyObject.instance, disputeId, disputeStatus.toShortName(), rejectedReason)).thenReturn(response);
+
+		assertThrows(InternalServerErrorException.class, () -> {
+			repository.setStatus(disputeId, disputeStatus, rejectedReason);
+		});
+	}
+
+	@Test
+	public void testUnassignExpect200() throws Exception {
+		Date now = new Date();
+		String assignedBeforeTs = dateToString(now, DateUtil.DATE_TIME_FORMAT);
+		ResponseResult response = new ResponseResult();
+		response.setStatus("1");
+
+		Mockito.when(violationTicketApi.unassignViolationTicketPost(EmptyObject.instance, assignedBeforeTs)).thenReturn(response);
+
+		assertDoesNotThrow(() -> {
+			repository.unassignDisputes(now);
+		});
+	}
+
+	@Test
+	public void testUnassignExpect500_ApiException() throws Exception {
+		Date now = new Date();
+		String assignedBeforeTs = dateToString(now, DateUtil.DATE_TIME_FORMAT);
+
+		Mockito.when(violationTicketApi.unassignViolationTicketPost(EmptyObject.instance, assignedBeforeTs)).thenThrow(ApiException.class);
+
+		assertThrows(ApiException.class, () -> {
+			repository.unassignDisputes(now);
+		});
+	}
+
+	@Test
+	public void testUnassignExpect500_noErrorMsg() throws Exception {
+		Date now = new Date();
+		String assignedBeforeTs = dateToString(now, DateUtil.DATE_TIME_FORMAT);
+		ResponseResult response = new ResponseResult();
+		response.setStatus("0"); // 0 status (meaning failure) and no message
+
+		Mockito.when(violationTicketApi.unassignViolationTicketPost(EmptyObject.instance, assignedBeforeTs)).thenReturn(response);
+
+		assertThrows(InternalServerErrorException.class, () -> {
+			repository.unassignDisputes(now);
+		});
+	}
+
+	@Test
+	public void testUnassignExpect500_nullReponse() throws Exception {
+		Date now = new Date();
+		String assignedBeforeTs = dateToString(now, DateUtil.DATE_TIME_FORMAT);
+
+		Mockito.when(violationTicketApi.unassignViolationTicketPost(EmptyObject.instance, assignedBeforeTs)).thenReturn(null);
+
+		assertThrows(InternalServerErrorException.class, () -> {
+			repository.unassignDisputes(now);
+		});
+	}
+
+	@Test
+	public void testUnassignExpect500_withErrorMsg() throws Exception {
+		Date now = new Date();
+		String assignedBeforeTs = dateToString(now, DateUtil.DATE_TIME_FORMAT);
+		ResponseResult response = new ResponseResult();
+		response.setStatus("0"); // 0 status (meaning failure)
+		response.setException("some failure cause");
+
+		Mockito.when(violationTicketApi.unassignViolationTicketPost(EmptyObject.instance, assignedBeforeTs)).thenReturn(response);
+
+		assertThrows(InternalServerErrorException.class, () -> {
+			repository.unassignDisputes(now);
+		});
+	}
+
+	@Test
+	public void testFindByTicketNumberAndTime200() throws Exception {
+		Long disputeId = Long.valueOf(1001L);
+		DisputeStatus disputeStatus = DisputeStatus.PROCESSING;
+		String ticketNumber = "AX00000000";
+		String issuedDateStr = "13:54";
+		Date issuedDate = DateUtils.parseDate(issuedDateStr, DateUtil.TIME_FORMAT);
+
+		ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Dispute dispute = new ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Dispute();
+		dispute.setDisputeId(disputeId.toString());
+		dispute.setDisputeStatusTypeCd(disputeStatus.toShortName());
+
+		ViolationTicket violationTicket = new ViolationTicket();
+		violationTicket.setDispute(dispute);
+		violationTicket.setTicketNumberTxt(ticketNumber);
+		violationTicket.setIssuedDt(new java.util.Date(issuedDate.getTime()));
+
+		ViolationTicketListResponse validResponse = new ViolationTicketListResponse();
+		validResponse.setViolationTickets(new ArrayList<ViolationTicket>());
+		validResponse.getViolationTickets().add(violationTicket);
+
+		ViolationTicketListResponse emptyResponse = new ViolationTicketListResponse();
+		emptyResponse.setViolationTickets(new ArrayList<ViolationTicket>());
+
+		Mockito.when(violationTicketApi.violationTicketListGet(null, null, ticketNumber, null, issuedDateStr)).thenReturn(validResponse);
+
+		List<DisputeResult> disputeResults = repository.findByTicketNumberAndTime(ticketNumber, issuedDate);
+		assertEquals(1, disputeResults.size());
+		assertEquals(disputeId, disputeResults.get(0).getDisputeId());
+		assertEquals(disputeStatus, disputeResults.get(0).getDisputeStatus());
+
+		disputeResults = repository.findByTicketNumberAndTime("AX", issuedDate);
+		assertEquals(0, disputeResults.size());
+
+		disputeResults = repository.findByTicketNumberAndTime(ticketNumber, DateUtils.parseDate("13:55", DateUtil.TIME_FORMAT));
+		assertEquals(0, disputeResults.size());
+	}
+
+	@Test
+	public void testFindByTicketNumberAndTime500() throws Exception {
+		Mockito.when(violationTicketApi.violationTicketListGet(any(), any(), any(), any(), any())).thenThrow(ApiException.class);
+
+		assertThrows(ApiException.class, () -> {
+			repository.findByTicketNumberAndTime("AX00000000", new Date());
+		});
+	}
+
+	@Test
+	public void testGetAllDisputesExpect200() throws Exception {
+		Date now = new Date();
+		String newerThanDate = dateToString(now, DateUtil.DATE_FORMAT);
+		DisputeStatus excludedStatus = DisputeStatus.CANCELLED;
+		String noticeOfDisputeGuid = java.util.UUID.randomUUID().toString();
+		DisputeListResponse response = new DisputeListResponse();
+		List<DisputeListItem> disputeListItems = new ArrayList<DisputeListItem>();
+		response.setDisputeListItems(disputeListItems);
+
+		Mockito.when(violationTicketApi.disputeListGet(newerThanDate, excludedStatus.toShortName(), null, noticeOfDisputeGuid, null)).thenReturn(response);
+
+		assertDoesNotThrow(() -> {
+			repository.findByStatusNotAndCreatedTsAfterAndNoticeOfDisputeGuid(excludedStatus, now, noticeOfDisputeGuid);
+		});
+	}
+
+	@Test
+	public void testGetAllDisputesExpect500_InternalServerError() throws Exception {
+		Date now = new Date();
+		String newerThanDate = dateToString(now, DateUtil.DATE_FORMAT);
+		DisputeStatus excludedStatus = DisputeStatus.CANCELLED;
+		String noticeOfDisputeGuid = java.util.UUID.randomUUID().toString();
+		DisputeListResponse response = new DisputeListResponse();
+		List<DisputeListItem> disputeListItems = new ArrayList<DisputeListItem>();
+		response.setDisputeListItems(disputeListItems);
+
+		Mockito.when(violationTicketApi.disputeListGet(newerThanDate, excludedStatus.toShortName(), null, noticeOfDisputeGuid, null)).thenThrow(ApiException.class);
+
+		assertThrows(InternalServerErrorException.class, () -> {
+			repository.findByStatusNotAndCreatedTsAfterAndNoticeOfDisputeGuid(excludedStatus, now, noticeOfDisputeGuid);
+		});
+	}
+
+	@Test
+	public void testUpdateDisputeExpect200() throws Exception {
+		Long disputeId = Long.valueOf(1);
+		ResponseResult response = new ResponseResult();
+		response.setStatus("1");
+
+		Dispute disputeToUpdate = new Dispute();
+		disputeToUpdate.setDisputeId(disputeId);
+		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
+		disputeToUpdate.setContactTypeCd(ContactType.INDIVIDUAL);
+
+		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenReturn(response);
+
+		assertDoesNotThrow(() -> {
+			repository.update(disputeToUpdate);
+		});
+	}
+
+	@Test
+	public void testUpdateDisputeExpect500_InternalServerError() throws Exception {
+		Long disputeId = Long.valueOf(1);
+
+		Dispute disputeToUpdate = new Dispute();
+		disputeToUpdate.setDisputeId(disputeId);
+		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
+		disputeToUpdate.setContactTypeCd(ContactType.INDIVIDUAL);
+
+		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenThrow(ApiException.class);
+
+		assertThrows(InternalServerErrorException.class, () -> {
+			repository.update(disputeToUpdate);
+		});
+	}
+
+	@Test
+	public void testUpdateDisputeExpect500_noErrorMsg() throws Exception {
+		Long disputeId = Long.valueOf(1);
+		ResponseResult response = new ResponseResult();
+		response.setStatus("0"); // 0 status (meaning failure) and no message
+
+		Dispute disputeToUpdate = new Dispute();
+		disputeToUpdate.setDisputeId(disputeId);
+		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
+		disputeToUpdate.setContactTypeCd(ContactType.INDIVIDUAL);
+
+		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenReturn(response);
+
+		assertThrows(InternalServerErrorException.class, () -> {
+			repository.update(disputeToUpdate);
+		});
+	}
+
+	@Test
+	public void testUpdateDisputeExpect500_nullResponse() throws Exception {
+		Long disputeId = Long.valueOf(1);
+		Dispute disputeToUpdate = new Dispute();
+		disputeToUpdate.setDisputeId(disputeId);
+		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
+		disputeToUpdate.setContactTypeCd(ContactType.INDIVIDUAL);
+
+		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenReturn(null);
+
+		assertThrows(InternalServerErrorException.class, () -> {
+			repository.update(disputeToUpdate);
+		});
+	}
+
+	@Test
+	public void testUpdateDisputeExpect500_withErrorMsg() throws Exception {
+		Long disputeId = Long.valueOf(1);
+		ResponseResult response = new ResponseResult();
+		response.setStatus("0"); // 0 status (meaning failure)
+		response.setException("some failure cause");
+
+		Dispute disputeToUpdate = new Dispute();
+		disputeToUpdate.setDisputeId(disputeId);
+		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
+		disputeToUpdate.setContactTypeCd(ContactType.INDIVIDUAL);
+
+		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenReturn(response);
+
+		assertThrows(InternalServerErrorException.class, () -> {
+			repository.update(disputeToUpdate);
+		});
+	}
+
+	private String dateToString(Date date, String format) {
+		return DateFormatUtils.formatUTC(date, format);
+	}
+
+}
