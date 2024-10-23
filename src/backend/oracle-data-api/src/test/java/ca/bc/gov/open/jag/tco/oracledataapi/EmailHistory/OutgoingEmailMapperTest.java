@@ -1,18 +1,18 @@
-package ca.bc.gov.open.jag.tco.oracledataapi.mapper;
-
+package ca.bc.gov.open.jag.tco.oracledataapi.EmailHistory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.UUID;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.mapper.OutgoingEmailMapperImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.OutgoingEmail;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.EmailHistory;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OutgoingEmailMapperTest{
 
     private OutgoingEmailMapperImpl outgoingEmailMapper;

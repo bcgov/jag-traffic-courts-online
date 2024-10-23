@@ -5,10 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.Arrays;
 import java.util.Date;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
+import org.junit.jupiter.api.TestInstance;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceAPP;
@@ -24,13 +23,17 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.Plea;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
 
-public class JJDisputeMapperTest extends BaseTestSuite {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class JJDisputeMapperTest {
 
-	@Autowired
-	private JJDisputeMapper jjDisputeMapper;
+	private JJDisputeMapperImpl jjDisputeMapper;
+	private TicketImageDataMapperImpl ticketImageDataMapper;
 
-	@Autowired
-	private TicketImageDataMapper ticketImageDataMapper;
+	@BeforeEach
+	void setUp() {
+		jjDisputeMapper = new JJDisputeMapperImpl();
+		ticketImageDataMapper = new TicketImageDataMapperImpl();
+	}
 
 	@Test
 	public void testJJDispute() throws Exception {

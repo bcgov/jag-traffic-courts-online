@@ -2,16 +2,24 @@ package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
+import org.junit.jupiter.api.TestInstance;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 
-public class DisputeServiceTest extends BaseTestSuite {
-	
-	@Autowired
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class DisputeServiceTest  {
+
+    @InjectMocks
 	private DisputeService disputeService;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
 
     @Test
     public void testReplaceProvinceValuesWithNA() {

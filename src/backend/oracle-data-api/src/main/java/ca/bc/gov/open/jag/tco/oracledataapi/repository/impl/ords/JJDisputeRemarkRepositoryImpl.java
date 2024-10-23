@@ -2,7 +2,7 @@ package ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.ords;
 
 import java.util.function.Supplier;
 
-import javax.ws.rs.InternalServerErrorException;
+import jakarta.ws.rs.InternalServerErrorException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

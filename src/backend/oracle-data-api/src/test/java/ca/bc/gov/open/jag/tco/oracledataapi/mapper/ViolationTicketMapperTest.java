@@ -4,25 +4,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
+import org.junit.jupiter.api.TestInstance;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatusType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicket;
 
-public class ViolationTicketMapperTest extends BaseTestSuite{
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class ViolationTicketMapperTest {
 
-	private ViolationTicketMapper violationTicketMapper;
-
-	@Autowired
 	private ViolationTicketMapperImpl violationTicketMapperImpl;
 
 	@BeforeEach
 	void setUp() {
-		violationTicketMapper = violationTicketMapperImpl;
+        violationTicketMapperImpl = new ViolationTicketMapperImpl();
 	}
 
 	@Test
@@ -39,7 +35,7 @@ public class ViolationTicketMapperTest extends BaseTestSuite{
 				+ "Vivamus ornare ante nec eros luctus, non tincidunt ipsum interdum. Aliquam felis felis, ullamcorper non rutrum sit amet, sollicitudin sit amet lectus. "
 				+ "Quisque non massa dolor porttitor.");
 
-		ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicket result = violationTicketMapper.convertDisputeToViolationTicketDto(testDispute);
+		ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicket result = violationTicketMapperImpl.convertDisputeToViolationTicketDto(testDispute);
 
 		// Should return split out lawyer address string into 3 different fields each having 100 characters
 		assertEquals("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce accumsan nulla quam, non aliquam erat", result.getDispute().getLawFirmAddrLine1Txt());

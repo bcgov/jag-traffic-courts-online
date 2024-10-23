@@ -10,17 +10,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import javax.ws.rs.InternalServerErrorException;
+import ca.bc.gov.open.jag.tco.oracledataapi.mapper.DisputeMapperImpl;
+import jakarta.ws.rs.InternalServerErrorException;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
-import ca.bc.gov.open.jag.tco.oracledataapi.mapper.DisputeMapper;
+import org.mockito.MockitoAnnotations;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
@@ -36,19 +37,20 @@ import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicket
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.ords.DisputeRepositoryImpl;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class DisputeServiceImplTest  {
 
-class DisputeServiceImplTest extends BaseTestSuite {
-	
-	@Autowired
-	DisputeMapper disputeMapper;
+    DisputeMapperImpl disputeMapper;
 
-	@Mock
+    @Mock
 	private ViolationTicketApi violationTicketApi;
+    @InjectMocks
 	private DisputeRepositoryImpl repository;
 
-	@Override
 	@BeforeEach
 	public void beforeEach() {
+        MockitoAnnotations.openMocks(this);
+        disputeMapper = new DisputeMapperImpl();
 		repository = new DisputeRepositoryImpl(violationTicketApi, disputeMapper);
 	}
 

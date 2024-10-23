@@ -6,24 +6,23 @@ import java.util.Date;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequest;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequestStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequestType;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
 
-public class DisputeUpdateRequestMapperTest extends BaseTestSuite {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class DisputeUpdateRequestMapperTest {
 
-	private DisputeUpdateRequestMapper disputeUpdateRequestMapper;
 
 	@Autowired
 	private DisputeUpdateRequestMapperImpl disputeUpdateRequestMapperImpl;
 
 	@BeforeEach
 	void setUp() {
-		disputeUpdateRequestMapper = disputeUpdateRequestMapperImpl;
+        disputeUpdateRequestMapperImpl = new DisputeUpdateRequestMapperImpl();
 	}
 
 	@Test
@@ -50,7 +49,7 @@ public class DisputeUpdateRequestMapperTest extends BaseTestSuite {
 		source.setUpdDtm(updDtm);
 		source.setUpdUserId(updUserId);
 
-		DisputeUpdateRequest target = disputeUpdateRequestMapper.convert(source);
+		DisputeUpdateRequest target = disputeUpdateRequestMapperImpl.convert(source);
 
 		assertEquals(Long.valueOf(disputeUpdateRequestId), target.getDisputeUpdateRequestId());
 		assertEquals(Long.valueOf(disputeId), target.getDisputeId());
@@ -87,7 +86,7 @@ public class DisputeUpdateRequestMapperTest extends BaseTestSuite {
 		source.setModifiedTs(updDtm);
 		source.setModifiedBy(updUserId);
 
-		ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.DisputeUpdateRequest target = disputeUpdateRequestMapper.convert(source);
+		ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.DisputeUpdateRequest target = disputeUpdateRequestMapperImpl.convert(source);
 
 		assertEquals(disputeUpdateRequestId, target.getDisputeUpdateRequestId());
 		assertEquals(disputeId, target.getDisputeId());

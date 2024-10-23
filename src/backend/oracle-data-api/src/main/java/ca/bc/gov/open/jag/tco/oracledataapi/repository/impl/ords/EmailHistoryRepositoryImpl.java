@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.InternalServerErrorException;
+import jakarta.ws.rs.InternalServerErrorException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,9 +29,11 @@ public class EmailHistoryRepositoryImpl implements EmailHistoryRepository {
 
 	// Delegate, OpenAPI generated client
 	private final OutgoingEmailApi outgoingEmailApi;
+	private final OutgoingEmailMapper outgoingEmailMapper;
 
-	public EmailHistoryRepositoryImpl(OutgoingEmailApi outgoingEmailApi) {
+	public EmailHistoryRepositoryImpl(OutgoingEmailApi outgoingEmailApi, OutgoingEmailMapper outgoingEmailMapper) {
 		this.outgoingEmailApi = outgoingEmailApi;
+		this.outgoingEmailMapper = outgoingEmailMapper;
 	}
 
 	@Override
@@ -43,7 +45,7 @@ public class EmailHistoryRepositoryImpl implements EmailHistoryRepository {
 			logger.debug("Successfully returned outgoing email entries from ORDS");
 
 			outgoingEmailsToReturn = response.getOutgoingEmails().stream()
-					.map(outgoingEmail -> OutgoingEmailMapper.INSTANCE.convert(outgoingEmail))
+					.map(outgoingEmail -> outgoingEmailMapper.convert(outgoingEmail))
 					.collect(Collectors.toList());
 		}
 
@@ -56,7 +58,7 @@ public class EmailHistoryRepositoryImpl implements EmailHistoryRepository {
 			throw new IllegalArgumentException("EmailHistory body is null.");
 		}
 
-		ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.OutgoingEmail outgoingEmail = OutgoingEmailMapper.INSTANCE.convert(emailHistory);
+		ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.OutgoingEmail outgoingEmail = outgoingEmailMapper.convert(emailHistory);
 		logger.debug("DEBUG saving outgoing email", StructuredArguments.fields(outgoingEmail));
 		try {
 			OutgoingEmailResponseResult result = assertNoExceptions(() -> outgoingEmailApi.v1ProcessOutgoingEmailPost(outgoingEmail));
