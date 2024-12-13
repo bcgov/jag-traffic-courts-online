@@ -17,6 +17,7 @@ using FluentValidation;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Metrics;
 using ZiggyCreatures.Caching.Fusion;
+using TrafficCourts.OrdsDataService;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -51,6 +52,7 @@ public static class Startup
                 })
                 .AddCitizenServiceInstrumentation()
                 .AddComsClientInstrumentation()
+                .AddOrdsDataServiceInstrumentation()
                 .AddMassTransitInstrumentation();
         },
             options =>
@@ -59,11 +61,13 @@ public static class Startup
                     .AddFusionCacheInstrumentation()
                     .AddCitizenServiceInstrumentation()
                     .AddComsClientInstrumentation()
-                    .AddMassTransitInstrumentation();
+                    .AddMassTransitInstrumentation()
+                    .AddOrdsDataServiceInstrumentation();
             }
         );
 
         builder.Services.AddHttpContextAccessor();
+        builder.Services.AddOrdsDataService(builder.Configuration);
 
         // Redis
         var redisConnectionString = builder.AddRedis();
