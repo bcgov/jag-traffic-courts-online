@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Validators.Rules;
 using TrafficCourts.Domain.Models;
@@ -29,7 +30,7 @@ public class FieldMatchesRegexRuleTest
         FieldMatchesRegexRule rule = new(field, pattern, "ERROR: Pattern mismatch ...");
 
         // When
-        await rule.RunAsync();
+        await rule.RunAsync(CancellationToken.None);
 
         // Then
         Assert.Equal(expectedErrorCount == 0, rule.IsValid());
@@ -50,7 +51,7 @@ public class FieldMatchesRegexRuleTest
         FieldMatchesRegexRule rule = new(field, "AAAA", "Field is blank");
 
         // When
-        await rule.RunAsync();
+        await rule.RunAsync(CancellationToken.None);
 
         // Then
         Assert.False(rule.IsValid());

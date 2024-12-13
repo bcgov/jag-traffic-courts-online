@@ -13,7 +13,7 @@ public class DidCommitIsMVA : ValidationRule
         this._violationTicket = violationTicket;
     }
 
-    public override Task RunAsync()
+    public override Task RunAsync(CancellationToken cancellationToken)
     {
         bool isMVA = this._violationTicket.Fields[OffenceIsMVA].IsCheckboxSelected() ?? false;
         bool isMVRA = this._violationTicket.Fields[OffenceIsMVAR].IsCheckboxSelected() ?? false;

@@ -25,4 +25,21 @@ public static class Cache
             return $"ticket-search:v{version}:{ticketNumber}-{timeOnly.Hour:D2}:{timeOnly.Minute:D2}";
         }
     }
+
+    public static class Api
+    {
+        public static string Agencies(int version = 1) => $"citizen-api:v{version}:agencies";
+        public static string Agencies(string type, int version = 1) => $"citizen-api:v{version}:agencies:{type}";
+        public static string Countries(int version = 1) => $"citizen-api:v{version}:countries";
+        public static string Languages(int version = 1) => $"citizen-api:v{version}:languages";
+        public static string Provinces(int version = 1) => $"citizen-api:v{version}:provinces";
+
+        /// <summary>
+        /// Stores the list of statutues
+        /// </summary>
+        /// <param name="version">The version of the data structure. If new data structure is used, defined a new version. Defaults to 1.</param>
+        public static string Statutes(int version = 1) => $"citizen-api:v{version}:statutes";
+
+    }
+
 }

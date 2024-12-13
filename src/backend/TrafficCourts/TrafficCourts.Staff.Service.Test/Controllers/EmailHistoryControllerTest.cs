@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.Staff.Service.Controllers;
@@ -21,7 +22,7 @@ public class EmailHistoryControllerTest
 {
     
     [Fact]
-    public async void TestGetEmailHistory200Result()
+    public async Task TestGetEmailHistory200Result()
     {
         // Mock the IEmailHistoryService to return a couple File history records, confirm controller returns them.
 

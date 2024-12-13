@@ -15,7 +15,7 @@ public class VersionVT1DisallowedRule : ValidationRule {
         this._violationTicket = violationTicket;
     }
 
-    public override Task RunAsync()
+    public override Task RunAsync(CancellationToken cancellationToken)
     {
         if (ViolationTicketVersion.VT1 == _violationTicket.TicketVersion) {
             _violationTicket.GlobalValidationErrors.Add(ValidationMessages.TicketVersionInvalid);

@@ -166,7 +166,8 @@ public class JJDisputeServiceTest
         string expectedDescription = "MVA 100(1)(a)i Fail to stop/police pursuit";
 
         _oracleDataApiClient.Setup(_ => _.GetJJDisputeAsync(dispute.TicketNumber, It.IsAny<bool>(), CancellationToken.None)).ReturnsAsync(dispute);
-        _statuteLookupService.Setup(_ => _.GetByIdAsync(dispute.JjDisputedCounts.First().Description)).ReturnsAsync(expected);
+        var id = int.Parse(dispute.JjDisputedCounts.First().Description);
+        _statuteLookupService.Setup(_ => _.GetByIdAsync(id, CancellationToken.None)).ReturnsAsync(expected);
 
         // Act
         JJDispute _jjDispute = await jJDisputeService.GetJJDisputeAsync(dispute.TicketNumber, false, CancellationToken.None);

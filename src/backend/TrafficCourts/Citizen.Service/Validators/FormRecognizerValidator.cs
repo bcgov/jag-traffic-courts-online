@@ -22,14 +22,14 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task SanitizeViolationTicketAsync(OcrViolationTicket violationTicket)
+    public async Task SanitizeViolationTicketAsync(OcrViolationTicket violationTicket, CancellationToken cancellationToken)
     {
-        await SanitizeAsync(violationTicket);
+        await SanitizeAsync(violationTicket, cancellationToken);
     }
 
-    public async Task ValidateViolationTicketAsync(OcrViolationTicket violationTicket)
+    public async Task ValidateViolationTicketAsync(OcrViolationTicket violationTicket, CancellationToken cancellationToken)
     {
-        ApplyGlobalRules(violationTicket);
+        ApplyGlobalRules(violationTicket, cancellationToken);
 
         // abort validation if this is not a valid Violation Ticket.
         if (violationTicket.GlobalValidationErrors.Count > 0)
@@ -37,7 +37,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
             return;
         }
 
-        await ApplyFieldRules(violationTicket);
+        await ApplyFieldRules(violationTicket, cancellationToken);
 
         // TCVP-932 Reject ticket if certain fields have a low confidence value (this is determined after all the fields have been validated and their datatype confirmed)
         LowConfidenceGlobalRule.Run(violationTicket);
@@ -47,7 +47,8 @@ public class FormRecognizerValidator : IFormRecognizerValidator
     /// Cleans up the scanned data from a poor OCR scan.
     /// </summary>
     /// <param name="violationTicket"></param>
-    public async Task SanitizeAsync(OcrViolationTicket violationTicket)
+    /// <param name="cancellationToken"></param>
+    public async Task SanitizeAsync(OcrViolationTicket violationTicket, CancellationToken cancellationToken)
     {
         // TODO: Use TryGetValue to avoid numerous trips back and forth into the dictionary
         // It can happen that if adjacent text fields has content too close to the common dividing line, the OCR tool can misread both fields thinking one is blank and the other starts with the blank field's text.
@@ -265,11 +266,11 @@ public class FormRecognizerValidator : IFormRecognizerValidator
 
         // TCVP-2706 - It appears the Form Recognizer does a poor job at recognizing checkboxes.
         // Instead, use the counts to lookup statutes and if they are valid, replace MVA/MVAR Did Commit checkbox selections with identified Statute act codes.
-        await SanitizeDidCommitAsyc(violationTicket);
+        await SanitizeDidCommitAsyc(violationTicket, cancellationToken);
     }
 
     // A function to sanitize the OcrViolationTicket and set the isMVA and isMVAR checkboxes based on the validity of the MVA and MVAR Statutes referenced in the section text for the 3 counts.
-    private async Task SanitizeDidCommitAsyc(OcrViolationTicket violationTicket)
+    private async Task SanitizeDidCommitAsyc(OcrViolationTicket violationTicket, CancellationToken cancellationToken)
     {
         // TCVO-2804 - only attempt to use statutes if the MVA/MVAR checkboxes could not be read.
 
@@ -278,9 +279,9 @@ public class FormRecognizerValidator : IFormRecognizerValidator
             // If field neither, it couldn't be read successfully, attempt to use statutes instead.
             if (isMVA.Value != Field._selected && isMVA.Value != Field._unselected) { 
                 isMVA.Value = (
-                    await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count1Section, Field._mva)
-                    || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count2Section, Field._mva)
-                    || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count3Section, Field._mva)) 
+                    await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count1Section, Field._mva, cancellationToken)
+                    || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count2Section, Field._mva, cancellationToken)
+                    || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count3Section, Field._mva, cancellationToken)) 
                     ? Field._selected : Field._unselected;
             }
                 
@@ -292,9 +293,9 @@ public class FormRecognizerValidator : IFormRecognizerValidator
             // If field neither, it couldn't be read successfully, attempt to use statutes instead.
             if (isMVAR.Value != Field._selected && isMVAR.Value != Field._unselected) { 
                 isMVAR.Value = (
-                    await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count1Section, Field._mvar)
-                    || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count2Section, Field._mvar)
-                    || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count3Section, Field._mvar)) 
+                    await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count1Section, Field._mvar, cancellationToken)
+                    || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count2Section, Field._mvar, cancellationToken)
+                    || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count3Section, Field._mvar, cancellationToken)) 
                     ? Field._selected : Field._unselected;
             }
 
@@ -308,8 +309,9 @@ public class FormRecognizerValidator : IFormRecognizerValidator
     /// <param name="violationTicket"></param>
     /// <param name="sectionKey"></param>
     /// <param name="actCode"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    private async Task<bool> IsStatuteValidAsync(OcrViolationTicket violationTicket, string sectionKey, string actCode)
+    private async Task<bool> IsStatuteValidAsync(OcrViolationTicket violationTicket, string sectionKey, string actCode, CancellationToken cancellationToken)
     {
         if (violationTicket.Fields.TryGetValue(sectionKey, out Field? field))
         {
@@ -317,18 +319,19 @@ public class FormRecognizerValidator : IFormRecognizerValidator
             if (!String.IsNullOrEmpty(sectionText))
             {
                 sectionText = Regex.Replace(sectionText, @"^\$$", ""); // remove $ if it's the only character.
-                Domain.Models.Statute? statute = await _lookupService.GetBySectionAsync(sectionText);
-                if (statute is null) {
-                    _logger.LogTrace($"Statute not found: {sectionText}");
+                Domain.Models.Statute? statute = await _lookupService.GetBySectionAsync(sectionText, cancellationToken);
+                if (statute is null)
+                {
+                    _logger.LogTrace("Statute not found: {SectionText}", sectionText);
                     return false;
                 }
                 else {
                     bool matchesAct = statute?.ActCode == actCode;
                     if (!matchesAct) {
-                        _logger.LogTrace($"Statute {sectionText} does not match act code {actCode}");
+                        _logger.LogTrace("Statute {SectionText} does not match act code {ActCode}", sectionText, actCode);
                     }
                     else {
-                        _logger.LogTrace($"Statute found: {actCode} {sectionText}");
+                        _logger.LogTrace("Statute found: {actCode} {sectionText}", actCode, sectionText);
                     }
                     return matchesAct;
                 }
@@ -338,7 +341,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
     }
 
     /// <summary>Applies a set of validation rules to determine if the given violationTicket is valid or not.</summary>
-    private static async void ApplyGlobalRules(OcrViolationTicket violationTicket)
+    private static async void ApplyGlobalRules(OcrViolationTicket violationTicket, CancellationToken cancellationToken)
     {
         // TCVP-933 A ticket is considered valid iff
         // - TCVP-2559 Ticket Version must not be VT1 (superceded by VT2 and is no longer supported)
@@ -369,7 +372,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         // Run each rule and aggregate the results
         foreach (var rule in rules)
         {
-            await rule.RunAsync();
+            await rule.RunAsync(cancellationToken);
         }
 
         foreach (var field in violationTicket.Fields.Values)
@@ -384,7 +387,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         }
     }
 
-    private async Task ApplyFieldRules(OcrViolationTicket violationTicket)
+    private async Task ApplyFieldRules(OcrViolationTicket violationTicket, CancellationToken cancellationToken)
     {
         List<ValidationRule> rules = new();
 
@@ -428,7 +431,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
 
         foreach (var rule in rules)
         {
-            await rule.RunAsync();
+            await rule.RunAsync(cancellationToken);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Citizen.Service.Validators.Rules;
@@ -20,7 +21,7 @@ public class CheckboxIsValidRuleTest
         CheckboxIsValidRule rule = new(field);
 
         // When
-        await rule.RunAsync();
+        await rule.RunAsync(CancellationToken.None);
 
         // Then.
         if (expectError)

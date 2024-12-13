@@ -15,15 +15,15 @@ namespace TrafficCourts.Domain.Models
         public string Section { get; private set; } = string.Empty;
         public string Subsection { get; private set; } = string.Empty;
         public string Paragraph { get; private set; } = string.Empty;
-        public string Subparagrah { get; private set; } = string.Empty;
+        public string Subparagraph { get; private set; } = string.Empty;
 
         private static readonly string[] _separator = ["(", ")"];
 
         public override string ToString()
         {
-            if (!string.IsNullOrEmpty(Section) && !string.IsNullOrEmpty(Subsection) && !string.IsNullOrEmpty(Paragraph) && !string.IsNullOrEmpty(Subparagrah))
+            if (!string.IsNullOrEmpty(Section) && !string.IsNullOrEmpty(Subsection) && !string.IsNullOrEmpty(Paragraph) && !string.IsNullOrEmpty(Subparagraph))
             {
-                return $"{Section}({Subsection})({Paragraph})({Subparagrah})";
+                return $"{Section}({Subsection})({Paragraph})({Subparagraph})";
             }
             if (!string.IsNullOrEmpty(Section) && !string.IsNullOrEmpty(Subsection) && !string.IsNullOrEmpty(Paragraph))
             {
@@ -79,7 +79,7 @@ namespace TrafficCourts.Domain.Models
                                 result.Paragraph = parts[2];
 
                                 if (parts.Length >= 4)
-                                    result.Subparagrah = parts[3];
+                                    result.Subparagraph = parts[3];
                             }
                         }
 

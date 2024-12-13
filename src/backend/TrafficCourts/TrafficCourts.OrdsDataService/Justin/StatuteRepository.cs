@@ -9,7 +9,7 @@ internal class StatuteRepository : OrdsRepository<StatuteRepository>, IStatuteRe
     {
     }
 
-    public async Task<Statute?> GetAsync(decimal stat_id, CancellationToken cancellationToken)
+    public async Task<Statute?> GetAsync(int stat_id, CancellationToken cancellationToken)
     {
         var parameters = new Dictionary<string, string>
         {

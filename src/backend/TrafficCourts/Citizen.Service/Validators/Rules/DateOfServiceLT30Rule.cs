@@ -12,7 +12,7 @@ public class DateOfServiceLT30Rule : ValidationRule
     {
     }
 
-    public override Task RunAsync()
+    public override Task RunAsync(CancellationToken cancellationToken)
     {
         DateTime? dateOfService = Field.GetDate();
         if (dateOfService is null)

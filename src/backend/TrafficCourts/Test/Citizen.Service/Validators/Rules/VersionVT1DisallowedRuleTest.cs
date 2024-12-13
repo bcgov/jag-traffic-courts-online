@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Validators.Rules;
 using TrafficCourts.Domain.Models;
@@ -21,7 +22,7 @@ public class VersionVT1DisallowedRuleTest
         VersionVT1DisallowedRule rule = new(new Field(), violationTicket);
 
         // When
-        await rule.RunAsync();
+        await rule.RunAsync(CancellationToken.None);
 
         // Then
         Assert.True(violationTicket.GlobalValidationErrors.Count == (expectError ? 1 : 0));

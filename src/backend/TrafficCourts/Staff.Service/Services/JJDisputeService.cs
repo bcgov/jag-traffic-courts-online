@@ -588,18 +588,18 @@ public partial class JJDisputeService : IJJDisputeService
     private async Task<string> GetStatuteDescriptionAsync(JJDisputedCount count)
     {
         // Find statute by count's statute ID since the ID is stored in the Description field of the JJDisputedCount
-        TrafficCourts.Domain.Models.Statute? statute = await _lookupService.GetByIdAsync(count.Description);
-        if (statute is not null)
+        if (int.TryParse(count.Description, out int statuteId))
         {
-            string statuteDescription = string.Format("{0} {1} {2}",
-                          statute.ActCode, statute.Code, statute.ShortDescriptionText);
-            return statuteDescription;
+            TrafficCourts.Domain.Models.Statute? statute = await _lookupService.GetByIdAsync(statuteId, CancellationToken.None);
+            if (statute is not null)
+            {
+                string statuteDescription = string.Format("{0} {1} {2}", statute.ActCode, statute.Code, statute.ShortDescriptionText);
+                return statuteDescription;
+            }
         }
-        else
-        {
-            _logger.LogWarning("Failed to return Statute based on the provided {statuteId}", count.Description);
-            return string.Empty;
-        }
+
+        _logger.LogWarning("Failed to return Statute based on the provided {statuteId}", count.Description);
+        return string.Empty;
     }
 
     [LoggerMessage(EventId = 0, Level = LogLevel.Warning, EventName = "UserAssignedToTicketHasNoPartId", Message = "User assigned to ticket has no PartId attribute in Keycloak")]
