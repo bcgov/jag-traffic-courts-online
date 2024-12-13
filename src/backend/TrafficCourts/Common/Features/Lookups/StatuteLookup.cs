@@ -39,7 +39,7 @@ namespace TrafficCourts.Common.Features.Lookups
                 // get one?
                 if (!string.IsNullOrEmpty(request.Section))
                 {
-                    var statute = await _service.GetBySectionAsync(request.Section);
+                    var statute = await _service.GetBySectionAsync(request.Section, cancellationToken);
                     if (statute is not null)
                     {
                         return new Response(new Statute[] { statute });
@@ -49,7 +49,7 @@ namespace TrafficCourts.Common.Features.Lookups
                 }
 
                 // get all
-                IList<Statute> statutes = await _service.GetListAsync();
+                IList<Statute> statutes = await _service.GetListAsync(cancellationToken);
                 return new Response(statutes);
             }
         }

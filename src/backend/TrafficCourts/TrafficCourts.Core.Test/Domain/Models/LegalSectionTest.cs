@@ -9,7 +9,7 @@ public class LegalSectionTest
         Assert.Equal(string.Empty, actual.Section);
         Assert.Equal(string.Empty, actual.Subsection);
         Assert.Equal(string.Empty, actual.Paragraph);
-        Assert.Equal(string.Empty, actual.Subparagrah);
+        Assert.Equal(string.Empty, actual.Subparagraph);
     }
 
     [Theory]
@@ -26,7 +26,7 @@ public class LegalSectionTest
         Assert.Equal(section, actual.Section);
         Assert.Equal(subsection, actual.Subsection);
         Assert.Equal(paragraph, actual.Paragraph);
-        Assert.Equal(subparagrah, actual.Subparagrah);
+        Assert.Equal(subparagrah, actual.Subparagraph);
     }
 
     [Theory]

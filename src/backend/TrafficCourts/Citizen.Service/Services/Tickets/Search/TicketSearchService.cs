@@ -144,7 +144,7 @@ public class TicketSearchService : ITicketSearchService
             count.Section = legalSection.Section;
             count.Subsection = legalSection.Subsection;
             count.Paragraph = legalSection.Paragraph;
-            count.Subparagraph = legalSection.Subparagrah;
+            count.Subparagraph = legalSection.Subparagraph;
 
             count.IsAct = invoice.Act == _mva ? ViolationTicketCountIsAct.Y : ViolationTicketCountIsAct.N;
             count.IsRegulation = invoice.Act == _mvar ? ViolationTicketCountIsRegulation.Y : ViolationTicketCountIsRegulation.N;

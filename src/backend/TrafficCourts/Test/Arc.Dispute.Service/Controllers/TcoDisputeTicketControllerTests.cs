@@ -5,6 +5,7 @@ using Moq;
 using NSubstitute;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using TrafficCourts.Arc.Dispute.Service.Controllers;
 using TrafficCourts.Arc.Dispute.Service.Models;
 using TrafficCourts.Arc.Dispute.Service.Services;
@@ -20,7 +21,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Controllers
         private readonly IArcFileService _mockArcFileService = Substitute.For<IArcFileService>();
 
         [Fact]
-        public async void Test_arcFileRecordList_output_from_mapping_passed_for_ArcFileService_and_returned_result_ok()
+        public async Task Test_arcFileRecordList_output_from_mapping_passed_for_ArcFileService_and_returned_result_ok()
         {
             // Arrange
             var disputeTicket = new TcoDisputeTicket

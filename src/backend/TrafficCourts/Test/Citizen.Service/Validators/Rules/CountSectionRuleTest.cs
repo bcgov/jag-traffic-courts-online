@@ -1,4 +1,5 @@
 using Moq;
+using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Citizen.Service.Validators.Rules;
@@ -24,7 +25,7 @@ public class CountSectionRuleTest
         // Given
         var lookupService = new Mock<IStatuteLookupService>();
         Domain.Models.Statute expected = new ("19588", "MVA", "100", "1", "a", "i", "MVA 100(1) ai", "Fail to stop/police pursuit", "Fail to stop/police pursuit");
-        lookupService.Setup(_ => _.GetBySectionAsync("MVA 100(1) ai")).Returns(Task.FromResult((Domain.Models.Statute?)expected));
+        lookupService.Setup(_ => _.GetBySectionAsync("MVA 100(1) ai", CancellationToken.None)).Returns(Task.FromResult((Domain.Models.Statute?)expected));
 
         Field field = new();
         field.TagName = Count1Section;
@@ -32,7 +33,7 @@ public class CountSectionRuleTest
         CountSectionRule rule = new(field, lookupService.Object);
 
         // When
-        await rule.RunAsync();
+        await rule.RunAsync(CancellationToken.None);
 
         // Then
         if (expectValid)

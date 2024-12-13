@@ -17,7 +17,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets;
 public class AnalyseHandlerTests
 {
     [Fact]
-    public async void TestHandleReturnsResponse()
+    public async Task TestHandleReturnsResponse()
     {
         // Arrange
         var mockValidator = new Mock<IFormRecognizerValidator>();

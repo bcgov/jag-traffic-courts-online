@@ -14,13 +14,14 @@ using TrafficCourts.Staff.Service.Services;
 using Xunit;
 using ApiException = TrafficCourts.Exceptions.ApiException;
 using MediatR;
+using System.Threading.Tasks;
 
 namespace TrafficCourts.Staff.Service.Test.Controllers;
 
 public class JJControllerTest
 {
     [Fact]
-    public async void TestAcceptJJDispute200Result()
+    public async Task TestAcceptJJDispute200Result()
     {
         // Arrange
         JJDispute dispute = new();
@@ -47,7 +48,7 @@ public class JJControllerTest
     }
 
     [Fact]
-    public async void TestAssignJJDisputesToJJ200Result()
+    public async Task TestAssignJJDisputesToJJ200Result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with ticket number (AJ201092461) to assign it to a JJ, confirm controller updates and assigns the JJ.
 
@@ -73,7 +74,7 @@ public class JJControllerTest
     }
 
     [Fact]
-    public async void TestAssignJJDisputesToJJT400Result()
+    public async Task TestAssignJJDisputesToJJT400Result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with no ticket number to assign it to a JJ, confirm controller returns 400 when updating.
 
@@ -100,7 +101,7 @@ public class JJControllerTest
     }
 
     [Fact]
-    public async void TestAssignJJDisputesToJJT404Result()
+    public async Task TestAssignJJDisputesToJJT404Result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with an invalid ticket number that is not exist in db to assign it to a JJ, confirm controller returns 404 when updating.
 
@@ -128,7 +129,7 @@ public class JJControllerTest
     }
 
     [Fact]
-    public async void TestUpdateCourtAppearanceAndRequireCourtHearing200Result()
+    public async Task TestUpdateCourtAppearanceAndRequireCourtHearing200Result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with ticket number (AJ201092461) to set its status to REQUIRE_COURT_HEARING, confirm controller updates the status.
 
@@ -153,7 +154,7 @@ public class JJControllerTest
     }
 
     [Fact]
-    public async void TestUpdateCourtAppearanceAndRequireCourtHearing400result()
+    public async Task TestUpdateCourtAppearanceAndRequireCourtHearing400result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with no ticket number to set its status to REQUIRE_COURT_HEARING, confirm controller returns 400 when updating.
 
@@ -180,7 +181,7 @@ public class JJControllerTest
     }
 
     [Fact]
-    public async void TestUpdateCourtAppearanceAndRequireCourtHearing404result()
+    public async Task TestUpdateCourtAppearanceAndRequireCourtHearing404result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with an invalid ticket number to set its status to REQUIRE_COURT_HEARING, confirm controller returns 404 when updating.
 
@@ -207,7 +208,7 @@ public class JJControllerTest
     }
 
     [Fact]
-    public async void TestUpdateCourtAppearanceAndRequireCourtHearing405result()
+    public async Task TestUpdateCourtAppearanceAndRequireCourtHearing405result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with ticket number (AJ201092461) to set its status to REQUIRE_COURT_HEARING that has invalid status and returns 405, confirm controller returns 405 when updating.
 
@@ -234,7 +235,7 @@ public class JJControllerTest
     }
 
     [Fact]
-    public async void TestUpdateCourtAppearanceAndConfirm200Result()
+    public async Task TestUpdateCourtAppearanceAndConfirm200Result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with ticket number (AJ201092461) to set its status to CONFIRMED, confirm controller updates the status.
 
@@ -259,7 +260,7 @@ public class JJControllerTest
     }
 
     [Fact]
-    public async void TestUpdateCourtAppearanceAndConfirm400result()
+    public async Task TestUpdateCourtAppearanceAndConfirm400result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with no ticket number to set its status to CONFIRMED, confirm controller returns 400 when updating.
 
@@ -286,7 +287,7 @@ public class JJControllerTest
     }
 
     [Fact]
-    public async void TestUpdateCourtAppearanceAndConfirm404result()
+    public async Task TestUpdateCourtAppearanceAndConfirm404result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with an invalid ticket number to set its status to CONFIRMED, confirm controller returns 404 when updating.
 
@@ -313,7 +314,7 @@ public class JJControllerTest
     }
 
     [Fact]
-    public async void TestUpdateCourtAppearanceAndConfirm405result()
+    public async Task TestUpdateCourtAppearanceAndConfirm405result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with ticket number (AJ201092461) to set its status to CONFIRMED that has invalid status and returns 405, confirm controller returns 405 when updating.
 
@@ -340,7 +341,7 @@ public class JJControllerTest
     }
 
     [Fact]
-    public async void TestGetJJDispute200Result()
+    public async Task TestGetJJDispute200Result()
     {
         // Arrange
         JJDispute dispute = new();
@@ -366,7 +367,7 @@ public class JJControllerTest
     }
 
     [Fact]
-    public async void TestGetJJDispute400Result()
+    public async Task TestGetJJDispute400Result()
     {
         // Arrange
         JJDispute dispute = new();
@@ -392,7 +393,7 @@ public class JJControllerTest
     }
 
     [Fact]
-    public async void TestGetJJDispute404Result()
+    public async Task TestGetJJDispute404Result()
     {
         // Arrange
         JJDispute dispute = new();
@@ -418,7 +419,7 @@ public class JJControllerTest
     }
 
     [Fact]
-    public async void TestGetJustinDocument200Result()
+    public async Task TestGetJustinDocument200Result()
     {
         // Arrange
         TicketImageDataJustinDocument justinDocument = new();
@@ -448,10 +449,8 @@ public class JJControllerTest
         var fileResult = Assert.IsType<FileStreamResult>(result);
     }
 
-
-
     [Fact]
-    public async void TestGetJustinDocument404Result()
+    public async Task TestGetJustinDocument404Result()
     {
         // Arrange
         JJDispute dispute = new();
@@ -478,7 +477,7 @@ public class JJControllerTest
     }
 
     [Fact]
-    public async void TestGetJJDisputeDisputeAssigned409Result()
+    public async Task TestGetJJDisputeDisputeAssigned409Result()
     {
         // Arrange
         JJDispute dispute = new();
@@ -506,7 +505,7 @@ public class JJControllerTest
     }
 
     [Fact]
-    public async void TestGetJJDisputeThrowsObjectManagementServiceException500Result()
+    public async Task TestGetJJDisputeThrowsObjectManagementServiceException500Result()
     {
         // Arrange
         string ticketnumber = "AJ201092461";

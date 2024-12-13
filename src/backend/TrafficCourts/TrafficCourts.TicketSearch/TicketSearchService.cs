@@ -113,7 +113,7 @@ public partial class TicketSearchService : ITicketSearchService
             count.Section = legalSection.Section;
             count.Subsection = legalSection.Subsection;
             count.Paragraph = legalSection.Paragraph;
-            count.Subparagraph = legalSection.Subparagrah;
+            count.Subparagraph = legalSection.Subparagraph;
 
             if (!string.IsNullOrEmpty(invoice.OffenceDescription))
             {

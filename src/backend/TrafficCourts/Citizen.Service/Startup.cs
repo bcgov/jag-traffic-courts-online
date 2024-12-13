@@ -81,7 +81,7 @@ public static class Startup
         UseFormRecognizer(builder);
 
         builder.Services.AddLanguageLookup();
-        builder.Services.AddStatuteLookup();
+        builder.Services.AddStatuteLookup<StatuteLookupService>();
         builder.Services.AddAgencyLookup();
         builder.Services.AddProvinceLookup();
         builder.Services.AddTransient<IRedisCacheService, RedisCacheService>();

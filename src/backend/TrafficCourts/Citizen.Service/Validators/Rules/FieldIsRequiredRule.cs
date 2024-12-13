@@ -11,7 +11,7 @@ public class FieldIsRequiredRule : ValidationRule
     {
     }
 
-    public override Task RunAsync()
+    public override Task RunAsync(CancellationToken cancellationToken)
     {
         if (Field.Value is null)
         {

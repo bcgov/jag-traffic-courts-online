@@ -9,6 +9,7 @@ using TrafficCourts.Caching;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Authentication;
 using TrafficCourts.Common.Configuration;
+using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Messaging;
 using TrafficCourts.OrdsDataService;
 using TrafficCourts.Staff.Service.Authentication;
@@ -104,7 +105,7 @@ public static class Startup
         builder.Services.AddTransient<IDisputeLockService, RedisDisputeLockService>();
 
         builder.Services.AddLanguageLookup();
-        builder.Services.AddStatuteLookup();
+        builder.Services.AddStatuteLookup<StatuteLookupService>();
         builder.Services.AddAgencyLookup();
         builder.Services.AddProvinceLookup();
         builder.Services.AddCountryLookup();

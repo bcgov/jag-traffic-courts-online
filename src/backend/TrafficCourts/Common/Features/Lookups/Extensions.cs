@@ -13,11 +13,9 @@ public static partial class Extensions
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>
-    public static IServiceCollection AddStatuteLookup(this IServiceCollection services)
+    public static IServiceCollection AddStatuteLookup<TImplementation>(this IServiceCollection services) where TImplementation : class, IStatuteLookupService
     {
-        services.AddTransient<IStatuteLookupService, StatuteLookupService>();
-        services.AddMemoryCache();
-
+        services.AddTransient<IStatuteLookupService, TImplementation>();
         services.AddTransient<IRequestHandler<StatuteLookup.Request, StatuteLookup.Response>, StatuteLookup.Handler>();
 
         return services;

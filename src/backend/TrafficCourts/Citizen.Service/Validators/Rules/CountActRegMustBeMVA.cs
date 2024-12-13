@@ -14,7 +14,7 @@ public class CountActRegMustBeMVA : ValidationRule
         _countNum = countNum;
     }
 
-    public override Task RunAsync()
+    public override Task RunAsync(CancellationToken cancellationToken)
     {
         string? countAct = this.Field.Value;
         if (countAct is not null && 
