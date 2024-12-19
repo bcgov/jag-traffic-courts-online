@@ -2,8 +2,8 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Threading;
 using System.Threading.Tasks;
+using TrafficCourts.Citizen.Service.Services.Lookups;
 using TrafficCourts.Citizen.Service.Validators;
-using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Domain.Models;
 using Xunit;
 

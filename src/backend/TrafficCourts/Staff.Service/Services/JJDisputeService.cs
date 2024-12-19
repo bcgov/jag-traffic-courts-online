@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Security.Claims;
 using TrafficCourts.Collections;
-using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Common.OpenAPIs.Keycloak;
 using TrafficCourts.Common.OpenAPIs.Keycloak.v22_0;
 using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v22_0;

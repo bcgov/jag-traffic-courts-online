@@ -78,7 +78,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeCourthouseTeamCounts();
-    this.getCourthouseAgencyIds();    
+    this.getCourthouseAgencyIds();   
   }
 
   getTCODisputes() {

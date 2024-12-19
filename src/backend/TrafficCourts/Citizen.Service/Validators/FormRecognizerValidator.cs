@@ -1,9 +1,9 @@
 using TrafficCourts.Citizen.Service.Validators.Rules;
-using TrafficCourts.Common.Features.Lookups;
 using System.Text.RegularExpressions;
 using TrafficCourts.Domain.Models;
 
 using OcrViolationTicket = TrafficCourts.Domain.Models.OcrViolationTicket;
+using TrafficCourts.Citizen.Service.Services.Lookups;
 
 namespace TrafficCourts.Citizen.Service.Validators;
 
@@ -29,7 +29,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
 
     public async Task ValidateViolationTicketAsync(OcrViolationTicket violationTicket, CancellationToken cancellationToken)
     {
-        ApplyGlobalRules(violationTicket, cancellationToken);
+        await ApplyGlobalRulesAsync(violationTicket, cancellationToken);
 
         // abort validation if this is not a valid Violation Ticket.
         if (violationTicket.GlobalValidationErrors.Count > 0)
@@ -341,7 +341,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
     }
 
     /// <summary>Applies a set of validation rules to determine if the given violationTicket is valid or not.</summary>
-    private static async void ApplyGlobalRules(OcrViolationTicket violationTicket, CancellationToken cancellationToken)
+    private static async Task ApplyGlobalRulesAsync(OcrViolationTicket violationTicket, CancellationToken cancellationToken)
     {
         // TCVP-933 A ticket is considered valid iff
         // - TCVP-2559 Ticket Version must not be VT1 (superceded by VT2 and is no longer supported)

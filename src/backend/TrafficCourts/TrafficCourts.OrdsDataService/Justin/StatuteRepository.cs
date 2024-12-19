@@ -19,7 +19,7 @@ internal class StatuteRepository : OrdsRepository<StatuteRepository>, IStatuteRe
         var response = await GetListAsync(
             parameters,
             JsonContext.Default.OrdsDataServiceCollectionResponseStatute,
-            ETagCache.FiveMinutes,
+            ETagCache.OneHour,
             cancellationToken);
 
         return response?.Rows?.FirstOrDefault();

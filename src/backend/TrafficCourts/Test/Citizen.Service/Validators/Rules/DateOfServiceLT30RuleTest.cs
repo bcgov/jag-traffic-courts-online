@@ -3,9 +3,9 @@ using Moq;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using TrafficCourts.Citizen.Service.Services.Lookups;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Citizen.Service.Validators.Rules;
-using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Domain.Models;
 using Xunit;
 

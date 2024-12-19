@@ -1,5 +1,5 @@
 using System.Text.RegularExpressions;
-using TrafficCourts.Common.Features.Lookups;
+using TrafficCourts.Citizen.Service.Services.Lookups;
 using TrafficCourts.Domain.Models;
 
 namespace TrafficCourts.Citizen.Service.Validators.Rules;

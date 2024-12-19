@@ -18,6 +18,7 @@ using Microsoft.OpenApi.Models;
 using OpenTelemetry.Metrics;
 using ZiggyCreatures.Caching.Fusion;
 using TrafficCourts.OrdsDataService;
+using TrafficCourts.Citizen.Service.Services.Lookups;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -69,6 +70,8 @@ public static class Startup
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddOrdsDataService(builder.Configuration);
 
+        builder.Services.AddTransient<IStatuteLookupService, StatuteLookupService>();
+
         // Redis
         var redisConnectionString = builder.AddRedis();
 
@@ -84,10 +87,6 @@ public static class Startup
         // Form Recognizer
         UseFormRecognizer(builder);
 
-        builder.Services.AddLanguageLookup();
-        builder.Services.AddStatuteLookup<StatuteLookupService>();
-        builder.Services.AddAgencyLookup();
-        builder.Services.AddProvinceLookup();
         builder.Services.AddTransient<IRedisCacheService, RedisCacheService>();
         builder.Services.AddTransient<ICitizenDocumentService, CitizenDocumentService>();
 

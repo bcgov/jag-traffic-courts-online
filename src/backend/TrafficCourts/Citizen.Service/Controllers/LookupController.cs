@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Domain.Models;
 
 namespace TrafficCourts.Citizen.Service.Controllers;
@@ -30,10 +29,10 @@ public class LookupController : ControllerBase
     {
         _logger.LogDebug("Retrieving a Statutes");
 
-        StatuteLookup.Request request = new StatuteLookup.Request(section);
-        StatuteLookup.Response response = await _mediator.Send(request, cancellationToken);
+        var request = new Features.Lookups.Statutes.Request(section);
+        var response = await _mediator.Send(request, cancellationToken);
 
-        return Ok(response.Statutes);
+        return Ok(response.Items);
     }
 
     /// <summary> 
@@ -48,10 +47,9 @@ public class LookupController : ControllerBase
     {
         _logger.LogDebug("Retrieving Languages");
 
-        LanguageLookup.Request request = new();
-        LanguageLookup.Response response = await _mediator.Send(request, cancellationToken);
-
-        return Ok(response.Languages);
+        var request = new Features.Lookups.Languages.Request();
+        var response = await _mediator.Send(request, cancellationToken);
+        return Ok(response.Items);
     }
 }
 

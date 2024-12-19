@@ -19,6 +19,7 @@ public class LegalSectionTest
     [InlineData(" 4.21(5)", "4.21", "5", "", "")]       // leading space
     [InlineData("4.21(5) ", "4.21", "5", "", "")]       // trailing space
     [InlineData("4.21 (5)", "4.21", "5", "", "")]       // internal space
+    [InlineData("4.21(a)(i)", "4.21", "", "a", "i")]    // no subsection
     public void TryParseWithValidInput(string formatted, string section, string subsection, string paragraph, string subparagrah)
     {
         Assert.True(LegalSection.TryParse(formatted, out LegalSection? actual));
