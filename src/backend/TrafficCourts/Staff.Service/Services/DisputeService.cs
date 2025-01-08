@@ -3,7 +3,6 @@ using MediatR;
 using System.Security.Claims;
 using System.Text.Json;
 using TrafficCourts.Collections;
-using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Domain.Events;
 using TrafficCourts.Domain.Models;
@@ -110,7 +109,7 @@ public class DisputeService : IDisputeService,
         parameters ??= new GetAllDisputesParameters();
         parameters.SetDefaultSortIfNotSpecified();
 
-        var agencies = await _agencyLookupService.GetListAsync();
+        var agencies = await _agencyLookupService.GetListAsync(cancellationToken);
 
         // apply fitler, sorting and paging
         var paged = disputes
@@ -259,9 +258,9 @@ public class DisputeService : IDisputeService,
         await GetIcbcTicketInformation(dispute, options, cancellationToken);
 
         // set AddressProvince to 2 character abbreviation code if prov seq no & ctry id present
-        if (dispute.AddressProvinceSeqNo != null)
+        if (dispute.AddressProvinceSeqNo is not null && dispute.AddressCountryId is not null)
         {
-            var provFound = await _provinceLookupService.GetByProvSeqNoCtryIdAsync(dispute.AddressProvinceSeqNo.ToString(), dispute.AddressCountryId.ToString());
+            var provFound = await _provinceLookupService.GetByProvSeqNoCtryIdAsync(dispute.AddressProvinceSeqNo.Value, dispute.AddressCountryId.Value, cancellationToken);
             if (provFound != null) { dispute.AddressProvince = provFound.ProvAbbreviationCd; }
         }
 

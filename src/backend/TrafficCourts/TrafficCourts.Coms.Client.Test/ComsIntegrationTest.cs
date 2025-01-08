@@ -151,7 +151,7 @@ namespace TrafficCourts.Coms.Client.Test
             // test fetch and add tags
             IList<Anonymous3> fetchTagsResponse = await client.FetchTagsAsync([objectId], null, CancellationToken.None);
 
-            var objectTags = Assert.Single(fetchTagsResponse.Where(_ => _.ObjectId == objectId));
+            var objectTags = Assert.Single(fetchTagsResponse, _ => _.ObjectId == objectId);
             var objectTagValue = Assert.Single(objectTags.Tagset);
             Assert.Equal("a", objectTagValue.Key);
             Assert.Equal("1", objectTagValue.Value);
@@ -162,12 +162,12 @@ namespace TrafficCourts.Coms.Client.Test
             await client.AddTaggingAsync(objectId, tags, null);
             fetchTagsResponse = await client.FetchTagsAsync([objectId]);
 
-            objectTags = Assert.Single(fetchTagsResponse.Where(_ => _.ObjectId == objectId));
+            objectTags = Assert.Single(fetchTagsResponse, _ => _.ObjectId == objectId);
             Assert.Equal(2, objectTags.Tagset.Count);
 
             // 
             IList<Anonymous2> fetchMetadataResponse = await client.FetchMetadataAsync([objectId], null, CancellationToken.None);
-            var objectMetadata = Assert.Single(fetchMetadataResponse.Where(_ => _.ObjectId == objectId));
+            var objectMetadata = Assert.Single(fetchMetadataResponse, _ => _.ObjectId == objectId);
 
             meta = ToDictionary(objectMetadata);
             //meta["coms-name"] = "something-new.txt";
@@ -183,7 +183,7 @@ namespace TrafficCourts.Coms.Client.Test
             }
 
             fetchMetadataResponse = await client.FetchMetadataAsync([objectId], null, CancellationToken.None);
-            objectMetadata = Assert.Single(fetchMetadataResponse.Where(_ => _.ObjectId == objectId));
+            objectMetadata = Assert.Single(fetchMetadataResponse, _ => _.ObjectId == objectId);
         }
 
         private Dictionary<string, string> ToDictionary(Anonymous2 objectMetadata)

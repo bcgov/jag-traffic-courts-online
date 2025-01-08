@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -26,18 +25,14 @@ public class LookupController : StaffControllerBase
     /// <returns></returns>
     /// <response code="200">OK</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
+    [Obsolete("Use StatutesV2Async instead. This method will be removed in a future release.")]
     [HttpGet]
     [Produces("application/json")]
     [ProducesResponseType(typeof(IList<Statute>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> StatutesAsync(string? section, CancellationToken cancellationToken)
+    public Task<IActionResult> StatutesAsync(string? section, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Retrieving Statutes");
-
-        StatuteLookup.Request request = new(section);
-        StatuteLookup.Response response = await _mediator.Send(request, cancellationToken);
-
-        return Ok(response.Statutes);
+        return StatutesV2Async(section, cancellationToken);
     }
 
     /// <summary> 
@@ -73,18 +68,14 @@ public class LookupController : StaffControllerBase
     /// <returns></returns>
     /// <response code="200">OK</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
+    [Obsolete("Use LanguagesV2Async instead. This method will be removed in a future release.")]
     [HttpGet]
     [Produces("application/json")]
     [ProducesResponseType(typeof(IList<Language>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> LanguagesAsync(CancellationToken cancellationToken)
+    public Task<IActionResult> LanguagesAsync(CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Retrieving Languages");
-
-        LanguageLookup.Request request = new();
-        LanguageLookup.Response response = await _mediator.Send(request, cancellationToken);
-
-        return Ok(response.Languages);
+        return LanguagesV2Async(cancellationToken);
     }
 
     /// <summary> 
@@ -118,18 +109,14 @@ public class LookupController : StaffControllerBase
     /// <returns></returns>
     /// <response code="200">OK</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
+    [Obsolete("Use AgenciesV2Async instead. This method will be removed in a future release.")]
     [HttpGet]
     [Produces("application/json")]
     [ProducesResponseType(typeof(IList<Agency>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> AgenciesAsync(CancellationToken cancellationToken)
+    public Task<IActionResult> AgenciesAsync(CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Retrieving Agencies");
-
-        AgencyLookup.Request request = new();
-        AgencyLookup.Response response = await _mediator.Send(request, cancellationToken);
-
-        return Ok(response.Agencies);
+        return AgenciesV2Async(null, cancellationToken);
     }
 
     /// <summary> 
@@ -165,18 +152,14 @@ public class LookupController : StaffControllerBase
     /// <returns></returns>
     /// <response code="200">OK</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
+    [Obsolete("Use ProvinceV2Async instead. This method will be removed in a future release.")]
     [HttpGet]
     [Produces("application/json")]
     [ProducesResponseType(typeof(IList<Province>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> ProvinceAsync(CancellationToken cancellationToken)
+    public Task<IActionResult> ProvinceAsync(CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Retrieving Provinces");
-
-        ProvinceLookup.Request request = new();
-        ProvinceLookup.Response response = await _mediator.Send(request, cancellationToken);
-
-        return Ok(response.Provinces);
+        return ProvinceV2Async(cancellationToken);
     }
 
     /// <summary> 
@@ -211,18 +194,14 @@ public class LookupController : StaffControllerBase
     /// <returns></returns>
     /// <response code="200">OK</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
+    [Obsolete("Use CountryV2Async instead. This method will be removed in a future release.")]
     [HttpGet]
     [Produces("application/json")]
     [ProducesResponseType(typeof(IList<Country>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> CountryAsync(CancellationToken cancellationToken)
+    public Task<IActionResult> CountryAsync(CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Retrieving Countries");
-
-        CountryLookup.Request request = new();
-        CountryLookup.Response response = await _mediator.Send(request, cancellationToken);
-
-        return Ok(response.Countries);
+        return CountryV2Async(cancellationToken);
     }
 
 

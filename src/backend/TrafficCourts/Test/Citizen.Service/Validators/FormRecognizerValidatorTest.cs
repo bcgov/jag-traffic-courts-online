@@ -1,7 +1,9 @@
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Threading;
+using System.Threading.Tasks;
+using TrafficCourts.Citizen.Service.Services.Lookups;
 using TrafficCourts.Citizen.Service.Validators;
-using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Domain.Models;
 using Xunit;
 
@@ -10,14 +12,14 @@ namespace TrafficCourts.Test.Citizen.Service.Validators;
 public class FormRecognizerValidatorTest
 {
     [Fact]
-    public async void TestSanitize_MVAStatuteExists()
+    public async Task TestSanitize_MVAStatuteExists()
     {
         // isMVA should be overwritten to _selected if the section text references a valid MVA Statute
 
         // Given
         Statute statute = new Statute("19590", "MVA", "100", "1", "a", "", "MVA 100(1)(a)", "Fail to stop/police pursuit", "Fail to stop/police pursuit");
         var _statuteLookupService = new Mock<IStatuteLookupService>();
-        _statuteLookupService.Setup(x => x.GetBySectionAsync("100(1)(a)")).ReturnsAsync(statute);
+        _statuteLookupService.Setup(x => x.GetBySectionAsync("100(1)(a)", CancellationToken.None)).ReturnsAsync(statute);
         var _logger = new Mock<ILogger<FormRecognizerValidator>>();
         FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
 
@@ -26,21 +28,21 @@ public class FormRecognizerValidatorTest
         violationTicket.Fields.Add(OcrViolationTicket.Count1Section, new Field("100(1)(a)"));
 
         // When
-        await formRecognizerValidator.SanitizeAsync(violationTicket);
+        await formRecognizerValidator.SanitizeAsync(violationTicket, CancellationToken.None);
 
         // Then
         Assert.Equal(Field._selected, violationTicket.Fields[OcrViolationTicket.OffenceIsMVA].Value);
     }
 
     [Fact]
-    public async void TestSanitize_MVAStatuteDoesntExist()
+    public async Task TestSanitize_MVAStatuteDoesntExist()
     {
         // isMVA should be overwritten to _unselected if the section text is blank or does not reference a valid MVA Statute.
 
         // Given
         Statute statute = new Statute("19590", "MVA", "100", "1", "a", "", "MVA 100(1)(a)", "Fail to stop/police pursuit", "Fail to stop/police pursuit");
         var _statuteLookupService = new Mock<IStatuteLookupService>();
-        _statuteLookupService.Setup(x => x.GetBySectionAsync("100(1)(a)")).ReturnsAsync(statute);
+        _statuteLookupService.Setup(x => x.GetBySectionAsync("100(1)(a)", CancellationToken.None)).ReturnsAsync(statute);
         var _logger = new Mock<ILogger<FormRecognizerValidator>>();
         FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
 
@@ -49,21 +51,21 @@ public class FormRecognizerValidatorTest
         violationTicket.Fields.Add(OcrViolationTicket.Count1Section, new Field("777"));
 
         // When
-        await formRecognizerValidator.SanitizeAsync(violationTicket);
+        await formRecognizerValidator.SanitizeAsync(violationTicket, CancellationToken.None);
 
         // Then
         Assert.Equal(Field._unselected, violationTicket.Fields[OcrViolationTicket.OffenceIsMVA].Value);
     }
     
     [Fact]
-    public async void TestSanitize_MVARStatuteExists()
+    public async Task TestSanitize_MVARStatuteExists()
     {
         // isMVAR should be overwritten to _selected if the section text references a valid MVA Statute
 
         // Given
         Statute statute = new Statute("19590", "MVAR", "100", "1", "a", "", "MVAR 100(1)(a)", "Fail to stop/police pursuit", "Fail to stop/police pursuit");
         var _statuteLookupService = new Mock<IStatuteLookupService>();
-        _statuteLookupService.Setup(x => x.GetBySectionAsync("100(1)(a)")).ReturnsAsync(statute);
+        _statuteLookupService.Setup(x => x.GetBySectionAsync("100(1)(a)", CancellationToken.None)).ReturnsAsync(statute);
         var _logger = new Mock<ILogger<FormRecognizerValidator>>();
         FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
 
@@ -72,21 +74,21 @@ public class FormRecognizerValidatorTest
         violationTicket.Fields.Add(OcrViolationTicket.Count1Section, new Field("100(1)(a)"));
 
         // When
-        await formRecognizerValidator.SanitizeAsync(violationTicket);
+        await formRecognizerValidator.SanitizeAsync(violationTicket, CancellationToken.None);
 
         // Then
         Assert.Equal(Field._selected, violationTicket.Fields[OcrViolationTicket.OffenceIsMVAR].Value);
     }
 
     [Fact]
-    public async void TestSanitize_MVARStatuteDoesntExist()
+    public async Task TestSanitize_MVARStatuteDoesntExist()
     {
         // isMVA should be overwritten to _unselected if the section text is blank or does not reference a valid MVA Statute.
 
         // Given
         Statute statute = new Statute("19590", "MVAR", "100", "1", "a", "", "MVAR 100(1)(a)", "Fail to stop/police pursuit", "Fail to stop/police pursuit");
         var _statuteLookupService = new Mock<IStatuteLookupService>();
-        _statuteLookupService.Setup(x => x.GetBySectionAsync("100(1)(a)")).ReturnsAsync(statute);
+        _statuteLookupService.Setup(x => x.GetBySectionAsync("100(1)(a)", CancellationToken.None)).ReturnsAsync(statute);
         var _logger = new Mock<ILogger<FormRecognizerValidator>>();
         FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
 
@@ -95,14 +97,14 @@ public class FormRecognizerValidatorTest
         violationTicket.Fields.Add(OcrViolationTicket.Count1Section, new Field("777"));
 
         // When
-        await formRecognizerValidator.SanitizeAsync(violationTicket);
+        await formRecognizerValidator.SanitizeAsync(violationTicket, CancellationToken.None);
 
         // Then
         Assert.Equal(Field._unselected, violationTicket.Fields[OcrViolationTicket.OffenceIsMVAR].Value);
     }
 
     [Fact]
-    public async void TestSanitize_DLNumberFromProvince()
+    public async Task TestSanitize_DLNumberFromProvince()
     {
         // Given
         var _statuteLookupService = new Mock<IStatuteLookupService>();
@@ -114,7 +116,7 @@ public class FormRecognizerValidatorTest
         violationTicket.Fields.Add(OcrViolationTicket.DriverLicenceProvince, new Field("BC 1234567"));
 
         // When
-        await formRecognizerValidator.SanitizeAsync(violationTicket);
+        await formRecognizerValidator.SanitizeAsync(violationTicket, CancellationToken.None);
 
         // Then
         Assert.Equal("BC", violationTicket.Fields[OcrViolationTicket.DriverLicenceProvince].Value);
@@ -122,7 +124,7 @@ public class FormRecognizerValidatorTest
     }
 
     [Fact]
-    public async void TestSanitize_ProvinceFromDLNumber()
+    public async Task TestSanitize_ProvinceFromDLNumber()
     {
         // Given
         var _statuteLookupService = new Mock<IStatuteLookupService>();
@@ -134,7 +136,7 @@ public class FormRecognizerValidatorTest
         violationTicket.Fields.Add(OcrViolationTicket.DriverLicenceProvince, new Field(""));
 
         // When
-        await formRecognizerValidator.SanitizeAsync(violationTicket);
+        await formRecognizerValidator.SanitizeAsync(violationTicket, CancellationToken.None);
 
         // Then
         Assert.Equal("BC", violationTicket.Fields[OcrViolationTicket.DriverLicenceProvince].Value);
@@ -142,7 +144,7 @@ public class FormRecognizerValidatorTest
     }
 
     [Fact]
-    public async void TestSanitize_EmptySectionAndTicketAmountForAllCounts()
+    public async Task TestSanitize_EmptySectionAndTicketAmountForAllCounts()
     {
         // Given
         var _statuteLookupService = new Mock<IStatuteLookupService>();
@@ -167,7 +169,7 @@ public class FormRecognizerValidatorTest
         violationTicket.Fields.Add(OcrViolationTicket.Count3TicketAmount, new Field(""));
 
         // When
-        await formRecognizerValidator.SanitizeAsync(violationTicket);
+        await formRecognizerValidator.SanitizeAsync(violationTicket, CancellationToken.None);
 
         // Then
         Assert.True(string.IsNullOrEmpty(violationTicket.Fields[OcrViolationTicket.Count1Description].Value));
@@ -176,7 +178,7 @@ public class FormRecognizerValidatorTest
     }
 
     [Fact]
-    public async void TestSanitize_WhitespaceRemoved()
+    public async Task TestSanitize_WhitespaceRemoved()
     {
         // Given
         var _statuteLookupService = new Mock<IStatuteLookupService>();
@@ -189,7 +191,7 @@ public class FormRecognizerValidatorTest
         violationTicket.Fields.Add(OcrViolationTicket.ViolationTicketTitle, new Field(" \t \n some_text \t "));
 
         // When
-        await formRecognizerValidator.SanitizeAsync(violationTicket);
+        await formRecognizerValidator.SanitizeAsync(violationTicket, CancellationToken.None);
 
         // Then
         Assert.Equal(" some_text ", violationTicket.Fields[OcrViolationTicket.DetachmentLocation].Value);
@@ -199,7 +201,7 @@ public class FormRecognizerValidatorTest
 
     // Given a Violation Ticket with a count that has a Ticket Amount field with a trailing hyphen, ensure the hyphen is removed
     [Fact]
-    public async void TestSanitize_TicketAmountStripHyphens()
+    public async Task TestSanitize_TicketAmountStripHyphens()
     {
         // Given
         var _statuteLookupService = new Mock<IStatuteLookupService>();
@@ -212,7 +214,7 @@ public class FormRecognizerValidatorTest
         violationTicket.Fields.Add(OcrViolationTicket.Count3TicketAmount, new Field("-3 33"));
 
         // When
-        await formRecognizerValidator.SanitizeAsync(violationTicket);
+        await formRecognizerValidator.SanitizeAsync(violationTicket, CancellationToken.None);
 
         // Then
         Assert.Equal("100", violationTicket.Fields[OcrViolationTicket.Count1TicketAmount].Value);

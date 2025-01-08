@@ -10,7 +10,7 @@ public interface IFormRecognizerValidator
     /// </summary>
     /// <param name="violationTicket"></param>
     /// <returns></returns>
-    public Task SanitizeViolationTicketAsync(OcrViolationTicket violationTicket);
+    public Task SanitizeViolationTicketAsync(OcrViolationTicket violationTicket, CancellationToken cancellationToken);
 
     /// <summary>
     ///    Validates the Violation Ticket, updating the global and field-specific confidence scores and validation results.
@@ -19,5 +19,5 @@ public interface IFormRecognizerValidator
     ///    ie. Count ticket amounts must be numeric
     ///    ie. Drivers Licence must be 7 digits
     /// </summary>
-    public Task ValidateViolationTicketAsync(OcrViolationTicket violationTicket);
+    public Task ValidateViolationTicketAsync(OcrViolationTicket violationTicket, CancellationToken cancellationToken);
 }

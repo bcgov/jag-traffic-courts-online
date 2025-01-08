@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Cdogs.Client;
-using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v22_0;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Domain.Models;

@@ -1,10 +1,11 @@
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
+using TrafficCourts.Citizen.Service.Services.Lookups;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Citizen.Service.Validators.Rules;
-using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Domain.Models;
 using Xunit;
 
@@ -56,7 +57,7 @@ public class DateOfServiceLT30RuleTest
     [InlineData("2021 11 02", "2021 11 03", "2021-11-02", "2021-11-03")]
     [InlineData("2021 02", "2021 11 03", "2021-11-03", "2021-11-03")] // Violation Date is not a valid date => null
     [InlineData("2021 11 02", "2021 03", "2021-11-02", "2021-11-02")] // Date of Service is not a valid date => null
-    public async void TestSanitizeDates(string violationDateStr, string dateOfServiceStr, string expectedVDStr, string expectedDoStr) {
+    public async Task TestSanitizeDates(string violationDateStr, string dateOfServiceStr, string expectedVDStr, string expectedDoStr) {
         // ViolationDate and DateOfService are usually the same day. If either is misread/null, use the other date value.
 
         // Given
@@ -69,7 +70,7 @@ public class DateOfServiceLT30RuleTest
         FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
 
         // When
-        await formRecognizerValidator.SanitizeAsync(violationTicket);
+        await formRecognizerValidator.SanitizeAsync(violationTicket, CancellationToken.None);
 
         // Then
         Assert.Equal(violationTicket.Fields[OcrViolationTicket.ViolationDate].GetDate()?.ToString("yyyy-MM-dd"), expectedVDStr);
@@ -88,7 +89,7 @@ public class DateOfServiceLT30RuleTest
         DateOfServiceLT30Rule rule = new(dateOfService);
 
         // When
-        await rule.RunAsync();
+        await rule.RunAsync(CancellationToken.None);
 
         // Then
         Assert.Equal(isValid, rule.IsValid());

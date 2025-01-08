@@ -23,6 +23,6 @@ public abstract class ValidationRule
         Field.FieldConfidence = 0;
     }
 
-    public abstract Task RunAsync();
+    public abstract Task RunAsync(CancellationToken cancellationToken);
 
 }

@@ -85,12 +85,12 @@ public static class AnalyseHandler
 
             if (request.Sanitize) {
                 // Perform basic cleanup from a bad OCR scan.
-                await _formRecognizerValidator.SanitizeViolationTicketAsync(violationTicket);
+                await _formRecognizerValidator.SanitizeViolationTicketAsync(violationTicket, cancellationToken);
             }
 
             if (request.Validate) {
                 // Validate the violationTicket and adjust confidence values (invalid ticket number, invalid count section text, etc)
-                await _formRecognizerValidator.ValidateViolationTicketAsync(violationTicket);
+                await _formRecognizerValidator.ValidateViolationTicketAsync(violationTicket, cancellationToken);
             }
 
             // Save the violation ticket OCR data into Redis using the generated guid and set it to expire after 1 day from Redis

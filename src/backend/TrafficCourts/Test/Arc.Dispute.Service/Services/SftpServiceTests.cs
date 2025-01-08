@@ -35,7 +35,7 @@
         }
 
         [Fact]
-        public async void TestThrowArgumentNullExceptionIfNullValuesPassedForUploadFile()
+        public async Task TestThrowArgumentNullExceptionIfNullValuesPassedForUploadFile()
         {
             var mockMemoryStream = new Mock<MemoryStream>();
             string fileName = _fixture.Create<String>();

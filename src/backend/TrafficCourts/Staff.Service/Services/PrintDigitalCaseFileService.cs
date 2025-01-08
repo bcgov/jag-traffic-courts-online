@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.FileProviders;
 using System.Text;
 using TrafficCourts.Cdogs.Client;
-using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.Interfaces;
 using TrafficCourts.Staff.Service.Models.DigitalCaseFiles.Print;
@@ -84,7 +83,9 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         Domain.Models.Province? driversLicenceProvince = null;
         if (dispute.DriversLicenceIssuedProvinceSeqNo is not null && dispute.DriversLicenceIssuedCountryId is not null)
         {
-            driversLicenceProvince = await GetDriversLicenceProvinceAsync(dispute.DriversLicenceIssuedProvinceSeqNo.ToString()!, dispute.DriversLicenceIssuedCountryId.ToString()!);
+            var provinceSeqNo = dispute.DriversLicenceIssuedProvinceSeqNo.Value;
+            var countryId = dispute.DriversLicenceIssuedCountryId.Value;
+            driversLicenceProvince = await _provinceLookupService.GetByProvSeqNoCtryIdAsync(provinceSeqNo, countryId, cancellationToken);
         }
 
         var digitalCaseFile = new DigitalCaseFile();
@@ -118,14 +119,18 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
             contact.GivenNames = ticket.GivenNames;
         }
         Domain.Models.Province? addressProvince = null;
-        if (dispute.AddressProvinceSeqNo != null && dispute.AddressCountryId != null)
+        if (dispute.AddressProvinceSeqNo is not null && dispute.AddressCountryId is not null)
         {
-            addressProvince = await GetDriversLicenceProvinceAsync(dispute.AddressProvinceSeqNo.ToString()!, dispute.AddressCountryId.ToString()!);
+            var provinceSeqNo = dispute.AddressProvinceSeqNo.Value;
+            var countryId = dispute.AddressCountryId.Value;
+
+            addressProvince = await _provinceLookupService.GetByProvSeqNoCtryIdAsync(provinceSeqNo, countryId, cancellationToken); ;
         }
+
         Domain.Models.Country? addressCountry = null;
         if (dispute.AddressCountryId != null)
         {
-            addressCountry = await GetCountryAsync(dispute.AddressCountryId.ToString()!);
+            addressCountry = await GetCountryAsync(dispute.AddressCountryId, cancellationToken);
         }
         contact.Address = FormatAddress(dispute, addressProvince?.ProvAbbreviationCd, addressCountry?.CtryLongNm);
         contact.DriversLicence.Province = driversLicenceProvince?.ProvAbbreviationCd ?? string.Empty;
@@ -233,23 +238,12 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         return stream;
     }
 
-    private async Task<Domain.Models.Province?> GetDriversLicenceProvinceAsync(string provinceSeqNo, string countryId)
-    {
-        Domain.Models.Province? driversLicenceProvince = null;
-        if (provinceSeqNo is not null && countryId is not null)
-        {
-            driversLicenceProvince = await _provinceLookupService.GetByProvSeqNoCtryIdAsync(provinceSeqNo, countryId);
-        }
-
-        return driversLicenceProvince;
-    }
-
-    private async Task<Domain.Models.Country?> GetCountryAsync(string countryId)
+    private async Task<Domain.Models.Country?> GetCountryAsync(int? countryId, CancellationToken cancellationToken)
     {
         Domain.Models.Country? country = null;
         if (countryId is not null)
         {
-            country = await _countryLookupService.GetByIdAsync(countryId);
+            country = await _countryLookupService.GetByIdAsync(countryId.Value, cancellationToken);
         }
 
         return country;
@@ -259,13 +253,14 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     /// Returns Agency (Courthouse Location) based on the provided agencyId through agencyLookupService.
     /// </summary>
     /// <param name="agencyId"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    private async Task<Agency?> GetCourthouseLocationAsync(string agencyId)
+    private async Task<Agency?> GetCourthouseLocationAsync(string agencyId, CancellationToken cancellationToken)
     {
         Domain.Models.Agency? courthouseLocation = null;
         if (agencyId is not null)
         {
-            courthouseLocation = await _agencyLookupService.GetByIdAsync(agencyId);
+            courthouseLocation = await _agencyLookupService.GetByIdAsync(agencyId, cancellationToken);
         }
 
         return courthouseLocation;
@@ -282,10 +277,18 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
         var dispute = await _jjDisputeService.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
 
-        Domain.Models.Province? driversLicenceProvince = await GetDriversLicenceProvinceAsync(dispute.DrvLicIssuedProvSeqNo, dispute.DrvLicIssuedCtryId);
+        Domain.Models.Province? driversLicenceProvince = null;
+
+        if (dispute.DrvLicIssuedProvSeqNo is not null && dispute.DrvLicIssuedCtryId is not null)
+        {
+            if (int.TryParse(dispute.DrvLicIssuedProvSeqNo, out int provSeqNo) && int.TryParse(dispute.DrvLicIssuedCtryId, out int ctryId))
+            {
+                driversLicenceProvince = await _provinceLookupService.GetByProvSeqNoCtryIdAsync(provSeqNo, ctryId, cancellationToken);
+            }
+        }
 
         // Get courthouse location data from the courthouse location lookup service based on CourtAgenId provided from the dispute
-        Agency? courthouseLocation = await GetCourthouseLocationAsync(dispute.CourtAgenId);
+        Agency? courthouseLocation = await GetCourthouseLocationAsync(dispute.CourtAgenId, cancellationToken);
 
         var digitalCaseFile = new DigitalCaseFile();
 

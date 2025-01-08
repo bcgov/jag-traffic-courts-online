@@ -71,6 +71,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\TrafficCourts.Core\TrafficCourts.Core.csproj" />
+	  <ProjectReference Include="..\TrafficCourts.OrdsDataService\TrafficCourts.OrdsDataService.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
