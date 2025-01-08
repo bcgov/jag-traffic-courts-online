@@ -273,9 +273,10 @@ export class JJDisputeComponent implements OnInit {
       actionType: "warn",
       cancelTextKey: "Go back",
       icon: "error_outline",
-      message: this.requireCourtHearingReason
+      message: this.requireCourtHearingReason,
+      data: this.lastUpdatedJJDispute.jjDisputedCounts
     };
-    this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
+    this.dialog.open(ConfirmReasonDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action?: any) => {
         if (action?.output?.response) {
           this.requireCourtHearingReason = action.output.reason; // update on form for appearances

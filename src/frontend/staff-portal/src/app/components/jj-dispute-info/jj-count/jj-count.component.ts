@@ -155,14 +155,14 @@ export class JJCountComponent implements OnInit, OnChanges {
       this.inclSurcharge = (this.jjDisputedCount && this.jjDisputedCount.lesserOrGreaterAmount) ? 
         (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.Y ? "yes" : 
         (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.N ? "no" : "")) : "";
-      this.fineReduction = this.jjDisputedCount ? (this.jjDisputedCount.totalFineAmount || 
+      this.fineReduction = this.jjDisputedCount ? (this.jjDisputedCount.totalFineAmount && 
           this.jjDisputedCount.lesserOrGreaterAmount ? (this.jjDisputedCount.lesserOrGreaterAmount !== null && 
           this.jjDisputedCount.lesserOrGreaterAmount != this.jjDisputedCount.ticketedFineAmount ? 
           "yes" : "no") : "") : "";      
-      this.timeToPay = this.jjDisputedCount ? (this.jjDisputedCount.revisedDueDate ? 
+      this.timeToPay = this.jjDisputedCount ? ((this.jjDisputedCount.revisedDueDate && this.jjDisputeInfo.jjDecisionDate) ? 
         (new Date(this.jjDisputedCount.dueDate).getDate() != new Date(this.jjDisputedCount.revisedDueDate).getDate() 
           && this.jjDisputedCount.revisedDueDate.split('T')[0] != this.jjDisputeInfo.jjDecisionDate.split('T')[0]
-          ? "Yes" : "No") : "") : "";
+          ? "yes" : "no") : "") : "";
       this.bindRevisedDueDate(this.jjDisputedCount.revisedDueDate);
       this.updateInclSurcharge(this.inclSurcharge);
 

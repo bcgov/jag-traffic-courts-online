@@ -5,6 +5,7 @@ import { DialogDefaultOptions } from '../dialog-default-options.model';
 import { DialogOptions } from '../dialog-options.model';
 import { DIALOG_DEFAULT_OPTION } from '../dialogs-properties.provider';
 import { DialogContentOutput } from '../dialog-output.model';
+import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-confirm-reason-dialog',
@@ -16,12 +17,15 @@ export class ConfirmReasonDialogComponent {
   public options: DialogOptions;
   public dialogContentOutput: DialogContentOutput<any>;
   public reasonForm: FormGroup;
+  jjIDIR: string;
+  currentDate: Date = new Date();
 
   constructor(
     public dialogRef: MatDialogRef<ConfirmReasonDialogComponent>,
     protected fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public customOptions: DialogOptions,
-    @Inject(DIALOG_DEFAULT_OPTION) public defaultOptions: DialogDefaultOptions
+    @Inject(DIALOG_DEFAULT_OPTION) public defaultOptions: DialogDefaultOptions,
+    private authService: AuthService
   ) {
     this.options =
       typeof customOptions === 'string'
@@ -33,6 +37,12 @@ export class ConfirmReasonDialogComponent {
     this.reasonForm = this.fb.group({
       reason: [this.options.message, [Validators.maxLength(256), Validators.required]]
     })
+
+    this.authService.userProfile$.subscribe(userProfile => {
+      if (userProfile) {
+        this.jjIDIR = userProfile.idir;
+      }
+    });
   }
 
   public onConfirm(): void {
