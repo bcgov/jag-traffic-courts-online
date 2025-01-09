@@ -47,6 +47,7 @@ export class TicketInboxComponent implements OnInit {
   sortBy: Array<string> = ["submittedTs"];
   sortDirection: Array<SortDirection> = [SortDirection.Desc];
   newCount: number = 0;
+  newCountShow: boolean = false;
   filters: TableFilter = new TableFilter();
   previousFilters: TableFilter = new TableFilter();
 
@@ -129,6 +130,8 @@ export class TicketInboxComponent implements OnInit {
     this.filters = dataFilters;
     this.previousFilters = { ...dataFilters };
     this.getAllDisputes();
+
+    this.newCountShow = this.filters.status == DisputeStatus.New;
   }
 
   backWorkbench(element) {

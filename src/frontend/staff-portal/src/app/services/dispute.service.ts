@@ -122,9 +122,8 @@ export class DisputeService implements IDisputeService {
      */
   public getDisputes(sortBy: Array<string>, sortDirection: Array<SortDirection>, pageNumber: number, 
     filters?: TableFilter): Observable<PagedDisputeListItemCollection> {
-    return this.disputeApiService.apiDisputeDisputesGet(filters.status ? undefined : [ExcludeStatus.Cancelled, 
-      ExcludeStatus.Processing, ExcludeStatus.Rejected, ExcludeStatus.Concluded], filters.ticketNumber, filters.disputantSurname, 
-      filters.status ? [filters.status] : [DisputeStatus.New, DisputeStatus.Validated], filters.dateSubmittedFrom, 
+    return this.disputeApiService.apiDisputeDisputesGet(filters.status ? undefined : [], filters.ticketNumber, filters.disputantSurname, 
+      filters.status ? [filters.status] : [DisputeStatus.New, DisputeStatus.Validated, DisputeStatus.Processing, DisputeStatus.Rejected, DisputeStatus.Cancelled, DisputeStatus.Concluded], filters.dateSubmittedFrom, 
       filters.dateSubmittedTo, undefined, sortBy, sortDirection, undefined, pageNumber, 25)
       .pipe(
         map((response: PagedDisputeListItemCollection) => {
