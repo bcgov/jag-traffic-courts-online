@@ -5,7 +5,7 @@ import { DisputeService, Dispute } from 'app/services/dispute.service';
 import { DisputeRequestCourtAppearanceYn, DisputeDisputantDetectedOcrIssues, DisputeStatus, DisputeSystemDetectedOcrIssues, PagedDisputeListItemCollection, SortDirection } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
-import { TableFilter, TableFilterKeys } from '@shared/models/table-filter-options.model';
+import { TableFilter, TableFilterKeys, TableFilterStatus, TableFilterStatusOptions } from '@shared/models/table-filter-options.model';
 import { TableFilterService } from 'app/services/table-filter.service';
 
 @Component({
@@ -22,7 +22,7 @@ export class TicketInboxComponent implements OnInit {
   dataSource = new MatTableDataSource(this.disputes);
 
   tableFilterKeys: TableFilterKeys[] = ["dateSubmittedFrom", "dateSubmittedTo", "disputantSurname", "status", "ticketNumber"];
-  statusFilterOptions = [DisputeStatus.New, DisputeStatus.Processing, DisputeStatus.Validated, DisputeStatus.Rejected, DisputeStatus.Cancelled, DisputeStatus.Concluded];
+  statusFilterOptions = TableFilterStatusOptions;
 
   displayedColumns: string[] = [
     '__RedGreenAlert',
@@ -72,7 +72,7 @@ export class TicketInboxComponent implements OnInit {
 
     // when authentication token available, get data
     let dataFilter: TableFilter = this.tableFilterService.tableFilters[this.tabIndex];
-    dataFilter.status = dataFilter.status ?? "";
+    //dataFilter.status = dataFilter.status ?? [];
     this.filters = dataFilter;
     this.previousFilters = { ...dataFilter };
     this.currentPage = this.tableFilterService.currentPage[this.tabIndex];
@@ -131,7 +131,8 @@ export class TicketInboxComponent implements OnInit {
     this.previousFilters = { ...dataFilters };
     this.getAllDisputes();
 
-    this.newCountShow = this.filters.status == DisputeStatus.New;
+    debugger;
+    this.newCountShow = this.filters? this.filters.status.mapping.includes(DisputeStatus.New) : false;
   }
 
   backWorkbench(element) {

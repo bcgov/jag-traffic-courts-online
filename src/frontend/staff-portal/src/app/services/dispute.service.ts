@@ -5,9 +5,10 @@ import { DisputeService as DisputeApiService, Dispute as DisputeBase, DisputeWit
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
-import { TableFilter } from '@shared/models/table-filter-options.model';
+import { TableFilter, TableFilterStatus } from '@shared/models/table-filter-options.model';
 import { HttpClient, HttpContext, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { AuthService } from './auth.service';
+
 
 export interface IDisputeService {
   disputes$: Observable<Dispute[]>;
@@ -122,31 +123,33 @@ export class DisputeService implements IDisputeService {
      */
   public getDisputes(sortBy: Array<string>, sortDirection: Array<SortDirection>, pageNumber: number, 
     filters?: TableFilter): Observable<PagedDisputeListItemCollection> {
-    return this.disputeApiService.apiDisputeDisputesGet(filters.status ? undefined : [], filters.ticketNumber, filters.disputantSurname, 
-      filters.status ? [filters.status] : [DisputeStatus.New, DisputeStatus.Validated, DisputeStatus.Processing, DisputeStatus.Rejected, DisputeStatus.Cancelled, DisputeStatus.Concluded], filters.dateSubmittedFrom, 
-      filters.dateSubmittedTo, undefined, sortBy, sortDirection, undefined, pageNumber, 25)
-      .pipe(
-        map((response: PagedDisputeListItemCollection) => {
-          this.logger.info('DisputeService::getDisputes', response);
-          this._disputes.next(response.items);
-          response.items.forEach(dispute => {
-            dispute = this.joinDisputantGivenNames(dispute);
-            dispute = this.joinContactGivenNames(dispute);
-            dispute = this.joinLawyerNames(dispute);
-            dispute = this.joinAddressLines(dispute);
-          });
 
-          return response;
-        }),
-        catchError((error: any) => {
-          this.toastService.openErrorToast(this.configService.dispute_error);
-          this.logger.error(
-            'DisputeService::getDisputes error has occurred: ',
-            error
-          );
-          throw error;
-        })
-      );
+      var disputeStatuses = filters.status ? filters.status.mapping : [DisputeStatus.New, DisputeStatus.Validated, DisputeStatus.Processing, DisputeStatus.Rejected, DisputeStatus.Cancelled, DisputeStatus.Concluded];
+
+      return this.disputeApiService.apiDisputeDisputesGet(undefined, filters.ticketNumber, filters.disputantSurname, 
+        disputeStatuses, filters.dateSubmittedFrom, filters.dateSubmittedTo, undefined, sortBy, sortDirection, undefined, pageNumber, 25)
+        .pipe(
+          map((response: PagedDisputeListItemCollection) => {
+            this.logger.info('DisputeService::getDisputes', response);
+            this._disputes.next(response.items);
+            response.items.forEach(dispute => {
+              dispute = this.joinDisputantGivenNames(dispute);
+              dispute = this.joinContactGivenNames(dispute);
+              dispute = this.joinLawyerNames(dispute);
+              dispute = this.joinAddressLines(dispute);
+            });
+
+            return response;
+          }),
+          catchError((error: any) => {
+            this.toastService.openErrorToast(this.configService.dispute_error);
+            this.logger.error(
+              'DisputeService::getDisputes error has occurred: ',
+              error
+            );
+            throw error;
+          })
+        );
   }
 
   public get disputantUpdateRequests$(): Observable<DisputantUpdateRequest[]> {

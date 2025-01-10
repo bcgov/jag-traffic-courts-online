@@ -42,7 +42,7 @@ export class TableFiltersComponent implements OnInit {
       this.tableFilterConfigs[key] = true;
     })
     this.dataFilters = this.tableFilterService.tableFilters[this.tabIndex];
-    this.dataFilters.status = this.dataFilters.status ?? "";
+    //this.dataFilters.status = this.dataFilters.status ?? [];
   }
 
   resetSearchFilters() {
@@ -52,7 +52,7 @@ export class TableFiltersComponent implements OnInit {
     // Put this call in a Timeout to keep UI responsive.
     setTimeout(() => {
       this.tableFilterService.tableFilters[this.tabIndex] = this.dataFilters;
-      this.dataFilters.status = this.dataFilters.status ?? "";
+      //this.dataFilters.status = this.dataFilters.status ?? [];
       this.onFilterChanged.emit(this.dataFilters);
     }, 100);
   }
