@@ -131,7 +131,6 @@ export class TicketInboxComponent implements OnInit {
     this.previousFilters = { ...dataFilters };
     this.getAllDisputes();
 
-    debugger;
     this.newCountShow = this.filters? this.filters.status.mapping.includes(DisputeStatus.New) : false;
   }
 

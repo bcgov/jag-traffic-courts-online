@@ -9,38 +9,27 @@ export class TableFilterStatus {
   mapping: DisputeStatus[];
 }
 
-export const TableFilterStatusOptions = [
-    {
-        Label: 'UNKNOWN',
-        Mapping: [DisputeStatus.Unknown]
-    },
-    {
-        Label: 'NEW',
-        Mapping: [DisputeStatus.New]
-    },
-    {
-        Label: 'VALIDATED',
-        Mapping: [DisputeStatus.Validated]
-    },
-     {
-        Label: 'NEW AND VALIDATED',
-        Mapping: [DisputeStatus.New, DisputeStatus.Validated]
-    },
-    {
-        Label: 'PROCESSING',
-        Mapping: [DisputeStatus.Processing]
-    },
-    {
-        Label: 'REJECTED',
-        Mapping: [DisputeStatus.Rejected]
-    },
-    {
-        Label: 'CANCELLED',
-        Mapping: [DisputeStatus.Cancelled]
-    },
-    {
-        Label: 'CONCLUDED',
-        Mapping: [DisputeStatus.Concluded]
+export const TableFilterStatusOptions = [{
+        label: 'NEW',
+        mapping: [DisputeStatus.New]
+    },{
+        label: 'VALIDATED',
+        mapping: [DisputeStatus.Validated]
+    },{
+        label: 'NEW & VALIDATED',
+        mapping: [DisputeStatus.New, DisputeStatus.Validated]
+    },{
+        label: 'PROCESSING',
+        mapping: [DisputeStatus.Processing]
+    },{
+        label: 'REJECTED',
+        mapping: [DisputeStatus.Rejected]
+    },{
+        label: 'CANCELLED',
+        mapping: [DisputeStatus.Cancelled]
+    },{
+        label: 'CONCLUDED',
+        mapping: [DisputeStatus.Concluded]
     },
 ];
 
