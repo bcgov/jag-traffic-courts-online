@@ -10,6 +10,9 @@ export class TableFilterStatus {
 }
 
 export const TableFilterStatusOptions = [{
+        label: 'ALL',
+        mapping: [DisputeStatus.New, DisputeStatus.Validated, DisputeStatus.Processing, DisputeStatus.Rejected, DisputeStatus.Cancelled, DisputeStatus.Concluded]
+    },{
         label: 'NEW',
         mapping: [DisputeStatus.New]
     },{
@@ -33,6 +36,8 @@ export const TableFilterStatusOptions = [{
     },
 ];
 
+export const TableFilterStatusDefault = TableFilterStatusOptions[0];
+
 export class TableFilter {
   dateSubmittedFrom?: string;
   dateSubmittedTo?: string;
@@ -43,7 +48,7 @@ export class TableFilter {
   surname?: string;
   team?: string;
   courthouseLocation?: Agency[];
-  status?: TableFilterStatus;
+  status?: TableFilterStatus = TableFilterStatusDefault;
 }
 export type TableFilterKeys = keyof TableFilter;
 export type TableFilterConfigs = {

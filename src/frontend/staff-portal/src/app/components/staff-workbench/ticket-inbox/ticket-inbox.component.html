@@ -1,5 +1,5 @@
 <app-table-filters [tabIndex]="tabIndex" [tableFilterKeys]="tableFilterKeys" [statusFilterOptions]="statusFilterOptions"
-  [statusFilterDefaultText]="'ALL'" (onFilterChanged)="onApplyFilter($event)">
+  [statusFilterDefault]="statusFilterDefault" (onFilterChanged)="onApplyFilter($event)">
   <ng-container recordCount *ngIf="newCountShow">
     <div fxFlex fxFlex.gt-md="20">
       <div class="vcenter">

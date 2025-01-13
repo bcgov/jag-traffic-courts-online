@@ -5,7 +5,7 @@ import { DisputeService, Dispute } from 'app/services/dispute.service';
 import { DisputeRequestCourtAppearanceYn, DisputeDisputantDetectedOcrIssues, DisputeStatus, DisputeSystemDetectedOcrIssues, PagedDisputeListItemCollection, SortDirection } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
-import { TableFilter, TableFilterKeys, TableFilterStatus, TableFilterStatusOptions } from '@shared/models/table-filter-options.model';
+import { TableFilter, TableFilterKeys, TableFilterStatus, TableFilterStatusOptions, TableFilterStatusDefault } from '@shared/models/table-filter-options.model';
 import { TableFilterService } from 'app/services/table-filter.service';
 
 @Component({
@@ -23,6 +23,7 @@ export class TicketInboxComponent implements OnInit {
 
   tableFilterKeys: TableFilterKeys[] = ["dateSubmittedFrom", "dateSubmittedTo", "disputantSurname", "status", "ticketNumber"];
   statusFilterOptions = TableFilterStatusOptions;
+  statusFilterDefault = TableFilterStatusDefault;
 
   displayedColumns: string[] = [
     '__RedGreenAlert',
@@ -131,7 +132,7 @@ export class TicketInboxComponent implements OnInit {
     this.previousFilters = { ...dataFilters };
     this.getAllDisputes();
 
-    this.newCountShow = this.filters? this.filters.status.mapping.includes(DisputeStatus.New) : false;
+    this.newCountShow = (this.filters && this.filters.status) ? this.filters.status.mapping.includes(DisputeStatus.New) : false;
   }
 
   backWorkbench(element) {

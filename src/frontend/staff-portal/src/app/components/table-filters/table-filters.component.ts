@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { TableFilter, TableFilterConfigs, TableFilterKeys } from '@shared/models/table-filter-options.model';
+import { TableFilter, TableFilterConfigs, TableFilterKeys, TableFilterStatus, TableFilterStatusDefault } from '@shared/models/table-filter-options.model';
 import { DisputeStatus } from 'app/api';
 import { LookupsService } from 'app/services/lookups.service';
 import { TableFilterService } from 'app/services/table-filter.service';
@@ -14,7 +14,7 @@ export class TableFiltersComponent implements OnInit {
   @Input() tabIndex: number;
   @Input() tableFilterKeys: TableFilterKeys[] = [];
   @Input() statusFilterOptions: DisputeStatus[] = [];
-  @Input() statusFilterDefaultText: string = "ALL";
+  @Input() statusFilterDefaultText: string = 'ALL';
   @Input() courthouseTeamNames: string[] = [];
   @Output() onFilterChanged: EventEmitter<TableFilter> = new EventEmitter();
 
@@ -42,7 +42,7 @@ export class TableFiltersComponent implements OnInit {
       this.tableFilterConfigs[key] = true;
     })
     this.dataFilters = this.tableFilterService.tableFilters[this.tabIndex];
-    //this.dataFilters.status = this.dataFilters.status ?? [];
+    this.dataFilters.status = this.dataFilters.status ?? TableFilterStatusDefault;
   }
 
   resetSearchFilters() {
