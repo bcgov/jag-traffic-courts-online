@@ -21,6 +21,7 @@ public class OrdsDisputeCaseFileSummary
     public string prof_given_1_nm { get; set; }
     public string prof_given_2_nm { get; set; }
     public string prof_given_3_nm { get; set; }
+    public string prof_org_nm { get; set; }
     public string time_to_pay_reason_txt { get; set; }
     public string fine_reduction_reason_txt { get; set; }
     public string dispute_status_type_cd { get; set; }

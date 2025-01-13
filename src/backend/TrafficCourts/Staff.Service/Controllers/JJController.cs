@@ -93,6 +93,7 @@ public partial class JJController : StaffControllerBase
     /// <param name="submitted_thru">Disputes sumbitted on or before this date</param>
     /// <param name="ticket_number"></param>
     /// <param name="surname">The case insenstive surname to search for.</param>
+    /// <param name="surname_or_org_name">The case insenstive disputant surname or organization name to search for.</param>
     /// <param name="jj_assigned_to">The JJ assigned user</param>
     /// <param name="jj_decision_dt_from">The jj decision date where greater or equal to this date. Format must be YYYY-MM-DD.</param>
     /// <param name="jj_decision_dt_thru">The jj decision date where less or equal to this date. Format must be YYYY-MM-DD.</param>
@@ -126,6 +127,7 @@ public partial class JJController : StaffControllerBase
         string? submitted_thru,
         string? ticket_number,
         string? surname,
+        string? surname_or_org_name,
         string? jj_assigned_to,
         string? jj_decision_dt_from,
         string? jj_decision_dt_thru,
@@ -151,6 +153,7 @@ public partial class JJController : StaffControllerBase
             submitted_thru = submitted_thru,
             ticket_number  = ticket_number,
             surname = surname,
+            surname_or_org_name = surname_or_org_name,
             jj_assigned_to = jj_assigned_to,
             jj_decision_dt_from = jj_decision_dt_from,
             jj_decision_dt_thru = jj_decision_dt_thru,
