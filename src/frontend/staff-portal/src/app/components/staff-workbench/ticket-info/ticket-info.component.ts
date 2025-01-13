@@ -164,6 +164,19 @@ export class TicketInfoComponent implements OnInit {
         violationTime: [null, [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3])[0-5][0-9]$/)]],  // api returns issued date, extract time from that
       })
     });
+    // Custom validator for driversLicenceNumber
+  this.form.get('violationTicket').get('driversLicenceProvince').valueChanges.subscribe(value => {
+    if (value === this.bc.provAbbreviationCd) {
+      this.form.get('violationTicket').get('disputantDriversLicenceNumber').setValidators([
+        Validators.maxLength(9),
+        Validators.minLength(7),
+        Validators.pattern(/^\d+$/) // Only numeric values
+      ]);
+    } else {
+      this.form.get('violationTicket').get('disputantDriversLicenceNumber').setValidators([Validators.maxLength(20)]);
+    }
+    this.form.get('violationTicket').get('disputantDriversLicenceNumber').updateValueAndValidity();
+  });
     // retreive fresh copy from db
     this.getDispute();
   }
@@ -316,8 +329,11 @@ export class TicketInfoComponent implements OnInit {
         this.form.get('violationTicket').get('disputantDriversLicenceNumber').setValidators([Validators.maxLength(20)]);
       } else{
         if (provAbbreviationCd == this.bc.provAbbreviationCd) {
-          this.form.get('violationTicket').get('disputantDriversLicenceNumber').setValidators([Validators.maxLength(9)])
-          this.form.get('violationTicket').get('disputantDriversLicenceNumber').addValidators([Validators.minLength(7)]);
+          this.form.get('violationTicket').get('disputantDriversLicenceNumber').setValidators([
+            Validators.maxLength(9),
+            Validators.minLength(7),
+            Validators.pattern(/^\d+$/)
+          ]);
         } else {
           this.form.get('violationTicket').get('disputantDriversLicenceNumber').setValidators([Validators.maxLength(20)]);
         }
@@ -326,7 +342,9 @@ export class TicketInfoComponent implements OnInit {
           let ctryFound = this.config.countries.filter(x => x.ctryId === provFound.ctryId).shift();
           this.form.get('violationTicket').get('driversLicenceCountry').setValue(ctryFound.ctryLongNm);
         }
-      }      
+      }
+      this.form.get('violationTicket').get('disputantDriversLicenceNumber').markAsTouched();
+      this.form.get('violationTicket').get('disputantDriversLicenceNumber').markAsDirty();      
       this.form.get('violationTicket').get('disputantDriversLicenceNumber').updateValueAndValidity();
     }, 5)
   }
