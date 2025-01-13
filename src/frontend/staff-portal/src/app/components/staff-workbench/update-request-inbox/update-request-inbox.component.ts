@@ -92,6 +92,11 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
       else if ("dateSubmittedTo" === field) {
         return !value || !DateUtil.isValid(value) || DateUtil.isDateOnOrBefore(record.submittedTs, value);
       }
+      else if ("status" === field) {
+        var status = record[field];
+        var statusFilters = (value as unknown) as TableFilterStatus;
+        return statusFilters.mapping.includes(status);
+      }
       else if (record[field]) {
         return record[field].toLocaleLowerCase().indexOf(value.trim().toLocaleLowerCase()) != -1;
       }
