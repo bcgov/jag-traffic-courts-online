@@ -21,12 +21,46 @@
   // Change the height of the progress bar
   // to match the height of the top border
   // of the container
-  height: 3px !important;
+  height: 6px !important;
 }
 
 .ng-bar {
   // Actual bar that translates when the progress increments
-  background: theme-palette(yellow) !important;
+  background: repeating-linear-gradient(
+    45deg,
+    lighten(theme-palette(yellow), 0%),
+    lighten(theme-palette(yellow), 0%) 10px,
+    theme-palette(yellow) 10px,
+    theme-palette(yellow) 20px
+  ) !important;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 150%;
+    height: 150%;
+    background: repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.5) 10px,
+      rgba(255, 255, 255, 0) 20px
+    );
+    box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.5);
+    animation: light-sweep 2s infinite;
+  }
+}
+
+@keyframes light-sweep {
+  0% {
+    left: +50%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 
 // .ng-spinner {
