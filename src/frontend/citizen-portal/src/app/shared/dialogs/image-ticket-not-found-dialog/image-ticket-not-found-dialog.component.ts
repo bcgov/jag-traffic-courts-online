@@ -1,4 +1,4 @@
-import { Component, Inject, ChangeDetectionStrategy} from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy, HostListener} from '@angular/core';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 
@@ -58,6 +58,16 @@ export class ImageTicketNotFoundDialogComponent {
       icon: options.actionType === 'warn' ? 'warning' : 'help',
       ...options,
     };
+  }
+  @HostListener('document:keydown', ['$event'])
+  public preventEvent(event: KeyboardEvent): void {
+    if (this.options.messageKey === 'error500') {
+      event.preventDefault();
+      event.stopPropagation();
+      if (event.key === 'Enter') {
+        this.dialogRef.close();
+      }
+    }
   }
 
 }
