@@ -105,7 +105,7 @@ public partial class JJController : StaffControllerBase
     /// <param name="hearing_type_cd">The hearing type code to search.</param>
     /// <param name="page_number">The page number to fetch. Starts at 1.</param>
     /// <param name="page_size">The page size to use. If not specified, defaults to 25</param>
-    /// <param name="sort_by">The list of columns to sort the result by. To sort descending, add a '-' before the column name.</param>
+    /// <param name="sort_by">The list of columns to sort the result by. To sort descending, add a '-' before the column name. Note: 'surnameOrOrgName' is a pseudo field for sorting by surname or organization name.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
 #if DEBUG
