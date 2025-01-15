@@ -112,7 +112,6 @@
       </th>
       <td mat-cell *matCellDef="let element" class="centerColumn">
         <mat-checkbox [checked]="element.interpreterRequired === DisputeInterpreterRequired.Y"
-          [indeterminate]="element.interpreterRequired === null && element.ticketNumber[0] === 'A'"
           [disabled]="true"></mat-checkbox>
       </td>
     </ng-container>
