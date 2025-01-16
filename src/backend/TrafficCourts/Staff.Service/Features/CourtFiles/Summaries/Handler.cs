@@ -140,11 +140,12 @@ public class Handler : IRequestHandler<Request, Response>
         AddUtcDateRangeFilter(parameters, "jj_decision_dt", request.time_zone, request.jj_decision_dt_from, request.jj_decision_dt_thru);
 
         AddDateRangeFilter(parameters, "appr_tm", request.appearance_dt_from, request.appearance_dt_thru);
-
-        // Search where starts with the spuplied value. We could also use "_regexp_like" and use a regex pattern
+        
+        // Search where starts with the supplied value. We could also use "_regexp_like" and use a regex pattern
         // ticket number is always uppercase
         AddLikeFilter(parameters, "ticket_number_txt", request.ticket_number);
         AddLikeFilter(parameters, "prof_surname_nm", request.surname);
+        AddLikeFilter(parameters, "prof_surname_nm_or_org_nm", request.surname_or_org_name);
 
         if (request.jj_assigned_to is not null) parameters.Add("jj_assigned_to_eq", request.jj_assigned_to);
 
@@ -266,6 +267,7 @@ public class Handler : IRequestHandler<Request, Response>
                 "violationDate" => "violation_dt",
                 "toBeHeardAtCourthouseName" => "to_be_heard_at_agen_nm",
                 "surname" => "prof_surname_nm",
+                "surnameOrOrgName" => "prof_surname_nm_or_org_nm",
                 "disputantGivenName1" => "prof_given_1_nm",
                 "status" => "dispute_status_type_dsc",
                 "policeDetachment" => "detachment_agency_nm",
@@ -392,6 +394,7 @@ public class Handler : IRequestHandler<Request, Response>
             DisputantGivenName1 = dispute.prof_given_1_nm,
             DisputantGivenName2 = dispute.prof_given_2_nm,
             DisputantGivenName3 = dispute.prof_given_3_nm,
+            DisputantOrganizationName = dispute.prof_org_nm,
             FineReductionReason = dispute.fine_reduction_reason_txt,
             TimeToPayReason = dispute.time_to_pay_reason_txt,
             DisputeStatus = new DisputeCaseFileStatus
