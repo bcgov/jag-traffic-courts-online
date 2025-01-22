@@ -101,16 +101,17 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="surname">
+    <ng-container matColumnDef="surnameOrOrgName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         <span class="text-start">SURNAME, GIVEN NAME(S)</span>
       </th>
       <td mat-cell *matCellDef="let element">
-        <span>{{ element.disputantSurname + (element.disputantGivenName1 || 
+        <span *ngIf="element.disputantSurname">{{ element.disputantSurname + (element.disputantGivenName1 || 
           element.disputantGivenName2 || element.disputantGivenName3 ? "," : "") + 
           (element.disputantGivenName1 ? " " + element.disputantGivenName1 : "") + 
           (element.disputantGivenName2 ? " " + element.disputantGivenName2 : "") + 
           (element.disputantGivenName3 ? " " + element.disputantGivenName3 : "") }}</span>
+        <span *ngIf="!element.disputantSurname">{{ element.disputantOrganizationName }}</span>
       </td>
     </ng-container>
 
