@@ -28,6 +28,7 @@ export interface DisputeCaseFileSummary {
     disputantGivenName1?: string | null;
     disputantGivenName2?: string | null;
     disputantGivenName3?: string | null;
+    disputantOrganizationName?: string | null;
     disputeStatus?: DisputeCaseFileStatus;
     policeDetachment?: string | null;
     policeDetachmentId?: number | null;

@@ -34,7 +34,7 @@ export class DisputeDecisionInboxComponent implements OnInit {
     "jjDecisionDate",
     "signatoryName",
     "violationDate",
-    "surname",
+    "surnameOrOrgName",
     "toBeHeardAtCourthouseName",
     "appearanceRoomCode",
     "status",
@@ -94,7 +94,7 @@ export class DisputeDecisionInboxComponent implements OnInit {
       jjDecisionDtFrom: this.filters.decisionDateFrom,
       jjDecisionDtThru: this.filters.decisionDateTo,
       ticketNumber: this.filters.ticketNumber ? this.filters.ticketNumber.toUpperCase() : "",
-      surname: this.filters.surname ?? "",
+      surnameOrOrgName: this.filters.surname ?? "",
       disputeStatusCodes: DisputeStatus.Confirmed + "," + DisputeStatus.RequireCourtHearing,
       toBeHeardAtCourthouseIds: this.filters.courthouseLocation && this.filters.courthouseLocation.length > 0 ? 
         this.filters.courthouseLocation.map(x => x.id).join(",") : 
