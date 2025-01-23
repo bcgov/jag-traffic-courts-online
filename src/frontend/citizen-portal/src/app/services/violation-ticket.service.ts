@@ -446,7 +446,7 @@ export class ViolationTicketService {
   }
 
   private openErrorScenarioFourDialog() {
-    return this.openImageTicketNotFoundDialog("Non-MVA ticket", "error2");
+    return this.openImageTicketNotFoundDialog("Invalid ticket type", "error8");
   }
 
   private openErrorScenarioSevenDialog() {
@@ -462,7 +462,7 @@ export class ViolationTicketService {
   }
 
   private openInValidETicketDateDialog() {
-    return this.openImageTicketNotFoundDialog(`Your ticket is past the allowable dispute time period`, "error5");
+    return this.openImageTicketNotFoundDialog(`Your ticket is over 30 days old`, "error5");
   }
 
   private openInValidISCTicketDateDialog() {
