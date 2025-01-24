@@ -235,9 +235,10 @@ export class JJDisputeComponent implements OnInit {
 
   onConfirm(): void {    
     // TCVP-3082: Set dueDate values to current date before opening the dialog
+    let today = new Date().toISOString();
     this.lastUpdatedJJDispute.jjDisputedCounts.forEach(count => {
       if (!count.revisedDueDate && count.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.Guilty) {
-        count.revisedDueDate = new Date().toISOString();
+        count.revisedDueDate = today;
       }
     });
 
@@ -264,12 +265,13 @@ export class JJDisputeComponent implements OnInit {
   }
 
   onRequireCourtHearing() {
+    let today = new Date().toISOString();
     this.lastUpdatedJJDispute.jjDisputedCounts.forEach(count => {
       if (!count.revisedDueDate && count.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.Guilty) {
-        count.revisedDueDate = new Date().toISOString();
+        count.revisedDueDate = today;
       }
     });
-    
+
     const data: DialogOptions = {
       titleKey: this.lastUpdatedJJDispute.hearingType === this.HearingType.WrittenReasons ? "Adjourn / Require Hearing?" : "Adjourn / Continue?",
       messageKey: this.lastUpdatedJJDispute.hearingType === this.HearingType.WrittenReasons ?
