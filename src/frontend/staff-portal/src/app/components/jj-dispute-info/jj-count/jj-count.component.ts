@@ -433,7 +433,7 @@ export class JJCountComponent implements OnInit, OnChanges {
       } else {
         this.form.get('totalFineAmount').setValue(this.jjDisputedCount?.ticketedFineAmount);
         this.form.get('lesserOrGreaterAmount').setValue(this.jjDisputedCount?.ticketedFineAmount);
-        this.bindRevisedDueDate(this.jjDisputedCount.revisedDueDate);
+        this.form.controls.revisedDueDate.setValue(new Date()); // TCVP-3082 & TCVP-3070 implemented this based on multiple scenarios on findings and time to pay selections
         this.inclSurcharge = this.jjDisputedCount?.includesSurcharge == this.IncludesSurcharge.N ? "no" : "yes";
         this.updateInclSurcharge(this.inclSurcharge);
       }
@@ -486,8 +486,11 @@ export class JJCountComponent implements OnInit, OnChanges {
   }
 
   updateRevisedDueDate(event: MatRadioChange) {
-    // if they select no set it to null
+    // TCVP-3082 & TCVP-3070 implemented this based on multiple scenarios on findings and time to pay selections
     if (event.value == "no") {
+      let today = new Date();
+      this.form.controls.revisedDueDate.setValue(today);
+    } else {
       this.form.controls.revisedDueDate.setValue(null);
     }
   }
