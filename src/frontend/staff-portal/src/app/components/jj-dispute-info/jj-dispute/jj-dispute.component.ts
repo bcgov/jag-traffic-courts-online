@@ -237,7 +237,7 @@ export class JJDisputeComponent implements OnInit {
     // TCVP-3082: Set dueDate values to current date before opening the dialog
     let today = new Date().toISOString();
     this.lastUpdatedJJDispute.jjDisputedCounts.forEach(count => {
-      if (!count.revisedDueDate && count.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.Guilty) {
+      if (!count.revisedDueDate && count.jjDisputedCountRoP?.finding !== JJDisputedCountRoPFinding.NotGuilty) {
         count.revisedDueDate = today;
       }
     });
@@ -267,7 +267,7 @@ export class JJDisputeComponent implements OnInit {
   onRequireCourtHearing() {
     let today = new Date().toISOString();
     this.lastUpdatedJJDispute.jjDisputedCounts.forEach(count => {
-      if (!count.revisedDueDate && count.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.Guilty) {
+      if (!count.revisedDueDate && count.jjDisputedCountRoP?.finding !== JJDisputedCountRoPFinding.NotGuilty) {
         count.revisedDueDate = today;
       }
     });
