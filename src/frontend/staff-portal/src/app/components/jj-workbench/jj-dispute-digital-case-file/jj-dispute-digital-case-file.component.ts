@@ -49,7 +49,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit {
 
   ngOnInit(): void {    
     let dataFilter: TableFilter = this.tableFilterService.tableFilters[this.tabIndex];
-    dataFilter.status = dataFilter.status ?? "";
+    //dataFilter.status = dataFilter.status ?? "";
     this.filters = dataFilter; 
     this.previousFilters = { ...dataFilter };
     this.currentPage = this.tableFilterService.currentPage[this.tabIndex];
