@@ -19,6 +19,7 @@ import { TabType } from '@shared/enums/tab-type.enum';
 import { Dispute } from 'app/services/dispute.service';
 import { DisputeStatus } from '@shared/consts/DisputeStatus.model';
 import { HearingType } from '@shared/consts/HearingType.model';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -131,7 +132,8 @@ export class JJDisputeComponent implements OnInit {
     private lookupsService: LookupsService,
     private config: ConfigService,
     private documentService: DocumentService,
-    private historyRecordService: HistoryRecordService
+    private historyRecordService: HistoryRecordService,
+    private cdr: ChangeDetectorRef,
   ) {
     this.authService.jjList$.subscribe(result => {
       this.jjList = result;
@@ -559,17 +561,39 @@ export class JJDisputeComponent implements OnInit {
 
   onUpload(files: FileList) {
     if (files.length <= 0) return;
-
-    // upload to coms
+  
+    // Initially, set the status to "waiting for virus scan..."
+    let item: FileMetadata = { 
+      fileId: '', 
+      fileName: files[0].name, 
+      virusScanStatus: "waiting for virus scan..." 
+    };
+  
+    // Add the item to the fileData array
+    this.lastUpdatedJJDispute.fileData.push(item);
+  
+    // Manually trigger change detection to ensure the UI is refreshed
+    this.cdr.detectChanges();
+  
+    // Upload the file
     this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.noticeOfDisputeGuid, this.fileTypeToUpload, files[0], this.lastUpdatedJJDispute.id)
       .subscribe(fileId => {
-
-        // add to display of files in DCF
-        let item: FileMetadata = { fileId: fileId, fileName: files[0].name, virusScanStatus: "waiting for virus scan..." };
-        this.lastUpdatedJJDispute.fileData.push(item);
+        // Once the file is uploaded, update the fileId and status
+        item.fileId = fileId;
+        item.virusScanStatus = "";  // or any other status
+  
+        // Manually trigger change detection again to update the view
+        this.cdr.detectChanges();
+  
+        // Call refreshFileHistory() to update the history if needed
         this.refreshFileHistory();
+      }, error => {
+        // If the upload fails, set an error message
+        item.virusScanStatus = "upload failed";
+        this.cdr.detectChanges();  // Ensure the component updates in case of error
       });
   }
+
 
   onPrint(isCompleteVersion: boolean) {
     var type = DcfTemplateType.DcfTemplate;

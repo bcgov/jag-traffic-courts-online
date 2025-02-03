@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AppConfigService } from 'app/services/app-config.service';
 
 @Component({
   selector: 'app-ticket-landing',
@@ -7,7 +8,10 @@ import { Component } from '@angular/core';
 })
 
 export class TicketLandingComponent {
+  roadSafetyBCVisitUsLink: string;
   constructor(
+    private appConfigService: AppConfigService
   ) {
+    this.roadSafetyBCVisitUsLink = this.appConfigService.roadSafetyBCVisitUsLink;
   }
 }
