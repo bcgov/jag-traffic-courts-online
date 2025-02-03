@@ -61,7 +61,7 @@ export class ImageTicketNotFoundDialogComponent {
   }
   @HostListener('document:keydown', ['$event'])
   public preventEvent(event: KeyboardEvent): void {
-    if (this.options.messageKey === 'error500') {
+    if (/error/i.test(this.options.messageKey)) {
       event.preventDefault();
       event.stopPropagation();
       if (event.key === 'Enter') {
