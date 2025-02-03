@@ -6,7 +6,7 @@ import { Dispute, DisputeStatus } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 import { DateUtil } from '@shared/utils/date-util';
-import { TableFilter, TableFilterKeys } from '@shared/models/table-filter-options.model';
+import { TableFilter, TableFilterKeys, TableFilterStatus, TableFilterStatusOptions } from '@shared/models/table-filter-options.model';
 import { TableFilterService } from 'app/services/table-filter.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
 
   dataSource = new MatTableDataSource();
   tableFilterKeys: TableFilterKeys[] = ["dateSubmittedFrom", "dateSubmittedTo", "disputantSurname", "status", "ticketNumber"];
-  statusFilterOptions = [DisputeStatus.New, DisputeStatus.Processing, DisputeStatus.Validated, DisputeStatus.Rejected, DisputeStatus.Cancelled, DisputeStatus.Concluded];
+  statusFilterOptions = TableFilterStatusOptions;
   displayedColumns: string[] = [
     'submittedTs',
     'ticketNumber',
@@ -91,6 +91,11 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
       }
       else if ("dateSubmittedTo" === field) {
         return !value || !DateUtil.isValid(value) || DateUtil.isDateOnOrBefore(record.submittedTs, value);
+      }
+      else if ("status" === field) {
+        var status = record[field];
+        var statusFilters = (value as unknown) as TableFilterStatus;
+        return statusFilters.mapping.includes(status);
       }
       else if (record[field]) {
         return record[field].toLocaleLowerCase().indexOf(value.trim().toLocaleLowerCase()) != -1;

@@ -133,7 +133,7 @@ export class DisputeService {
     const data: DialogOptions = {
       titleKey: "Warning",
       actionType: "warn",
-      messageKey: `You could not be authenticated as the contact noted on this dispute. ` + err,
+      messageKey: `You could not be authenticated as the contact noted on this dispute as your information does not match your BC Services Card information.`,
       actionTextKey: "Close",
       cancelHide: true
     };

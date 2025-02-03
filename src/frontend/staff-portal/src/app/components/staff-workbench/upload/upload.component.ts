@@ -6,6 +6,7 @@ import { DocumentService } from 'app/api/api/document.service';
 import { FileMetadata } from 'app/api/model/fileMetadata.model';
 import { Dispute } from 'app/services/dispute.service';
 import { JJDisputeService } from 'app/services/jj-dispute.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-upload',
@@ -26,6 +27,7 @@ export class UploadComponent {
     private dialog: MatDialog,
     private documentService: DocumentService,
     private jjDisputeService: JJDisputeService,
+    private cdr: ChangeDetectorRef,
   ) {
   }
 
@@ -63,10 +65,33 @@ export class UploadComponent {
 
   onUpload(files: FileList) {
     if (files.length <= 0) return;
-    this.documentService.apiDocumentPost(this.disputeInfo.noticeOfDisputeGuid, this.fileTypeToUpload, files[0], 
-      null).subscribe(fileId => {
-        let item: FileMetadata = { fileId: fileId, fileName: files[0].name, virusScanStatus: "waiting for virus scan..." };
-        this.disputeInfo.fileData.push(item);
-    });
+  
+    // Initially, set the status to "waiting for virus scan..."
+    let item: FileMetadata = { 
+      fileId: '', 
+      fileName: files[0].name, 
+      virusScanStatus: "waiting for virus scan..." 
+    };
+  
+    // Add the item to the fileData array
+    this.disputeInfo.fileData.push(item);
+  
+    // Manually trigger change detection to ensure the UI is refreshed
+    this.cdr.detectChanges();
+  
+    // Now upload the file
+    this.documentService.apiDocumentPost(this.disputeInfo.noticeOfDisputeGuid, this.fileTypeToUpload, files[0], null)
+      .subscribe(fileId => {
+        // Once the file is uploaded, update the status and fileId
+        item.fileId = fileId;
+        item.virusScanStatus = "";  // or any other status
+  
+        // Manually trigger change detection again to update the view
+        this.cdr.detectChanges();
+      }, error => {
+        // If the upload fails, set an error message
+        item.virusScanStatus = "upload failed";
+        this.cdr.detectChanges();  // Ensure the component updates in case of error
+      });
   }
 }
