@@ -3,7 +3,6 @@ using TrafficCourts.Common.Configuration;
 using TrafficCourts.Configuration.Validation;
 using TrafficCourts.Diagnostics;
 using TrafficCourts.Staff.Service;
-using TrafficCourts.Staff.Service.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 var logger = builder.GetProgramLogger();
