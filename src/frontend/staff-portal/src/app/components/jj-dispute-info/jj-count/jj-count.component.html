@@ -345,8 +345,8 @@
             <span class="section-grid-header">Fine Amount</span>
           </div>
           <div class="col-md-7">
-            <span class="section-grid-text">{{ jjDisputedCount?.ticketedFineAmount | 
-              currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
+            <span class="section-grid-text">{{ jjDisputedCount?.totalFineAmount ? (jjDisputedCount?.ticketedFineAmount | 
+              currency:'CAD':'symbol-narrow':'1.0-0') : '' }}</span>
           </div>
         </div>
         <ng-container *ngIf="jjDisputedCount?.lesserOrGreaterAmount && 
@@ -361,7 +361,7 @@
             </div>
           </div>
         </ng-container>
-        <ng-container *ngIf="jjDisputedCount.totalFineAmount">
+        <ng-container *ngIf="jjDisputedCount?.totalFineAmount">
           <div class="row">
             <div class="col-md-5">
               &nbsp;

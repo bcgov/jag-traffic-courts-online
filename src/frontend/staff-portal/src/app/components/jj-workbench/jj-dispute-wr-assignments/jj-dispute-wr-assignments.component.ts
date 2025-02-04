@@ -33,7 +33,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit {
     "bulkAssign",
     "ticketNumber",
     "submittedTs",
-    "surname",
+    "surnameOrOrgName",
     "toBeHeardAtCourthouseName",
     "policeDetachment",
     "timeToPayReason",

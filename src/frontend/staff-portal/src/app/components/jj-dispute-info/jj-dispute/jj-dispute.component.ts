@@ -234,12 +234,6 @@ export class JJDisputeComponent implements OnInit {
   }
 
   onConfirm(): void {
-    // TCVP-3082: Set dueDate values to current date before opening the dialog
-    this.lastUpdatedJJDispute.jjDisputedCounts.forEach(count => {
-      if (!count.revisedDueDate) {
-        count.revisedDueDate = new Date().toISOString();
-      }
-    });
 
     const data: DialogOptions = {
       titleKey: "Submit to VTC Staff?",
@@ -264,6 +258,7 @@ export class JJDisputeComponent implements OnInit {
   }
 
   onRequireCourtHearing() {
+
     const data: DialogOptions = {
       titleKey: this.lastUpdatedJJDispute.hearingType === this.HearingType.WrittenReasons ? "Adjourn / Require Hearing?" : "Adjourn / Continue?",
       messageKey: this.lastUpdatedJJDispute.hearingType === this.HearingType.WrittenReasons ?

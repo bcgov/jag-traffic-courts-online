@@ -67,15 +67,15 @@ export class JJDisputeService {
 
   public getTCODisputes(params: { appearances?: boolean, noticeOfHearingYn?: boolean, multipleOfficersYn?: boolean, 
     electronicTicketYn?: boolean, timeZone?: string, submittedFrom?: string, submittedThru?: string, 
-    ticketNumber?: string, surname?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string, 
+    ticketNumber?: string, surname?: string, surnameOrOrgName?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string, 
     jjDecisionDtThru?: string, disputeStatusCodes?: string, appearanceCourthouseIds?: string,
     appearanceDtFrom?: string, appearanceDtThru?: string, toBeHeardAtCourthouseIds?: string, 
     hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number }): 
     Observable<PagedDisputeCaseFileSummaryCollection> {
     return this.jjApiService.apiJjDisputesSearchGet(params.appearances, params.noticeOfHearingYn, 
       params.multipleOfficersYn, params.electronicTicketYn, params.timeZone, params.submittedFrom, 
-      params.submittedThru, params.ticketNumber, params.surname, params.jjAssignedTo, params.jjDecisionDtFrom,
-      params.jjDecisionDtThru, params.disputeStatusCodes, params.appearanceCourthouseIds, 
+      params.submittedThru, params.ticketNumber, params.surname, params.surnameOrOrgName, params.jjAssignedTo, 
+      params.jjDecisionDtFrom, params.jjDecisionDtThru, params.disputeStatusCodes, params.appearanceCourthouseIds, 
       params.appearanceDtFrom, params.appearanceDtThru, params.toBeHeardAtCourthouseIds, 
       params.hearingTypeCd, params.sortBy, params.pageNumber, params.pageSize)
       .pipe(
