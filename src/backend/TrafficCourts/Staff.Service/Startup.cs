@@ -60,6 +60,7 @@ public static class Startup
 
         builder.Services.AddTransient<IAgencyLookupService, AgencyLookupService>();
         builder.Services.AddTransient<ICountryLookupService, CountryLookupService>();
+        builder.Services.AddTransient<ILanguageLookupService, LanguageLookupService>();
         builder.Services.AddTransient<IProvinceLookupService, ProvinceLookupService>();
         builder.Services.AddTransient<IStatuteLookupService, StatuteLookupService>();
 

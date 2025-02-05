@@ -1,21 +1,29 @@
 ﻿using MediatR;
-using TrafficCourts.Staff.Service.Services;
+using TrafficCourts.OrdsDataService.Justin;
 
 namespace TrafficCourts.Staff.Service.Features.Lookups.Provinces;
 
 public class Handler : IRequestHandler<Request, Response>
 {
-    private readonly IProvinceLookupService _lookupService;
+    private readonly IProvinceRepository _repository;
 
-    public Handler(IProvinceLookupService lookupService)
+    public Handler(IProvinceRepository repository)
     {
-        _lookupService = lookupService ?? throw new ArgumentNullException(nameof(lookupService));
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
 
     public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
     {
-        var items = await _lookupService.GetListAsync(cancellationToken);
+        var items = await _repository.GetListAsync(cancellationToken);
 
-        return new Response(items);
+        var models = items.Select(_ => new Domain.Models.Province
+        (
+            _.ctry_id.ToString(),
+            _.prov_seq_no.ToString(),
+            _.prov_nm,
+            _.prov_abbreviation_cd
+        )).ToList();
+
+        return new Response(models);
     }
 }

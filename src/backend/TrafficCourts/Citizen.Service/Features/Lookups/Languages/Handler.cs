@@ -5,17 +5,15 @@ namespace TrafficCourts.Citizen.Service.Features.Lookups.Languages;
 
 public class Handler : IRequestHandler<Request, Response>
 {
-    private readonly ICachedLookupService<Language> _service;
-    public Handler(ICachedLookupService<Language> service)
+    private readonly ILanguageRepository _repository;
+    public Handler(ILanguageRepository repository)
     {
-        _service = service ?? throw new ArgumentNullException(nameof(service));
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
 
     public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
     {
-        var key = Caching.Cache.Api.Languages(2);
-
-        var items = await _service.GetListAsync(key, TimeSpan.FromDays(1), cancellationToken);
+        var items = await _repository.GetListAsync(cancellationToken);
 
         var models = items.Select(item => item.ToDomainModel())
             .ToList();
@@ -23,3 +21,4 @@ public class Handler : IRequestHandler<Request, Response>
         return new Response(models);
     }
 }
+
