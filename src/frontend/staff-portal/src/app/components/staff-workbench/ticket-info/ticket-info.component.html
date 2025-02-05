@@ -172,22 +172,25 @@
                         <!-- Violation Ticket Drivers Licence Number -->
                         <div class="col-lg-6">
                           <mat-form-field class="w-100"
-                            [ngClass]="{'underErrThreshold': applyUnderErrThreshold('drivers_licence_number'), 'overErrThreshold': applyOverErrThreshold('drivers_licence_number')}">
-                            <mat-label>DL number</mat-label>
-                            <input matInput formControlName="disputantDriversLicenceNumber"
-                              (keypress)="($event.charCode >= 48 && $event.charCode < 58)" minlength="7" maxlength="9"
-                              autocomplete="off" [readonly]="isTicketInformationReadOnly"
-                              *ngIf="form.get('violationTicket').get('driversLicenceProvince').value === bc.provAbbreviationCd" />
-                            <input matInput formControlName="disputantDriversLicenceNumber" autocomplete="off"
-                              *ngIf="form.get('violationTicket').get('driversLicenceProvince').value !== bc.provAbbreviationCd"
-                              [readonly]="isTicketInformationReadOnly" />
-                            <mat-error *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('disputantDriversLicenceNumber').hasError('required')">
-                              {{ "error.required" | translate }}
-                            </mat-error>
-                            <mat-error *ngIf="!isTicketInformationReadOnly && (form.get('violationTicket').get('disputantDriversLicenceNumber')?.errors?.minlength || form.get('violationTicket').get('disputantDriversLicenceNumber').hasError('maxlength'))">
-                              Must be a valid BC driver's licence number of seven to nine digits
-                            </mat-error>
-                          </mat-form-field>
+  [ngClass]="{'underErrThreshold': applyUnderErrThreshold('drivers_licence_number'), 'overErrThreshold': applyOverErrThreshold('drivers_licence_number')}">
+  <mat-label>DL number</mat-label>
+  <input matInput formControlName="disputantDriversLicenceNumber"
+    (keypress)="($event.charCode >= 48 && $event.charCode < 58)" minlength="7" maxlength="9"
+    autocomplete="off" [readonly]="isTicketInformationReadOnly"
+    *ngIf="form.get('violationTicket').get('driversLicenceProvince').value === bc.provAbbreviationCd" />
+  <input matInput formControlName="disputantDriversLicenceNumber" autocomplete="off"
+    *ngIf="form.get('violationTicket').get('driversLicenceProvince').value !== bc.provAbbreviationCd"
+    [readonly]="isTicketInformationReadOnly" />
+  <mat-error *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('disputantDriversLicenceNumber').hasError('required')">
+    {{ "error.required" | translate }}
+  </mat-error>
+  <mat-error *ngIf="!isTicketInformationReadOnly && (form.get('violationTicket').get('disputantDriversLicenceNumber')?.errors?.minlength || form.get('violationTicket').get('disputantDriversLicenceNumber').hasError('maxlength'))">
+    Must be a valid BC driver's licence number of seven to nine digits
+  </mat-error>
+  <mat-error *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('disputantDriversLicenceNumber').hasError('pattern')">
+    Must be a numeric value for BC driver's licence
+  </mat-error>
+</mat-form-field>
                         </div>
                       </div>
                     </section>
