@@ -28,7 +28,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit {
     "ticketNumber",
     "submittedTs",
     "violationDate",
-    "surname",
+    "surnameOrOrgName",
     "toBeHeardAtCourthouseName",
     "status",
   ];
@@ -63,7 +63,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit {
       submittedFrom: this.filters.dateSubmittedFrom,
       submittedThru: this.filters.dateSubmittedTo,
       ticketNumber: this.filters.ticketNumber ? this.filters.ticketNumber.toUpperCase() : "",
-      surname: this.filters.surname ?? "",
+      surnameOrOrgName: this.filters.surname ?? "",
       toBeHeardAtCourthouseIds: this.filters.courthouseLocation && this.filters.courthouseLocation.length > 0 ? 
         this.filters.courthouseLocation.map(x => x.id).join(",") : "",
       sortBy: this.sortDirection === SortDirection.Asc ? this.sortBy : "-" + this.sortBy,

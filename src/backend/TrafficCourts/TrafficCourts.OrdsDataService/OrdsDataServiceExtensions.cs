@@ -47,13 +47,6 @@ public static class OrdsDataServiceExtensions
         services.AddTransient<IProvinceRepository, ProvinceRepository>();
         services.AddTransient<IStatuteRepository, StatuteRepository>();
 
-        services.AddTransient<ICachedLookupService<Agency>, AgencyLookupService>();
-        services.AddTransient<ICachedLookupService<City>, CityLookupService>();
-        services.AddTransient<ICachedLookupService<Country>, CountryLookupService>();
-        services.AddTransient<ICachedLookupService<Language>, LanguageLookupService>();
-        services.AddTransient<ICachedLookupService<Province>, ProvinceLookupService>();
-        services.AddTransient<ICachedLookupService<Statute>, StatuteLookupService>();
-
         // occam
 
         // tco

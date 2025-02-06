@@ -15,6 +15,7 @@ public class Request : IRequest<Response>
 
     public string? ticket_number { get; set; }
     public string? surname { get; set; }
+    public string? surname_or_org_name { get; set; }
 
     public string? jj_assigned_to { get; set; }
 

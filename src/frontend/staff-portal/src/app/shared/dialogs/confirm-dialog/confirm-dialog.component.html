@@ -43,15 +43,14 @@
           <span class="section-jj-grid-cell">
             <span class="section-grid-header">Total Amount: </span>
             <span class="section-grid-text">{{ (count.totalFineAmount ? 
-              (count.totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0') : '$0') }}</span>
+              (count.totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0') : '') }}</span>
           </span>
           <span class="section-jj-grid-cell">
             <span class="section-grid-header">Due Date: </span>
             <span class="section-grid-text">
               {{
                 count.jjDisputedCountRoP?.finding === 'NOT_GUILTY' ? '' :
-                (count.revisedDueDate ? (count.revisedDueDate | date: "dd-MMM-yyyy" : "UTC") :
-                (count.dueDate ? (count.dueDate | date: "dd-MMM-yyyy" : "UTC") : ''))
+                (count.revisedDueDate ? (count.revisedDueDate | date: "dd-MMM-yyyy" : "UTC") : '')
               }}
             </span>
           </span>

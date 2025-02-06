@@ -20,6 +20,7 @@ public class DisputeCaseFileSummary
     public string DisputantGivenName1 { get; set; }
     public string DisputantGivenName2 { get; set; }
     public string DisputantGivenName3 { get; set; }
+    public string DisputantOrganizationName { get; set; }
     
     public DisputeCaseFileStatus DisputeStatus { get; set; }
 
