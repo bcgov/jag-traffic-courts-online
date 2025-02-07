@@ -6,7 +6,7 @@ import { Dispute, DisputeStatus } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 import { DateUtil } from '@shared/utils/date-util';
-import { TableFilter, TableFilterKeys, TableFilterStatus, TableFilterStatusOptions } from '@shared/models/table-filter-options.model';
+import { TableFilter, TableFilterKeys, TableFilterStatus, TableFilterStatusOptions, UpdateRequestTableStatusDefault } from '@shared/models/table-filter-options.model';
 import { TableFilterService } from 'app/services/table-filter.service';
 
 @Component({
@@ -21,6 +21,7 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource();
   tableFilterKeys: TableFilterKeys[] = ["dateSubmittedFrom", "dateSubmittedTo", "disputantSurname", "status", "ticketNumber"];
   statusFilterOptions = TableFilterStatusOptions;
+  defaultStatusFilter = UpdateRequestTableStatusDefault;
   displayedColumns: string[] = [
     'submittedTs',
     'ticketNumber',
@@ -52,7 +53,7 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
         this.userProfile = userProfile;
       }
     })
-
+    
     // when authentication token available, get data
     this.getAllDisputesWithPendingUpdates();
   }

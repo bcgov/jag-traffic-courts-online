@@ -36,7 +36,8 @@ export const TableFilterStatusOptions = [{
     },
 ];
 
-export const TableFilterStatusDefault = TableFilterStatusOptions[0];
+export const TableFilterStatusDefault: TableFilterStatus = TableFilterStatusOptions[0];
+export const UpdateRequestTableStatusDefault: TableFilterStatus = TableFilterStatusOptions[1];
 
 export class TableFilter {
   dateSubmittedFrom?: string;
