@@ -78,31 +78,41 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
     } else {
       this.countryFormControl.setValue(country);
     }
-
+  
     let province = this.provincesAndStates.filter(i => i.provAbbreviationCd === this.form.value.address_province).shift();
     if (!this.form.value.address_province) {
       this.provinceFormControl.setValue(this.bc);
     } else {
       this.provinceFormControl.setValue(province);
     }
-
+  
     let form = this.form as NoticeOfDisputeFormGroup;
-    // search for drivers licence province using abbreviation e.g. BC
     if (form.value.drivers_licence_province) {
       let foundProvinces = this.provincesAndStates.filter(x => x.provAbbreviationCd === form.value.drivers_licence_province).shift();
       if (foundProvinces) {
         this.driversLicenceProvinceFormControl.setValue(foundProvinces);
-      } else{
+      } else {
         this.driversLicenceProvinceFormControl.setValue(null);
       }
-    } else if (form.controls.drivers_licence_province) { // have control but no value
-      if(this.mode !== DisputeFormMode.UPDATE) {
+    } else if (form.controls.drivers_licence_province) {
+      if (this.mode !== DisputeFormMode.UPDATE) {
         this.driversLicenceProvinceFormControl.setValue(this.bc);
       } else {
         this.driversLicenceProvinceFormControl.setValue(null);
-      }      
+      }
     }
-
+  
+    // Check for the driver's licence number validity on load
+    const driversLicenceNumber = form.controls.drivers_licence_number.value;
+    const isBC = this.driversLicenceProvinceFormControl.value?.provId === this.bc.provId;
+    const isInvalid = isBC ? !(driversLicenceNumber && driversLicenceNumber.length >= 7 && driversLicenceNumber.length <= 9 && /^[0-9]+$/.test(driversLicenceNumber)) :
+                            !(driversLicenceNumber && driversLicenceNumber.length <= 20);
+  
+    if (isInvalid) {
+      form.controls.drivers_licence_number.markAsTouched();
+      form.controls.drivers_licence_number.markAsDirty();
+    }
+  
     if (this.preferEmail !== undefined && this.preferEmail !== true) {
       this.form.controls.email_address.disable();
       this.optOut = true;
@@ -180,10 +190,17 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
       }
       
       if (province != null && province.provId === this.bc.provId) {
-        form.controls.drivers_licence_number.setValidators([Validators.maxLength(9)]);
-        form.controls.drivers_licence_number.addValidators([Validators.minLength(7)]);
+        form.controls.drivers_licence_number.setValidators([
+          Validators.required,
+          Validators.minLength(7),
+          Validators.maxLength(9),
+          Validators.pattern(/^\d+$/) // Ensure it's numeric
+        ]);
       } else {
-        form.controls.drivers_licence_number.setValidators([Validators.maxLength(20)]);
+        form.controls.drivers_licence_number.setValidators([
+          Validators.required,
+          Validators.maxLength(20)
+        ]);
       }
 
       form.controls.drivers_licence_number.updateValueAndValidity();

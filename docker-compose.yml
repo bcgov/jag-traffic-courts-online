@@ -44,6 +44,9 @@ services:
       SERILOG__WRITETO__0__ARGS__THEME: Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console
       SERILOG__WRITETO__0__NAME: Console      
       SERILOG__MINIMUMLEVEL__DEFAULT: ${SERILOG__MINIMUMLEVEL__DEFAULT:-Information} 
+      ORDSDATASERVICE__ADDRESS: ${ORDSDATASERVICE__ADDRESS}
+      ORDSDATASERVICE__PASSWORD: ${ORDSDATASERVICE__PASSWORD}
+      ORDSDATASERVICE__USERNAME: ${ORDSDATASERVICE__USERNAME}
     ports:
       - "5080:8080"
     restart: always

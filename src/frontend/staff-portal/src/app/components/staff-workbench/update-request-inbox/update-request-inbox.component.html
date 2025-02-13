@@ -1,5 +1,5 @@
 <app-table-filters [tabIndex]="tabIndex" [tableFilterKeys]="tableFilterKeys" [statusFilterOptions]="statusFilterOptions"
-  (onFilterChanged)="onApplyFilter($event)">
+  [defaultStatusFilter]="defaultStatusFilter" (onFilterChanged)="onApplyFilter($event)">
 </app-table-filters>
 
 <div class="table-responsive">

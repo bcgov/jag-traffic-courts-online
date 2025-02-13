@@ -1,6 +1,6 @@
 <app-table-filters [tabIndex]="tabIndex" [tableFilterKeys]="tableFilterKeys" [statusFilterOptions]="statusFilterOptions"
-  [statusFilterDefaultText]="'NEW & VALIDATED'" (onFilterChanged)="onApplyFilter($event)">
-  <ng-container recordCount>
+  [statusFilterDefault]="statusFilterDefault" (onFilterChanged)="onApplyFilter($event)">
+  <ng-container recordCount *ngIf="newCountShow">
     <div fxFlex fxFlex.gt-md="20">
       <div class="vcenter">
         <span class="BC-Gov-15px-black-text" style="color:green;"><b>{{ newCount }} NEW ticket

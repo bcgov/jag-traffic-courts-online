@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { TableFilter, TableFilterConfigs, TableFilterKeys } from '@shared/models/table-filter-options.model';
+import { TableFilter, TableFilterConfigs, TableFilterKeys, TableFilterStatus, TableFilterStatusDefault } from '@shared/models/table-filter-options.model';
 import { DisputeStatus } from 'app/api';
 import { LookupsService } from 'app/services/lookups.service';
 import { TableFilterService } from 'app/services/table-filter.service';
@@ -14,7 +14,7 @@ export class TableFiltersComponent implements OnInit {
   @Input() tabIndex: number;
   @Input() tableFilterKeys: TableFilterKeys[] = [];
   @Input() statusFilterOptions: DisputeStatus[] = [];
-  @Input() statusFilterDefaultText: string = "-- select --";
+  @Input() defaultStatusFilter: TableFilterStatus = TableFilterStatusDefault;
   @Input() courthouseTeamNames: string[] = [];
   @Output() onFilterChanged: EventEmitter<TableFilter> = new EventEmitter();
 
@@ -42,17 +42,17 @@ export class TableFiltersComponent implements OnInit {
       this.tableFilterConfigs[key] = true;
     })
     this.dataFilters = this.tableFilterService.tableFilters[this.tabIndex];
-    this.dataFilters.status = this.dataFilters.status ?? "";
+    this.dataFilters.status = this.dataFilters.status ?? this.defaultStatusFilter;
   }
 
   resetSearchFilters() {
     // Will update search filters in UI
     this.dataFilters = new TableFilter();
+    this.dataFilters.status = this.defaultStatusFilter;
     // Will re-execute the filter function, but will block UI rendering
     // Put this call in a Timeout to keep UI responsive.
     setTimeout(() => {
       this.tableFilterService.tableFilters[this.tabIndex] = this.dataFilters;
-      this.dataFilters.status = this.dataFilters.status ?? "";
       this.onFilterChanged.emit(this.dataFilters);
     }, 100);
   }
