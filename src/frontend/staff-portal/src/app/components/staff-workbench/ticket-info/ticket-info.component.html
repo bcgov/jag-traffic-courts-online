@@ -2,9 +2,9 @@
   <ng-container stickyToolBar>
     <div class="app-width" style="padding-top: 1.5vh; padding-bottom: 1.5vh;" fxLayout="row">
       <div fxFlex>
-        <a (click)="onBack()" style="color: #48afe5">
-          <mat-icon inline="true">arrow_back</mat-icon> Back to TRM home
-        </a>
+        <button mat-button (click)="onBack()" color="primary">
+          <mat-icon inline="true">arrow_back</mat-icon> Back
+        </button>
       </div>
       <div>
         <button mat-raised-button (click)="onPrint()">Print</button>
@@ -41,15 +41,18 @@
           </app-page-header>
         </mat-expansion-panel-header>
         <div class="ticket-body">
-          <app-ticket-image-container [imageToShow]="imageToShow" appClickOutside (clickOutside)="onCloseTicketImage($event)"></app-ticket-image-container>
+          <app-ticket-image-container [imageToShow]="imageToShow" appClickOutside
+            (clickOutside)="onCloseTicketImage($event)"></app-ticket-image-container>
           <div style="display: flex; justify-content: space-evenly">
             <section class="mb-2 img-section" style="width: 20%">
               <ng-container subHeader>
                 <h3>Ticket Image</h3>
               </ng-container>
               <div width="150 !important" *ngIf="imageToShow">
-                <img [src]="imageToShow" width="150" height="200" (click)="onExpandTicketImage($event)" class="ticket-image"><br />
-                <span style="font-size:10px; color:#009cde; align-content: center;" width="150" (click)="onExpandTicketImage($event)" class="ticket-image">
+                <img [src]="imageToShow" width="150" height="200" (click)="onExpandTicketImage($event)"
+                  class="ticket-image"><br />
+                <span style="font-size:10px; color:#009cde; align-content: center;" width="150"
+                  (click)="onExpandTicketImage($event)" class="ticket-image">
                   <i class="fa fa-plus-circle" style="font-size:18px; color:#009cde"></i>
                   <strong> Click to expand ticket image</strong><br />
                 </span>
@@ -72,12 +75,15 @@
                           <mat-form-field class="w-100 mb-2"
                             [ngClass]="{'underErrThreshold': applyUnderErrThreshold('ticket_number'), 'overErrThreshold': applyOverErrThreshold('ticket_number')}">
                             <mat-label>Ticket number</mat-label>
-                            <input formControlName="ticketNumber" matInput type="text" oninput="this.value = this.value.toUpperCase()" mask="SS00000000" autocomplete="off"
+                            <input formControlName="ticketNumber" matInput type="text"
+                              oninput="this.value = this.value.toUpperCase()" mask="SS00000000" autocomplete="off"
                               [readonly]="isTicketInformationReadOnly" />
-                            <mat-error *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('ticketNumber').hasError('required')">
+                            <mat-error
+                              *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('ticketNumber').hasError('required')">
                               {{ "error.required" | translate }}
                             </mat-error>
-                            <mat-error *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('ticketNumber').value && form.get('violationTicket').get('ticketNumber').hasError('mask')">
+                            <mat-error
+                              *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('ticketNumber').value && form.get('violationTicket').get('ticketNumber').hasError('mask')">
                               This ticket number is not valid. It must be 2 letters and 8 numbers.
                             </mat-error>
                           </mat-form-field>
@@ -88,8 +94,10 @@
                           <mat-form-field class="w-100"
                             [ngClass]="{'underErrThreshold': applyUnderErrThreshold('violation_date'), 'overErrThreshold': applyOverErrThreshold('violation_date')}">
                             <mat-label>Date</mat-label>
-                            <input matInput type="date" placeholder="yyyy-MM-DD" formControlName="violationDate" [max]="todayDate" [readonly]="isTicketInformationReadOnly" />
-                            <mat-error *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('violationDate').hasError('required')">
+                            <input matInput type="date" placeholder="yyyy-MM-DD" formControlName="violationDate"
+                              [max]="todayDate" [readonly]="isTicketInformationReadOnly" />
+                            <mat-error
+                              *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('violationDate').hasError('required')">
                               {{ "error.required" | translate }}
                             </mat-error>
                           </mat-form-field>
@@ -100,11 +108,14 @@
                           <mat-form-field class="w-100"
                             [ngClass]="{'underErrThreshold': applyUnderErrThreshold('violation_time'), 'overErrThreshold': applyOverErrThreshold('violation_time')}">
                             <mat-label>Time</mat-label>
-                            <input matInput type="text" mask="00:00" formControlName="violationTime" [readonly]="isTicketInformationReadOnly" />
-                            <mat-error *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('violationTime').hasError('required')">
+                            <input matInput type="text" mask="00:00" formControlName="violationTime"
+                              [readonly]="isTicketInformationReadOnly" />
+                            <mat-error
+                              *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('violationTime').hasError('required')">
                               {{ "error.required" | translate }}
                             </mat-error>
-                            <mat-error *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('violationTime').hasError('pattern')">
+                            <mat-error
+                              *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('violationTime').hasError('pattern')">
                               Invalid time. Use 24hr format.
                             </mat-error>
                           </mat-form-field>
@@ -124,11 +135,14 @@
                           <mat-form-field class="w-100"
                             [ngClass]="{'underErrThreshold': applyUnderErrThreshold('disputant_surname'), 'overErrThreshold': applyOverErrThreshold('disputant_surname')}">
                             <mat-label>Surname</mat-label>
-                            <input matInput formControlName="disputantSurname" [readonly]="isTicketInformationReadOnly" />
-                            <mat-error *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('disputantSurname').hasError('required')">
+                            <input matInput formControlName="disputantSurname"
+                              [readonly]="isTicketInformationReadOnly" />
+                            <mat-error
+                              *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('disputantSurname').hasError('required')">
                               {{ "error.required" | translate }}
                             </mat-error>
-                            <mat-error *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('disputantSurname').hasError('maxlength')">
+                            <mat-error
+                              *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('disputantSurname').hasError('maxlength')">
                               {{ "error.max_length" | translate }}30
                             </mat-error>
                           </mat-form-field>
@@ -139,11 +153,14 @@
                           <mat-form-field class="w-100"
                             [ngClass]="{'underErrThreshold': applyUnderErrThreshold('disputant_given_names'), 'overErrThreshold': applyOverErrThreshold('disputant_given_names')}">
                             <mat-label>Given name(s)</mat-label>
-                            <input matInput formControlName="disputantGivenNames" [readonly]="isTicketInformationReadOnly" />
-                            <mat-error *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('disputantGivenNames').hasError('required')">
+                            <input matInput formControlName="disputantGivenNames"
+                              [readonly]="isTicketInformationReadOnly" />
+                            <mat-error
+                              *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('disputantGivenNames').hasError('required')">
                               {{ "error.required" | translate }}
                             </mat-error>
-                            <mat-error *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('disputantGivenNames').hasError('maxlength')">
+                            <mat-error
+                              *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('disputantGivenNames').hasError('maxlength')">
                               {{ "error.max_length" | translate }}30 per name
                             </mat-error>
                           </mat-form-field>
@@ -155,7 +172,9 @@
                           <mat-form-field class="w-100"
                             [ngClass]="{'underErrThreshold': applyUnderErrThreshold('drivers_licence_province'), 'overErrThreshold': applyOverErrThreshold('drivers_licence_province')}">
                             <mat-label>Prov/State of DL</mat-label>
-                            <mat-select formControlName="driversLicenceProvince" (selectionChange)="onViolationTicketDLProvinceChange($event.value)" [readonly]="isTicketInformationReadOnly">
+                            <mat-select formControlName="driversLicenceProvince"
+                              (selectionChange)="onViolationTicketDLProvinceChange($event.value)"
+                              [readonly]="isTicketInformationReadOnly">
                               <mat-option [value]=null></mat-option>
                               <mat-option [value]="bc.provAbbreviationCd">{{bc.provNm}}</mat-option>
                               <mat-option *ngFor="let province of provinces" [value]="province.provAbbreviationCd">{{
@@ -165,7 +184,8 @@
                                 state.provNm }}
                               </mat-option>
                             </mat-select>
-                            <mat-error *ngIf="!isTicketInformationReadOnly">{{ "error.required" | translate }}</mat-error>
+                            <mat-error *ngIf="!isTicketInformationReadOnly">{{ "error.required" | translate
+                              }}</mat-error>
                           </mat-form-field>
                         </div>
 
@@ -181,11 +201,25 @@
                             <input matInput formControlName="disputantDriversLicenceNumber" autocomplete="off"
                               *ngIf="form.get('violationTicket').get('driversLicenceProvince').value !== bc.provAbbreviationCd"
                               [readonly]="isTicketInformationReadOnly" />
-                            <mat-error *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('disputantDriversLicenceNumber').hasError('required')">
+                            <mat-error
+                              *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('disputantDriversLicenceNumber').hasError('required')">
                               {{ "error.required" | translate }}
                             </mat-error>
-                            <mat-error *ngIf="!isTicketInformationReadOnly && (form.get('violationTicket').get('disputantDriversLicenceNumber')?.errors?.minlength || form.get('violationTicket').get('disputantDriversLicenceNumber').hasError('maxlength'))">
+                            <mat-error
+                              *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('driversLicenceProvince').value === bc.provAbbreviationCd &&
+   (form.get('violationTicket').get('disputantDriversLicenceNumber')?.errors?.minlength || form.get('violationTicket').get('disputantDriversLicenceNumber').hasError('maxlength'))">
                               Must be a valid BC driver's licence number of seven to nine digits
+                            </mat-error>
+
+                            <mat-error
+                              *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('driversLicenceProvince').value !== bc.provAbbreviationCd &&
+    (form.get('violationTicket').get('disputantDriversLicenceNumber')?.errors?.minlength || form.get('violationTicket').get('disputantDriversLicenceNumber').hasError('maxlength'))">
+                              Must be a valid driver's licence number with a maximum of 20 characters.
+                            </mat-error>
+
+                            <mat-error
+                              *ngIf="!isTicketInformationReadOnly && form.get('violationTicket').get('disputantDriversLicenceNumber').hasError('pattern')">
+                              Must be a numeric value for BC driver's licence
                             </mat-error>
                           </mat-form-field>
                         </div>
@@ -216,8 +250,10 @@
                                 [value]="statute.__statuteString">
                                 {{ statute.__statuteString }}</mat-option>
                             </mat-autocomplete>
-                            <mat-error *ngIf="!isTicketInformationReadOnly">{{ "error.required" | translate }}</mat-error>
-                            <mat-hint *ngIf="!isTicketInformationReadOnly && !isStatuteValid(1)" style="color:red; font-weight: bold;">Invalid statute selection.</mat-hint>
+                            <mat-error *ngIf="!isTicketInformationReadOnly">{{ "error.required" | translate
+                              }}</mat-error>
+                            <mat-hint *ngIf="!isTicketInformationReadOnly && !isStatuteValid(1)"
+                              style="color:red; font-weight: bold;">Invalid statute selection.</mat-hint>
                           </mat-form-field>
                         </div>
                         <!-- Violation Ticket Count 1 Fine Amount -->
@@ -226,12 +262,12 @@
                             [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_1.ticketed_amount'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_1.ticketed_amount')}">
                             <mat-label>Fine amount ($)</mat-label>
                             <input matInput formControlName="ticketedAmount" [readonly]="isTicketInformationReadOnly" />
-                            <mat-error *ngIf="!isTicketInformationReadOnly">{{ "error.required" | translate }}</mat-error>
+                            <mat-error *ngIf="!isTicketInformationReadOnly">{{ "error.required" | translate
+                              }}</mat-error>
                           </mat-form-field>
                         </div>
                         <div class="col-lg-1">
-                          <button type="button" class="count-delete"
-                            (click)="onDeleteViolationTicketCount(1)"
+                          <button type="button" class="count-delete" (click)="onDeleteViolationTicketCount(1)"
                             *ngIf="lastUpdatedDispute.status === DispStatus.New && 
                             (this.form.get('violationTicket').get('violationTicketCount1').get('fullDescription').value ||
                             this.form.get('violationTicket').get('violationTicketCount1').get('ticketedAmount').value > 0)">
@@ -257,16 +293,18 @@
                               (change)="onChangeCount(2, $event.target.value)" (keyup)="onFullDescription2Keyup()"
                               [readonly]="isTicketInformationReadOnly" />
                             <mat-autocomplete #auto2="matAutocomplete" panelWidth="750"
-                            (optionSelected)="onChangeCount(2, $event.option.value)">
-                            <mat-option
-                            [value]="getCountLegalParagraphing(2, initialDisputeValues.violationTicket)">{{
-                              getCountLegalParagraphing(2, initialDisputeValues.violationTicket) }}</mat-option>
+                              (optionSelected)="onChangeCount(2, $event.option.value)">
+                              <mat-option
+                                [value]="getCountLegalParagraphing(2, initialDisputeValues.violationTicket)">{{
+                                getCountLegalParagraphing(2, initialDisputeValues.violationTicket) }}</mat-option>
                               <mat-option *ngFor="let statute of filteredCount2Statutes"
-                              [value]="statute.__statuteString">
-                              {{ statute.__statuteString }}</mat-option>
+                                [value]="statute.__statuteString">
+                                {{ statute.__statuteString }}</mat-option>
                             </mat-autocomplete>
-                            <mat-error *ngIf="!isTicketInformationReadOnly">{{ "error.required" | translate }}</mat-error>
-                            <mat-hint *ngIf="!isTicketInformationReadOnly && !isStatuteValid(2)" style="color:red; font-weight: bold;">Invalid statute selection.</mat-hint>
+                            <mat-error *ngIf="!isTicketInformationReadOnly">{{ "error.required" | translate
+                              }}</mat-error>
+                            <mat-hint *ngIf="!isTicketInformationReadOnly && !isStatuteValid(2)"
+                              style="color:red; font-weight: bold;">Invalid statute selection.</mat-hint>
                           </mat-form-field>
                         </div>
                         <!-- Violation Ticket Count 2 Fine Amount -->
@@ -275,12 +313,12 @@
                             [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_2.ticketed_amount'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_2.ticketed_amount')}">
                             <mat-label>Fine amount ($)</mat-label>
                             <input matInput formControlName="ticketedAmount" [readonly]="isTicketInformationReadOnly" />
-                            <mat-error *ngIf="!isTicketInformationReadOnly">{{ "error.required" | translate }}</mat-error>
+                            <mat-error *ngIf="!isTicketInformationReadOnly">{{ "error.required" | translate
+                              }}</mat-error>
                           </mat-form-field>
                         </div>
                         <div class="col-lg-1">
-                          <button type="button" class="count-delete"
-                            (click)="onDeleteViolationTicketCount(2)"
+                          <button type="button" class="count-delete" (click)="onDeleteViolationTicketCount(2)"
                             *ngIf="lastUpdatedDispute.status === DispStatus.New && 
                             (this.form.get('violationTicket').get('violationTicketCount2').get('fullDescription').value ||
                             this.form.get('violationTicket').get('violationTicketCount2').get('ticketedAmount').value > 0)">
@@ -314,8 +352,10 @@
                                 [value]="statute.__statuteString">
                                 {{ statute.__statuteString }}</mat-option>
                             </mat-autocomplete>
-                            <mat-error *ngIf="!isTicketInformationReadOnly">{{ "error.required" | translate }}</mat-error>
-                            <mat-hint *ngIf="!isTicketInformationReadOnly && !isStatuteValid(3)" style="color:red; font-weight: bold;">Invalid statute selection.</mat-hint>
+                            <mat-error *ngIf="!isTicketInformationReadOnly">{{ "error.required" | translate
+                              }}</mat-error>
+                            <mat-hint *ngIf="!isTicketInformationReadOnly && !isStatuteValid(3)"
+                              style="color:red; font-weight: bold;">Invalid statute selection.</mat-hint>
                           </mat-form-field>
                         </div>
                         <!-- Violation Ticket Count 3 Ticketed Amount -->
@@ -324,12 +364,12 @@
                             [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_3.ticketed_amount'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_3.ticketed_amount')}">
                             <mat-label>Fine amount ($)</mat-label>
                             <input matInput formControlName="ticketedAmount" [readonly]="isTicketInformationReadOnly" />
-                            <mat-error *ngIf="!isTicketInformationReadOnly">{{ "error.required" | translate }}</mat-error>
+                            <mat-error *ngIf="!isTicketInformationReadOnly">{{ "error.required" | translate
+                              }}</mat-error>
                           </mat-form-field>
                         </div>
                         <div class="col-lg-1">
-                          <button type="button" class="count-delete" 
-                            (click)="onDeleteViolationTicketCount(3)"
+                          <button type="button" class="count-delete" (click)="onDeleteViolationTicketCount(3)"
                             *ngIf="lastUpdatedDispute.status === DispStatus.New && 
                             (this.form.get('violationTicket').get('violationTicketCount3').get('fullDescription').value ||
                             this.form.get('violationTicket').get('violationTicketCount3').get('ticketedAmount').value > 0)">
@@ -349,14 +389,16 @@
                         <div class="col-lg-9">
                           <mat-form-field class="w-100"
                             [ngClass]="{'underErrThreshold': applyUnderErrThreshold('court_location'), 'overErrThreshold': applyOverErrThreshold('court_location')}">
-                            <mat-select [formControl]="form.get('violationTicket').get('courtLocation')" [readonly]="isTicketInformationReadOnly">
+                            <mat-select [formControl]="form.get('violationTicket').get('courtLocation')"
+                              [readonly]="isTicketInformationReadOnly">
                               <mat-option [value]="initialDisputeValues.violationTicket.courtLocation">{{
                                 initialDisputeValues.violationTicket.courtLocation }}</mat-option>
                               <mat-option *ngFor="let courtLocation of lookupsService.courthouseAgencies"
                                 [value]="courtLocation.name">{{
                                 courtLocation.name }}</mat-option>
                             </mat-select>
-                            <mat-error *ngIf="!isTicketInformationReadOnly">{{ "error.required" | translate }}</mat-error>
+                            <mat-error *ngIf="!isTicketInformationReadOnly">{{ "error.required" | translate
+                              }}</mat-error>
                           </mat-form-field>
                         </div>
                       </div>
@@ -374,7 +416,7 @@
                     Save
                   </button>
                   <button class="large" mat-flat-button type="submit" color="primary" (click)="onCancelChanges()"
-                    *ngIf="isViolationTicketCountDeleted" >
+                    *ngIf="isViolationTicketCountDeleted">
                     Cancel Changes
                   </button>
                 </div>
@@ -539,7 +581,7 @@
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
                         <mat-label>{{ "label.mailing_address" | translate }}</mat-label>
-                        <input matInput formControlName="address" (change)="onFieldChange()"/>
+                        <input matInput formControlName="address" (change)="onFieldChange()" />
                         <mat-error *ngIf="form.controls.address.hasError('required')">{{ "error.required" | translate
                           }}</mat-error>
                         <mat-error *ngIf="form.controls.address.hasError('maxlength')">{{ "error.max_length" | translate
@@ -569,7 +611,7 @@
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
                         <mat-label>{{ "label.city" | translate }}</mat-label>
-                        <input matInput formControlName="addressCity" (change)="onFieldChange()"/>
+                        <input matInput formControlName="addressCity" (change)="onFieldChange()" />
                         <mat-error *ngIf="form.controls.addressCity.hasError('required')">{{ "error.required" |
                           translate }}</mat-error>
                         <mat-error *ngIf="form.controls.addressCity.hasError('maxlength')">{{ "error.max_length" |
@@ -580,8 +622,10 @@
                     <!-- Notice of dispute province/state -->
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
-                        <mat-label *ngIf="form.get('addressCountryId').value===canada.ctryId">{{ "label.province" | translate }}</mat-label>
-                        <mat-label *ngIf="form.get('addressCountryId').value===usa.ctryId">{{ "label.state" | translate }}</mat-label>
+                        <mat-label *ngIf="form.get('addressCountryId').value===canada.ctryId">{{ "label.province" |
+                          translate }}</mat-label>
+                        <mat-label *ngIf="form.get('addressCountryId').value===usa.ctryId">{{ "label.state" | translate
+                          }}</mat-label>
                         <mat-select formControlName="addressProvinceProvId"
                           (selectionChange)="onAddressProvinceChange($event.value)" (change)="onFieldChange()"
                           *ngIf="form.get('addressCountryId').value === canada.ctryId || form.get('addressCountryId').value === usa.ctryId">
@@ -601,8 +645,7 @@
                           {{ "label.province_state" | translate }}</mat-label>
                         <input matInput formControlName="addressProvince" (change)="onFieldChange()"
                           *ngIf="form.get('addressCountryId').value !== usa.ctryId && form.get('addressCountryId').value !== canada.ctryId" />
-                        <mat-error
-                          *ngIf="form.controls.addressProvinceProvId.hasError('required')">{{
+                        <mat-error *ngIf="form.controls.addressProvinceProvId.hasError('required')">{{
                           "error.required" | translate }}</mat-error>
                         <mat-error *ngIf="form.controls.addressProvince.hasError('maxlength')">{{ "error.max_length" |
                           translate }}30</mat-error>
@@ -616,21 +659,23 @@
                   <!-- Notice of dispute postal code -->
                   <div class="col-md-6">
                     <mat-form-field class="w-100">
-                      <mat-label *ngIf="form.get('addressCountryId').value ===canada.ctryId">{{ "label.postal_code" | translate }}</mat-label>
-                      <input matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()" minlength="6" (change)="onFieldChange()"
-                        formControlName="postalCode" [showMaskTyped]="true"
+                      <mat-label *ngIf="form.get('addressCountryId').value ===canada.ctryId">{{ "label.postal_code" |
+                        translate }}</mat-label>
+                      <input matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()" minlength="6"
+                        (change)="onFieldChange()" formControlName="postalCode" [showMaskTyped]="true"
                         *ngIf="form.get('addressCountryId').value===canada.ctryId" />
                       <mat-label *ngIf="form.get('addressCountryId').value===usa.ctryId">Zip Code</mat-label>
-                      <input matInput mask="00000" oninput="this.value = this.value.toUpperCase()" (change)="onFieldChange()"
-                        formControlName="postalCode" [showMaskTyped]="true"
+                      <input matInput mask="00000" oninput="this.value = this.value.toUpperCase()"
+                        (change)="onFieldChange()" formControlName="postalCode" [showMaskTyped]="true"
                         *ngIf="form.get('addressCountryId').value===usa.ctryId" />
                       <mat-label
                         *ngIf="form.get('addressCountryId').value!==usa.ctryId && form.get('addressCountryId').value!==canada.ctryId">
                         {{ "label.postal_zip" | translate }}</mat-label>
-                      <input matInput maxLength="6" oninput="this.value = this.value.toUpperCase()" (change)="onFieldChange()"
-                        formControlName="postalCode"
+                      <input matInput maxLength="6" oninput="this.value = this.value.toUpperCase()"
+                        (change)="onFieldChange()" formControlName="postalCode"
                         *ngIf="form.get('addressCountryId').value!==usa.ctryId && form.get('addressCountryId').value !== canada.ctryId" />
-                      <mat-error *ngIf="form.get('postalCode').hasError('required')">{{ "error.required" | translate }}</mat-error>
+                      <mat-error *ngIf="form.get('postalCode').hasError('required')">{{ "error.required" | translate
+                        }}</mat-error>
                       <mat-error
                         *ngIf="form.get('postalCode').hasError('pattern') || form.get('postalCode').hasError('minlength') || form.get('postalCode').hasError('maxlength')">
                         {{ "error.postal_zip" | translate }}
@@ -646,9 +691,11 @@
                       <input matInput formControlName="homePhoneNumber" mask="(000) 000-0000" (change)="onFieldChange()"
                         *ngIf="form.get('addressCountryId').value === canada.ctryId || form.get('addressCountryId').value === usa.ctryId"
                         [showMaskTyped]="true" />
-                      <input matInput formControlName="homePhoneNumber" mask="99999999999999999999" (change)="onFieldChange()"
-                        *ngIf="form.get('addressCountryId').value !== canada.ctryId && form.get('addressCountryId').value !== usa.ctryId" />                      
-                      <mat-error *ngIf="form.get('homePhoneNumber')?.hasError('phone')">{{ "error.phone_number" | translate }}
+                      <input matInput formControlName="homePhoneNumber" mask="99999999999999999999"
+                        (change)="onFieldChange()"
+                        *ngIf="form.get('addressCountryId').value !== canada.ctryId && form.get('addressCountryId').value !== usa.ctryId" />
+                      <mat-error *ngIf="form.get('homePhoneNumber')?.hasError('phone')">{{ "error.phone_number" |
+                        translate }}
                       </mat-error>
                     </mat-form-field>
                   </div>
@@ -657,7 +704,7 @@
                   <div class="col-md-6">
                     <mat-form-field class="w-100">
                       <mat-label>{{ "label.email_address" | translate }}</mat-label>
-                      <input matInput formControlName="emailAddress" autocomplete="off" (change)="onFieldChange()"/>
+                      <input matInput formControlName="emailAddress" autocomplete="off" (change)="onFieldChange()" />
                       <mat-hint
                         *ngIf="lastUpdatedDispute.emailAddressVerified === false && lastUpdatedDispute.emailAddress"
                         style="color:red">
@@ -693,7 +740,8 @@
                     <mat-form-field class="w-100">
                       <mat-label>{{ "label.dl_number" | translate }}</mat-label>
                       <input matInput formControlName="driversLicenceNumber"
-                        (keypress)="($event.charCode >= 48 && $event.charCode < 58)" (change)="onFieldChange()" minlength="7" maxlength="9"
+                        (keypress)="($event.charCode >= 48 && $event.charCode < 58)" (change)="onFieldChange()"
+                        minlength="7" maxlength="9"
                         *ngIf="form.get('driversLicenceProvinceProvId').value === bc.provId" />
                       <input matInput formControlName="driversLicenceNumber" maxlength="20"
                         *ngIf="form.get('driversLicenceProvinceProvId').value !== bc.provId" />
@@ -736,14 +784,12 @@
               (click)="reject()">
               Reject
             </button>
-            <button class="large" mat-flat-button type="button" color="primary"
-              [disabled]="lastUpdatedDispute.status === DispStatus.New || lastUpdatedDispute.status === DispStatus.Validated ||
-              lastUpdatedDispute.status === DispStatus.Cancelled"
-              (click)="cancel()">
+            <button class="large" mat-flat-button type="button" color="primary" [disabled]="lastUpdatedDispute.status === DispStatus.New || lastUpdatedDispute.status === DispStatus.Validated ||
+              lastUpdatedDispute.status === DispStatus.Cancelled" (click)="cancel()">
               Cancel
             </button>
           </div>
-        </ng-container>        
+        </ng-container>
       </div>
     </div>
   </div>

@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { TableFilter } from '@shared/models/table-filter-options.model';
+import { TableFilter, UpdateRequestTableStatusDefault} from '@shared/models/table-filter-options.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TableFilterService { // Temp
-  tableFilters: TableFilter[] = new Array(4).fill(new TableFilter());
+  tableFilters: TableFilter[] = Array.from({ length: 4 }, () => new TableFilter());
   currentPage: number[] = new Array(4).fill(1);
-  constructor(
-  ) {
+  constructor() {
+    //default status for Update Request inbox set to 'New'
+    this.tableFilters[2].status = UpdateRequestTableStatusDefault;
   }
 }
