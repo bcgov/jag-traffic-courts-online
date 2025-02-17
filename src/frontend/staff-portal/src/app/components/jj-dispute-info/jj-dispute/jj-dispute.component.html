@@ -532,10 +532,10 @@
             <button type="button" class="linkbutton" (click)="onGetFile(doc.fileId)"
               *ngIf="doc.virusScanStatus === 'clean'">{{ doc.fileName }}</button>&nbsp;
             <span *ngIf="doc.virusScanStatus !== 'clean'">{{ doc.fileName }} {{ doc.virusScanStatus }}</span>
-            <button type="button" style="width:50px !important; border:none; background-color:white"
+            <button *ngIf="!(type === tabTypes.DCF && isJJ)" type="button" style="width:50px !important; border:none; background-color:white"
               (click)="onRemoveFile(doc.fileId, doc.fileName)"><mat-icon style="color:red">delete</mat-icon></button>
           </div>
-          <div>
+          <div *ngIf="!(type === tabTypes.DCF && isJJ)">
             <label>File type for upload:</label>
             <mat-form-field appearance="outline" style="display: inline-flex;">
               <mat-select [(ngModel)]="fileTypeToUpload">
@@ -545,11 +545,11 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <button class="large" mat-flat-button type="button" color="primary"
+          <button *ngIf="!(type === tabTypes.DCF && isJJ)" class="large" mat-flat-button type="button" color="primary"
             onclick="document.getElementById('getFile').click()">
             <mat-icon>upload</mat-icon>&nbsp;Upload File
           </button>
-          <input type="file" id="getFile" style="display:none" accept="image/*,.pdf"
+          <input *ngIf="!(type === tabTypes.DCF && isJJ)" type="file" id="getFile" style="display:none" accept="image/*,.pdf"
             (change)="onUpload($event.target.files)">
         </mat-expansion-panel>
 
