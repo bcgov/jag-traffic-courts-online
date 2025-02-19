@@ -11,6 +11,7 @@ namespace TrafficCourts.OrdsDataService;
 [JsonSerializable(typeof(Tco.AuditLogEntryType))]
 [JsonSerializable(typeof(Tco.OrdsDisputeCaseFileSummary))]
 [JsonSerializable(typeof(Tco.DisputeStatusType))]
+[JsonSerializable(typeof(Occam.OccamDispute))]
 [JsonSerializable(typeof(OrdsDataServiceCollectionResponse<Justin.Agency>))]
 [JsonSerializable(typeof(OrdsDataServiceCollectionResponse<Justin.City>))]
 [JsonSerializable(typeof(OrdsDataServiceCollectionResponse<Justin.Country>))]
@@ -20,6 +21,7 @@ namespace TrafficCourts.OrdsDataService;
 [JsonSerializable(typeof(OrdsDataServiceCollectionResponse<Tco.AuditLogEntryType>))]
 [JsonSerializable(typeof(OrdsDataServiceCollectionResponse<Tco.DisputeStatusType>))]
 [JsonSerializable(typeof(OrdsDataServicePagedCollectionResponse<Tco.OrdsDisputeCaseFileSummary>))]
+[JsonSerializable(typeof(OrdsDataServicePagedCollectionResponse<Occam.OccamDispute>))]
 internal partial class JsonContext : JsonSerializerContext
 {
 }

@@ -15,10 +15,10 @@ COPY ["Messaging/TrafficCourts.Messaging.csproj", "Messaging/"]
 RUN dotnet restore "Citizen.Service/TrafficCourts.Citizen.Service.csproj"
 COPY . .
 WORKDIR "/src/Citizen.Service"
-RUN dotnet build "TrafficCourts.Citizen.Service.csproj" -c Release -o /app/build
+RUN dotnet build "TrafficCourts.Citizen.Service.csproj" -c Debug -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "TrafficCourts.Citizen.Service.csproj" -c Release -o /app/publish
+RUN dotnet publish "TrafficCourts.Citizen.Service.csproj" -c Debug -o /app/publish
 COPY entrypoint.sh /app/publish
 
 FROM base AS final

@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using TrafficCourts.OrdsDataService;
 using TrafficCourts.OrdsDataService.Justin;
+using TrafficCourts.OrdsDataService.Occam;
 using TrafficCourts.OrdsDataService.Tco;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -19,12 +20,28 @@ public static class OrdsDataServiceExtensions
 
     public static void AddOrdsDataService(this IServiceCollection services, IConfiguration configuration)
     {
+        // TODO:DKAY split these options by TCO vs OCCAM so we can init both
         var options = new OrdsDataServiceOptions();
         configuration.GetSection("OrdsDataService").Bind(options);
 
+
         services.AddMemoryCache();
 
-        services.AddHttpClient<OrdsDataServiceClient>(client =>
+        services.AddHttpClient<TcoOrdsDataServiceClient>(client =>
+        {
+            client.BaseAddress = new Uri(options.Address);
+            client.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue(options.Username, options.Password);
+        })
+        .AddHttpMessageHandler(sp =>
+        {
+            var cache = sp.GetRequiredService<Caching.Memory.IMemoryCache>();
+            var metrics = sp.GetRequiredService<IOrdsDataServiceOperationMetrics>();
+            ETagHandler handler = new ETagHandler(cache, metrics);
+            return handler;
+        });
+
+        // TODO:DKAY How do we make sure this is being cached separately from the TCO stuff? In theory the endpoints should manage that, but...?
+        services.AddHttpClient<OccamOrdsDataServiceClient>(client =>
         {
             client.BaseAddress = new Uri(options.Address);
             client.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue(options.Username, options.Password);
@@ -47,13 +64,13 @@ public static class OrdsDataServiceExtensions
         services.AddTransient<IProvinceRepository, ProvinceRepository>();
         services.AddTransient<IStatuteRepository, StatuteRepository>();
 
-        // occam
-
         // tco
         services.AddTransient<IAuditLogEntryTypeRepository, AuditLogEntryTypeRepository>();
         services.AddTransient<IDisputeStatusTypeRepository, DisputeStatusTypeRepository>();
-
         services.AddTransient<IDisputeCaseFileSummaryRepository, DisputeCaseFileSummaryRepository>();
+
+        // occam
+        services.AddTransient<IOccamDisputeRepository, OccamDisputeRepository>();
     }
 
 
