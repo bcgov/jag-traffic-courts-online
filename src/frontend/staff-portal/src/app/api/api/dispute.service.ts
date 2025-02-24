@@ -991,8 +991,8 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.get<PagedDisputeListItemCollection>(`${this.configuration.basePath}/api/dispute/disputes`,
-            {
+        return this.httpClient.get<PagedDisputeListItemCollection>(`${this.configuration.basePath}/api/OccamDisputeV2/disputes`,
+        {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
                 responseType: <any>responseType_,

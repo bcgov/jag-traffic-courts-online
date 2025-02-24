@@ -12,7 +12,7 @@ public interface IOccamDisputeRepository
 internal class OccamDisputeRepository : OccamOrdsRepository<OccamDisputeRepository>, IOccamDisputeRepository
 {
     public OccamDisputeRepository(OccamOrdsDataServiceClient client, ILogger<OccamDisputeRepository> logger) 
-        : base(client, "/v2/tco_disputes", logger)
+        : base(client, "/v2/occam_disputes", logger)
     {
     }
 
