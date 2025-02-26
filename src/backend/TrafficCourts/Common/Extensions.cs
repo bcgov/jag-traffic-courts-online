@@ -119,7 +119,18 @@ public static partial class Extensions
         return model;
     }
 
-    public static TrafficCourts.Domain.Models.Statute ToDomainModel(this TrafficCourts.OrdsDataService.Justin.Statute statute, StringBuilder buffer)
+    public static Domain.Models.DisputeCaseFileSummary ToDomainModel(this OrdsDataService.Occam.OccamDispute item)
+    {
+        //todo-dkay: flesh this mapping out
+        var model = new Domain.Models.DisputeCaseFileSummary()
+        {
+            Id = item.dispute_id
+        };
+
+        return model;
+    }
+
+    public static TrafficCourts.Domain.Models.Statute ToDomainModel(this OrdsDataService.Justin.Statute statute, StringBuilder buffer)
     {
         var model = new TrafficCourts.Domain.Models.Statute
         (
