@@ -532,10 +532,10 @@
             <button type="button" class="linkbutton" (click)="onGetFile(doc.fileId)"
               *ngIf="doc.virusScanStatus === 'clean'">{{ doc.fileName }}</button>&nbsp;
             <span *ngIf="doc.virusScanStatus !== 'clean'">{{ doc.fileName }} {{ doc.virusScanStatus }}</span>
-            <button type="button" style="width:50px !important; border:none; background-color:white"
+            <button *ngIf="!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))" type="button" style="width:50px !important; border:none; background-color:white"
               (click)="onRemoveFile(doc.fileId, doc.fileName)"><mat-icon style="color:red">delete</mat-icon></button>
           </div>
-          <div>
+          <div *ngIf="!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))">
             <label>File type for upload:</label>
             <mat-form-field appearance="outline" style="display: inline-flex;">
               <mat-select [(ngModel)]="fileTypeToUpload">
@@ -545,11 +545,11 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <button class="large" mat-flat-button type="button" color="primary"
+          <button *ngIf="!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))" class="large" mat-flat-button type="button" color="primary"
             onclick="document.getElementById('getFile').click()">
             <mat-icon>upload</mat-icon>&nbsp;Upload File
           </button>
-          <input type="file" id="getFile" style="display:none" accept="image/*,.pdf"
+          <input *ngIf="!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))" type="file" id="getFile" style="display:none" accept="image/*,.pdf"
             (change)="onUpload($event.target.files)">
         </mat-expansion-panel>
 
