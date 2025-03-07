@@ -20,6 +20,7 @@ import { Dispute } from 'app/services/dispute.service';
 import { DisputeStatus } from '@shared/consts/DisputeStatus.model';
 import { HearingType } from '@shared/consts/HearingType.model';
 import { ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -134,6 +135,7 @@ export class JJDisputeComponent implements OnInit {
     private documentService: DocumentService,
     private historyRecordService: HistoryRecordService,
     private cdr: ChangeDetectorRef,
+    private router: Router,
   ) {
     this.authService.jjList$.subscribe(result => {
       this.jjList = result;
@@ -214,6 +216,9 @@ export class JJDisputeComponent implements OnInit {
 
       this.isNoAppEnabled = this.RoPApp.N === this.lastUpdatedJJDispute.mostRecentCourtAppearance.appCd;
     });
+  }
+  isJjBaseAddress(): boolean {
+    return this.router.url.includes('/jj');
   }
 
   goTo(id: string) {
