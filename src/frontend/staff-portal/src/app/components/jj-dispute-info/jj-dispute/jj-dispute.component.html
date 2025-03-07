@@ -422,7 +422,7 @@
         <app-jj-dispute-court-appearances [data]="lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs">
         </app-jj-dispute-court-appearances>
       </section>
-      <section *ngIf="tcoDisputeInfo.hearingType === HearingTypeCodes.WrittenReasons" class="section-sticky">
+      <section *ngIf="tcoDisputeInfo.hearingType === HearingTypeCodes.WrittenReasons || tcoDisputeInfo.hearingType === HearingTypeCodes.CourtAppearance" class="section-sticky">
         <ng-container subHeader>
           <span>
             <h3>Disputant Statement</h3>
@@ -511,7 +511,7 @@
 
       <span #uploadedDocuments></span>
       <mat-accordion multi [togglePosition]="'before'" class="info-expansion-panel">
-        <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel [expanded]="false">
           <mat-expansion-panel-header>
             <mat-panel-title>
               <span style="color: black;"><b>Documents</b></span>
@@ -566,7 +566,7 @@
         </mat-expansion-panel>
 
         <span #disputantUpdates></span>
-        <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel [expanded]="false">
           <mat-expansion-panel-header>
             <mat-panel-title>
               <span style="color: black;"><b>{{ "label.disputant_updates" | translate }}</b></span>
@@ -578,7 +578,7 @@
         </mat-expansion-panel>
 
         <span #fileRemarks></span>
-        <mat-expansion-panel [expanded]="true" id="file-remarks">
+        <mat-expansion-panel [expanded]="false" id="file-remarks">
           <mat-expansion-panel-header>
             <mat-panel-title>
               <span style="color: black;"><b>File Remarks </b></span>
