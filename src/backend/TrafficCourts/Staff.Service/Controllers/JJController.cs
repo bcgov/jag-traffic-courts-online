@@ -192,6 +192,7 @@ public partial class JJController : StaffControllerBase
     /// <param name="jjDisputeId">Unique identifier for a specific JJ dispute record.</param>
     /// <param name="ticketNumber">Ticket number for a specific JJ dispute record.</param>
     /// <param name="assignVTC">boolean to indicate need to assign VTC.</param>
+    /// <param name="executeUserLock">A flag indicating whether to execute a user lock.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A single JJ dispute record</returns>
     /// <response code="200">The JJ dispute was found.</response>
@@ -209,7 +210,7 @@ public partial class JJController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
-    public async Task<IActionResult> GetJJDisputeAsync(long jjDisputeId, string ticketNumber, bool assignVTC, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetJJDisputeAsync(long jjDisputeId, string ticketNumber, bool assignVTC, bool executeUserLock, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Retrieving JJ Dispute {JJDisputeId} from oracle-data-api", jjDisputeId);
 
@@ -230,13 +231,18 @@ public partial class JJController : StaffControllerBase
                 _logger.LogWarning("GetJJDisputeAsync searches by ticket number, not jjDisputeId. The returned record does not have a matching dispute id.");
             }
 
-            var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
-
-            if (disputeLock is not null)
+            // TCVP-3162: If executeUserLock is true, attempt to lock the dispute for the current user.
+            // Otherwise, return the dispute without a lock.
+            if (executeUserLock)
             {
-                dispute.LockId = disputeLock.LockId;
-                dispute.LockedBy = disputeLock.Username;
-                dispute.LockExpiresAtUtc = disputeLock.ExpiryTimeUtc;
+                var lockInfo = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
+
+                if (lockInfo is not null)
+                {
+                    dispute.LockId = lockInfo.LockId;
+                    dispute.LockedBy = lockInfo.Username;
+                    dispute.LockExpiresAtUtc = lockInfo.ExpiryTimeUtc;
+                }
             }
 
             return Ok(dispute);
