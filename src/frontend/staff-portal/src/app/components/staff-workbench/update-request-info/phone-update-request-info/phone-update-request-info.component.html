@@ -1,11 +1,11 @@
-<mat-card>
+<mat-card *ngIf="disputantUpdateRequest.status === 'PENDING' && updateRequested.HomePhoneNumber !== disputeInfo.homePhoneNumber">
   <span>
     <span><b>Home Phone Number ({{ disputantUpdateRequest.status }})</b></span>
     <span style="float:right">
       {{ disputantUpdateRequest.createdTs | date: "dd-MMM-yyyy" }}
     </span>
   </span><br /><br />
-  <div style="display: grid; grid-template-columns: auto auto auto" *ngIf="requestReadable === true && disputantUpdateRequest.status === 'PENDING'">
+  <div style="display: grid; grid-template-columns: auto auto auto" *ngIf="requestReadable === true">
     <span class="section-grid-cell">
       <p class="section-grid-header">&nbsp;</p>
     </span>
@@ -21,22 +21,6 @@
     <span class="section-grid-cell">
       <p class="section-grid-text" *ngIf="disputeInfo.addressCountryId === 1 || disputeInfo.addressCountryId === 2">{{ disputeInfo.homePhoneNumber | phone}}</p>
       <p class="section-grid-text" *ngIf="disputeInfo.addressCountryId !== 1 && disputeInfo.addressCountryId !== 2">{{ disputeInfo.homePhoneNumber }}</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" *ngIf="disputeInfo.addressCountryId === 1 || disputeInfo.addressCountryId === 2">{{ updateRequested.HomePhoneNumber | phone }}</p>
-      <p class="section-grid-text" *ngIf="disputeInfo.addressCountryId !== 1 && disputeInfo.addressCountryId !== 2">{{ updateRequested.HomePhoneNumber }}</p>
-    </span>
-    <br />
-  </div>
-  <div style="display: grid; grid-template-columns: auto auto" *ngIf="requestReadable === true && disputantUpdateRequest.status !== 'PENDING'">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">&nbsp;</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Requested Update</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Home Phone Number</p>
     </span>
     <span class="section-grid-cell">
       <p class="section-grid-text" *ngIf="disputeInfo.addressCountryId === 1 || disputeInfo.addressCountryId === 2">{{ updateRequested.HomePhoneNumber | phone }}</p>
