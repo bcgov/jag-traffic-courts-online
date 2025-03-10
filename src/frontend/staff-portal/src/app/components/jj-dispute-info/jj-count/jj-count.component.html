@@ -1,6 +1,6 @@
 <div class="contact-info">
   <!-- Count Information -->
-  <section class="section-sticky">
+  <section class="section-sticky" [ngClass]="{'greyed-out': !jjDisputedCount}">
     <ng-container subHeader>
       <span class="count-text">
         <h3>Count {{ count }} <span class="medium-note"><i>(source Ticket & ICBC)</i></span></h3>
@@ -29,7 +29,7 @@
   </section>
 
   <!-- Disputant Request -->
-  <section class="section-sticky">
+  <section class="section-sticky" [ngClass]="{'greyed-out': !jjDisputedCount}">
     <ng-container subHeader>
       <span class="count-text">
         <h3>Disputant Request <span class="medium-note"><i>(source Online Portal)</i></span></h3>
@@ -96,7 +96,7 @@
   </section>
 
   <!-- JJ Latest Change Plea -->
-  <section [formGroup]="form" *ngIf="(jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !(isSSEditMode && jjDisputedCount)">
+  <section [formGroup]="form" [ngClass]="{'greyed-out': !jjDisputedCount}" *ngIf="(jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !(isSSEditMode && jjDisputedCount)">
     <ng-container subHeader>
       <span class="count-text">
         <h3>{{ "label.jj_decision" | translate }} - Count {{ count }}</h3>
@@ -137,7 +137,7 @@
     </div>
   </section>
 
-  <section *ngIf="(jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && (isSSEditMode && jjDisputedCount)">
+  <section [ngClass]="{'greyed-out': !jjDisputedCount}" *ngIf="(jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && (isSSEditMode && jjDisputedCount)">
     <form [formGroup]="countForm">
       <ng-container subHeader>
         <span class="count-text">
@@ -161,7 +161,7 @@
   </section>
 
   <!-- JJ RoP for Court Appearance -->
-  <section *ngIf="type !== tabTypes.DECISION_VALIDATION && type !== tabTypes.DCF && (jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !isSSEditMode">
+  <section [ngClass]="{'greyed-out': !jjDisputedCount}" *ngIf="type !== tabTypes.DECISION_VALIDATION && type !== tabTypes.DCF && (jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !isSSEditMode">
     <ng-container subHeader>
       <span class="count-text">
         <h3>{{ "label.findings" | translate }}</h3>
@@ -196,7 +196,7 @@
       </div>
     </div>
   </section>
-  <section *ngIf="(type === tabTypes.DECISION_VALIDATION || type === tabTypes.DCF) && (jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !isSSEditMode">
+  <section [ngClass]="{'greyed-out': !jjDisputedCount}" *ngIf="(type === tabTypes.DECISION_VALIDATION || type === tabTypes.DCF) && (jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !isSSEditMode">
     <ng-container subHeader>
       <span class="count-text">
         <h3>{{ "label.findings" | translate }}</h3>
@@ -221,7 +221,7 @@
   </section>
 
   <!-- Findings -->
-  <section *ngIf="(jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && isSSEditMode">
+  <section [ngClass]="{'greyed-out': !jjDisputedCount}" *ngIf="(jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && isSSEditMode">
     <ng-container subHeader>
       <span class="count-text">
         <h3>{{ "label.findings" | translate }}</h3>
@@ -246,7 +246,7 @@
   </section>
 
   <!-- Final disposition -->
-  <section>
+  <section [ngClass]="{'greyed-out': !jjDisputedCount}">
     <ng-container subHeader>
       <span class="count-text">
         <h3>{{ "label.final_disposition" | translate }}</h3>
