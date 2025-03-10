@@ -200,7 +200,8 @@ public partial class RedisDisputeLockService : IDisputeLockService
         }
 
         // problem, why couldn't we get the lock
-        _logger.LogWarning("On AquireLock, could not create the lock and could not get lock for ticket number {TicketNumber}", ticketNumber);
+        string sanitizedTicketNumber = ticketNumber.Replace(Environment.NewLine, "").Replace("\n", "").Replace("\r", "");
+        _logger.LogWarning("On AquireLock, could not create the lock and could not get lock for ticket number {TicketNumber}", sanitizedTicketNumber);
 
         // this is a problem, hope this never happens, possible upstream bug
         // this error really should be: unable to create lock and unable to get current lock holder
