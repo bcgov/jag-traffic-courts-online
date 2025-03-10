@@ -313,8 +313,8 @@ export class JJDisputeService {
    *
    * @param disputeId
    */
-  public getJJDispute(disputeId: number, ticketNumber: string, assignVTC: boolean): Observable<JJDispute> {
-    return this.jjApiService.apiJjJjDisputeIdGet(disputeId, ticketNumber, assignVTC)
+  public getJJDispute(disputeId: number, ticketNumber: string, assignVTC: boolean, executeUserLock: boolean): Observable<JJDispute> {
+    return this.jjApiService.apiJjJjDisputeIdGet(disputeId, ticketNumber, assignVTC, executeUserLock)
       .pipe(
         map((response: JJDispute) => {
           this.logger.info('jj-DisputeService::getJJDispute', response)
