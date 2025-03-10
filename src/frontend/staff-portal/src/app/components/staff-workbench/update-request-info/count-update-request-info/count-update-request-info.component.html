@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card *ngIf="updateRequested.DisputeCounts && updateRequested.DisputeCounts.length > 0">
   <span>
     <span><b>Counts ({{ disputantUpdateRequest.status }})</b></span>
     <span style="float:right">
@@ -25,6 +25,7 @@
       <span class="section-grid-cell">
         <p class="section-grid-text">{{ disputeCount.CountNo }}</p>
       </span>
+      <ng-container *ngIf="disputeCount.PleaCode !== disputeCount.OldPleaCode">
       <span class="section-grid-cell">
         <p class="section-grid-header">Plea Code</p>
       </span>
@@ -34,6 +35,8 @@
       <span class="section-grid-cell">
         <p class="section-grid-text">{{ disputeCount.PleaCode }}</p>
       </span>
+      </ng-container>
+      <ng-container *ngIf="disputeCount.RequestTimeToPay !== disputeCount.OldRequestTimeToPay">
       <span class="section-grid-cell">
         <p class="section-grid-header">Request Time To Pay</p>
       </span>
@@ -43,6 +46,8 @@
       <span class="section-grid-cell">
         <p class="section-grid-text">{{ disputeCount.RequestTimeToPay }}</p>
       </span>
+      </ng-container>
+      <ng-container *ngIf="disputeCount.RequestReduction !== disputeCount.OldRequestReduction">
       <span class="section-grid-cell">
         <p class="section-grid-header">Request Reduction</p>
       </span>
@@ -52,6 +57,7 @@
       <span class="section-grid-cell">
         <p class="section-grid-text">{{ disputeCount.RequestReduction }}</p>
       </span>
+      </ng-container>
     </div>
     <br />
   </div>
