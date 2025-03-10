@@ -13,23 +13,24 @@
     </mat-form-field>
     <!-- Temp fix for DatetimePicker styles -->
 
-    <div style="display:flex; flex-direction: row; justify-content: right;">
-      <input matInput [matDatepicker]="picker" [formControl]="appearanceDateFilter" (click)='picker.open()'
-        placeholder="court date" style="background-color: #f2f2f2; width:250px;" />
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-      <mat-select [formControl]="jjAssignedToFilter" placeholder="choose a jj"
-        style="width:250px; background-color: #f2f2f2;">
-        <mat-option value="unassigned"><i>choose a jj</i></mat-option>
-        <mat-option value=""><i>all JJs</i></mat-option>
-        <mat-option *ngFor="let jj of jjList" [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i></mat-option>
-      </mat-select>
-    </div>
+
   </div>
+
   <div class="overflow-auto">
     <div class="row w-100">    
       <div class="w-80 col-md-10">
-        &nbsp;
+        <div style="display:flex; flex-direction: row; justify-content: left;">
+          <input matInput [matDatepicker]="picker" [formControl]="appearanceDateFilter" (click)='picker.open()'
+            placeholder="Hearing date" style="background-color: #f2f2f2; width:250px;" />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-select [formControl]="jjAssignedToFilter" placeholder="choose a jj"
+            style="width:250px; background-color: #f2f2f2;">
+            <mat-option value="unassigned"><i>choose a jj</i></mat-option>
+            <mat-option value=""><i>all JJs</i></mat-option>
+            <mat-option *ngFor="let jj of jjList" [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i></mat-option>
+          </mat-select>
+        </div>
       </div>
       <div class="w-20 col-md-2">
         <app-paging [currentPage]="currentPage" [totalPages]="totalPages" (pageChanged)="onPageChange($event)">
@@ -42,7 +43,7 @@
           <span class="text-start">ASSIGNED TO</span>
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.jjAssignedTo ? getName(element.jjAssignedTo) : 'Unassigned' }}
+          {{ element.disputeStatus.code === (disputeStatus.InProgress || disputeStatus.Review) ? (element.jjAssignedTo ? getName(element.jjAssignedTo) : 'Unassigned') : '' }}
         </td>
       </ng-container>
 
@@ -56,16 +57,7 @@
           <span *ngIf="!isEditable(element)">{{ element.ticketNumber }}</span>
         </td>
       </ng-container>
-
-      <ng-container matColumnDef="submittedTs">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <span class="text-start">SUBMITTED DATE</span>
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <span>{{ element.submittedTs | date: "dd-MMM-yyyy" }}</span>
-        </td>
-      </ng-container>
-
+      
       <ng-container matColumnDef="violationDate">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           <span class="text-start">VIOLATION DATE</span>
@@ -93,14 +85,7 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="appearanceDuration">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <span class="text-start">DURATION (min)</span>
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <span>{{ element?.appearanceDuration }}</span>
-        </td>
-      </ng-container>
+
 
       <ng-container matColumnDef="appearanceRoomCode">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -108,6 +93,15 @@
         </th>
         <td mat-cell *matCellDef="let element">
           <span>{{ element.appearanceRoomCode }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="appearanceDuration">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span class="text-start">DURATION (min)</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <span>{{ element?.appearanceDuration }}</span>
         </td>
       </ng-container>
 
