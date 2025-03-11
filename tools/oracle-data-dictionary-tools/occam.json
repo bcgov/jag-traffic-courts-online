@@ -1,0 +1,63 @@
+{
+  "Schema": "OCCAM",
+  "AuditColumns": [
+    "ENT_DTM",
+    "UPD_DTM"
+  ],
+  "Tables": [
+    {
+      "Name": "OCCAM_AUDIT_LOG_ENTRIES",
+      "PrimaryKeySequenceName": "occam_alen_seq",
+      "Abbreviation": "alen"
+    },
+    {
+      "Name": "OCCAM_DISPUTE_COUNTS",
+      "PrimaryKeySequenceName": "occam_dico_seq",
+      "Abbreviation": "dico"
+    },
+    {
+      "Name": "OCCAM_DISPUTE_UPDATE_REQUESTS",
+ 	  "Properties": [ 
+		{ "Name": "STATUS_UPDATE_DTM", "DateTimeKind": "Utc" }
+	  ],
+      "PrimaryKeySequenceName": "occam_dure_seq",
+      "Abbreviation": "dure"
+    },
+    {
+      "Name": "OCCAM_DISPUTES",
+	  "Properties": [ 
+		{ "Name": "DISPUTANT_BIRTH_DT", "Format": "yyyy-MM-dd" },
+		{ "Name": "SUBMITTED_DT", "DateTimeKind": "Utc" },
+		{ "Name": "USER_ASSIGNED_DTM", "DateTimeKind": "Utc" }
+	  ],
+      "PrimaryKeySequenceName": "occam_disp_seq",
+      "Abbreviation": "disp"
+    },
+    {
+      "Name": "OCCAM_ERROR_LOGS",
+      "PrimaryKeySequenceName": "occam_erlo_seq",
+      "Abbreviation": "erlo"
+    },
+    {
+      "Name": "OCCAM_OUTGOING_EMAILS",
+ 	  "Properties": [ 
+		{ "Name": "EMAIL_SENT_DTM", "DateTimeKind": "Utc" }
+	  ],
+      "PrimaryKeySequenceName": "occam_ouem_seq",
+      "Abbreviation": "ouem"
+    },
+    {
+      "Name": "OCCAM_VIOLATION_TICKET_COUNTS",
+      "PrimaryKeySequenceName": "occam_vitc_seq",
+      "Abbreviation": "vitc"
+    },
+    {
+      "Name": "OCCAM_VIOLATION_TICKET_UPLOADS",
+ 	  "Properties": [ 
+		{ "Name": "DISPUTANT_BIRTH_DT", "Format": "yyyy-MM-dd" }
+	  ],
+      "PrimaryKeySequenceName": "occam_vitu_seq",
+      "Abbreviation": "vitu"
+    }
+  ]
+}

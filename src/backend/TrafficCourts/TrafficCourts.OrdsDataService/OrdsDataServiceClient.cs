@@ -1,6 +1,6 @@
-﻿using OpenTelemetry.Metrics;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using System.Web;
@@ -59,6 +59,44 @@ internal class OrdsDataServiceClient
             throw;
         }
     }
+
+    /// <summary>
+    /// Post a series of database operations
+    /// </summary>
+    /// <param name="path"></param>
+    /// <param name="operations">One or more operations that should be executed.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task PostAsync(string path, BatchDatabaseOperation operations, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(path);
+        ArgumentNullException.ThrowIfNull(operations);
+
+        using var postOperation = _metrics.BeginOperation(path);
+        postOperation.AddTag("method", "POST");
+        postOperation.AddTag("operation-count", operations.Count);
+
+        try
+        {
+            // build the path with query string parameters
+            Debug.Assert(_httpClient.BaseAddress != null);
+            path = _httpClient.BaseAddress!.AbsolutePath + path;
+
+            HttpRequestMessage request = new(HttpMethod.Post, path);
+
+            request.Content = new StringContent(JsonSerializer.Serialize(operations), Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await _httpClient.SendAsync(request, cancellationToken);
+            response.EnsureSuccessStatusCode();
+
+        }
+        catch (Exception exception)
+        {
+            postOperation.Error(exception);
+            throw;
+        }
+    }
+
 
     private async Task<T?> ReadContentAsync<T>(HttpResponseMessage response, JsonTypeInfo<T> jsonTypeInfo, CancellationToken cancellationToken)
     {

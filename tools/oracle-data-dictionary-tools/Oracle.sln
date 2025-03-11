@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34227.203
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oracle", "Oracle\Oracle.csproj", "{826B8DFA-DA00-40DD-A952-9D182B15AF45}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oracle.DataDictionary", "Oracle.DataDictionary\Oracle.DataDictionary.csproj", "{3CB00D7C-4189-46D5-86AB-E4027DF4A342}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrudGenerator", "CrudGenerator\CrudGenerator.csproj", "{D993927B-EA30-4689-ADC0-AC4F51B7BA3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyGenerator", "DependencyGenerator\DependencyGenerator.csproj", "{15ED7F6A-AAC4-4D61-98B9-6AC47356D63D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{826B8DFA-DA00-40DD-A952-9D182B15AF45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{826B8DFA-DA00-40DD-A952-9D182B15AF45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{826B8DFA-DA00-40DD-A952-9D182B15AF45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{826B8DFA-DA00-40DD-A952-9D182B15AF45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CB00D7C-4189-46D5-86AB-E4027DF4A342}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CB00D7C-4189-46D5-86AB-E4027DF4A342}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CB00D7C-4189-46D5-86AB-E4027DF4A342}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CB00D7C-4189-46D5-86AB-E4027DF4A342}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D993927B-EA30-4689-ADC0-AC4F51B7BA3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D993927B-EA30-4689-ADC0-AC4F51B7BA3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D993927B-EA30-4689-ADC0-AC4F51B7BA3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D993927B-EA30-4689-ADC0-AC4F51B7BA3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15ED7F6A-AAC4-4D61-98B9-6AC47356D63D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15ED7F6A-AAC4-4D61-98B9-6AC47356D63D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15ED7F6A-AAC4-4D61-98B9-6AC47356D63D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15ED7F6A-AAC4-4D61-98B9-6AC47356D63D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D3625436-72A4-45D5-BAAF-2655DE0B7DC4}
+	EndGlobalSection
+EndGlobal

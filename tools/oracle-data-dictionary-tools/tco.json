@@ -1,0 +1,52 @@
+{
+    "Schema": "TCO",
+    "AuditColumns": [
+        "ENT_DTM",
+        "UPD_DTM"
+    ],
+    "Tables": [
+        {
+            "Name": "TCO_APPEARANCE_CHARGE_COUNTS",
+            "PrimaryKeySequenceName": "tco_apcc_seq",
+            "Abbreviation": "apcc"
+        },
+        {
+            "Name": "TCO_AUDIT_LOG_ENTRIES",
+            "PrimaryKeySequenceName": "tco_ale_seq",
+            "Abbreviation": "ale"
+        },
+        {
+            "Name": "TCO_COURT_APPEARANCES",
+            "PrimaryKeySequenceName": "tco_coap_seq",
+            "Abbreviation": "coap"
+        },
+        {
+            "Name": "TCO_DISPUTE_COUNTS",
+            "PrimaryKeySequenceName": "tco_dico_seq",
+            "Abbreviation": "dico"
+        },
+        {
+            "Name": "TCO_DISPUTE_REMARKS",
+            "PrimaryKeySequenceName": "tco_dire_seq",
+            "Abbreviation": "dire"
+        },
+        {
+            "Name": "TCO_DISPUTES",
+            "PrimaryKeySequenceName": "tco_disp_seq",
+            "Abbreviation": "disp"
+        },        
+		{
+            "Name": "TCO_DISPUTE_STATUS_TYPES",
+            "Abbreviation": "dist",
+			"Operations": [
+			  "Insert",
+			  "Update"
+			]
+        },
+        {
+            "Name": "TCO_ERROR_LOGS",
+            "PrimaryKeySequenceName": "tco_erlo_seq",
+            "Abbreviation": "erlo"
+        }
+    ]
+}
