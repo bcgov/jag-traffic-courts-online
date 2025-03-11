@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Security.Claims;
@@ -359,7 +360,7 @@ public class JJControllerTest
         JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, false, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, false, false, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -385,7 +386,7 @@ public class JJControllerTest
         JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, false, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, false, false, CancellationToken.None);
 
         // Assert
         var badRequestResult = Assert.IsType<HttpError>(result);
@@ -402,7 +403,7 @@ public class JJControllerTest
         var jjDisputeService = new Mock<IJJDisputeService>();
 
         jjDisputeService
-            .Setup(_ => _.GetJJDisputeAsync(ticketnumber,false, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, false, It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status404NotFound, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         var printService = Mock.Of<IPrintDigitalCaseFileService>();
@@ -411,7 +412,7 @@ public class JJControllerTest
         JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, false, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, false, false, CancellationToken.None);
 
         // Assert
         var notFoundResult = Assert.IsType<HttpError>(result);
@@ -495,7 +496,7 @@ public class JJControllerTest
         JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, true, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, true, false, CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -525,12 +526,52 @@ public class JJControllerTest
         JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, true, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, true, false, CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
         var problemDetails = Assert.IsType<ProblemDetails>(objectResult.Value);
         Assert.Equal((int)HttpStatusCode.InternalServerError, problemDetails.Status);
         Assert.True(problemDetails?.Title?.Contains("Error Invoking COMS"));
+    }
+
+    [Fact]
+    public async Task TestGetJJDisputeWithUserLock200Result()
+    {
+        // Arrange
+        JJDispute dispute = new();
+        string ticketnumber = "AJ201092461";
+        dispute.TicketNumber = ticketnumber;
+        var jjDisputeService = new Mock<IJJDisputeService>();
+        var lockService = new Mock<IDisputeLockService>();
+
+        jjDisputeService
+            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, false, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(dispute);
+
+        lockService
+            .Setup(_ => _.GetLock(ticketnumber, It.IsAny<string>()))
+            .Returns(new Models.Lock
+            {
+                LockId = Guid.NewGuid().ToString(),
+                Username = "testuser",
+                ExpiryTimeUtc = DateTime.UtcNow.AddMinutes(30)
+            });
+
+        var mockLogger = new Mock<ILogger<JJController>>();
+        var printService = Mock.Of<IPrintDigitalCaseFileService>();
+        var mediator = Mock.Of<IMediator>();
+        JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService.Object, mockLogger.Object);
+
+        // Act
+        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, false, true, CancellationToken.None);
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var returnedDispute = Assert.IsType<JJDispute>(okResult.Value);
+        Assert.Equal(dispute.TicketNumber, returnedDispute.TicketNumber);
+        Assert.NotNull(returnedDispute.LockId);
+        Assert.Equal("testuser", returnedDispute.LockedBy);
+        Assert.NotNull(returnedDispute.LockExpiresAtUtc);
     }
 }

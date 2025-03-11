@@ -359,19 +359,6 @@ public partial class JJDisputeService : IJJDisputeService
     public async Task AssignJJDisputesToJJ(List<string> ticketNumbers, string? username, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         await _oracleDataApi.AssignJJDisputesToJJAsync(ticketNumbers, username, cancellationToken);
-
-        // Publish file history
-        foreach (string ticketNumber in ticketNumbers)
-        {
-            JJDispute dispute = await _oracleDataApi.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
-
-            SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
-                dispute.TicketNumber,
-                FileHistoryAuditLogEntryType.JASG, // Dispute assigned to JJ
-                GetUserName(user));
-
-            await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
-        }
     }
 
     public async Task<JJDispute> ReviewJJDisputeAsync(string ticketNumber, string remark, bool checkVTC, ClaimsPrincipal user, bool recalled, CancellationToken cancellationToken)
