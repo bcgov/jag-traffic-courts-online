@@ -98,6 +98,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 Dispute_counts = CreateDisputeCounts(context)
             };
 
+
             return disputeTicket;
         }
 
@@ -111,6 +112,13 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
             foreach (var ticketCount in message.ViolationTicketCounts)
             {
+                // TCVP-3184 ticket counts may be deleted, we need to ensure we only send the counts where act
+                if (string.IsNullOrEmpty(ticketCount.Act))
+                {
+                    LogCountSkippedDueToNoAct(context, ticketCount.Count);
+                    continue;
+                }
+
                 if (ticketCount.Amount is null)
                 {
                     LogCountSkippedDueToNoAmount(context, ticketCount.Count);
@@ -144,12 +152,46 @@ namespace TrafficCourts.Workflow.Service.Consumers
         /// </summary>
         private List<DisputeCount> CreateDisputeCounts(ConsumeContext<DisputeApproved> context)
         {
-            DisputeApproved message = context.Message; 
+            DisputeApproved message = context.Message;
 
-            var disputeCounts = message.DisputeCounts
-                .OrderBy(_ => _.Count)
-                .Select(_ => new DisputeCount { Count = _.Count, Dispute_type = _.DisputeType })
-                .ToList();
+            List<DisputeCount> disputeCounts = new();
+
+            foreach (var disputeCount in message.DisputeCounts)
+            {
+                // TCVP-3184 ticket counts may be deleted, we need to ensure we only send the disputes against counts
+                // where the ticket count
+                #region Check if dispute should be sent
+
+                var ticketCount = message
+                    .ViolationTicketCounts
+                    .SingleOrDefault(_ => _.Count == disputeCount.Count);
+
+                if (ticketCount is null)
+                {
+                    LogDisputeCountSkippedDueToNoTicketCount(context, disputeCount.Count);
+                    continue;
+                }
+
+                if (string.IsNullOrEmpty(ticketCount.Act))
+                {
+                    LogDisputeCountSkippedDueToTicketCountNoAct(context, disputeCount.Count);
+                    continue;
+                }
+
+                if (ticketCount.Amount is null)
+                {
+                    LogDisputeCountSkippedDueToTicketCountNoAmount(context, disputeCount.Count);
+                    continue;
+                }
+
+                #endregion
+
+                disputeCounts.Add(new DisputeCount
+                {
+                    Count = disputeCount.Count,
+                    Dispute_type = disputeCount.DisputeType
+                });
+            }
 
             return disputeCounts;
         }
@@ -189,6 +231,34 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
         [LoggerMessage(EventId = 6, Level = LogLevel.Information, Message = "Ticket count skipped because there was no amount", EventName = "CountSkippedDueToNoAmount")]
         private partial void LogCountSkippedDueToNoAmount(
+             [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)]
+             ConsumeContext<DisputeApproved> context,
+             [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordCountNumberTag), OmitReferenceName = true)]
+             int count);
+
+        [LoggerMessage(EventId = 7, Level = LogLevel.Information, Message = "Ticket count skipped because there was no Act", EventName = "CountSkippedDueToNoAct")]
+        private partial void LogCountSkippedDueToNoAct(
+             [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)]
+             ConsumeContext<DisputeApproved> context,
+             [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordCountNumberTag), OmitReferenceName = true)]
+             int count);
+
+        [LoggerMessage(EventId = 8, Level = LogLevel.Information, Message = "Dispute count skipped because there was no matching ticket count", EventName = "DisputeCountSkippedDueToNoTicketCount")]
+        private partial void LogDisputeCountSkippedDueToNoTicketCount(
+             [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)]
+             ConsumeContext<DisputeApproved> context,
+             [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordCountNumberTag), OmitReferenceName = true)]
+             int count);
+
+        [LoggerMessage(EventId = 9, Level = LogLevel.Information, Message = "Dispute count skipped because the ticket count has no Act", EventName = "DisputeCountSkippedDueToTicketCountNoAct")]
+        private partial void LogDisputeCountSkippedDueToTicketCountNoAct(
+             [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)]
+             ConsumeContext<DisputeApproved> context,
+             [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordCountNumberTag), OmitReferenceName = true)]
+             int count);
+
+        [LoggerMessage(EventId = 10, Level = LogLevel.Information, Message = "Dispute count skipped because the ticket count has no Amount", EventName = "DisputeCountSkippedDueToTicketCountNoAmount")]
+        private partial void LogDisputeCountSkippedDueToTicketCountNoAmount(
              [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)]
              ConsumeContext<DisputeApproved> context,
              [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordCountNumberTag), OmitReferenceName = true)]
