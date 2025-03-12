@@ -34,19 +34,18 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
     "jjAssignedTo",
     "ticketNumber",
-    "submittedTs",
     "violationDate",
     "toBeHeardAtCourthouseName",
-    "appearanceTs",
-    "appearanceDuration",
+    "appearanceTs",  
     "appearanceRoomCode",
+    "appearanceDuration",
     "accidentYn",
     "multipleOfficersYn",
     "status",
   ];
   currentPage: number = 1;
   totalPages: number = 1;
-  sortBy: string = "submittedTs";
+  sortBy: string = "toBeHeardAtCourthouseName";
   sortDirection: SortDirection = SortDirection.Asc;
   disputeStatus = DisputeStatus;
   hearingType = HearingType;

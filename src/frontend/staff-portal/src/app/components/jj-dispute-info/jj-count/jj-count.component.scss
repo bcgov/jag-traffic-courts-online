@@ -298,3 +298,8 @@ section{
   background-color: #fffee6;
   border: none;
 }
+
+.greyed-out {
+  opacity: 0.5;          /* Makes the content look faded */
+  pointer-events: none;  /* Disables interactions (optional) */
+}
