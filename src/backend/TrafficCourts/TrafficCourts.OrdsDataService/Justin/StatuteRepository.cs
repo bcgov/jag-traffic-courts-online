@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace TrafficCourts.OrdsDataService.Justin;
 
@@ -9,7 +10,7 @@ internal class StatuteRepository : OrdsRepository<StatuteRepository>, IStatuteRe
     {
     }
 
-    public async Task<Statute?> GetAsync(int stat_id, CancellationToken cancellationToken)
+    public async Task<Statute?> GetAsync(int stat_id, CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -25,11 +26,32 @@ internal class StatuteRepository : OrdsRepository<StatuteRepository>, IStatuteRe
         return response?.Rows?.FirstOrDefault();
     }
 
-    public async Task<List<Statute>> GetListAsync(CancellationToken cancellationToken)
+    public async Task<List<Statute>> GetListAsync(CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
             { "act_cd_in", "MVA,MVR" }
+        };
+
+        var response = await GetListAsync(
+            parameters,
+            JsonContext.Default.OrdsDataServiceCollectionResponseStatute,
+            ETagCache.OneDay,
+            cancellationToken);
+
+        return response?.Rows ?? [];
+    }
+
+    public async Task<List<Statute>> GetListAsync(DateTime effectiveOn, CancellationToken cancellationToken = default)
+    {
+        // when we filter stat_termination_dt >= :date, the back end will actually do
+        // :date <= stat_termination_dt OR stat_termination_dt is null
+        // since we want only the statutes that are effective on the given date
+        var parameters = new Dictionary<string, string>
+        {
+            { "act_cd_in", "MVA,MVR" },
+            { "stat_effective_dt_le", effectiveOn.ToString("yyyy-MM-dd") },
+            { "stat_termination_dt_ge", effectiveOn.ToString("yyyy-MM-dd") }
         };
 
         var response = await GetListAsync(
