@@ -43,7 +43,12 @@
           <span class="text-start">ASSIGNED TO</span>
         </th>
         <td mat-cell *matCellDef="let element">
-          {{ element.disputeStatus.code === (disputeStatus.InProgress || disputeStatus.Review) ? (element.jjAssignedTo ? getName(element.jjAssignedTo) : 'Unassigned') : '' }}
+          {{ 
+            (element.disputeStatus.code === disputeStatus.InProgress ||
+             element.disputeStatus.code === disputeStatus.Review)
+              ? (element.jjAssignedTo ? getName(element.jjAssignedTo) : 'Unassigned')
+              : '' 
+          }}    
         </td>
       </ng-container>
 
