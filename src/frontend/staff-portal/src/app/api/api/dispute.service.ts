@@ -991,7 +991,7 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.get<PagedDisputeListItemCollection>(`${this.configuration.basePath}/api/v2/occam/dispute/disputes`,
+        return this.httpClient.get<PagedDisputeListItemCollection>(`${this.configuration.basePath}/api/v2/occam/dispute/disputes2`,
         {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,

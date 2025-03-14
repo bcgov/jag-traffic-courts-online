@@ -648,6 +648,7 @@ public class DisputeService : IDisputeService,
 
     private async Task<List<DisputeListItem>> GetAllDisputesAsListAsync(CancellationToken cancellationToken)
     {
+        // TODO-DKAY: Can we just replace this call with a direct ORDS call? What does that look like?
         ICollection<DisputeListItem> values = await _oracleDataApi.GetAllDisputesAsync(null, null, cancellationToken);
 
         if (values is List<DisputeListItem> listOfDisputes)

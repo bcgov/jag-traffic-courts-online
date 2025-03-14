@@ -109,7 +109,7 @@ public class DisputeController : StaffControllerBase
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error retrieving Disputes from oracle-data-api");
+            _logger.LogError(e, "Error retrieving Disputes from ORDS");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }

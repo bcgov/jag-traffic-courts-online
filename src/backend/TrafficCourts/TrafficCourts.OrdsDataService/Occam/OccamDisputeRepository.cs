@@ -12,7 +12,8 @@ public interface IOccamDisputeRepository
 internal class OccamDisputeRepository : OccamOrdsRepository<OccamDisputeRepository>, IOccamDisputeRepository
 {
     public OccamDisputeRepository(OccamOrdsDataServiceClient client, ILogger<OccamDisputeRepository> logger) 
-        : base(client, "/v2/occam_disputes", logger)
+        //: base(client, "/v2/occam_disputes", logger)
+        : base(client, "api/lookup/dispute-case-file-statuses/v2", logger)
     {
     }
 

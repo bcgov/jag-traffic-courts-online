@@ -20,7 +20,7 @@ public static class OrdsDataServiceExtensions
 
     public static void AddOrdsDataService(this IServiceCollection services, IConfiguration configuration)
     {
-        // TODO:DKAY split these options by TCO vs OCCAM so we can init both
+        // TODO-DKAY split these options by TCO vs OCCAM so we can init both
         var options = new OrdsDataServiceOptions();
         configuration.GetSection("OrdsDataService").Bind(options);
 
@@ -40,7 +40,7 @@ public static class OrdsDataServiceExtensions
             return handler;
         });
 
-        // TODO:DKAY How do we make sure this is being cached separately from the TCO stuff? In theory the endpoints should manage that, but...?
+        // TODO-DKAY How do we make sure this is being cached separately from the TCO stuff? In theory the endpoints should manage that, but...?
         services.AddHttpClient<OccamOrdsDataServiceClient>(client =>
         {
             client.BaseAddress = new Uri(options.Address);

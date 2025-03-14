@@ -121,7 +121,7 @@ public static partial class Extensions
 
     public static Domain.Models.DisputeCaseFileSummary ToDomainModel(this OrdsDataService.Occam.OccamDispute item)
     {
-        //todo-dkay: flesh this mapping out
+        // TODO-DKAY: flesh this mapping out
         var model = new Domain.Models.DisputeCaseFileSummary()
         {
             Id = item.dispute_id
