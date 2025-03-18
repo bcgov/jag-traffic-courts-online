@@ -20,17 +20,15 @@ public static class OrdsDataServiceExtensions
 
     public static void AddOrdsDataService(this IServiceCollection services, IConfiguration configuration)
     {
-        // TODO-DKAY split these options by TCO vs OCCAM so we can init both
-        var options = new OrdsDataServiceOptions();
-        configuration.GetSection("OrdsDataService").Bind(options);
-
+        var options_tco = new OrdsDataServiceOptions();
+        configuration.GetSection("OrdsDataService_Tco").Bind(options_tco);
 
         services.AddMemoryCache();
 
         services.AddHttpClient<TcoOrdsDataServiceClient>(client =>
         {
-            client.BaseAddress = new Uri(options.Address);
-            client.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue(options.Username, options.Password);
+            client.BaseAddress = new Uri(options_tco.Address);
+            client.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue(options_tco.Username, options_tco.Password);
         })
         .AddHttpMessageHandler(sp =>
         {
@@ -40,11 +38,13 @@ public static class OrdsDataServiceExtensions
             return handler;
         });
 
-        // TODO-DKAY How do we make sure this is being cached separately from the TCO stuff? In theory the endpoints should manage that, but...?
+        var options_occam = new OrdsDataServiceOptions();
+        configuration.GetSection("OrdsDataService_Occam").Bind(options_occam);
+
         services.AddHttpClient<OccamOrdsDataServiceClient>(client =>
         {
-            client.BaseAddress = new Uri(options.Address);
-            client.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue(options.Username, options.Password);
+            client.BaseAddress = new Uri(options_occam.Address);
+            client.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue(options_occam.Username, options_occam.Password);
         })
         .AddHttpMessageHandler(sp =>
         {

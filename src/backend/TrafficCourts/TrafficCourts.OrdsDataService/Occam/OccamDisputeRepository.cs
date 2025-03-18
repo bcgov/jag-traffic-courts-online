@@ -11,11 +11,11 @@ public interface IOccamDisputeRepository
 
 internal class OccamDisputeRepository : OccamOrdsRepository<OccamDisputeRepository>, IOccamDisputeRepository
 {
-    public OccamDisputeRepository(OccamOrdsDataServiceClient client, ILogger<OccamDisputeRepository> logger) 
-        //: base(client, "/v2/occam_disputes", logger)
-        : base(client, "api/lookup/dispute-case-file-statuses/v2", logger)
-    {
-    }
+    public OccamDisputeRepository(OccamOrdsDataServiceClient client, ILogger<OccamDisputeRepository> logger)
+        : base(client, "/v2/occam_disputes", logger)
+        //: base(client, "/occam/v1/disputeList", logger)
+        //: base(client, "/v2/tco_disputes", logger)
+    { }
 
     public async Task<List<OccamDispute>> GetListAsync(
         IReadOnlyDictionary<string, string>? parameters,
