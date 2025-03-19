@@ -13,8 +13,6 @@ public class Handler : IRequestHandler<Request, Response>
     }
     public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
     {
-        var key = Caching.Cache.Api.Statutes(3);
-
         IEnumerable<Domain.Models.Statute> models = await _service.GetListAsync(cancellationToken);
 
         if (!string.IsNullOrWhiteSpace(request.Section))
