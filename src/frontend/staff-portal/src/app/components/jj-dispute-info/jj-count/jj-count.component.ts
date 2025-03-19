@@ -158,11 +158,10 @@ export class JJCountComponent implements OnInit, OnChanges {
       this.fineReduction = this.jjDisputedCount ? (this.jjDisputedCount.totalFineAmount && 
           this.jjDisputedCount.lesserOrGreaterAmount ? (this.jjDisputedCount.lesserOrGreaterAmount !== null && 
           this.jjDisputedCount.lesserOrGreaterAmount != this.jjDisputedCount.ticketedFineAmount ? 
-          "yes" : "no") : "") : "";
-      let today = new Date();      
-      this.timeToPay = this.jjDisputedCount ? ((this.jjDisputedCount.revisedDueDate) ? 
+          "yes" : "no") : "") : "";      
+      this.timeToPay = this.jjDisputedCount ? ((this.jjDisputedCount.revisedDueDate && this.jjDisputeInfo.jjDecisionDate) ? 
         (new Date(this.jjDisputedCount.dueDate).getDate() != new Date(this.jjDisputedCount.revisedDueDate).getDate() 
-          && this.jjDisputedCount.revisedDueDate.split('T')[0] != today.toISOString().split('T')[0]
+          && this.jjDisputedCount.revisedDueDate.split('T')[0] != this.jjDisputeInfo.jjDecisionDate.split('T')[0]
           ? "yes" : "no") : "") : "";
       this.bindRevisedDueDate(this.jjDisputedCount.revisedDueDate);
       this.updateInclSurcharge(this.inclSurcharge);
@@ -287,7 +286,6 @@ export class JJCountComponent implements OnInit, OnChanges {
         this.jjDisputedCount = { ...this.jjDisputedCount, ...this.countForm.value };
         if (this.jjDisputedCount.revisedDueDate) {
           let revisedDueDate = new Date(this.jjDisputedCount.revisedDueDate);
-          revisedDueDate.setDate(revisedDueDate.getDate() + 1);
           revisedDueDate.setHours(0, 0, 0, 0);
           this.jjDisputedCount.revisedDueDate = revisedDueDate.toISOString().slice(0, 10);
         }

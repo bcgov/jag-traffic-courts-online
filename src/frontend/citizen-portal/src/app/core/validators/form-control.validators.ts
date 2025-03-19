@@ -79,6 +79,37 @@ export class FormControlValidators {
   }
 
   /**
+  * @description
+  * Checks the form control value contains an email-like pattern.
+  *
+  * It gives an error if the value contains:
+  * 1. The "@" symbol anywhere.
+  * 2. A valid domain suffix (e.g., ".com", ".net", ".xyz", etc.).
+  */
+  public static containsEmailPattern(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) {
+      return null;
+    }
+
+    // Regular expression to check if the value contains the "@" symbol anywhere
+    const atSymbolRegExp = /@/;
+
+    // Regular expression to check if the value contains a valid domain suffix (e.g., .com, .net, .org)
+    const domainSuffixRegExp = /\.[a-zA-Z]{2,}$/;
+
+    // Check for either condition:
+    const containsAtSymbol = atSymbolRegExp.test(control.value);
+    const containsDomainSuffix = domainSuffixRegExp.test(control.value);
+
+    // If either condition is true, return an error.
+    if (containsAtSymbol || containsDomainSuffix) {
+      return { containsEmailPattern: true };
+    }
+
+    return null;
+  }
+
+  /**
    * @description
    * Checks the form control value is an phone number.
    */

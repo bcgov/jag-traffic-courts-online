@@ -1,11 +1,11 @@
-<mat-card>
+<mat-card *ngIf="isUpdateRequested && disputantUpdateRequest.status === 'PENDING'">
   <span>
     <span><b>Disputant Address ({{ disputantUpdateRequest.status }})</b></span>
     <span style="float:right">
       {{ disputantUpdateRequest.createdTs | date: "dd-MMM-yyyy" }}
     </span>
   </span><br /><br />
-  <div style="display: grid; grid-template-columns: auto auto auto" *ngIf="requestReadable === true && disputantUpdateRequest.status === 'PENDING'">
+  <div style="display: grid; grid-template-columns: auto auto auto" *ngIf="requestReadable === true">
     <span class="section-grid-cell">
       <p class="section-grid-header">&nbsp;</p>
     </span>
@@ -15,150 +15,105 @@
     <span class="section-grid-cell">
       <p class="section-grid-header">Requested Update</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressLine1">
+    <ng-container *ngIf="updateRequested.AddressLine1 && updateRequested.AddressLine1 !== disputeInfo.addressLine1">
+    <span class="section-grid-cell">
       <p class="section-grid-header">Address Line One</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressLine1">
+    <span class="section-grid-cell">
       <p class="section-grid-text" >{{ disputeInfo.addressLine1 }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressLine1">
+    <span class="section-grid-cell">
       <p class="section-grid-text">{{ updateRequested.AddressLine1 }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressLine2">
+    </ng-container>
+    <ng-container *ngIf="updateRequested.AddressLine2 && updateRequested.AddressLine2 !== disputeInfo.addressLine2">
+    <span class="section-grid-cell">
       <p class="section-grid-header">Address Line Two</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressLine2">
+    <span class="section-grid-cell">
       <p class="section-grid-text" >{{ disputeInfo.addressLine2 }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressLine2">
+    <span class="section-grid-cell">
       <p class="section-grid-text">{{ updateRequested.AddressLine2 }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressLine3">
+    </ng-container>
+    <ng-container *ngIf="updateRequested.AddressLine3 && updateRequested.AddressLine3 !== disputeInfo.addressLine3">
+    <span class="section-grid-cell">
       <p class="section-grid-header">Address Line Three</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressLine3">
+    <span class="section-grid-cell">
       <p class="section-grid-text" >{{ disputeInfo.addressLine3 }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressLine3">
+    <span class="section-grid-cell">
       <p class="section-grid-text">{{ updateRequested.AddressLine3 }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressCity">
+    </ng-container>
+    <ng-container *ngIf="updateRequested.AddressCity && updateRequested.AddressCity !== disputeInfo.addressCity">
+    <span class="section-grid-cell">
       <p class="section-grid-header">City</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressCity">
+    <span class="section-grid-cell">
       <p class="section-grid-text" >{{ disputeInfo.addressCity }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressCity">
+    <span class="section-grid-cell">
       <p class="section-grid-text">{{ updateRequested.AddressCity }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressProvinceCountryId || updateRequested.AddressProvince">
+    </ng-container>
+    <ng-container *ngIf="(updateRequested.AddressProvinceCountryId || updateRequested.AddressProvince) && oldProvince !== newProvince">
+    <span class="section-grid-cell">
       <p class="section-grid-header">Province/State</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressProvinceCountryId || updateRequested.AddressProvince">
+    <span class="section-grid-cell">
       <p class="section-grid-text" >{{ oldProvince }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressProvinceCountryId || updateRequested.AddressProvince">
+    <span class="section-grid-cell">
       <p class="section-grid-text">{{ newProvince }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressCountryId">
+    </ng-container>
+    <ng-container *ngIf="updateRequested.AddressCountryId && oldCountry !== newCountry">
+    <span class="section-grid-cell">
       <p class="section-grid-header">Country</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressCountryId">
+    <span class="section-grid-cell">
       <p class="section-grid-text" >{{ oldCountry }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressCountryId">
+    <span class="section-grid-cell">
       <p class="section-grid-text">{{ newCountry }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.PostalCode">
+    </ng-container>
+    <ng-container *ngIf="updateRequested.PostalCode && updateRequested.PostalCode !== disputeInfo.postalCode">
+    <span class="section-grid-cell">
       <p class="section-grid-header">Postal/Zip Code</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.PostalCode">
+    <span class="section-grid-cell">
       <p class="section-grid-text" >{{ disputeInfo.postalCode }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.PostalCode">
+    <span class="section-grid-cell">
       <p class="section-grid-text">{{ updateRequested.PostalCode }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.DriversLicenceNumber">
+    </ng-container>
+    <ng-container *ngIf="updateRequested.DriversLicenceNumber && updateRequested.DriversLicenceNumber !== disputeInfo.driversLicenceNumber">
+    <span class="section-grid-cell">
       <p class="section-grid-header">Driver's Licence Number</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.DriversLicenceNumber">
+    <span class="section-grid-cell">
       <p class="section-grid-text" >{{ disputeInfo.driversLicenceNumber }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.DriversLicenceNumber">
+    <span class="section-grid-cell">
       <p class="section-grid-text">{{ updateRequested.DriversLicenceNumber }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.DriversLicenceIssuedProvSeqNo|| updateRequested.DriversLicenceProvince">
+    </ng-container>
+    <ng-container *ngIf="oldDLProvince !== newDLProvince">
+    <span class="section-grid-cell">
       <p class="section-grid-header">Driver's Licence Province/State</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.DriversLicenceIssuedProvSeqNo|| updateRequested.DriversLicenceProvince">
+    <span class="section-grid-cell">
       <p class="section-grid-text" >{{ oldDLProvince }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.DriversLicenceIssuedProvSeqNo|| updateRequested.DriversLicenceProvince">
+    <span class="section-grid-cell">
       <p class="section-grid-text">{{ newDLProvince }}</p>
     </span>
-    <br />
-  </div>
-  <div style="display: grid; grid-template-columns: auto auto" *ngIf="requestReadable === true && disputantUpdateRequest.status !== 'PENDING'">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">&nbsp;</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Requested Update</p>
-    </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressLine1">
-      <p class="section-grid-header">Address Line One</p>
-    </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressLine1">
-      <p class="section-grid-text">{{ updateRequested.AddressLine1 }}</p>
-    </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressLine2">
-      <p class="section-grid-header">Address Line Two</p>
-    </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressLine2">
-      <p class="section-grid-text">{{ updateRequested.AddressLine2 }}</p>
-    </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressLine3">
-      <p class="section-grid-header">Address Line Three</p>
-    </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressLine3">
-      <p class="section-grid-text">{{ updateRequested.AddressLine3 }}</p>
-    </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressCity">
-      <p class="section-grid-header">City</p>
-    </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressCity">
-      <p class="section-grid-text">{{ updateRequested.AddressCity }}</p>
-    </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressProvinceCountryId || updateRequested.AddressProvince">
-      <p class="section-grid-header">Province/State</p>
-    </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressProvinceCountryId || updateRequested.AddressProvince">
-      <p class="section-grid-text">{{ newProvince }}</p>
-    </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressCountryId">
-      <p class="section-grid-header">Country</p>
-    </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.AddressCountryId">
-      <p class="section-grid-text">{{ newCountry }}</p>
-    </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.PostalCode">
-      <p class="section-grid-header">Postal/Zip Code</p>
-    </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.PostalCode">
-      <p class="section-grid-text">{{ updateRequested.PostalCode }}</p>
-    </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.DriversLicenceNumber">
-      <p class="section-grid-header">Driver's Licence Number</p>
-    </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.DriversLicenceNumber">
-      <p class="section-grid-text">{{ updateRequested.DriversLicenceNumber }}</p>
-    </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.DriversLicenceIssuedProvSeqNo|| updateRequested.DriversLicenceProvince">
-      <p class="section-grid-header">Driver's Licence Province/State</p>
-    </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.DriversLicenceIssuedProvSeqNo|| updateRequested.DriversLicenceProvince">
-      <p class="section-grid-text">{{ newDLProvince }}</p>
-    </span>
+    </ng-container>
     <br />
   </div>
   <div>
