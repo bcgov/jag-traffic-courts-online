@@ -16,8 +16,9 @@ import { BehaviorSubject } from 'rxjs';
 export class UpdateDisputeLandingComponent implements OnInit {
   private state: DisputeStore.State;
   private nonEditableStatus = [JJDisputeStatus.Cancelled, JJDisputeStatus.Concluded, DisputeStatus.Concluded, DisputeStatus.Cancelled, DisputeStatus.Rejected];
-  private completedJJStatuses = [JJDisputeStatus.Accepted, JJDisputeStatus.Concluded];
+  private writtenReasonsCompletedJJStatuses = [JJDisputeStatus.Cancelled, JJDisputeStatus.Confirmed, JJDisputeStatus.Concluded];
   public isEditable: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public isPleaEditable: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public bcServicesCardInfoLink: string;
   public isEmailVerified: boolean | null = null;
 
@@ -40,10 +41,14 @@ export class UpdateDisputeLandingComponent implements OnInit {
             if (!dispute) this.isEditable.next(false); // no dispute found
             else if (this.nonEditableStatus.includes(dispute.dispute_status)) this.isEditable.next(false); // OCCAM dispute done
             else if (this.nonEditableStatus.includes(dispute.jjdispute_status)) this.isEditable.next(false); // JJ Dispute over
-            else if (dispute.hearing_type === JJDisputeHearingType.WrittenReasons && dispute.jjdispute_status) this.isEditable.next(false); // written reasons and has a jj workbench status
-            // TCVP-2712 Do not show Change Address or Change Dispute for Completed Hearing Disputes
-            else if (this.completedJJStatuses.includes(dispute.jjdispute_status)) this.isEditable.next(false); // Has a completed JJDisputeStatus
             else this.isEditable.next(true); // otherwise allow editing
+
+            // TCVP-3143 Do not show Change Plea for Written Reasons Disputes with Completed JJ Workbench Statuses
+            if (dispute.hearing_type === JJDisputeHearingType.WrittenReasons && this.writtenReasonsCompletedJJStatuses.includes(dispute.jjdispute_status)) {
+              this.isPleaEditable.next(false);
+            } else {
+              this.isPleaEditable.next(true);
+            }
 
             this.isEmailVerified = dispute?.is_email_verified === null ? null : dispute?.is_email_verified;
             if (this.isEmailVerified === false) {

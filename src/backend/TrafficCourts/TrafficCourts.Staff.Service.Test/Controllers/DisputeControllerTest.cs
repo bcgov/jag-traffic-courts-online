@@ -25,7 +25,7 @@ public class DisputeControllerTest
 {
     
     [Fact]
-    public async void TestGetDisputes200Result()
+    public async Task TestGetDisputes200Result()
     {
         // Arrange
         var expected = new PagedDisputeListItemCollection(new PagedList<DisputeListItem>(Array.Empty<DisputeListItem>().AsQueryable(), 1, 25));
@@ -50,7 +50,7 @@ public class DisputeControllerTest
     }
 
     [Fact]
-    public async void TestGetDispute200Result()
+    public async Task TestGetDispute200Result()
     {
         // Mock the IDisputeService to return a specific Dispute for (1), confirm controller returns the dispute.
 
@@ -75,7 +75,7 @@ public class DisputeControllerTest
     }
 
     [Fact]
-    public async void TestGetDispute400Result()
+    public async Task TestGetDispute400Result()
     {
         // Mock the IDisputeService to return a specific Dispute for (1), confirm controller returns 400 when retrieving.
 
@@ -100,7 +100,7 @@ public class DisputeControllerTest
     }
 
     [Fact]
-    public async void TestGetDispute404Result()
+    public async Task TestGetDispute404Result()
     {
         // Mock the IDisputeService to return a specific Dispute for (1), confirm controller returns 404 when retrieving.
 
@@ -125,7 +125,7 @@ public class DisputeControllerTest
     }
     
     [Fact]
-    public async void TestUpdateDispute200Result()
+    public async Task TestUpdateDispute200Result()
     {
         // Mock the OracleDataApi to update a specific Dispute with id (1), confirm controller updates and returns the dispute.
 
@@ -150,7 +150,7 @@ public class DisputeControllerTest
     }
 
     [Fact]
-    public async void TestUpdateDispute400Result()
+    public async Task TestUpdateDispute400Result()
     {
         // Mock the OracleDataApi to update a specific Dispute with id (1), confirm controller returns 400 when updating.
 
@@ -175,7 +175,7 @@ public class DisputeControllerTest
     }
 
     [Fact]
-    public async void TestUpdateDispute404Result()
+    public async Task TestUpdateDispute404Result()
     {
         // Mock the OracleDataApi to update a specific Dispute with id (2), confirm controller returns 404 when updating.
 
@@ -201,7 +201,7 @@ public class DisputeControllerTest
     }
 
     [Fact]
-    public async void TestValidateDispute200Result()
+    public async Task TestValidateDispute200Result()
     {
         // Mock the OracleDataApi to update a specific Dispute with id (1), confirm controller updates and returns the dispute.
 
@@ -247,7 +247,7 @@ public class DisputeControllerTest
     }
 
     [Fact]
-    public async void TestAcceptDisputeUpdateRequest_200()
+    public async Task TestAcceptDisputeUpdateRequest_200()
     {
 
         // Arrange
@@ -270,7 +270,7 @@ public class DisputeControllerTest
     }
     
     [Fact]
-    public async void TestGetDisputesWithUpdateRequests200Result()
+    public async Task TestGetDisputesWithUpdateRequests200Result()
     {
         // Mock the IDisputeService to return a Disputes, confirm controller returns them.
 
@@ -304,7 +304,7 @@ public class DisputeControllerTest
 
 
     [Fact]
-    public async void TestGetDisputeUpdateRequestsAsync200Result()
+    public async Task TestGetDisputeUpdateRequestsAsync200Result()
     {
         // Mock the IDisputeService to return a DisputeUpdateRequests, confirm controller returns them.
 
@@ -337,7 +337,7 @@ public class DisputeControllerTest
     }
 
     [Fact]
-    public async void TestGetDisputeThrowsObjectManagementServiceException500Result()
+    public async Task TestGetDisputeThrowsObjectManagementServiceException500Result()
     {
         // Arrange
         Dispute dispute = new();
@@ -363,7 +363,7 @@ public class DisputeControllerTest
     }
 
     [Fact]
-    public async void TestDeleteViolationTicketCountAsync()
+    public async Task TestDeleteViolationTicketCountAsync()
     {
         // Arrange
         int violationTicketCountId = 1;

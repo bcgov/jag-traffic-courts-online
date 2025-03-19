@@ -2564,6 +2564,14 @@
               }
             },
             {
+              "name": "surname_or_org_name",
+              "in": "query",
+              "description": "The case insenstive disputant surname or organization name to search for.",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
               "name": "jj_assigned_to",
               "in": "query",
               "description": "The JJ assigned user",
@@ -2638,7 +2646,7 @@
             {
               "name": "sort_by",
               "in": "query",
-              "description": "The list of columns to sort the result by. To sort descending, add a '-' before the column name.",
+              "description": "The list of columns to sort the result by. To sort descending, add a '-' before the column name. Note: 'surnameOrOrgName' is a pseudo field for sorting by surname or organization name.",
               "schema": {
                 "type": "string"
               }
@@ -4974,7 +4982,8 @@
                 }
               }
             }
-          }
+          },
+          "deprecated": true
         }
       },
       "/api/lookup/statutes/v2": {
@@ -5050,7 +5059,8 @@
                 }
               }
             }
-          }
+          },
+          "deprecated": true
         }
       },
       "/api/lookup/languages/v2": {
@@ -5116,7 +5126,8 @@
                 }
               }
             }
-          }
+          },
+          "deprecated": true
         }
       },
       "/api/lookup/agencies/v2": {
@@ -5192,7 +5203,8 @@
                 }
               }
             }
-          }
+          },
+          "deprecated": true
         }
       },
       "/api/lookup/provinces/v2": {
@@ -5258,7 +5270,8 @@
                 }
               }
             }
-          }
+          },
+          "deprecated": true
         }
       },
       "/api/lookup/countries/v2": {
@@ -5923,6 +5936,10 @@
               "nullable": true
             },
             "disputantGivenName3": {
+              "type": "string",
+              "nullable": true
+            },
+            "disputantOrganizationName": {
               "type": "string",
               "nullable": true
             },

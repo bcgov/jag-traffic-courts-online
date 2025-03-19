@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Citizen.Service.Validators.Rules;
@@ -27,7 +28,7 @@ public class TicketAmountValidRuleTest
 
         // When
         float? actualCurrency = field.GetCurrency();
-        await rule.RunAsync();
+        await rule.RunAsync(CancellationToken.None);
 
         // Then.
         if (expectedCurrency is null)

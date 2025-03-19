@@ -1,0 +1,11 @@
+  <!-- Draggable Overlay -->
+  <div [ngClass]="{'visible': isTicketImageContainerVisible}" id="draggable-overlay" class="draggable-overlay">
+    <div class="title-bar" id="title-bar">
+      <p>Ticket Image</p>
+      <button class="close-btn" (click)="closeImage($event)">X</button>
+    </div>
+    <div class="content-body">
+      <img [src]="imageToShow" alt="Resizable Image" class="resizable-image">
+    </div>
+    <div class="resizer"></div>
+  </div>

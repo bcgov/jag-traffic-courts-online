@@ -9,7 +9,7 @@ internal class StatuteRepository : OrdsRepository<StatuteRepository>, IStatuteRe
     {
     }
 
-    public async Task<Statute?> GetAsync(decimal stat_id, CancellationToken cancellationToken)
+    public async Task<Statute?> GetAsync(int stat_id, CancellationToken cancellationToken)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -19,7 +19,7 @@ internal class StatuteRepository : OrdsRepository<StatuteRepository>, IStatuteRe
         var response = await GetListAsync(
             parameters,
             JsonContext.Default.OrdsDataServiceCollectionResponseStatute,
-            ETagCache.FiveMinutes,
+            ETagCache.OneHour,
             cancellationToken);
 
         return response?.Rows?.FirstOrDefault();

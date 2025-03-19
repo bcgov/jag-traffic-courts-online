@@ -5,7 +5,7 @@ import { DisputeService, Dispute } from 'app/services/dispute.service';
 import { DisputeRequestCourtAppearanceYn, DisputeDisputantDetectedOcrIssues, DisputeStatus, DisputeSystemDetectedOcrIssues, PagedDisputeListItemCollection, SortDirection } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
-import { TableFilter, TableFilterKeys } from '@shared/models/table-filter-options.model';
+import { TableFilter, TableFilterKeys, TableFilterStatusOptions, TicketValidationTableStatusDefault } from '@shared/models/table-filter-options.model';
 import { TableFilterService } from 'app/services/table-filter.service';
 
 @Component({
@@ -22,7 +22,8 @@ export class TicketInboxComponent implements OnInit {
   dataSource = new MatTableDataSource(this.disputes);
 
   tableFilterKeys: TableFilterKeys[] = ["dateSubmittedFrom", "dateSubmittedTo", "disputantSurname", "status", "ticketNumber"];
-  statusFilterOptions = [DisputeStatus.New, DisputeStatus.Processing, DisputeStatus.Validated, DisputeStatus.Rejected, DisputeStatus.Cancelled, DisputeStatus.Concluded];
+  statusFilterOptions = TableFilterStatusOptions;
+  defaultStatusFilter = TicketValidationTableStatusDefault;
 
   displayedColumns: string[] = [
     '__RedGreenAlert',
@@ -47,7 +48,9 @@ export class TicketInboxComponent implements OnInit {
   sortBy: Array<string> = ["submittedTs"];
   sortDirection: Array<SortDirection> = [SortDirection.Desc];
   newCount: number = 0;
+  newCountShow: boolean = false;
   filters: TableFilter = new TableFilter();
+  previousFilters: TableFilter = new TableFilter();
 
   constructor(
     private disputeService: DisputeService,
@@ -70,8 +73,10 @@ export class TicketInboxComponent implements OnInit {
 
     // when authentication token available, get data
     let dataFilter: TableFilter = this.tableFilterService.tableFilters[this.tabIndex];
-    dataFilter.status = dataFilter.status ?? "";
+    //dataFilter.status = dataFilter.status ?? [];
     this.filters = dataFilter;
+    this.previousFilters = { ...dataFilter };
+    this.currentPage = this.tableFilterService.currentPage[this.tabIndex];
     this.getAllDisputes();
     this.countNewTickets();
   }
@@ -119,9 +124,15 @@ export class TicketInboxComponent implements OnInit {
 
   // called on keyup in filter field
   onApplyFilter(dataFilters: TableFilter) {
+    if (JSON.stringify(this.previousFilters) !== JSON.stringify(dataFilters)) { // Add this line
+      this.currentPage = 1;
+      this.tableFilterService.currentPage[this.tabIndex] = 1;
+    }
     this.filters = dataFilters;
-    this.currentPage = 1;
+    this.previousFilters = { ...dataFilters };
     this.getAllDisputes();
+
+    this.newCountShow = (this.filters && this.filters.status) ? this.filters.status.mapping.includes(DisputeStatus.New) : false;
   }
 
   backWorkbench(element) {
@@ -132,11 +143,13 @@ export class TicketInboxComponent implements OnInit {
     this.sortBy = [sort.active];
     this.sortDirection = [sort.direction ? sort.direction as SortDirection : SortDirection.Desc];
     this.currentPage = 1;
+    this.tableFilterService.currentPage[this.tabIndex] = 1;
     this.getAllDisputes();
   }
 
   onPageChange(event: number) {
     this.currentPage = event;
+    this.tableFilterService.currentPage[this.tabIndex] = event;
     this.getAllDisputes();
   }
 }

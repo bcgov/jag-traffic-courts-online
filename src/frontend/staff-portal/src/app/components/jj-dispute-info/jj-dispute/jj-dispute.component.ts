@@ -19,6 +19,8 @@ import { TabType } from '@shared/enums/tab-type.enum';
 import { Dispute } from 'app/services/dispute.service';
 import { DisputeStatus } from '@shared/consts/DisputeStatus.model';
 import { HearingType } from '@shared/consts/HearingType.model';
+import { ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -131,7 +133,9 @@ export class JJDisputeComponent implements OnInit {
     private lookupsService: LookupsService,
     private config: ConfigService,
     private documentService: DocumentService,
-    private historyRecordService: HistoryRecordService
+    private historyRecordService: HistoryRecordService,
+    private cdr: ChangeDetectorRef,
+    private router: Router,
   ) {
     this.authService.jjList$.subscribe(result => {
       this.jjList = result;
@@ -213,6 +217,9 @@ export class JJDisputeComponent implements OnInit {
       this.isNoAppEnabled = this.RoPApp.N === this.lastUpdatedJJDispute.mostRecentCourtAppearance.appCd;
     });
   }
+  isJjBaseAddress(): boolean {
+    return this.router.url.includes('/jj');
+  }
 
   goTo(id: string) {
     let element: ElementRef;
@@ -234,12 +241,6 @@ export class JJDisputeComponent implements OnInit {
   }
 
   onConfirm(): void {
-    // TCVP-3082: Set dueDate values to current date before opening the dialog
-    this.lastUpdatedJJDispute.jjDisputedCounts.forEach(count => {
-      if (!count.revisedDueDate) {
-        count.revisedDueDate = new Date().toISOString();
-      }
-    });
 
     const data: DialogOptions = {
       titleKey: "Submit to VTC Staff?",
@@ -264,6 +265,7 @@ export class JJDisputeComponent implements OnInit {
   }
 
   onRequireCourtHearing() {
+
     const data: DialogOptions = {
       titleKey: this.lastUpdatedJJDispute.hearingType === this.HearingType.WrittenReasons ? "Adjourn / Require Hearing?" : "Adjourn / Continue?",
       messageKey: this.lastUpdatedJJDispute.hearingType === this.HearingType.WrittenReasons ?
@@ -273,9 +275,10 @@ export class JJDisputeComponent implements OnInit {
       actionType: "warn",
       cancelTextKey: "Go back",
       icon: "error_outline",
-      message: this.requireCourtHearingReason
+      message: this.requireCourtHearingReason,
+      data: this.lastUpdatedJJDispute.jjDisputedCounts
     };
-    this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
+    this.dialog.open(ConfirmReasonDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action?: any) => {
         if (action?.output?.response) {
           this.requireCourtHearingReason = action.output.reason; // update on form for appearances
@@ -558,17 +561,39 @@ export class JJDisputeComponent implements OnInit {
 
   onUpload(files: FileList) {
     if (files.length <= 0) return;
-
-    // upload to coms
+  
+    // Initially, set the status to "waiting for virus scan..."
+    let item: FileMetadata = { 
+      fileId: '', 
+      fileName: files[0].name, 
+      virusScanStatus: "waiting for virus scan..." 
+    };
+  
+    // Add the item to the fileData array
+    this.lastUpdatedJJDispute.fileData.push(item);
+  
+    // Manually trigger change detection to ensure the UI is refreshed
+    this.cdr.detectChanges();
+  
+    // Upload the file
     this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.noticeOfDisputeGuid, this.fileTypeToUpload, files[0], this.lastUpdatedJJDispute.id)
       .subscribe(fileId => {
-
-        // add to display of files in DCF
-        let item: FileMetadata = { fileId: fileId, fileName: files[0].name, virusScanStatus: "waiting for virus scan..." };
-        this.lastUpdatedJJDispute.fileData.push(item);
+        // Once the file is uploaded, update the fileId and status
+        item.fileId = fileId;
+        item.virusScanStatus = "";  // or any other status
+  
+        // Manually trigger change detection again to update the view
+        this.cdr.detectChanges();
+  
+        // Call refreshFileHistory() to update the history if needed
         this.refreshFileHistory();
+      }, error => {
+        // If the upload fails, set an error message
+        item.virusScanStatus = "upload failed";
+        this.cdr.detectChanges();  // Ensure the component updates in case of error
       });
   }
+
 
   onPrint(isCompleteVersion: boolean) {
     var type = DcfTemplateType.DcfTemplate;

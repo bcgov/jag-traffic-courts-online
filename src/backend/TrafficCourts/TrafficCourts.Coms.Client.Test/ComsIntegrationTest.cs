@@ -1,4 +1,5 @@
-﻿using Xunit.Abstractions;
+﻿using System.Text.RegularExpressions;
+using Xunit.Abstractions;
 
 namespace TrafficCourts.Coms.Client.Test
 {
@@ -19,9 +20,9 @@ namespace TrafficCourts.Coms.Client.Test
     public abstract class ComsIntegrationTest : IAsyncLifetime
     {
         private readonly bool _versioningEnabled;
-
-        private readonly ComsContainers _containers = new();
         private readonly ITestOutputHelper _output;
+
+        private ComsContainers _containers;
 
         protected ComsIntegrationTest(bool versioningEnabled, ITestOutputHelper output)
         {
@@ -31,7 +32,6 @@ namespace TrafficCourts.Coms.Client.Test
 
         public async Task InitializeAsync()
         {
-            await _containers.BuildAndStartAsync(_versioningEnabled, CancellationToken.None);
         }
 
         public async Task DisposeAsync()
@@ -39,9 +39,14 @@ namespace TrafficCourts.Coms.Client.Test
             await _containers.DisposeAsync().AsTask();
         }
 
-        [IntegrationTestFact]
-        public async Task client_can_delete_files()
+        [IntegrationTestTheory]
+        [InlineData("0.4.2")]
+        [InlineData("0.5.0")]
+        public async Task client_can_delete_files(string version)
         {
+            _containers = new(version);
+            await _containers.BuildAndStartAsync(_versioningEnabled, CancellationToken.None);
+
             var client = _containers.GetObjectManagementClient();
 
             // create a file
@@ -58,9 +63,14 @@ namespace TrafficCourts.Coms.Client.Test
             Assert.Equal(404, e.StatusCode);
         }
 
-        [IntegrationTestFact]
-        public async Task service_can_delete_files()
+        [IntegrationTestTheory]
+        [InlineData("0.4.2")]
+        [InlineData("0.5.0")]
+        public async Task service_can_delete_files(string version)
         {
+            _containers = new(version);
+            await _containers.BuildAndStartAsync(_versioningEnabled, CancellationToken.None);
+
             var client = _containers.GetObjectManagementClient();
             var service = _containers.GetObjectManagementService();
 
@@ -79,9 +89,14 @@ namespace TrafficCourts.Coms.Client.Test
             var actual = Assert.ThrowsAsync<FileNotFoundException>(() => service.GetFileAsync(id, CancellationToken.None));
         }
 
-        [IntegrationTestFact]
-        public async Task client_after_delete_file_search_files_does_not_find_file()
+        [IntegrationTestTheory]
+        [InlineData("0.4.2")]
+        [InlineData("0.5.0")]
+        public async Task client_after_delete_file_search_files_does_not_find_file(string version)
         {
+            _containers = new(version);
+            await _containers.BuildAndStartAsync(_versioningEnabled, CancellationToken.None);
+
             var client = _containers.GetObjectManagementClient();
 
             // create a file
@@ -104,9 +119,14 @@ namespace TrafficCourts.Coms.Client.Test
             Assert.Empty(searchResult);
         }
 
-        [IntegrationTestFact]
-        public async Task service_after_delete_file_search_files_does_not_find_file()
+        [IntegrationTestTheory]
+        [InlineData("0.4.2")]
+        [InlineData("0.5.0")]
+        public async Task service_after_delete_file_search_files_does_not_find_file(string version)
         {
+            _containers = new(version);
+            await _containers.BuildAndStartAsync(_versioningEnabled, CancellationToken.None);
+
             var client = _containers.GetObjectManagementClient();
             var service = _containers.GetObjectManagementService();
 
@@ -131,9 +151,14 @@ namespace TrafficCourts.Coms.Client.Test
             Assert.Empty(searchResult);
         }
 
-        [IntegrationTestFact]
-        public async Task test_coms_operations()
+        [IntegrationTestTheory]
+        [InlineData("0.4.2")]
+        [InlineData("0.5.0")]
+        public async Task test_coms_operations(string version)
         {
+            _containers = new(version);
+            await _containers.BuildAndStartAsync(_versioningEnabled, CancellationToken.None);
+
             byte[] buffer = new byte[4 * 1024];
             var stream = new MemoryStream(buffer);
 
@@ -151,10 +176,27 @@ namespace TrafficCourts.Coms.Client.Test
             // test fetch and add tags
             IList<Anonymous3> fetchTagsResponse = await client.FetchTagsAsync([objectId], null, CancellationToken.None);
 
-            var objectTags = Assert.Single(fetchTagsResponse.Where(_ => _.ObjectId == objectId));
-            var objectTagValue = Assert.Single(objectTags.Tagset);
-            Assert.Equal("a", objectTagValue.Key);
-            Assert.Equal("1", objectTagValue.Value);
+            var objectTags = Assert.Single(fetchTagsResponse, _ => _.ObjectId == objectId);
+
+            var comsVersion = _containers.Coms.ContainerVersion();
+
+            if (comsVersion.Minor == 4)
+            {
+                var objectTagValue = Assert.Single(objectTags.Tagset);
+                Assert.Equal("a", objectTagValue.Key);
+                Assert.Equal("1", objectTagValue.Value);
+            }
+            else //if (comsVersion.Minor == 5)
+            {
+                // 0.5.0 adds coms-id tag
+                var objectTagValue = Assert.Single(objectTags.Tagset, _ => _.Key == "a");
+                Assert.Equal("a", objectTagValue.Key);
+                Assert.Equal("1", objectTagValue.Value);
+
+                objectTagValue = Assert.Single(objectTags.Tagset, _ => _.Key == "coms-id");
+                Assert.Equal("coms-id", objectTagValue.Key);
+                Assert.Equal(objectId.ToString(), objectTagValue.Value);
+            }
 
             tags.Add("b", "2");
             tags.Remove("a");
@@ -162,12 +204,20 @@ namespace TrafficCourts.Coms.Client.Test
             await client.AddTaggingAsync(objectId, tags, null);
             fetchTagsResponse = await client.FetchTagsAsync([objectId]);
 
-            objectTags = Assert.Single(fetchTagsResponse.Where(_ => _.ObjectId == objectId));
-            Assert.Equal(2, objectTags.Tagset.Count);
+            if (comsVersion.Minor == 4)
+            {
+                objectTags = Assert.Single(fetchTagsResponse, _ => _.ObjectId == objectId);
+                Assert.Equal(2, objectTags.Tagset.Count);
+            }
+            else //if (comsVersion.Minor == 5)
+            {
+                objectTags = Assert.Single(fetchTagsResponse, _ => _.ObjectId == objectId);
+                Assert.Equal(3, objectTags.Tagset.Count);
+            }
 
             // 
             IList<Anonymous2> fetchMetadataResponse = await client.FetchMetadataAsync([objectId], null, CancellationToken.None);
-            var objectMetadata = Assert.Single(fetchMetadataResponse.Where(_ => _.ObjectId == objectId));
+            var objectMetadata = Assert.Single(fetchMetadataResponse, _ => _.ObjectId == objectId);
 
             meta = ToDictionary(objectMetadata);
             //meta["coms-name"] = "something-new.txt";
@@ -183,7 +233,7 @@ namespace TrafficCourts.Coms.Client.Test
             }
 
             fetchMetadataResponse = await client.FetchMetadataAsync([objectId], null, CancellationToken.None);
-            objectMetadata = Assert.Single(fetchMetadataResponse.Where(_ => _.ObjectId == objectId));
+            objectMetadata = Assert.Single(fetchMetadataResponse, _ => _.ObjectId == objectId);
         }
 
         private Dictionary<string, string> ToDictionary(Anonymous2 objectMetadata)

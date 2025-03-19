@@ -12,6 +12,7 @@ using AutoMapper;
 using HashidsNet;
 using TrafficCourts.Coms.Client;
 using Microsoft.Extensions.Time.Testing;
+using System.Threading.Tasks;
 
 namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
 {
@@ -41,7 +42,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
         }
 
         [Fact]
-        public async void TestHandlePublishMessageAndReturnsResponse()
+        public async Task TestHandlePublishMessageAndReturnsResponse()
         {
             var mockBus = new Mock<IBus>();
             var mockRedisCacheService = new Mock<IRedisCacheService>();

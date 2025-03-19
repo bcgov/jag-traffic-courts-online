@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Citizen.Service.Validators.Rules;
@@ -29,7 +30,7 @@ public class DriversLicenceValidRuleTest
         DriversLicenceValidRule rule = new(licenceField, violationTicket);
 
         // When
-        await rule.RunAsync();
+        await rule.RunAsync(CancellationToken.None);
 
         // Then.
         if (expectProvValid)

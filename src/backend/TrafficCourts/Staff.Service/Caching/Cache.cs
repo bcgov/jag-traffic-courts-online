@@ -44,27 +44,4 @@ public class Cache
         /// <param name="version">The version of the data structure. If new data structure is used, defined a new version. Defaults to 1.</param>
         public static string DisputeListItems(int version = 1) => $"oracle:v{version}:all:dispute-list-items";
     }
-
-    /// <summary>
-    /// Api named cache. Stores data cached queried returned fro the API, primarily code tables.
-    /// </summary>
-    public static class Api
-    {
-        public static string Agencies(int version = 1) => $"staff-api:v{version}:agencies";
-        public static string Agencies(string type, int version = 1) => $"staff-api:v{version}:agencies:{type}";
-
-        public static string Countries(int version = 1) => $"staff-api:v{version}:countries";
-
-        public static string Languages(int version = 1) => $"staff-api:v{version}:languages";
-        public static string Provinces(int version = 1) => $"staff-api:v{version}:provinces";
-
-        public static string DisputeCaseFileStatusTypes(int version = 1) => $"staff-api:v{version}:tco:dispute-status_types";
-
-        /// <summary>
-        /// Stores the list of statutues
-        /// </summary>
-        /// <param name="version">The version of the data structure. If new data structure is used, defined a new version. Defaults to 1.</param>
-        public static string Statutes(int version = 1) => $"staff-api:v{version}:statutes";
-
-    }
 }

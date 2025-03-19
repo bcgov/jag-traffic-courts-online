@@ -21,6 +21,7 @@ export class AddressUpdateRequestInfoComponent implements OnInit {
   public newCountry: string = "";
   public oldDLProvince: string = "";
   public newDLProvince: string = "";
+  public isUpdateRequested: boolean = false;
 
   constructor(
     private logger: LoggerService,
@@ -68,6 +69,19 @@ export class AddressUpdateRequestInfoComponent implements OnInit {
         let newDLProv = this.config.provincesAndStates.filter(x => x.ctryId === this.updateRequested.DriversLicenceIssuedCountryId && x.provSeqNo === this.updateRequested.DriversLicenceIssuedProvSeqNo);
         if (newDLProv.length > 0) this.newDLProvince = newDLProv[0].provNm;
       } else if (this.updateRequested.DriversLicenceProvince !== null) this.newDLProvince = this.updateRequested.DriversLicenceProvince;
+
+      if (this.disputeInfo.addressLine1 !== this.updateRequested.AddressLine1 || 
+        this.disputeInfo.addressLine2 !== this.updateRequested.AddressLine2 || 
+        this.disputeInfo.addressLine3 !== this.updateRequested.AddressLine3 || 
+        this.disputeInfo.addressCity !== this.updateRequested.AddressCity || 
+        this.oldProvince !== this.newProvince || 
+        this.oldCountry !== this.newCountry || 
+        this.disputeInfo.postalCode !== this.updateRequested.PostalCode || 
+        this.disputeInfo.driversLicenceNumber !== this.updateRequested.DriversLicenceNumber || 
+        this.oldDLProvince !== this.newDLProvince)
+        {
+          this.isUpdateRequested = true;
+        }
 
     }
     catch (ex) {

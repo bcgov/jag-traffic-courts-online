@@ -27,6 +27,7 @@ import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { YesNoPipe } from './pipes/yes-no.pipe';
 import { CustomDatePipe } from './pipes/custom-date.pipe';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { TicketImageContainerComponent } from './dialogs/ticket-image-container/ticket-image-container.component';
 
 @NgModule({
     declarations: [
@@ -48,7 +49,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
         AlertComponent,
         HeaderComponent,
         FeatureFlagDirective,
-        TicketImageDialogComponent
+        TicketImageDialogComponent,
+        TicketImageContainerComponent
     ],
     imports: [
         CommonModule,
@@ -89,6 +91,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
         HeaderComponent,
         FeatureFlagDirective,
         FlexLayoutModule,
+        TicketImageContainerComponent
     ],
     providers: [provideNgxMask()]
 })

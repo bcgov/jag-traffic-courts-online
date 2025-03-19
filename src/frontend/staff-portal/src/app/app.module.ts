@@ -61,6 +61,7 @@ import { PagingComponent } from '@components/paging/paging.component';
 import { UploadComponent } from './components/staff-workbench/upload/upload.component';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { ClickOutsideDirective } from './directives/click-outside.directive';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -111,7 +112,8 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     TableFiltersComponent,
     JjDisputeUpdatesComponent,
     PagingComponent,
-    UploadComponent
+    UploadComponent,
+    ClickOutsideDirective
   ],
   imports: [
     CommonModule,

@@ -44,7 +44,7 @@ public static class Startup
                 .AddOrdsDataServiceInstrumentation()
                 .AddRedisInstrumentation();
         },
-        options => 
+        options =>
         {
             options
                 .AddComsClientInstrumentation()
@@ -57,6 +57,17 @@ public static class Startup
         builder.Services.AddFastEndpoints();
 
         builder.Services.AddOrdsDataService(builder.Configuration);
+
+        builder.Services.AddTransient<IAgencyLookupService, AgencyLookupService>();
+        builder.Services.AddTransient<ICountryLookupService, CountryLookupService>();
+        builder.Services.AddTransient<ILanguageLookupService, LanguageLookupService>();
+        builder.Services.AddTransient<IProvinceLookupService, ProvinceLookupService>();
+        builder.Services.AddTransient<IStatuteLookupService, StatuteLookupService>();
+
+        builder.Services.AddMediatR(opts =>
+        {
+            opts.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+        });
 
         var redisConnectionString = builder.AddRedis();
 
@@ -103,11 +114,11 @@ public static class Startup
         //builder.Services.AddTransient<IDisputeLockService, DisputeLockService>(); can use this one for in memory
         builder.Services.AddTransient<IDisputeLockService, RedisDisputeLockService>();
 
-        builder.Services.AddLanguageLookup();
-        builder.Services.AddStatuteLookup();
-        builder.Services.AddAgencyLookup();
-        builder.Services.AddProvinceLookup();
-        builder.Services.AddCountryLookup();
+        //builder.Services.AddLanguageLookup();
+        //builder.Services.AddStatuteLookup<StatuteLookupService>();
+        //builder.Services.AddAgencyLookup();
+        //builder.Services.AddProvinceLookup();
+        //builder.Services.AddCountryLookup();
 
         // Add COMS (Object Management Service) Client
         builder.Services.AddObjectManagementService("COMS");

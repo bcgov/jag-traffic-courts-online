@@ -1,6 +1,4 @@
 # Use Splunk logging for services
-version: "3.8"
-
 services:
 
   #############################################################################################
@@ -15,7 +13,7 @@ services:
     container_name: splunk
     image: splunk/splunk:latest
     ports:
-      - 8000:8000
+      - 8001:8000
       - 8088:8088
     environment:
       SPLUNK_START_ARGS: --accept-license
@@ -25,18 +23,20 @@ services:
 
   arc-dispute-api:
     environment:
-      Serilog__Using__0: Serilog.Sinks.Splunk
-      Serilog__WriteTo__0__Name: EventCollector
-      Serilog__WriteTo__0__Args:splunkHost: http://splunk:8088
-      Serilog__WriteTo__0__Args:eventCollectorToken: token
+      Serilog__Using__1: Serilog.Sinks.Splunk
+      Serilog__WriteTo__1__Name: EventCollector
+      Serilog__WriteTo__1__Args:splunkHost: http://splunk:8088
+      Serilog__WriteTo__1__Args:eventCollectorToken: token
+      Serilog__WriteTo__1__Args__uriPath: "services/collector"
     depends_on: [splunk]
 
   citizen-api:
     environment:
-      Serilog__Using__0: Serilog.Sinks.Splunk
-      Serilog__WriteTo__0__Name: EventCollector
-      Serilog__WriteTo__0__Args:splunkHost: http://splunk:8088
-      Serilog__WriteTo__0__Args:eventCollectorToken: token
+      Serilog__Using__1: Serilog.Sinks.Splunk
+      Serilog__WriteTo__1__Name: EventCollector
+      Serilog__WriteTo__1__Args:splunkHost: http://splunk:8088
+      Serilog__WriteTo__1__Args:eventCollectorToken: token
+      Serilog__WriteTo__1__Args__uriPath: "services/collector"
     depends_on: [splunk]
 
   oracle-data-api:
@@ -47,18 +47,18 @@ services:
   
   staff-api:
     environment:
-      Serilog__Using__0: Serilog.Sinks.Splunk
-      Serilog__WriteTo__0__Name: EventCollector
-      Serilog__WriteTo__0__Args:splunkHost: http://splunk:8088
-      Serilog__WriteTo__0__Args:eventCollectorToken: token
+      Serilog__Using__1: Serilog.Sinks.Splunk
+      Serilog__WriteTo__1__Name: EventCollector
+      Serilog__WriteTo__1__Args:splunkHost: http://splunk:8088
+      Serilog__WriteTo__1__Args:eventCollectorToken: token
+      Serilog__WriteTo__1__Args__uriPath: "services/collector"
     depends_on: [splunk]
 
   workflow-service:
     environment:
-      Serilog__Using__0: Serilog.Sinks.Splunk
-      Serilog__WriteTo__0__Name: EventCollector
-      Serilog__WriteTo__0__Args:splunkHost: http://splunk:8088
-      Serilog__WriteTo__0__Args:eventCollectorToken: token
+      Serilog__Using__1: Serilog.Sinks.Splunk
+      Serilog__WriteTo__1__Name: EventCollector
+      Serilog__WriteTo__1__Args:splunkHost: http://splunk:8088
+      Serilog__WriteTo__1__Args:eventCollectorToken: token
+      Serilog__WriteTo__1__Args__uriPath: "services/collector"
     depends_on: [splunk]
-
-  

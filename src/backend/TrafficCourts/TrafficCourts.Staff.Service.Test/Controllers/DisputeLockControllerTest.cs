@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Net;
+using System.Threading.Tasks;
 using TrafficCourts.Staff.Service.Controllers;
 using TrafficCourts.Staff.Service.Models;
 using TrafficCourts.Staff.Service.Services;
@@ -14,7 +15,7 @@ namespace TrafficCourts.Staff.Service.Test.Controllers;
 public class DisputeLockControllerTest
 {
     [Fact]
-    public async void GetLockReturns200OkWhenLockAcquiredSuccessfully()
+    public async Task GetLockReturns200OkWhenLockAcquiredSuccessfully()
     {
         // Arrange
         var mockService = new Mock<IDisputeLockService>();
@@ -32,7 +33,7 @@ public class DisputeLockControllerTest
     }
 
     [Fact]
-    public async void GetLockReturns409ConflictWhenLockIsInUse()
+    public async Task GetLockReturns409ConflictWhenLockIsInUse()
     {
         // Arrange
         var mockService = new Mock<IDisputeLockService>();
@@ -55,7 +56,7 @@ public class DisputeLockControllerTest
     }
 
     [Fact]
-    public async void GetLockReturns500InternalServerErrorWhenExceptionThrown()
+    public async Task GetLockReturns500InternalServerErrorWhenExceptionThrown()
     {
         // Arrange
         var mockService = new Mock<IDisputeLockService>();
@@ -72,7 +73,7 @@ public class DisputeLockControllerTest
     }
 
     [Fact]
-    public async void RefreshLockReturns200OkWhenLockRefreshedSuccessfully()
+    public async Task RefreshLockReturns200OkWhenLockRefreshedSuccessfully()
     {
         // Arrange
         var mockService = new Mock<IDisputeLockService>();
@@ -90,7 +91,7 @@ public class DisputeLockControllerTest
     }
 
     [Fact]
-    public async void RefreshLockReturns500InternalServerErrorWhenExceptionThrown()
+    public async Task RefreshLockReturns500InternalServerErrorWhenExceptionThrown()
     {
         // Arrange
         var mockService = new Mock<IDisputeLockService>();
@@ -107,7 +108,7 @@ public class DisputeLockControllerTest
     }
 
     [Fact]
-    public async void ReleaseLockReturns200OkWhenLockReleasedSuccessfully()
+    public async Task ReleaseLockReturns200OkWhenLockReleasedSuccessfully()
     {
         // Arrange
         var mockService = new Mock<IDisputeLockService>();
@@ -124,7 +125,7 @@ public class DisputeLockControllerTest
     }
 
     [Fact]
-    public async void ReleaseLockReturns500InternalServerErrorWhenExceptionThrown()
+    public async Task ReleaseLockReturns500InternalServerErrorWhenExceptionThrown()
     {
         // Arrange
         var mockService = new Mock<IDisputeLockService>();

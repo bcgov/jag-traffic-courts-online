@@ -7,6 +7,7 @@ using Moq;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Controllers;
 using TrafficCourts.Citizen.Service.Features.Tickets;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search;
@@ -20,7 +21,7 @@ namespace TrafficCourts.Test.Citizen.Service.Controllers;
 public class TicketsControllerTests
 {
     [Fact]
-    public async void TestAnalyseOkResult()
+    public async Task TestAnalyseOkResult()
     {
         // Arrange
         var mockImage = new Mock<IFormFile>();
@@ -56,7 +57,7 @@ public class TicketsControllerTests
     }
 
     [Fact]
-    public async void TestAnalyseBadRequest()
+    public async Task TestAnalyseBadRequest()
     {
         // Arrange
         var mockImage = new Mock<IFormFile>();
@@ -84,7 +85,7 @@ public class TicketsControllerTests
     }
 
     [Fact]
-    public async void TestAnalyseBadRequest_DisputeSubmittedBefore()
+    public async Task TestAnalyseBadRequest_DisputeSubmittedBefore()
     {
         // Arrange
         var mockImage = new Mock<IFormFile>();
@@ -125,7 +126,7 @@ public class TicketsControllerTests
     }
 
     [Fact]
-    public async void TestAnalyseInternalError_DisputeSearchFailed()
+    public async Task TestAnalyseInternalError_DisputeSearchFailed()
     {
         // Arrange
         var mockImage = new Mock<IFormFile>();
@@ -168,7 +169,7 @@ public class TicketsControllerTests
     }
 
     [Fact]
-    public async void TestSearchOkResult()
+    public async Task TestSearchOkResult()
     {
         // Arrange
         var mockImage = new Mock<IFormFile>();
@@ -199,7 +200,7 @@ public class TicketsControllerTests
     }
 
     [Fact]
-    public async void TestSearchBadRequest_DisputeSubmittedBefore()
+    public async Task TestSearchBadRequest_DisputeSubmittedBefore()
     {
         // Arrange
         var mockImage = new Mock<IFormFile>();
@@ -232,7 +233,7 @@ public class TicketsControllerTests
     }
 
     [Fact]
-    public async void TestSearchInternalError_DisputeSearchFailed()
+    public async Task TestSearchInternalError_DisputeSearchFailed()
     {
         // Arrange
         var mockImage = new Mock<IFormFile>();

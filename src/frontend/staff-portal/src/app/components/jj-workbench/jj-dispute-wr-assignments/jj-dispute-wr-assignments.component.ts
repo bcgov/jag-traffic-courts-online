@@ -33,7 +33,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit {
     "bulkAssign",
     "ticketNumber",
     "submittedTs",
-    "surname",
+    "surnameOrOrgName",
     "toBeHeardAtCourthouseName",
     "policeDetachment",
     "timeToPayReason",
@@ -78,15 +78,14 @@ export class JJDisputeWRAssignmentsComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeCourthouseTeamCounts();
-    this.getCourthouseAgencyIds();    
+    this.getCourthouseAgencyIds();   
   }
 
   getTCODisputes() {
     this.logger.log('JJDisputeWRAssignmentsComponent::getTCODisputes');
     const params = {
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      disputeStatusCodes: [DisputeStatus.New, DisputeStatus.Review, DisputeStatus.InProgress, 
-        DisputeStatus.HearingScheduled].join(","),
+      disputeStatusCodes: [DisputeStatus.New, DisputeStatus.Review, DisputeStatus.InProgress].join(","),
       hearingTypeCd: HearingType.WrittenReasons,
       toBeHeardAtCourthouseIds: this.courthouseTeamIds[this.currentTeam] ? 
         this.courthouseTeamIds[this.currentTeam].join(",") : "",

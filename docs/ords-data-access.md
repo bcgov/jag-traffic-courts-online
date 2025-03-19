@@ -9,6 +9,139 @@ A set of packages were created to assist in executing various database queries a
 * support user supplied filter criteria including comparions: =, <>, <, >, <=, >=, in, not in, is null on almost any column without coding for each one
 * support user supplied order by clause, ordering on one or more columns acscending or descending
 
+## ORDS TCO Endpoints
+
+At present, there is no Open API specifiation for these services
+
+In each endpoint, the filter criteria can be suffixed with the following operator 
+suffixes  `_eq`, `_ne`, `_gt`, `_lt`, `_ge`, `_le`, `_in`, `_not_in`, `_is_null`, `_is_not_null`. 
+Unless otherwise stated, the string parameters can also have `_like` and `_regexp_like` operator suffixes. 
+It is up to the caller to ensure the correct wildcard sequences are used in the parameter value.
+
+### Get TCO Disputes
+
+`GET /v2/tco_disputes`
+
+#### Include Options
+
+Some portions of the TCO dispute record are more expensive to fetch. For those fields that 
+involve more expensive joins, they are excluded by default. Callers can request to include
+these fields in the response. There is an include parameter that can accept one or more of
+these parameters
+
+Query String Parameter: `include=parameter-list`
+
+| Parameter | Notes |
+| --------- | --------- |
+| appearances | The results should include fields related to the next unresulted appearance | 
+| notice_of_hearing_yn | The results should include if there is a notice of hearing |
+| multiple_officers_yn | The results should include if there are multiple officers associated with the disput |
+| electronic_ticket_yn | The results should include if it is an electronic ticket |
+
+#### Filter Options
+
+Query String Parameters: `parameter_operator=value(s)`
+
+| Parameter | Type | Notes |
+| --------- | ---- | --------- |
+| dispute_id | number | 
+| submitted_dt | datetime | The date and time formatted as an ISO 8601 date |
+| jj_decision_dt | datetime | The date and time formatted as an ISO 8601 date |
+| to_be_heard_at_agen_id | number |
+| hearing_type_cd | string |
+| appr_ctrm_agen_id | number |
+| appr_ctrm_room_cd | string |
+| appr_tm | date | Should be YYYY-MM-DD |
+| ticket_number_txt | string |
+| prof_surname_nm | string | Will be compared against prof_surname_upper_nm |
+| prof_given_1_nm | string | Will be compared against prof_upper_given_1_nm |
+| prof_org_nm | string | Will be compared against prof_upper_org_nm |
+| prof_surname_nm_or_org_nm | string | Will compare where either prof_surname_nm or prof_org_nm matches. Will be compared against the upper version of the columns |
+| vtc_assigned_to | string |
+| jj_assigned_to | string |
+| occam_violation_ticket_upld_id | number |
+| dispute_status_type_cd | string |
+
+#### Order By
+
+Query String Parameter: `order=field-list`
+
+Almost any field can be sorted on. To sort descending, prefix the field with a `-`. For example, `order=prof_surname_nm_or_org_nm,prof_given_1_nm` or 
+`order=-prof_surname_nm_or_org_nm,-prof_given_1_nm`. Each field can either be sorted ascending or descending independentyly. 
+If no order by is supplied, the default order is by `dispute_id`.
+
+#### Paging
+
+The paging parameters are optional.  Query String Parameters: `offset_rows=n` and `fetch_rows=m`
+
+| Parameter | Notes |
+| --------- | --------- |
+| offset_rows | The zero based number of rows to skip. Defaults to 0. |
+| fetch_rows | The page size. Defaults to 25. Use 0 (zero) to fetch just the rows. Use -1 to bypass paging and return all the rows. Returning all the rows should be used sparingly fetching all the rows without a narrow filter criteria could cause system stability. Fetching all the rows should be only used as stop gap until the application can be properly updated. |
+
+### Get JUSTIN Agencies
+
+`GET /v2/justin_agencies`
+
+#### Filter Options
+
+| Parameter | Type | Notes |
+| --------- | ---- | --------- |
+| cdat_agency_type_cd | string |
+| agen_active_yn | string |
+
+#### Order By
+
+Default sort order is by primary key `agen_id`.
+
+### Get JUSTIN Languages
+
+`GET /v2/justin_languages`
+
+#### Filter Options
+
+| Parameter | Type | Notes |
+| --------- | ---- | --------- |
+| cdln_language_cd | string |
+| cdln_active_yn | string |
+
+#### Order By
+
+Default sort order is by primary key `cdln_language_cd`.
+
+
+### Get JUSTIN Provinces
+
+`GET /v2/justin_provinces`
+
+#### Filter Options
+
+| Parameter | Type | Notes |
+| --------- | ---- | --------- |
+| ctry_id | number |
+| prov_abbreviation_cd | string |
+
+#### Order By
+
+Default sort order is by primary key `ctry_id`, `prov_abbreviation_cd`.
+
+### Get JUSTIN Statutes
+
+`GET /v2/justin_statutes`
+
+#### Filter Options
+
+| Parameter | Type | Notes |
+| --------- | ---- | --------- |
+| stat_id | number |
+| act_cd | string | `_like` and `_regexp_like` are not supported |
+| stat_section_txt | string |
+
+#### Order By
+
+Default sort order is by primary key `stat_id`..
+
+
 ## High Level Execution Level
 
 At a high level, the ORDS user call into a REST package. This could be one or multiple REST packages. The `tco_common` package is used to assemble 
@@ -96,7 +229,7 @@ as
  l_args tco_justin_query.t_justin_statutes_get_args_type;
 begin
 
-  l_args.filter_by := to_predicates(in_parameters);
+  l_args.filter_by := tco_common.to_predicates(in_parameters);
 
   if in_parameters.exists('order') then
     l_args.order_by := tco_common.parse_order_by(in_parameters('order'));
@@ -110,12 +243,10 @@ exception
 end;
 ```
 
-** **Note** the `to_predicates` function should be in `tco_common`.
-
 The `to_predicates` function has this signature.
 
 ```sql
-function to_predicates(in_parameters in tco_common.dictionary_t) return tco_common.t_predicates_type;
+function tco_common.to_predicates(in_parameters in tco_common.dictionary_t) return tco_common.t_predicates_type;
 ```
 
 The function loops over all the keys in the dictionary looking for standard filter predicate extensions. 
@@ -217,10 +348,9 @@ as
 begin
   ords_builder.declare_template('justin_statutes');
   ords_builder.declare_handler(p_procedure_name  => 'tco.tco_rest_v2.justin_statutes_get');
-  ords_builder.declare_parameter('stat_id_eq');
-  ords_builder.declare_parameter('act_cd_eq');
-  ords_builder.declare_parameter('act_cd_in');
-  ords_builder.declare_parameter('stat_section_txt_eq');
+  ords_builder.declare_filter_parameter('stat_id', p_include_like => false);
+  ords_builder.declare_filter_parameter('act_cd');
+  ords_builder.declare_filter_parameter('stat_section_txt');
   ords_builder.declare_parameter('order');
   ords_builder.declare_refcursor_out_parameter('rows');
   ords_builder.declare_refcursor_out_parameter('errors');
@@ -232,7 +362,8 @@ Here we can see we:
 
 1. Declare a template. The module is infered based on the last `declare_module` called.
 1. Declare a handler. The default method is GET. It can be overriden by supplying the p_method parameter. The procedure that is going to be called is supplied.
-1. Declare each of the input parameters.
+1. Declare each of the filter parameters. Each filter parameter will be created with `_eq`, `_ne`, `_gt`, `_lt`, `_ge`, `_le`, `_in`, `_not_in`, `_is_null`, `_is_not_null` operators. By default string/varchar2 types will also include `_like` and `_regexp_like` operators. For non-string types, the `p_include_like` should be set to false. We could add `_not_like` and `_not_regexp_like` if there is a requirement.
+1. Declare the order by parameter.
 1. Declare each of the output parameters.
 
 This is appears to be a lot simpiler than all those ORDS.DEFINE procedures. So what actually happens when `create_all` is run. What gets called?
@@ -247,7 +378,8 @@ END;
 
 The output is long, but lets look at the output for the justin_statutes examples we have look at so far,
 
-What was configured and where the values will come from. The bind variables are automatically created based on order they were declared.
+What was configured and where the values will come from. The bind variables are automatically created based on order they were declared. 
+Note, the other operators have been removed for brevity.
 
 ```
     template: /v2/justin_statutes
@@ -261,7 +393,7 @@ What was configured and where the values will come from. The bind variables are 
         resultset out parameter: "errors" from ":b7"
 ```
 
-The `p_source` block auto-generated for handler. Each of the defined input parameters are added to the dictionary if they are not null. The rows and errors are automatically passed to the procedure. In addition, if there is any error calling any of this, an exception block is generated to return the problem in the errors collection. This is a lot of repetitive code the developer does not need to write.
+The `p_source` block auto-generated for handler. Each of the defined input parameters are added to the dictionary if they are not null. The rows and errors are automatically passed to the procedure. In addition, if there is any error calling any of this, an exception block is generated to return the problem in the errors collection. This is a lot of repetitive code the developer does not need to write. Note, the other operators have been removed for brevity.
 
 ```sql
 declare

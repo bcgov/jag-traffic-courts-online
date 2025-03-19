@@ -28,7 +28,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit {
     "ticketNumber",
     "submittedTs",
     "violationDate",
-    "surname",
+    "surnameOrOrgName",
     "toBeHeardAtCourthouseName",
     "status",
   ];
@@ -37,6 +37,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit {
   sortBy: string = "submittedTs";
   sortDirection: SortDirection = SortDirection.Desc;
   filters: TableFilter = new TableFilter();
+  previousFilters: TableFilter = new TableFilter();
   disputeStatus = DisputeStatus;
 
   constructor(
@@ -48,8 +49,10 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit {
 
   ngOnInit(): void {    
     let dataFilter: TableFilter = this.tableFilterService.tableFilters[this.tabIndex];
-    dataFilter.status = dataFilter.status ?? "";
+    //dataFilter.status = dataFilter.status ?? "";
     this.filters = dataFilter; 
+    this.previousFilters = { ...dataFilter };
+    this.currentPage = this.tableFilterService.currentPage[this.tabIndex];
     this.getTCODisputes();    
   }
 
@@ -60,7 +63,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit {
       submittedFrom: this.filters.dateSubmittedFrom,
       submittedThru: this.filters.dateSubmittedTo,
       ticketNumber: this.filters.ticketNumber ? this.filters.ticketNumber.toUpperCase() : "",
-      surname: this.filters.surname ?? "",
+      surnameOrOrgName: this.filters.surname ?? "",
       toBeHeardAtCourthouseIds: this.filters.courthouseLocation && this.filters.courthouseLocation.length > 0 ? 
         this.filters.courthouseLocation.map(x => x.id).join(",") : "",
       sortBy: this.sortDirection === SortDirection.Asc ? this.sortBy : "-" + this.sortBy,
@@ -86,8 +89,12 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit {
   }
 
   onApplyFilter(dataFilters: TableFilter) {
+    if (JSON.stringify(this.previousFilters) !== JSON.stringify(dataFilters)) { // Add this line
+      this.currentPage = 1;
+      this.tableFilterService.currentPage[this.tabIndex] = 1;
+    }
     this.filters = dataFilters;
-    this.currentPage = 1;
+    this.previousFilters = { ...dataFilters };
     this.getTCODisputes();
   }
 
@@ -95,11 +102,13 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit {
     this.sortBy = sort.active;
     this.sortDirection = sort.direction ? sort.direction as SortDirection : SortDirection.Desc;
     this.currentPage = 1;
+    this.tableFilterService.currentPage[this.tabIndex] = 1;
     this.getTCODisputes();
   }
 
   onPageChange(event: number) {
     this.currentPage = event;
+    this.tableFilterService.currentPage[this.tabIndex] = event;
     this.getTCODisputes();
   }
 

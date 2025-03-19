@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace TrafficCourts.Domain.Models
 {
@@ -15,32 +16,35 @@ namespace TrafficCourts.Domain.Models
         public string Section { get; private set; } = string.Empty;
         public string Subsection { get; private set; } = string.Empty;
         public string Paragraph { get; private set; } = string.Empty;
-        public string Subparagrah { get; private set; } = string.Empty;
+        public string Subparagraph { get; private set; } = string.Empty;
 
         private static readonly string[] _separator = ["(", ")"];
 
         public override string ToString()
         {
-            if (!string.IsNullOrEmpty(Section) && !string.IsNullOrEmpty(Subsection) && !string.IsNullOrEmpty(Paragraph) && !string.IsNullOrEmpty(Subparagrah))
+            StringBuilder buffer = new StringBuilder();
+
+            if (Section != string.Empty)
             {
-                return $"{Section}({Subsection})({Paragraph})({Subparagrah})";
+                buffer.Append(Section); // 123
             }
-            if (!string.IsNullOrEmpty(Section) && !string.IsNullOrEmpty(Subsection) && !string.IsNullOrEmpty(Paragraph))
+
+            if (Subsection != string.Empty)
             {
-                return $"{Section}({Subsection})({Paragraph})";
+                buffer.Append($"({Subsection})"); // (1)
             }
-            else if (!string.IsNullOrEmpty(Section) && !string.IsNullOrEmpty(Subsection))
+
+            if (Paragraph != string.Empty)
             {
-                return $"{Section}({Subsection})";
+                buffer.Append($"({Paragraph})"); // (a)
             }
-            else if (!string.IsNullOrEmpty(Section))
+
+            if (Subparagraph != string.Empty)
             {
-                return Section;
+                buffer.Append($"({Subparagraph})"); // (i)
             }
-            else
-            {
-                return string.Empty;
-            }
+
+            return buffer.ToString();
         }
 
         /// <summary>
@@ -72,14 +76,30 @@ namespace TrafficCourts.Domain.Models
 
                         if (parts.Length >= 2)
                         {
-                            result.Subsection = parts[1];
+                            // Subsection is optional and always a digit if specified
+                            if (char.IsDigit(parts[1][0]))
+                            {
+                                result.Subsection = parts[1];
+                            }
+                            else
+                            {
+                                // no subsection, so push the remaining fields into paragraph and subparagraph
+                                result.Paragraph = parts[1];
+                                if (parts.Length >= 3)
+                                {
+                                    result.Subparagraph = parts[2];
+                                }
+
+                                legalSection = result;
+                                return true;
+                            }
 
                             if (parts.Length >= 3)
                             {
                                 result.Paragraph = parts[2];
 
                                 if (parts.Length >= 4)
-                                    result.Subparagrah = parts[3];
+                                    result.Subparagraph = parts[3];
                             }
                         }
 

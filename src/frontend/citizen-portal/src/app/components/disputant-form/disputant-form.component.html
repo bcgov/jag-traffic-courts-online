@@ -33,6 +33,7 @@
         <mat-form-field class="w-100">
           <mat-label>Contact Type</mat-label>
           <mat-select formControlName="contact_type" (selectionChange)="onSelectContactType($event.value)">
+            <mat-option [value]="null"> </mat-option>
             <mat-option [value]="ContactType.Individual">Individual on the ticket</mat-option>
             <mat-option [value]="ContactType.Lawyer">Lawyer</mat-option>
             <mat-option [value]="ContactType.Other">{{ "label.agent_or_other" | translate }}</mat-option>
@@ -51,7 +52,7 @@
         </mat-form-field>
       </div>
     </div>
-    <div class="row" *ngIf="form.value.contact_type !== ContactType.Individual">
+    <div class="row" *ngIf="form.value.contact_type !== ContactType.Individual && form.value.contact_type">
       <div class="col-md-6">
         <mat-form-field class="w-100">
           <mat-label *ngIf="form.value.contact_type === ContactType.Lawyer">Lawyer surname</mat-label>
@@ -89,7 +90,7 @@
     </section> -->
 
     <section [ngClass]="{'hide-address': !showAddressFields}">
-      <div class="row">
+      <div class="row" *ngIf="form.value.contact_type">
         <div class="col-md-6">
           <mat-form-field class="w-100">
             <mat-label *ngIf="form.value.contact_type === ContactType.Individual">Mailing address</mat-label>
@@ -100,6 +101,7 @@
             <mat-error *ngIf="form.controls.address.hasError('required')">{{ "error.required" | translate }}</mat-error>
             <mat-error *ngIf="form.controls.address.hasError('maxlength')">{{ "error.max_length" | translate }}100 per
               line</mat-error>
+              <mat-error *ngIf="form.controls.address.hasError('containsEmailPattern')">Invalid entry - Enter mailing address</mat-error>
           </mat-form-field>
         </div>
         <div class="col-md-6">
@@ -178,7 +180,7 @@
 
     </section>
 
-    <div class="row">
+    <div class="row" *ngIf="form.value.contact_type">
       <div class="col-md-6">
         <mat-form-field class="w-100">
           <mat-label *ngIf="form.value.contact_type === ContactType.Individual">{{ "label.email_address" | translate
@@ -231,10 +233,14 @@
             minlength="7" maxlength="9" />
           <input matInput formControlName="drivers_licence_number" maxlength="20"
             *ngIf="driversLicenceProvinceFormControl.value?.provId !== bc.provId" />
-          <mat-error
-            *ngIf="form.controls.drivers_licence_number.errors?.minlength || form.controls.drivers_licence_number.hasError('maxlength')">
-            Must be a valid driver's licence number of seven to nine digits
-          </mat-error>
+            <mat-error *ngIf="form.controls.drivers_licence_number.invalid && form.controls.drivers_licence_number.touched">
+              <ng-container *ngIf="driversLicenceProvinceFormControl.value?.provId === bc.provId">
+                Must be a valid driver's licence number of seven to nine digits.
+              </ng-container>
+              <ng-container *ngIf="driversLicenceProvinceFormControl.value?.provId !== bc.provId">
+                Must be a valid driver's licence number with a maximum of 20 characters.
+              </ng-container>
+            </mat-error>
         </mat-form-field>
       </div>
     </div>

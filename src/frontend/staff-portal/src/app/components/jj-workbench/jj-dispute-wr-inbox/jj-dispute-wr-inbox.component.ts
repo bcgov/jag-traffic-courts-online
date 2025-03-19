@@ -25,7 +25,7 @@ export class JJDisputeWRInboxComponent implements OnInit {
     "ticketNumber",
     "submittedTs",
     "violationDate",
-    "surname",
+    "surnameOrOrgName",
     "toBeHeardAtCourthouseName",
     "policeDetachment",
     "accidentYn",

@@ -1,9 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
+using System.Threading;
 using System.Threading.Tasks;
+using TrafficCourts.Citizen.Service.Services.Lookups;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Citizen.Service.Validators.Rules;
-using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Domain.Models;
 using Xunit;
 
@@ -25,7 +26,7 @@ public class CountActRegMustBeMVATest
         CountActRegMustBeMVA rule = new(field, 1);
 
         // When
-        await rule.RunAsync();
+        await rule.RunAsync(CancellationToken.None);
 
         // Then.
         if (expectValid)
@@ -58,8 +59,8 @@ public class CountActRegMustBeMVATest
         FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
 
         // When
-        await formRecognizerValidator.SanitizeAsync(violationTicket);
-        await rule.RunAsync();
+        await formRecognizerValidator.SanitizeAsync(violationTicket, CancellationToken.None);
+        await rule.RunAsync(CancellationToken.None);
 
         // Then.
         if (expectValid)

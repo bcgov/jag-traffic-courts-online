@@ -32,15 +32,25 @@ export class CountUpdateRequestInfoComponent implements OnInit {
       this.updateRequested = JSON.parse(this.disputantUpdateRequest.updateJson);
       this.requestReadable = true;
 
-      // update for display
-      this.updateRequested.DisputeCounts.forEach(count => {
-        let oldCount = this.disputeInfo.disputeCounts.filter(x => x.countNo === count.CountNo);
-        if (oldCount.length > 0) {
-          count.OldPleaCode = oldCount[0].pleaCode;
-          count.OldRequestReduction = oldCount[0].requestReduction;
-          count.OldRequestTimeToPay = oldCount[0].requestTimeToPay;
+      //update for display
+      this.updateRequested.DisputeCounts = this.updateRequested.DisputeCounts.filter(count => {
+        const oldCount = this.disputeInfo.disputeCounts.find(x => x.countNo === count.CountNo);
+        if (oldCount) {
+          // Assign old values for potential use or display
+          count.OldPleaCode = oldCount.pleaCode;
+          count.OldRequestReduction = oldCount.requestReduction;
+          count.OldRequestTimeToPay = oldCount.requestTimeToPay;
+          
+          // If all new values equal the old values, filter this count out
+          return (
+            count.PleaCode !== oldCount.pleaCode ||
+            count.RequestReduction !== oldCount.requestReduction ||
+            count.RequestTimeToPay !== oldCount.requestTimeToPay
+          );
         }
-      })
+        // If there's no matching old record, keep the count
+        return true;
+      });
     }
     catch (ex) {
       // Just dont crash, fail gracefully

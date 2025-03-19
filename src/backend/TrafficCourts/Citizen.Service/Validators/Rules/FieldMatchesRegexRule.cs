@@ -14,7 +14,7 @@ public class FieldMatchesRegexRule : ValidationRule
         this._reason = reason;
     }
 
-    public override Task RunAsync()
+    public override Task RunAsync(CancellationToken cancellationToken)
     {
         if (Field.Value is null)
         {

@@ -1,5 +1,5 @@
 using System.Text.RegularExpressions;
-using TrafficCourts.Common.Features.Lookups;
+using TrafficCourts.Citizen.Service.Services.Lookups;
 using TrafficCourts.Domain.Models;
 
 namespace TrafficCourts.Citizen.Service.Validators.Rules;
@@ -17,18 +17,18 @@ public class CountSectionRule : ValidationRule
         _lookupService = lookupService;
     }
 
-    public override async Task RunAsync()
+    public override async Task RunAsync(CancellationToken cancellationToken)
     {
-        if (!String.IsNullOrEmpty(Field.Value))
+        if (!string.IsNullOrEmpty(Field.Value))
         {
             Field.Value = Field.Value.Trim(); // remove whitespace only from beginning and end
             Field.Value = Regex.Replace(Field.Value, @"^\$$", ""); // remove $ if it's the only character.
-            if (!String.IsNullOrEmpty(Field.Value))
+            if (!string.IsNullOrEmpty(Field.Value))
             {
-                var statute = await _lookupService.GetBySectionAsync(Field.Value);
+                var statute = await _lookupService.GetBySectionAsync(Field.Value, cancellationToken);
                 if (statute is null)
                 {
-                    AddValidationError(String.Format(ValidationMessages.CountSectionInvalid, Field.Value));
+                    AddValidationError(string.Format(ValidationMessages.CountSectionInvalid, Field.Value));
                 }
             }
         }

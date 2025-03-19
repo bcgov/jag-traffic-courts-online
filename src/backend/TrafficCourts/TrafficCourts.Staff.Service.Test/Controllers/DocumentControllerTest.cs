@@ -7,6 +7,7 @@ using System.IO;
 using System.Net;
 using System.Security.Claims;
 using System.Threading;
+using System.Threading.Tasks;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Staff.Service.Controllers;
 using TrafficCourts.Staff.Service.Services;
@@ -17,7 +18,7 @@ namespace TrafficCourts.Staff.Service.Test.Controllers;
 public class DocumentControllerTest
 {
     [Fact]
-    public async void TestCreateAsync200Result()
+    public async Task TestCreateAsync200Result()
     {
         // Arrange
         var mockFile = new Mock<IFormFile>();
@@ -38,7 +39,7 @@ public class DocumentControllerTest
     }
 
     [Fact]
-    public async void TestUploadDocumentThrowsMetadataInvalidKeyException400result()
+    public async Task TestUploadDocumentThrowsMetadataInvalidKeyException400result()
     {
         // Arrange
         var mockFile = new Mock<IFormFile>();
@@ -61,7 +62,7 @@ public class DocumentControllerTest
     }
 
     [Fact]
-    public async void TestUploadDocumentThrowsMetadataTooLongException400result()
+    public async Task TestUploadDocumentThrowsMetadataTooLongException400result()
     {
         // Arrange
         var mockFile = new Mock<IFormFile>();
@@ -84,7 +85,7 @@ public class DocumentControllerTest
     }
 
     [Fact]
-    public async void TestUploadDocumentThrowsTagKeyEmptyExceptionException400result()
+    public async Task TestUploadDocumentThrowsTagKeyEmptyExceptionException400result()
     {
         // Arrange
         var mockFile = new Mock<IFormFile>();
@@ -107,7 +108,7 @@ public class DocumentControllerTest
     }
 
     [Fact]
-    public async void TestUploadDocumentThrowsTagKeyTooLongException400result()
+    public async Task TestUploadDocumentThrowsTagKeyTooLongException400result()
     {
         // Arrange
         var mockFile = new Mock<IFormFile>();
@@ -130,7 +131,7 @@ public class DocumentControllerTest
     }
 
     [Fact]
-    public async void TestUploadDocumentThrowsTagValueTooLongException400result()
+    public async Task TestUploadDocumentThrowsTagValueTooLongException400result()
     {
         // Arrange
         var mockFile = new Mock<IFormFile>();
@@ -153,7 +154,7 @@ public class DocumentControllerTest
     }
 
     [Fact]
-    public async void TestUploadDocumentThrowsTooManyTagsException400result()
+    public async Task TestUploadDocumentThrowsTooManyTagsException400result()
     {
         // Arrange
         var mockFile = new Mock<IFormFile>();
@@ -176,7 +177,7 @@ public class DocumentControllerTest
     }
 
     [Fact]
-    public async void TestUploadDocumentThrowsObjectManagementServiceException500result()
+    public async Task TestUploadDocumentThrowsObjectManagementServiceException500result()
     {
         // Arrange
         var mockFile = new Mock<IFormFile>();
@@ -199,7 +200,7 @@ public class DocumentControllerTest
     }
 
     [Fact]
-    public async void TestDownloadDocument200Result()
+    public async Task TestDownloadDocument200Result()
     {
         // Arrange
         var fileStream = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("FileData"));
@@ -225,7 +226,7 @@ public class DocumentControllerTest
     }
 
     [Fact]
-    public async void TestDownloadDocumentMissingMetadataKeyThrowsObjectManagementServiceException500result()
+    public async Task TestDownloadDocumentMissingMetadataKeyThrowsObjectManagementServiceException500result()
     {
         // Arrange
         var fileStream = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("FileData"));
@@ -251,7 +252,7 @@ public class DocumentControllerTest
     }
 
     [Fact]
-    public async void TestDownloadDocumentInvalidScanStatusThrowsObjectManagementServiceException500result()
+    public async Task TestDownloadDocumentInvalidScanStatusThrowsObjectManagementServiceException500result()
     {
         // Arrange
         var fileStream = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("FileData"));
@@ -278,7 +279,7 @@ public class DocumentControllerTest
     }
 
     [Fact]
-    public async void TestRemoveDocument200Result()
+    public async Task TestRemoveDocument200Result()
     {
         // Arrange
         var comsService = new Mock<IStaffDocumentService>();
@@ -296,7 +297,7 @@ public class DocumentControllerTest
     }
 
     [Fact]
-    public async void TestRemoveDocumentThrowsObjectManagementServiceException500result()
+    public async Task TestRemoveDocumentThrowsObjectManagementServiceException500result()
     {
         // Arrange
         var comsService = new Mock<IStaffDocumentService>();

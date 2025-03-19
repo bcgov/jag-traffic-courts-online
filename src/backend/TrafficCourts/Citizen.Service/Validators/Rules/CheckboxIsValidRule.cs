@@ -8,7 +8,7 @@ public class CheckboxIsValidRule : ValidationRule
     {
     }
 
-    public override Task RunAsync()
+    public override Task RunAsync(CancellationToken cancellationToken)
     {
         if (Field.IsCheckboxSelected() is null) {
             AddValidationError(String.Format(ValidationMessages.CheckboxInvalid, Field.TagName, Field.Value));

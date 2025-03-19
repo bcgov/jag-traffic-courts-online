@@ -20,7 +20,7 @@
           <div>Update your contact information, email, mailing address or phone number</div>
         </div>
       </div>
-      <div fxFlex="32">
+      <div *ngIf="isPleaEditable | async" fxFlex="32">
         <div class="option">
           <button type="button" mat-flat-button color="primary" class="large" (click)="goToUpdateDispute()" 
               [disabled]="isEmailVerified === false" title="{{ isEmailVerified ? '' : 'Email address not yet verified' }}">

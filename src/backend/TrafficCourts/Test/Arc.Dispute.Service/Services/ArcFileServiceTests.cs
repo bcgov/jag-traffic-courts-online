@@ -354,7 +354,7 @@ ARCUICBC DIM       1           256- 256      Create ARCF0630 Record Flag        
         }
 
         [Fact]
-        public async void Test_throw_ArgumentNullException_if_null_value_passed_for_CreateArcFile()
+        public async Task Test_throw_ArgumentNullException_if_null_value_passed_for_CreateArcFile()
         {
             // Arrange
             SftpOptions options = new SftpOptions();
@@ -365,7 +365,7 @@ ARCUICBC DIM       1           256- 256      Create ARCF0630 Record Flag        
 
 
         [Fact]
-        public async void when_creating_arc_file_it_is_upload_to_correct_remote_path()
+        public async Task when_creating_arc_file_it_is_upload_to_correct_remote_path()
         {
             // Arrange
             SftpOptions options = new SftpOptions { RemotePath = Guid.NewGuid().ToString("n") };

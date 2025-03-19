@@ -9,7 +9,7 @@ public class LegalSectionTest
         Assert.Equal(string.Empty, actual.Section);
         Assert.Equal(string.Empty, actual.Subsection);
         Assert.Equal(string.Empty, actual.Paragraph);
-        Assert.Equal(string.Empty, actual.Subparagrah);
+        Assert.Equal(string.Empty, actual.Subparagraph);
     }
 
     [Theory]
@@ -19,6 +19,7 @@ public class LegalSectionTest
     [InlineData(" 4.21(5)", "4.21", "5", "", "")]       // leading space
     [InlineData("4.21(5) ", "4.21", "5", "", "")]       // trailing space
     [InlineData("4.21 (5)", "4.21", "5", "", "")]       // internal space
+    [InlineData("4.21(a)(i)", "4.21", "", "a", "i")]    // no subsection
     public void TryParseWithValidInput(string formatted, string section, string subsection, string paragraph, string subparagrah)
     {
         Assert.True(LegalSection.TryParse(formatted, out LegalSection? actual));
@@ -26,7 +27,7 @@ public class LegalSectionTest
         Assert.Equal(section, actual.Section);
         Assert.Equal(subsection, actual.Subsection);
         Assert.Equal(paragraph, actual.Paragraph);
-        Assert.Equal(subparagrah, actual.Subparagrah);
+        Assert.Equal(subparagrah, actual.Subparagraph);
     }
 
     [Theory]

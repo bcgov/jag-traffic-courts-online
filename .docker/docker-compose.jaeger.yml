@@ -35,3 +35,7 @@ services:
       OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://jaeger:4317
     depends_on: [jaeger]
 
+  workflow-service:
+    environment:
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://jaeger:4317
+    depends_on: [jaeger]

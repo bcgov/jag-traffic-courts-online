@@ -11,7 +11,7 @@ public class TicketAmountValidRule : ValidationRule
     {
     }
 
-    public override Task RunAsync()
+    public override Task RunAsync(CancellationToken cancellationToken)
     {
         if (Field.Value is not null)
         {
