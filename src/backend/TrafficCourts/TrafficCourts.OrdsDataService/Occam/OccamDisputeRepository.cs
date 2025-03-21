@@ -4,7 +4,7 @@ namespace TrafficCourts.OrdsDataService.Occam;
 
 public interface IOccamDisputeRepository
 {
-    Task<List<OccamDispute>> GetListAsync(
+    Task<OrdsDataServicePagedCollectionResponse<OccamDispute>> GetListAsync(
         IReadOnlyDictionary<string, string>? parameters,
         CancellationToken cancellationToken);
 }
@@ -17,16 +17,18 @@ internal class OccamDisputeRepository : OccamOrdsRepository<OccamDisputeReposito
         //: base(client, "/v2/tco_disputes", logger)
     { }
 
-    public async Task<List<OccamDispute>> GetListAsync(
+    public async Task<OrdsDataServicePagedCollectionResponse<OccamDispute>> GetListAsync(
         IReadOnlyDictionary<string, string>? parameters,
         CancellationToken cancellationToken)
     {
+        var jsonTypeInfo = JsonContext.Default.OrdsDataServicePagedCollectionResponseOccamDispute;
+
         var response = await GetPagedListAsync(
             parameters,
             JsonContext.Default.OrdsDataServicePagedCollectionResponseOccamDispute,
             ETagCache.FiveMinutes,
             cancellationToken);
 
-        return response?.Rows ?? [];
+        return response;
     }
 }

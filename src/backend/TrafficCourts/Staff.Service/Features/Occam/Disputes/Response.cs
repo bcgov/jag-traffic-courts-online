@@ -1,13 +1,18 @@
-﻿using Model = TrafficCourts.Domain.Models.DisputeCaseFileSummary;
+﻿namespace TrafficCourts.Staff.Service.Features.Occam.Disputes;
 
-namespace TrafficCourts.Staff.Service.Features.Occam.Disputes;
-
-public record Response
+public class Response
 {
-    public Response(IList<Model> items)
+    public Response(PagedOccamDisputeListItemCollection data)
     {
-        Items = items;
+        Data = data ?? throw new ArgumentNullException(nameof(data));
     }
 
-    public IList<Model> Items { get; }
+    public Response(string errorId)
+    {
+        ErrorId = errorId ?? throw new ArgumentNullException(nameof(errorId));
+    }
+
+    public PagedOccamDisputeListItemCollection? Data { get; set; }
+
+    public string? ErrorId { get; set; }
 }
