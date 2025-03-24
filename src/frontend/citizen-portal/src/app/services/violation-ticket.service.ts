@@ -250,7 +250,7 @@ export class ViolationTicketService {
       result.drivers_licence_number = (<Field>source.fields[this.driversLicenceNumberKey]).value;
     }
     if (isDateFound || isTimeFound) {
-      result.issued_date = this.datePipe.transform(result[this.ocrTicketDateKey] + " " + result[this.ocrTicketTimeKey], "yyyy-MM-ddTHH:mm:ss'Z'");
+      result.issued_date = `${result[this.ocrTicketDateKey]}T${result[this.ocrTicketTimeKey]}`;
     }
     if (isDateFound) {
       result[this.ocrTicketDateKey] = this.datePipe.transform(result[this.ocrTicketDateKey], "MMM dd, yyyy", "UTC");
