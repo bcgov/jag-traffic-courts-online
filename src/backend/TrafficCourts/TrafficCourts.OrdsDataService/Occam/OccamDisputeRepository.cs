@@ -12,9 +12,7 @@ public interface IOccamDisputeRepository
 internal class OccamDisputeRepository : OccamOrdsRepository<OccamDisputeRepository>, IOccamDisputeRepository
 {
     public OccamDisputeRepository(OccamOrdsDataServiceClient client, ILogger<OccamDisputeRepository> logger)
-        : base(client, "/v2/occam_disputes", logger)
-        //: base(client, "/occam/v1/disputeList", logger)
-        //: base(client, "/v2/tco_disputes", logger)
+        : base(client, "/v2/occam_dispute_list", logger)
     { }
 
     public async Task<OrdsDataServicePagedCollectionResponse<OccamDispute>> GetListAsync(

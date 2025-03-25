@@ -35,8 +35,9 @@ public class OccamDisputeListItemModel
     public DateTime? userAssignedTs { get; set; }
     public YesNo? disputantDetectedOcrIssues { get; set; }
     public YesNo? systemDetectedOcrIssues { get; set; }
+    public YesNo? interpreterRequired { get; set; }
     public DateTime? violationDate { get; set; }
-    public string jjDisputeStatus { get; set; }
+    public DisputeListItemJjDisputeStatus jjDisputeStatus { get; set; }
     public string jjAssignedTo { get; set; }
     public string decisionMadeBy { get; set; }
     public DateTime? jjDecisionDate { get; set; }

@@ -1,10 +1,8 @@
-﻿using MediatR;
+using MediatR;
 using System.Globalization;
 using System.Text;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.OrdsDataService.Occam;
-using TrafficCourts.Staff.Service.Features.CourtFiles.Summaries;
-using TrafficCourts.Staff.Service.Models;
 
 namespace TrafficCourts.Staff.Service.Features.Occam.Disputes;
 
@@ -283,6 +281,17 @@ public class Handler : IRequestHandler<Request, Response>
         }
     }
 
+    private static YesNo? ToYesNo(string? value)
+    {
+        return value switch
+        {
+            "Y" => YesNo.Yes,
+            "N" => YesNo.No,
+            null => null,
+            _ => YesNo.Unknown
+        };
+    }
+
     private OccamDisputeListItemModel Map(OccamDispute dispute)
     {
         var listItem = new OccamDisputeListItemModel
@@ -296,15 +305,16 @@ public class Handler : IRequestHandler<Request, Response>
             disputantGivenName3 = dispute.disputant_given_3_nm,
             status = dispute.dispute_status_type_cd,
             emailAddress = dispute.email_address_txt,
-            emailAddressVerified = dispute.email_verified_yn,
+            emailAddressVerified = ToYesNo(dispute.email_verified_yn),
             filingDate = dispute.filing_dt,
-            requestCourtAppearanceYn = dispute.request_court_appearance_yn,
+            requestCourtAppearanceYn = ToYesNo(dispute.request_court_appearance_yn),
             userAssignedTo = dispute.user_assigned_to,
             userAssignedTs = null, // TODO-DKAY - why isn't this in our model?
-            disputantDetectedOcrIssues = dispute.disputant_detect_ocr_issues_yn,
-            systemDetectedOcrIssues = dispute.system_detect_ocr_issues_yn,
+            disputantDetectedOcrIssues = ToYesNo(dispute.disputant_detect_ocr_issues_yn),
+            systemDetectedOcrIssues = ToYesNo(dispute.system_detect_ocr_issues_yn),
+            interpreterRequired = ToYesNo(dispute.interpreter_required_yn),
             violationDate = dispute.violation_dt,
-            jjDisputeStatus = dispute.dispute_status_type_cd, // ??
+            //jjDisputeStatus = dispute.dispute_status_type_cd, // ??
             jjAssignedTo = dispute.jj_assigned_to,
             decisionMadeBy = dispute.most_recent_decision_made_by,
             jjDecisionDate = dispute.jj_decision_dt,
