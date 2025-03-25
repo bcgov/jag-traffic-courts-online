@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Inpu
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { Sort } from '@angular/material/sort';
 import { DisputeService, Dispute } from 'app/services/dispute.service';
-import { DisputeRequestCourtAppearanceYn, DisputeDisputantDetectedOcrIssues, DisputeStatus, DisputeSystemDetectedOcrIssues, PagedDisputeListItemCollection, SortDirection } from 'app/api';
+import { DisputeRequestCourtAppearanceYn, DisputeDisputantDetectedOcrIssues, DisputeStatus, DisputeSystemDetectedOcrIssues, PagedDisputeListItemCollection, SortDirection, DisputeInterpreterRequired } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 import { TableFilter, TableFilterKeys, TableFilterStatus, TableFilterStatusOptions, TableFilterStatusDefault } from '@shared/models/table-filter-options.model';
@@ -34,13 +34,14 @@ export class TicketInboxComponent implements OnInit {
     'status',
     'requestCourtAppearanceYn',
     'disputantDetectedOcrIssues',
-    'systemDetectedOcrIssues',
+    'interpreterRequired',
     'userAssignedTo',
   ];
   userProfile: KeycloakProfile = {};
   RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
   DisputantDetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
   SystemDetectedOcrIssues = DisputeSystemDetectedOcrIssues;
+  DisputeInterpreterRequired = DisputeInterpreterRequired;
 
   showTicket = false;
   currentPage: number = 1;
