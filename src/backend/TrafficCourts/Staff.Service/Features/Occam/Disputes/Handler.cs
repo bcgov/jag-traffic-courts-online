@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
 using System.Text;
 using TrafficCourts.Domain.Models;
@@ -109,24 +110,28 @@ public class Handler : IRequestHandler<Request, Response>
     private void AddWhere(Dictionary<string, string> parameters, Request request)
     {
         AddUtcDateRangeFilter(parameters, "submitted_dt", request.Parameters.TimeZone, request.Parameters.From, request.Parameters.Thru);
-        AddLikeFilter(parameters, "ticket_number_txt", request.Parameters.TicketNumber);
-        AddLikeFilter(parameters, "prof_surname_nm", request.Parameters.Surname);
-        if (request.Parameters.Status is not null) parameters.Add("dispute_status_type_cd_in", string.Join(',', request.Parameters.Status));
+        AddStartFilter(parameters, "ticket_number_txt", request.Parameters.TicketNumber);
+        AddStartFilter(parameters, "disputant_surname_nm", request.Parameters.Surname, false);
+        if (request.Parameters.Status is not null)
+        { 
+            parameters.Add("dispute_status_type_cd_in", string.Join(',', request.Parameters.Status)); 
+        }
     }
 
-    private void AddLikeFilter(Dictionary<string, string> parameters, string field, string? value, bool toUpper = true)
+    private void AddStartFilter(Dictionary<string, string> parameters, string field, string? value, bool toUpper = true)
     {
-        if (value is null)
+        if (string.IsNullOrWhiteSpace(value))
         {
             return;
         }
+
+        value = value.Trim(); // remove wrapping spaces
 
         if (toUpper)
         {
             value = value.ToUpper();
         }
 
-        value = value.TrimEnd(); // remove trailing spaces
         parameters.Add($"{field}_like", $"{value}%");
     }
 
