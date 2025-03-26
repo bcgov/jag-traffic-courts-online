@@ -195,28 +195,15 @@ public class Handler : IRequestHandler<Request, Response>
             // map the model to the column name
             string? target = item switch
             {
-                "submittedTs" => "submitted_dt",
-                "jjDecisionDate" => "jj_decision_dt",
-                "signatoryName" => "signed_by",
-                "hearingType" => "hearing_type_cd",
-                "ticketNumber" => "ticket_number_txt",
-                "violationDate" => "violation_dt",
-                "toBeHeardAtCourthouseName" => "to_be_heard_at_agen_nm",
-                "surname" => "prof_surname_nm",
-                "surnameOrOrgName" => "prof_surname_nm_or_org_nm",
-                "disputantGivenName1" => "prof_given_1_nm",
-                "status" => "dispute_status_type_dsc",
-                "policeDetachment" => "detachment_agency_nm",
-                "accidentYn" => "accident_yn",
-                "noticeOfHearingYn" => "notice_of_hearing_yn",
-                "multipleOfficersYn" => "multiple_officers_yn",
-                "electronicTicketYn" => "electronic_ticket_yn",
-                "jjAssignedTo" => "jj_assigned_to",
-                "vtcAssignedTo" => "vtc_assigned_to",
-                "vtcAssignedTs" => "vtc_assigned_dtm",
-                "appearanceCourthouseName" => "appr_ctrm_agen_nm",
-                "appearanceRoomCode" => "appr_ctrm_room_cd",
-                "appearanceTs" => "appr_tm",
+                "submittedTs"                   => "submitted_dt",
+                "ticketNumber"                  => "ticket_number_txt",
+                "disputantSurname"              => "disputant_surname_nm",
+                "disputantGivenName1"           => "disputant_given_1_nm",
+                "status"                        => "dispute_status_type_cd",
+                "requestCourtAppearanceYn"      => "request_court_appearance_yn",
+                "disputantDetectedOcrIssues"    => "disputant_detect_ocr_issues_yn",
+                "interpreterRequired"           => "interpreter_required_yn",
+                "userAssignedTo"                => "user_assigned_to",
                 _ => null
             };
 
@@ -286,16 +273,15 @@ public class Handler : IRequestHandler<Request, Response>
             filingDate = dispute.filing_dt,
             requestCourtAppearanceYn = ToYesNo(dispute.request_court_appearance_yn),
             userAssignedTo = dispute.user_assigned_to,
-            userAssignedTs = null, // TODO-DKAY - why isn't this in our model?
             disputantDetectedOcrIssues = ToYesNo(dispute.disputant_detect_ocr_issues_yn),
             systemDetectedOcrIssues = ToYesNo(dispute.system_detect_ocr_issues_yn),
             interpreterRequired = ToYesNo(dispute.interpreter_required_yn),
             violationDate = dispute.violation_dt,
-            //jjDisputeStatus = dispute.dispute_status_type_cd, // ??
             jjAssignedTo = dispute.jj_assigned_to,
             decisionMadeBy = dispute.most_recent_decision_made_by,
             jjDecisionDate = dispute.jj_decision_dt,
             courtAgenId = dispute.court_agen_id,
+           
         };
 
         return listItem;

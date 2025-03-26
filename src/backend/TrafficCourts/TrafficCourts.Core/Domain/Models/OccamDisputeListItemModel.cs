@@ -32,12 +32,10 @@ public class OccamDisputeListItemModel
     public DateTime? filingDate { get; set; }
     public YesNo? requestCourtAppearanceYn { get; set; }
     public string userAssignedTo { get; set; }
-    public DateTime? userAssignedTs { get; set; }
     public YesNo? disputantDetectedOcrIssues { get; set; }
     public YesNo? systemDetectedOcrIssues { get; set; }
     public YesNo? interpreterRequired { get; set; }
     public DateTime? violationDate { get; set; }
-    public DisputeListItemJjDisputeStatus jjDisputeStatus { get; set; }
     public string jjAssignedTo { get; set; }
     public string decisionMadeBy { get; set; }
     public DateTime? jjDecisionDate { get; set; }
