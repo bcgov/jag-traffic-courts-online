@@ -89,26 +89,28 @@ export class TicketInboxComponent implements OnInit {
   getAllDisputes(): void {
     this.logger.log('TicketInboxComponent::getAllDisputes');    
 
-    this.disputeService.getDisputes(this.sortBy, this.sortDirection, this.currentPage != 0 ? this.currentPage : 1, 
-      this.filters).subscribe((response) => {
-      this.disputes = [];
-      this.logger.info(
-        'TicketInboxComponent::getAllDisputes response',
-        response
-      );
+    this.disputeService
+      .getDisputes(this.sortBy, this.sortDirection, this.currentPage != 0 ? this.currentPage : 1, this.filters)
+      .subscribe((response) => {
+        this.disputes = [];
+        this.logger.info(
+          'TicketInboxComponent::getAllDisputes response',
+          response
+        );
 
-      this.disputesCollection = response;
-      this.currentPage = response.pageNumber;
-      this.totalPages = response.pageCount;
-      if(!this.totalPages){
-        this.currentPage = 0;
+        this.disputesCollection = response;
+        this.currentPage = response.pageNumber;
+        this.totalPages = response.pageCount;
+        if(!this.totalPages){
+          this.currentPage = 0;
+        }
+        response.items.forEach((dispute: Dispute) => {
+          dispute.__RedGreenAlert = dispute.status == DisputeStatus.New ? 'Green' : '',
+            this.disputes.push(dispute);
+        });      
+        this.dataSource.data = this.disputes;
       }
-      response.items.forEach((dispute: Dispute) => {
-        dispute.__RedGreenAlert = dispute.status == DisputeStatus.New ? 'Green' : '',
-          this.disputes.push(dispute);
-      });      
-      this.dataSource.data = this.disputes;
-    });
+    );
   }
 
   countNewTickets() {
