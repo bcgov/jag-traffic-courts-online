@@ -109,12 +109,8 @@ public class Handler : IRequestHandler<Request, Response>
     private void AddWhere(Dictionary<string, string> parameters, Request request)
     {
         AddUtcDateRangeFilter(parameters, "submitted_dt", request.Parameters.TimeZone, request.Parameters.From, request.Parameters.Thru);
-
-        // Search where starts with the supplied value. We could also use "_regexp_like" and use a regex pattern
-        // ticket number is always uppercase
         AddLikeFilter(parameters, "ticket_number_txt", request.Parameters.TicketNumber);
         AddLikeFilter(parameters, "prof_surname_nm", request.Parameters.Surname);
-
         if (request.Parameters.Status is not null) parameters.Add("dispute_status_type_cd_in", string.Join(',', request.Parameters.Status));
     }
 
@@ -132,29 +128,6 @@ public class Handler : IRequestHandler<Request, Response>
 
         value = value.TrimEnd(); // remove trailing spaces
         parameters.Add($"{field}_like", $"{value}%");
-    }
-
-    private void AddDateRangeFilter(Dictionary<string, string> parameters, string field, string? from, string? thru)
-    {
-        if (from is null && thru is null)
-        {
-            return;
-        }
-
-        if (from is not null)
-        {
-            DateTime date = DateTime.ParseExact(from, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            parameters.Add($"{field}_ge", date.ToString("yyyy-MM-dd"));
-        }
-
-        if (thru is not null)
-        {
-            // bump the date by one and search for less than the next day
-            DateTime date = DateTime.ParseExact(thru, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            date = date.AddDays(1);
-            parameters.Add($"{field}_lt", date.ToString("yyyy-MM-dd"));
-        }
-
     }
 
     private void AddUtcDateRangeFilter(Dictionary<string, string> parameters, string field, string? timeZone, string? from, string? thru)
@@ -192,28 +165,27 @@ public class Handler : IRequestHandler<Request, Response>
             return;
         }
 
-        StringBuilder buffer = new StringBuilder();
-        string[] clientOrder = request.Parameters.SortBy.ToArray();
+        var buffer = new StringBuilder();
+        var clientOrder = request.Parameters.SortBy.ToArray();
+        var clientDirection = request.Parameters.SortDirection.ToArray();
 
-        void Append(string direction, string target)
+        void Append(Collections.SortDirection direction, string target)
         {
             if (buffer.Length > 0)
             {
                 buffer.Append(',');
             }
-            buffer.Append(direction);
+            if (direction == Collections.SortDirection.desc)
+            {
+                buffer.Append("-");
+            }
             buffer.Append(target);
         }
 
         for (int i = 0; i < clientOrder.Length; i++)
         {
-            string direction = "";
             var item = clientOrder[i];
-            if (item.StartsWith('-'))
-            {
-                direction = "-";
-                item = item.Substring(1);
-            }
+            var direction = clientDirection[i];
 
             // map the model to the column name
             string? target = item switch
