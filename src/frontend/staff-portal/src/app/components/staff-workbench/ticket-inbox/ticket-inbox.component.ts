@@ -100,7 +100,7 @@ export class TicketInboxComponent implements OnInit {
 
         this.disputesCollection = response;
         this.currentPage = response.pageNumber;
-        this.totalPages = response.pageCount;
+        this.totalPages = response.totalPages;
         if(!this.totalPages){
           this.currentPage = 0;
         }

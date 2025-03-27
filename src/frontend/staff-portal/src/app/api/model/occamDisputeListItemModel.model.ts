@@ -9,8 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { DisputeListItemJjDisputeStatus } from './disputeListItemJjDisputeStatus.model';
-import { YesNo } from './yesNo.model';
+import { DisputeSystemDetectedOcrIssues } from './disputeSystemDetectedOcrIssues.model';
+import { DisputeListItemStatus } from './disputeListItemStatus.model';
+import { DisputeInterpreterRequired } from './disputeInterpreterRequired.model';
+import { DisputeDisputantDetectedOcrIssues } from './disputeDisputantDetectedOcrIssues.model';
+import { DisputeRequestCourtAppearanceYn } from './disputeRequestCourtAppearanceYn.model';
 
 
 export interface OccamDisputeListItemModel { 
@@ -21,21 +24,19 @@ export interface OccamDisputeListItemModel {
     disputantGivenName1?: string | null;
     disputantGivenName2?: string | null;
     disputantGivenName3?: string | null;
-    status?: string | null;
+    status?: DisputeListItemStatus;
     emailAddress?: string | null;
-    emailAddressVerified?: YesNo;
+    emailAddressVerified?: boolean | null;
     filingDate?: string | null;
-    requestCourtAppearanceYn?: YesNo;
+    requestCourtAppearanceYn?: DisputeRequestCourtAppearanceYn;
     userAssignedTo?: string | null;
-    userAssignedTs?: string | null;
-    disputantDetectedOcrIssues?: YesNo;
-    systemDetectedOcrIssues?: YesNo;
-    interpreterRequired?: YesNo;
+    disputantDetectedOcrIssues?: DisputeDisputantDetectedOcrIssues;
+    systemDetectedOcrIssues?: DisputeSystemDetectedOcrIssues;
+    interpreterRequired?: DisputeInterpreterRequired;
     violationDate?: string | null;
-    jjDisputeStatus?: DisputeListItemJjDisputeStatus;
     jjAssignedTo?: string | null;
     decisionMadeBy?: string | null;
     jjDecisionDate?: string | null;
-    courtAgenId?: number | null;
+    courtAgenId?: string | null;
 }
 

@@ -113,8 +113,9 @@ public class Handler : IRequestHandler<Request, Response>
         AddStartFilter(parameters, "ticket_number_txt", request.Parameters.TicketNumber);
         AddStartFilter(parameters, "disputant_surname_nm", request.Parameters.Surname, false);
         if (request.Parameters.Status is not null)
-        { 
-            parameters.Add("dispute_status_type_cd_in", string.Join(',', request.Parameters.Status)); 
+        {
+            var statusCodes = request.Parameters.Status.Select(s => ToDisputeStatusCode(s));
+            parameters.Add("dispute_status_type_cd_in", string.Join(',', statusCodes)); 
         }
     }
 
@@ -256,8 +257,38 @@ public class Handler : IRequestHandler<Request, Response>
         };
     }
 
+    private static DisputeListItemStatus ToDisputeStatusEnum(string value)
+    {
+        return value switch
+        {
+            "NEW"  => DisputeListItemStatus.NEW,
+            "VALD" => DisputeListItemStatus.VALIDATED,
+            "PROC" => DisputeListItemStatus.PROCESSING,
+            "REJ"  => DisputeListItemStatus.REJECTED,
+            "CANC" => DisputeListItemStatus.CANCELLED,
+            "CNLD" => DisputeListItemStatus.CONCLUDED,
+            _      => DisputeListItemStatus.UNKNOWN,
+        };
+    }
+
+    private static string ToDisputeStatusCode(DisputeStatus value)
+    {
+        return value switch
+        {
+            DisputeStatus.NEW           => "NEW",
+            DisputeStatus.VALIDATED     => "VALD",
+            DisputeStatus.PROCESSING    => "PROC",
+            DisputeStatus.REJECTED      => "REJ",
+            DisputeStatus.CANCELLED     => "CANC",
+            DisputeStatus.CONCLUDED     => "CNLD",
+            DisputeStatus.UNKNOWN       => null,
+            _                           => null,
+        };
+    }
+
     private OccamDisputeListItemModel Map(OccamDispute dispute)
     {
+        // all of the == "Y" stuff is a temporary hack to maintain V1 support in the front-end - should probably all be YesNo properties instead of unique enums
         var listItem = new OccamDisputeListItemModel
         {
             disputeId = dispute.dispute_id,
@@ -267,21 +298,20 @@ public class Handler : IRequestHandler<Request, Response>
             disputantGivenName1 = dispute.disputant_given_1_nm,
             disputantGivenName2 = dispute.disputant_given_2_nm,
             disputantGivenName3 = dispute.disputant_given_3_nm,
-            status = dispute.dispute_status_type_cd,
+            status = ToDisputeStatusEnum(dispute.dispute_status_type_cd),
             emailAddress = dispute.email_address_txt,
-            emailAddressVerified = ToYesNo(dispute.email_verified_yn),
+            emailAddressVerified = dispute.email_verified_yn == "Y", 
             filingDate = dispute.filing_dt,
-            requestCourtAppearanceYn = ToYesNo(dispute.request_court_appearance_yn),
+            requestCourtAppearanceYn = dispute.request_court_appearance_yn == "Y" ? DisputeRequestCourtAppearanceYn.Y : DisputeRequestCourtAppearanceYn.N,
             userAssignedTo = dispute.user_assigned_to,
-            disputantDetectedOcrIssues = ToYesNo(dispute.disputant_detect_ocr_issues_yn),
-            systemDetectedOcrIssues = ToYesNo(dispute.system_detect_ocr_issues_yn),
-            interpreterRequired = ToYesNo(dispute.interpreter_required_yn),
+            disputantDetectedOcrIssues = dispute.disputant_detect_ocr_issues_yn == "Y" ? DisputeDisputantDetectedOcrIssues.Y : DisputeDisputantDetectedOcrIssues.N,
+            systemDetectedOcrIssues = dispute.system_detect_ocr_issues_yn == "Y" ? DisputeSystemDetectedOcrIssues.Y : DisputeSystemDetectedOcrIssues.N,
+            interpreterRequired = dispute.interpreter_required_yn == "Y" ? DisputeInterpreterRequired.Y : DisputeInterpreterRequired.N,
             violationDate = dispute.violation_dt,
             jjAssignedTo = dispute.jj_assigned_to,
             decisionMadeBy = dispute.most_recent_decision_made_by,
             jjDecisionDate = dispute.jj_decision_dt,
-            courtAgenId = dispute.court_agen_id,
-           
+            courtAgenId = dispute.court_agen_id.ToString(),
         };
 
         return listItem;

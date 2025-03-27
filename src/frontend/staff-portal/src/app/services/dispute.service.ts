@@ -1,7 +1,22 @@
 import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { DisputeService as DisputeApiService, Dispute as DisputeBase, DisputeWithUpdates as DisputeWithUpdatesBase, DisputeUpdateRequest as DisputantUpdateRequestBase, DisputeUpdateRequestStatus2, DisputeListItem, PagedDisputeListItemCollection, DisputeStatus, GetDisputeCountResponse, SortDirection, ExcludeStatus, DcfTemplateType } from 'app/api';
+import { 
+    DisputeService as DisputeApiService, 
+    Dispute as DisputeBase, 
+    DisputeWithUpdates as DisputeWithUpdatesBase, 
+    DisputeUpdateRequest as DisputantUpdateRequestBase, 
+    DisputeUpdateRequestStatus2, 
+    DisputeListItem,
+    PagedDisputeListItemCollection, 
+    OccamDisputeListItemModel,
+    PagedOccamDisputeListItemCollection, 
+    DisputeStatus, 
+    GetDisputeCountResponse, 
+    SortDirection, 
+    ExcludeStatus, 
+    DcfTemplateType 
+  } from 'app/api';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
@@ -15,8 +30,12 @@ export interface IDisputeService {
   disputes: Dispute[];
   disputantUpdateRequests$: Observable<DisputantUpdateRequest[]>;
   disputantUpdateRequests: DisputantUpdateRequest[];
-  getDisputes(sortBy: Array<string>, sortDirection: Array<SortDirection>, pageNumber: number, 
-    filters?: TableFilter): Observable<PagedDisputeListItemCollection>;
+  getDisputes(
+    sortBy: Array<string>, 
+    sortDirection: Array<SortDirection>, 
+    pageNumber: number, 
+    filters?: TableFilter
+  ): Observable<PagedDisputeListItemCollection>;
   getDisputeStatusCount(status?: DisputeStatus): Observable<GetDisputeCountResponse>;
 }
 
@@ -121,15 +140,19 @@ export class DisputeService implements IDisputeService {
      *
      * @param none
      */
-  public getDisputes(sortBy: Array<string>, sortDirection: Array<SortDirection>, pageNumber: number, 
-    filters?: TableFilter): Observable<PagedDisputeListItemCollection> {
+  public getDisputes(
+    sortBy: Array<string>, 
+    sortDirection: Array<SortDirection>, 
+    pageNumber: number, 
+    filters?: TableFilter
+  ): Observable<PagedOccamDisputeListItemCollection> {
 
       var disputeStatuses = filters.status ? filters.status.mapping : [DisputeStatus.New, DisputeStatus.Validated, DisputeStatus.Processing, DisputeStatus.Rejected, DisputeStatus.Cancelled, DisputeStatus.Concluded];
 
-      return this.disputeApiService.apiDisputeDisputesGet(undefined, filters.ticketNumber, filters.disputantSurname, 
+      return this.disputeApiService.apiV2OccamDisputeDisputesGet(undefined, undefined, filters.ticketNumber, filters.disputantSurname, 
         disputeStatuses, filters.dateSubmittedFrom, filters.dateSubmittedTo, undefined, sortBy, sortDirection, undefined, pageNumber, 25)
         .pipe(
-          map((response: PagedDisputeListItemCollection) => {
+          map((response: PagedOccamDisputeListItemCollection) => {
             this.logger.info('DisputeService::getDisputes', response);
             this._disputes.next(response.items);
             response.items.forEach(dispute => {
@@ -578,7 +601,7 @@ export interface Dispute extends DisputeBase {
   __RedGreenAlert?: string,
 }
 
-export interface Dispute extends DisputeListItem {
+export interface Dispute extends OccamDisputeListItemModel {
   disputantGivenNames?: string;
   contactGivenNames?: string;
   lawyerFullName?: string;

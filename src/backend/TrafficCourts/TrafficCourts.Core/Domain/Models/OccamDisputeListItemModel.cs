@@ -26,18 +26,20 @@ public class OccamDisputeListItemModel
     public string disputantGivenName1 { get; set; }
     public string disputantGivenName2 { get; set; }
     public string disputantGivenName3 { get; set; }
-    public string status { get; set; }
+    public DisputeListItemStatus status { get; set; }
     public string emailAddress { get; set; }
-    public YesNo? emailAddressVerified { get; set; }
+    // This should be a YesNo, but the current Front End expects a boolean for some reason
+    // The front end isn't being changed at this time to aavoid breaking backwards compatibility of the dispute service for pages still using the v1 endpoints
+    public bool? emailAddressVerified { get; set; }
     public DateTime? filingDate { get; set; }
-    public YesNo? requestCourtAppearanceYn { get; set; }
+    public DisputeRequestCourtAppearanceYn requestCourtAppearanceYn { get; set; }
     public string userAssignedTo { get; set; }
-    public YesNo? disputantDetectedOcrIssues { get; set; }
-    public YesNo? systemDetectedOcrIssues { get; set; }
-    public YesNo? interpreterRequired { get; set; }
+    public DisputeDisputantDetectedOcrIssues disputantDetectedOcrIssues { get; set; }
+    public DisputeSystemDetectedOcrIssues systemDetectedOcrIssues { get; set; }
+    public DisputeInterpreterRequired interpreterRequired { get; set; }
     public DateTime? violationDate { get; set; }
     public string jjAssignedTo { get; set; }
     public string decisionMadeBy { get; set; }
     public DateTime? jjDecisionDate { get; set; }
-    public float? courtAgenId { get; set; }
+    public string courtAgenId { get; set; }
 }

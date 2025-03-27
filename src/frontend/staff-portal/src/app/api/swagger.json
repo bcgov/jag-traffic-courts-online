@@ -7988,15 +7988,15 @@
             "nullable": true
           },
           "status": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/DisputeListItemStatus"
           },
           "emailAddress": {
             "type": "string",
             "nullable": true
           },
           "emailAddressVerified": {
-            "$ref": "#/components/schemas/YesNo"
+            "type": "boolean",
+            "nullable": true
           },
           "filingDate": {
             "type": "string",
@@ -8004,33 +8004,25 @@
             "nullable": true
           },
           "requestCourtAppearanceYn": {
-            "$ref": "#/components/schemas/YesNo"
+            "$ref": "#/components/schemas/DisputeRequestCourtAppearanceYn"
           },
           "userAssignedTo": {
             "type": "string",
             "nullable": true
           },
-          "userAssignedTs": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
           "disputantDetectedOcrIssues": {
-            "$ref": "#/components/schemas/YesNo"
+            "$ref": "#/components/schemas/DisputeDisputantDetectedOcrIssues"
           },
           "systemDetectedOcrIssues": {
-            "$ref": "#/components/schemas/YesNo"
+            "$ref": "#/components/schemas/DisputeSystemDetectedOcrIssues"
           },
           "interpreterRequired": {
-            "$ref": "#/components/schemas/YesNo"
+            "$ref": "#/components/schemas/DisputeInterpreterRequired"
           },
           "violationDate": {
             "type": "string",
             "format": "date-time",
             "nullable": true
-          },
-          "jjDisputeStatus": {
-            "$ref": "#/components/schemas/DisputeListItemJjDisputeStatus"
           },
           "jjAssignedTo": {
             "type": "string",
@@ -8046,8 +8038,7 @@
             "nullable": true
           },
           "courtAgenId": {
-            "type": "number",
-            "format": "float",
+            "type": "string",
             "nullable": true
           }
         },
