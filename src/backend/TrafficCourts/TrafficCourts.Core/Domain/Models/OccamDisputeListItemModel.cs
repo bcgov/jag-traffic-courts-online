@@ -42,4 +42,5 @@ public class OccamDisputeListItemModel
     public string decisionMadeBy { get; set; }
     public DateTime? jjDecisionDate { get; set; }
     public string courtAgenId { get; set; }
+    public string courtAgenName { get; set; }
 }

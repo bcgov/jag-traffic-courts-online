@@ -1788,11 +1788,14 @@
             }
           },
           {
-            "name": "courtHouse",
+            "name": "courthouseId",
             "in": "query",
             "description": "The optional court house location to search. The value will be searched using contains.",
             "schema": {
-              "type": "string"
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
@@ -8038,6 +8041,10 @@
             "nullable": true
           },
           "courtAgenId": {
+            "type": "string",
+            "nullable": true
+          },
+          "courtAgenName": {
             "type": "string",
             "nullable": true
           }

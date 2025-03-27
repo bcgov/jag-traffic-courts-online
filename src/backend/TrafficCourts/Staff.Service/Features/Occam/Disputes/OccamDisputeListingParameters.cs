@@ -52,8 +52,8 @@ public class OccamDisputeListingParameters : IPagable, ISortable
     /// <summary>
     /// The optional court house location to search. The value will be searched using contains.
     /// </summary>
-    [FromQuery(Name = "courtHouse")]
-    public string? CourtHouse { get; set; }
+    [FromQuery(Name = "courthouseId")]
+    public List<string>? CourtHouseIds { get; set; }
 
     #endregion
 

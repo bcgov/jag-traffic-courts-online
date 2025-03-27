@@ -112,10 +112,17 @@ public class Handler : IRequestHandler<Request, Response>
         AddUtcDateRangeFilter(parameters, "submitted_dt", request.Parameters.TimeZone, request.Parameters.From, request.Parameters.Thru);
         AddStartFilter(parameters, "ticket_number_txt", request.Parameters.TicketNumber);
         AddStartFilter(parameters, "disputant_surname_nm", request.Parameters.Surname, false);
+
         if (request.Parameters.Status is not null)
         {
             var statusCodes = request.Parameters.Status.Select(s => ToDisputeStatusCode(s));
             parameters.Add("dispute_status_type_cd_in", string.Join(',', statusCodes)); 
+        }
+
+        if (request.Parameters.CourtHouseIds is not null)
+        {
+            var courthouseIds = request.Parameters.CourtHouseIds;
+            parameters.Add("court_agen_id_in", string.Join(',', courthouseIds));
         }
     }
 
@@ -205,6 +212,7 @@ public class Handler : IRequestHandler<Request, Response>
                 "disputantDetectedOcrIssues"    => "disputant_detect_ocr_issues_yn",
                 "interpreterRequired"           => "interpreter_required_yn",
                 "userAssignedTo"                => "user_assigned_to",
+                "courthouseLocation"            => "court_agen_nm",
                 _ => null
             };
 
@@ -312,6 +320,7 @@ public class Handler : IRequestHandler<Request, Response>
             decisionMadeBy = dispute.most_recent_decision_made_by,
             jjDecisionDate = dispute.jj_decision_dt,
             courtAgenId = dispute.court_agen_id.ToString(),
+            courtAgenName = dispute.court_agen_nm
         };
 
         return listItem;

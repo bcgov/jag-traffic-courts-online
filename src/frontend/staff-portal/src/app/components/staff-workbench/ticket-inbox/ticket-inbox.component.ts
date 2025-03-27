@@ -21,7 +21,7 @@ export class TicketInboxComponent implements OnInit {
   disputesCollection: PagedDisputeListItemCollection = {};
   dataSource = new MatTableDataSource(this.disputes);
 
-  tableFilterKeys: TableFilterKeys[] = ["dateSubmittedFrom", "dateSubmittedTo", "disputantSurname", "status", "ticketNumber"];
+  tableFilterKeys: TableFilterKeys[] = ["dateSubmittedFrom", "dateSubmittedTo", "disputantSurname", "status", "ticketNumber", "courthouseLocation"];
   statusFilterOptions = TableFilterStatusOptions;
   statusFilterDefault = TableFilterStatusDefault;
 
@@ -35,6 +35,7 @@ export class TicketInboxComponent implements OnInit {
     'requestCourtAppearanceYn',
     'disputantDetectedOcrIssues',
     'interpreterRequired',
+    'courthouseLocation',
     'userAssignedTo',
   ];
   userProfile: KeycloakProfile = {};
@@ -74,7 +75,6 @@ export class TicketInboxComponent implements OnInit {
 
     // when authentication token available, get data
     let dataFilter: TableFilter = this.tableFilterService.tableFilters[this.tabIndex];
-    //dataFilter.status = dataFilter.status ?? [];
     this.filters = dataFilter;
     this.previousFilters = { ...dataFilter };
     this.currentPage = this.tableFilterService.currentPage[this.tabIndex];
