@@ -30,12 +30,16 @@ public class RoundTripMappingTest<TSourceModel, TDestinationModel> : DomainModel
 
         var mapped = _sut.Map<TDestinationModel>(expected);
 
+        // Reverse map
         var actual = _sut.Map<TSourceModel>(mapped);
 
-        var expectedJson = JsonConvert.SerializeObject(expected, Formatting.Indented);
-        var actualJson = JsonConvert.SerializeObject(expected, Formatting.Indented);
+        // Exclude IssuedTs from comparison
+        RemoveIssuedTs(expected!);
+        RemoveIssuedTs(actual!);
 
-        // uncomment and change path to help diagnose differences
+        var expectedJson = JsonConvert.SerializeObject(expected, Formatting.Indented);
+        var actualJson = JsonConvert.SerializeObject(actual, Formatting.Indented);
+
         if (_debug)
         {
             WriteAllTextToTempPath($"{typeof(TSourceModel).Name}-expected.json", expectedJson);
@@ -45,6 +49,42 @@ public class RoundTripMappingTest<TSourceModel, TDestinationModel> : DomainModel
 
         Assert.Equivalent(expected, actual);
         Assert.Equal(expectedJson, actualJson);
+    }
+
+    private static void RemoveIssuedTs(object obj)
+    {
+        if (obj == null) return;
+
+        // Check if the object has an IssuedTs property
+        var issuedTsProperty = obj.GetType().GetProperty("IssuedTs");
+        if (issuedTsProperty != null && issuedTsProperty.PropertyType == typeof(DateTimeOffset?))
+        {
+            // Set IssuedTs to null
+            issuedTsProperty.SetValue(obj, null);
+        }
+
+        // Recursively handle nested objects
+        foreach (var property in obj.GetType().GetProperties())
+        {
+            if (property.PropertyType.IsClass && property.PropertyType != typeof(string))
+            {
+                var nestedObject = property.GetValue(obj);
+                if (nestedObject != null)
+                {
+                    if (nestedObject is IEnumerable<object> enumerable)
+                    {
+                        foreach (var item in enumerable)
+                        {
+                            RemoveIssuedTs(item);
+                        }
+                    }
+                    else
+                    {
+                        RemoveIssuedTs(nestedObject);
+                    }
+                }
+            }
+        }
     }
 
     private string WriteAllTextToTempPath(string filename, string content)

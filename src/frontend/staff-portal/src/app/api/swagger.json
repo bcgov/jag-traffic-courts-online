@@ -723,7 +723,7 @@
             }
           },
           "405": {
-            "description": "A Dispute status can only be set to REJECTED iff status is NEW, VALIDATED or PROCESSING and the rejected reason must be \u003C= 256 characters. Update failed.",
+            "description": "A Dispute status can only be set to REJECTED iff status is NEW, VALIDATED or PROCESSING and the rejected reason must be <= 256 characters. Update failed.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -7957,9 +7957,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": {
-
-        }
+        "additionalProperties": { }
       },
       "Province": {
         "type": "object",
@@ -8634,7 +8632,7 @@
   },
   "security": [
     {
-      "Bearer": []
+      "Bearer": [ ]
     }
   ]
 }
