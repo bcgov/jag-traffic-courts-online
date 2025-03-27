@@ -148,9 +148,10 @@ export class DisputeService implements IDisputeService {
   ): Observable<PagedOccamDisputeListItemCollection> {
 
       var disputeStatuses = filters.status ? filters.status.mapping : [DisputeStatus.New, DisputeStatus.Validated, DisputeStatus.Processing, DisputeStatus.Rejected, DisputeStatus.Cancelled, DisputeStatus.Concluded];
+      var courthouseIds = filters.courthouseLocation ? filters.courthouseLocation.map(cl => cl.id) : [];
 
       return this.disputeApiService.apiV2OccamDisputeDisputesGet(undefined, undefined, filters.ticketNumber, filters.disputantSurname, 
-        disputeStatuses, filters.dateSubmittedFrom, filters.dateSubmittedTo, undefined, sortBy, sortDirection, undefined, pageNumber, 25)
+        disputeStatuses, filters.dateSubmittedFrom, filters.dateSubmittedTo, courthouseIds, sortBy, sortDirection, undefined, pageNumber, 25)
         .pipe(
           map((response: PagedOccamDisputeListItemCollection) => {
             this.logger.info('DisputeService::getDisputes', response);
