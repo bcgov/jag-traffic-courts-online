@@ -165,7 +165,7 @@ namespace TrafficCourts.Domain.Models
         public System.DateTimeOffset? SubmittedTs { get; set; }
 
         [Newtonsoft.Json.JsonProperty("issuedTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? IssuedTs { get; set; }
+        public System.DateTime? IssuedTs { get; set; }
 
         [Newtonsoft.Json.JsonProperty("violationDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTimeOffset? ViolationDate { get; set; }
@@ -630,7 +630,7 @@ namespace TrafficCourts.Domain.Models
         public string TicketNumber { get; set; }
 
         [Newtonsoft.Json.JsonProperty("issuedTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? IssuedTs { get; set; }
+        public System.DateTime? IssuedTs { get; set; }
 
         [Newtonsoft.Json.JsonProperty("submittedTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTimeOffset? SubmittedTs { get; set; }
@@ -993,7 +993,7 @@ namespace TrafficCourts.Domain.Models
         public string DetachmentLocation { get; set; }
 
         [Newtonsoft.Json.JsonProperty("issuedTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? IssuedTs { get; set; }
+        public System.DateTime? IssuedTs { get; set; }
 
         [Newtonsoft.Json.JsonProperty("issuedOnRoadOrHighway", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string IssuedOnRoadOrHighway { get; set; }

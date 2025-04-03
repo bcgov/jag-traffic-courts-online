@@ -54,23 +54,55 @@ public class TcoDisputeTicketController : ControllerBase
 
     private void CleanDisputeData(TcoDisputeTicket disputeData)
     {
-        int removed = disputeData.TicketDetails.RemoveAll(_ => string.IsNullOrWhiteSpace(_.Act));
+        // ticket counts are currently soft deleted by setting the Act property to null
+        // Remove TicketDetails with soft deleted counts
+        int removedTicketCounts = disputeData.TicketDetails.RemoveAll(td => td.IsDeleted);
+        var ticketCounts = disputeData.TicketDetails.Select(td => td.Count).ToList();
 
-        if (removed > 0)
+        // TCVP-3184 - Remove dispute counts where there is not a corresponding ticket count
+        int removedDisputeCounts = disputeData.DisputeCounts.RemoveAll(dc => !ticketCounts.Contains(dc.Count));
+
+        if (removedTicketCounts > 0)
         {
             if (disputeData.TicketDetails.Count == 0)
             {
-                _logger.LogWarning("Removed all {RemovedCount} count records on {TicketNumber}. Dispute cant be sent to ARC",
-                    removed,
+                _logger.LogWarning("Removed all {RemovedCount} ticket count records on {TicketNumber}. Dispute cant be sent to ARC",
+                    removedTicketCounts,
                     disputeData.TicketFileNumber);
             }
             else
             {
-                _logger.LogInformation("Removed {RemovedCount} count records on {TicketNumber}. {NumberOfCounts} will be sent to ARC", 
-                    removed, 
+                _logger.LogInformation("Removed {RemovedCount} ticket count records on {TicketNumber}. {NumberOfCounts} will be sent to ARC",
+                    removedTicketCounts, 
                     disputeData.TicketFileNumber, 
                     disputeData.TicketDetails.Count);
             }
+        }
+
+        if (removedDisputeCounts > 0)
+        {
+            if (disputeData.DisputeCounts.Count == 0)
+            {
+                _logger.LogWarning("Removed all {RemovedCount} dispute records on {TicketNumber}. Dispute cant be sent to ARC",
+                    removedDisputeCounts,
+                    disputeData.TicketFileNumber);
+            }
+            else
+            {
+                _logger.LogInformation("Removed {RemovedCount} dispute records on {TicketNumber}. {NumberOfCounts} will be sent to ARC",
+                    removedDisputeCounts,
+                    disputeData.TicketFileNumber,
+                    disputeData.DisputeCounts.Count);
+            }
+        }
+
+        if (disputeData.TicketDetails.Count != disputeData.DisputeCounts.Count)
+        {
+            // generally the TicketDetails.Count >= disputeData.DisputeCounts.Count
+            _logger.LogWarning("The number of count on the ticket and number of disputed counts do not match on {TicketNumber}. Ticket count: {TicketCount}, Dispute count: {DisputeCount}",
+                disputeData.TicketFileNumber,
+                disputeData.TicketDetails.Count,
+                disputeData.DisputeCounts.Count);
         }
     }
 }

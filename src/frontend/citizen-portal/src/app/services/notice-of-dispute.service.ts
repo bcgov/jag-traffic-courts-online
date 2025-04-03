@@ -224,7 +224,7 @@ export class NoticeOfDisputeService {
                 this.router.navigate([AppRoutes.SUBMIT_SUCCESS], {
                   queryParams: {
                     ticketNumber: input.ticket_number,
-                    time: this.datePipe.transform(input.issued_date, "HH:mm", "UTC"),
+                    time: this.datePipe.transform(input.issued_date, "HH:mm"),
                     mode: DisputeFormMode.CREATE
                   },
                 });
