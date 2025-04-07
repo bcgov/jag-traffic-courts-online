@@ -2,9 +2,9 @@
 using TrafficCourts.Collections;
 using TrafficCourts.Domain.Models;
 
-namespace TrafficCourts.Staff.Service.Features.Occam.Disputes;
+namespace TrafficCourts.Staff.Service.Features.Occam.DisputesWithUpdateRequests;
 
-public class OccamDisputeListingParameters : IPagable, ISortable
+public class OccamDisputeWithUpdateRequestsListingParameters : IPagable, ISortable
 {
     #region Filtering
     /// <summary>
@@ -55,6 +55,12 @@ public class OccamDisputeListingParameters : IPagable, ISortable
     [FromQuery(Name = "courthouseId")]
     public List<string>? CourtHouseIds { get; set; }
 
+    /// <summary>
+    /// The optional status to find.
+    /// </summary>
+    [FromQuery(Name = "requestStatus")]
+    public List<DisputeUpdateRequestStatus>? RequestStatus { get; set; }
+
     #endregion
 
     #region Sorting
@@ -91,7 +97,7 @@ public class OccamDisputeListingParameters : IPagable, ISortable
 
     #endregion
 
-    public static readonly OccamDisputeListingParameters Default = new OccamDisputeListingParameters();
+    public static readonly OccamDisputeWithUpdateRequestsListingParameters Default = new OccamDisputeWithUpdateRequestsListingParameters();
 
     /// <summary>
     /// Sets the default sort order if no sort order specified
@@ -100,7 +106,7 @@ public class OccamDisputeListingParameters : IPagable, ISortable
     {
         if (SortBy is null || SortBy?.Count == 0)
         {
-            SortBy = [nameof(OccamDisputeListItemModel.submittedTs), nameof(OccamDisputeListItemModel.ticketNumber)];
+            SortBy = [nameof(OccamDisputeWithUpdateRequestListItemModel.submittedTs), nameof(OccamDisputeWithUpdateRequestListItemModel.ticketNumber)];
             SortDirection = [Collections.SortDirection.desc, Collections.SortDirection.asc];
         }
     }

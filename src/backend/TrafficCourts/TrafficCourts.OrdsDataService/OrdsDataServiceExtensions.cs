@@ -71,6 +71,7 @@ public static class OrdsDataServiceExtensions
 
         // occam
         services.AddTransient<IOccamDisputeRepository, OccamDisputeRepository>();
+        services.AddTransient<IOccamDisputeWithUpdateRequestRepository, OccamDisputeWithUpdateRequestRepository>();
     }
 
 

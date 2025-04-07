@@ -4,7 +4,7 @@
 #pragma warning disable IDE1006 // Naming Styles
 
 
-public class OccamDispute
+public class OccamDisputeWithUpdateRequest
 {
     public int dispute_id { get; set; }
     public DateTime submitted_dt { get; set; }

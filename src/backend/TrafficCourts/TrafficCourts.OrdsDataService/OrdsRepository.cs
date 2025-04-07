@@ -27,7 +27,6 @@ internal abstract partial class OrdsRepository<TOrdsRepository>
         ETagCache policy,
         CancellationToken cancellationToken)
     {
-        // TODO-DKAY - Make this work with new V2 endpoint
         var response = await _client.GetAsync(
             _path,
             parameters,

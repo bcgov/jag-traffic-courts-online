@@ -1,18 +1,17 @@
 using MediatR;
-using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
 using System.Text;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.OrdsDataService.Occam;
 
-namespace TrafficCourts.Staff.Service.Features.Occam.Disputes;
+namespace TrafficCourts.Staff.Service.Features.Occam.DisputesWithUpdateRequests;
 
 public class Handler : IRequestHandler<Request, Response>
 {
-    private readonly IOccamDisputeRepository _repository;
+    private readonly IOccamDisputeWithUpdateRequestRepository _repository;
     private readonly Serilog.ILogger _logger;
 
-    public Handler(IOccamDisputeRepository repository, Serilog.ILogger logger)
+    public Handler(IOccamDisputeWithUpdateRequestRepository repository, Serilog.ILogger logger)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -45,7 +44,7 @@ public class Handler : IRequestHandler<Request, Response>
     }
 
 
-    private Response CreateResponse(OrdsDataService.OrdsDataServicePagedCollectionResponse<OccamDispute> pagedCollection)
+    private Response CreateResponse(OrdsDataService.OrdsDataServicePagedCollectionResponse<OccamDisputeWithUpdateRequest> pagedCollection)
     {
         if (pagedCollection.Rows is not null)
         {
@@ -58,7 +57,7 @@ public class Handler : IRequestHandler<Request, Response>
             int pageNumber = (offset / pageSize) + 1;
             int totalPages = (int)Math.Ceiling((double)totalRows / pageSize);
 
-            var pagedList = new PagedOccamDisputeListItemCollection(items, pageNumber, pageSize, pagedCollection.TotalRows);
+            var pagedList = new PagedOccamDisputeWithUpdateRequestListItemCollection(items, pageNumber, pageSize, pagedCollection.TotalRows);
             return new Response(pagedList);
         }
 
@@ -113,6 +112,11 @@ public class Handler : IRequestHandler<Request, Response>
         AddStartFilter(parameters, "ticket_number_txt", request.Parameters.TicketNumber);
         AddStartFilter(parameters, "disputant_surname_nm", request.Parameters.Surname, false);
 
+        // We're hardcoding this to always filter on PEND because that's what V1 API did.
+        // Probably this should come from the UI instead?
+        // At the very least, it should come from an ENUM, but we don't have an enum for Request Statuses in C# yet
+        AddEqualityFilter(parameters, "dispute_update_stat_type_cd", "PEND");
+
         if (request.Parameters.Status is not null)
         {
             var statusCodes = request.Parameters.Status.Select(s => ToDisputeStatusCode(s));
@@ -124,6 +128,23 @@ public class Handler : IRequestHandler<Request, Response>
             var courthouseIds = request.Parameters.CourtHouseIds;
             parameters.Add("court_agen_id_in", string.Join(',', courthouseIds));
         }
+    }
+
+    private void AddEqualityFilter(Dictionary<string, string> parameters, string field, string? value, bool toUpper = true)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return;
+        }
+
+        value = value.Trim(); // remove wrapping spaces
+
+        if (toUpper)
+        {
+            value = value.ToUpper();
+        }
+
+        parameters.Add($"{field}_eq", $"{value}");
     }
 
     private void AddStartFilter(Dictionary<string, string> parameters, string field, string? value, bool toUpper = true)
@@ -295,10 +316,10 @@ public class Handler : IRequestHandler<Request, Response>
         };
     }
 
-    private OccamDisputeListItemModel Map(OccamDispute dispute)
+    private OccamDisputeWithUpdateRequestListItemModel Map(OccamDisputeWithUpdateRequest dispute)
     {
         // all of the == "Y" stuff is a temporary hack to maintain V1 support in the front-end - should probably all be YesNo properties instead of unique enums
-        var listItem = new OccamDisputeListItemModel
+        var listItem = new OccamDisputeWithUpdateRequestListItemModel
         {
             disputeId = dispute.dispute_id,
             ticketNumber = dispute.ticket_number_txt,

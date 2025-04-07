@@ -4,9 +4,9 @@
 /// Represents a subset of a dispute case file, used for displaying lists of dispute case files
 /// </summary>
 
-public class PagedOccamDisputeListModel
+public class PagedOccamDisputeWithUpdateRequestListModel
 {
-    public OccamDisputeListItemModel[] items { get; set; }
+    public OccamDisputeWithUpdateRequestListItemModel[] items { get; set; }
     public int pageNumber { get; set; }
     public int pageSize { get; set; }
     public int pageCount { get; set; }
@@ -17,7 +17,7 @@ public class PagedOccamDisputeListModel
     public bool isLastPage { get; set; }
 }
 
-public class OccamDisputeListItemModel
+public class OccamDisputeWithUpdateRequestListItemModel
 {
     public int disputeId { get; set; }
     public string ticketNumber { get; set; }
@@ -44,3 +44,29 @@ public class OccamDisputeListItemModel
     public string courtAgenId { get; set; }
     public string courtAgenName { get; set; }
 }
+
+public class Rootobject
+{
+    public int dispute_update_request_id { get; set; }
+    public int dispute_id { get; set; }
+    public string dispute_update_stat_type_cd { get; set; }
+    public string dispute_update_req_type_cd { get; set; }
+    public string request_json_txt { get; set; }
+    public string current_json_txt { get; set; }
+    public DateTime status_update_dtm { get; set; }
+    public DateTime ent_dtm { get; set; }
+    public string ent_user_id { get; set; }
+    public DateTime upd_dtm { get; set; }
+    public string upd_user_id { get; set; }
+    public DateTime submitted_dt { get; set; }
+    public string disputant_surname_nm { get; set; }
+    public string disputant_given_1_nm { get; set; }
+    public object disputant_given_2_nm { get; set; }
+    public object disputant_given_3_nm { get; set; }
+    public string dispute_status_type_cd { get; set; }
+    public string notice_of_dispute_guid { get; set; }
+    public object court_agen_id { get; set; }
+    public string ticket_number_txt { get; set; }
+    public int violation_ticket_upload_id { get; set; }
+}
+

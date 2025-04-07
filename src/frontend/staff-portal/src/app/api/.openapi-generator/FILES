@@ -94,10 +94,12 @@ model/language.model.ts
 model/lock.model.ts
 model/models.ts
 model/occamDisputeListItemModel.model.ts
+model/occamDisputeWithUpdateRequestListItemModel.model.ts
 model/ocrViolationTicket.model.ts
 model/pagedDisputeCaseFileSummaryCollection.model.ts
 model/pagedDisputeListItemCollection.model.ts
 model/pagedOccamDisputeListItemCollection.model.ts
+model/pagedOccamDisputeWithUpdateRequestListItemCollection.model.ts
 model/permission.model.ts
 model/point.model.ts
 model/problemDetails.model.ts
