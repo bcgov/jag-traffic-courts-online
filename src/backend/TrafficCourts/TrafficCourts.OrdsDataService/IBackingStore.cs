@@ -25,10 +25,10 @@ public interface IBackingStore
     /// <typeparam name="T"></typeparam>
     /// <param name="key">The key</param>
     /// <param name="value">The value</param>
-    /// <param name="alwaysDirty">
-    /// If <c>true</c> the key will always be considered ditry. Primary key values should always be dirty if set.
+    /// <param name="isKey">
+    /// The field is a primary key field.
     /// </param>
-    void Set<T>(string key, T? value, bool alwaysDirty = false);
+    void Set<T>(string key, T? value, bool isKey = false);
 
     /// <summary>
     /// Set a DateTime value in the backing store with the specified format.
@@ -42,7 +42,7 @@ public interface IBackingStore
     /// Converts the backing store to a dictionary. Only keys that are dirty are included.
     /// </summary>
     /// <returns></returns>
-    Dictionary<string, object?> ToDictionary();
+    Dictionary<string, object?> ToDictionary(DatabaseOperationType operationType);
 
     /// <summary>
     /// Determines if there are any dirty items in the backing store.

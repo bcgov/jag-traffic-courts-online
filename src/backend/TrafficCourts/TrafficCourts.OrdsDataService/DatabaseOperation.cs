@@ -5,36 +5,31 @@
 /// </summary>
 public class DatabaseOperation : Dictionary<string, object?>
 {
-    internal DatabaseOperation(string operation, string table, Dictionary<string, object?> data)
+    internal DatabaseOperation(DatabaseOperationType operationType, string table, DatabaseEntity entity)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(operation);
-        ArgumentException.ThrowIfNullOrWhiteSpace(table);
-        ArgumentNullException.ThrowIfNull(data);
-
-        if (data.Keys.Count == 0)
-        {
-            throw new ArgumentException("There are no properties set on the data.", nameof(data));
-        }
-
-        Add("$operation", operation);
-        Add("$table", table);
-        Add("$data", data);
-    }
-
-    internal DatabaseOperation(string operation, string table, DatabaseEntity entity)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(operation);
         ArgumentException.ThrowIfNullOrWhiteSpace(table);
         ArgumentNullException.ThrowIfNull(entity);
 
-        Dictionary<string, object?> data = entity.BackingStore.ToDictionary();
+        Dictionary<string, object?> data = entity.BackingStore.ToDictionary(operationType);
+
         if (data.Keys.Count == 0)
         {
             throw new ArgumentException("There are no properties set on the entity.", nameof(entity));
         }
 
-        Add("$operation", operation);
+        Add("$operation", GetOperationName(operationType));
         Add("$table", table);
         Add("$data", data);
+    }
+
+    private static string GetOperationName(DatabaseOperationType operationType)
+    {
+        return operationType switch
+        {
+            DatabaseOperationType.Insert => "insert",
+            DatabaseOperationType.Update => "update",
+            DatabaseOperationType.Delete => "delete",
+            _ => throw new ArgumentOutOfRangeException(nameof(operationType), operationType, null)
+        };
     }
 }

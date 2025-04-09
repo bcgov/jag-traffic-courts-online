@@ -8,7 +8,7 @@ namespace TrafficCourts.OrdsDataService;
 
 internal class InMemoryBackingStore : IBackingStore
 {
-    private ConcurrentDictionary<string, Field> _store = new ConcurrentDictionary<string, Field>();
+    private readonly ConcurrentDictionary<string, Field> _store = new ConcurrentDictionary<string, Field>();
 
     public T? Get<T>(string key)
     {
@@ -37,14 +37,14 @@ internal class InMemoryBackingStore : IBackingStore
         return DateTime.SpecifyKind(date, kind);
     }
 
-    public void Set<T>(string key, T? value, bool alwaysDirty = false)
+    public void Set<T>(string key, T? value, bool isKey = false)
     {
         if (string.IsNullOrEmpty(key))
         {
             throw new ArgumentNullException(nameof(key));
         }
 
-        if (!_store.TryAdd(key, new Field { Value = value, Dirty = true, AlwaysDirty = alwaysDirty }))
+        if (!_store.TryAdd(key, new Field { Value = value, Dirty = true, IsKey = isKey }))
         {
             // key already exists, update the value
             Field field = _store[key];
@@ -69,17 +69,25 @@ internal class InMemoryBackingStore : IBackingStore
         }
     }
 
-    public Dictionary<string, object?> ToDictionary()
+    /// <summary>
+    /// Create the dictionary to send to the database base on the operation type.
+    /// </summary>
+    /// <param name="operationType"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    public Dictionary<string, object?> ToDictionary(DatabaseOperationType operationType)
     {
-        var values = new Dictionary<string, object?>();
-
-        foreach (var (key, field) in _store)
+        Func<Field, bool> predicate = operationType switch
         {
-            if (field.Dirty)
-            {
-                values.Add(key, field.Value);
-            }
-        }
+            DatabaseOperationType.Insert => Insert,
+            DatabaseOperationType.Update => Update,
+            DatabaseOperationType.Delete => Delete,
+            _ => throw new ArgumentOutOfRangeException(nameof(operationType), operationType, null)
+        };
+
+        Dictionary<string, object?> values = _store
+            .Where(kv => predicate(kv.Value))
+            .ToDictionary(kv => kv.Key, kv => kv.Value.Value);
 
         return values;
     }
@@ -88,31 +96,43 @@ internal class InMemoryBackingStore : IBackingStore
     {
         get
         {
-            foreach (var (_, field) in _store)
-            {
-                if (field.AlwaysDirty || field.Dirty)
-                {
-                    return true;
-                }
-            }
-            return false;
+            return _store.Any(kv => kv.Value.Dirty);
         }
         set
         {
             foreach (var (_, field) in _store)
             {
-                if (!field.AlwaysDirty)
-                {
-                    field.Dirty = value;
-                }
+                field.Dirty = value;
             }
         }
+    }
+
+
+    private static bool Insert(Field field)
+    {
+        return !field.IsKey && field.Dirty; // we need to send all fields except the key fields
+    }
+
+    private static bool Update(Field field)
+    {
+        return field.IsKey || field.Dirty; // we need to send the key fields and any dirty fields
+    }
+
+    private static bool Delete(Field field)
+    {
+        return field.IsKey; // we only need the key fields for delete
     }
 }
 
 public class Field
 {
     public object? Value { get; set; }
+    /// <summary>
+    /// The value has changed.
+    /// </summary>
     public bool Dirty { get; set; }
-    public bool AlwaysDirty { get; set; }
+    /// <summary>
+    /// The value represents a key.
+    /// </summary>
+    public bool IsKey { get; set; }
 }

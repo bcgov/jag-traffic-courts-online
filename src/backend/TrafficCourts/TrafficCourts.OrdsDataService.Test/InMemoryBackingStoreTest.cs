@@ -1,6 +1,4 @@
-﻿using TrafficCourts.OrdsDataService.Occam;
-
-namespace TrafficCourts.OrdsDataService.Test;
+﻿namespace TrafficCourts.OrdsDataService.Test;
 
 public class InMemoryBackingStoreTests
 {
@@ -66,7 +64,7 @@ public class InMemoryBackingStoreTests
         var value = "testValue";
 
         // Act
-        store.Set(key, value, alwaysDirty: true);
+        store.Set(key, value, isKey: true);
 
         // Assert
         Assert.True(store.Dirty);
@@ -131,7 +129,7 @@ public class InMemoryBackingStoreTests
         var key = "testKey";
         var value = "testValue";
 
-        store.Set(key, value, alwaysDirty: true);
+        store.Set(key, value, isKey: true);
 
         // Act
         var isDirty = store.Dirty;
@@ -158,7 +156,7 @@ public class InMemoryBackingStoreTests
         store.Set(key1, "newValue1");
 
         // Act
-        var dictionary = store.ToDictionary();
+        var dictionary = store.ToDictionary(DatabaseOperationType.Insert);
 
         // Assert
         Assert.Single(dictionary);
@@ -175,11 +173,11 @@ public class InMemoryBackingStoreTests
         var key2 = "key2";
         var value2 = "value2";
 
-        store.Set(key1, value1, alwaysDirty: true);
-        store.Set(key2, value2, alwaysDirty: false);
+        store.Set(key1, value1, isKey: true);
+        store.Set(key2, value2, isKey: false);
 
         // Act
-        var dictionary = store.ToDictionary();
+        var dictionary = store.ToDictionary(DatabaseOperationType.Update);
 
         // Assert
         Assert.Equal(2, dictionary.Count);
@@ -194,7 +192,7 @@ public class InMemoryBackingStoreTests
         var store = new InMemoryBackingStore();
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => store.Set(null, "value"));
+        Assert.Throws<ArgumentNullException>(() => store.Set(null!, "value"));
     }
 
     [Fact]
@@ -204,6 +202,6 @@ public class InMemoryBackingStoreTests
         var store = new InMemoryBackingStore();
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => store.Get<string>(null));
+        Assert.Throws<ArgumentNullException>(() => store.Get<string>(null!));
     }
 }

@@ -27,7 +27,7 @@ public partial class TcoAppearanceChargeCounts : DatabaseEntity
     public long? AppearanceChargeCountId
     {
         get { return BackingStore.Get<long?>("appearance_charge_count_id"); }
-        set { BackingStore.Set<long?>("appearance_charge_count_id", value, alwaysDirty: true); }
+        set { BackingStore.Set<long?>("appearance_charge_count_id", value, isKey: true); }
     }
 
     [System.Text.Json.Serialization.JsonPropertyName("court_appearance_id")]
@@ -207,7 +207,7 @@ public partial class TcoAuditLogEntries : DatabaseEntity
     public long? AuditLogEntryId
     {
         get { return BackingStore.Get<long?>("audit_log_entry_id"); }
-        set { BackingStore.Set<long?>("audit_log_entry_id", value, alwaysDirty: true); }
+        set { BackingStore.Set<long?>("audit_log_entry_id", value, isKey: true); }
     }
 
     [System.Text.Json.Serialization.JsonPropertyName("dispute_id")]
@@ -282,7 +282,7 @@ public partial class TcoCourtAppearances : DatabaseEntity
     public long? CourtAppearanceId
     {
         get { return BackingStore.Get<long?>("court_appearance_id"); }
-        set { BackingStore.Set<long?>("court_appearance_id", value, alwaysDirty: true); }
+        set { BackingStore.Set<long?>("court_appearance_id", value, isKey: true); }
     }
 
     [System.Text.Json.Serialization.JsonPropertyName("dispute_id")]
@@ -427,7 +427,7 @@ public partial class TcoDisputeCounts : DatabaseEntity
     public long? DisputeCountId
     {
         get { return BackingStore.Get<long?>("dispute_count_id"); }
-        set { BackingStore.Set<long?>("dispute_count_id", value, alwaysDirty: true); }
+        set { BackingStore.Set<long?>("dispute_count_id", value, isKey: true); }
     }
 
     [System.Text.Json.Serialization.JsonPropertyName("dispute_id")]
@@ -586,7 +586,7 @@ public partial class TcoDisputeRemarks : DatabaseEntity
     public long? DisputeRemarkId
     {
         get { return BackingStore.Get<long?>("dispute_remark_id"); }
-        set { BackingStore.Set<long?>("dispute_remark_id", value, alwaysDirty: true); }
+        set { BackingStore.Set<long?>("dispute_remark_id", value, isKey: true); }
     }
 
     [System.Text.Json.Serialization.JsonPropertyName("dispute_id")]
@@ -661,7 +661,7 @@ public partial class TcoDisputes : DatabaseEntity
     public long? DisputeId
     {
         get { return BackingStore.Get<long?>("dispute_id"); }
-        set { BackingStore.Set<long?>("dispute_id", value, alwaysDirty: true); }
+        set { BackingStore.Set<long?>("dispute_id", value, isKey: true); }
     }
 
     [System.Text.Json.Serialization.JsonPropertyName("dispute_status_type_cd")]
@@ -834,7 +834,7 @@ public partial class TcoDisputeStatusTypes : DatabaseEntity
     public string? DisputeStatusTypeCd
     {
         get { return BackingStore.Get<string?>("dispute_status_type_cd"); }
-        set { BackingStore.Set<string?>("dispute_status_type_cd", value, alwaysDirty: true); }
+        set { BackingStore.Set<string?>("dispute_status_type_cd", value, isKey: true); }
     }
 
     [System.Text.Json.Serialization.JsonPropertyName("dispute_status_type_dsc")]
@@ -895,7 +895,7 @@ public partial class TcoErrorLogs : DatabaseEntity
     public long? ErrorLogId
     {
         get { return BackingStore.Get<long?>("error_log_id"); }
-        set { BackingStore.Set<long?>("error_log_id", value, alwaysDirty: true); }
+        set { BackingStore.Set<long?>("error_log_id", value, isKey: true); }
     }
 
     [System.Text.Json.Serialization.JsonPropertyName("error_message_no")]

@@ -26,18 +26,18 @@ public abstract class DatabaseEntity
     /// Creates an insert operation for this entity
     /// </summary>
     /// <returns></returns>
-    internal virtual DatabaseOperation ToInsertOperation() => new DatabaseOperation("insert", Name, this);
+    internal virtual DatabaseOperation ToInsertOperation() => new DatabaseOperation(DatabaseOperationType.Insert, Name, this);
     /// <summary>
     /// Creates an update operation for this entity
     /// </summary>
     /// <returns></returns>
-    internal virtual DatabaseOperation ToUpdateOperation() => new DatabaseOperation("update", Name, this);
+    internal virtual DatabaseOperation ToUpdateOperation() => new DatabaseOperation(DatabaseOperationType.Update, Name, this);
 
     /// <summary>
     /// Creates an delete operation for this entity
     /// </summary>
     /// <returns></returns>
-    internal virtual DatabaseOperation ToDeleteOperation() => new DatabaseOperation("delete", Name, this);
+    internal virtual DatabaseOperation ToDeleteOperation() => new DatabaseOperation(DatabaseOperationType.Delete, Name, this);
 }
 
 

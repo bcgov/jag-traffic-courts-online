@@ -27,7 +27,7 @@ public partial class OccamAuditLogEntries : DatabaseEntity
     public long? AuditLogEntryId
     {
         get { return BackingStore.Get<long?>("audit_log_entry_id"); }
-        set { BackingStore.Set<long?>("audit_log_entry_id", value, alwaysDirty: true); }
+        set { BackingStore.Set<long?>("audit_log_entry_id", value, isKey: true); }
     }
 
     [System.Text.Json.Serialization.JsonPropertyName("dispute_id")]
@@ -102,7 +102,7 @@ public partial class OccamDisputeCounts : DatabaseEntity
     public long? DisputeCountId
     {
         get { return BackingStore.Get<long?>("dispute_count_id"); }
-        set { BackingStore.Set<long?>("dispute_count_id", value, alwaysDirty: true); }
+        set { BackingStore.Set<long?>("dispute_count_id", value, isKey: true); }
     }
 
     [System.Text.Json.Serialization.JsonPropertyName("dispute_id")]
@@ -198,7 +198,7 @@ public partial class OccamDisputeUpdateRequests : DatabaseEntity
     public long? DisputeUpdateRequestId
     {
         get { return BackingStore.Get<long?>("dispute_update_request_id"); }
-        set { BackingStore.Set<long?>("dispute_update_request_id", value, alwaysDirty: true); }
+        set { BackingStore.Set<long?>("dispute_update_request_id", value, isKey: true); }
     }
 
     [System.Text.Json.Serialization.JsonPropertyName("dispute_id")]
@@ -287,7 +287,7 @@ public partial class OccamDisputes : DatabaseEntity
     public long? DisputeId
     {
         get { return BackingStore.Get<long?>("dispute_id"); }
-        set { BackingStore.Set<long?>("dispute_id", value, alwaysDirty: true); }
+        set { BackingStore.Set<long?>("dispute_id", value, isKey: true); }
     }
 
     [System.Text.Json.Serialization.JsonPropertyName("court_agen_id")]
@@ -880,7 +880,7 @@ public partial class OccamErrorLogs : DatabaseEntity
     public long? ErrorLogId
     {
         get { return BackingStore.Get<long?>("error_log_id"); }
-        set { BackingStore.Set<long?>("error_log_id", value, alwaysDirty: true); }
+        set { BackingStore.Set<long?>("error_log_id", value, isKey: true); }
     }
 
     [System.Text.Json.Serialization.JsonPropertyName("error_message_no")]
@@ -962,7 +962,7 @@ public partial class OccamOutgoingEmails : DatabaseEntity
     public long? OutgoingEmailId
     {
         get { return BackingStore.Get<long?>("outgoing_email_id"); }
-        set { BackingStore.Set<long?>("outgoing_email_id", value, alwaysDirty: true); }
+        set { BackingStore.Set<long?>("outgoing_email_id", value, isKey: true); }
     }
 
     [System.Text.Json.Serialization.JsonPropertyName("dispute_id")]
@@ -1079,7 +1079,7 @@ public partial class OccamViolationTicketCounts : DatabaseEntity
     public long? ViolationTicketCountId
     {
         get { return BackingStore.Get<long?>("violation_ticket_count_id"); }
-        set { BackingStore.Set<long?>("violation_ticket_count_id", value, alwaysDirty: true); }
+        set { BackingStore.Set<long?>("violation_ticket_count_id", value, isKey: true); }
     }
 
     [System.Text.Json.Serialization.JsonPropertyName("violation_ticket_upload_id")]
@@ -1203,7 +1203,7 @@ public partial class OccamViolationTicketUploads : DatabaseEntity
     public long? ViolationTicketUploadId
     {
         get { return BackingStore.Get<long?>("violation_ticket_upload_id"); }
-        set { BackingStore.Set<long?>("violation_ticket_upload_id", value, alwaysDirty: true); }
+        set { BackingStore.Set<long?>("violation_ticket_upload_id", value, isKey: true); }
     }
 
     [System.Text.Json.Serialization.JsonPropertyName("ticket_number_txt")]
