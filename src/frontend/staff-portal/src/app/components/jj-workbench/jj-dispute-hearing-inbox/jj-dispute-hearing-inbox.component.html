@@ -86,7 +86,7 @@
           <span class="text-start">DATE / TIME</span>
         </th>
         <td mat-cell *matCellDef="let element">
-          <span>{{ element?.appearanceTs | date: "dd-MMM-yyyy HH:mm" }}</span>
+          <span>{{ element?.appearanceTs | date: "dd-MMM-yyyy hh:mm a" }}</span>
         </td>
       </ng-container>
 

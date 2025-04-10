@@ -493,11 +493,11 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
     private Appearance SetFields(Appearance appearance, JJDisputeCourtAppearanceRoP appearanceRop, string? jjDisplayName)
     {
-        appearance.When = new FormattedDateTime(appearanceRop.AppearanceTs);
+        appearance.When = new FormattedDateTime(appearanceRop.AppearanceTs, true);
         appearance.Room = appearanceRop.Room;
         appearance.Reason = appearanceRop.Reason;
         appearance.App = ToString(appearanceRop.AppCd);
-        appearance.NoApp = new FormattedDateTime(appearanceRop.NoAppTs);
+        appearance.NoApp = new FormattedDateTime(appearanceRop.NoAppTs, true);
         appearance.Clerk = appearanceRop.ClerkRecord;
         appearance.DefenseCouncil = appearanceRop.DefenceCounsel;
         appearance.DefenseAtt = ToString(appearanceRop.DattCd);
