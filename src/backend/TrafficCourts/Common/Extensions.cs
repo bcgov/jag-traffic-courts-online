@@ -139,23 +139,20 @@ public static partial class Extensions
 
     private static string FormatCode(this TrafficCourts.OrdsDataService.Justin.Statute statute, StringBuilder buffer)
     {
+        void AppendIfNotNullOrWhiteSpace(string? value)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                buffer.Append('(');
+                buffer.Append(value);
+                buffer.Append(')');
+            }
+        }
+
         buffer.Append(statute.stat_section_txt);
-
-        if (!string.IsNullOrWhiteSpace(statute.stat_sub_section_txt))
-        {
-
-            buffer.Append('(');
-            buffer.Append(statute.stat_sub_section_txt);
-            buffer.Append(')');
-        }
-
-        if (!string.IsNullOrWhiteSpace(statute.stat_paragraph_txt))
-        {
-
-            buffer.Append('(');
-            buffer.Append(statute.stat_paragraph_txt);
-            buffer.Append(')');
-        }
+        AppendIfNotNullOrWhiteSpace(statute.stat_sub_section_txt);
+        AppendIfNotNullOrWhiteSpace(statute.stat_paragraph_txt);
+        AppendIfNotNullOrWhiteSpace(statute.stat_sub_paragraph_txt);
 
         var code = buffer.ToString();
         buffer.Clear();
