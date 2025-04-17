@@ -29,8 +29,12 @@ public class OccamDisputeWithUpdateRequest
     public string jj_assigned_to { get; set; }
     public string most_recent_decision_made_by { get; set; }
     public DateTime? jj_decision_dt { get; set; }
+    public DateTime? issued_dt { get; set; }
+    public DateTime? update_request_submitted_dt { get; set; }
+    public string update_request_change_of_plea_yn { get; set; }
+    public string update_request_adjournment_document_yn { get; set; }
+    public DateTime? hearing_dt { get; set; }
 }
-
 
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 #pragma warning restore IDE1006 // Naming Styles

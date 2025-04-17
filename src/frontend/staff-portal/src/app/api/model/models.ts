@@ -27,6 +27,7 @@ export * from './disputeSignatoryType.model';
 export * from './disputeStatus.model';
 export * from './disputeSystemDetectedOcrIssues.model';
 export * from './disputeUpdateRequest.model';
+export * from './disputeUpdateRequestStatus.model';
 export * from './disputeUpdateRequestStatus2.model';
 export * from './disputeUpdateRequestUpdateType.model';
 export * from './disputeWithUpdates.model';

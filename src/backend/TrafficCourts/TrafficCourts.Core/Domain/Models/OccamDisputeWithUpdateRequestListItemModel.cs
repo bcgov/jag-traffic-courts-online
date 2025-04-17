@@ -43,6 +43,10 @@ public class OccamDisputeWithUpdateRequestListItemModel
     public DateTime? jjDecisionDate { get; set; }
     public string courtAgenId { get; set; }
     public string courtAgenName { get; set; }
+    public DateTime? hearingDate { get; set; }
+    public DateTime? updateRequest_OldestDate { get; set; }
+    public string updateRequest_HasChangeOfPlea { get; set; }
+    public string updateRequest_HasAdjournmentDocument { get; set; }
 }
 
 public class Rootobject

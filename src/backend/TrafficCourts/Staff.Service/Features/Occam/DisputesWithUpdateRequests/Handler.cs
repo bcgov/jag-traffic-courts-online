@@ -342,7 +342,11 @@ public class Handler : IRequestHandler<Request, Response>
             decisionMadeBy = dispute.most_recent_decision_made_by,
             jjDecisionDate = dispute.jj_decision_dt,
             courtAgenId = dispute.court_agen_id.ToString(),
-            courtAgenName = dispute.court_agen_nm
+            courtAgenName = dispute.court_agen_nm,
+            hearingDate = dispute.hearing_dt,
+            updateRequest_OldestDate = dispute.update_request_submitted_dt,
+            updateRequest_HasChangeOfPlea = dispute.update_request_change_of_plea_yn,
+            updateRequest_HasAdjournmentDocument = dispute.update_request_adjournment_document_yn,
         };
 
         return listItem;

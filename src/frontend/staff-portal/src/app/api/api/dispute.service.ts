@@ -27,6 +27,8 @@ import { DisputeStatus } from '../model/disputeStatus.model';
 // @ts-ignore
 import { DisputeUpdateRequest } from '../model/disputeUpdateRequest.model';
 // @ts-ignore
+import { DisputeUpdateRequestStatus } from '../model/disputeUpdateRequestStatus.model';
+// @ts-ignore
 import { DisputeWithUpdates } from '../model/disputeWithUpdates.model';
 // @ts-ignore
 import { ExcludeStatus } from '../model/excludeStatus.model';
@@ -1279,10 +1281,10 @@ export class DisputeService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiOccamDisputeDisputesGetV2(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PagedOccamDisputeListItemCollection>;
-    public apiOccamDisputeDisputesGetV2(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PagedOccamDisputeListItemCollection>>;
-    public apiOccamDisputeDisputesGetV2(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PagedOccamDisputeListItemCollection>>;
-    public apiOccamDisputeDisputesGetV2(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+    public apiV2OccamDisputeDisputesGet(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PagedOccamDisputeListItemCollection>;
+    public apiV2OccamDisputeDisputesGet(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PagedOccamDisputeListItemCollection>>;
+    public apiV2OccamDisputeDisputesGet(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PagedOccamDisputeListItemCollection>>;
+    public apiV2OccamDisputeDisputesGet(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (timeZone !== undefined && timeZone !== null) {
@@ -1409,6 +1411,7 @@ export class DisputeService {
      * @param from The optional from date to search. The submitted date will be filtered where greater or equal to this value.
      * @param thru The optional thru date to search. The submitted date will be filtered where less than or equal to this value.
      * @param courthouseId The optional court house location to search. The value will be searched using contains.
+     * @param requestStatus The optional status to find.
      * @param sortBy The optional sort by contains the attribute name to sort. The data is sorted on the attribute.
      * @param direction The optional sort direction contains the asc or desc. The data is sorted by given direction.
      * @param defaultPageSize The default page size contains the default count of records.
@@ -1417,10 +1420,10 @@ export class DisputeService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiOccamDisputeDisputesWithUpdateRequestsGetV2(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PagedOccamDisputeWithUpdateRequestListItemCollection>;
-    public apiOccamDisputeDisputesWithUpdateRequestsGetV2(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PagedOccamDisputeWithUpdateRequestListItemCollection>>;
-    public apiOccamDisputeDisputesWithUpdateRequestsGetV2(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PagedOccamDisputeWithUpdateRequestListItemCollection>>;
-    public apiOccamDisputeDisputesWithUpdateRequestsGetV2(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+    public apiV2OccamDisputeDisputeswithupdaterequestsGet(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, requestStatus?: Array<DisputeUpdateRequestStatus>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PagedOccamDisputeWithUpdateRequestListItemCollection>;
+    public apiV2OccamDisputeDisputeswithupdaterequestsGet(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, requestStatus?: Array<DisputeUpdateRequestStatus>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PagedOccamDisputeWithUpdateRequestListItemCollection>>;
+    public apiV2OccamDisputeDisputeswithupdaterequestsGet(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, requestStatus?: Array<DisputeUpdateRequestStatus>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PagedOccamDisputeWithUpdateRequestListItemCollection>>;
+    public apiV2OccamDisputeDisputeswithupdaterequestsGet(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, requestStatus?: Array<DisputeUpdateRequestStatus>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (timeZone !== undefined && timeZone !== null) {
@@ -1459,6 +1462,12 @@ export class DisputeService {
             courthouseId.forEach((element) => {
                 localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
                   <any>element, 'courthouseId');
+            })
+        }
+        if (requestStatus) {
+            requestStatus.forEach((element) => {
+                localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                  <any>element, 'requestStatus');
             })
         }
         if (sortBy) {
