@@ -224,18 +224,22 @@ public class Handler : IRequestHandler<Request, Response>
             // map the model to the column name
             string? target = item switch
             {
-                "disputeId"                     => "dispute_id",
-                "submittedTs"                   => "submitted_dt",
-                "ticketNumber"                  => "ticket_number_txt",
-                "disputantSurname"              => "disputant_surname_nm",
-                "disputantGivenName1"           => "disputant_given_1_nm",
-                "status"                        => "dispute_status_type_cd",
-                "requestCourtAppearanceYn"      => "request_court_appearance_yn",
-                "disputantDetectedOcrIssues"    => "disputant_detect_ocr_issues_yn",
-                "interpreterRequired"           => "interpreter_required_yn",
-                "userAssignedTo"                => "user_assigned_to",
-                "courthouseLocation"            => "court_agen_nm",
-                _ => null
+                "disputeId"                             => "dispute_id",
+                "submittedTs"                           => "submitted_dt",
+                "ticketNumber"                          => "ticket_number_txt",
+                "disputantSurname"                      => "disputant_surname_nm",
+                "disputantGivenName1"                   => "disputant_given_1_nm",
+                "status"                                => "dispute_status_type_cd",
+                "requestCourtAppearanceYn"              => "request_court_appearance_yn",
+                "disputantDetectedOcrIssues"            => "disputant_detect_ocr_issues_yn",
+                "interpreterRequired"                   => "interpreter_required_yn",
+                "userAssignedTo"                        => "user_assigned_to",
+                "courthouseLocation"                    => "court_agen_nm",
+                "hearingDate"                           => "hearing_dt",
+                "updateRequest_OldestDate"              => "update_request_submitted_dt",
+                "updateRequest_HasChangeOfPlea"         => "update_request_change_of_plea_yn",
+                "updateRequest_HasAdjournmentDocument"  => "update_request_adjournment_document_yn",
+                _                                       => null
             };
 
             if (target is not null)
