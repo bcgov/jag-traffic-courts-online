@@ -1,4 +1,4 @@
-import { Agency, DisputeStatus } from "app/api";
+import { Agency, DisputeStatus, DisputeUpdateRequestStatus } from "app/api";
 
 
   /**
@@ -8,6 +8,11 @@ export class TableFilterStatus {
   label: string;
   mapping: DisputeStatus[];
 }
+
+export class TableFilterUpdateRequestStatus {
+    label: string;
+    mapping: DisputeUpdateRequestStatus[];
+  }
 
 export const TableFilterStatusOptions = [{
         label: 'ALL',
@@ -36,8 +41,24 @@ export const TableFilterStatusOptions = [{
     },
 ];
 
+export const TableFilterUpdateRequestStatusOptions = [{
+        label: 'ALL',
+        mapping: [DisputeUpdateRequestStatus.Accepted, DisputeUpdateRequestStatus.Pending, DisputeUpdateRequestStatus.Rejected]
+    },{
+        label: 'ACCEPTED',
+        mapping: [DisputeUpdateRequestStatus.Accepted]
+    },{
+        label: 'PENDING',
+        mapping: [DisputeUpdateRequestStatus.Pending]
+    },{
+        label: 'REJECTED',
+        mapping: [DisputeUpdateRequestStatus.Rejected]
+    },
+];
+
 export const TableFilterStatusDefault: TableFilterStatus = TableFilterStatusOptions[0];
 export const UpdateRequestTableStatusDefault: TableFilterStatus = TableFilterStatusOptions[1];
+export const TableFilterUpdateRequestStatusDefault: TableFilterUpdateRequestStatus = TableFilterUpdateRequestStatusOptions[0];
 
 export class TableFilter {
   dateSubmittedFrom?: string;
@@ -50,6 +71,7 @@ export class TableFilter {
   team?: string;
   courthouseLocation?: Agency[];
   status?: TableFilterStatus = TableFilterStatusDefault;
+  updateRequestStatus?: TableFilterUpdateRequestStatus = TableFilterUpdateRequestStatusDefault;
 }
 export type TableFilterKeys = keyof TableFilter;
 export type TableFilterConfigs = {
