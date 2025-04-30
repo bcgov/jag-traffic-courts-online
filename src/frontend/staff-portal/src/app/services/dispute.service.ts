@@ -11,7 +11,8 @@ import {
     PagedDisputeListItemCollection, 
     OccamDisputeListItemModel,
     PagedOccamDisputeListItemCollection, 
-    DisputeStatus, 
+    DisputeStatus,
+    DisputeUpdateRequestStatus, 
     GetDisputeCountResponse, 
     SortDirection, 
     ExcludeStatus, 
@@ -66,8 +67,17 @@ export class DisputeService implements IDisputeService {
    *
    * @param none
    */
-  public getDisputesWithPendingUpdates(): Observable<PagedOccamDisputeWithUpdateRequestListItemCollection> {
-    return this.disputeApiService.apiV2OccamDisputeDisputeswithupdaterequestsGet()
+  public getDisputesWithPendingUpdates(
+    sortBy: Array<string>, 
+    sortDirection: Array<SortDirection>, 
+    pageNumber: number, 
+    filters?: TableFilter
+  ): Observable<PagedOccamDisputeWithUpdateRequestListItemCollection> {
+    var disputeStatuses = filters.status ? filters.status.mapping : [DisputeStatus.New, DisputeStatus.Validated, DisputeStatus.Processing, DisputeStatus.Rejected, DisputeStatus.Cancelled, DisputeStatus.Concluded];
+    var disputeUpdateRequestStatuses = filters.updateRequestStatus ? filters.updateRequestStatus.mapping : [DisputeUpdateRequestStatus.Accepted, DisputeUpdateRequestStatus.Pending, DisputeUpdateRequestStatus.Rejected];
+    var courthouseIds = filters.courthouseLocation ? filters.courthouseLocation.map(cl => cl.id) : [];
+    return this.disputeApiService.apiV2OccamDisputeDisputeswithupdaterequestsGet(undefined, undefined, filters.ticketNumber, filters.disputantSurname, 
+      disputeStatuses, filters.dateSubmittedFrom, filters.dateSubmittedTo, courthouseIds, disputeUpdateRequestStatuses, sortBy, sortDirection, undefined, pageNumber, 5)
       .pipe(
         map((response: PagedOccamDisputeWithUpdateRequestListItemCollection) => {
           this.logger.info('DisputeService::getDisputesWithPendingUpdates', response);

@@ -1,13 +1,14 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { MatSort } from '@angular/material/sort';
-import { DisputeService, DisputeWithUpdates } from 'app/services/dispute.service';
-import { Dispute, DisputeStatus, PagedDisputeListItemCollection, SortDirection } from 'app/api';
+import { DisputeService, DisputeWithUpdates, Dispute } from 'app/services/dispute.service';
+import { DisputeStatus, PagedDisputeListItemCollection, SortDirection } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 import { DateUtil } from '@shared/utils/date-util';
 import { TableFilter, TableFilterKeys, TableFilterStatus, TableFilterStatusOptions, UpdateRequestTableStatusDefault } from '@shared/models/table-filter-options.model';
 import { TableFilterService } from 'app/services/table-filter.service';
+import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-update-request-inbox',
@@ -27,6 +28,7 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
   defaultStatusFilter = UpdateRequestTableStatusDefault;
 
   displayedColumns: string[] = [
+    '__RedGreenAlert',
     'submittedTs',
     'ticketNumber',
     'disputantSurname',
@@ -69,7 +71,7 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
         this.userProfile = userProfile;
       }
     })
-    
+
     // when authentication token available, get data
     let dataFilter: TableFilter = this.tableFilterService.tableFilters[this.tabIndex];
     this.filters = dataFilter;
@@ -82,10 +84,10 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     this.logger.log('UpdateRequestInboxComponent::getAllDisputesWithPendingUpdates');
 
     this.dataSource.data = [];
-
     this.disputeService
-      .getDisputesWithPendingUpdates()
+      .getDisputesWithPendingUpdates(this.sortBy, this.sortDirection, this.currentPage != 0 ? this.currentPage : 1, this.filters)
       .subscribe((response) => {
+        this.disputes = [];
         this.logger.info(
           'UpdateRequestInboxComponent::getAllDisputesWithPendingUpdates response',
           response
@@ -98,45 +100,42 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
           this.currentPage = 0;
         }
 
-        this.dataSource.data = response as DisputeWithUpdates[];
-
-        // initially sort data by Date Submitted
-        this.dataSource.data = this.dataSource.data.sort((a: DisputeWithUpdates, b: DisputeWithUpdates) => { if (a.submittedTs > b.submittedTs) { return -1; } else { return 1 } });
-
-        // this section allows filtering by ticket number or partial ticket number by setting the filter predicate
-        this.dataSource.filterPredicate = this.searchFilter;
-        this.onApplyFilter(this.tableFilterService.tableFilters[this.tabIndex]);
+        response.items.forEach((dispute: Dispute) => {
+          dispute.__RedGreenAlert = dispute.status == DisputeStatus.New ? 'Green' : '',
+            this.disputes.push(dispute);
+        });      
+        this.dataSource.data = this.disputes;
       }
     );
   }
+
+    sortData(sort: Sort){
+      this.sortBy = [sort.active];
+      this.sortDirection = [sort.direction ? sort.direction as SortDirection : SortDirection.Desc];
+      this.currentPage = 1;
+      this.tableFilterService.currentPage[this.tabIndex] = 1;
+      this.getAllDisputesWithPendingUpdates();
+    }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.tickTbSort;
   }
 
-  searchFilter = function (record: DisputeWithUpdates, filter: string) {
-    let searchTerms = JSON.parse(filter);
-    return Object.entries(searchTerms).every(([field, value]: [string, string]) => {
-      if ("dateSubmittedFrom" === field) {
-        return !value || !DateUtil.isValid(value) || DateUtil.isDateOnOrAfter(record.submittedTs, value);
-      }
-      else if ("dateSubmittedTo" === field) {
-        return !value || !DateUtil.isValid(value) || DateUtil.isDateOnOrBefore(record.submittedTs, value);
-      }
-      else if ("status" === field) {
-        var status = record[field];
-        var statusFilters = (value as unknown) as TableFilterStatus;
-        return statusFilters.mapping.includes(status);
-      }
-      else if (record[field]) {
-        return record[field].toLocaleLowerCase().indexOf(value.trim().toLocaleLowerCase()) != -1;
-      }
-      return true;
-    });
-  };
 
   onApplyFilter(dataFilters: TableFilter) {
-    this.dataSource.filter = JSON.stringify(dataFilters);
+    if (JSON.stringify(this.previousFilters) !== JSON.stringify(dataFilters)) { // Add this line
+      this.currentPage = 1;
+      this.tableFilterService.currentPage[this.tabIndex] = 1;
+    }
+    this.filters = dataFilters;
+    this.previousFilters = { ...dataFilters };
+    this.getAllDisputesWithPendingUpdates();
+  }
+
+  onPageChange(event: number) {
+    this.currentPage = event;
+    this.tableFilterService.currentPage[this.tabIndex] = event;
+    this.getAllDisputesWithPendingUpdates();
   }
 
   backWorkbench(element) {
