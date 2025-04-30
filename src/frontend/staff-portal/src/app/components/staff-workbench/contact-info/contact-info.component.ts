@@ -79,7 +79,7 @@ export class ContactInfoComponent implements OnInit {
       addressProvinceCountryId: [null],
       addressProvinceSeqNo: [null],
       addressCountryId: [null, [Validators.required]],
-      rejectedReason: [null, Validators.maxLength(256)], // Optional
+      rejectedReason: [null, Validators.maxLength(4000)], // Optional
       postalCode: [null],
       driversLicenceNumber: [null], // Optional
       driversLicenceProvinceProvId: [null],

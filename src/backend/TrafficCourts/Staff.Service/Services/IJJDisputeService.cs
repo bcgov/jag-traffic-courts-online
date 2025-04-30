@@ -63,7 +63,7 @@ public interface IJJDisputeService
 
     /// <summary>Updates the status of a particular JJDispute record to REVIEW as well as adds an optional remark that explaining why the status was set to REVIEW.</summary>
     /// <param name="ticketNumber">Ticket number JJ Dispute record.</param>
-    /// <param name="remark">The remark or note (max 256 characters) the JJDispute was set to REVIEW.</param>
+    /// <param name="remark">The remark or note (max 4000 characters) the JJDispute was set to REVIEW.</param>
     /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
     /// <param name="user">The user executing the operation</param>
     /// <param name="recalled">Indicates the dispute is re-opened by a JJ</param>
@@ -75,7 +75,7 @@ public interface IJJDisputeService
 
     /// <summary>Updates the status of a particular JJDispute record to REQUIRE_COURT_HEARING as well as adds an optional remark that explaining why the status was set to REVIEW and sets hearing type to COURT_APPEARANCE.</summary>
     /// <param name="ticketNumber">Ticket number for a specific JJ Dispute record.</param>
-    /// <param name="remark">The remark or note (max 256 characters) the JJDispute was set.</param>
+    /// <param name="remark">The remark or note (max 4000 characters) the JJDispute was set.</param>
     /// <param name="user">The user executing the operation</param>    
     /// <param name="cancellationToken"></param>
     /// <returns></returns>

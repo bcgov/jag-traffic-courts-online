@@ -1065,7 +1065,7 @@ export class JJService {
     /**
      * Updates the status of a particular JJDispute record to REQUIRE_COURT_HEARING, hearing type to COURT_APPEARANCE as well as adds an optional remark that explaining why the status was set.
      * @param ticketNumber Unique identifier for a specific JJ Dispute record.
-     * @param remark The remark or note (max 256 characters) the JJDispute was set to REVIEW.
+     * @param remark The remark or note (max 4000 characters) the JJDispute was set to REVIEW.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -1153,7 +1153,7 @@ export class JJService {
      * Updates the status of a particular JJDispute record to REVIEW as well as adds an optional remark that explaining why the status was set to REVIEW.
      * @param ticketNumber Unique identifier for a specific JJ Dispute record.
      * @param checkVTC boolean to indicate need to check VTC assigned.
-     * @param remark The remark or note (max 256 characters) the JJDispute was set to REVIEW.
+     * @param remark The remark or note (max 4000 characters) the JJDispute was set to REVIEW.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */

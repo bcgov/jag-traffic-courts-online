@@ -155,7 +155,7 @@ export class TicketInfoComponent implements OnInit {
       driversLicenceProvinceProvId: [null],
       driversLicenceCountryId: [null],
       driversLicenceProvinceSeqNo: [null],
-      rejectedReason: [null, Validators.maxLength(256)],
+      rejectedReason: [null, Validators.maxLength(4000)],
       violationTicket: this.formBuilder.group({
         ticketNumber: [null, Validators.required],
         courtLocation: [null, [Validators.required, Validators.maxLength(50)]],

@@ -35,7 +35,7 @@ export class ConfirmReasonDialogComponent {
     this.dialogContentOutput = null;
 
     this.reasonForm = this.fb.group({
-      reason: [this.options.message, [Validators.maxLength(256), Validators.required]]
+      reason: [this.options.message, [Validators.maxLength(4000), Validators.required]]
     })
 
     this.authService.userProfile$.subscribe(userProfile => {

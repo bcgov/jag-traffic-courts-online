@@ -52,7 +52,7 @@
     </div>
   </section>
   <mat-form-field class="custom-form-field">
-    <textarea matInput maxlength="256" style="min-height: 20vh;" [formControl]="reasonForm.get('reason')"></textarea>
+    <textarea matInput maxlength="4000" style="min-height: 20vh;" [formControl]="reasonForm.get('reason')"></textarea>
     <mat-error *ngIf="reasonForm.get('reason').hasError('required')">{{ "error.required" | translate
     }}</mat-error>
   </mat-form-field>
