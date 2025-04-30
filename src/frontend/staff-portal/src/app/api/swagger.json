@@ -8326,6 +8326,24 @@
           "courtAgenName": {
             "type": "string",
             "nullable": true
+          },
+          "hearingDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updateRequest_OldestDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updateRequest_HasChangeOfPlea": {
+            "type": "string",
+            "nullable": true
+          },
+          "updateRequest_HasAdjournmentDocument": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
