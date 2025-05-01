@@ -77,7 +77,7 @@ export class DisputeService implements IDisputeService {
     var disputeUpdateRequestStatuses = filters.updateRequestStatus ? filters.updateRequestStatus.mapping : [DisputeUpdateRequestStatus.Accepted, DisputeUpdateRequestStatus.Pending, DisputeUpdateRequestStatus.Rejected];
     var courthouseIds = filters.courthouseLocation ? filters.courthouseLocation.map(cl => cl.id) : [];
     return this.disputeApiService.apiV2OccamDisputeDisputeswithupdaterequestsGet(undefined, undefined, filters.ticketNumber, filters.disputantSurname, 
-      disputeStatuses, filters.dateSubmittedFrom, filters.dateSubmittedTo, courthouseIds, disputeUpdateRequestStatuses, sortBy, sortDirection, undefined, pageNumber, 5)
+      disputeStatuses, filters.dateSubmittedFrom, filters.dateSubmittedTo, courthouseIds, disputeUpdateRequestStatuses, sortBy, sortDirection, undefined, pageNumber, 25)
       .pipe(
         map((response: PagedOccamDisputeWithUpdateRequestListItemCollection) => {
           this.logger.info('DisputeService::getDisputesWithPendingUpdates', response);
