@@ -22,12 +22,12 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="submittedTs">
+    <ng-container matColumnDef="updateRequest_OldestDate">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Dispute Submitted
+          Update Submitted
         </th>
         <td mat-cell *matCellDef="let element">
-          <span>{{ element.submittedTs | date: 'dd-MMM-yyyy' }}</span>
+          <span>{{ element.updateRequest_OldestDate | date: 'dd-MMM-yyyy' }}</span>
         </td>
       </ng-container>
 

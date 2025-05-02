@@ -29,7 +29,7 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [
     '__RedGreenAlert',
-    'submittedTs',
+    'updateRequest_OldestDate',
     'ticketNumber',
     'disputantSurname',
     'disputantGivenNames',
@@ -45,7 +45,7 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
 
   currentPage: number = 1;
   totalPages: number = 1;
-  sortBy: Array<string> = ["submittedTs"];
+  sortBy: Array<string> = ["updateRequest_OldestDate"];
   sortDirection: Array<SortDirection> = [SortDirection.Desc];
 
   public userProfile: KeycloakProfile = {};
@@ -82,7 +82,6 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
 
   getAllDisputesWithPendingUpdates(): void {
     this.logger.log('UpdateRequestInboxComponent::getAllDisputesWithPendingUpdates');
-
     this.dataSource.data = [];
     this.disputeService
       .getDisputesWithPendingUpdates(this.sortBy, this.sortDirection, this.currentPage != 0 ? this.currentPage : 1, this.filters)
