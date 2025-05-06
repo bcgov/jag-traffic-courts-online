@@ -110,7 +110,7 @@ public class Handler : IRequestHandler<Request, Response>
     {
         AddUtcDateRangeFilter(parameters, "submitted_dt", request.Parameters.TimeZone, request.Parameters.From, request.Parameters.Thru);
         AddStartFilter(parameters, "ticket_number_txt", request.Parameters.TicketNumber);
-        AddStartFilter(parameters, "disputant_surname_nm", request.Parameters.Surname, false);
+        AddStartFilter(parameters, "disputant_surname_nm", request.Parameters.Surname?.ToUpper(), false);
 
         // We're hardcoding this to always filter on PEND because that's what V1 API did.
         // Probably this should come from the UI instead?
