@@ -81,6 +81,10 @@ export class DisputeService implements IDisputeService {
       .pipe(
         map((response: PagedOccamDisputeWithUpdateRequestListItemCollection) => {
           this.logger.info('DisputeService::getDisputesWithPendingUpdates', response);
+          this._disputes.next(response.items);
+          response.items.forEach(dispute => {
+            dispute = this.joinDisputantGivenNames(dispute);
+          });
           // response.items.forEach(x => {
           //   x.disputantGivenNames = `${x.disputantGivenName1}${x.disputantGivenName2 ? ' ' + x.disputantGivenName2 : ''}${x.disputantGivenName3 ? ' ' + x.disputantGivenName3 : ''}`;
           // });
