@@ -32,7 +32,7 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     'updateRequest_OldestDate',
     'ticketNumber',
     'disputantSurname',
-    'disputantGivenNames',
+    'disputantGivenName1',
     'courthouseLocation',
     'hearingDate',
     'changeOfPlea',
