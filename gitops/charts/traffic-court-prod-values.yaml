@@ -238,7 +238,7 @@ staff-api:
   pdb:
     create: true
   image:
-    tag: "2.10.7"
+    tag: "2.10.6.1"
     pullPolicy: Always
   env:    
     "Jwt__Audience": "staff-api"
@@ -282,7 +282,7 @@ staff-web:
     {
         "production": true,
         "environment": "prod",
-        "version": "2.10.7",
+        "version": "2.10.6.1",
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "features": {
