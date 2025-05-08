@@ -613,6 +613,8 @@ internal partial class OracleDataApiService : IOracleDataApiService
                 oracleBody.ViolationTicket = CreateViolationTicketFromDispute(oracleBody);
             }
 
+            // _logger.LogTrace("Saving dispute with ticket number {@OracleDisputeBody}", oracleBody);
+
             long id = await _client.SaveDisputeAsync(oracleBody, cancellationToken);
 
             await PublishDisputeChanged(id, cancellationToken);
@@ -850,6 +852,13 @@ internal partial class OracleDataApiService : IOracleDataApiService
     {
         Oracle.ViolationTicket violationTicket = new();
         violationTicket.TicketNumber = dispute.TicketNumber;
+        violationTicket.DisputantGivenNames = dispute.DisputantGivenName1;
+        violationTicket.DisputantSurname = dispute.DisputantSurname;
+        violationTicket.IssuedTs = dispute.IssuedTs;
+        violationTicket.DisputantBirthdate = dispute.DisputantBirthdate;
+        violationTicket.OfficerPin = dispute.OfficerPin;
+        violationTicket.DetachmentLocation = dispute.DetachmentLocation;
+
         // Stub out the violationsTicketCounts with default count no for mapping dispute counts properly in Oracle API
         List<Oracle.ViolationTicketCount> violationTicketCounts = new();
         for (int i = 1; i <= 3; i++)
