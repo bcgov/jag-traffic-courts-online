@@ -1718,6 +1718,351 @@
         }
       }
     },
+    "/api/v2/occam/dispute/disputes": {
+      "get": {
+        "tags": [
+          "Dispute"
+        ],
+        "summary": "Returns all Disputes from the Oracle Data API with given parameters.",
+        "parameters": [
+          {
+            "name": "time_zone",
+            "in": "query",
+            "description": "The status to exclude",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "excludeStatus",
+            "in": "query",
+            "description": "The status to exclude",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ExcludeStatus"
+              }
+            }
+          },
+          {
+            "name": "ticket",
+            "in": "query",
+            "description": "The optional ticket number to search on. The value will be searched using contains.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "surname",
+            "in": "query",
+            "description": "The optional surname to search on. The value will be searched using contains.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "The optional status to find.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/DisputeStatus"
+              }
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "The optional from date to search. The submitted date will be filtered where greater or equal to this value.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "thru",
+            "in": "query",
+            "description": "The optional thru date to search. The submitted date will be filtered where less than or equal to this value.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "courthouseId",
+            "in": "query",
+            "description": "The optional court house location to search. The value will be searched using contains.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "The optional sort by contains the attribute name to sort. The data is sorted on the attribute.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "description": "The optional sort direction contains the asc or desc. The data is sorted by given direction.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/SortDirection"
+              }
+            }
+          },
+          {
+            "name": "DefaultPageSize",
+            "in": "query",
+            "description": "The default page size contains the default count of records.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "The optional page number gives the records from given page",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "The optional page size sets the record count",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The Disputes were found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedOccamDisputeListItemCollection"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Request lacks valid authentication credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, requires dispute:read permission.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the search from completing successfully or no data found."
+          }
+        }
+      }
+    },
+    "/api/v2/occam/dispute/disputeswithupdaterequests": {
+      "get": {
+        "tags": [
+          "Dispute"
+        ],
+        "summary": "Returns all Disputes that have pending update requests from the Oracle Data API",
+        "parameters": [
+          {
+            "name": "time_zone",
+            "in": "query",
+            "description": "The status to exclude",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "excludeStatus",
+            "in": "query",
+            "description": "The status to exclude",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ExcludeStatus"
+              }
+            }
+          },
+          {
+            "name": "ticket",
+            "in": "query",
+            "description": "The optional ticket number to search on. The value will be searched using contains.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "surname",
+            "in": "query",
+            "description": "The optional surname to search on. The value will be searched using contains.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "The optional status to find.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/DisputeStatus"
+              }
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "The optional from date to search. The submitted date will be filtered where greater or equal to this value.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "thru",
+            "in": "query",
+            "description": "The optional thru date to search. The submitted date will be filtered where less than or equal to this value.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "courthouseId",
+            "in": "query",
+            "description": "The optional court house location to search. The value will be searched using contains.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "requestStatus",
+            "in": "query",
+            "description": "The optional status to find.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/DisputeUpdateRequestStatus"
+              }
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "The optional sort by contains the attribute name to sort. The data is sorted on the attribute.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "description": "The optional sort direction contains the asc or desc. The data is sorted by given direction.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/SortDirection"
+              }
+            }
+          },
+          {
+            "name": "DefaultPageSize",
+            "in": "query",
+            "description": "The default page size contains the default count of records.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "The optional page number gives the records from given page",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "The optional page size sets the record count",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The Disputes were found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedOccamDisputeWithUpdateRequestListItemCollection"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Request lacks valid authentication credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, requires dispute:read permission.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the search from completing successfully or no data found."
+          }
+        }
+      }
+    },
     "/api/disputelock": {
       "get": {
         "tags": [
@@ -6388,6 +6733,15 @@
         },
         "additionalProperties": false
       },
+      "DisputeUpdateRequestStatus": {
+        "enum": [
+          "UNKNOWN",
+          "ACCEPTED",
+          "PENDING",
+          "REJECTED"
+        ],
+        "type": "string"
+      },
       "DisputeUpdateRequestStatus2": {
         "enum": [
           "UNKNOWN",
@@ -7800,6 +8154,208 @@
         },
         "additionalProperties": false
       },
+      "OccamDisputeListItemModel": {
+        "type": "object",
+        "properties": {
+          "disputeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ticketNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "submittedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "disputantSurname": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputantGivenName1": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputantGivenName2": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputantGivenName3": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/DisputeListItemStatus"
+          },
+          "emailAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "emailAddressVerified": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "filingDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "requestCourtAppearanceYn": {
+            "$ref": "#/components/schemas/DisputeRequestCourtAppearanceYn"
+          },
+          "userAssignedTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputantDetectedOcrIssues": {
+            "$ref": "#/components/schemas/DisputeDisputantDetectedOcrIssues"
+          },
+          "systemDetectedOcrIssues": {
+            "$ref": "#/components/schemas/DisputeSystemDetectedOcrIssues"
+          },
+          "interpreterRequired": {
+            "$ref": "#/components/schemas/DisputeInterpreterRequired"
+          },
+          "violationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "jjAssignedTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "decisionMadeBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "jjDecisionDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "courtAgenId": {
+            "type": "string",
+            "nullable": true
+          },
+          "courtAgenName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OccamDisputeWithUpdateRequestListItemModel": {
+        "type": "object",
+        "properties": {
+          "disputeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ticketNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "submittedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "disputantSurname": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputantGivenName1": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputantGivenName2": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputantGivenName3": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/DisputeListItemStatus"
+          },
+          "emailAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "emailAddressVerified": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "filingDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "requestCourtAppearanceYn": {
+            "$ref": "#/components/schemas/DisputeRequestCourtAppearanceYn"
+          },
+          "userAssignedTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputantDetectedOcrIssues": {
+            "$ref": "#/components/schemas/DisputeDisputantDetectedOcrIssues"
+          },
+          "systemDetectedOcrIssues": {
+            "$ref": "#/components/schemas/DisputeSystemDetectedOcrIssues"
+          },
+          "interpreterRequired": {
+            "$ref": "#/components/schemas/DisputeInterpreterRequired"
+          },
+          "violationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "jjAssignedTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "decisionMadeBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "jjDecisionDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "courtAgenId": {
+            "type": "string",
+            "nullable": true
+          },
+          "courtAgenName": {
+            "type": "string",
+            "nullable": true
+          },
+          "hearingDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updateRequest_OldestDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updateRequest_HasChangeOfPlea": {
+            "type": "string",
+            "nullable": true
+          },
+          "updateRequest_HasAdjournmentDocument": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "OcrViolationTicket": {
         "type": "object",
         "properties": {
@@ -7898,6 +8454,64 @@
           "isLastPage": {
             "type": "boolean",
             "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagedOccamDisputeListItemCollection": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OccamDisputeListItemModel"
+            },
+            "nullable": true
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalRows": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagedOccamDisputeWithUpdateRequestListItemCollection": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OccamDisputeWithUpdateRequestListItemModel"
+            },
+            "nullable": true
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalRows": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

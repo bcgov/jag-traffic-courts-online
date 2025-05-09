@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
+using TrafficCourts.OrdsDataService.Tco;
 
 namespace TrafficCourts.OrdsDataService.Justin;
 
 internal class CountryRepository : OrdsRepository<CountryRepository>, ICountryRepository
 {
-    public CountryRepository(OrdsDataServiceClient client, ILogger<CountryRepository> logger) 
+    public CountryRepository(TcoOrdsDataServiceClient client, ILogger<CountryRepository> logger) 
         : base(client, "/v2/justin_countries", logger)
     {
     }

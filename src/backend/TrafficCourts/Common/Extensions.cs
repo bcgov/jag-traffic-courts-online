@@ -119,7 +119,7 @@ public static partial class Extensions
         return model;
     }
 
-    public static TrafficCourts.Domain.Models.Statute ToDomainModel(this TrafficCourts.OrdsDataService.Justin.Statute statute, StringBuilder buffer)
+    public static TrafficCourts.Domain.Models.Statute ToDomainModel(this OrdsDataService.Justin.Statute statute, StringBuilder buffer)
     {
         var model = new TrafficCourts.Domain.Models.Statute
         (

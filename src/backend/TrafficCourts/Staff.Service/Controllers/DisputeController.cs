@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -574,6 +575,9 @@ public class DisputeController : StaffControllerBase
     /// <response code="403">Forbidden, requires dispute:read permission.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A collection of Dispute records</returns>
+#if DEBUG
+    [AllowAnonymous]
+#endif
     [HttpGet("disputesWithUpdateRequests")]
     [ProducesResponseType(typeof(IList<DisputeWithUpdates>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

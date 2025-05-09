@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
+using TrafficCourts.OrdsDataService.Tco;
 
 namespace TrafficCourts.OrdsDataService.Justin;
 
 internal class CityRepository : OrdsRepository<CityRepository>, ICityRepository
 {
-    public CityRepository(OrdsDataServiceClient client, ILogger<CityRepository> logger) 
+    public CityRepository(TcoOrdsDataServiceClient client, ILogger<CityRepository> logger) 
         : base(client, "/v2/justin_cities", logger)
     {
     }
