@@ -111,7 +111,7 @@ public class Handler : IRequestHandler<Request, Response>
     {
         AddUtcDateRangeFilter(parameters, "submitted_dt", request.Parameters.TimeZone, request.Parameters.From, request.Parameters.Thru);
         AddStartFilter(parameters, "ticket_number_txt", request.Parameters.TicketNumber);
-        AddStartFilter(parameters, "disputant_surname_nm", request.Parameters.Surname?.ToUpper(), false);
+        AddStartFilter(parameters, "upper_disputant_surname_nm", request.Parameters.Surname?.ToUpper(), false);
 
         if (request.Parameters.Status is not null)
         {
@@ -206,8 +206,8 @@ public class Handler : IRequestHandler<Request, Response>
                 "disputeId"                     => "dispute_id",
                 "submittedTs"                   => "submitted_dt",
                 "ticketNumber"                  => "ticket_number_txt",
-                "disputantSurname"              => "disputant_surname_nm",
-                "disputantGivenName1"           => "disputant_given_1_nm",
+                "disputantSurname"              => "upper_disputant_surname_nm",
+                "disputantGivenName1"           => "upper_disputant_given_1_nm",
                 "status"                        => "dispute_status_type_cd",
                 "requestCourtAppearanceYn"      => "request_court_appearance_yn",
                 "disputantDetectedOcrIssues"    => "disputant_detect_ocr_issues_yn",
