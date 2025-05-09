@@ -38,8 +38,8 @@ export class NoticeOfDisputeService {
     contact_given_names: { value: null, options: { validators: [Validators.maxLength(92)] } },
     contact_surname: { value: null, options: { validators: [Validators.maxLength(30)] } },
     contact_law_firm_name: { value: null, options: { validators: [Validators.maxLength(200)] } },
-    contact_type: { value: this.ContactType.Individual, options: { validators: [Validators.required] } },
-    address: { value: null, options: { validators: [Validators.required, Validators.maxLength(304)] } },
+    contact_type: { value: null, options: { validators: [Validators.required] } },
+    address: { value: null, options: { validators: [Validators.required, Validators.maxLength(304), FormControlValidators.containsEmailPattern] } },
     address_city: { value: null, options: { validators: [Validators.required, Validators.maxLength(30)] } },
     address_province: { value: null, options: { validators: [Validators.required, Validators.maxLength(30)] } },
     address_province_country_id: null,
@@ -224,7 +224,7 @@ export class NoticeOfDisputeService {
                 this.router.navigate([AppRoutes.SUBMIT_SUCCESS], {
                   queryParams: {
                     ticketNumber: input.ticket_number,
-                    time: this.datePipe.transform(input.issued_date, "HH:mm", "UTC"),
+                    time: this.datePipe.transform(input.issued_date, "HH:mm"),
                     mode: DisputeFormMode.CREATE
                   },
                 });

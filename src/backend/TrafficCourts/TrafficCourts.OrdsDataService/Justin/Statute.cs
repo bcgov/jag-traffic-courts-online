@@ -11,5 +11,7 @@ public record Statute
     public string? stat_sub_paragraph_txt { get; set; } = string.Empty;
     public string stat_short_description_txt { get; set; } = string.Empty;
     public string stat_description_txt { get; set; } = string.Empty;
+    public DateTime stat_effective_dt { get; set; }
+    public DateTime? stat_termination_dt { get; set; }
 #pragma warning restore IDE1006 // Naming Styles
 }

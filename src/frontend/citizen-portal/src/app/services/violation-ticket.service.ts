@@ -95,7 +95,6 @@ export class ViolationTicketService {
       .pipe(
         map((response: ViolationTicket) => {
           if (response) {
-            response.issued_date = this.datePipe.transform(response.issued_date, "yyyy-MM-ddTHH:mm:ss'Z'"); // e-tickets need this
             this._ticket.next(response);
             if (this.validateTicket(params)) {
               this.goToInitiateResolution(params);
@@ -188,7 +187,7 @@ export class ViolationTicketService {
   validateTicket(params?: QueryParamsForSearch): boolean {
     var result = false;
     if (this.ticket && this.ticket.issued_date) {
-      var storedTicketTime = this.datePipe.transform(this.ticket.issued_date, "HH:mm", "UTC");
+      var storedTicketTime = this.datePipe.transform(this.ticket.issued_date, "HH:mm");
       if (this.ticket.ticket_number === params.ticketNumber && storedTicketTime === params.time) {
         result = true;
       }
@@ -251,7 +250,7 @@ export class ViolationTicketService {
       result.drivers_licence_number = (<Field>source.fields[this.driversLicenceNumberKey]).value;
     }
     if (isDateFound || isTimeFound) {
-      result.issued_date = this.datePipe.transform(result[this.ocrTicketDateKey] + " " + result[this.ocrTicketTimeKey], "yyyy-MM-ddTHH:mm:ss'Z'");
+      result.issued_date = `${result[this.ocrTicketDateKey]}T${result[this.ocrTicketTimeKey]}`;
     }
     if (isDateFound) {
       result[this.ocrTicketDateKey] = this.datePipe.transform(result[this.ocrTicketDateKey], "MMM dd, yyyy", "UTC");
@@ -323,7 +322,7 @@ export class ViolationTicketService {
     if (this.ticket) {
       let params = paramsInput ?? {
         ticketNumber: this.ticket.ticket_number,
-        time: this.datePipe.transform(this.ticket.issued_date, "HH:mm", "UTC")
+        time: this.datePipe.transform(this.ticket.issued_date, "HH:mm")
       };
       let dateDiff = this.dateDiff(this.ticket.issued_date); // for electronic or camera tickets
       if (this.ticketType === TicketTypes.HANDWRITTEN_TICKET) { // for handwritten tickets use service date

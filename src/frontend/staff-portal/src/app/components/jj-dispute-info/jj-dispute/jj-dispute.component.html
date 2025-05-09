@@ -83,11 +83,11 @@
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Violation Date</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "dd-MMM-yyyy" : "UTC" }}</p>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "dd-MMM-yyyy" }}</p>
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Violation Time</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "HH:mm" : "UTC" }}</p>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "HH:mm" }}</p>
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Online Submission Date</p>
@@ -422,7 +422,7 @@
         <app-jj-dispute-court-appearances [data]="lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs">
         </app-jj-dispute-court-appearances>
       </section>
-      <section *ngIf="tcoDisputeInfo.hearingType === HearingTypeCodes.WrittenReasons" class="section-sticky">
+      <section *ngIf="tcoDisputeInfo.hearingType === HearingTypeCodes.WrittenReasons || tcoDisputeInfo.hearingType === HearingTypeCodes.CourtAppearance" class="section-sticky">
         <ng-container subHeader>
           <span>
             <h3>Disputant Statement</h3>
@@ -511,7 +511,7 @@
 
       <span #uploadedDocuments></span>
       <mat-accordion multi [togglePosition]="'before'" class="info-expansion-panel">
-        <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel [expanded]="false">
           <mat-expansion-panel-header>
             <mat-panel-title>
               <span style="color: black;"><b>Documents</b></span>
@@ -532,10 +532,10 @@
             <button type="button" class="linkbutton" (click)="onGetFile(doc.fileId)"
               *ngIf="doc.virusScanStatus === 'clean'">{{ doc.fileName }}</button>&nbsp;
             <span *ngIf="doc.virusScanStatus !== 'clean'">{{ doc.fileName }} {{ doc.virusScanStatus }}</span>
-            <button type="button" style="width:50px !important; border:none; background-color:white"
+            <button *ngIf="!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))" type="button" style="width:50px !important; border:none; background-color:white"
               (click)="onRemoveFile(doc.fileId, doc.fileName)"><mat-icon style="color:red">delete</mat-icon></button>
           </div>
-          <div>
+          <div *ngIf="!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))">
             <label>File type for upload:</label>
             <mat-form-field appearance="outline" style="display: inline-flex;">
               <mat-select [(ngModel)]="fileTypeToUpload">
@@ -545,11 +545,11 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <button class="large" mat-flat-button type="button" color="primary"
+          <button *ngIf="!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))" class="large" mat-flat-button type="button" color="primary"
             onclick="document.getElementById('getFile').click()">
             <mat-icon>upload</mat-icon>&nbsp;Upload File
           </button>
-          <input type="file" id="getFile" style="display:none" accept="image/*,.pdf"
+          <input *ngIf="!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))" type="file" id="getFile" style="display:none" accept="image/*,.pdf"
             (change)="onUpload($event.target.files)">
         </mat-expansion-panel>
 
@@ -566,7 +566,7 @@
         </mat-expansion-panel>
 
         <span #disputantUpdates></span>
-        <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel [expanded]="false">
           <mat-expansion-panel-header>
             <mat-panel-title>
               <span style="color: black;"><b>{{ "label.disputant_updates" | translate }}</b></span>
@@ -578,7 +578,7 @@
         </mat-expansion-panel>
 
         <span #fileRemarks></span>
-        <mat-expansion-panel [expanded]="true" id="file-remarks">
+        <mat-expansion-panel [expanded]="false" id="file-remarks">
           <mat-expansion-panel-header>
             <mat-panel-title>
               <span style="color: black;"><b>File Remarks </b></span>

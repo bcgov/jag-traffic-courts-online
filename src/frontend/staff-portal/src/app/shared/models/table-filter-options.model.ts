@@ -59,6 +59,7 @@ export const TableFilterUpdateRequestStatusOptions = [{
 export const TableFilterStatusDefault: TableFilterStatus = TableFilterStatusOptions[0];
 export const UpdateRequestTableStatusDefault: TableFilterStatus = TableFilterStatusOptions[1];
 export const TableFilterUpdateRequestStatusDefault: TableFilterUpdateRequestStatus = TableFilterUpdateRequestStatusOptions[0];
+export const TicketValidationTableStatusDefault: TableFilterStatus = TableFilterStatusOptions[1];
 
 export class TableFilter {
   dateSubmittedFrom?: string;

@@ -1,6 +1,6 @@
 <div class="contact-info">
   <!-- Count Information -->
-  <section class="section-sticky">
+  <section class="section-sticky" [ngClass]="{'greyed-out': !jjDisputedCount}">
     <ng-container subHeader>
       <span class="count-text">
         <h3>Count {{ count }} <span class="medium-note"><i>(source Ticket & ICBC)</i></span></h3>
@@ -10,7 +10,7 @@
       <div style="display: grid; grid-template-columns: auto auto">
         <span class="section-grid-cell">
           <p class="section-grid-header">Offence Date</p>
-          <p class="section-grid-text">{{ jjDisputedCount ? (jjDisputeInfo.issuedTs | date: "dd-MMM-yyyy" : "UTC") : '&nbsp;' }}</p>
+          <p class="section-grid-text">{{ jjDisputedCount ? (jjDisputeInfo.issuedTs | date: "dd-MMM-yyyy") : '&nbsp;' }}</p>
         </span>
         <span class="section-grid-cell" style="grid-column: span 2">
           <p class="section-grid-header">Description of offence</p>
@@ -29,7 +29,7 @@
   </section>
 
   <!-- Disputant Request -->
-  <section class="section-sticky">
+  <section class="section-sticky" [ngClass]="{'greyed-out': !jjDisputedCount}">
     <ng-container subHeader>
       <span class="count-text">
         <h3>Disputant Request <span class="medium-note"><i>(source Online Portal)</i></span></h3>
@@ -96,7 +96,7 @@
   </section>
 
   <!-- JJ Latest Change Plea -->
-  <section [formGroup]="form" *ngIf="(jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !(isSSEditMode && jjDisputedCount)">
+  <section [formGroup]="form" [ngClass]="{'greyed-out': !jjDisputedCount}" *ngIf="(jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !(isSSEditMode && jjDisputedCount)">
     <ng-container subHeader>
       <span class="count-text">
         <h3>{{ "label.jj_decision" | translate }} - Count {{ count }}</h3>
@@ -137,7 +137,7 @@
     </div>
   </section>
 
-  <section *ngIf="(jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && (isSSEditMode && jjDisputedCount)">
+  <section [ngClass]="{'greyed-out': !jjDisputedCount}" *ngIf="(jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && (isSSEditMode && jjDisputedCount)">
     <form [formGroup]="countForm">
       <ng-container subHeader>
         <span class="count-text">
@@ -161,7 +161,7 @@
   </section>
 
   <!-- JJ RoP for Court Appearance -->
-  <section *ngIf="type !== tabTypes.DECISION_VALIDATION && type !== tabTypes.DCF && (jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !isSSEditMode">
+  <section [ngClass]="{'greyed-out': !jjDisputedCount}" *ngIf="type !== tabTypes.DECISION_VALIDATION && type !== tabTypes.DCF && (jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !isSSEditMode">
     <ng-container subHeader>
       <span class="count-text">
         <h3>{{ "label.findings" | translate }}</h3>
@@ -196,7 +196,7 @@
       </div>
     </div>
   </section>
-  <section *ngIf="(type === tabTypes.DECISION_VALIDATION || type === tabTypes.DCF) && (jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !isSSEditMode">
+  <section [ngClass]="{'greyed-out': !jjDisputedCount}" *ngIf="(type === tabTypes.DECISION_VALIDATION || type === tabTypes.DCF) && (jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !isSSEditMode">
     <ng-container subHeader>
       <span class="count-text">
         <h3>{{ "label.findings" | translate }}</h3>
@@ -221,7 +221,7 @@
   </section>
 
   <!-- Findings -->
-  <section *ngIf="(jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && isSSEditMode">
+  <section [ngClass]="{'greyed-out': !jjDisputedCount}" *ngIf="(jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && isSSEditMode">
     <ng-container subHeader>
       <span class="count-text">
         <h3>{{ "label.findings" | translate }}</h3>
@@ -246,7 +246,7 @@
   </section>
 
   <!-- Final disposition -->
-  <section>
+  <section [ngClass]="{'greyed-out': !jjDisputedCount}">
     <ng-container subHeader>
       <span class="count-text">
         <h3>{{ "label.final_disposition" | translate }}</h3>
@@ -462,7 +462,7 @@
               <span class="count-text" style="font-size: small"><b>Driving Prohibition</b></span>
             </mat-checkbox>
             <br />
-            <div style="padding-left: 0.75rem;">
+            <div *ngIf="form?.controls.jjDisputedCountRoP?.controls.drivingProhibitionCheckbox.value" style="padding-left: 0.75rem;">
               <mat-label class="section-grid-header">Duration</mat-label><br />
               <input matInput (placeholder)="isViewOnly ? '' : 'duration'" formControlName="drivingProhibition" /><br />
               <mat-label class="section-grid-header">MVA Section</mat-label><br />
@@ -499,10 +499,11 @@
             </mat-checkbox><br /><br />
             <mat-checkbox *ngIf="isViewOnly === false" [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"
               formControlName="stayOfProceedingsByCheckbox" (change)="onStayOfProceedingsByCheck($event.checked)">
-              <span class="count-text" style="font-size: small"><b>Stay of Proceedings By</b></span>
-            </mat-checkbox>
-            <br />
-            <input matInput (placeholder)="isViewOnly ? '' : 'JJ'" formControlName="stayOfProceedingsBy" /><br />
+              <span class="count-text" style="font-size: small;display: block;"><b>Stay of Proceedings By</b></span>
+            </mat-checkbox><br />
+            <ng-container *ngIf="form?.controls.jjDisputedCountRoP?.controls.stayOfProceedingsByCheckbox.value">
+              <input matInput (placeholder)="isViewOnly ? '' : 'JJ'" formControlName="stayOfProceedingsBy" /><br />
+            </ng-container>
             <mat-checkbox *ngIf="isViewOnly === false" [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons" 
               formControlName="otherCheckbox" (change)="onOtherCheck($event.checked)">
               <span class="count-text" style="font-size: small"><b>Other</b></span>

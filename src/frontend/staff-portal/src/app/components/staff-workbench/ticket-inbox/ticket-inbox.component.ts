@@ -5,7 +5,7 @@ import { DisputeService, Dispute } from 'app/services/dispute.service';
 import { DisputeRequestCourtAppearanceYn, DisputeDisputantDetectedOcrIssues, DisputeStatus, DisputeSystemDetectedOcrIssues, PagedDisputeListItemCollection, SortDirection, DisputeInterpreterRequired } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
-import { TableFilter, TableFilterKeys, TableFilterStatus, TableFilterStatusOptions, TableFilterStatusDefault } from '@shared/models/table-filter-options.model';
+import { TableFilter, TableFilterKeys, TableFilterStatusOptions, TicketValidationTableStatusDefault } from '@shared/models/table-filter-options.model';
 import { TableFilterService } from 'app/services/table-filter.service';
 
 @Component({
@@ -23,7 +23,7 @@ export class TicketInboxComponent implements OnInit {
 
   tableFilterKeys: TableFilterKeys[] = ["dateSubmittedFrom", "dateSubmittedTo", "disputantSurname", "status", "ticketNumber", "courthouseLocation"];
   statusFilterOptions = TableFilterStatusOptions;
-  statusFilterDefault = TableFilterStatusDefault;
+  defaultStatusFilter = TicketValidationTableStatusDefault;
 
   displayedColumns: string[] = [
     '__RedGreenAlert',

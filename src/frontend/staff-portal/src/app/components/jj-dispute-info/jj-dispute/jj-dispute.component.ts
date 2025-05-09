@@ -20,6 +20,8 @@ import { Dispute } from 'app/services/dispute.service';
 import { DisputeStatus } from '@shared/consts/DisputeStatus.model';
 import { HearingType } from '@shared/consts/HearingType.model';
 import { ChangeDetectorRef } from '@angular/core';
+import { ToastService } from '@core/services/toast.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -134,6 +136,8 @@ export class JJDisputeComponent implements OnInit {
     private documentService: DocumentService,
     private historyRecordService: HistoryRecordService,
     private cdr: ChangeDetectorRef,
+    private toastService: ToastService,
+    private router: Router,
   ) {
     this.authService.jjList$.subscribe(result => {
       this.jjList = result;
@@ -160,12 +164,22 @@ export class JJDisputeComponent implements OnInit {
   getJJDispute(): void {
     this.logger.log('JJDisputeComponent::getJJDispute');
     let assignVTC = false;
+    let executeUserLock = false;
     if(this.type === TabType.DECISION_VALIDATION) {
       assignVTC = true;
     }
+    if (this.type !== TabType.DCF) {
+      executeUserLock = true;
+    }
 
-    this.jjDisputeService.getJJDispute(this.tcoDisputeInfo.id, this.tcoDisputeInfo.ticketNumber, assignVTC).subscribe(response => {
+    this.jjDisputeService.getJJDispute(this.tcoDisputeInfo.id, this.tcoDisputeInfo.ticketNumber, assignVTC, executeUserLock).subscribe(response => {
       this.retrieving = false;
+      if (response.lockedBy && response.lockedBy !== this.jjIDIR) {
+        this.logger.warn("This dispute is currently being worked on by another user.");
+        // Show toast message to user and navigate back to inbox
+        this.toastService.openErrorToast("This dispute is currently being worked on by another user.");
+        this.onBackClicked();
+      }
       this.logger.info(
         'JJDisputeComponent::getJJDispute response',
         response
@@ -214,6 +228,9 @@ export class JJDisputeComponent implements OnInit {
 
       this.isNoAppEnabled = this.RoPApp.N === this.lastUpdatedJJDispute.mostRecentCourtAppearance.appCd;
     });
+  }
+  isJjBaseAddress(): boolean {
+    return this.router.url.includes('/jj');
   }
 
   goTo(id: string) {

@@ -46,7 +46,7 @@ public class Mapper
             }
         }
 
-        target.TicketIssuanceDate = dispute.IssuedTs?.DateTime;
+        target.TicketIssuanceDate = dispute.IssuedTs;
         target.TicketFileNumber = dispute.TicketNumber;
 
         // TCVP-2793 - issuing organziation should always be police (POL) and issuing location is the detachment location

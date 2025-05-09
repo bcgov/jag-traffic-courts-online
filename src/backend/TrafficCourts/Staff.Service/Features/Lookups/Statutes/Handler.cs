@@ -16,16 +16,19 @@ public class Handler : IRequestHandler<Request, Response>
 
     public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
     {
-        var items = await _repository.GetListAsync(cancellationToken);
+        var effectiveOn = request.EffectiveOn ?? DateTime.Today;
+
+        var items = await _repository.GetListAsync(effectiveOn, cancellationToken);
 
         var buffer = new StringBuilder();
-        List<Domain.Models.Statute> models = items.Select(_ => _.ToDomainModel(buffer)).ToList();
+
+        IEnumerable<Domain.Models.Statute> models = items.Select(_ => _.ToDomainModel(buffer));
 
         if (!string.IsNullOrWhiteSpace(request.Section))
         {
-            models = models.Where(_ => _.Code == request.Section).ToList();
+            models = models.Where(_ => _.Code == request.Section);
         }
 
-        return new Response(models);
+        return new Response([.. models]);
     }
 }

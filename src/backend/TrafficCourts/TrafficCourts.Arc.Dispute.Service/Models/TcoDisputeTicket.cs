@@ -64,7 +64,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
         [JsonRequired]
         public int Count { get; set; } = 0;
 
-        [Obsolete("No used in ARC file")]
+        [Obsolete("Not used in ARC file")]
         [JsonProperty("subparagraph")]
         public string? Subparagraph { get; set; }
         
@@ -83,6 +83,12 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
         [JsonProperty("amount")]
         [JsonRequired]
         public decimal Amount { get; set; }
+
+        /// <summary>
+        /// Soft deleted by setting the Act property to null
+        /// </summary>
+        [JsonIgnore]
+        public bool IsDeleted => string.IsNullOrWhiteSpace(Act);
     }
 
     public partial class DisputeCount

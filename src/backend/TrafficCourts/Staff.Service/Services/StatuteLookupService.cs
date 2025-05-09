@@ -15,15 +15,11 @@ public class StatuteLookupService : IStatuteLookupService
 
     public async Task<Domain.Models.Statute?> GetByIdAsync(int statuteId, CancellationToken cancellationToken)
     {
-        var items = await _repository.GetListAsync(cancellationToken);
+        var item = await _repository.GetAsync(statuteId, cancellationToken);
 
-        var index = items.BinarySearch(
-            new Statute { stat_id = statuteId },
-            new StatuteIdComparer());
-
-        if (index >= 0)
+        if (item is not null)
         {
-            return items[index].ToDomainModel(new StringBuilder());
+            return item.ToDomainModel(new StringBuilder());
         }
 
         return null;
