@@ -1876,12 +1876,6 @@
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
                 }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string",
-                  "format": "date-time"
-                }
               }
             }
           },
@@ -2039,16 +2033,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PagedOccamDisputeWithUpdateRequestListItemCollection"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -2321,9 +2305,6 @@
                 }
               }
             }
-          },
-          "500": {
-            "description": "There was a server error that prevented the file upload from completing successfully."
           }
         },
         "responses": {
@@ -2724,16 +2705,6 @@
                     "$ref": "#/components/schemas/FileHistory"
                   }
                 }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
               }
             }
           },
@@ -2809,16 +2780,6 @@
                     "$ref": "#/components/schemas/JJDispute"
                   }
                 }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/JJDispute"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/JJDispute"
-                }
               }
             }
           },
@@ -2826,16 +2787,6 @@
             "description": "Request lacks valid authentication credentials.",
             "content": {
               "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
                 }
@@ -3082,16 +3033,6 @@
                 "schema": {
                   "$ref": "#/components/schemas/PagedDisputeCaseFileSummaryCollection"
                 }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
               }
             }
           },
@@ -3173,6 +3114,14 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "executeUserLock",
+            "in": "query",
+            "description": "A flag indicating whether to execute a user lock.",
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
@@ -3189,7 +3138,7 @@
                   "$ref": "#/components/schemas/JJDispute"
                 }
               },
-              "application/json": {
+              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/JJDispute"
                 }
