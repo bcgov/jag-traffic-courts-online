@@ -21,7 +21,7 @@ export class TicketInboxComponent implements OnInit {
   disputesCollection: PagedDisputeListItemCollection = {};
   dataSource = new MatTableDataSource(this.disputes);
 
-  tableFilterKeys: TableFilterKeys[] = ["dateSubmittedFrom", "dateSubmittedTo", "disputantSurname", "status", "ticketNumber", "courthouseLocation"];
+  tableFilterKeys: TableFilterKeys[] = ["dateSubmittedFrom", "dateSubmittedTo", "disputantSurname", "status", "ticketNumber", /*"courthouseLocation"*/ ]; // TCVP-3258 - temporarily hiding 'courthouseLocation'
   statusFilterOptions = TableFilterStatusOptions;
   defaultStatusFilter = TicketValidationTableStatusDefault;
 
@@ -35,7 +35,7 @@ export class TicketInboxComponent implements OnInit {
     'requestCourtAppearanceYn',
     'disputantDetectedOcrIssues',
     'interpreterRequired',
-    'courthouseLocation',
+ //   'courthouseLocation', TCVP-3258 - temporarily hiding 'courthouseLocation'
     'userAssignedTo',
   ];
   userProfile: KeycloakProfile = {};

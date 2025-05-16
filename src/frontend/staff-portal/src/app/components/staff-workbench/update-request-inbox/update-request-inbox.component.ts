@@ -23,7 +23,7 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
   disputesCollection: PagedDisputeListItemCollection = {};
   dataSource = new MatTableDataSource(this.disputes);
 
-  tableFilterKeys: TableFilterKeys[] = ["dateSubmittedFrom", "dateSubmittedTo", "disputantSurname", "status", "ticketNumber", "courthouseLocation"];
+  tableFilterKeys: TableFilterKeys[] = ["dateSubmittedFrom", "dateSubmittedTo", "disputantSurname", "status", "ticketNumber" /*, "courthouseLocation"*/ ]; // TCVP-3258 - temporarily hiding 'courthouseLocation'
   statusFilterOptions = TableFilterStatusOptions;
   defaultStatusFilter = UpdateRequestTableStatusDefault;
 
@@ -33,7 +33,7 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     'ticketNumber',
     'disputantSurname',
     'disputantGivenName1',
-    'courthouseLocation',
+    // TCVP-3258 - temporarily hiding 'courthouseLocation'
     'hearingDate',
     'changeOfPlea',
     'adjournmentDocument',
