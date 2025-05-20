@@ -1,9 +1,17 @@
 <app-table-filters [tabIndex]="tabIndex" [tableFilterKeys]="tableFilterKeys" [statusFilterOptions]="statusFilterOptions"
   [defaultStatusFilter]="defaultStatusFilter" (onFilterChanged)="onApplyFilter($event)">
+  <ng-container pagination>
+    <div fxFlex fxFlex.gt-md="20">
+      <div class="vcenter">
+        <app-paging [currentPage]="currentPage" [totalPages]="totalPages" (pageChanged)="onPageChange($event)">
+        </app-paging>
+      </div>
+    </div>
+  </ng-container>
 </app-table-filters>
 
 <div class="table-responsive">
-  <table mat-table [dataSource]="dataSource" matSort>
+  <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
 
     <ng-container matColumnDef="__RedGreenAlert">
       <th mat-header-cell *matHeaderCellDef></th>
@@ -14,12 +22,12 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="submittedTs">
+    <ng-container matColumnDef="updateRequest_OldestDate">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Dispute Submitted
+          Update Submitted
         </th>
         <td mat-cell *matCellDef="let element">
-          <span>{{ element.submittedTs | date: 'dd-MMM-yyyy' }}</span>
+          <span>{{ element.updateRequest_OldestDate | date: 'dd-MMM-yyyy' }}</span>
         </td>
       </ng-container>
 
@@ -42,7 +50,7 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="disputantGivenNames">
+      <ng-container matColumnDef="disputantGivenName1">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           Given Name(s)
         </th>
@@ -85,6 +93,15 @@
         <td mat-cell *matCellDef="let element">
           <span *ngIf="element.emailAddressVerified === true || !(element.emailAddress)">{{ element.status }}</span>
           <span *ngIf="element.emailAddressVerified === false && element.emailAddress">Email Address Not Verified</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="courthouseLocation">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Courthouse Location
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <span>{{ element.courtAgenName }} </span>
         </td>
       </ng-container>
 

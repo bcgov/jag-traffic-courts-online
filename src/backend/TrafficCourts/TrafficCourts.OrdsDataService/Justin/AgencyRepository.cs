@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using TrafficCourts.OrdsDataService.Tco;
 
 namespace TrafficCourts.OrdsDataService.Justin;
 
@@ -23,7 +24,7 @@ internal static class AgencyType
 
 internal class AgencyRepository : OrdsRepository<AgencyRepository>, IAgencyRepository
 {
-    public AgencyRepository(OrdsDataServiceClient ordsClient, ILogger<AgencyRepository> logger)
+    public AgencyRepository(TcoOrdsDataServiceClient ordsClient, ILogger<AgencyRepository> logger)
         : base(ordsClient, "/v2/justin_agencies", logger)
     {
     }

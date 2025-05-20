@@ -1,0 +1,1190 @@
+type: collection.insomnia.rest/5.0
+name: OrdsDataService
+meta:
+  id: wrk_b012db4309e2474593a1be9537e48c6b
+  created: 1736446150264
+  modified: 1736446150264
+collection:
+  - name: tco
+    meta:
+      id: fld_516cb0b10abd4d889c1429e47b78bfd3
+      created: 1736199375395
+      modified: 1742333040476
+      sortKey: -1736199375395
+    children:
+      - name: v1
+        meta:
+          id: fld_295228368a0a4f18a9d2a39708ccd483
+          created: 1736199392897
+          modified: 1744314690964
+          sortKey: -1736199401058
+        children:
+          - url: "{{ _.tco.base_url }}/tco/v1/jjDisputeList"
+            name: Get JJ Disputes
+            meta:
+              id: req_265bf7aed1a34d72a29f820c8519a62c
+              created: 1731522180802
+              modified: 1736199443980
+              isPrivate: false
+              sortKey: -1736199443933
+            method: GET
+            headers:
+              - name: User-Agent
+                value: insomnia/10.1.1
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: v2
+        meta:
+          id: fld_67262139b9c44ec396f0e4086bbdd31b
+          created: 1736199400958
+          modified: 1736199400958
+          sortKey: -1736199400958
+        children:
+          - name: Justin
+            meta:
+              id: fld_a0a203921cac4393bcb20546b4e9bede
+              created: 1731387216787
+              modified: 1736199552930
+              sortKey: -1736199411169
+            children:
+              - url: "{{ _.tco.base_url }}/v2/justin_agencies"
+                name: Get Agencies
+                meta:
+                  id: req_7d60625193c44c95afe51ad0488ade76
+                  created: 1731139869032
+                  modified: 1736199559463
+                  isPrivate: false
+                  sortKey: -1731387226551
+                method: GET
+                parameters:
+                  - id: pair_f91e8be5df82423c80a41919dd628102
+                    name: cdat_agency_type_cd_eq
+                    value: CTH
+                    disabled: true
+                  - id: pair_50e44b343a42430599875c1ac5cca308
+                    name: agen_active_yn_eq
+                    value: Y
+                    disabled: true
+                  - id: pair_34d0f86d49244d5191c11afbfe134b65
+                    name: agen_active_yn_ne
+                    value: Y
+                    disabled: true
+                  - id: pair_7fbe7233f7fb49fba416cbe57d87f205
+                    name: order
+                    value: agen_agency_nm
+                    disabled: true
+                  - id: pair_5005d921eeb14d9da0f18b3c9feb8862
+                    name: agen_id_eq
+                    value: "1.0007"
+                    disabled: true
+                headers:
+                  - name: User-Agent
+                    value: insomnia/10.1.1
+                    id: pair_c96bb2ea8c64406484d5eebf4c3d5aa7
+                  - id: pair_ca5a8e1b73b04d87bb4970d254a35aed
+                    name: If-None-Match
+                    value: '	"nWooQVNs+b2+TJMUdQlLCoNU159XE3EYtobhr0gKTwfaX4K6Dz5X28QBUIwcpElIC/024Cidpbtx1WapH2SMbQ=="'
+                    disabled: true
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{ _.tco.base_url }}/v2/justin_cities"
+                name: Get Cities
+                meta:
+                  id: req_dc92ce7f82da4357b48f5f5bf07ebd14
+                  created: 1731385593696
+                  modified: 1736199281710
+                  isPrivate: false
+                  sortKey: -1731387226544.75
+                method: GET
+                parameters:
+                  - id: pair_a1f4f601b40e4897ad1bac8a8b2eb83a
+                    name: ctry_id_eq
+                    value: "1"
+                    disabled: true
+                  - id: pair_818e0415d63e43b5b4dccf722a927339
+                    name: city_seq_no_eq
+                    value: "604"
+                    disabled: true
+                  - id: pair_7140107133044d41adab38a47443d4cd
+                    name: prov_ctry_id_eq
+                    value: "1"
+                    disabled: true
+                  - id: pair_fe1cab9606dd42509786d5ed3f414601
+                    name: prov_seq_no_eq
+                    value: "1"
+                    disabled: true
+                  - id: pair_bc7c974667664e4a87263138f11c4a1b
+                    name: order
+                    value: -city_long_nm
+                    disabled: true
+                headers:
+                  - name: User-Agent
+                    value: insomnia/10.1.1
+                    id: pair_c96bb2ea8c64406484d5eebf4c3d5aa7
+                  - id: pair_ca5a8e1b73b04d87bb4970d254a35aed
+                    name: If-None-Match
+                    value: '	"tpH4Yk2jsHMunbCs+hMFTxGG6mGH7/sBFaI4VnfVq3EiS7aBrIAAhxiCRskxZDLLiFPefugC5TgyshKMF/N2mA=="'
+                    disabled: true
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{ _.tco.base_url }}/v2/justin_countries"
+                name: Get Countries
+                meta:
+                  id: req_6ed257cc67144f12b6a41bfa8485d0b2
+                  created: 1731385765141
+                  modified: 1736199235044
+                  isPrivate: false
+                  sortKey: -1731387226538.5
+                method: GET
+                parameters:
+                  - id: pair_7140107133044d41adab38a47443d4cd
+                    name: ctry_id_eq
+                    value: "1"
+                    disabled: true
+                  - id: pair_32d14e48bd8d43ce858c6441edeae58e
+                    name: order
+                    value: -ctry_long_nm
+                    disabled: true
+                headers:
+                  - name: User-Agent
+                    value: insomnia/10.1.1
+                    id: pair_c96bb2ea8c64406484d5eebf4c3d5aa7
+                  - id: pair_ca5a8e1b73b04d87bb4970d254a35aed
+                    name: If-None-Match
+                    value: '	"tpH4Yk2jsHMunbCs+hMFTxGG6mGH7/sBFaI4VnfVq3EiS7aBrIAAhxiCRskxZDLLiFPefugC5TgyshKMF/N2mA=="'
+                    disabled: true
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{ _.tco.base_url }}/v2/justin_languages"
+                name: Get Languages
+                meta:
+                  id: req_b107699a1d7a45eb93ed19e264fd6fb8
+                  created: 1731385835027
+                  modified: 1736199244413
+                  isPrivate: false
+                  sortKey: -1731387226526
+                method: GET
+                parameters:
+                  - id: pair_aef02d30741140959cc220636e3215c5
+                    name: cdln_language_cd_eq
+                    value: ENG
+                    disabled: true
+                  - id: pair_b18d11c133ff4d5c897a0bbc6b782698
+                    name: cdln_active_yn
+                    value: Y
+                    disabled: true
+                  - id: pair_6eb187bf5d5741f3b3abe60e4f1a8647
+                    name: order
+                    value: -cdln_language_dsc
+                    disabled: false
+                headers:
+                  - name: User-Agent
+                    value: insomnia/10.1.1
+                    id: pair_c96bb2ea8c64406484d5eebf4c3d5aa7
+                  - id: pair_ca5a8e1b73b04d87bb4970d254a35aed
+                    name: If-None-Match
+                    value: '	"tpH4Yk2jsHMunbCs+hMFTxGG6mGH7/sBFaI4VnfVq3EiS7aBrIAAhxiCRskxZDLLiFPefugC5TgyshKMF/N2mA=="'
+                    disabled: true
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{ _.tco.base_url }}/v2/justin_provinces"
+                name: Get Provinces
+                meta:
+                  id: req_6ec342840eb54d9b9661e82dbfcbcd38
+                  created: 1731386033847
+                  modified: 1736199294669
+                  isPrivate: false
+                  sortKey: -1731387226513.5
+                method: GET
+                parameters:
+                  - id: pair_1a8e862785ac449ca5df29899e6cb90a
+                    name: ctry_id_eq
+                    value: "1"
+                    disabled: true
+                  - id: pair_f6f77f8fc1d349a98d421c384ca7e6ce
+                    name: prov_abbreviation_cd_eq
+                    value: AB
+                    disabled: true
+                  - id: pair_7f76b8bf32b8461599ea787aefcadced
+                    name: order
+                    value: -prov_nm
+                    disabled: true
+                headers:
+                  - name: User-Agent
+                    value: insomnia/10.1.1
+                    id: pair_c96bb2ea8c64406484d5eebf4c3d5aa7
+                  - id: pair_ca5a8e1b73b04d87bb4970d254a35aed
+                    name: If-None-Match
+                    value: '	"tpH4Yk2jsHMunbCs+hMFTxGG6mGH7/sBFaI4VnfVq3EiS7aBrIAAhxiCRskxZDLLiFPefugC5TgyshKMF/N2mA=="'
+                    disabled: true
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{ _.tco.base_url }}/v2/justin_statutes"
+                name: Get Statutes
+                meta:
+                  id: req_fc2ec886d30349ca94692176d3c92008
+                  created: 1731386092947
+                  modified: 1736199304706
+                  isPrivate: false
+                  sortKey: -1731387226507.25
+                method: GET
+                parameters:
+                  - id: pair_1a8e862785ac449ca5df29899e6cb90a
+                    name: stat_id_eq
+                    value: "34281"
+                    disabled: true
+                  - id: pair_7a7679bedffe4a87af188cc98bed83d1
+                    name: act_cd_eq
+                    value: MVA
+                    disabled: true
+                  - id: pair_8f245f883a924178baaa60974e1d534a
+                    name: stat_section_txt_eq
+                    value: "151"
+                    disabled: true
+                  - id: pair_a22c54406ee148a29359dfa8f16799d2
+                    name: stat_sub_section_txt_eq
+                    value: "4"
+                    disabled: true
+                  - id: pair_9d7eb4d9f3d44692b7f2d87afc9f754d
+                    name: order
+                    value: stat_sub_section_txt
+                    disabled: true
+                  - id: pair_ba35b8870c4c44bda0ca0bbdb9c0416a
+                    name: act_cd_in
+                    value: MVR,MVA
+                    disabled: true
+                headers:
+                  - name: User-Agent
+                    value: insomnia/10.1.1
+                    id: pair_c96bb2ea8c64406484d5eebf4c3d5aa7
+                  - id: pair_ca5a8e1b73b04d87bb4970d254a35aed
+                    name: If-None-Match
+                    value: '	"YqGu848GhUTxgl3rwhkNgkw0tGWuq4VQNw6gIBSJOQIVXQvkIMzUq48c6PeeMTg5YJ3kM1icfH9rWSicNauyIg=="'
+                    disabled: false
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+          - name: TCO
+            meta:
+              id: fld_b635dadc556743dca4503dcc972b7f73
+              created: 1731387298103
+              modified: 1736199417699
+              sortKey: -1736199411069
+            children:
+              - url: "{{ _.tco.base_url }}/v2/tco_disputes"
+                name: Get Disputes
+                meta:
+                  id: req_2f9abd818ad7482e89d78397afc0bd29
+                  created: 1731037286947
+                  modified: 1742921209580
+                  isPrivate: false
+                  sortKey: -1731387301284
+                method: GET
+                parameters:
+                  - id: pair_940ea0d9bc224174ad5b0c1c6d71778c
+                    name: jj_assigned_to_is_null
+                    value: "1"
+                    disabled: true
+                  - id: pair_641542d2726a4a759bd309c949676b7f
+                    name: fetch_rows
+                    value: "-1"
+                    disabled: true
+                  - id: pair_29271ec27c8844469fb8b640e2b8afeb
+                    name: include
+                    value: notice_of_hearing_yn,appearances,multiple_officers_yn,electronic_ticket_yn
+                    disabled: true
+                    type: text
+                    multiline: false
+                  - id: pair_af57681e3dfd4449b7a77a2036492c96
+                    name: include
+                    value: appearances
+                    disabled: true
+                  - id: pair_75e7a8eb907a49bc840cbaeebfa05a06
+                    name: submitted_dt_gt
+                    value: 2022-12-02T22:48:33
+                    disabled: true
+                  - id: pair_ae1b4cae7d04482c97263cd4c8cbbb93
+                    name: submitted_dt_lt
+                    value: 2022-12-02T22:48:35
+                    disabled: true
+                  - id: pair_d12008d5bd5b463eb4c03fbe3e96eff7
+                    name: ticket_number_txt_eq
+                    value: EA00663088
+                    disabled: true
+                  - id: pair_b3b53905296f4999afe1106b2319b92c
+                    name: prof_surname_nm_eq
+                    value: Kent
+                    disabled: true
+                  - id: pair_9c9f87bf92854bab97a0003bc73c3d7a
+                    name: vtc_assigned_to_eq
+                    disabled: true
+                  - id: pair_9b42d1fbd8bd4b058260b6668fdbda70
+                    name: jj_assigned_to_eq
+                    value: LOCHUNG
+                    disabled: true
+                  - id: pair_d6650d1e6ae94e8494f6785f9eca8b70
+                    name: dispute_status_type_cd_not_in
+                    value: CNLD
+                    disabled: true
+                  - id: pair_8f8cb771859748dfaf8970d13dc9c220
+                    name: dispute_status_type_cd_in
+                    value: NEW,PROG,REV
+                    disabled: true
+                  - id: pair_e31f0148c632434f9020302abbf573b8
+                    name: to_be_heard_at_agen_id_eq
+                    value: "8807.0007"
+                    disabled: true
+                  - id: pair_f6845e3edf414849a195a42f6f7ca2ff
+                    name: violation_ticket_upld_id_eq
+                    disabled: true
+                  - id: pair_a73ab45af62e42c4a71356bc200a5fea
+                    name: order
+                    value: -submitted_dt
+                    disabled: true
+                  - id: pair_de561c815c7c41d1be4e88fc2cd3bfd5
+                    name: offset_rows
+                    value: "50"
+                    disabled: true
+                  - id: pair_af6b0f147777473c8712e1801c8c6fd3
+                    name: dispute_id_eq
+                    value: "5225"
+                    disabled: true
+                  - id: pair_f94ec9e775b44438a035a642f412adcb
+                    name: dispute_id_in
+                    value: 161,204
+                    disabled: true
+                  - id: pair_2dd12df2cb90463abc002d38b3c919a8
+                    name: to_be_heard_at_agen_id_in
+                    value: "83.0007"
+                    disabled: true
+                  - id: pair_3442981eb7cf4acca8bd33a5c2a63182
+                    name: appr_ctrm_agen_id_in
+                    value: 8807.0007,83.0007
+                    disabled: true
+                  - id: pair_ec48162f3a6242c69f53a7ab6325bc53
+                    name: jj_decision_dt_ge
+                    value: 2023-09-11
+                    disabled: true
+                  - id: pair_d4a4fc5aef5347ffacc7c7ce4e2f0a99
+                    name: jj_decision_dt_le
+                    value: 2023-09-12
+                    disabled: true
+                  - id: pair_75425bdebf2e4dbe9d5fadf755ccac9c
+                    name: hearing_type_cd_not_in
+                    value: W,C
+                    disabled: true
+                  - id: pair_5c7aea370feb4928a43e7af6aadc7ff9
+                    name: appr_tm_ge
+                    value: 2023-02-20
+                    disabled: true
+                  - id: pair_51c4e39b3bf447bb99b889a333a56916
+                    name: appr_tm_lt
+                    value: 2023-02-21
+                    disabled: true
+                  - id: pair_80bb5d2a5f4e4983bf57ed28e8fd1ae6
+                    name: prof_surname_nm_like
+                    value: F%
+                    disabled: true
+                  - id: pair_8382261c35cb45f6bd427451be12ea7c
+                    disabled: true
+                  - id: pair_fdf5ca3a9eb846fb89165298fa1482b6
+                    name: ticket_number_txt_like
+                    value: "%25EA9%"
+                    disabled: false
+                headers:
+                  - name: User-Agent
+                    value: insomnia/10.1.1
+                    id: pair_c96bb2ea8c64406484d5eebf4c3d5aa7
+                  - id: pair_ca5a8e1b73b04d87bb4970d254a35aed
+                    name: If-None-Match
+                    value: '	"WedKGCEiU1VyQHFJxyLubLG7JfBq+L/bMbY5Z7DIIcgzEyIFtRZnK5jct+WbuIE5QZKEpPGPR3ydrXa5Y9fh1g=="'
+                    disabled: true
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{ _.tco.base_url }}/v2/tco_audit_log_entry_types"
+                name: Get Audit Log Entry Types
+                meta:
+                  id: req_7f469d07778b4794a6ecfdefafcb60c4
+                  created: 1731800877444
+                  modified: 1736199323670
+                  isPrivate: false
+                  sortKey: -1731387263917.5
+                method: GET
+                headers:
+                  - name: User-Agent
+                    value: insomnia/10.1.1
+                    id: pair_c96bb2ea8c64406484d5eebf4c3d5aa7
+                  - id: pair_ca5a8e1b73b04d87bb4970d254a35aed
+                    name: If-None-Match
+                    value: '	"wwrER5qGlLwdYmC9oZCwxHD5iTlKHDNOtBBiVFeEmoWfYgzVVWnU56YNI8Q7kVBTloFSnjEBA6cx8fMLvU341g=="'
+                    disabled: true
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{ _.tco.base_url }}/v2/tco_dispute_status_types"
+                name: Get Dispute Status Types
+                meta:
+                  id: req_4047323e2b7743e2a46ede71d174aeb8
+                  created: 1731802176669
+                  modified: 1736199330429
+                  isPrivate: false
+                  sortKey: -1731387245234.25
+                method: GET
+                headers:
+                  - name: User-Agent
+                    value: insomnia/10.1.1
+                    id: pair_c96bb2ea8c64406484d5eebf4c3d5aa7
+                  - id: pair_ca5a8e1b73b04d87bb4970d254a35aed
+                    name: If-None-Match
+                    value: '	"wwrER5qGlLwdYmC9oZCwxHD5iTlKHDNOtBBiVFeEmoWfYgzVVWnU56YNI8Q7kVBTloFSnjEBA6cx8fMLvU341g=="'
+                    disabled: true
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+    scripts:
+      afterResponse: >+
+        insomnia.test('Check If-None-Match header and response status', () => {
+
+        	// Check if the If-None-Match header is present in the request
+        	const ifNoneMatchHeader = insomnia.request.headers.find(header => header.key === 'If-None-Match',{});
+
+        	// Get the response status code
+        	const statusCode = insomnia.response.code;
+
+          if (ifNoneMatchHeader) {
+            // Ensure the status code is either 200 or 304
+            insomnia.expect(statusCode).to.be.oneOf([200, 304], `Expected status code 200 or 304, but got ${statusCode}`);
+          } else {
+            // Ensure the status code is 200
+            insomnia.expect(statusCode).to.equal(200, `Expected status code 200, but got ${statusCode}`);
+          }
+        });
+
+    authentication:
+      type: basic
+      useISO88591: false
+      disabled: false
+      username: "{{ _.tco.username }}"
+      password: "{{ _.tco.password }}"
+  - name: occam
+    meta:
+      id: fld_c4a61296a11f426a983a261b83d924f7
+      created: 1736199481229
+      modified: 1744914548913
+      sortKey: -1736199481229
+    children:
+      - name: v1
+        meta:
+          id: fld_75d5903663b940a090b8435e8a862fa0
+          created: 1736200724314
+          modified: 1744739464932
+          sortKey: -1736200724514
+        children:
+          - url: "{{ _.occam.base_url }}/occam/v1/statutes"
+            name: Get Statutues
+            meta:
+              id: req_006e6535c2ea4595a4632ff4e98f2cdc
+              created: 1733951408415
+              modified: 1736200730031
+              isPrivate: false
+              sortKey: -1736200729966
+            method: GET
+            headers:
+              - name: User-Agent
+                value: insomnia/10.2.0
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ _.occam.base_url }}//occam/v1/disputeList"
+            name: Get Dispute List
+            meta:
+              id: req_ea54585bc45f4833ae42dbdfd29be37e
+              created: 1742330531185
+              modified: 1743609991219
+              isPrivate: false
+              sortKey: -1736200086949.5
+            method: GET
+            headers:
+              - name: User-Agent
+                value: insomnia/10.2.0
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ _.occam.base_url }}/occam/v1/disputeUpdateRequestList"
+            name: Get DisputeWithUpdateRequest List
+            meta:
+              id: req_6fd54213dbde4066b9f038b16bcaabec
+              created: 1743547335917
+              modified: 1743610003209
+              isPrivate: false
+              sortKey: -1736199765441.25
+            method: GET
+            headers:
+              - name: User-Agent
+                value: insomnia/10.2.0
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: v2
+        meta:
+          id: fld_9fcc138b8d4b4bce943523bf0460b315
+          created: 1736200737427
+          modified: 1744914548913
+          sortKey: -1736200724414
+        children:
+          - url: "{{ _.occam.base_url }}/v2/occam_disputes"
+            name: Get Disputes
+            meta:
+              id: req_af36f47d935749e2ab9c0a1b0a617a7e
+              created: 1736203601331
+              modified: 1744049412388
+              isPrivate: false
+              description: >
+                
+                ### Get OCCAM Disputes
+
+
+                `GET /v2/occam_disputes`
+
+
+                #### Filter Options
+
+
+                In each endpoint, the filter criteria can be suffixed with the following operator 
+
+                suffixes  `_eq`, `_ne`, `_gt`, `_lt`, `_ge`, `_le`, `_in`, `_not_in`, `_is_null`, `_is_not_null`. 
+
+                Unless otherwise stated, the string parameters can also have `_like` and `_regexp_like` operator suffixes. 
+
+                It is up to the caller to ensure the correct wildcard sequences are used in the parameter value.
+
+
+                Query String Parameters: `parameter_operator=value(s)`
+
+
+                | Parameter | Type | Notes |
+
+                | --------- | ---- | --------- |
+
+                | dispute_id | number | |
+
+                | submitted_dt | number | |
+
+                | jj_decision_dt | number | |
+
+                | jj_assigned_to | string | |
+
+                | court_agen_id | number | |
+
+                | ticket_number_txt | string | |
+
+                | disputant_surname_nm | string | |
+
+                | disputant_given_1_nm | string | |
+
+                | occam_violation_ticket_upld_id | number | |
+
+                | dispute_status_type_cd | string | `_like` and `_regexp_like` not supported  |
+              sortKey: -1736203601331
+            method: GET
+            parameters:
+              - id: pair_b6e310bea79242ca9bfbbe389396c2aa
+                name: offset_rows
+                value: "25"
+                disabled: false
+              - id: pair_a576d0f962d243bfb36e11842ef6b615
+                name: fetch_rows
+                value: "10"
+                disabled: false
+              - id: pair_1d8f332f9ff64e5391b3583e3241acf6
+                name: dispute_id
+                value: "281"
+                disabled: false
+              - id: pair_f5a45f9841b8476eaf0fc457048e5ad7
+                name: submitted_dt
+                disabled: true
+              - id: pair_d7709cda3c484825aa79ed6c1b5a6a06
+                name: jj_decision_dt
+                disabled: true
+              - id: pair_6e8d3ff6160c44e490e564c1e568e562
+                name: court_agen_id
+                disabled: true
+              - id: pair_29cdda3ddf354b3887f2e8ee817921bb
+                name: occam_violation_ticket_upld_id
+                disabled: true
+              - id: pair_ee6771757d854542befff89fc5124881
+                name: dispute_status_type_cd_in
+                value: NEW,PROG,
+                disabled: true
+              - id: pair_4dc685d9bc9440afbe4449c7476680bd
+                name: ticket_number_txt
+                disabled: true
+              - id: pair_5191bdf1f5b74020b4c951ba2e090b6b
+                name: disputant_surname_nm
+                value: "12"
+                disabled: true
+              - id: pair_e935066692cc4bbcb2e73197df3945eb
+                name: disputant_given_1_nm
+                disabled: true
+              - id: pair_a6889ced0b83429aacbb08a463a45876
+                name: jj_assigned_to
+                disabled: true
+            headers:
+              - name: User-Agent
+                value: insomnia/10.3.0
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ _.occam.base_url }}/v2/occam_dispute_list"
+            name: Get Dispute List
+            meta:
+              id: req_df7c147447ab405da2ace937d392f4f3
+              created: 1742853473581
+              modified: 1744048121655
+              isPrivate: false
+              description: >
+                
+                ### Get OCCAM Disputes
+
+
+                `GET /v2/occam_disputes`
+
+
+                #### Filter Options
+
+
+                In each endpoint, the filter criteria can be suffixed with the following operator 
+
+                suffixes  `_eq`, `_ne`, `_gt`, `_lt`, `_ge`, `_le`, `_in`, `_not_in`, `_is_null`, `_is_not_null`. 
+
+                Unless otherwise stated, the string parameters can also have `_like` and `_regexp_like` operator suffixes. 
+
+                It is up to the caller to ensure the correct wildcard sequences are used in the parameter value.
+
+
+                Query String Parameters: `parameter_operator=value(s)`
+
+
+                | Parameter | Type | Notes |
+
+                | --------- | ---- | --------- |
+
+                | dispute_id | number | |
+
+                | submitted_dt | number | |
+
+                | jj_decision_dt | number | |
+
+                | jj_assigned_to | string | |
+
+                | court_agen_id | number | |
+
+                | ticket_number_txt | string | |
+
+                | disputant_surname_nm | string | |
+
+                | disputant_given_1_nm | string | |
+
+                | occam_violation_ticket_upld_id | number | |
+
+                | dispute_status_type_cd | string | `_like` and `_regexp_like` not supported  |
+              sortKey: -1736202165648.5
+            method: GET
+            parameters:
+              - id: pair_b6e310bea79242ca9bfbbe389396c2aa
+                name: offset_rows
+                value: "0"
+                disabled: false
+              - id: pair_a576d0f962d243bfb36e11842ef6b615
+                name: fetch_rows
+                value: "25"
+                disabled: false
+              - id: pair_f5a45f9841b8476eaf0fc457048e5ad7
+                name: submitted_dt_ge
+                value: 2024-01-01T08:00:00Z
+                disabled: true
+              - id: pair_1c261b620b5046abb02a71e2ad4e257d
+                name: submitted_dt_lt
+                value: 2025-03-31T07:00:00Z
+                disabled: true
+              - id: pair_4dc685d9bc9440afbe4449c7476680bd
+                name: ticket_number_txt_like
+                value: EA%25
+                disabled: false
+                type: text
+                multiline: false
+              - id: pair_5191bdf1f5b74020b4c951ba2e090b6b
+                name: disputant_surname_nm_like
+                value: Req%25
+                disabled: true
+              - id: pair_ad96db5d4b2846eb838398e8ce2378cf
+                name: disputant_surname_nm_regexp_like
+                value: ^and
+                disabled: true
+              - id: pair_020467d074224fcbb91c586e5508ca70
+                name: disputant_surname_nm_starts
+                value: And
+                disabled: true
+              - id: pair_6e8d3ff6160c44e490e564c1e568e562
+                name: dispute_status_type_cd_in
+                value: VALIDATED
+                disabled: true
+              - id: pair_79bff03484bc4583867c947f8dec1316
+                name: order
+                value: -interpreter_required_yn
+                disabled: true
+            headers:
+              - name: User-Agent
+                value: insomnia/10.3.0
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ _.occam.base_url }}/v2/occam_dispute_update_requests_list"
+            name: Get DisputeWithUpdateRequest List
+            meta:
+              id: req_59cdef7af9f24692a278a7a592822e63
+              created: 1743546896805
+              modified: 1744914558471
+              isPrivate: false
+              description: >
+                
+                ### Get OCCAM Disputes
+
+
+                `GET /v2/occam_disputes`
+
+
+                #### Filter Options
+
+
+                In each endpoint, the filter criteria can be suffixed with the following operator 
+
+                suffixes  `_eq`, `_ne`, `_gt`, `_lt`, `_ge`, `_le`, `_in`, `_not_in`, `_is_null`, `_is_not_null`. 
+
+                Unless otherwise stated, the string parameters can also have `_like` and `_regexp_like` operator suffixes. 
+
+                It is up to the caller to ensure the correct wildcard sequences are used in the parameter value.
+
+
+                Query String Parameters: `parameter_operator=value(s)`
+
+
+                | Parameter | Type | Notes |
+
+                | --------- | ---- | --------- |
+
+                | dispute_id | number | |
+
+                | submitted_dt | number | |
+
+                | jj_decision_dt | number | |
+
+                | jj_assigned_to | string | |
+
+                | court_agen_id | number | |
+
+                | ticket_number_txt | string | |
+
+                | disputant_surname_nm | string | |
+
+                | disputant_given_1_nm | string | |
+
+                | occam_violation_ticket_upld_id | number | |
+
+                | dispute_status_type_cd | string | `_like` and `_regexp_like` not supported  |
+              sortKey: -1736201447807.25
+            method: GET
+            parameters:
+              - id: pair_b6e310bea79242ca9bfbbe389396c2aa
+                name: offset_rows
+                value: "0"
+                disabled: false
+              - id: pair_a576d0f962d243bfb36e11842ef6b615
+                name: fetch_rows
+                value: "25"
+                disabled: false
+              - id: pair_f5a45f9841b8476eaf0fc457048e5ad7
+                name: submitted_dt_ge
+                value: 2024-01-01T08:00:00Z
+                disabled: true
+              - id: pair_1c261b620b5046abb02a71e2ad4e257d
+                name: submitted_dt_lt
+                value: 2025-03-31T07:00:00Z
+                disabled: true
+              - id: pair_4dc685d9bc9440afbe4449c7476680bd
+                name: ticket_number_txt_like
+                value: AK%25
+                disabled: true
+                type: text
+                multiline: false
+              - id: pair_5191bdf1f5b74020b4c951ba2e090b6b
+                name: disputant_surname_nm_like
+                value: Req%25
+                disabled: true
+              - id: pair_ad96db5d4b2846eb838398e8ce2378cf
+                name: disputant_surname_nm_regexp_like
+                value: ^and
+                disabled: true
+              - id: pair_020467d074224fcbb91c586e5508ca70
+                name: disputant_surname_nm_starts
+                value: And
+                disabled: true
+              - id: pair_6e8d3ff6160c44e490e564c1e568e562
+                name: dispute_status_type_cd_in
+                value: VALIDATED
+                disabled: true
+              - id: pair_79bff03484bc4583867c947f8dec1316
+                name: order
+                value: -update_request_change_of_plea_yn
+                disabled: false
+              - id: pair_1c1cedf279734584936c84b64836d477
+                name: dispute_update_stat_type_cd_eq
+                value: PEND
+                disabled: false
+            headers:
+              - name: User-Agent
+                value: insomnia/10.3.0
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+    scripts:
+      afterResponse: >
+        insomnia.test('Check If-None-Match header and response status', () => {
+
+        	// Check if the If-None-Match header is present in the request
+        	const ifNoneMatchHeader = insomnia.request.headers.find(header => header.key === 'If-None-Match',{});
+
+        	// Get the response status code
+        	const statusCode = insomnia.response.code;
+
+          if (ifNoneMatchHeader) {
+            // Ensure the status code is either 200 or 304
+            insomnia.expect(statusCode).to.be.oneOf([200, 304], `Expected status code 200 or 304, but got ${statusCode}`);
+          } else {
+            // Ensure the status code is 200
+            insomnia.expect(statusCode).to.equal(200, `Expected status code 200, but got ${statusCode}`);
+          }
+        });
+    authentication:
+      type: basic
+      useISO88591: false
+      disabled: false
+      username: "{{ _.occam.username }}"
+      password: "{{ _.occam.password }}"
+  - name: staff-api
+    meta:
+      id: fld_d7ed370ba4514b22bd7d881777ef77da
+      created: 1742859897962
+      modified: 1742859897962
+      sortKey: -1742859897963
+    children:
+      - name: v2
+        meta:
+          id: fld_0acce6b10c964c758b6c6d2bdd0f2d14
+          created: 1742860141886
+          modified: 1742860151089
+          sortKey: -1742859922345
+        children:
+          - url: "{{ _['staff-api'].host }}/api/v2/occam/dispute/disputes"
+            name: Dispute List
+            meta:
+              id: req_a5cc1f5256cf4a799aea07b7953efece
+              created: 1742859922245
+              modified: 1743096347674
+              isPrivate: false
+              sortKey: -1742860157771
+            method: GET
+            parameters:
+              - id: pair_0351e088998f47558b0b4f144049001b
+                name: ticket
+                value: ak
+                disabled: true
+              - id: pair_d30f64eb6ea14f30894c332088601be6
+                name: surname
+                value: Req
+                disabled: true
+              - id: pair_06c01dacf5674e76a2a062a9e6ad6ef2
+                name: status
+                value: NEW
+                disabled: true
+              - id: pair_1ccda7f7ebeb4bc59e551fad5ec09064
+                name: status
+                value: VALIDATED
+                disabled: true
+              - id: pair_f86721fe8b754be7be92b5e85e9d7d2f
+                name: from
+                value: 2024-01-01
+                disabled: true
+              - id: pair_c4aaa11a70774ce88a3fcb73314ea5d8
+                name: thru
+                value: 2025-03-31
+                disabled: true
+              - id: pair_5e63019f174649ea81621d91f3e8c8b0
+                name: sortBy
+                value: submittedTs
+                disabled: true
+              - id: pair_038c8f4f5af04cccb70c62b7ff4247c3
+                name: direction
+                value: asc
+                disabled: true
+              - id: pair_4750b50d12e84a539a1a9c5286be4871
+                name: courthouseId
+                value: "8841.0001"
+                disabled: false
+              - id: pair_f5868e8410af4b85bdb6ae1b5848c4b3
+                name: pageNumber
+                value: "0"
+                disabled: false
+              - id: pair_a5a464a13e144070959749e14f479177
+                name: pageSize
+                value: "25"
+                disabled: false
+            headers:
+              - name: User-Agent
+                value: insomnia/10.3.1
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ _['staff-api'].host }}/api/v2/occam/dispute/disputesWithUpdateRequests"
+            name: DisputeWithUpdateRequest List
+            meta:
+              id: req_ed508b9825a84f84930771338f7e68b9
+              created: 1743609890301
+              modified: 1744906063828
+              isPrivate: false
+              sortKey: -1739531879551
+            method: GET
+            parameters:
+              - id: pair_0351e088998f47558b0b4f144049001b
+                name: ticket
+                value: ak
+                disabled: true
+              - id: pair_d30f64eb6ea14f30894c332088601be6
+                name: surname
+                value: Req
+                disabled: true
+              - id: pair_06c01dacf5674e76a2a062a9e6ad6ef2
+                name: status
+                value: PROCESSING
+                disabled: true
+              - id: pair_1ccda7f7ebeb4bc59e551fad5ec09064
+                name: status
+                value: VALIDATED
+                disabled: true
+              - id: pair_f86721fe8b754be7be92b5e85e9d7d2f
+                name: from
+                value: 2024-01-01
+                disabled: true
+              - id: pair_c4aaa11a70774ce88a3fcb73314ea5d8
+                name: thru
+                value: 2025-03-31
+                disabled: true
+              - id: pair_5e63019f174649ea81621d91f3e8c8b0
+                name: sortBy
+                value: -disputeId
+                disabled: true
+              - id: pair_4750b50d12e84a539a1a9c5286be4871
+                name: courthouseId
+                value: "8841.0001"
+                disabled: true
+              - id: pair_f5868e8410af4b85bdb6ae1b5848c4b3
+                name: pageNumber
+                value: "0"
+                disabled: true
+              - id: pair_a5a464a13e144070959749e14f479177
+                name: pageSize
+                value: "60"
+                disabled: true
+            headers:
+              - name: User-Agent
+                value: insomnia/10.3.1
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: v1
+        meta:
+          id: fld_bb3ca9a14dd642d7ba2585c20dc77dbb
+          created: 1743547375248
+          modified: 1743547379746
+          sortKey: -1742859922445
+        children:
+          - url: "{{ _['staff-api'].host }}/api/dispute/disputeswithupdaterequests"
+            name: DisputeWithUpdateRequest List
+            meta:
+              id: req_e9e4c754649447f79c9ecaf9d89a9da4
+              created: 1743547235972
+              modified: 1743610541364
+              isPrivate: false
+              sortKey: -1743547393573
+            method: GET
+            parameters:
+              - id: pair_0351e088998f47558b0b4f144049001b
+                name: ticket
+                value: ak
+                disabled: true
+              - id: pair_d30f64eb6ea14f30894c332088601be6
+                name: surname
+                value: Req
+                disabled: true
+              - id: pair_06c01dacf5674e76a2a062a9e6ad6ef2
+                name: status
+                value: NEW
+                disabled: true
+              - id: pair_1ccda7f7ebeb4bc59e551fad5ec09064
+                name: status
+                value: VALIDATED
+                disabled: true
+              - id: pair_f86721fe8b754be7be92b5e85e9d7d2f
+                name: from
+                value: 2024-01-01
+                disabled: true
+              - id: pair_c4aaa11a70774ce88a3fcb73314ea5d8
+                name: thru
+                value: 2025-03-31
+                disabled: true
+              - id: pair_5e63019f174649ea81621d91f3e8c8b0
+                name: sortBy
+                value: submittedTs
+                disabled: true
+              - id: pair_038c8f4f5af04cccb70c62b7ff4247c3
+                name: direction
+                value: asc
+                disabled: true
+              - id: pair_4750b50d12e84a539a1a9c5286be4871
+                name: courthouseId
+                value: "8841.0001"
+                disabled: true
+              - id: pair_f5868e8410af4b85bdb6ae1b5848c4b3
+                name: pageNumber
+                value: "0"
+                disabled: true
+              - id: pair_a5a464a13e144070959749e14f479177
+                name: pageSize
+                value: "25"
+                disabled: true
+            headers:
+              - name: User-Agent
+                value: insomnia/10.3.1
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_752b7e6303da4cbbbe39f88935ccba83
+    created: 1731027543549
+    modified: 1744914548910
+environments:
+  name: Base Environment
+  meta:
+    id: env_1cb28c2165704f38a21b6ebb8ed3c123
+    created: 1731027543547
+    modified: 1744914548912
+    isPrivate: false
+  data:
+    tco:
+      base_url: https://{{ _.wsgw_host }}/tco/ords/{{ _.db_name }}/tcoords
+    occam:
+      base_url: https://{{ _.wsgw_host }}/occam/ords/{{ _.db_name }}/occamords

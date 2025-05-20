@@ -16,9 +16,9 @@ public interface IDisputeStatusTypeRepository
     Task<List<DisputeStatusType>> GetListAsync(CancellationToken cancellationToken);
 }
 
-internal class DisputeStatusTypeRepository : OrdsRepository<DisputeStatusTypeRepository>, IDisputeStatusTypeRepository
+internal class DisputeStatusTypeRepository : TcoOrdsRepository<DisputeStatusTypeRepository>, IDisputeStatusTypeRepository
 {
-    public DisputeStatusTypeRepository(OrdsDataServiceClient client, ILogger<DisputeStatusTypeRepository> logger)
+    public DisputeStatusTypeRepository(TcoOrdsDataServiceClient client, ILogger<DisputeStatusTypeRepository> logger)
         : base(client, "/v2/tco_dispute_status_types", logger)
     {
     }

@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
+using TrafficCourts.OrdsDataService.Tco;
 
 namespace TrafficCourts.OrdsDataService.Justin;
 
-internal class ProvinceRepository : OrdsRepository<ProvinceRepository>, IProvinceRepository
+internal class ProvinceRepository : TcoOrdsRepository<ProvinceRepository>, IProvinceRepository
 {
-    public ProvinceRepository(OrdsDataServiceClient client, ILogger<ProvinceRepository> logger) 
+    public ProvinceRepository(TcoOrdsDataServiceClient client, ILogger<ProvinceRepository> logger) 
         : base(client, "/v2/justin_provinces", logger)
     {
     }

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Inpu
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { Sort } from '@angular/material/sort';
 import { DisputeService, Dispute } from 'app/services/dispute.service';
-import { DisputeRequestCourtAppearanceYn, DisputeDisputantDetectedOcrIssues, DisputeStatus, DisputeSystemDetectedOcrIssues, PagedDisputeListItemCollection, SortDirection } from 'app/api';
+import { DisputeRequestCourtAppearanceYn, DisputeDisputantDetectedOcrIssues, DisputeStatus, DisputeSystemDetectedOcrIssues, PagedDisputeListItemCollection, SortDirection, DisputeInterpreterRequired } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 import { TableFilter, TableFilterKeys, TableFilterStatusOptions, TicketValidationTableStatusDefault } from '@shared/models/table-filter-options.model';
@@ -21,7 +21,7 @@ export class TicketInboxComponent implements OnInit {
   disputesCollection: PagedDisputeListItemCollection = {};
   dataSource = new MatTableDataSource(this.disputes);
 
-  tableFilterKeys: TableFilterKeys[] = ["dateSubmittedFrom", "dateSubmittedTo", "disputantSurname", "status", "ticketNumber"];
+  tableFilterKeys: TableFilterKeys[] = ["dateSubmittedFrom", "dateSubmittedTo", "disputantSurname", "status", "ticketNumber", /*"courthouseLocation"*/ ]; // TCVP-3258 - temporarily hiding 'courthouseLocation'
   statusFilterOptions = TableFilterStatusOptions;
   defaultStatusFilter = TicketValidationTableStatusDefault;
 
@@ -34,13 +34,15 @@ export class TicketInboxComponent implements OnInit {
     'status',
     'requestCourtAppearanceYn',
     'disputantDetectedOcrIssues',
-    'systemDetectedOcrIssues',
+    'interpreterRequired',
+ //   'courthouseLocation', TCVP-3258 - temporarily hiding 'courthouseLocation'
     'userAssignedTo',
   ];
   userProfile: KeycloakProfile = {};
   RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
   DisputantDetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
   SystemDetectedOcrIssues = DisputeSystemDetectedOcrIssues;
+  DisputeInterpreterRequired = DisputeInterpreterRequired;
 
   showTicket = false;
   currentPage: number = 1;
@@ -73,7 +75,6 @@ export class TicketInboxComponent implements OnInit {
 
     // when authentication token available, get data
     let dataFilter: TableFilter = this.tableFilterService.tableFilters[this.tabIndex];
-    //dataFilter.status = dataFilter.status ?? [];
     this.filters = dataFilter;
     this.previousFilters = { ...dataFilter };
     this.currentPage = this.tableFilterService.currentPage[this.tabIndex];
@@ -88,26 +89,28 @@ export class TicketInboxComponent implements OnInit {
   getAllDisputes(): void {
     this.logger.log('TicketInboxComponent::getAllDisputes');    
 
-    this.disputeService.getDisputes(this.sortBy, this.sortDirection, this.currentPage != 0 ? this.currentPage : 1, 
-      this.filters).subscribe((response) => {
-      this.disputes = [];
-      this.logger.info(
-        'TicketInboxComponent::getAllDisputes response',
-        response
-      );
+    this.disputeService
+      .getDisputes(this.sortBy, this.sortDirection, this.currentPage != 0 ? this.currentPage : 1, this.filters)
+      .subscribe((response) => {
+        this.disputes = [];
+        this.logger.info(
+          'TicketInboxComponent::getAllDisputes response',
+          response
+        );
 
-      this.disputesCollection = response;
-      this.currentPage = response.pageNumber;
-      this.totalPages = response.pageCount;
-      if(!this.totalPages){
-        this.currentPage = 0;
+        this.disputesCollection = response;
+        this.currentPage = response.pageNumber;
+        this.totalPages = response.totalPages;
+        if(!this.totalPages){
+          this.currentPage = 0;
+        }
+        response.items.forEach((dispute: Dispute) => {
+          dispute.__RedGreenAlert = dispute.status == DisputeStatus.New ? 'Green' : '',
+            this.disputes.push(dispute);
+        });      
+        this.dataSource.data = this.disputes;
       }
-      response.items.forEach((dispute: Dispute) => {
-        dispute.__RedGreenAlert = dispute.status == DisputeStatus.New ? 'Green' : '',
-          this.disputes.push(dispute);
-      });      
-      this.dataSource.data = this.disputes;
-    });
+    );
   }
 
   countNewTickets() {
