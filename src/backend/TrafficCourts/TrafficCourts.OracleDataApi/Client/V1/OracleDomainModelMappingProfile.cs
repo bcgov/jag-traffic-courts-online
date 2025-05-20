@@ -88,12 +88,10 @@ public class OracleDomainModelMappingProfile : AutoMapper.Profile
         CreateMap<Oracle.FileHistory, DomainModel.FileHistory>().ReverseMap();
         CreateMap<Oracle.JJDispute, DomainModel.JJDispute>()
             .ForMember(dest => dest.FileData, opt => opt.Ignore())
-            .ForMember(dest => dest.IssuedTs, src => src.MapFrom(s => UtcToPacificTimeDateTime(s.IssuedTs)))
             .ForMember(dest => dest.LockId, opt => opt.Ignore())
             .ForMember(dest => dest.LockedBy, opt => opt.Ignore())
             .ForMember(dest => dest.LockExpiresAtUtc, opt => opt.Ignore())
-            .ReverseMap()
-            .ForMember(dest => dest.IssuedTs, src => src.MapFrom(s => s.IssuedTs));
+            .ReverseMap();
         CreateMap<Oracle.JJDisputeCourtAppearanceRoP, DomainModel.JJDisputeCourtAppearanceRoP>().ReverseMap();
         CreateMap<Oracle.JJDisputedCount, DomainModel.JJDisputedCount>().ReverseMap();
         CreateMap<Oracle.JJDisputedCountRoP, DomainModel.JJDisputedCountRoP>().ReverseMap();
