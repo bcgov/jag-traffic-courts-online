@@ -165,7 +165,7 @@ namespace TrafficCourts.Domain.Models
         public System.DateTimeOffset? SubmittedTs { get; set; }
 
         [Newtonsoft.Json.JsonProperty("issuedTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTime? IssuedTs { get; set; }
+        public System.DateTimeOffset? IssuedTs { get; set; }
 
         [Newtonsoft.Json.JsonProperty("violationDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTimeOffset? ViolationDate { get; set; }
