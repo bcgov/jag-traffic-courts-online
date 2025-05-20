@@ -20,7 +20,7 @@ citizen-api:
   pdb:
     create: true
   image:
-   tag: "2.11.1"
+    tag: "2.11.1"
     pullPolicy: Always
   env:
     "FormRecognizer__ApiVersion": "2022-08-31"
