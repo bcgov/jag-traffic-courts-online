@@ -608,10 +608,7 @@ internal partial class OracleDataApiService : IOracleDataApiService
             Oracle.Dispute oracleBody = _mapper.Map<Oracle.Dispute>(body);
 
             // stub out the ViolationTicket if the submitted Dispute has associated OCR scan results.
-            if (!string.IsNullOrEmpty(oracleBody.OcrTicketFilename))
-            {
-                oracleBody.ViolationTicket = CreateViolationTicketFromDispute(oracleBody);
-            }
+            oracleBody.ViolationTicket = CreateViolationTicketFromDispute(oracleBody);
 
             // _logger.LogTrace("Saving dispute with ticket number {@OracleDisputeBody}", oracleBody);
 
