@@ -1,11 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
+using TrafficCourts.OrdsDataService.Tco;
 using System.Collections.Generic;
 
 namespace TrafficCourts.OrdsDataService.Justin;
 
-internal class StatuteRepository : OrdsRepository<StatuteRepository>, IStatuteRepository
+internal class StatuteRepository : TcoOrdsRepository<StatuteRepository>, IStatuteRepository
 {
-    public StatuteRepository(OrdsDataServiceClient client, ILogger<StatuteRepository> logger)
+    public StatuteRepository(TcoOrdsDataServiceClient client, ILogger<StatuteRepository> logger)
         : base(client, "/v2/justin_statutes", logger)
     {
     }

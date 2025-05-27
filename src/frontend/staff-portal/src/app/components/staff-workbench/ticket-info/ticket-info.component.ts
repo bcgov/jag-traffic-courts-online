@@ -592,7 +592,8 @@ export class TicketInfoComponent implements OnInit {
       this.form
         .get('violationTicket')
         .get('violationTime')
-        .value.substring(2, 4);
+        .value.substring(2, 4) +
+      'Z';
     putDispute.issuedTs =
       this.form.get('violationTicket').get('violationDate').value +
       'T' +
@@ -604,7 +605,8 @@ export class TicketInfoComponent implements OnInit {
       this.form
         .get('violationTicket')
         .get('violationTime')
-        .value.substring(2, 4);
+        .value.substring(2, 4) +
+      ':00Z';
 
     // Counts 1,2,3
     putDispute.violationTicket.violationTicketCounts =

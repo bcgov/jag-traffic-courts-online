@@ -1,5 +1,4 @@
-﻿using OpenTelemetry.Metrics;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
@@ -7,7 +6,7 @@ using System.Web;
 
 namespace TrafficCourts.OrdsDataService;
 
-internal class OrdsDataServiceClient
+internal abstract class OrdsDataServiceClient
 {
     private readonly HttpClient _httpClient;
     private readonly IOrdsDataServiceOperationMetrics _metrics;

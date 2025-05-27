@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
+using TrafficCourts.OrdsDataService.Tco;
 
 namespace TrafficCourts.OrdsDataService.Justin;
 
 internal class LanguageRepository : OrdsRepository<LanguageRepository>, ILanguageRepository
 {
-    public LanguageRepository(OrdsDataServiceClient client, ILogger<LanguageRepository> logger) 
+    public LanguageRepository(TcoOrdsDataServiceClient client, ILogger<LanguageRepository> logger) 
         : base(client, "/v2/justin_languages", logger)
     {
     }

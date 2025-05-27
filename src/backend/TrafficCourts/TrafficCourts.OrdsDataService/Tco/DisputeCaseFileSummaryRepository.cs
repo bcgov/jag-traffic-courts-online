@@ -9,9 +9,9 @@ public interface IDisputeCaseFileSummaryRepository
         CancellationToken cancellationToken);
 }
 
-internal class DisputeCaseFileSummaryRepository : OrdsRepository<DisputeCaseFileSummaryRepository>, IDisputeCaseFileSummaryRepository
+internal class DisputeCaseFileSummaryRepository : TcoOrdsRepository<DisputeCaseFileSummaryRepository>, IDisputeCaseFileSummaryRepository
 {
-    public DisputeCaseFileSummaryRepository(OrdsDataServiceClient client, ILogger<DisputeCaseFileSummaryRepository> logger) 
+    public DisputeCaseFileSummaryRepository(TcoOrdsDataServiceClient client, ILogger<DisputeCaseFileSummaryRepository> logger) 
         : base(client, "/v2/tco_disputes", logger)
     {
     }

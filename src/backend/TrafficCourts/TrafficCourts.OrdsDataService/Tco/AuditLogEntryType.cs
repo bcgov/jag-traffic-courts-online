@@ -20,9 +20,9 @@ public interface IAuditLogEntryTypeRepository
     Task<List<AuditLogEntryType>> GetListAsync(CancellationToken cancellationToken);
 }
 
-internal class AuditLogEntryTypeRepository : OrdsRepository<AuditLogEntryTypeRepository>, IAuditLogEntryTypeRepository
+internal class AuditLogEntryTypeRepository : TcoOrdsRepository<AuditLogEntryTypeRepository>, IAuditLogEntryTypeRepository
 {
-    public AuditLogEntryTypeRepository(OrdsDataServiceClient client, ILogger<AuditLogEntryTypeRepository> logger)
+    public AuditLogEntryTypeRepository(TcoOrdsDataServiceClient client, ILogger<AuditLogEntryTypeRepository> logger)
         : base(client, "/v2/tco_audit_log_entry_types", logger)
     {
     }

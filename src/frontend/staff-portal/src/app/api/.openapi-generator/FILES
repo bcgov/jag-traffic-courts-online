@@ -44,6 +44,7 @@ model/disputeSignatoryType.model.ts
 model/disputeStatus.model.ts
 model/disputeSystemDetectedOcrIssues.model.ts
 model/disputeUpdateRequest.model.ts
+model/disputeUpdateRequestStatus.model.ts
 model/disputeUpdateRequestStatus2.model.ts
 model/disputeUpdateRequestUpdateType.model.ts
 model/disputeWithUpdates.model.ts
@@ -93,9 +94,13 @@ model/jJDisputedCountRoPWithdrawn.model.ts
 model/language.model.ts
 model/lock.model.ts
 model/models.ts
+model/occamDisputeListItemModel.model.ts
+model/occamDisputeWithUpdateRequestListItemModel.model.ts
 model/ocrViolationTicket.model.ts
 model/pagedDisputeCaseFileSummaryCollection.model.ts
 model/pagedDisputeListItemCollection.model.ts
+model/pagedOccamDisputeListItemCollection.model.ts
+model/pagedOccamDisputeWithUpdateRequestListItemCollection.model.ts
 model/permission.model.ts
 model/point.model.ts
 model/problemDetails.model.ts
