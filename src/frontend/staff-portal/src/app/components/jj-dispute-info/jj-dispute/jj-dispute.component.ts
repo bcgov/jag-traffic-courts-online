@@ -385,7 +385,7 @@ export class JJDisputeComponent implements OnInit {
     this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action: any) => {
         if (action) {
-          this.jjDisputeService.apiJjTicketNumberAcceptPut(this.lastUpdatedJJDispute.ticketNumber, 
+          this.jjDisputeService.apiJjTicketNumberAcceptPut(this.lastUpdatedJJDispute.ticketNumber,
             this.type === TabType.DECISION_VALIDATION).subscribe(response => {
             this.onBackClicked();
           });
@@ -408,7 +408,7 @@ export class JJDisputeComponent implements OnInit {
       .subscribe((action: any) => {
         if (action?.output?.response) {
           this.remarks = action.output.reason;
-          this.jjDisputeService.apiJjDisputeIdReviewPut(this.lastUpdatedJJDispute.ticketNumber, 
+          this.jjDisputeService.apiJjDisputeIdReviewPut(this.lastUpdatedJJDispute.ticketNumber,
             this.type === TabType.DECISION_VALIDATION, this.remarks).subscribe(() => {
             this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.selectedJJ).subscribe(response => {
               this.onBackClicked();
@@ -423,11 +423,11 @@ export class JJDisputeComponent implements OnInit {
     if (this.lastUpdatedJJDispute.hearingType === this.HearingType.CourtAppearance) {
       this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0] = { ...this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0], ...this.courtAppearanceForm.value };
     }
-    return this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id, 
+    return this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id,
       this.lastUpdatedJJDispute, this.type === TabType.DECISION_VALIDATION, this.remarks).pipe(
       map(
         response => {
-          this.lastUpdatedJJDispute = response;
+          this.lastUpdatedJJDispute = this.jjDisputeService.toDisplay(response);
           this.logger.info(
             'JJDisputeComponent::putJJDispute response',
             response
@@ -573,30 +573,30 @@ export class JJDisputeComponent implements OnInit {
 
   onUpload(files: FileList) {
     if (files.length <= 0) return;
-  
+
     // Initially, set the status to "waiting for virus scan..."
-    let item: FileMetadata = { 
-      fileId: '', 
-      fileName: files[0].name, 
-      virusScanStatus: "waiting for virus scan..." 
+    let item: FileMetadata = {
+      fileId: '',
+      fileName: files[0].name,
+      virusScanStatus: "waiting for virus scan..."
     };
-  
+
     // Add the item to the fileData array
     this.lastUpdatedJJDispute.fileData.push(item);
-  
+
     // Manually trigger change detection to ensure the UI is refreshed
     this.cdr.detectChanges();
-  
+
     // Upload the file
     this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.noticeOfDisputeGuid, this.fileTypeToUpload, files[0], this.lastUpdatedJJDispute.id)
       .subscribe(fileId => {
         // Once the file is uploaded, update the fileId and status
         item.fileId = fileId;
         item.virusScanStatus = "";  // or any other status
-  
+
         // Manually trigger change detection again to update the view
         this.cdr.detectChanges();
-  
+
         // Call refreshFileHistory() to update the history if needed
         this.refreshFileHistory();
       }, error => {
