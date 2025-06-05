@@ -1,30 +1,25 @@
 kind: BuildConfig
 apiVersion: build.openshift.io/v1
 metadata:
-  name: virus-scan-api-build
+  name: ticket-generator-build
   namespace: 0198bb-tools
 spec:
   output:
     to:
       kind: ImageStreamTag
-      name: 'virus-scan-api:latest'
+      name: 'ticket-gen:latest'
   resources: {}
   successfulBuildsHistoryLimit: 5
   failedBuildsHistoryLimit: 5
   strategy:
     type: Docker
     dockerStrategy:
-      env:
-        - name: ASPNETCORE_ENVIRONMENT
-          value: 'Production'
-        - name: ASPNETCORE_URLS
-          value: 'http://*:8080'
-      dockerfilePath: BCGov.VirusScan.Api/Dockerfile
+      dockerfilePath: Dockerfile
   postCommit: {}
   source:
     type: Git
     git:
       uri: 'https://github.com/bcgov/jag-traffic-courts-online'
-      ref: main
-    contextDir: src/backend/bc-gov-virus-scan
+      ref: develop
+    contextDir: tools/ticket-generator
   runPolicy: Serial
