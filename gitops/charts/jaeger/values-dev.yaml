@@ -38,12 +38,12 @@ podAnnotations:
 storage:
   # see https://www.jaegertracing.io/docs/latest/deployment/#memory
   memory:
-    enabled: false
+    enabled: true
     # Limit the number of traces stored in-memory, if not specified, defaults to 50000
     maxTraces: 50000
   # badger embedded local storage
   badger:
-   enabled: true
+   enabled: false
    ephemeral: false
   #
   pvc:
