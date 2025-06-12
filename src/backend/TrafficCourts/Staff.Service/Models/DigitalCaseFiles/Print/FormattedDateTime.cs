@@ -4,7 +4,8 @@ namespace TrafficCourts.Staff.Service.Models.DigitalCaseFiles.Print;
 
 public class FormattedDateTime : FormattedDateOnly
 {
-    private const string TimeFormat = "HH:mm";
+    private const string _timeFormat24Hour = "HH:mm";
+    private const string _timeFormat12Hour = "hh:mm tt";
 
     public static new FormattedDateTime Empty = new FormattedDateTime();
 
@@ -13,24 +14,24 @@ public class FormattedDateTime : FormattedDateOnly
         Time = string.Empty;
     }
 
-    public FormattedDateTime(DateTime dateTime) : base(dateTime)
+    public FormattedDateTime(DateTime dateTime, bool use12HourFormat = false) : base(dateTime)
     {
-        Time = dateTime.ToString(TimeFormat);
+        Time = dateTime.ToString(use12HourFormat ? _timeFormat12Hour : _timeFormat24Hour);
     }
 
-    public FormattedDateTime(DateTime? dateTime) : base(dateTime)
+    public FormattedDateTime(DateTime? dateTime, bool use12HourFormat = false) : base(dateTime)
     {
-        Time = dateTime?.ToString(TimeFormat) ?? string.Empty;
+        Time = dateTime?.ToString(use12HourFormat ? _timeFormat12Hour : _timeFormat24Hour) ?? string.Empty;
     }
 
-    public FormattedDateTime(DateTimeOffset dateTime) : base(dateTime)
+    public FormattedDateTime(DateTimeOffset dateTime, bool use12HourFormat = false) : base(dateTime)
     {
-        Time = dateTime.ToString(TimeFormat);
+        Time = dateTime.ToString(use12HourFormat ? _timeFormat12Hour : _timeFormat24Hour);
     }
 
-    public FormattedDateTime(DateTimeOffset? dateTime) : base(dateTime)
+    public FormattedDateTime(DateTimeOffset? dateTime, bool use12HourFormat = false) : base(dateTime)
     {
-        Time = dateTime?.ToString(TimeFormat) ?? string.Empty;
+        Time = dateTime?.ToString(use12HourFormat ? _timeFormat12Hour : _timeFormat24Hour) ?? string.Empty;
     }
 
     [JsonProperty("time")]

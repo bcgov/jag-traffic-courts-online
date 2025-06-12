@@ -83,11 +83,11 @@
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Violation Date</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "dd-MMM-yyyy" : "UTC" }}</p>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "dd-MMM-yyyy" }}</p>
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Violation Time</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "HH:mm" : "UTC" }}</p>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "HH:mm" }}</p>
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Online Submission Date</p>
@@ -295,7 +295,7 @@
             <span class="section-grid-cell">
               <p class="section-grid-header">Appearance Date/Time</p>
               <p class="section-grid-text">
-                {{ lastUpdatedJJDispute.mostRecentCourtAppearance?.appearanceTs | date: "dd-MMM-yyyy HH:mm" : "UTC" }}
+                {{ lastUpdatedJJDispute.mostRecentCourtAppearance?.appearanceTs | date: "dd-MMM-yyyy hh:mm a" : "UTC" }}
               </p>
             </span>
             <span class="section-grid-cell">
