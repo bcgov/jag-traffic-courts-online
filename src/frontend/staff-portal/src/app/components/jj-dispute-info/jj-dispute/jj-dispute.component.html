@@ -399,7 +399,7 @@
             <span class="section-grid-cell">
               <p class="section-grid-header">Judicial Justice</p>
               <p class="section-grid-text">
-                <span>{{ courtAppearanceForm?.value.adjudicator }}</span>
+                <span *ngIf="type !== tabTypes.HEARING_INBOX">{{ courtAppearanceForm?.value.adjudicator }}</span>
               </p>
             </span>
             <span class="section-grid-cell" style="grid-column: span 11">
