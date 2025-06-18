@@ -261,7 +261,8 @@
     "phone_number": "Must be a valid phone number",  
     "positive_number": "Enter positive number",
     "postal_zip": "Must be a valid postal/zip code",
-    "required": "Required"
+    "required": "Required",
+    "remark_required": "Enter a remark to save"
   },
   "warning": {
     "unverified_email": "The contact email address has not been verified by the disputant. To opt them out of email communications, set the email address to blank and Save. Alternatively you can resend the email verification to the disputant."

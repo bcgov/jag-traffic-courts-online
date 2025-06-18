@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, TemplateRef } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
 import { JJDisputeService, JJDispute } from '../../../services/jj-dispute.service';
 import { Observable, map } from 'rxjs';
@@ -33,6 +33,7 @@ export class JJDisputeComponent implements OnInit {
   @ViewChild("uploadedDocuments") uploadedDocumentsAnchor: ElementRef;
   @ViewChild("fileHistory") fileHistoryAnchor: ElementRef;
   @ViewChild("fileRemarks") fileRemarksAnchor: ElementRef;
+  @ViewChild('remarksDialog') remarksDialog!: TemplateRef<any>;
 
   @Input() tcoDisputeInfo: DisputeCaseFileSummary;
   @Input() type: TabType;
@@ -186,7 +187,7 @@ export class JJDisputeComponent implements OnInit {
       );
 
       this.lastUpdatedJJDispute = response;
-
+      
       // set up headings for written reasons
       this.lastUpdatedJJDispute.jjDisputedCounts.forEach(disputedCount => {
         if (disputedCount.requestTimeToPay === this.RequestTimeToPay.Y) this.timeToPayCountsHeading += "Count " + disputedCount.count.toString() + ", ";
@@ -309,6 +310,22 @@ export class JJDisputeComponent implements OnInit {
       });
   }
 
+  onAddRemarks(): void {
+
+    const dialogRef = this.dialog.open(this.remarksDialog, {
+      width: '500px',
+      data: {},
+      disableClose: true, // optional: require button click to close
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.onRemarkSave();
+      }
+    });
+  }
+  
+
   onUpdateAPPCd() {
     if (JJDisputeCourtAppearanceRoPAppCd.P === this.courtAppearanceForm.value.appCd
       || JJDisputeCourtAppearanceRoPAppCd.A === this.courtAppearanceForm.value.appCd) {
@@ -362,6 +379,24 @@ export class JJDisputeComponent implements OnInit {
       this.getJJDispute();
     });
   }
+
+  onRemarkSave(): void {
+    this.jjDisputeService.putJJDispute( this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id, this.lastUpdatedJJDispute, this.type === TabType.DCF, this.remarks) 
+    .subscribe(response => {
+
+      const data: DialogOptions = {
+        titleKey: "Remark Saved",
+        actionTextKey: "Ok",
+        cancelHide: true,
+        actionType: "primary",
+        icon: "done"
+      };
+      this.dialog.open(ConfirmDialogComponent, { data, width: "200px" });
+      this.getJJDispute();
+    });
+
+  }
+
 
   /**
    * Called by support-staff when reverting any changes they may have made to the form.
