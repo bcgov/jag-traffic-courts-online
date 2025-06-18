@@ -65,18 +65,18 @@ export class JJDisputeService {
     return of([]);
   }
 
-  public getTCODisputes(params: { appearances?: boolean, noticeOfHearingYn?: boolean, multipleOfficersYn?: boolean, 
-    electronicTicketYn?: boolean, timeZone?: string, submittedFrom?: string, submittedThru?: string, 
-    ticketNumber?: string, surname?: string, surnameOrOrgName?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string, 
+  public getTCODisputes(params: { appearances?: boolean, noticeOfHearingYn?: boolean, multipleOfficersYn?: boolean,
+    electronicTicketYn?: boolean, timeZone?: string, submittedFrom?: string, submittedThru?: string,
+    ticketNumber?: string, surname?: string, surnameOrOrgName?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string,
     jjDecisionDtThru?: string, disputeStatusCodes?: string, appearanceCourthouseIds?: string,
-    appearanceDtFrom?: string, appearanceDtThru?: string, toBeHeardAtCourthouseIds?: string, 
-    hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number }): 
+    appearanceDtFrom?: string, appearanceDtThru?: string, toBeHeardAtCourthouseIds?: string,
+    hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number }):
     Observable<PagedDisputeCaseFileSummaryCollection> {
-    return this.jjApiService.apiJjDisputesSearchGet(params.appearances, params.noticeOfHearingYn, 
-      params.multipleOfficersYn, params.electronicTicketYn, params.timeZone, params.submittedFrom, 
-      params.submittedThru, params.ticketNumber, params.surname, params.surnameOrOrgName, params.jjAssignedTo, 
-      params.jjDecisionDtFrom, params.jjDecisionDtThru, params.disputeStatusCodes, params.appearanceCourthouseIds, 
-      params.appearanceDtFrom, params.appearanceDtThru, params.toBeHeardAtCourthouseIds, 
+    return this.jjApiService.apiJjDisputesSearchGet(params.appearances, params.noticeOfHearingYn,
+      params.multipleOfficersYn, params.electronicTicketYn, params.timeZone, params.submittedFrom,
+      params.submittedThru, params.ticketNumber, params.surname, params.surnameOrOrgName, params.jjAssignedTo,
+      params.jjDecisionDtFrom, params.jjDecisionDtThru, params.disputeStatusCodes, params.appearanceCourthouseIds,
+      params.appearanceDtFrom, params.appearanceDtThru, params.toBeHeardAtCourthouseIds,
       params.hearingTypeCd, params.sortBy, params.pageNumber, params.pageSize)
       .pipe(
         map((response: PagedDisputeCaseFileSummaryCollection) => {
@@ -215,8 +215,8 @@ export class JJDisputeService {
 
   /**
    * Updates a single JJ Dispute and related Dispute data. Must have update-admin permission on the JJDispute resource to use this endpoint.
-   * @param ticketNumber 
-   * @param jjDispute 
+   * @param ticketNumber
+   * @param jjDispute
    * @returns update JJDispute
    */
   public apiJjTicketNumberCascadePut(ticketNumber: string, jjDispute: JJDispute): Observable<any> {
@@ -225,11 +225,11 @@ export class JJDisputeService {
         map((response: any) => {
           this.logger.info('jj-DisputeService::apiJjTicketNumberCascadePut', response)
           this.store.dispatch(JJDisputeStore.Actions.Get());
-          
+
           this.toastService.openSuccessToast(
             this.translateService.instant('toaster.dispute_saved')
           );
-          
+
           return response;
         }),
         catchError((error: any) => {
@@ -381,7 +381,7 @@ export class JJDisputeService {
       }));
   }
 
-  private toDisplay(jjDispute: JJDispute): JJDispute {
+  toDisplay(jjDispute: JJDispute): JJDispute {
     jjDispute.contactName = jjDispute.contactSurname + (jjDispute.contactGivenName1 || jjDispute.contactGivenName2 || jjDispute.contactGivenName3 ? "," : "") + (jjDispute.contactGivenName1 ? " " + jjDispute.contactGivenName1 : "") + (jjDispute.contactGivenName2 ? " " + jjDispute.contactGivenName2 : "") + (jjDispute.contactGivenName3 ? " " + jjDispute.contactGivenName3 : "");
     jjDispute.contactGivenNames = jjDispute.contactGivenName1 + (jjDispute.contactGivenName2 ? " " + jjDispute.contactGivenName2 : "") + (jjDispute.contactGivenName3 ? " " + jjDispute.contactGivenName3 : "");
     jjDispute.occamDisputantName = jjDispute.occamDisputantSurnameNm + (jjDispute.occamDisputantGiven1Nm || jjDispute.occamDisputantGiven2Nm || jjDispute.occamDisputantGiven3Nm ? "," : "") + (jjDispute.occamDisputantGiven1Nm ? " " + jjDispute.occamDisputantGiven1Nm : "") + (jjDispute.occamDisputantGiven2Nm ? " " + jjDispute.occamDisputantGiven2Nm : "") + (jjDispute.occamDisputantGiven3Nm ? " " + jjDispute.occamDisputantGiven3Nm : "");
