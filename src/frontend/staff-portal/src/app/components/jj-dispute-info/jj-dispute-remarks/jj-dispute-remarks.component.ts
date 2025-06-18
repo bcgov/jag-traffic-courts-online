@@ -1,4 +1,4 @@
-import { Component, ViewChild, Input, OnDestroy } from '@angular/core';
+import { Component, ViewChild, Input, OnDestroy, SimpleChanges } from '@angular/core';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { MatSort } from '@angular/material/sort';
 import { FileHistory, JJDisputeRemark } from 'app/api';
@@ -30,6 +30,11 @@ export class JJDisputeRemarksComponent implements OnDestroy {
     }));
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.data) {
+      this.refreshData();
+    }
+  }
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
