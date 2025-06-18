@@ -156,11 +156,11 @@ class DisputeControllerTest extends BaseTestSuite {
 		rejectDispute(disputeId, "")
 		.andExpect(status().isBadRequest());
 
-		// try using an long reason, > 256 (should fail with 400 error)
-		rejectDispute(disputeId, RandomStringUtils.random(257))
+		// try using an long reason, > 4000 (should fail with 400 error)
+		rejectDispute(disputeId, RandomStringUtils.random(4001))
 		.andExpect(status().isBadRequest());
 
-		String longString = RandomStringUtils.randomAlphabetic(256);
+		String longString = RandomStringUtils.randomAlphabetic(4000);
 
 		// Set the status to REJECTED
 		rejectDispute(disputeId, longString)
@@ -231,11 +231,11 @@ class DisputeControllerTest extends BaseTestSuite {
 		cancelDispute(disputeId, "")
 		.andExpect(status().isBadRequest());
 
-		// try using an long reason, > 256 (should fail with 400 error)
-		cancelDispute(disputeId, RandomStringUtils.random(257))
+		// try using an long reason, > 400 (should fail with 400 error)
+		cancelDispute(disputeId, RandomStringUtils.random(4001))
 		.andExpect(status().isBadRequest());
 
-		String longString = RandomStringUtils.randomAlphabetic(256);
+		String longString = RandomStringUtils.randomAlphabetic(4000);
 
 		// Set the status to CANCELLED
 		cancelDispute(disputeId, longString)
