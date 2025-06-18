@@ -115,6 +115,12 @@ public class Dispute : DisputantContactInformation
     public string? LawyerPhoneNumber { get; set; }
 
     /// <summary>
+    /// Court Location 
+    /// </summary>
+    [JsonPropertyName("court_location")]
+    public string? CourtLocation { get; set; }
+
+    /// <summary>
     /// Request Court Appearance
     /// </summary>
     [JsonPropertyName("request_court_appearance")]
