@@ -73,7 +73,9 @@ export class JJCountComponent implements OnInit, OnChanges {
   lesserOrGreaterAmount: number = 0;
   surcharge: number = 0;
   lesserDescriptionFilteredStatutes: Statute[];
-  drivingProhibitionFilteredStatutes: Statute[];
+  // @see https://jira.justice.gov.bc.ca/browse/TCVP-3153
+  drivingProhibitionStatutes: Statute[] = this.lookupsService.statutes.filter(statute => ['98', '100'].includes(statute.code));
+  drivingProhibitionFilteredStatutes: Statute[] = [...this.drivingProhibitionStatutes];
   DisputeStatus = JJDisputeStatus;
 
   constructor(
@@ -152,16 +154,16 @@ export class JJCountComponent implements OnInit, OnChanges {
       // Patch the form with the modified object
       this.form.patchValue(jjDisputedCountCopy);
       this.jjDisputedCount.lesserOrGreaterAmount ?? this.form.controls.lesserOrGreaterAmount.setValue(this.jjDisputedCount.ticketedFineAmount);
-      this.inclSurcharge = (this.jjDisputedCount && this.jjDisputedCount.lesserOrGreaterAmount) ? 
-        (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.Y ? "yes" : 
+      this.inclSurcharge = (this.jjDisputedCount && this.jjDisputedCount.lesserOrGreaterAmount) ?
+        (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.Y ? "yes" :
         (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.N ? "no" : "")) : "";
-      this.fineReduction = this.jjDisputedCount ? (this.jjDisputedCount.totalFineAmount && 
-          this.jjDisputedCount.lesserOrGreaterAmount ? (this.jjDisputedCount.lesserOrGreaterAmount !== null && 
-          this.jjDisputedCount.lesserOrGreaterAmount != this.jjDisputedCount.ticketedFineAmount ? 
+      this.fineReduction = this.jjDisputedCount ? (this.jjDisputedCount.totalFineAmount &&
+          this.jjDisputedCount.lesserOrGreaterAmount ? (this.jjDisputedCount.lesserOrGreaterAmount !== null &&
+          this.jjDisputedCount.lesserOrGreaterAmount != this.jjDisputedCount.ticketedFineAmount ?
           "yes" : "no") : "") : "";
-      let today = new Date();      
-      this.timeToPay = this.jjDisputedCount ? ((this.jjDisputedCount.revisedDueDate) ? 
-        (new Date(this.jjDisputedCount.dueDate).getDate() != new Date(this.jjDisputedCount.revisedDueDate).getDate() 
+      let today = new Date();
+      this.timeToPay = this.jjDisputedCount ? ((this.jjDisputedCount.revisedDueDate) ?
+        (new Date(this.jjDisputedCount.dueDate).getDate() != new Date(this.jjDisputedCount.revisedDueDate).getDate()
           && this.jjDisputedCount.revisedDueDate.split('T')[0] != today.toISOString().split('T')[0]
           ? "yes" : "no") : "") : "";
       this.bindRevisedDueDate(this.jjDisputedCount.revisedDueDate);
@@ -278,7 +280,7 @@ export class JJCountComponent implements OnInit, OnChanges {
           revisedDueDate.setHours(0, 0, 0, 0);
           this.jjDisputedCount.revisedDueDate = revisedDueDate.toISOString().slice(0, 10);
         }
-        this.jjDisputedCount.includesSurcharge = (this.inclSurcharge === "yes" ? this.IncludesSurcharge.Y : 
+        this.jjDisputedCount.includesSurcharge = (this.inclSurcharge === "yes" ? this.IncludesSurcharge.Y :
           (this.inclSurcharge === "no" ? this.IncludesSurcharge.N : this.IncludesSurcharge.Unknown));
         this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
       });
@@ -439,7 +441,7 @@ export class JJCountComponent implements OnInit, OnChanges {
           this.bindRevisedDueDate(this.jjDisputedCount.revisedDueDate);
         } else {
           this.form.controls.revisedDueDate.setValue(new Date()); // TCVP-3082 & TCVP-3070 implemented this based on multiple scenarios on findings and time to pay selections
-        }        
+        }
         this.inclSurcharge = this.jjDisputedCount?.includesSurcharge == this.IncludesSurcharge.N ? "no" : "yes";
         this.updateInclSurcharge(this.inclSurcharge);
       }
@@ -447,7 +449,10 @@ export class JJCountComponent implements OnInit, OnChanges {
   }
 
   onDrivingProhibitionMVASectionKeyup() {
-    this.drivingProhibitionFilteredStatutes = this.filterStatutes(this.form.get('jjDisputedCountRoP').get('drivingProhibitionMVASection').value);
+    this.drivingProhibitionFilteredStatutes = this.drivingProhibitionStatutes
+      .filter(option => option.__statuteString.toLocaleLowerCase().includes(
+        this.form.get('jjDisputedCountRoP').get('drivingProhibitionMVASection').value?.toLowerCase()
+      ));
   }
 
   // return a filtered list of statutes
@@ -514,7 +519,7 @@ export class JJCountComponent implements OnInit, OnChanges {
   bindRevisedDueDate(value){
     if(value) {
       value = new Date(value);
-      value.setDate(value.getDate() + 1);      
+      value.setDate(value.getDate() + 1);
       this.form.controls.revisedDueDate.setValue(value);
     } else {
       this.form.controls.revisedDueDate.setValue(null);

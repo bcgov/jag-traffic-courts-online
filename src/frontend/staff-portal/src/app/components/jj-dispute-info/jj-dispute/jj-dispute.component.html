@@ -6,7 +6,43 @@
           <mat-icon inline="true">arrow_back</mat-icon> Back
         </button>
       </div>
+      <ng-template #remarksDialog let-dialogRef="dialogRef">
+        <h2 mat-dialog-title>{{ "Add Remark" | translate }}</h2>
+      
+        <mat-dialog-content>
+          <textarea
+            matInput
+            [(ngModel)]="remarks"
+            #remarkInput="ngModel"
+            required
+            rows="6"
+            style="width: 100%; background: #fffee6"
+            maxlength="1500"
+          ></textarea>
+          <!-- Character count -->
+          <div style="text-align: right; font-size: 12px; color: gray;">
+            {{ remarks?.length || 0 }}/1500
+          </div>
+          <!-- Validation error -->
+          <div>
+            <mat-error *ngIf="remarkInput.invalid">
+              {{"error.remark_required" | translate }}
+            </mat-error>
+          </div>
+        </mat-dialog-content>
+      
+        <mat-dialog-actions align="end">
+          <button mat-button (click)="dialogRef.close(false)">
+            {{ "common.button.cancel" | translate }}
+          </button>
+          <button mat-raised-button color="primary" [disabled]="remarkInput.invalid" (click)="dialogRef.close(true)">
+            {{ "common.button.save" | translate }}
+          </button>
+        </mat-dialog-actions>
+      </ng-template>
       <div>
+        <button mat-raised-button *ngIf="isSupportStaff && !isSSEditMode" (click)="onAddRemarks()"
+        class="form-button">{{ "Add Remark" | translate }}</button>
         <button mat-raised-button *ngIf="isSupportStaff && !isSSEditMode" (click)="isSSEditMode=true"
           class="form-button">{{ "common.button.edit" | translate }}</button>
         <button mat-raised-button *ngIf="isSSEditMode" (click)="onSupportStaffSave()" class="form-button"
@@ -83,11 +119,11 @@
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Violation Date</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "dd-MMM-yyyy" : "UTC" }}</p>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "dd-MMM-yyyy" }}</p>
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Violation Time</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "HH:mm" : "UTC" }}</p>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "HH:mm" }}</p>
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Online Submission Date</p>
@@ -295,7 +331,7 @@
             <span class="section-grid-cell">
               <p class="section-grid-header">Appearance Date/Time</p>
               <p class="section-grid-text">
-                {{ lastUpdatedJJDispute.mostRecentCourtAppearance?.appearanceTs | date: "dd-MMM-yyyy HH:mm" : "UTC" }}
+                {{ lastUpdatedJJDispute.mostRecentCourtAppearance?.appearanceTs | date: "dd-MMM-yyyy hh:mm a" : "UTC" }}
               </p>
             </span>
             <span class="section-grid-cell">
@@ -399,7 +435,7 @@
             <span class="section-grid-cell">
               <p class="section-grid-header">Judicial Justice</p>
               <p class="section-grid-text">
-                <span>{{ courtAppearanceForm?.value.adjudicator }}</span>
+                <span *ngIf="type !== tabTypes.HEARING_INBOX">{{ courtAppearanceForm?.value.adjudicator }}</span>
               </p>
             </span>
             <span class="section-grid-cell" style="grid-column: span 11">
