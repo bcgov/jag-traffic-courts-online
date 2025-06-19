@@ -41,7 +41,7 @@
         </mat-dialog-actions>
       </ng-template>
       <div>
-        <button mat-raised-button *ngIf="isSupportStaff && !isSSEditMode" (click)="onAddRemarks()"
+        <button mat-raised-button *ngIf="isVTCStaff && !isSSEditMode" (click)="onAddRemarks()"
         class="form-button">{{ "Add Remark" | translate }}</button>
         <button mat-raised-button *ngIf="isSupportStaff && !isSSEditMode" (click)="isSSEditMode=true"
           class="form-button">{{ "common.button.edit" | translate }}</button>
