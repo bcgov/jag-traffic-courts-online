@@ -42,6 +42,7 @@ export class JJDisputeComponent implements OnInit {
   @Output() backInbox: EventEmitter<any> = new EventEmitter();
   printOptions: PrintOptions = new PrintOptions();
   isSupportStaff: boolean = false;
+  isVTCStaff: boolean = false;
   isSSEditMode: boolean = false;
   isJJ: boolean = false;
 
@@ -154,8 +155,9 @@ export class JJDisputeComponent implements OnInit {
         this.jjName = userProfile.fullName;
       }
     });
-
+    
     this.isSupportStaff = this.enableStaffSupport && this.authService.checkRole(UserGroup.SUPPORT_STAFF);
+    this.isVTCStaff = this.authService.checkRole(UserGroup.VTC_STAFF);
     this.isJJ = this.authService.checkRoles([UserGroup.JUDICIAL_JUSTICE, UserGroup.ADMIN_JUDICIAL_JUSTICE]);
     this.provinces = this.lookupsService.provinces;
     this.languages = this.lookupsService.languages;
