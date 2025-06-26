@@ -185,13 +185,13 @@ public class JJDisputeController {
 		@ApiResponse(responseCode = "200", description = "Ok. Updated JJDispute record returned."),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
 		@ApiResponse(responseCode = "404", description = "JJDispute record not found. Update failed."),
-		@ApiResponse(responseCode = "405", description = "A JJDispute status can only be set to REVIEW if status is CONFIRMED and the remark must be <= 256 characters OR "
+		@ApiResponse(responseCode = "405", description = "A JJDispute status can only be set to REVIEW if status is CONFIRMED and the remark must be <= 4000 characters OR "
 				+ "if the status ACCEPTED, CONFIRMED or CONCLUDED and DCF's current hearing date = today's date. Update failed."),
 		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
 	})
 	@PutMapping("/dispute/{ticketNumber}/review")
 	public ResponseEntity<JJDispute> reviewJJDispute(@PathVariable String ticketNumber,
-			@RequestBody (required = false) @Size(max = 256) String remark,
+			@RequestBody (required = false) @Size(max = 4000) String remark,
 			boolean checkVTCAssigned,
 			Principal principal,
 			boolean recalled) {
@@ -273,12 +273,12 @@ public class JJDisputeController {
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
 		@ApiResponse(responseCode = "404", description = "JJDispute record not found. Update failed."),
 		@ApiResponse(responseCode = "405", description = "A JJDispute status can only be set to REQUIRE_COURT_HEARING iff status is one of the following: "
-				+ "NEW, IN_PROGRESS, REVIEW, REQUIRE_COURT_HEARING and the remark must be <= 256 characters. Update failed."),
+				+ "NEW, IN_PROGRESS, REVIEW, REQUIRE_COURT_HEARING and the remark must be <= 4000 characters. Update failed."),
 		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
 	})
 	@PutMapping("/dispute/{ticketNumber}/requirecourthearing")
 	public ResponseEntity<JJDispute> requireCourtHearingJJDispute(@PathVariable String ticketNumber,
-			@RequestParam (required = false) @Size(max = 256) String remark,
+			@RequestParam (required = false) @Size(max = 4000) String remark,
 			Principal principal) {
 		logger.debug("PUT /jj/dispute/{}/requirecourthearing called", StructuredArguments.value("ticketNumber", ticketNumber));
 

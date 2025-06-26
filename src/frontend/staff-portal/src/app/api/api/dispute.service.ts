@@ -126,7 +126,7 @@ export class DisputeService {
     /**
      * Updates the status of a particular Dispute record to CANCELLED.
      * @param disputeId Unique identifier for a specific Dispute record to cancel.
-     * @param cancelledReason The reason or note (max 256 characters) the Dispute was cancelled.
+     * @param cancelledReason The reason or note (max 4000 characters) the Dispute was cancelled.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -507,7 +507,7 @@ export class DisputeService {
     /**
      * Updates the status of a particular Dispute record to REJECTED.
      * @param disputeId Unique identifier for a specific Dispute record to cancel.
-     * @param rejectedReason The reason or note (max 256 characters) the Dispute was rejected.
+     * @param rejectedReason The reason or note (max 4000 characters) the Dispute was rejected.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */

@@ -160,6 +160,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		rejectDispute(disputeId, RandomStringUtils.random(257))
 		.andExpect(status().isBadRequest());
 
+		// proper length should not fail
 		String longString = RandomStringUtils.randomAlphabetic(256);
 
 		// Set the status to REJECTED
@@ -235,6 +236,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		cancelDispute(disputeId, RandomStringUtils.random(257))
 		.andExpect(status().isBadRequest());
 
+		// proper length should not fail
 		String longString = RandomStringUtils.randomAlphabetic(256);
 
 		// Set the status to CANCELLED

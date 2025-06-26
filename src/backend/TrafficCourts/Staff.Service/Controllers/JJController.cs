@@ -588,7 +588,7 @@ public partial class JJController : StaffControllerBase
     /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires jjdispute:review permission.</response>
     /// <response code="404">JJDispute record not found. Update failed.</response>
-    /// <response code="405">A JJDispute status can only be set to REVIEW if status is CONFIRMED and the remark must be less than 256 characters OR if the status ACCEPTED, CONFIRMED or CONCLUDED and DCF's current hearing date = today's date. Update failed</response>
+    /// <response code="405">A JJDispute status can only be set to REVIEW if status is CONFIRMED and the remark must be less than or equal to 4000 characters OR if the status ACCEPTED, CONFIRMED or CONCLUDED and DCF's current hearing date = today's date. Update failed</response>
     /// <response code="409">The JJDispute has already been assigned to a different user. JJDispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("{ticketNumber}/recall")]
@@ -649,7 +649,7 @@ public partial class JJController : StaffControllerBase
     /// Updates the status of a particular JJDispute record to REVIEW as well as adds an optional remark that explaining why the status was set to REVIEW.
     /// </summary>
     /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
-    /// <param name="remark">The remark or note (max 256 characters) the JJDispute was set to REVIEW.</param>
+    /// <param name="remark">The remark or note (max 4000 characters) the JJDispute was set to REVIEW.</param>
     /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
@@ -658,7 +658,7 @@ public partial class JJController : StaffControllerBase
     /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires jjdispute:review permission.</response>
     /// <response code="404">JJDispute record not found. Update failed.</response>
-    /// <response code="405">A JJDispute status can only be set to REVIEW if status is CONFIRMED and the remark must be less than 256 characters OR if the status ACCEPTED, CONFIRMED or CONCLUDED and DCF's current hearing date = today's date. Update failed</response>
+    /// <response code="405">A JJDispute status can only be set to REVIEW if status is CONFIRMED and the remark must be less than or equal to 4000 characters OR if the status ACCEPTED, CONFIRMED or CONCLUDED and DCF's current hearing date = today's date. Update failed</response>
     /// <response code="409">The JJDispute has already been assigned to a different user. JJDispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("{ticketNumber}/review")]
@@ -674,7 +674,7 @@ public partial class JJController : StaffControllerBase
     public async Task<IActionResult> ReviewJJDisputeAsync(
         string ticketNumber,
         [FromForm]
-        [StringLength(256, ErrorMessage = "Remark note cannot exceed 256 characters.")] string remark,
+        [StringLength(4000, ErrorMessage = "Remark note cannot exceed 4000 characters.")] string remark,
         bool checkVTC,
         CancellationToken cancellationToken)
     {
@@ -721,7 +721,7 @@ public partial class JJController : StaffControllerBase
     /// Updates the status of a particular JJDispute record to REQUIRE_COURT_HEARING, hearing type to COURT_APPEARANCE as well as adds an optional remark that explaining why the status was set.
     /// </summary>
     /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
-    /// <param name="remark">The remark or note (max 256 characters) the JJDispute was set to REVIEW.</param>
+    /// <param name="remark">The remark or note (max 4000 characters) the JJDispute was set to REVIEW.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The JJDispute is updated.</response>
@@ -729,7 +729,7 @@ public partial class JJController : StaffControllerBase
     /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires jjdispute:require_court_hearing permission.</response>
     /// <response code="404">JJDispute record not found. Update failed.</response>
-    /// <response code="405">A JJDispute status can only be set to REQUIRE_COURT_HEARING iff status is one of the following: NEW, IN_PROGRESS, REVIEW, REQUIRE_COURT_HEARING and the remark must be less than or equal to 256 characters. Update failed.</response>
+    /// <response code="405">A JJDispute status can only be set to REQUIRE_COURT_HEARING iff status is one of the following: NEW, IN_PROGRESS, REVIEW, REQUIRE_COURT_HEARING and the remark must be less than or equal to 4000 characters. Update failed.</response>
     /// <response code="409">The JJDispute has already been assigned to a different user. JJDispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("{ticketNumber}/requirecourthearing")]
@@ -745,7 +745,7 @@ public partial class JJController : StaffControllerBase
     public async Task<IActionResult> RequireCourtHearingJJDisputeAsync(
         string ticketNumber,
         [FromForm]
-        [StringLength(256, ErrorMessage = "Remark note cannot exceed 256 characters.")] string remark,
+        [StringLength(4000, ErrorMessage = "Remark note cannot exceed 4000 characters.")] string remark,
         CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the JJDispute status to REQUIRE_COURT_HEARING");

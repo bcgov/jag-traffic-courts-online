@@ -126,8 +126,8 @@
       <div class="col-md-8" *ngIf="jjDisputedCount">
         <div *ngIf="type !== tabTypes.DECISION_VALIDATION && type !== tabTypes.DCF && !isViewOnly; else view_plea_date_content ">
           <input type="text" formControlName="latestPleaUpdateTs" class="section-grid-text latest-plea-text"
-            bsDatepicker placeholder="DD-MMM-YYYY" [bsConfig]="{ withTimepicker: false, keepDatepickerOpened: true, 
-            dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true, showWeekNumbers: false, 
+            bsDatepicker placeholder="DD-MMM-YYYY" [bsConfig]="{ withTimepicker: false, keepDatepickerOpened: true,
+            dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true, showWeekNumbers: false,
             adaptivePosition: true }">
         </div>
         <ng-template #view_plea_date_content>
@@ -173,6 +173,7 @@
         *ngIf="!isViewOnly && jjDisputedCount" style="margin-left:20px !important; width:85%; background:#fffee6">
         <mat-option [value]="Finding.Guilty">Guilty as charged</mat-option>
         <mat-option [value]="Finding.NotGuilty">Not guilty</mat-option>
+        <mat-option [value]="Finding.GuiltyLesser">Not Guilty as Charged, but Guilty to lesser / included offence</mat-option>
       </mat-select>
       <div *ngIf="isViewOnly" style="margin-left:20px;">
         <span class="section-grid-header">Finding:<br /></span>
@@ -191,6 +192,22 @@
           other offence</span>
         <span *ngIf="!form?.get('jjDisputedCountRoP').get('finding').value">&nbsp;</span>
       </div>
+
+      <div *ngIf="!isViewOnly && jjDisputedCount && form?.get('jjDisputedCountRoP').get('finding').value === Finding.GuiltyLesser" >
+        <mat-label class="section-grid-header">MVA Section</mat-label><br />
+        <input  matInput (placeholder)="isViewOnly ? '' : 'start typing section, then select'"
+          formControlName="lesserDescription" [matAutocomplete]="auto" style="margin-left:20px !important; width:85%; background:#fffee6"
+          (keyup)="onLesserDescriptionKeyup()"
+          [matTooltip]="form.get('jjDisputedCountRoP').get('lesserDescription').value" />
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let statute of lesserDescriptionFilteredStatutes"
+            [matTooltip]="statute.__statuteString" [value]="statute.__statuteString">
+            {{ statute.__statuteString }}</mat-option>
+        </mat-autocomplete><br />
+        <mat-tooltip style="font-size:x-small">Hover over section to see full description
+        </mat-tooltip>
+      </div>
+      
       <div *ngIf="!jjDisputedCount">
         <span>&nbsp;</span>
       </div>
@@ -255,7 +272,7 @@
     <!-- Final disposition input for court appeaances, form for Non Staff Support Edit mode -->
     <form [formGroup]="form" novalidate
       *ngIf="(jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !(jjDisputedCount && isSSEditMode)">
-      <!-- Fine amount -->      
+      <!-- Fine amount -->
       <ng-container *ngIf="!isViewOnly">
         <div class="row">
           <div class="col-md-5">
@@ -263,7 +280,7 @@
           </div>
           <div class="col-md-7">
             <mat-radio-group [(ngModel)]="fineReduction" [ngModelOptions]="{standalone: true}"
-              (change)="updateFineAmount($event)" [disabled]="(!jjDisputedCount || 
+              (change)="updateFineAmount($event)" [disabled]="(!jjDisputedCount ||
               this.form.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty)">
               <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
               <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
@@ -287,16 +304,16 @@
           <div class="col-md-7">
             <input type="number" formControlName="lesserOrGreaterAmount" max="9999" min="0"
               (change)="onChangelesserOrGreaterAmount()" class="section-grid-text final-disposition-text"/><br>
-            <span class="section-grid-text text-body" *ngIf="!(form.get('lesserOrGreaterAmount').hasError('min') || 
+            <span class="section-grid-text text-body" *ngIf="!(form.get('lesserOrGreaterAmount').hasError('min') ||
               form.get('lesserOrGreaterAmount').hasError('max'))"><i>
-              {{ lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0'}} + 
-              {{ surcharge | currency:'CAD':'symbol-narrow':'1.0-0' }} (surcharge) = 
+              {{ lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0'}} +
+              {{ surcharge | currency:'CAD':'symbol-narrow':'1.0-0' }} (surcharge) =
               {{ (lesserOrGreaterAmount + surcharge) | currency:'CAD':'symbol-narrow':'1.0-0' }}</i>
             </span>
             <span
-              *ngIf="form.get('lesserOrGreaterAmount').hasError('min') || 
+              *ngIf="form.get('lesserOrGreaterAmount').hasError('min') ||
               form.get('lesserOrGreaterAmount').hasError('max')" class="section-grid-header" style="color: red;">
-              0 < Fine < 10 000 
+              0 < Fine < 10 000
             </span>
           </div>
         </div>
@@ -320,7 +337,7 @@
           </div>
           <div class="col-md-7">
             <mat-radio-group [(ngModel)]="timeToPay" [ngModelOptions]="{standalone: true}" layout="row"
-              (change)="updateRevisedDueDate($event)" [disabled]="(!jjDisputedCount || 
+              (change)="updateRevisedDueDate($event)" [disabled]="(!jjDisputedCount ||
               this.form.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty)">
               <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
               <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
@@ -345,19 +362,19 @@
             <span class="section-grid-header">Fine Amount</span>
           </div>
           <div class="col-md-7">
-            <span class="section-grid-text">{{ jjDisputedCount?.totalFineAmount ? (jjDisputedCount?.ticketedFineAmount | 
+            <span class="section-grid-text">{{ jjDisputedCount?.totalFineAmount ? (jjDisputedCount?.ticketedFineAmount |
               currency:'CAD':'symbol-narrow':'1.0-0') : '' }}</span>
           </div>
         </div>
-        <ng-container *ngIf="jjDisputedCount?.lesserOrGreaterAmount && 
+        <ng-container *ngIf="jjDisputedCount?.lesserOrGreaterAmount &&
           lesserOrGreaterAmount !== jjDisputedCount?.ticketedFineAmount">
           <div class="row">
             <div class="col-md-5">
               <span class="section-grid-header">Lesser/Greater Amount</span>
             </div>
             <div class="col-md-7">
-              <span class="section-grid-text">{{ jjDisputedCount?.lesserOrGreaterAmount | 
-                currency:'CAD':'symbol-narrow':'1.0-0' }}</span>              
+              <span class="section-grid-text">{{ jjDisputedCount?.lesserOrGreaterAmount |
+                currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
             </div>
           </div>
         </ng-container>
@@ -368,25 +385,25 @@
             </div>
             <div class="col-md-7">
               <span class="section-grid-text text-body"><i>
-                {{ lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0'}} + 
-                {{ surcharge | currency:'CAD':'symbol-narrow':'1.0-0' }} (surcharge) = 
+                {{ lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0'}} +
+                {{ surcharge | currency:'CAD':'symbol-narrow':'1.0-0' }} (surcharge) =
                 {{ (lesserOrGreaterAmount + surcharge) | currency:'CAD':'symbol-narrow':'1.0-0' }}</i>
               </span>
             </div>
           </div>
-        </ng-container>        
-        <ng-container *ngIf="jjDisputedCount?.lesserOrGreaterAmount && 
+        </ng-container>
+        <ng-container *ngIf="jjDisputedCount?.lesserOrGreaterAmount &&
           lesserOrGreaterAmount !== jjDisputedCount?.ticketedFineAmount">
           <div class="row">
             <div class="col-md-5">
               <span class="section-grid-header">Includes Surcharge</span>
             </div>
             <div class="col-md-7">
-              <span class="section-grid-text">{{ jjDisputedCount?.includesSurcharge === IncludesSurcharge.Y ? 
+              <span class="section-grid-text">{{ jjDisputedCount?.includesSurcharge === IncludesSurcharge.Y ?
                 "Yes" : "No" }}</span>
             </div>
           </div>
-        </ng-container>        
+        </ng-container>
         <div class="row">
           <div class="col-md-5">
             <span class="section-grid-header">Time to pay</span>
@@ -395,7 +412,7 @@
             <span class="section-grid-text">{{ timeToPay === 'no' ? 'No' : 'Yes' }}</span><br>
             <span class="section-grid-header text-body"
               *ngIf="(jjDisputedCount?.revisedDueDate && timeToPay === 'yes')">{{
-              jjDisputedCount?.revisedDueDate | 
+              jjDisputedCount?.revisedDueDate |
               date: "dd-MMM-yyyy" : "UTC" }}</span>
           </div>
         </div>
@@ -504,7 +521,7 @@
             <ng-container *ngIf="form?.controls.jjDisputedCountRoP?.controls.stayOfProceedingsByCheckbox.value">
               <input matInput (placeholder)="isViewOnly ? '' : 'JJ'" formControlName="stayOfProceedingsBy" /><br />
             </ng-container>
-            <mat-checkbox *ngIf="isViewOnly === false" [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons" 
+            <mat-checkbox *ngIf="isViewOnly === false" [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"
               formControlName="otherCheckbox" (change)="onOtherCheck($event.checked)">
               <span class="count-text" style="font-size: small"><b>Other</b></span>
             </mat-checkbox>
@@ -520,7 +537,7 @@
           <mat-label class="small-note">
             <i><span style="color:red;">*</span> These comments will be shared to all parties</i>
           </mat-label>
-          <textarea matInput formControlName="comments" maxlength="1500" rows="5" style="width: 100%;">
+          <textarea matInput formControlName="comments" maxlength="4000" rows="5" style="width: 100%;">
           </textarea>
         </span>
       </div>
@@ -558,8 +575,8 @@
           <div class="col-8">
             <input formControlName="revisedDueDate" type="text"
               bsDatepicker class="revised-due-date" placeholder="DD-MMM-YYYY"
-              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true, 
-              showWeekNumbers: false, adaptivePosition: true }">             
+              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true,
+              showWeekNumbers: false, adaptivePosition: true }">
           </div>
         </div>
       </form>
@@ -755,7 +772,7 @@
           <span class="section-grid-text"
             *ngIf="jjDisputeInfo.status == DisputeStatus.Confirmed || jjDisputeInfo.status == DisputeStatus.Review ||
             jjDisputeInfo.status == DisputeStatus.RequireCourtHearing || jjDisputeInfo.status == DisputeStatus.Concluded" >
-            {{ jjDisputedCount ? ( jjDisputedCount.totalFineAmount ? 
+            {{ jjDisputedCount ? ( jjDisputedCount.totalFineAmount ?
             (jjDisputedCount.totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0') : '&nbsp;') : '&nbsp;' }}</span>
         </p>
       </span>

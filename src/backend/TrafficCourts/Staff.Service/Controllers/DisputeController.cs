@@ -245,7 +245,7 @@ public class DisputeController : StaffControllerBase
     /// Updates the status of a particular Dispute record to REJECTED.
     /// </summary>
     /// <param name="disputeId">Unique identifier for a specific Dispute record to cancel.</param>
-    /// <param name="rejectedReason">The reason or note (max 256 characters) the Dispute was rejected.</param>
+    /// <param name="rejectedReason">The reason or note (max 4000 characters) the Dispute was rejected.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The Dispute is updated.</response>
@@ -253,7 +253,7 @@ public class DisputeController : StaffControllerBase
     /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires dispute:reject permission.</response>
     /// <response code="404">Dispute record not found. Update failed.</response>
-    /// <response code="405">A Dispute status can only be set to REJECTED iff status is NEW, VALIDATED or PROCESSING and the rejected reason must be &lt;= 256 characters. Update failed.</response>
+    /// <response code="405">A Dispute status can only be set to REJECTED iff status is NEW, VALIDATED or PROCESSING and the rejected reason must be &lt;= 4000 characters. Update failed.</response>
     /// <response code="409">The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("{disputeId}/reject")]
@@ -270,7 +270,7 @@ public class DisputeController : StaffControllerBase
         long disputeId,
         [FromForm] 
         [Required]
-        [StringLength(256, ErrorMessage = "Rejected reason cannot exceed 256 characters.")] string rejectedReason, 
+        [StringLength(4000, ErrorMessage = "Rejected reason cannot exceed 4000 characters.")] string rejectedReason, 
         CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the Dispute status");
@@ -366,7 +366,7 @@ public class DisputeController : StaffControllerBase
     /// Updates the status of a particular Dispute record to CANCELLED.
     /// </summary>
     /// <param name="disputeId">Unique identifier for a specific Dispute record to cancel.</param>
-    /// <param name="cancelledReason">The reason or note (max 256 characters) the Dispute was cancelled.</param>
+    /// <param name="cancelledReason">The reason or note (max 4000 characters) the Dispute was cancelled.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The Dispute is updated.</response>
@@ -390,7 +390,7 @@ public class DisputeController : StaffControllerBase
     public async Task<IActionResult> CancelDisputeAsync(long disputeId,
         [FromForm]
         [Required]
-        [StringLength(256, ErrorMessage = "Cancelled reason cannot exceed 256 characters.")] string cancelledReason,
+        [StringLength(4000, ErrorMessage = "Cancelled reason cannot exceed 4000 characters.")] string cancelledReason,
         CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the Dispute status to {Status}", "CANCELLED");

@@ -4017,7 +4017,7 @@
             }
           },
           "405": {
-            "description": "A JJDispute status can only be set to REVIEW if status is CONFIRMED and the remark must be less than 256 characters OR if the status ACCEPTED, CONFIRMED or CONCLUDED and DCF's current hearing date = today's date. Update failed",
+            "description": "A JJDispute status can only be set to REVIEW if status is CONFIRMED and the remark must be less than or equal to 4000 characters OR if the status ACCEPTED, CONFIRMED or CONCLUDED and DCF's current hearing date = today's date. Update failed",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4094,10 +4094,10 @@
                 "type": "object",
                 "properties": {
                   "remark": {
-                    "maxLength": 256,
+                    "maxLength": 4000,
                     "minLength": 0,
                     "type": "string",
-                    "description": "The remark or note (max 256 characters) the JJDispute was set to REVIEW."
+                    "description": "The remark or note (max 4000 characters) the JJDispute was set to REVIEW."
                   }
                 }
               },
@@ -4194,7 +4194,7 @@
             }
           },
           "405": {
-            "description": "A JJDispute status can only be set to REVIEW if status is CONFIRMED and the remark must be less than 256 characters OR if the status ACCEPTED, CONFIRMED or CONCLUDED and DCF's current hearing date = today's date. Update failed",
+            "description": "A JJDispute status can only be set to REVIEW if status is CONFIRMED and the remark must be less than or equal to 4000 characters OR if the status ACCEPTED, CONFIRMED or CONCLUDED and DCF's current hearing date = today's date. Update failed",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4263,10 +4263,10 @@
                 "type": "object",
                 "properties": {
                   "remark": {
-                    "maxLength": 256,
+                    "maxLength": 4000,
                     "minLength": 0,
                     "type": "string",
-                    "description": "The remark or note (max 256 characters) the JJDispute was set to REVIEW."
+                    "description": "The remark or note (max 4000 characters) the JJDispute was set to REVIEW."
                   }
                 }
               },
@@ -4363,7 +4363,7 @@
             }
           },
           "405": {
-            "description": "A JJDispute status can only be set to REQUIRE_COURT_HEARING iff status is one of the following: NEW, IN_PROGRESS, REVIEW, REQUIRE_COURT_HEARING and the remark must be less than or equal to 256 characters. Update failed.",
+            "description": "A JJDispute status can only be set to REQUIRE_COURT_HEARING iff status is one of the following: NEW, IN_PROGRESS, REVIEW, REQUIRE_COURT_HEARING and the remark must be less than or equal to 4000 characters. Update failed.",
             "content": {
               "text/plain": {
                 "schema": {
