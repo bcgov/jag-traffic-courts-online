@@ -61,7 +61,7 @@ public class OracleDomainModelMappingProfileTests
         // Arrange
         var source = new Oracle.Dispute
         {
-            IssuedTs = new DateTimeOffset(2023, 10, 1, 12, 0, 0, TimeSpan.Zero) // UTC
+            IssuedTs = new DateTime(2023, 10, 1, 12, 0, 0, DateTimeKind.Unspecified) // UTC
         };
 
         // Act
