@@ -246,7 +246,7 @@ internal partial class OracleDataApiService : IOracleDataApiService
         }
     }
 
-    public async Task<ICollection<DisputeListItem>> GetAllDisputesAsync(DateTimeOffset? newerThan, ExcludeStatus? excludeStatus, CancellationToken cancellationToken)
+    public async Task<ICollection<DisputeListItem>> GetAllDisputesAsync(DateTime? newerThan, ExcludeStatus? excludeStatus, CancellationToken cancellationToken)
     {
         try
         {
