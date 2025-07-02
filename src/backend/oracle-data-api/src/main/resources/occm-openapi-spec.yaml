@@ -783,6 +783,7 @@ components:
         currentTimestamp:
           type: string
           format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer.class)"
     ResponseResult:
       type: object
       properties:
@@ -874,13 +875,13 @@ components:
         entDtm:
           type: string
           format: date-time
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd HH:mm:ss\", timezone = \"PST\")"
+          x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer.class)"
         entUserId:
           type: string
         updDtm:
           type: string
           format: date-time
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd HH:mm:ss\", timezone = \"PST\")"
+          x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer.class)"
         updUserId:
           type: string
           format: nullable
@@ -915,7 +916,7 @@ components:
         appearanceDtm:
           type: string
           format: date-time
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
+          x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer.class)"
         appearanceLessThan14Days:
           type: string
         contactGiven1Nm:
@@ -989,7 +990,7 @@ components:
         filingDt:
           type: string
           format: date
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'Z'\")"
+          x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlySerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlyDeserializer.class)"
         fineReductionReasonTxt:
           type: string
         homePhoneNumberTxt:
@@ -1000,7 +1001,7 @@ components:
         issuedDt:
           type: string
           format: date-time
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd HH:mm\", timezone = \"PST\")"
+          x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer.class)"
         jjAssignedTo:
           type: string
           format: nullable
@@ -1088,7 +1089,7 @@ components:
         submittedDt:
           type: string
           format: date-time
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
+          x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer.class)"
         systemDetectOcrIssuesYn:
           type: string
         timeToPayReasonTxt:
@@ -1096,7 +1097,7 @@ components:
         userAssignedDtm:
           type: string
           format: date-time
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
+          x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer.class)"
         userAssignedTo:
           type: string
           format: nullable
@@ -1134,7 +1135,7 @@ components:
         submitted_dt:
           type: string
           format: date-time
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
+          x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer.class)"
         disputant_surname_nm:
           type: string
         disputant_given_1_nm:
@@ -1152,7 +1153,7 @@ components:
         filing_dt:
           type: string
           format: date
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'Z'\")"
+          x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlySerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlyDeserializer.class)"
         request_court_appearance_yn:
           type: string
         disputant_detect_ocr_issues_yn:
@@ -1164,11 +1165,11 @@ components:
         user_assigned_dtm:
           type: string
           format: date-time
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
+          x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer.class)"
         violation_dt:
           type: string
           format: date
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'Z'\")"
+          x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlySerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlyDeserializer.class)"
         tco_dispute_status:
           type: string
         jj_assigned_to:
@@ -1178,7 +1179,7 @@ components:
         jj_decision_dt:
           type: string
           format: date-time
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
+          x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer.class)"
         court_agen_id:
           type: number
     Statute:
@@ -1287,7 +1288,7 @@ components:
         issuedDt:
           type: string
           format: date-time
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd HH:mm\", timezone = \"PST\")"
+          x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer.class)"
         issuedOnRoadOrHighwayTxt:
           type: string
           format: nullable
@@ -1355,7 +1356,7 @@ components:
         statusUpdateDtm:
           type: string
           format: date-time
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
+          x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer.class)"
       allOf:
         - $ref: '#/components/schemas/AuditBase'
     AuditLogEntry:
@@ -1386,7 +1387,7 @@ components:
         emailSentDtm:
           type: string
           format: date-time
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
+          x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer.class)"
         emailSubjectTxt:
           type: string
         fromEmailAddress:
