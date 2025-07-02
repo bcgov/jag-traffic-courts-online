@@ -76,10 +76,9 @@ public class OracleDomainModelMappingProfile : AutoMapper.Profile
         // classes
         CreateMap<Oracle.Dispute, DomainModel.Dispute>()
             .ForMember(dest => dest.FileData, opt => opt.Ignore())
-            .ForMember(dest => dest.IssuedTs, src => src.MapFrom(s => UtcToPacificTimeDateTime(s.IssuedTs)))
             .ForMember(dest => dest.IcbcName, opt => opt.Ignore())
-            .ReverseMap()
-            .ForMember(dest => dest.IssuedTs, src => src.MapFrom(s => s.IssuedTs));
+            .ForMember(dest => dest.CourtLocation, opt => opt.Ignore()) // TCVP-3083 added this column, modified generated code but did not update Open API Spec
+            .ReverseMap();
         CreateMap<Oracle.DisputeCount, DomainModel.DisputeCount>().ReverseMap();
         CreateMap<Oracle.DisputeListItem, DomainModel.DisputeListItem>().ReverseMap();
         CreateMap<Oracle.DisputeResult, DomainModel.DisputeResult>().ReverseMap();
@@ -88,12 +87,10 @@ public class OracleDomainModelMappingProfile : AutoMapper.Profile
         CreateMap<Oracle.FileHistory, DomainModel.FileHistory>().ReverseMap();
         CreateMap<Oracle.JJDispute, DomainModel.JJDispute>()
             .ForMember(dest => dest.FileData, opt => opt.Ignore())
-            .ForMember(dest => dest.IssuedTs, src => src.MapFrom(s => UtcToPacificTimeDateTime(s.IssuedTs)))
             .ForMember(dest => dest.LockId, opt => opt.Ignore())
             .ForMember(dest => dest.LockedBy, opt => opt.Ignore())
             .ForMember(dest => dest.LockExpiresAtUtc, opt => opt.Ignore())
-            .ReverseMap()
-            .ForMember(dest => dest.IssuedTs, src => src.MapFrom(s => s.IssuedTs));
+            .ReverseMap();
         CreateMap<Oracle.JJDisputeCourtAppearanceRoP, DomainModel.JJDisputeCourtAppearanceRoP>().ReverseMap();
         CreateMap<Oracle.JJDisputedCount, DomainModel.JJDisputedCount>().ReverseMap();
         CreateMap<Oracle.JJDisputedCountRoP, DomainModel.JJDisputedCountRoP>().ReverseMap();
@@ -101,7 +98,6 @@ public class OracleDomainModelMappingProfile : AutoMapper.Profile
         CreateMap<Oracle.TicketImageDataJustinDocument, DomainModel.TicketImageDataJustinDocument>().ReverseMap();
         CreateMap<Oracle.ViolationTicket, DomainModel.ViolationTicket>()
             .ForMember(dest => dest.ViolationTicketImage, opt => opt.Ignore())
-            .ForMember(dest => dest.IssuedTs, src => src.MapFrom(s => UtcToPacificTimeDateTime(s.IssuedTs)))
             .ForMember(dest => dest.OcrViolationTicket, opt => opt.Ignore())
             .ReverseMap()
             .ForMember(dest => dest.IssuedTs, src => src.MapFrom(s => s.IssuedTs));
@@ -114,22 +110,6 @@ public class OracleDomainModelMappingProfile : AutoMapper.Profile
             .ConstructUsing(src => new Oracle.FileResponse(src.StatusCode, src.Headers, src.Stream, null, null));
     }
     private static readonly TimeZoneInfo _vancouver = TimeZoneInfo.FindSystemTimeZoneById("America/Vancouver");
-
-    /// <summary>
-    /// Converts a UTC DateTimeOffset to a Pacific Time DateTime
-    /// </summary>
-    /// <param name="utc">The UTC DateTimeOffset</param>
-    /// <returns>The Pacific Time DateTime</returns>
-    internal static DateTime? UtcToPacificTimeDateTime(DateTimeOffset? utc)
-    {
-        if (utc.HasValue && utc.Value.Offset == TimeSpan.Zero)
-        {
-            DateTimeOffset pacificTime = TimeZoneInfo.ConvertTime(utc.Value, _vancouver);
-            return DateTime.SpecifyKind(pacificTime.DateTime, DateTimeKind.Unspecified);
-        }
-
-        return null;
-    }
 }
 
 [System.CodeDom.Compiler.GeneratedCode("DomainModelMappingTestGenerator.generate_mapper", "")]
