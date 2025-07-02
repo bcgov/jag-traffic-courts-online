@@ -16,6 +16,11 @@ import java.util.Date;
 public class DateOnlyDeserializer extends JsonDeserializer<Date> {
     
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    
+    static {
+        // Make parsing strict - don't allow lenient parsing
+        DATE_FORMAT.setLenient(false);
+    }
 
     @Override
     public Date deserialize(JsonParser parser, DeserializationContext context) throws IOException {
@@ -26,7 +31,12 @@ public class DateOnlyDeserializer extends JsonDeserializer<Date> {
         }
         
         try {
-            return DATE_FORMAT.parse(dateString.trim());
+            String trimmed = dateString.trim();
+            // Additional validation: ensure the string matches exact expected format
+            if (!trimmed.matches("\\d{4}-\\d{2}-\\d{2}")) {
+                throw new ParseException("Date string does not match expected format yyyy-MM-dd: " + trimmed, 0);
+            }
+            return DATE_FORMAT.parse(trimmed);
         } catch (ParseException e) {
             throw new IOException("Failed to parse date: " + dateString + ". Expected format: yyyy-MM-dd", e);
         }
