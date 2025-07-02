@@ -5,6 +5,11 @@ spring:
   application:  
     name: oracle-data-api
 
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    date-format: "yyyy-MM-dd'T'HH:mm:ss"
+
   jmx:
     enabled: true
 
