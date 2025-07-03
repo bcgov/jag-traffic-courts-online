@@ -608,7 +608,7 @@ internal partial class OracleDataApiService : IOracleDataApiService
             Oracle.Dispute oracleBody = _mapper.Map<Oracle.Dispute>(body);
 
             // stub out the ViolationTicket if the submitted Dispute has associated OCR scan results.
-            oracleBody.ViolationTicket = CreateViolationTicketFromDispute(body);
+            oracleBody.ViolationTicket = CreateViolationTicketFromDispute(oracleBody);
 
             // _logger.LogTrace("Saving dispute with ticket number {@OracleDisputeBody}", oracleBody);
 
@@ -845,9 +845,8 @@ internal partial class OracleDataApiService : IOracleDataApiService
         }
     }
 
-    private Oracle.ViolationTicket CreateViolationTicketFromDispute(Dispute dispute)
+    private static Oracle.ViolationTicket CreateViolationTicketFromDispute(Oracle.Dispute dispute)
     {
-        // @Refactor to use AutoMapper
         Oracle.ViolationTicket violationTicket = new();
         violationTicket.TicketNumber = dispute.TicketNumber;
         violationTicket.DisputantGivenNames = dispute.DisputantGivenName1;
@@ -856,7 +855,6 @@ internal partial class OracleDataApiService : IOracleDataApiService
         violationTicket.DisputantBirthdate = dispute.DisputantBirthdate;
         violationTicket.OfficerPin = dispute.OfficerPin;
         violationTicket.DetachmentLocation = dispute.DetachmentLocation;
-        violationTicket.CourtLocation = dispute.CourtLocation;
 
         // Stub out the violationsTicketCounts with default count no for mapping dispute counts properly in Oracle API
         List<Oracle.ViolationTicketCount> violationTicketCounts = new();

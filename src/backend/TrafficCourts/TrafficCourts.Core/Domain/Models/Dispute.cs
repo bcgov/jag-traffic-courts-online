@@ -6,11 +6,6 @@
 public partial class Dispute
 {
     /// <summary>
-    /// Court Location
-    /// </summary>
-    public string? CourtLocation { get; set; }
-
-    /// <summary>
     /// List of file metadata that contain ID and Filename of all the uploaded documents related to this particular Dispute
     /// </summary>
     public List<FileMetadata>? FileData { get; set; }

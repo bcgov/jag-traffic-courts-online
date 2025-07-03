@@ -33,12 +33,6 @@ public class NoticeOfDispute : Dispute
     public string TicketId { get; set; } = null!;
 
     /// <summary>
-    /// Court Location 
-    /// </summary>
-    [JsonPropertyName("court_location")]
-    public string? CourtLocation { get; set; }
-
-    /// <summary>
     /// Detachment Location
     /// </summary>
     [JsonPropertyName("detachment_location")]
