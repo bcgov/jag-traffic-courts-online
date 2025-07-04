@@ -749,9 +749,6 @@ namespace TrafficCourts.Domain.Models
         [System.ComponentModel.DataAnnotations.StringLength(100)]
         public string LawyerEmail { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("courtLocation", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string CourtLocation { get; set; }
-
         [Newtonsoft.Json.JsonProperty("officerPin", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string OfficerPin { get; set; }
 
