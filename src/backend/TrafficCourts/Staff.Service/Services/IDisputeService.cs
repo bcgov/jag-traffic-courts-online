@@ -8,12 +8,12 @@ namespace TrafficCourts.Staff.Service.Services;
 
 public interface IDisputeService
 {
-    /// <summary>Returns all the existing disputes from the database with optional exclusion parameter to exclude disputes having specified status from the result.</summary>
-    /// <param name="excludeStatus"></param>
-    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>A collection of Dispute objects</returns>
-    /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<ICollection<DisputeListItem>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken);
+    /////// <summary>Returns all the existing disputes from the database with optional exclusion parameter to exclude disputes having specified status from the result.</summary>
+    /////// <param name="excludeStatus"></param>
+    /////// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /////// <returns>A collection of Dispute objects</returns>
+    /////// <exception cref="ApiException">A server side error occurred.</exception>
+    ////Task<ICollection<DisputeListItem>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets the number of records with the given <see cref="DisputeStatus"/>.
@@ -27,9 +27,10 @@ public interface IDisputeService
     /// Gets a paged collecton of disputes.
     /// </summary>
     /// <param name="parameters">The filter, sort and paging parameters.</param>
+    /// <param name="timeZone"></param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
-    Task<PagedDisputeListItemCollection> GetAllDisputesAsync(GetAllDisputesParameters? parameters, CancellationToken cancellationToken);
+    Task<PagedDisputeListItemCollection> GetAllDisputesAsync(GetAllDisputesParameters? parameters, TimeZoneInfo timeZone, CancellationToken cancellationToken);
 
     /// <summary>Saves new dispute in the oracle database.</summary>
     /// <param name="dispute"></param>
@@ -42,19 +43,21 @@ public interface IDisputeService
     /// Gets a dispute by id. Additional information is returned based on the options provided.
     /// </summary>
     /// <param name="options"></param>
+    /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Dispute> GetDisputeAsync(GetDisputeOptions options, CancellationToken cancellationToken);
+    Task<Dispute> GetDisputeAsync(GetDisputeOptions options, TimeZoneInfo timeZone, CancellationToken cancellationToken);
 
     /// <summary>Updates the properties of a particular Dispute record based on the given values.</summary>
     /// <param name="id">Unique identifier of a Dispute record to modify.</param>
     /// <param name="user"></param>
     /// <param name="staffComment">VTC staff's comment for saving or updating a dispute in Ticket Validation</param>
-    /// <param name="dispute">A modified version of the Dispute record to save.</param>    
+    /// <param name="dispute">A modified version of the Dispute record to save.</param>
+    /// <param name="timeZone"></param>    
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>The modified Dispute record.</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<Dispute> UpdateDisputeAsync(long id, ClaimsPrincipal user, string? staffComment, Dispute dispute, System.Threading.CancellationToken cancellationToken);
+    Task<Dispute> UpdateDisputeAsync(long id, ClaimsPrincipal user, string? staffComment, Dispute dispute, TimeZoneInfo timeZone, System.Threading.CancellationToken cancellationToken);
 
     /// <summary>Updates the status of a particular Dispute record to VALIDATED.</summary>
     /// <param name="id">Unique identifier of a Dispute record to validate.</param>
@@ -126,10 +129,11 @@ public interface IDisputeService
     /// <summary>
     /// Returns all the existing disputes from the database with pending update requests.
     /// </summary>
+    /// <param name="timeZone">The users time zone</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A collection of Dispute objects</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<ICollection<DisputeWithUpdates>> GetAllDisputesWithPendingUpdateRequestsAsync(CancellationToken cancellationToken);
+    Task<ICollection<DisputeWithUpdates>> GetAllDisputesWithPendingUpdateRequestsAsync(TimeZoneInfo timeZone, CancellationToken cancellationToken);
 
     /// <summary>
     /// Returns all the existing dispute update requests from the database for a given dispute id
