@@ -71,14 +71,14 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     /// Fetches the <see cref="DigitalCaseFile"/> based on OCCAM disputeId. This is for printing ticket validation view in DCF template (TCVP-2865).
     /// </summary>
     /// <param name="disputeId"></param>
-    /// <param name="timeZone"></param>
+    /// <param name="timeZone">The user's timezone</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     internal async Task<DigitalCaseFile> GetDigitalCaseFileAsync(long disputeId, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
         GetDisputeOptions options = new GetDisputeOptions {  DisputeId = disputeId, Assign = false, GetNameFromIcbc = true };
 
-        var dispute = await _disputeService.GetDisputeAsync(options, cancellationToken);
+        var dispute = await _disputeService.GetDisputeAsync(options, timeZone, cancellationToken);
 
         Domain.Models.Province? driversLicenceProvince = null;
         if (dispute.DriversLicenceIssuedProvinceSeqNo is not null && dispute.DriversLicenceIssuedCountryId is not null)
@@ -104,7 +104,8 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         ticket.Issued = new FormattedDateTime(dispute.ViolationTicket.IssuedTs);
         if (dispute.SubmittedTs.HasValue)
         {
-            ticket.Submitted = ConvertToFormattedLocalDateTime(dispute.SubmittedTs.Value, timeZone.Id);
+            // alredy converted from UTC
+            ticket.Submitted = new FormattedDateTime(dispute.SubmittedTs);
         }
         ticket.CourtAgenyId = dispute.CourtAgenId;
         ticket.CourtHouse = dispute.ViolationTicket.CourtLocation;
@@ -133,7 +134,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
             addressCountry = await GetCountryAsync(dispute.AddressCountryId, cancellationToken);
         }
         contact.Address = FormatAddress(dispute, addressProvince?.ProvAbbreviationCd, addressCountry?.CtryLongNm);
-        contact.DriversLicence.Province = driversLicenceProvince?.ProvAbbreviationCd ?? string.Empty;
+        contact.DriversLicence.Province = ((Province?)null)?.ProvAbbreviationCd ?? string.Empty;
         contact.DriversLicence.Number = dispute.DriversLicenceNumber;
         contact.Email = dispute.EmailAddress;
         contact.PhoneNumber = dispute.HomePhoneNumber ?? dispute.WorkPhoneNumber;
@@ -155,7 +156,8 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         writtenReasons.Signature = dispute.SignatoryName;
         if (dispute.SignatoryName != null && dispute.SubmittedTs.HasValue)
         {
-            writtenReasons.SubmissionTs = ConvertToFormattedLocalDateTime(dispute.SubmittedTs.Value, timeZone.Id);
+            // already converted from UTC
+            writtenReasons.SubmissionTs = new FormattedDateTime(dispute.SubmittedTs);
         }
 
         // set the counts
@@ -275,7 +277,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         // Time Zone from the browser is either a time zone identifier from the IANA Time Zone Database or a UTC offset in ISO 8601 extended format.
         // https://tc39.es/ecma402/#sec-properties-of-intl-datetimeformat-instances
 
-        var dispute = await _jjDisputeService.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
+        var dispute = await _jjDisputeService.GetJJDisputeAsync(ticketNumber, false, timeZone, cancellationToken);
 
         Domain.Models.Province? driversLicenceProvince = null;
 
@@ -309,7 +311,8 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         ticket.Issued = new FormattedDateTime(dispute.IssuedTs);
         if (dispute.SubmittedTs.HasValue)
         {
-            ticket.Submitted = ConvertToFormattedLocalDateTime(dispute.SubmittedTs.Value, timeZone.Id);
+            var submitted = dispute.SubmittedTs.UtcToLocalTime(timeZone);
+            ticket.Submitted = new FormattedDateTime(submitted);
         }   
         ticket.IcbcReceived = new FormattedDateOnly(dispute.IcbcReceivedDate);
         ticket.CourtAgenyId = dispute.CourtAgenId;
@@ -366,7 +369,8 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         writtenReasons.Signature = dispute.SignatoryName;
         if (dispute.SignatoryName != null && dispute.SubmittedTs.HasValue)
         {
-            writtenReasons.SubmissionTs = ConvertToFormattedLocalDateTime(dispute.SubmittedTs.Value, timeZone.Id);
+            var submitted = dispute.SubmittedTs.UtcToLocalTime(timeZone);
+            writtenReasons.SubmissionTs = new FormattedDateTime(submitted);
         }
 
         // set the counts
@@ -407,10 +411,8 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
                 offenseCount.LatestPlea = ToString(disputedCount.LatestPlea);
                 if (disputedCount.LatestPleaUpdateTs.HasValue)
                 {
-                    // Assuming disputedCount.LatestPleaUpdateTs is in UTC
-                    DateTimeOffset utcDateTimeOffset = disputedCount.LatestPleaUpdateTs.Value;
-                    // Convert the UTC DateTimeOffset to the local DateTimeOffset
-                    offenseCount.LatestPleaUpdate = ConvertToFormattedLocalDateTime(utcDateTimeOffset, timeZone.Id);
+                    var updated = disputedCount.LatestPleaUpdateTs.UtcToLocalTime(timeZone);
+                    offenseCount.LatestPleaUpdate = new FormattedDateTime(updated);
                 }
                 if (disputedCount.JjDisputedCountRoP is not null) {
                     offenseCount.LesserDescription = disputedCount.JjDisputedCountRoP.LesserDescription ?? string.Empty;
@@ -998,24 +1000,4 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
                 break;
         }   
     }
-
-    private static FormattedDateTime ConvertToFormattedLocalDateTime(DateTimeOffset utcDateTimeOffset, string fallbackTimeZoneId = "Pacific Standard Time")
-    {
-        // Retrieve the local time zone
-        TimeZoneInfo localTimeZone = TimeZoneInfo.Local;
-
-        // Check if the local time zone is UTC
-        if (localTimeZone.BaseUtcOffset == TimeSpan.Zero)
-        {
-            // Fall back to a specific time zone if local time zone is UTC
-            localTimeZone = TimeZoneInfo.FindSystemTimeZoneById(fallbackTimeZoneId);
-        }
-
-        // Convert the UTC DateTimeOffset to the local DateTimeOffset
-        DateTimeOffset localDateTimeOffset = TimeZoneInfo.ConvertTime(utcDateTimeOffset, localTimeZone);
-
-        // Return the FormattedDateTime object
-        return new FormattedDateTime(localDateTimeOffset);
-    }
-
 }

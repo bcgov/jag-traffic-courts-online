@@ -21,6 +21,8 @@ namespace TrafficCourts.Staff.Service.Test.Controllers;
 
 public class JJControllerTest
 {
+    private readonly TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+
     [Fact]
     public async Task TestAcceptJJDispute200Result()
     {
@@ -33,7 +35,7 @@ public class JJControllerTest
         ticketNumbers.Add(ticketNumber);
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.AcceptJJDisputeAsync(ticketNumber, It.IsAny<bool>(), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()));
+            .Setup(_ => _.AcceptJJDisputeAsync(ticketNumber, It.IsAny<bool>(), It.IsAny<ClaimsPrincipal>(), timeZone, It.IsAny<CancellationToken>()));
         var mockLogger = new Mock<ILogger<JJController>>();
         var printService = Mock.Of<IPrintDigitalCaseFileService>();
         var lockService = Mock.Of<IDisputeLockService>();
@@ -42,7 +44,7 @@ public class JJControllerTest
 
         
         // Act
-        IActionResult? result = await jjDisputeController.AcceptJJDisputeAsync(ticketNumber, checkVTC, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.AcceptJJDisputeAsync(ticketNumber, checkVTC, timeZone.Id, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkResult>(result);
@@ -133,6 +135,7 @@ public class JJControllerTest
     public async Task TestUpdateCourtAppearanceAndRequireCourtHearing200Result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with ticket number (AJ201092461) to set its status to REQUIRE_COURT_HEARING, confirm controller updates the status.
+        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
 
         // Arrange
         JJDispute dispute = new();
@@ -140,15 +143,16 @@ public class JJControllerTest
         dispute.TicketNumber = ticketnumber;
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.RequireCourtHearingJJDisputeAsync(ticketnumber, null!, It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()));
+            .Setup(_ => _.RequireCourtHearingJJDisputeAsync(ticketnumber, null!, It.IsAny<ClaimsPrincipal>(), timeZone, It.IsAny<CancellationToken>()));
         var mockLogger = new Mock<ILogger<JJController>>();
         var printService = Mock.Of<IPrintDigitalCaseFileService>();
         var lockService = Mock.Of<IDisputeLockService>();
         var mediator = Mock.Of<IMediator>();
         JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService, mockLogger.Object);
 
+
         // Act
-        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(ticketnumber, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(ticketnumber, timeZone.Id, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkResult>(result);
@@ -158,6 +162,7 @@ public class JJControllerTest
     public async Task TestUpdateCourtAppearanceAndRequireCourtHearing400result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with no ticket number to set its status to REQUIRE_COURT_HEARING, confirm controller returns 400 when updating.
+        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
 
         // Arrange
         JJDispute dispute = new();
@@ -165,7 +170,7 @@ public class JJControllerTest
         dispute.TicketNumber = ticketnumber;
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.RequireCourtHearingJJDisputeAsync(ticketnumber, null!, It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.RequireCourtHearingJJDisputeAsync(ticketnumber, null!, It.IsAny<ClaimsPrincipal>(), timeZone, It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         var printService = Mock.Of<IPrintDigitalCaseFileService>();
@@ -174,7 +179,7 @@ public class JJControllerTest
         JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(ticketnumber, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(ticketnumber, timeZone.Id, CancellationToken.None);
 
         // Assert
         var badRequestResult = Assert.IsType<HttpError>(result);
@@ -185,6 +190,7 @@ public class JJControllerTest
     public async Task TestUpdateCourtAppearanceAndRequireCourtHearing404result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with an invalid ticket number to set its status to REQUIRE_COURT_HEARING, confirm controller returns 404 when updating.
+        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
 
         // Arrange
         JJDispute dispute = new();
@@ -192,7 +198,7 @@ public class JJControllerTest
         dispute.TicketNumber = ticketnumber;
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.RequireCourtHearingJJDisputeAsync(ticketnumber, null!, It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.RequireCourtHearingJJDisputeAsync(ticketnumber, null!, It.IsAny<ClaimsPrincipal>(), timeZone, It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status404NotFound, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         var printService = Mock.Of<IPrintDigitalCaseFileService>();
@@ -201,7 +207,7 @@ public class JJControllerTest
         JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(ticketnumber, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(ticketnumber, timeZone.Id, CancellationToken.None);
 
         // Assert
         var notFoundResult = Assert.IsType<HttpError>(result);
@@ -212,6 +218,7 @@ public class JJControllerTest
     public async Task TestUpdateCourtAppearanceAndRequireCourtHearing405result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with ticket number (AJ201092461) to set its status to REQUIRE_COURT_HEARING that has invalid status and returns 405, confirm controller returns 405 when updating.
+        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
 
         // Arrange
         JJDispute dispute = new();
@@ -219,7 +226,7 @@ public class JJControllerTest
         dispute.TicketNumber = ticketnumber;
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.RequireCourtHearingJJDisputeAsync(ticketnumber, null!, It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.RequireCourtHearingJJDisputeAsync(ticketnumber, null!, It.IsAny<ClaimsPrincipal>(), timeZone,It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status405MethodNotAllowed, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         var printService = Mock.Of<IPrintDigitalCaseFileService>();
@@ -228,7 +235,7 @@ public class JJControllerTest
         JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(ticketnumber, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(ticketnumber, "Pacific Standard Time",CancellationToken.None);
 
         // Assert
         var methodNotAllowedResult = Assert.IsType<HttpError>(result);
@@ -239,6 +246,7 @@ public class JJControllerTest
     public async Task TestUpdateCourtAppearanceAndConfirm200Result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with ticket number (AJ201092461) to set its status to CONFIRMED, confirm controller updates the status.
+        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
 
         // Arrange
         JJDispute dispute = new();
@@ -246,7 +254,7 @@ public class JJControllerTest
         dispute.TicketNumber = ticketnumber;
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.ConfirmJJDisputeAsync(ticketnumber, It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()));
+            .Setup(_ => _.ConfirmJJDisputeAsync(ticketnumber, It.IsAny<ClaimsPrincipal>(), timeZone, It.IsAny<CancellationToken>()));
         var mockLogger = new Mock<ILogger<JJController>>();
         var printService = Mock.Of<IPrintDigitalCaseFileService>();
         var lockService = Mock.Of<IDisputeLockService>();
@@ -254,7 +262,7 @@ public class JJControllerTest
         JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndConfirmJJDisputeAsync(ticketnumber, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndConfirmJJDisputeAsync(ticketnumber, timeZone.Id, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkResult>(result);
@@ -264,6 +272,7 @@ public class JJControllerTest
     public async Task TestUpdateCourtAppearanceAndConfirm400result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with no ticket number to set its status to CONFIRMED, confirm controller returns 400 when updating.
+        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
 
         // Arrange
         JJDispute dispute = new();
@@ -271,7 +280,7 @@ public class JJControllerTest
         dispute.TicketNumber = ticketnumber;
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.ConfirmJJDisputeAsync(ticketnumber, It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.ConfirmJJDisputeAsync(ticketnumber, It.IsAny<ClaimsPrincipal>(), timeZone, It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         var printService = Mock.Of<IPrintDigitalCaseFileService>();
@@ -280,7 +289,7 @@ public class JJControllerTest
         JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndConfirmJJDisputeAsync(ticketnumber, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndConfirmJJDisputeAsync(ticketnumber, timeZone.Id, CancellationToken.None);
 
         // Assert
         var badRequestResult = Assert.IsType<HttpError>(result);
@@ -291,6 +300,7 @@ public class JJControllerTest
     public async Task TestUpdateCourtAppearanceAndConfirm404result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with an invalid ticket number to set its status to CONFIRMED, confirm controller returns 404 when updating.
+        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
 
         // Arrange
         JJDispute dispute = new();
@@ -298,7 +308,7 @@ public class JJControllerTest
         dispute.TicketNumber = ticketnumber;
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.ConfirmJJDisputeAsync(ticketnumber, It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.ConfirmJJDisputeAsync(ticketnumber, It.IsAny<ClaimsPrincipal>(), timeZone, It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status404NotFound, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         var printService = Mock.Of<IPrintDigitalCaseFileService>();
@@ -307,7 +317,7 @@ public class JJControllerTest
         JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndConfirmJJDisputeAsync(ticketnumber, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndConfirmJJDisputeAsync(ticketnumber, timeZone.Id, CancellationToken.None);
 
         // Assert
         var notFoundResult = Assert.IsType<HttpError>(result);
@@ -325,7 +335,7 @@ public class JJControllerTest
         dispute.TicketNumber = ticketnumber;
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.ConfirmJJDisputeAsync(ticketnumber, It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.ConfirmJJDisputeAsync(ticketnumber, It.IsAny<ClaimsPrincipal>(), timeZone, It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status405MethodNotAllowed, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         var printService = Mock.Of<IPrintDigitalCaseFileService>();
@@ -334,7 +344,7 @@ public class JJControllerTest
         JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndConfirmJJDisputeAsync(ticketnumber, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndConfirmJJDisputeAsync(ticketnumber, timeZone.Id, CancellationToken.None);
 
         // Assert
         var methodNotAllowedResult = Assert.IsType<HttpError>(result);
@@ -351,7 +361,7 @@ public class JJControllerTest
         var jjDisputeService = new Mock<IJJDisputeService>();
 
         jjDisputeService
-            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, false, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, false, timeZone, It.IsAny<CancellationToken>()))
             .ReturnsAsync(dispute);
         var mockLogger = new Mock<ILogger<JJController>>();
         var printService = Mock.Of<IPrintDigitalCaseFileService>();
@@ -360,7 +370,7 @@ public class JJControllerTest
         JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, false, false, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, false, false, timeZone.Id, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -377,7 +387,7 @@ public class JJControllerTest
         var jjDisputeService = new Mock<IJJDisputeService>();
 
         jjDisputeService
-            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, false, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, false, timeZone, It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         var printService = Mock.Of<IPrintDigitalCaseFileService>();
@@ -386,7 +396,7 @@ public class JJControllerTest
         JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, false, false, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, false, false, timeZone.Id, CancellationToken.None);
 
         // Assert
         var badRequestResult = Assert.IsType<HttpError>(result);
@@ -403,7 +413,7 @@ public class JJControllerTest
         var jjDisputeService = new Mock<IJJDisputeService>();
 
         jjDisputeService
-            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, false, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, false, timeZone,It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status404NotFound, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         var printService = Mock.Of<IPrintDigitalCaseFileService>();
@@ -412,7 +422,7 @@ public class JJControllerTest
         JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, false, false, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, false, false, timeZone.Id, CancellationToken.None);
 
         // Assert
         var notFoundResult = Assert.IsType<HttpError>(result);
@@ -487,7 +497,7 @@ public class JJControllerTest
         var jjDisputeService = new Mock<IJJDisputeService>();
 
         jjDisputeService
-            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, true, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, true, timeZone, It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status409Conflict, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         var printService = Mock.Of<IPrintDigitalCaseFileService>();
@@ -496,7 +506,7 @@ public class JJControllerTest
         JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, true, false, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, true, false, timeZone.Id, CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -517,7 +527,7 @@ public class JJControllerTest
         var jjDisputeService = new Mock<IJJDisputeService>();
 
         jjDisputeService
-            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, true, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, true, timeZone, It.IsAny<CancellationToken>()))
             .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
         var mockLogger = new Mock<ILogger<JJController>>();
         var printService = Mock.Of<IPrintDigitalCaseFileService>();
@@ -526,7 +536,7 @@ public class JJControllerTest
         JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, true, false, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, true, false, timeZone.Id, CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -546,7 +556,7 @@ public class JJControllerTest
         var lockService = new Mock<IDisputeLockService>();
 
         jjDisputeService
-            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, false, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, false, timeZone, It.IsAny<CancellationToken>()))
             .ReturnsAsync(dispute);
 
         lockService
@@ -564,7 +574,7 @@ public class JJControllerTest
         JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, false, true, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, false, true, timeZone.Id, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);

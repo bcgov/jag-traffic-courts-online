@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TrafficCourts.Cdogs.Client;
@@ -39,6 +40,7 @@ public class DisputeController : StaffControllerBase
     /// Returns all Disputes from the Oracle Data API with given parameters.
     /// </summary>
     /// <param name="parameters"></param>
+    /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <response code="200">The Disputes were found.</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
@@ -51,13 +53,18 @@ public class DisputeController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.Dispute, Scopes.Read)]
-    public async Task<IActionResult> GetDisputesAsync(GetAllDisputesParameters parameters, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetDisputesAsync(GetAllDisputesParameters parameters, string timeZone, CancellationToken cancellationToken)
     {
+        if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
+        {
+            return validationResult; // Return BadRequest if validation fails
+        }
+
         _logger.LogDebug("Retrieving all Disputes from oracle-data-api");
         parameters ??= GetAllDisputesParameters.Default;
         try
         {
-            PagedDisputeListItemCollection disputes = await _disputeService.GetAllDisputesAsync(parameters, cancellationToken);
+            PagedDisputeListItemCollection disputes = await _disputeService.GetAllDisputesAsync(parameters, timeZoneInfo, cancellationToken);
             return Ok(disputes);
         }
         catch (Exception e)
@@ -104,6 +111,7 @@ public class DisputeController : StaffControllerBase
     /// Returns a single Dispute with the given identifier from the Oracle Data API.
     /// </summary>
     /// <param name="disputeId">Unique identifier for a specific Dispute record.</param>
+    /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>A single Dispute record</returns>
     /// <response code="200">The Dispute was found.</response>
@@ -122,14 +130,19 @@ public class DisputeController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.Dispute, Scopes.Read)]
-    public async Task<IActionResult> GetDisputeAsync(long disputeId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetDisputeAsync(long disputeId, string timeZone, CancellationToken cancellationToken)
     {
+        if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
+        {
+            return validationResult; // Return BadRequest if validation fails
+        }
+
         _logger.LogDebug("Retrieving Dispute from oracle-data-api");
 
         try
         {
             var options = new GetDisputeOptions { DisputeId = disputeId, Assign = true, GetNameFromIcbc = true };
-            Dispute dispute = await _disputeService.GetDisputeAsync(options, cancellationToken);
+            Dispute dispute = await _disputeService.GetDisputeAsync(options, timeZoneInfo, cancellationToken);
             return Ok(dispute);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -211,14 +224,20 @@ public class DisputeController : StaffControllerBase
     public async Task<IActionResult> UpdateDisputeAsync(long disputeId, 
         Dispute dispute,
         [StringLength(500, ErrorMessage = "Staff comment cannot exceed 500 characters.")]
-        string? staffComment, 
+        string? staffComment,
+        string timeZone,
         CancellationToken cancellationToken)
     {
+        if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
+        {
+            return validationResult; // Return BadRequest if validation fails
+        }
+
         _logger.LogDebug("Updating the Dispute in oracle-data-api");
 
         try
         {
-            Dispute updatedDispute = await _disputeService.UpdateDisputeAsync(disputeId, User, staffComment, dispute, cancellationToken);
+            Dispute updatedDispute = await _disputeService.UpdateDisputeAsync(disputeId, User, staffComment, dispute, timeZoneInfo, cancellationToken);
             return Ok(updatedDispute);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -569,6 +588,7 @@ public class DisputeController : StaffControllerBase
     /// <summary>
     /// Returns all Disputes that have pending update requests from the Oracle Data API
     /// </summary>
+    /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <response code="200">The Disputes were found.</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
@@ -584,13 +604,18 @@ public class DisputeController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.Dispute, Scopes.Read)]
-    public async Task<IActionResult> GetDisputesWithPendingUpdateRequestsAsync(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetDisputesWithPendingUpdateRequestsAsync([Required] string timeZone, CancellationToken cancellationToken)
     {
+        if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
+        {
+            return validationResult; // Return BadRequest if validation fails
+        }
+
         _logger.LogDebug("Retrieving all Disputes from oracle-data-api with pending update requests");
 
         try
         {
-            ICollection<DisputeWithUpdates> disputes = await _disputeService.GetAllDisputesWithPendingUpdateRequestsAsync(cancellationToken);
+            ICollection<DisputeWithUpdates> disputes = await _disputeService.GetAllDisputesWithPendingUpdateRequestsAsync(timeZoneInfo, cancellationToken);
             return Ok(disputes);
         }
         catch (Exception e)
@@ -655,10 +680,9 @@ public class DisputeController : StaffControllerBase
     [KeycloakAuthorize(Resources.Dispute, Scopes.Read)]
     public async Task<IActionResult> PrintDisputeAsync([Required] long disputeId, [Required] string timeZone, DcfTemplateType type, CancellationToken cancellationToken)
     {
-        // TODO: can we use model binding to validate the timezone?
-        if (!TimeZoneInfo.TryFindSystemTimeZoneById(timeZone, out TimeZoneInfo? timeZoneInfo))
+        if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
         {
-            return BadRequest("Invalid time zone. Time zone must be a valid IANA or Windows time zone id.");
+            return validationResult; // Return BadRequest if validation fails
         }
 
         _logger.LogDebug("Rendering print version of ticket validation view for dispute {disputeId} in timezone {timeZone}.", disputeId, timeZoneInfo);

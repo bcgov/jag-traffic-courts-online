@@ -54,6 +54,7 @@ public partial class JJController : StaffControllerBase
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <param name="jjAssignedTo">If specified, will retrieve the records which are assigned to the specified jj staff</param>
+    /// <param name="timeZone"></param>
     /// <response code="200">The JJ disputes were found.</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires jj-dispute:read permission.</response>
@@ -65,13 +66,18 @@ public partial class JJController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
-    public async Task<IActionResult> GetJJDisputesAsync(string? jjAssignedTo, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetJJDisputesAsync(string? jjAssignedTo, string timeZone, CancellationToken cancellationToken)
     {
+        if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
+        {
+            return validationResult; // Return BadRequest if validation fails
+        }
+
         _logger.LogDebug("Retrieving all JJ Disputes from oracle-data-api");
 
         try
         {
-            ICollection<JJDispute> JJDisputes = await _jjDisputeService.GetAllJJDisputesAsync(jjAssignedTo, cancellationToken);
+            ICollection<JJDispute> JJDisputes = await _jjDisputeService.GetAllJJDisputesAsync(jjAssignedTo, timeZoneInfo, cancellationToken);
             return Ok(JJDisputes);
         }
         catch (Exception e)
@@ -84,11 +90,11 @@ public partial class JJController : StaffControllerBase
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="time_zone">The callers time zone</param>
     /// <param name="appearances">Include appearance fields</param>
     /// <param name="notice_of_hearing_yn">Include notice of hearing flag.</param>
     /// <param name="multiple_officers_yn">Include multiple officers flag</param>
     /// <param name="electronic_ticket_yn">Include electronic ticket flag</param>
-    /// <param name="time_zone">The callers time zone</param>
     /// <param name="submitted_from">Disputes sumbitted on or after this date</param>
     /// <param name="submitted_thru">Disputes sumbitted on or before this date</param>
     /// <param name="ticket_number"></param>
@@ -118,11 +124,11 @@ public partial class JJController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
     public async Task<IActionResult> SearchDisputesAsync(
+        string time_zone,
         bool? appearances,
         bool? notice_of_hearing_yn,
         bool? multiple_officers_yn,
         bool? electronic_ticket_yn,
-        string? time_zone,
         string? submitted_from,
         string? submitted_thru,
         string? ticket_number,
@@ -148,7 +154,6 @@ public partial class JJController : StaffControllerBase
             notice_of_hearing_yn = notice_of_hearing_yn,
             multiple_officers_yn = multiple_officers_yn,
             electronic_ticket_yn = electronic_ticket_yn,
-            time_zone = time_zone,
             submitted_from = submitted_from,
             submitted_thru = submitted_thru,
             ticket_number  = ticket_number,
@@ -165,7 +170,8 @@ public partial class JJController : StaffControllerBase
             hearing_type_cd = hearing_type_cd,
             sort_by = sort_by,
             page_number = page_number,
-            page_size = page_size
+            page_size = page_size,
+            
         };
 
         try
@@ -193,6 +199,7 @@ public partial class JJController : StaffControllerBase
     /// <param name="ticketNumber">Ticket number for a specific JJ dispute record.</param>
     /// <param name="assignVTC">boolean to indicate need to assign VTC.</param>
     /// <param name="executeUserLock">A flag indicating whether to execute a user lock.</param>
+    /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>A single JJ dispute record</returns>
     /// <response code="200">The JJ dispute was found.</response>
@@ -210,13 +217,18 @@ public partial class JJController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
-    public async Task<IActionResult> GetJJDisputeAsync(long jjDisputeId, string ticketNumber, bool assignVTC, bool executeUserLock, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetJJDisputeAsync(long jjDisputeId, string ticketNumber, bool assignVTC, bool executeUserLock, string timeZone, CancellationToken cancellationToken)
     {
+        if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
+        {
+            return validationResult; // Return BadRequest if validation fails
+        }
+
         _logger.LogDebug("Retrieving JJ Dispute {JJDisputeId} from oracle-data-api", jjDisputeId);
 
         try
         {
-            JJDispute dispute = await _jjDisputeService.GetJJDisputeAsync(ticketNumber, assignVTC, cancellationToken);
+            JJDispute dispute = await _jjDisputeService.GetJJDisputeAsync(ticketNumber, assignVTC, timeZoneInfo, cancellationToken);
 
             // note, this would not be required if our APIs actually search by the primary key of the table and
             // not just an attribute that does not even have a unique constraint on it.
@@ -372,6 +384,7 @@ public partial class JJController : StaffControllerBase
     /// </summary>
     /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
     /// <param name="jjDispute"></param>
+    /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The JJ Dispute is updated.</response>
@@ -391,7 +404,7 @@ public partial class JJController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.UpdateAdmin)]
-    public async Task<IActionResult> UpdateJJDisputeCascadeAsync(string ticketNumber, JJDispute jjDispute, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateJJDisputeCascadeAsync(string ticketNumber, JJDispute jjDispute, string timeZone, CancellationToken cancellationToken)
     {
         if (jjDispute is null || jjDispute.TicketNumber is null)
         {
@@ -403,13 +416,18 @@ public partial class JJController : StaffControllerBase
             return new HttpError(StatusCodes.Status400BadRequest, "JJDispute ticketNumber mismatch");
         }
 
+        if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
+        {
+            return validationResult; // Return BadRequest if validation fails
+        }
+
         try
         {
             _logger.LogDebug("Updating the JJ Dispute in oracle-data-api");
 
             var disputeLock = _disputeLockService.GetLock(jjDispute.TicketNumber, GetUserName(User));
 
-            var updatedJJDispute = await _jjDisputeService.UpdateJJDisputeCascadeAsync(jjDispute, User, cancellationToken);
+            var updatedJJDispute = await _jjDisputeService.UpdateJJDisputeCascadeAsync(jjDispute, User, timeZoneInfo, cancellationToken);
 
             if (disputeLock != null)
             {
@@ -457,6 +475,7 @@ public partial class JJController : StaffControllerBase
     /// <param name="jjDisputeId">Unique identifier for a specific JJ Dispute record.</param>
     /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
     /// <param name="jjDispute"></param>
+    /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">Admin resolution is submitted. The JJ Dispute is updated.</response>
@@ -476,15 +495,20 @@ public partial class JJController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
-    public async Task<IActionResult> SubmitAdminResolutionAsync(string ticketNumber, long jjDisputeId, bool checkVTC, JJDispute jjDispute, CancellationToken cancellationToken)
+    public async Task<IActionResult> SubmitAdminResolutionAsync(string ticketNumber, long jjDisputeId, bool checkVTC, JJDispute jjDispute, string timeZone, CancellationToken cancellationToken)
     {
+        if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
+        {
+            return validationResult; // Return BadRequest if validation fails
+        }
+
         _logger.LogDebug("Updating the JJ Dispute in oracle-data-api");
 
         try
         {
             var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
 
-            var updatedJJDispute = await _jjDisputeService.SubmitAdminResolutionAsync(jjDisputeId, checkVTC, jjDispute, User, cancellationToken);
+            var updatedJJDispute = await _jjDisputeService.SubmitAdminResolutionAsync(jjDisputeId, checkVTC, jjDispute, User, timeZoneInfo, cancellationToken);
 
             if (disputeLock != null)
             {
@@ -581,6 +605,7 @@ public partial class JJController : StaffControllerBase
     /// </summary>
     /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
     /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
+    /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The JJDispute is updated.</response>
@@ -604,15 +629,21 @@ public partial class JJController : StaffControllerBase
     public async Task<IActionResult> RecallJJDisputeAsync(
         string ticketNumber,
         bool checkVTC,
+        string timeZone,
         CancellationToken cancellationToken)
     {
+        if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
+        {
+            return validationResult; // Return BadRequest if validation fails
+        }
+
         _logger.LogDebug("Dispute is recalled. Updating the JJDispute status to REVIEW");
 
         try
         {
             var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
 
-            await _jjDisputeService.ReviewJJDisputeAsync(ticketNumber, null!, checkVTC, User, true, cancellationToken);
+            await _jjDisputeService.ReviewJJDisputeAsync(ticketNumber, null!, checkVTC, User, true, timeZoneInfo, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -651,6 +682,7 @@ public partial class JJController : StaffControllerBase
     /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
     /// <param name="remark">The remark or note (max 4000 characters) the JJDispute was set to REVIEW.</param>
     /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
+    /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The JJDispute is updated.</response>
@@ -676,15 +708,21 @@ public partial class JJController : StaffControllerBase
         [FromForm]
         [StringLength(4000, ErrorMessage = "Remark note cannot exceed 4000 characters.")] string remark,
         bool checkVTC,
+        string timeZone,
         CancellationToken cancellationToken)
     {
+        if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
+        {
+            return validationResult; // Return BadRequest if validation fails
+        }
+
         _logger.LogDebug("Updating the JJDispute status to REVIEW");
 
         try
         {
             var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
 
-            await _jjDisputeService.ReviewJJDisputeAsync(ticketNumber, remark, checkVTC, User, false, cancellationToken);
+            await _jjDisputeService.ReviewJJDisputeAsync(ticketNumber, remark, checkVTC, User, false, timeZoneInfo, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -722,6 +760,7 @@ public partial class JJController : StaffControllerBase
     /// </summary>
     /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
     /// <param name="remark">The remark or note (max 4000 characters) the JJDispute was set to REVIEW.</param>
+    /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The JJDispute is updated.</response>
@@ -746,14 +785,20 @@ public partial class JJController : StaffControllerBase
         string ticketNumber,
         [FromForm]
         [StringLength(4000, ErrorMessage = "Remark note cannot exceed 4000 characters.")] string remark,
+        string timeZone,
         CancellationToken cancellationToken)
     {
+        if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
+        {
+            return validationResult; // Return BadRequest if validation fails
+        }
+
         _logger.LogDebug("Updating the JJDispute status to REQUIRE_COURT_HEARING");
 
         try
         {
             var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
-            await _jjDisputeService.RequireCourtHearingJJDisputeAsync(ticketNumber, remark, User, cancellationToken);
+            await _jjDisputeService.RequireCourtHearingJJDisputeAsync(ticketNumber, remark, User, timeZoneInfo, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -791,6 +836,7 @@ public partial class JJController : StaffControllerBase
     /// </summary>
     /// <param name="ticketNumber">Ticket number for a specific JJ Dispute record.</param>
     /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
+    /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The JJDispute is updated.</response>
@@ -814,14 +860,20 @@ public partial class JJController : StaffControllerBase
     public async Task<IActionResult> AcceptJJDisputeAsync(
         string ticketNumber,
         bool checkVTC,
+        string timeZone, 
         CancellationToken cancellationToken)
     {
+        if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
+        {
+            return validationResult; // Return BadRequest if validation fails
+        }
+
         _logger.LogDebug("Updating the JJDispute status to ACCEPTED");
 
         try
         {
             var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
-            await _jjDisputeService.AcceptJJDisputeAsync(ticketNumber, checkVTC, User, cancellationToken);
+            await _jjDisputeService.AcceptJJDisputeAsync(ticketNumber, checkVTC, User, timeZoneInfo, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -873,6 +925,7 @@ public partial class JJController : StaffControllerBase
     /// </summary>
     /// <param name="ticketNumber">Ticket number for a specific JJ Dispute record.</param>
     /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
+    /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The JJDispute is updated.</response>
@@ -894,14 +947,20 @@ public partial class JJController : StaffControllerBase
     public async Task<IActionResult> ConcludeJJDisputeAsync(
         string ticketNumber,
         bool checkVTC,
+        string timeZone, 
         CancellationToken cancellationToken)
     {
+        if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
+        {
+            return validationResult; // Return BadRequest if validation fails
+        }
+
         _logger.LogDebug("Updating the JJDispute status to CONCLUDED");
 
         try
         {
             var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
-            await _jjDisputeService.ConcludeJJDisputeAsync(ticketNumber, checkVTC, User, cancellationToken);
+            await _jjDisputeService.ConcludeJJDisputeAsync(ticketNumber, checkVTC, User, timeZoneInfo, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -938,6 +997,7 @@ public partial class JJController : StaffControllerBase
     /// </summary>
     /// <param name="ticketNumber">Ticket number for a specific JJ Dispute record.</param>
     /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
+    /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The JJDispute is updated.</response>
@@ -959,14 +1019,20 @@ public partial class JJController : StaffControllerBase
     public async Task<IActionResult> CancelJJDisputeAsync(
         string ticketNumber,
         bool checkVTC,
+        string timeZone,
         CancellationToken cancellationToken)
     {
+        if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
+        {
+            return validationResult; // Return BadRequest if validation fails
+        }
+
         _logger.LogDebug("Updating the JJDispute status to CANCELLED");
 
         try
         {
             var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
-            await _jjDisputeService.CancelJJDisputeAsync(ticketNumber, checkVTC, User, cancellationToken);
+            await _jjDisputeService.CancelJJDisputeAsync(ticketNumber, checkVTC, User, timeZoneInfo, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -1002,6 +1068,7 @@ public partial class JJController : StaffControllerBase
     /// Updates court appearance record as well as the status of a particular JJDispute record to REQUIRE_COURT_HEARING, hearing type to COURT_APPEARANCE.
     /// </summary>
     /// <param name="ticketNumber">Ticket number for a specific JJ Dispute record.</param>
+    /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The court appearance and JJDispute status are updated.</response>
@@ -1021,15 +1088,20 @@ public partial class JJController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
-    public async Task<IActionResult> UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(string ticketNumber, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(string ticketNumber, string timeZone, CancellationToken cancellationToken)
     {
+        if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
+        {
+            return validationResult; // Return BadRequest if validation fails
+        }
+
         _logger.LogDebug("Updating court appearance and the JJDispute status to REQUIRE_COURT_HEARING");
 
         try
         {
             // TODO: Call Oracle API to update court appearance when TCVP-1999 is completed as per TCVP-1978
             var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
-            await _jjDisputeService.RequireCourtHearingJJDisputeAsync(ticketNumber, null, User, cancellationToken);
+            await _jjDisputeService.RequireCourtHearingJJDisputeAsync(ticketNumber, null, User, timeZoneInfo, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -1066,6 +1138,7 @@ public partial class JJController : StaffControllerBase
     /// Updates court appearance record as well as the status of a particular JJDispute record to CONFIRMED.
     /// </summary>
     /// <param name="ticketNumber">Ticket number for a specific JJ Dispute record.</param>
+    /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The court appearance and JJDispute status are updated.</response>
@@ -1085,15 +1158,20 @@ public partial class JJController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
-    public async Task<IActionResult> UpdateCourtAppearanceAndConfirmJJDisputeAsync(string ticketNumber, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateCourtAppearanceAndConfirmJJDisputeAsync(string ticketNumber, string timeZone, CancellationToken cancellationToken)
     {
+        if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
+        {
+            return validationResult; // Return BadRequest if validation fails
+        }
+
         _logger.LogDebug("Updating court appearance and the JJDispute status to REQUIRE_COURT_HEARING");
 
         try
         {
             // TODO: Call Oracle API to update court appearance when TCVP-1999 is completed as per TCVP-1978
             var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
-            await _jjDisputeService.ConfirmJJDisputeAsync(ticketNumber, User, cancellationToken);
+            await _jjDisputeService.ConfirmJJDisputeAsync(ticketNumber, User, timeZoneInfo, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -1147,10 +1225,9 @@ public partial class JJController : StaffControllerBase
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
     public async Task<IActionResult> PrintDisputeAsync([Required] string ticketNumber, [Required] string timeZone, DcfTemplateType type, CancellationToken cancellationToken)
     {
-        // TODO: can we use model binding to validate the timezone?
-        if (!TimeZoneInfo.TryFindSystemTimeZoneById(timeZone, out TimeZoneInfo? timeZoneInfo))
+        if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
         {
-            return BadRequest("Invalid time zone. Time zone must be a valid IANA or Windows time zone id.");
+            return validationResult; // Return BadRequest if validation fails
         }
 
         _logger.LogDebug("Rendering print version of dispute {ticketNumber} in timezone {timeZone}. This really should be using the tco_dispute.dispute_id", ticketNumber, timeZoneInfo);
