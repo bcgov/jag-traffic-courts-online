@@ -282,18 +282,22 @@ export class DisputeService {
     /**
      * Returns a single Dispute with the given identifier from the Oracle Data API.
      * @param disputeId Unique identifier for a specific Dispute record.
+     * @param xTimezone 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDisputeDisputeIdGet(disputeId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Dispute>;
-    public apiDisputeDisputeIdGet(disputeId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Dispute>>;
-    public apiDisputeDisputeIdGet(disputeId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Dispute>>;
-    public apiDisputeDisputeIdGet(disputeId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiDisputeDisputeIdGet(disputeId: number, xTimezone?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Dispute>;
+    public apiDisputeDisputeIdGet(disputeId: number, xTimezone?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Dispute>>;
+    public apiDisputeDisputeIdGet(disputeId: number, xTimezone?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Dispute>>;
+    public apiDisputeDisputeIdGet(disputeId: number, xTimezone?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (disputeId === null || disputeId === undefined) {
             throw new Error('Required parameter disputeId was null or undefined when calling apiDisputeDisputeIdGet.');
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required
@@ -348,33 +352,29 @@ export class DisputeService {
     /**
      * Returns generated document.
      * @param disputeId Dispute Id
-     * @param timeZone The IANA timze zone id
      * @param type The type of template to generate
+     * @param xTimezone The IANA timze zone id
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDisputeDisputeIdPrintGet(disputeId: number, timeZone: string, type?: DcfTemplateType, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream' | 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Blob>;
-    public apiDisputeDisputeIdPrintGet(disputeId: number, timeZone: string, type?: DcfTemplateType, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream' | 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Blob>>;
-    public apiDisputeDisputeIdPrintGet(disputeId: number, timeZone: string, type?: DcfTemplateType, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream' | 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Blob>>;
-    public apiDisputeDisputeIdPrintGet(disputeId: number, timeZone: string, type?: DcfTemplateType, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/octet-stream' | 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiDisputeDisputeIdPrintGet(disputeId: number, type?: DcfTemplateType, xTimezone?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream' | 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Blob>;
+    public apiDisputeDisputeIdPrintGet(disputeId: number, type?: DcfTemplateType, xTimezone?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream' | 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Blob>>;
+    public apiDisputeDisputeIdPrintGet(disputeId: number, type?: DcfTemplateType, xTimezone?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream' | 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Blob>>;
+    public apiDisputeDisputeIdPrintGet(disputeId: number, type?: DcfTemplateType, xTimezone?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/octet-stream' | 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (disputeId === null || disputeId === undefined) {
             throw new Error('Required parameter disputeId was null or undefined when calling apiDisputeDisputeIdPrintGet.');
         }
-        if (timeZone === null || timeZone === undefined) {
-            throw new Error('Required parameter timeZone was null or undefined when calling apiDisputeDisputeIdPrintGet.');
-        }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (timeZone !== undefined && timeZone !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>timeZone, 'timeZone');
-        }
         if (type !== undefined && type !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>type, 'type');
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required
@@ -421,14 +421,15 @@ export class DisputeService {
      * Updates a single Dispute through the Oracle Data Interface API based on unique dispute id and the dispute data being passed in the body.
      * @param disputeId Unique identifier for a specific Dispute record.
      * @param staffComment VTC staff\&#39;s comment for saving or updating a dispute in Ticket Validation
+     * @param xTimezone 
      * @param dispute 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDisputeDisputeIdPut(disputeId: number, staffComment?: string, dispute?: Dispute, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Dispute>;
-    public apiDisputeDisputeIdPut(disputeId: number, staffComment?: string, dispute?: Dispute, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Dispute>>;
-    public apiDisputeDisputeIdPut(disputeId: number, staffComment?: string, dispute?: Dispute, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Dispute>>;
-    public apiDisputeDisputeIdPut(disputeId: number, staffComment?: string, dispute?: Dispute, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiDisputeDisputeIdPut(disputeId: number, staffComment?: string, xTimezone?: string, dispute?: Dispute, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Dispute>;
+    public apiDisputeDisputeIdPut(disputeId: number, staffComment?: string, xTimezone?: string, dispute?: Dispute, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Dispute>>;
+    public apiDisputeDisputeIdPut(disputeId: number, staffComment?: string, xTimezone?: string, dispute?: Dispute, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Dispute>>;
+    public apiDisputeDisputeIdPut(disputeId: number, staffComment?: string, xTimezone?: string, dispute?: Dispute, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (disputeId === null || disputeId === undefined) {
             throw new Error('Required parameter disputeId was null or undefined when calling apiDisputeDisputeIdPut.');
         }
@@ -440,6 +441,9 @@ export class DisputeService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required
@@ -891,13 +895,14 @@ export class DisputeService {
      * @param defaultPageSize The default page size contains the default count of records.
      * @param pageNumber The optional page number gives the records from given page
      * @param pageSize The optional page size sets the record count
+     * @param xTimezone 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDisputeDisputesGet(excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courtHouse?: string, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<PagedDisputeListItemCollection>;
-    public apiDisputeDisputesGet(excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courtHouse?: string, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<PagedDisputeListItemCollection>>;
-    public apiDisputeDisputesGet(excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courtHouse?: string, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<PagedDisputeListItemCollection>>;
-    public apiDisputeDisputesGet(excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courtHouse?: string, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiDisputeDisputesGet(excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courtHouse?: string, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, xTimezone?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<PagedDisputeListItemCollection>;
+    public apiDisputeDisputesGet(excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courtHouse?: string, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, xTimezone?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<PagedDisputeListItemCollection>>;
+    public apiDisputeDisputesGet(excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courtHouse?: string, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, xTimezone?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<PagedDisputeListItemCollection>>;
+    public apiDisputeDisputesGet(excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courtHouse?: string, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, xTimezone?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (excludeStatus) {
@@ -958,6 +963,9 @@ export class DisputeService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required
@@ -1012,15 +1020,19 @@ export class DisputeService {
 
     /**
      * Returns all Disputes that have pending update requests from the Oracle Data API
+     * @param xTimezone 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDisputeDisputeswithupdaterequestsGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<DisputeWithUpdates>>;
-    public apiDisputeDisputeswithupdaterequestsGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<DisputeWithUpdates>>>;
-    public apiDisputeDisputeswithupdaterequestsGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<DisputeWithUpdates>>>;
-    public apiDisputeDisputeswithupdaterequestsGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiDisputeDisputeswithupdaterequestsGet(xTimezone?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<DisputeWithUpdates>>;
+    public apiDisputeDisputeswithupdaterequestsGet(xTimezone?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<DisputeWithUpdates>>>;
+    public apiDisputeDisputeswithupdaterequestsGet(xTimezone?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<DisputeWithUpdates>>>;
+    public apiDisputeDisputeswithupdaterequestsGet(xTimezone?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required
