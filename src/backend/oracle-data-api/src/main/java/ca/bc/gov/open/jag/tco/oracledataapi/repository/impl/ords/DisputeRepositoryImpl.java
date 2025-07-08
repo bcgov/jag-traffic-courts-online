@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.TimeZone;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -25,7 +24,6 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeListItem;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequestStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.EmptyObject;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.ViolationTicketApi;
@@ -255,8 +253,6 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	@Override
 	public void unassignDisputes(Date olderThan) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateUtil.DATE_TIME_FORMAT);
-		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // FIXME: UTC is a time standard, not a time zone - I
-																	// think this should be GMT.
 		String dateStr = simpleDateFormat.format(olderThan);
 
 		logger.debug("Unassigning Disputes older than {}", StructuredArguments.value("date", dateStr));
