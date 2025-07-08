@@ -1,0 +1,120 @@
+using Serilog;
+using Microsoft.OpenApi.Models;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
+using System.Reflection;
+using System.Text.Json.Serialization;
+using TrafficCourts.Common.Configuration;
+using TrafficCourts.OrdsDataService;
+
+namespace TrafficCourts.Hotfix.DataMigration;
+
+public static class Startup
+{
+    public static void ConfigureApplication(this WebApplicationBuilder builder, Serilog.ILogger logger)
+    {
+        // this assembly, used in a couple locations below for registering things
+        Assembly assembly = Assembly.GetExecutingAssembly();
+
+        builder.Services.AddSingleton(TimeProvider.System);
+
+        // Add services to the container.
+        builder.AddSerilog();
+        builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
+        {
+            options
+                .AddOracleDataApiInstrumentation()
+                .AddOrdsDataServiceInstrumentation();       
+        },
+        options =>
+        {
+            options
+                .AddOracleDataApiInstrumentation()
+                .AddOrdsDataServiceInstrumentation();
+        });
+
+        // builder.Services.AddOrdsDataService(builder.Configuration);
+
+        // builder.Services.AddTransient<UserIdentityProviderHandler>();
+        builder.Services.AddHttpContextAccessor();
+
+        // builder.Services.AddOracleDataApi(builder.Configuration, builder =>
+        // {
+        //     // builder.AddHttpMessageHandler<UserIdentityProviderHandler>();
+        // });
+
+        // builder.Services.AddRecyclableMemoryStreams();
+        
+        builder.Services.UseTicketSearch(builder.Configuration, logger);
+
+        // Render enums as strings rather than ints
+        builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+        // Ensure routes (api endpoints) are lowercase
+        //   The RFC 3986 specifications denote that URIs care case-sensitive. Per best practices for rest apis, route endpoints
+        //   should be lowercase to avoid confusion about inconsistent capitalisation.
+        builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+
+        // builder.Services.AddAuthentication(builder.Configuration);
+
+        // builder.Services.AddAuthorization(builder.Configuration);
+
+        // builder.Services.AddKeycloakAdminApiClient(builder.Configuration);
+        // builder.Services.AddTransient<IKeycloakService, KeycloakService>();
+        AddSwagger(builder, assembly, logger);
+    }
+
+    /// <summary>
+    /// Adds swagger if enabled by configuration
+    /// </summary>
+    private static void AddSwagger(WebApplicationBuilder builder, Assembly assembly, Serilog.ILogger logger)
+    {
+        var swagger = SwaggerConfiguration.Get(builder.Configuration);
+        if (swagger.Enabled)
+        {
+            logger.Information("Swagger is enabled");
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Hotfix Data Migration API",
+                    Description = "Hotfix Data Migration API for Traffic Courts Online",
+                });
+
+                // c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                // {
+                //     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                //     Name = "Authorization",
+                //     In = ParameterLocation.Header,
+                //     Type = SecuritySchemeType.ApiKey
+                // });
+
+                // c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                // {
+                //     {
+                //         new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } },
+                //         Array.Empty<string>()
+                //     }
+                // });
+
+                c.CustomSchemaIds(RemoveDtoSuffix);
+
+                c.EnableAnnotations();
+
+                // Set the comments path for the Swagger JSON and UI.
+                // var xmlFile = $"{assembly.GetName().Name}.xml";
+                // var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                // c.IncludeXmlComments(xmlPath);
+            });
+        }
+    }
+
+    private static string RemoveDtoSuffix(Type type)
+    {
+        string name = type.Name;
+        return name.EndsWith("Dto") ? name[..^3] : name;
+    }
+}

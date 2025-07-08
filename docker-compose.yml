@@ -487,6 +487,44 @@ services:
     ports:
       - "8100:8080"
 
+  ###############################################################################################
+  ###                                 Data Migration Service                                 ###
+  ###############################################################################################
+  data-migration:
+    container_name: data-migration
+    profiles:
+      - hotfix
+    image: 'mcr.microsoft.com/dotnet/sdk:8.0'
+    working_dir: /TrafficCourts/TrafficCourts.Hotfix.DataMigration
+    build:
+      context: ./src/backend/TrafficCourts/TrafficCourts.Hotfix.DataMigration
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+      - SERILOG__USING__0=Serilog.Sinks.Console
+      - SERILOG__WRITETO__0__ARGS__OUTPUTTEMPLATE="[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"
+      - SERILOG__WRITETO__0__ARGS__THEME=Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console
+      - SERILOG__WRITETO__0__NAME=Console
+      - SERILOG__MINIMUMLEVEL__DEFAULT=${SERILOG__MINIMUMLEVEL__DEFAULT:-Information} 
+      - TICKETSEARCH__SEARCHTYPE=${TICKETSEARCH__SEARCHTYPE:-Mock}
+      - TICKETSEARCH__CLIENTID=${TICKETSEARCH__CLIENTID:-}
+      - TICKETSEARCH__CLIENTSECRET=${TICKETSEARCH__CLIENTSECRET:-}
+      - TICKETSEARCH__TOKENENDPOINT=${TICKETSEARCH__TOKENENDPOINT:-https://wsgw.test.jag.gov.bc.ca/auth/oauth/v2/token}
+      - TICKETSEARCH__RESOURCEURL=${TICKETSEARCH__RESOURCEURL:-https://wsgw.test.jag.gov.bc.ca/ride/paybc/paymentsvc}
+      - TICKETSEARCH__BASEADDRESS=${TICKETSEARCH__BASEADDRESS:-https://wsgw.test.jag.gov.bc.ca}
+      - ORDSDATASERVICE_TCO__ADDRESS=${ORDSDATASERVICE_TCO__ADDRESS}
+      - ORDSDATASERVICE_TCO__PASSWORD=${ORDSDATASERVICE_TCO__PASSWORD}
+      - ORDSDATASERVICE_TCO__USERNAME=${ORDSDATASERVICE_TCO__USERNAME}
+      - ORDSDATASERVICE_OCCAM__ADDRESS=${ORDSDATASERVICE_OCCAM__ADDRESS}
+      - ORDSDATASERVICE_OCCAM__PASSWORD=${ORDSDATASERVICE_OCCAM__PASSWORD}
+      - ORDSDATASERVICE_OCCAM__USERNAME=${ORDSDATASERVICE_OCCAM__USERNAME}
+    restart: no
+    ports: 
+      - 8086:80
+    volumes:
+      # Mount source code for hot reload
+      - ./src/backend/TrafficCourts/:/TrafficCourts
+    command: ["dotnet", "watch", "run", "--no-restore", "--project /app/TrafficCourts.Hotfix.DataMigration.csproj"]
 
 volumes:
   data-clamav:
