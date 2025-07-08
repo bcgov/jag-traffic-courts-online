@@ -66,7 +66,7 @@ public partial class JJController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
-    public async Task<IActionResult> GetJJDisputesAsync(string? jjAssignedTo, string timeZone, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetJJDisputesAsync(string? jjAssignedTo, [FromHeader(Name = "X-Timezone")] string timeZone, CancellationToken cancellationToken)
     {
         if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
         {
@@ -217,7 +217,7 @@ public partial class JJController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
-    public async Task<IActionResult> GetJJDisputeAsync(long jjDisputeId, string ticketNumber, bool assignVTC, bool executeUserLock, string timeZone, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetJJDisputeAsync(long jjDisputeId, string ticketNumber, bool assignVTC, bool executeUserLock, [FromHeader(Name = "X-Timezone")] string timeZone, CancellationToken cancellationToken)
     {
         if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
         {
@@ -404,7 +404,7 @@ public partial class JJController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.UpdateAdmin)]
-    public async Task<IActionResult> UpdateJJDisputeCascadeAsync(string ticketNumber, JJDispute jjDispute, string timeZone, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateJJDisputeCascadeAsync(string ticketNumber, JJDispute jjDispute, [FromHeader(Name = "X-Timezone")] string timeZone, CancellationToken cancellationToken)
     {
         if (jjDispute is null || jjDispute.TicketNumber is null)
         {
@@ -495,7 +495,7 @@ public partial class JJController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
-    public async Task<IActionResult> SubmitAdminResolutionAsync(string ticketNumber, long jjDisputeId, bool checkVTC, JJDispute jjDispute, string timeZone, CancellationToken cancellationToken)
+    public async Task<IActionResult> SubmitAdminResolutionAsync(string ticketNumber, long jjDisputeId, bool checkVTC, JJDispute jjDispute, [FromHeader(Name = "X-Timezone")] string timeZone, CancellationToken cancellationToken)
     {
         if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
         {
@@ -629,7 +629,7 @@ public partial class JJController : StaffControllerBase
     public async Task<IActionResult> RecallJJDisputeAsync(
         string ticketNumber,
         bool checkVTC,
-        string timeZone,
+        [FromHeader(Name = "X-Timezone")] string timeZone,
         CancellationToken cancellationToken)
     {
         if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
@@ -708,7 +708,7 @@ public partial class JJController : StaffControllerBase
         [FromForm]
         [StringLength(4000, ErrorMessage = "Remark note cannot exceed 4000 characters.")] string remark,
         bool checkVTC,
-        string timeZone,
+        [FromHeader(Name = "X-Timezone")] string timeZone,
         CancellationToken cancellationToken)
     {
         if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
@@ -785,7 +785,7 @@ public partial class JJController : StaffControllerBase
         string ticketNumber,
         [FromForm]
         [StringLength(4000, ErrorMessage = "Remark note cannot exceed 4000 characters.")] string remark,
-        string timeZone,
+        [FromHeader(Name = "X-Timezone")] string timeZone,
         CancellationToken cancellationToken)
     {
         if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
@@ -860,7 +860,7 @@ public partial class JJController : StaffControllerBase
     public async Task<IActionResult> AcceptJJDisputeAsync(
         string ticketNumber,
         bool checkVTC,
-        string timeZone, 
+        [FromHeader(Name = "X-Timezone")] string timeZone, 
         CancellationToken cancellationToken)
     {
         if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
@@ -947,7 +947,7 @@ public partial class JJController : StaffControllerBase
     public async Task<IActionResult> ConcludeJJDisputeAsync(
         string ticketNumber,
         bool checkVTC,
-        string timeZone, 
+        [FromHeader(Name = "X-Timezone")] string timeZone, 
         CancellationToken cancellationToken)
     {
         if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
@@ -1019,7 +1019,7 @@ public partial class JJController : StaffControllerBase
     public async Task<IActionResult> CancelJJDisputeAsync(
         string ticketNumber,
         bool checkVTC,
-        string timeZone,
+        [FromHeader(Name = "X-Timezone")] string timeZone,
         CancellationToken cancellationToken)
     {
         if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
@@ -1088,7 +1088,7 @@ public partial class JJController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
-    public async Task<IActionResult> UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(string ticketNumber, string timeZone, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(string ticketNumber, [FromHeader(Name = "X-Timezone")] string timeZone, CancellationToken cancellationToken)
     {
         if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
         {
@@ -1158,7 +1158,7 @@ public partial class JJController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
-    public async Task<IActionResult> UpdateCourtAppearanceAndConfirmJJDisputeAsync(string ticketNumber, string timeZone, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateCourtAppearanceAndConfirmJJDisputeAsync(string ticketNumber, [FromHeader(Name = "X-Timezone")] string timeZone, CancellationToken cancellationToken)
     {
         if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
         {
@@ -1223,7 +1223,7 @@ public partial class JJController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
-    public async Task<IActionResult> PrintDisputeAsync([Required] string ticketNumber, [Required] string timeZone, DcfTemplateType type, CancellationToken cancellationToken)
+    public async Task<IActionResult> PrintDisputeAsync([Required] string ticketNumber, DcfTemplateType type, [FromHeader(Name = "X-Timezone")] string timeZone, CancellationToken cancellationToken)
     {
         if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
         {
