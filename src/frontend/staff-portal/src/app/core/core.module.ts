@@ -8,6 +8,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { LoadingStore } from './store';
 import { LoadingInterceptor } from './interceptors/loading.interceptor';
+import { TimezoneInterceptor } from './interceptors/timezone.interceptor';
 
 export function initConfig(config: ConfigService) {
   return () => {
@@ -43,6 +44,12 @@ export function initConfig(config: ConfigService) {
       deps: [ConfigService],
       multi: true,
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TimezoneInterceptor,
+      multi: true
+    }
+
   ],
 })
 export class CoreModule {}

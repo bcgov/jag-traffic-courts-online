@@ -53,7 +53,7 @@ public class DisputeController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.Dispute, Scopes.Read)]
-    public async Task<IActionResult> GetDisputesAsync(GetAllDisputesParameters parameters, string timeZone, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetDisputesAsync(GetAllDisputesParameters parameters, [FromHeader(Name = "X-Timezone")] string timeZone, CancellationToken cancellationToken)
     {
         if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
         {
@@ -130,7 +130,7 @@ public class DisputeController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.Dispute, Scopes.Read)]
-    public async Task<IActionResult> GetDisputeAsync(long disputeId, string timeZone, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetDisputeAsync(long disputeId, [FromHeader(Name = "X-Timezone")] string timeZone, CancellationToken cancellationToken)
     {
         if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
         {
@@ -203,6 +203,7 @@ public class DisputeController : StaffControllerBase
     /// <param name="disputeId">Unique identifier for a specific Dispute record.</param>
     /// <param name="dispute"></param>
     /// <param name="staffComment">VTC staff's comment for saving or updating a dispute in Ticket Validation</param>
+    /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The Dispute is updated.</response>
@@ -225,7 +226,7 @@ public class DisputeController : StaffControllerBase
         Dispute dispute,
         [StringLength(500, ErrorMessage = "Staff comment cannot exceed 500 characters.")]
         string? staffComment,
-        string timeZone,
+        [FromHeader(Name = "X-Timezone")] string timeZone,
         CancellationToken cancellationToken)
     {
         if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
@@ -604,7 +605,7 @@ public class DisputeController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.Dispute, Scopes.Read)]
-    public async Task<IActionResult> GetDisputesWithPendingUpdateRequestsAsync([Required] string timeZone, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetDisputesWithPendingUpdateRequestsAsync([FromHeader(Name = "X-Timezone")] string timeZone, CancellationToken cancellationToken)
     {
         if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
         {
@@ -678,7 +679,7 @@ public class DisputeController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.Dispute, Scopes.Read)]
-    public async Task<IActionResult> PrintDisputeAsync([Required] long disputeId, [Required] string timeZone, DcfTemplateType type, CancellationToken cancellationToken)
+    public async Task<IActionResult> PrintDisputeAsync([Required] long disputeId, DcfTemplateType type, [FromHeader(Name = "X-Timezone")] string timeZone, CancellationToken cancellationToken)
     {
         if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
         {

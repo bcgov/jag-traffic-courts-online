@@ -14,9 +14,16 @@ public abstract class StaffControllerBase : ControllerBase
 {
     protected bool ValidateTimeZone(string timeZone, [NotNullWhen(true)] out TimeZoneInfo? timeZoneInfo, [NotNullWhen(false)] out IActionResult? result)
     {
+        if(string.IsNullOrWhiteSpace(timeZone))
+        {
+            result = BadRequest("Time zone not supplied. Add time zone as a header X-Timezone.");
+            timeZoneInfo = null;
+            return false; // Indicates failure
+        }
+
         if (!TimeZoneInfo.TryFindSystemTimeZoneById(timeZone, out timeZoneInfo))
         {
-            result = BadRequest("Invalid time zone. Time zone must be a valid IANA or Windows time zone id.");
+            result = BadRequest("Invalid time zone in header X-Timezone. Time zone must be a valid IANA or Windows time zone id.");
             return false;
         }
 

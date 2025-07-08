@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.ComponentModel.DataAnnotations;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
 using TrafficCourts.Domain.Models;
@@ -42,7 +43,7 @@ public class EmailHistoryController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
-    public async Task<IActionResult> GetEmailHistoryRecordsAsync(string ticketNumber, string timeZone, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetEmailHistoryRecordsAsync(string ticketNumber, [FromHeader(Name = "X-Timezone")] string timeZone, CancellationToken cancellationToken)
     {
         if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
         {
