@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using TrafficCourts.TicketSearch;
+using TrafficCourts.Hotfix.DataMigration.Hotfixes;
 
 namespace TrafficCourts.Hotfix.DataMigration.Controllers
 {
@@ -8,45 +8,57 @@ namespace TrafficCourts.Hotfix.DataMigration.Controllers
     public class HotfixController : ControllerBase
     {
         private readonly ILogger<HotfixController> _logger;
+        private readonly IHotfixManager _hotfixManager;
 
-        private readonly ITicketSearchService _ticketSearchService;
-
-        public HotfixController(ILogger<HotfixController> logger, ITicketSearchService ticketSearchService)
+        public HotfixController(ILogger<HotfixController> logger, IHotfixManager hotfixManager)
         {
             _logger = logger;
-            _ticketSearchService = ticketSearchService;
+            _hotfixManager = hotfixManager;
         }
 
         [HttpGet("/list")]
         public List<string> Get()
         {
-            _logger.LogInformation("Retrieving list of Hotfixs");
-            return ["00001_Fix_Missing_Counts_On_OCCAM_Violation_Tickets.sql"];
+            _logger.LogInformation("Retrieving list of Hotfixes");
+            return _hotfixManager.GetHotfixNames();
         }
 
-        [HttpPost("/run/{HotfixName}")]
-        public IActionResult RunHotfix(string HotfixName)
+        [HttpPost("/run/{HotfixName}/{fixVersion}")]
+        public async Task<IActionResult> RunHotfix(
+            string HotfixName,
+            string fixVersion,
+            [FromQuery] bool dryRun = true,
+            [FromQuery] string environment = "dev", 
+            [FromQuery] int batchSize = 100,
+            [FromBody] Dictionary<string, object>? additionalData = null,
+            CancellationToken cancellationToken = default)
         {
-            _logger.LogInformation("Running Hotfix: {HotfixName}", HotfixName);
+            _logger.LogInformation("Running Hotfix: {HotfixName} with fixVersion={FixVersion}, dryRun={DryRun}, environment={Environment}, batchSize={BatchSize}", 
+                HotfixName, fixVersion, dryRun, environment, batchSize);
 
-            switch (HotfixName)
+            try
             {
-                case "00001_Fix_Missing_Counts_On_OCCAM_Violation_Tickets":
-                    try
-                    {
-                        // await _ticketSearchService.SearchAsync(HotfixName);
-                        return Ok($"Hotfix {HotfixName} completed successfully.");
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "Error running Hotfix: {HotfixName}", HotfixName);
-                        return StatusCode(500, $"Error running Hotfix {HotfixName}: {ex.Message}");
-                    }
+                additionalData ??= new Dictionary<string, object>();
 
-                default:
-                    _logger.LogWarning("Hotfix {HotfixName} is not recognized.", HotfixName);
-                    return NotFound($"Hotfix {HotfixName} not found.");
-
+                var result = await _hotfixManager.ExecuteHotfixAsync(
+                    HotfixName, 
+                    fixVersion,
+                    dryRun, 
+                    environment, 
+                    batchSize, 
+                    additionalData, 
+                    cancellationToken);
+                return Ok(result);
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogWarning("Hotfix {HotfixName} is not recognized.", HotfixName);
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error running Hotfix: {HotfixName}", HotfixName);
+                return StatusCode(500, $"Error running Hotfix {HotfixName}: {ex.Message}");
             }
         }
     }

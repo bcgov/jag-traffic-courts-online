@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.OrdsDataService;
+using TrafficCourts.Hotfix.DataMigration.Extensions;
 
 namespace TrafficCourts.Hotfix.DataMigration;
 
@@ -33,7 +34,7 @@ public static class Startup
                 .AddOrdsDataServiceInstrumentation();
         });
 
-        // builder.Services.AddOrdsDataService(builder.Configuration);
+        builder.Services.AddOrdsDataService(builder.Configuration);
 
         // builder.Services.AddTransient<UserIdentityProviderHandler>();
         builder.Services.AddHttpContextAccessor();
@@ -44,11 +45,18 @@ public static class Startup
         // });
 
         // builder.Services.AddRecyclableMemoryStreams();
+
+        builder.Services.AddAutoMapper(assembly); // Registering and Initializing AutoMapper
+
         
         builder.Services.UseTicketSearch(builder.Configuration, logger);
 
         // Render enums as strings rather than ints
         builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+        // Register all hotfix services
+        builder.Services.AddHotfixServices();
+
 
         // Ensure routes (api endpoints) are lowercase
         //   The RFC 3986 specifications denote that URIs care case-sensitive. Per best practices for rest apis, route endpoints
