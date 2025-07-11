@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using TrafficCourts.Hotfix.DataMigration.Data;
 using System.Text.Json;
+using System.Text;
+using System.Net.Http.Headers;
 
 namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
 {
@@ -16,16 +18,30 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         private readonly ILogger<Fix_Missing_Counts_On_OCCAM_Violation_Tickets_Hotfix> _logger;
         private readonly IMapper _mapper;
         private readonly IOccamDisputeRepository _occamDisputeRepository;
+        private readonly HttpClient _httpClient;
+
+        // Configuration properties for violation data API
+        private readonly string _violationApiBaseUrl = "https://wsgw.dev.jag.gov.bc.ca/";
+        private readonly string _violationApiUsername = "occam_dev";
+        private readonly string _violationApiPassword = "4kuY15ma9!";
 
         public Fix_Missing_Counts_On_OCCAM_Violation_Tickets_Hotfix(
             ITicketSearchService ticketSearchService,
             IOccamDisputeRepository occamDisputeRepository,
-            ILogger<Fix_Missing_Counts_On_OCCAM_Violation_Tickets_Hotfix> logger, IMapper mapper)
+            ILogger<Fix_Missing_Counts_On_OCCAM_Violation_Tickets_Hotfix> logger, 
+            IMapper mapper,
+            HttpClient httpClient)
         {
             _ticketSearchService = ticketSearchService;
             _occamDisputeRepository = occamDisputeRepository;
             _logger = logger;
             _mapper = mapper;
+            _httpClient = httpClient;
+            
+            // TODO: These should be injected via configuration or environment variables
+            _violationApiBaseUrl = "https://wsgw.dev.jag.gov.bc.ca";
+            _violationApiUsername = "occam_dev";
+            _violationApiPassword = "4kuY15ma9!";
         }
 
         public string Name { get; } = "Fix_Missing_Counts_On_OCCAM_Violation_Tickets";
@@ -60,7 +76,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             }
 
             var cachedData = await context.HotfixOccamDisputes
-                .Select(d => d.DataJson)
+                .Select(d => d.BeforeHotfixDataJson)
                 .ToListAsync(cancellationToken);
 
             if (cachedData.Any())
@@ -68,9 +84,21 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 _logger.LogInformation("Loading {Count} dispute records from SQLite cache: {DbPath}",
                     cachedData.Count, $"{Name}.db");
                 return cachedData
-                    .Select(json => JsonSerializer.Deserialize<OccamDispute>(json)!)
+                    .Where(json => !string.IsNullOrEmpty(json))
+                    .Select(json => 
+                    {
+                        try
+                        {
+                            return JsonSerializer.Deserialize<OccamDispute>(json!);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogWarning(ex, "Failed to deserialize cached dispute data");
+                            return null;
+                        }
+                    })
                     .Where(d => d != null)
-                    .ToList();
+                    .ToList()!;
             }
 
             // Fetch fresh data from OCCAM
@@ -103,8 +131,9 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             var cacheEntries = disputeData.Select(d => new Data.HotfixOccamDispute
             {
                 TicketNumber = d.ticket_number_txt,
+                DisputeId = d.dispute_id,
                 CachedAt = DateTime.UtcNow,
-                DataJson = JsonSerializer.Serialize(d) // Store the entire dispute as JSON
+                BeforeHotfixDataJson = JsonSerializer.Serialize(d) // Store the entire dispute as JSON
             });
 
             await context.HotfixOccamDisputes.AddRangeAsync(cacheEntries, cancellationToken);
@@ -151,7 +180,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             {
                 _logger.LogInformation("Loading RSI ticket data for {TicketNumber} from SQLite cache: {DbPath}",
                     ticketNumber, $"{Name}.db");
-                return cachedTicket.DataJson;
+                return cachedTicket.BeforeHotfixDataJson;
             }
 
             // Fetch fresh data from RSI
@@ -195,7 +224,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             if (existingEntry != null)
             {
                 // Update existing entry
-                existingEntry.DataJson = jsonData;
+                existingEntry.BeforeHotfixDataJson = jsonData;
                 existingEntry.CachedAt = DateTime.UtcNow;
             }
             else
@@ -204,7 +233,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 var cacheEntry = new Data.HotfixRSITicketSearch
                 {
                     TicketNumber = ticketNumber,
-                    DataJson = jsonData,
+                    BeforeHotfixDataJson = jsonData,
                     CachedAt = DateTime.UtcNow
                 };
 
@@ -240,6 +269,152 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             {
                 _logger.LogError(ex, "Failed to initialize database. Attempting to recreate database schema.");
             }
+        }
+
+        /// <summary>
+        /// Gets violation data from the external API using HTTP client with basic authentication
+        /// </summary>
+        /// <param name="ticketNumber">The ticket number to get violation data for</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>The violation data as JSON string</returns>
+        private async Task<string?> GetViolationDataAsync(string ticketNumber, CancellationToken cancellationToken)
+        {
+            try
+            {
+                // Configure basic authentication
+                // var authValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_violationApiUsername}:{_violationApiPassword}"));
+                // _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authValue);
+
+                // Set base URL if not already set
+                _httpClient.BaseAddress = new Uri(_violationApiBaseUrl);
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", 
+                    Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_violationApiUsername}:{_violationApiPassword}")));
+            
+                // Build the API endpoint URL
+                var endpoint = "/occam/ords/devj/occamords/occam/v1/violationTicket?disputeId=4327&noticeOfDisputeGuid=&violationTicketId=";
+                
+                _logger.LogInformation("Fetching violation data for ticket {TicketNumber} from {Endpoint}", 
+                    ticketNumber, _httpClient.ToString());
+
+                // Make the HTTP request
+                var response = await _httpClient.GetAsync(endpoint, cancellationToken);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync(cancellationToken);
+                    _logger.LogInformation("Successfully retrieved violation data for ticket {TicketNumber}", ticketNumber);
+                    return content;
+                }
+                else
+                {
+                    _logger.LogWarning("Failed to retrieve violation data for ticket {TicketNumber}. Status: {StatusCode}, Reason: {ReasonPhrase}",
+                        ticketNumber, response.StatusCode, response.ReasonPhrase);
+                    return null;
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "HTTP request failed while fetching violation data for ticket {TicketNumber}", ticketNumber);
+                return null;
+            }
+            catch (TaskCanceledException ex)
+            {
+                _logger.LogError(ex, "Request timeout while fetching violation data for ticket {TicketNumber}", ticketNumber);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while fetching violation data for ticket {TicketNumber}", ticketNumber);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets violation data with caching support
+        /// </summary>
+        /// <param name="ticketNumber">The ticket number to get violation data for</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>The cached or freshly fetched violation data as JSON string</returns>
+        private async Task<string?> LoadOrFetchViolationDataAsync(string ticketNumber, CancellationToken cancellationToken)
+        {
+            using var context = new HotfixSqliteContext(Name, Env);
+
+            try
+            {
+                // Test if database is accessible for writing
+                await context.Database.OpenConnectionAsync(cancellationToken);
+                await context.Database.CloseConnectionAsync();
+                
+                // Ensure database and tables are created
+                await context.EnsureDatabaseCreatedAsync();
+            }
+            catch (Exception ex) when (ex.Message.Contains("database is locked"))
+            {
+                _logger.LogError("SQLite database is locked. Please close any database viewers/plugins in VS Code and try again.");
+                _logger.LogError("Database path: {DbPath}", context.GetDatabasePath());
+                throw new InvalidOperationException(
+                    "Database is locked by another process (likely VS Code SQLite plugin). " +
+                    "Please close the database connection in VS Code and retry.", ex);
+            }
+
+            // Check if violation data exists in cache
+            var cachedViolation = await context.HotfixViolationTickets
+                .FirstOrDefaultAsync(t => t.TicketNumber == ticketNumber, cancellationToken);
+
+            if (cachedViolation != null && cachedViolation.BeforeHotfixDataJson != null)
+            {
+                _logger.LogInformation("Loading violation data for {TicketNumber} from SQLite cache: {DbPath}",
+                    ticketNumber, $"{Name}.db");
+                return cachedViolation.BeforeHotfixDataJson;
+            }
+
+            // Fetch fresh data from violation API
+            _logger.LogInformation("Fetching fresh violation data for {TicketNumber} from violation API", ticketNumber);
+            
+            var violationData = await GetViolationDataAsync(ticketNumber, cancellationToken);
+
+            // Cache the data (using a prefixed key to distinguish from RSI data)
+            await CacheViolationDataAsync(context, ticketNumber, violationData, cancellationToken);
+
+            return violationData;
+        }
+
+        /// <summary>
+        /// Caches violation data in SQLite database
+        /// </summary>
+        /// <param name="context">The database context</param>
+        /// <param name="ticketNumber">The ticket number</param>
+        /// <param name="jsonData">The violation data as JSON string</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        private async Task CacheViolationDataAsync(HotfixSqliteContext context, string ticketNumber, string? jsonData, CancellationToken cancellationToken)
+        {
+            // Check if entry already exists
+            var existingEntry = await context.HotfixViolationTickets
+                .FirstOrDefaultAsync(t => t.TicketNumber == ticketNumber, cancellationToken);
+
+            if (existingEntry != null)
+            {
+                // Update existing entry
+                existingEntry.BeforeHotfixDataJson = jsonData;
+                existingEntry.CachedAt = DateTime.UtcNow;
+            }
+            else
+            {
+                // Add new cache entry
+                var cacheEntry = new Data.HotfixViolationTicket
+                {
+                    TicketNumber = ticketNumber,
+                    BeforeHotfixDataJson = jsonData,
+                    CachedAt = DateTime.UtcNow
+                };
+
+                await context.HotfixViolationTickets.AddAsync(cacheEntry, cancellationToken);
+            }
+
+            await context.SaveChangesAsync(cancellationToken);
+
+            _logger.LogInformation("Cached violation data for {TicketNumber} in SQLite database: {DbPath}", 
+                ticketNumber, $"{Name}.db");
         }
 
         // Implementation of IHotfix interface
@@ -305,6 +480,18 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 _logger.LogInformation("Fetched RSI ticket data for {TicketNumber}: {Data}", 
                     ticketsToProcess[6], rsiTicketDataJson ?? "No data found");
 
+                // Example: Get violation data with caching for the same ticket
+                var violationDataJson = await LoadOrFetchViolationDataAsync("EH02000155", context.CancellationToken);
+                
+                // Deserialize if needed for processing
+                object? violationData = null;
+                if (!string.IsNullOrEmpty(violationDataJson))
+                {
+                    violationData = JsonSerializer.Deserialize<object>(violationDataJson);
+                }
+                _logger.LogInformation("Fetched violation data for ticket EH02000155: {Data}", 
+                    "violationDataJson" ?? "No data found");
+
                 // Step 3; Get Violation ticket with Counts from OCCAM database
 
                 // Step 3: For each ticket check if the data is missing or mismatching data in RSI database 
@@ -317,7 +504,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                     // TODO: Add your OCCAM update logic here
                 }
 
-                return new { ticketsToProcess, rsiTicketData };            
+                return new { ticketsToProcess, rsiTicketData, violationData };            
             }
             catch (Exception ex)
             {

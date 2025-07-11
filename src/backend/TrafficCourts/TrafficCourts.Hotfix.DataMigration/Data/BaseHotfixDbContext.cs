@@ -16,9 +16,9 @@ namespace TrafficCourts.Hotfix.DataMigration.Data
         {
             HotfixName = hotfixName;
             Env = env;
-            var dataDir = Path.Combine(Environment.CurrentDirectory, ".db", "sqlite");
+            var dataDir = Path.Combine(Environment.CurrentDirectory, ".local", "sqlite", Env);
             Directory.CreateDirectory(dataDir);
-            _dbPath = Path.Combine(dataDir, $"{hotfixName}_{Env}.db");
+            _dbPath = Path.Combine(dataDir, $"{hotfixName}.db");
         }
 
         public DbSet<HotfixOccamDispute> HotfixOccamDisputes { get; set; } = null!;
@@ -59,12 +59,18 @@ namespace TrafficCourts.Hotfix.DataMigration.Data
             modelBuilder.Entity<HotfixOccamDispute>(entity =>
             {
                 entity.HasKey(e => e.Id);
+                entity.Property(e => e.DisputeId).IsRequired();
                 entity.Property(e => e.TicketNumber).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.CachedAt).HasDefaultValueSql("datetime('now')");
-                entity.Property(e => e.DataJson).HasMaxLength(5000);
+                entity.Property(e => e.BeforeHotfixDataJson);
+                entity.Property(e => e.HotfixUpdateDataJson);
+                entity.Property(e => e.AfterHotfixDataJson);
+                entity.Property(e => e.IsHotfixApplied).HasDefaultValue(false);
+                entity.Property(e => e.IsIntegrityCheckPassed).HasDefaultValue(false);
 
                 // Add index on TicketNumber for faster lookups (not unique to allow multiple cache entries)
                 entity.HasIndex(e => e.TicketNumber);
+                entity.HasIndex(e => e.DisputeId); // Index for DisputeId to optimize queries by dispute
             });
 
             modelBuilder.Entity<HotfixRSITicketSearch>(entity =>
@@ -72,7 +78,11 @@ namespace TrafficCourts.Hotfix.DataMigration.Data
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.TicketNumber).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.CachedAt).HasDefaultValueSql("datetime('now')");
-                entity.Property(e => e.DataJson).HasMaxLength(5000);
+                entity.Property(e => e.BeforeHotfixDataJson);
+                entity.Property(e => e.HotfixUpdateDataJson);
+                entity.Property(e => e.AfterHotfixDataJson);
+                entity.Property(e => e.IsHotfixApplied).HasDefaultValue(false);
+                entity.Property(e => e.IsIntegrityCheckPassed).HasDefaultValue(false);
 
                 // Add index on TicketNumber for faster lookups
                 entity.HasIndex(e => e.TicketNumber).IsUnique();
@@ -81,12 +91,18 @@ namespace TrafficCourts.Hotfix.DataMigration.Data
             modelBuilder.Entity<HotfixViolationTicket>(entity =>
             {
                 entity.HasKey(e => e.Id);
+                entity.Property(e => e.DisputeId).IsRequired();
                 entity.Property(e => e.TicketNumber).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.CachedAt).HasDefaultValueSql("datetime('now')");
-                entity.Property(e => e.DataJson).HasMaxLength(5000);
+                entity.Property(e => e.BeforeHotfixDataJson);
+                entity.Property(e => e.HotfixUpdateDataJson);
+                entity.Property(e => e.AfterHotfixDataJson);
+                entity.Property(e => e.IsHotfixApplied).HasDefaultValue(false);
+                entity.Property(e => e.IsIntegrityCheckPassed).HasDefaultValue(false);
 
                 // Add index on TicketNumber for faster lookups
                 entity.HasIndex(e => e.TicketNumber).IsUnique();
+                entity.HasIndex(e => e.DisputeId); // Index for DisputeId to optimize queries by dispute
             });
 
         }
@@ -107,7 +123,8 @@ namespace TrafficCourts.Hotfix.DataMigration.Data
         {
             await Database.EnsureCreatedAsync();
 
-            // Set WAL mode using PRAGMA command after database is created
+            // Set WAL mode using PRAGMA command after database is created; WAL = Write-Ahead Logging
+            // This improves concurrency and performance for SQLite databases
             await Database.ExecuteSqlRawAsync("PRAGMA journal_mode = WAL;");
     
         }

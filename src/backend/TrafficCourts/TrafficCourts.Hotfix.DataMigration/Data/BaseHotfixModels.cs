@@ -3,54 +3,36 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TrafficCourts.Hotfix.DataMigration.Data
 {
-    /// <summary>
-    /// Base class for dispute cache entries used across hotfixes
-    /// </summary>
-    public class HotfixOccamDispute
+
+    public class BaseHotfix
     {
         public int Id { get; set; }
-
-        [MaxLength(50)]
         public string TicketNumber { get; set; } = string.Empty;
-
+        public string? BeforeHotfixDataJson { get; set; }
+        public string? HotfixUpdateDataJson { get; set; }
+        public string? AfterHotfixDataJson { get; set; }
+        public Boolean IsHotfixApplied { get; set; } = false;
+        public Boolean IsIntegrityCheckPassed { get; set; } = false;
         public DateTime CachedAt { get; set; } = DateTime.UtcNow;
-
-        /// <summary>
-        /// Stores JSON data as a string in the database.
-        /// </summary>
-        public string? DataJson { get; set; }
     }
 
-    public class HotfixViolationTicket
-    {
-        public int Id { get; set; }
-
-        [MaxLength(50)]
-        public string TicketNumber { get; set; } = string.Empty;
-
-        public DateTime CachedAt { get; set; } = DateTime.UtcNow;
-
-        /// <summary>
-        /// Stores JSON data as a string in the database.
-        /// </summary>
-        public string? DataJson { get; set; }
-    }
-    
     /// <summary>
     /// Base class for ticket search cache entries used across hotfixes
     /// </summary>
-    public class HotfixRSITicketSearch
+    public class HotfixRSITicketSearch : BaseHotfix
     {
-        public int Id { get; set; }
-
-        [MaxLength(50)]
-        public string TicketNumber { get; set; } = string.Empty;
-
-        public DateTime CachedAt { get; set; } = DateTime.UtcNow;
-
-        /// <summary>
-        /// Stores JSON data as a string in the database.
-        /// </summary>
-        public string? DataJson { get; set; }
     }
+
+    public class HotfixOccamDispute : BaseHotfix
+    {
+        public int DisputeId { get; set; }
+    }
+
+    public class HotfixViolationTicket : BaseHotfix
+    {
+
+        public int DisputeId { get; set; }
+    }
+
+
 }

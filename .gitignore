@@ -71,3 +71,6 @@ package-lock.json
 
 # SFTP file location that contains generated ARC files 
 /sftp-in
+
+# Hotfix Data Migration
+.local
