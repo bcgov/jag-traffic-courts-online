@@ -41,7 +41,7 @@ public static class Startup
 
         // builder.Services.AddOracleDataApi(builder.Configuration, builder =>
         // {
-        //     // builder.AddHttpMessageHandler<UserIdentityProviderHandler>();
+        //     builder.AddHttpMessageHandler<UserIdentityProviderHandler>();
         // });
 
         // builder.Services.AddRecyclableMemoryStreams();
