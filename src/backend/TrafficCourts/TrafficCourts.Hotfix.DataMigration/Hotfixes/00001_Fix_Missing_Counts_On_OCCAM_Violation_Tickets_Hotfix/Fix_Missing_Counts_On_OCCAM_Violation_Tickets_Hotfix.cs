@@ -1,6 +1,6 @@
 using AutoMapper;
 using TrafficCourts.TicketSearch;
-using TrafficCourts.OrdsDataService;
+using TrafficCourts.OrdsDataService.Generated.OCCAM.Client.V1;
 using TrafficCourts.OrdsDataService.Occam;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
@@ -19,25 +19,34 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         private readonly IMapper _mapper;
         private readonly IOccamDisputeRepository _occamDisputeRepository;
         private readonly HttpClient _httpClient;
+        private readonly IOCCAMORDSDataServiceClientV1 _oCCAMORDSDataServiceClientV1;
 
         // Configuration properties for violation data API
         private readonly string _violationApiBaseUrl = "https://wsgw.dev.jag.gov.bc.ca/";
         private readonly string _violationApiUsername = "occam_dev";
         private readonly string _violationApiPassword = "4kuY15ma9!";
 
+        private readonly Newtonsoft.Json.JsonSerializerSettings _jsonSettings = new() 
+        { 
+            MissingMemberHandling = Newtonsoft.Json.MissingMemberHandling.Ignore,
+            NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore
+        };
+
         public Fix_Missing_Counts_On_OCCAM_Violation_Tickets_Hotfix(
             ITicketSearchService ticketSearchService,
             IOccamDisputeRepository occamDisputeRepository,
-            ILogger<Fix_Missing_Counts_On_OCCAM_Violation_Tickets_Hotfix> logger, 
+            IOCCAMORDSDataServiceClientV1 oCCAMORDSDataServiceClientV1,
+            ILogger<Fix_Missing_Counts_On_OCCAM_Violation_Tickets_Hotfix> logger,
             IMapper mapper,
             HttpClient httpClient)
         {
             _ticketSearchService = ticketSearchService;
             _occamDisputeRepository = occamDisputeRepository;
+            _oCCAMORDSDataServiceClientV1 = oCCAMORDSDataServiceClientV1;
             _logger = logger;
             _mapper = mapper;
             _httpClient = httpClient;
-            
+
             // TODO: These should be injected via configuration or environment variables
             _violationApiBaseUrl = "https://wsgw.dev.jag.gov.bc.ca";
             _violationApiUsername = "occam_dev";
@@ -150,7 +159,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         /// <param name="timeOfViolation">Time of the violation</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The cached or freshly fetched ticket data as JSON string</returns>
-        private async Task<string?> LoadOrFetchRSITicketDataAsync(string ticketNumber, TimeOnly timeOfViolation, CancellationToken cancellationToken)
+        private async Task<Ticket?> LoadOrFetchRSITicketDataAsync(string ticketNumber, TimeOnly timeOfViolation, CancellationToken cancellationToken)
         {
             using var context = new HotfixSqliteContext(Name, Env);
 
@@ -180,7 +189,9 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             {
                 _logger.LogInformation("Loading RSI ticket data for {TicketNumber} from SQLite cache: {DbPath}",
                     ticketNumber, $"{Name}.db");
-                return cachedTicket.BeforeHotfixDataJson;
+                return cachedTicket.BeforeHotfixDataJson != null
+                    ? JsonSerializer.Deserialize<Ticket>(cachedTicket.BeforeHotfixDataJson)
+                    : null;
             }
 
             // Fetch fresh data from RSI
@@ -188,15 +199,15 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             
             try
             {
-                var rsiTicketData = await _ticketSearchService.SearchAsync(ticketNumber, timeOfViolation, cancellationToken);
+                Ticket? rsiTicketData = await _ticketSearchService.SearchAsync(ticketNumber, timeOfViolation, cancellationToken);
                 
                 // Serialize the ticket data to JSON for caching
                 var jsonData = rsiTicketData != null ? JsonSerializer.Serialize(rsiTicketData) : null;
 
                 // Cache the data
-                await CacheRSITicketDataAsync(context, ticketNumber, jsonData, cancellationToken);
+                await CacheRSITicketDataAsync(context, ticketNumber, rsiTicketData, cancellationToken);
 
-                return jsonData;
+                return rsiTicketData;
             }
             catch (Exception ex)
             {
@@ -215,7 +226,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         /// <param name="ticketNumber">The ticket number</param>
         /// <param name="jsonData">The ticket data as JSON string</param>
         /// <param name="cancellationToken">Cancellation token</param>
-        private async Task CacheRSITicketDataAsync(HotfixSqliteContext context, string ticketNumber, string? jsonData, CancellationToken cancellationToken)
+        private async Task CacheRSITicketDataAsync(HotfixSqliteContext context, string ticketNumber, Ticket? jsonData, CancellationToken cancellationToken)
         {
             // Check if entry already exists
             var existingEntry = await context.HotfixRSITicketSearches
@@ -224,7 +235,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             if (existingEntry != null)
             {
                 // Update existing entry
-                existingEntry.BeforeHotfixDataJson = jsonData;
+                existingEntry.BeforeHotfixDataJson = jsonData != null ? JsonSerializer.Serialize(jsonData) : null;
                 existingEntry.CachedAt = DateTime.UtcNow;
             }
             else
@@ -233,7 +244,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 var cacheEntry = new Data.HotfixRSITicketSearch
                 {
                     TicketNumber = ticketNumber,
-                    BeforeHotfixDataJson = jsonData,
+                    BeforeHotfixDataJson = jsonData != null ? JsonSerializer.Serialize(jsonData) : null,
                     CachedAt = DateTime.UtcNow
                 };
 
@@ -277,7 +288,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         /// <param name="ticketNumber">The ticket number to get violation data for</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The violation data as JSON string</returns>
-        private async Task<string?> GetViolationDataAsync(string ticketNumber, CancellationToken cancellationToken)
+        private async Task<ViolationTicket?> GetViolationDataAsync(string ticketNumber, CancellationToken cancellationToken)
         {
             try
             {
@@ -287,30 +298,43 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
 
                 // Set base URL if not already set
                 _httpClient.BaseAddress = new Uri(_violationApiBaseUrl);
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", 
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
                     Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_violationApiUsername}:{_violationApiPassword}")));
-            
+
                 // Build the API endpoint URL
                 var endpoint = "/occam/ords/devj/occamords/occam/v1/violationTicket?disputeId=4327&noticeOfDisputeGuid=&violationTicketId=";
-                
-                _logger.LogInformation("Fetching violation data for ticket {TicketNumber} from {Endpoint}", 
+
+                _logger.LogInformation("Fetching violation data for ticket {TicketNumber} from {Endpoint}",
                     ticketNumber, _httpClient.ToString());
 
                 // Make the HTTP request
-                var response = await _httpClient.GetAsync(endpoint, cancellationToken);
+                // var response = await _httpClient.GetAsync(endpoint, cancellationToken);
 
-                if (response.IsSuccessStatusCode)
+                var response = await _oCCAMORDSDataServiceClientV1.ViolationTicketGetAsync(null, 4327, cancellationToken);
+                if (response == null)
                 {
-                    var content = await response.Content.ReadAsStringAsync(cancellationToken);
-                    _logger.LogInformation("Successfully retrieved violation data for ticket {TicketNumber}", ticketNumber);
-                    return content;
+                    _logger.LogWarning("No response received for ticket {TicketNumber}", ticketNumber);
+                    return null;
                 }
                 else
                 {
-                    _logger.LogWarning("Failed to retrieve violation data for ticket {TicketNumber}. Status: {StatusCode}, Reason: {ReasonPhrase}",
-                        ticketNumber, response.StatusCode, response.ReasonPhrase);
-                    return null;
+                    _logger.LogInformation("Received response for ticket {TicketNumber}",
+                        ticketNumber);
+                    return response;
                 }
+                
+                // if (response)
+                // {
+                //     var content = await response.Content.ReadAsStringAsync(cancellationToken);
+                //     _logger.LogInformation("Successfully retrieved violation data for ticket {TicketNumber}", ticketNumber);
+                //     return response.;
+                // }
+                // else
+                // {
+                //     _logger.LogWarning("Failed to retrieve violation data for ticket {TicketNumber}. Status: {StatusCode}, Reason: {ReasonPhrase}",
+                //         ticketNumber, response.StatusCode, response.ReasonPhrase);
+                //     return null;
+                // }
             }
             catch (HttpRequestException ex)
             {
@@ -335,7 +359,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         /// <param name="ticketNumber">The ticket number to get violation data for</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The cached or freshly fetched violation data as JSON string</returns>
-        private async Task<string?> LoadOrFetchViolationDataAsync(string ticketNumber, CancellationToken cancellationToken)
+        private async Task<ViolationTicket?> LoadOrFetchViolationTicketDataAsync(string ticketNumber, CancellationToken cancellationToken)
         {
             using var context = new HotfixSqliteContext(Name, Env);
 
@@ -363,9 +387,11 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
 
             if (cachedViolation != null && cachedViolation.BeforeHotfixDataJson != null)
             {
-                _logger.LogInformation("Loading violation data for {TicketNumber} from SQLite cache: {DbPath}",
-                    ticketNumber, $"{Name}.db");
-                return cachedViolation.BeforeHotfixDataJson;
+                _logger.LogInformation("Loading violation data for {TicketNumber} from SQLite cache: {Dispute}",
+                    ticketNumber, cachedViolation.BeforeHotfixDataJson);
+                return cachedViolation.BeforeHotfixDataJson != null
+                    ? Newtonsoft.Json.JsonConvert.DeserializeObject<ViolationTicket>(cachedViolation.BeforeHotfixDataJson, _jsonSettings)
+                    : null;
             }
 
             // Fetch fresh data from violation API
@@ -386,7 +412,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         /// <param name="ticketNumber">The ticket number</param>
         /// <param name="jsonData">The violation data as JSON string</param>
         /// <param name="cancellationToken">Cancellation token</param>
-        private async Task CacheViolationDataAsync(HotfixSqliteContext context, string ticketNumber, string? jsonData, CancellationToken cancellationToken)
+        private async Task CacheViolationDataAsync(HotfixSqliteContext context, string ticketNumber, ViolationTicket? jsonData, CancellationToken cancellationToken)
         {
             // Check if entry already exists
             var existingEntry = await context.HotfixViolationTickets
@@ -395,7 +421,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             if (existingEntry != null)
             {
                 // Update existing entry
-                existingEntry.BeforeHotfixDataJson = jsonData;
+                existingEntry.BeforeHotfixDataJson = jsonData != null ? JsonSerializer.Serialize(jsonData) : null;
                 existingEntry.CachedAt = DateTime.UtcNow;
             }
             else
@@ -404,7 +430,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 var cacheEntry = new Data.HotfixViolationTicket
                 {
                     TicketNumber = ticketNumber,
-                    BeforeHotfixDataJson = jsonData,
+                    BeforeHotfixDataJson = jsonData != null ? JsonSerializer.Serialize(jsonData) : null,
                     CachedAt = DateTime.UtcNow
                 };
 
@@ -468,29 +494,17 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 }
 
                 // Example: Get RSI ticket data with caching for one ticket
-                var rsiTicketDataJson = await LoadOrFetchRSITicketDataAsync(
+                var rsiTicket = await LoadOrFetchRSITicketDataAsync(
                     "EH02000155", TimeOnly.Parse("09:12"), context.CancellationToken);
                 
-                // Deserialize if needed for processing
-                object? rsiTicketData = null;
-                if (!string.IsNullOrEmpty(rsiTicketDataJson))
-                {
-                    rsiTicketData = JsonSerializer.Deserialize<object>(rsiTicketDataJson);
-                }
                 _logger.LogInformation("Fetched RSI ticket data for {TicketNumber}: {Data}", 
-                    ticketsToProcess[6], rsiTicketDataJson ?? "No data found");
+                    ticketsToProcess[6], "rsiTicket" ?? "No data found");
 
                 // Example: Get violation data with caching for the same ticket
-                var violationDataJson = await LoadOrFetchViolationDataAsync("EH02000155", context.CancellationToken);
-                
-                // Deserialize if needed for processing
-                object? violationData = null;
-                if (!string.IsNullOrEmpty(violationDataJson))
-                {
-                    violationData = JsonSerializer.Deserialize<object>(violationDataJson);
-                }
-                _logger.LogInformation("Fetched violation data for ticket EH02000155: {Data}", 
-                    "violationDataJson" ?? "No data found");
+                var violationTicket = await LoadOrFetchViolationTicketDataAsync("EH02000155", context.CancellationToken);
+
+                _logger.LogInformation("Fetched violation data for ticket EH02000155: {Data}",
+                    violationTicket?.Dispute?.DisputeId ?? "No data found");
 
                 // Step 3; Get Violation ticket with Counts from OCCAM database
 
@@ -504,13 +518,56 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                     // TODO: Add your OCCAM update logic here
                 }
 
-                return new { ticketsToProcess, rsiTicketData, violationData };            
+                return new { ticketsToProcess, rsiTicket, violationTicket };            
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error executing hotfix: {HotfixName}", Name);
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Merges missing count information from an RSI ticket into a violation ticket.
+        /// It iterates through the counts of the violation ticket and updates any null properties
+        /// with data from the corresponding count in the RSI ticket.
+        /// </summary>
+        /// <param name="violationTicket">The violation ticket data object, which will be modified.</param>
+        /// <param name="rsiTicket">The RSI ticket data object used as the source of truth.</param>
+        /// <returns>The updated violation ticket data object.</returns>
+        public ViolationTicket? MergeMissingCountData(ViolationTicket? violationTicket, Ticket? rsiTicket)
+        {
+            if (violationTicket?.ViolationTicketCounts is null || rsiTicket?.Counts is null)
+            {
+                _logger.LogWarning("Violation ticket or RSI ticket data is null or contains no counts to merge.");
+                return violationTicket;
+            }
+
+            var rsiCountsByNumber = rsiTicket.Counts.ToDictionary(c => c.Number);
+
+            foreach (var violationCount in violationTicket.ViolationTicketCounts)
+            {
+                if (!int.TryParse(violationCount.CountNo, out var countNumber))
+                {
+                    continue; // Skip if count number is not a valid integer
+                }
+
+                if (rsiCountsByNumber.TryGetValue(countNumber, out var rsiCount))
+                {
+                    // Copy data from rsiCount to violationCount only if the target property is null
+                    violationCount.DescriptionTxt ??= rsiCount.Description;
+                    violationCount.ActOrRegulationNameCd ??= rsiCount.Act;
+                    violationCount.IsActYn ??= rsiCount.IsAct ? "Y" : "N";
+                    violationCount.IsRegulationYn ??= rsiCount.IsRegulation ? "Y" : "N";
+                    violationCount.StatSectionTxt ??= rsiCount.Section;
+                    violationCount.StatSubSectionTxt ??= rsiCount.Subsection;
+                    violationCount.StatParagraphTxt ??= rsiCount.Paragraph;
+                    violationCount.StatSubParagraphTxt ??= rsiCount.Subparagraph;
+                    // violationCount.TicketedAmt ??= rsiCount.TicketedAmount;
+                }
+            }
+
+            return violationTicket;
         }
     }
 
