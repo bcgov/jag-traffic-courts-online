@@ -19,12 +19,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         private readonly IMapper _mapper;
         private readonly IOccamDisputeRepository _occamDisputeRepository;
         private readonly HttpClient _httpClient;
-        private readonly IOCCAMORDSDataServiceClientV1 _oCCAMORDSDataServiceClientV1;
-
-        // Configuration properties for violation data API
-        private readonly string _violationApiBaseUrl = "https://wsgw.dev.jag.gov.bc.ca/";
-        private readonly string _violationApiUsername = "occam_dev";
-        private readonly string _violationApiPassword = "4kuY15ma9!";
+        private readonly IOCCAMORDSDataServiceClientV1 _occamORDSDataServiceClientV1;
 
         private readonly Newtonsoft.Json.JsonSerializerSettings _jsonSettings = new() 
         { 
@@ -35,22 +30,17 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         public Fix_Missing_Counts_On_OCCAM_Violation_Tickets_Hotfix(
             ITicketSearchService ticketSearchService,
             IOccamDisputeRepository occamDisputeRepository,
-            IOCCAMORDSDataServiceClientV1 oCCAMORDSDataServiceClientV1,
+            IOCCAMORDSDataServiceClientV1 occamORDSDataServiceClientV1,
             ILogger<Fix_Missing_Counts_On_OCCAM_Violation_Tickets_Hotfix> logger,
             IMapper mapper,
             HttpClient httpClient)
         {
             _ticketSearchService = ticketSearchService;
             _occamDisputeRepository = occamDisputeRepository;
-            _oCCAMORDSDataServiceClientV1 = oCCAMORDSDataServiceClientV1;
+            _occamORDSDataServiceClientV1 = occamORDSDataServiceClientV1;
             _logger = logger;
             _mapper = mapper;
             _httpClient = httpClient;
-
-            // TODO: These should be injected via configuration or environment variables
-            _violationApiBaseUrl = "https://wsgw.dev.jag.gov.bc.ca";
-            _violationApiUsername = "occam_dev";
-            _violationApiPassword = "4kuY15ma9!";
         }
 
         public string Name { get; } = "Fix_Missing_Counts_On_OCCAM_Violation_Tickets";
@@ -292,25 +282,14 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         {
             try
             {
-                // Configure basic authentication
-                // var authValue = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_violationApiUsername}:{_violationApiPassword}"));
-                // _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authValue);
-
-                // Set base URL if not already set
-                _httpClient.BaseAddress = new Uri(_violationApiBaseUrl);
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
-                    Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_violationApiUsername}:{_violationApiPassword}")));
-
-                // Build the API endpoint URL
-                var endpoint = "/occam/ords/devj/occamords/occam/v1/violationTicket?disputeId=4327&noticeOfDisputeGuid=&violationTicketId=";
 
                 _logger.LogInformation("Fetching violation data for ticket {TicketNumber} from {Endpoint}",
                     ticketNumber, _httpClient.ToString());
 
                 // Make the HTTP request
                 // var response = await _httpClient.GetAsync(endpoint, cancellationToken);
-
-                var response = await _oCCAMORDSDataServiceClientV1.ViolationTicketGetAsync(null, 4327, cancellationToken);
+                
+                var response = await _occamORDSDataServiceClientV1.ViolationTicketGetAsync(null, 4327, cancellationToken);
                 if (response == null)
                 {
                     _logger.LogWarning("No response received for ticket {TicketNumber}", ticketNumber);
@@ -382,17 +361,17 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             }
 
             // Check if violation data exists in cache
-            var cachedViolation = await context.HotfixViolationTickets
-                .FirstOrDefaultAsync(t => t.TicketNumber == ticketNumber, cancellationToken);
+            // var cachedViolation = await context.HotfixViolationTickets
+            //     .FirstOrDefaultAsync(t => t.TicketNumber == ticketNumber, cancellationToken);
 
-            if (cachedViolation != null && cachedViolation.BeforeHotfixDataJson != null)
-            {
-                _logger.LogInformation("Loading violation data for {TicketNumber} from SQLite cache: {Dispute}",
-                    ticketNumber, cachedViolation.BeforeHotfixDataJson);
-                return cachedViolation.BeforeHotfixDataJson != null
-                    ? Newtonsoft.Json.JsonConvert.DeserializeObject<ViolationTicket>(cachedViolation.BeforeHotfixDataJson, _jsonSettings)
-                    : null;
-            }
+            // if (cachedViolation != null && cachedViolation.BeforeHotfixDataJson != null)
+            // {
+            //     _logger.LogInformation("Loading violation data for {TicketNumber} from SQLite cache: {Dispute}",
+            //         ticketNumber, cachedViolation.BeforeHotfixDataJson);
+            //     return cachedViolation.BeforeHotfixDataJson != null
+            //         ? Newtonsoft.Json.JsonConvert.DeserializeObject<ViolationTicket>(cachedViolation.BeforeHotfixDataJson, _jsonSettings)
+            //         : null;
+            // }
 
             // Fetch fresh data from violation API
             _logger.LogInformation("Fetching fresh violation data for {TicketNumber} from violation API", ticketNumber);
@@ -400,7 +379,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             var violationData = await GetViolationDataAsync(ticketNumber, cancellationToken);
 
             // Cache the data (using a prefixed key to distinguish from RSI data)
-            await CacheViolationDataAsync(context, ticketNumber, violationData, cancellationToken);
+            // await CacheViolationDataAsync(context, ticketNumber, violationData, cancellationToken);
 
             return violationData;
         }

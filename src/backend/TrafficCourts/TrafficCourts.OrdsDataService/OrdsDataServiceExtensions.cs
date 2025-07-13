@@ -55,20 +55,7 @@ public static class OrdsDataServiceExtensions
             return handler;
         });
 
-        services.AddScoped<IOCCAMORDSDataServiceClientV1, OCCAMORDSDataServiceClientV1>();
-
-        services.AddHttpClient<OCCAMORDSDataServiceClientV1>(client =>
-        {
-            client.BaseAddress = new Uri(options_occam.Address);
-            client.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue(options_occam.Username, options_occam.Password);
-        })
-        .AddHttpMessageHandler(sp =>
-        {
-            var cache = sp.GetRequiredService<Caching.Memory.IMemoryCache>();
-            var metrics = sp.GetRequiredService<IOrdsDataServiceOperationMetrics>();
-            ETagHandler handler = new ETagHandler(cache, metrics);
-            return handler;
-        });
+        services.AddSingleton<IOCCAMORDSDataServiceClientV1, OCCAMORDSDataServiceClientV1>();
 
         services.AddSingleton<IOrdsDataServiceOperationMetrics, OrdsDataServiceOperationMetrics>();
 
