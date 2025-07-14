@@ -215,11 +215,6 @@ public class SubmitNoticeOfDispute
     public string? DetachmentLocation { get; set; }
 
     /// <summary>
-    /// Court Location
-    /// </summary>
-    public string? CourtLocation { get; set; }
-
-    /// <summary>
     /// Court Agency Id
     /// </summary>
     public string? CourtAgenId { get; set; }
