@@ -13,6 +13,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Data
         public string? AfterHotfixDataJson { get; set; }
         public Boolean IsHotfixApplied { get; set; } = false;
         public Boolean IsIntegrityCheckPassed { get; set; } = false;
+        public string? IntegrityCheckFailureReason { get; set; }
         public DateTime CachedAt { get; set; } = DateTime.UtcNow;
     }
 

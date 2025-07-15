@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace TrafficCourts.Hotfix.DataMigration.Data
 {
@@ -67,6 +68,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Data
                 entity.Property(e => e.AfterHotfixDataJson);
                 entity.Property(e => e.IsHotfixApplied).HasDefaultValue(false);
                 entity.Property(e => e.IsIntegrityCheckPassed).HasDefaultValue(false);
+                entity.Property(e => e.IntegrityCheckFailureReason).HasMaxLength(2000);
 
                 // Add index on TicketNumber for faster lookups (not unique to allow multiple cache entries)
                 entity.HasIndex(e => e.TicketNumber);
@@ -83,6 +85,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Data
                 entity.Property(e => e.AfterHotfixDataJson);
                 entity.Property(e => e.IsHotfixApplied).HasDefaultValue(false);
                 entity.Property(e => e.IsIntegrityCheckPassed).HasDefaultValue(false);
+                entity.Property(e => e.IntegrityCheckFailureReason).HasMaxLength(2000);
 
                 // Add index on TicketNumber for faster lookups
                 entity.HasIndex(e => e.TicketNumber).IsUnique();
@@ -99,6 +102,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Data
                 entity.Property(e => e.AfterHotfixDataJson);
                 entity.Property(e => e.IsHotfixApplied).HasDefaultValue(false);
                 entity.Property(e => e.IsIntegrityCheckPassed).HasDefaultValue(false);
+                entity.Property(e => e.IntegrityCheckFailureReason).HasMaxLength(2000);
 
                 // Add index on TicketNumber for faster lookups
                 entity.HasIndex(e => e.TicketNumber).IsUnique();

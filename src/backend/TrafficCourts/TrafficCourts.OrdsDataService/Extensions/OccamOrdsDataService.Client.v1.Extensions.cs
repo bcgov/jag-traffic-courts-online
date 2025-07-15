@@ -34,27 +34,30 @@ namespace TrafficCourts.OrdsDataService.Generated.OCCAM.Client.V1
 
             return property;
         }
+
+        protected override JsonContract CreateContract(Type objectType)
+        {
+            var contract = base.CreateContract(objectType);
+
+            // For object contracts, disable extension data handling to prevent additionalProperties
+            if (contract is JsonObjectContract objectContract)
+            {
+                objectContract.ExtensionDataSetter = null;
+                objectContract.ExtensionDataGetter = null;
+            }
+
+            return contract;
+        }
     }
 
     public partial class OCCAMORDSDataServiceClientV1
     {
-        // In a real application, these should be managed by a proper configuration and secrets management system.
-        // Credentials can be loaded from configuration (e.g., appsettings.json, environment variables, or user secrets).
-        private string? _username = "";
-        private string? _password = "";
-
-
         // NSwag generates PrepareRequest partial methods that can be used to modify
-        // the HttpRequestMessage before it is sent. This is the ideal place to add
-        // custom headers, such as for authentication.
-        partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url)
+        // the HttpRequestMessage before it is sent. Since base address and authorization
+        // are now configured in the HttpClient setup, this method can be minimal.
+        partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, StringBuilder url)
         {
-            if (!string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password))
-            {
-                var authenticationString = $"{_username}:{_password}";
-                var base64EncodedAuthenticationString = System.Convert.ToBase64String(Encoding.ASCII.GetBytes(authenticationString));
-                request.Headers.Authorization = new AuthenticationHeaderValue("Basic", base64EncodedAuthenticationString);
-            }
+            // Any additional request preparation can be done here if needed
         }
 
         static partial void UpdateJsonSerializerSettings(Newtonsoft.Json.JsonSerializerSettings settings)
@@ -70,6 +73,13 @@ namespace TrafficCourts.OrdsDataService.Generated.OCCAM.Client.V1
             settings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
             // This setting handles cases where the API sends a null for a property that is a non-nullable value type in the C# model (e.g. long, int).
             // It instructs the deserializer to use the default value for the type (e.g. 0) instead of throwing an error.
+            settings.DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore;
+            
+            // Prevent additional properties from being generated during serialization/deserialization
+            // This ensures only defined properties are processed and unknown properties are ignored
+            settings.MetadataPropertyHandling = Newtonsoft.Json.MetadataPropertyHandling.Ignore;
+            
+            // Prevent serialization of default values to reduce additionalProperties generation
             settings.DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore;
         }
     }
