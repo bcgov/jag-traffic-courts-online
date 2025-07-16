@@ -281,15 +281,10 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         {
             try
             {
-                _logger.LogInformation("Fetching violation data for ticket {TicketNumber} from OCCAM API", ticketNumber);
+                _logger.LogInformation("Fetching violation data for ticket {TicketNumber}: {DisputeId} from OCCAM API", ticketNumber, dispute_id);
 
-                // Create a new HttpClient specifically for this GET operation to avoid the BaseAddress modification issue
-                using var httpClient = CreateOccamHttpClient();
                 
-                // Create a new OCCAM client instance for this operation
-                var getClient = new OCCAMORDSDataServiceClientV1(httpClient);
-                
-                var response = await getClient.ViolationTicketGetAsync(null, dispute_id, cancellationToken);
+                var response = await _occamORDSDataServiceClientV1.ViolationTicketGetAsync(null, dispute_id, cancellationToken);
                 if (response == null)
                 {
                     _logger.LogWarning("No response received for ticket {TicketNumber}", ticketNumber);
@@ -432,15 +427,9 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 
                 _logger.LogInformation("Updating violation ticket {TicketNumber} in OCCAM database", correctedViolationTicket.TicketNumberTxt);
                 
-                // Create a new HttpClient specifically for this update operation to avoid the BaseAddress modification issue
-                using var httpClient = CreateOccamHttpClient();
-                
-                // Create a new OCCAM client instance for this operation
-                var updateClient = new OCCAMORDSDataServiceClientV1(httpClient);
-                
                 _logger.LogInformation("Corrected ViolationTicket JSON: {Json}", JsonSerializer.Serialize(correctedViolationTicket, _jsonOptions));
                 // Call OCCAM API to update the violation ticket
-                var response = await updateClient.UpdateViolationTicketAsync(correctedViolationTicket, cancellationToken);
+                var response = await _occamORDSDataServiceClientV1.UpdateViolationTicketAsync(correctedViolationTicket, cancellationToken);
                 
                 if (response.Status == "1")
                 {
@@ -467,36 +456,6 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 _logger.LogError(ex, "Error updating violation ticket {TicketNumber} in OCCAM", correctedViolationTicket.TicketNumberTxt);
                 return null;
             }
-        }
-
-        /// <summary>
-        /// Creates a new HttpClient configured for OCCAM API calls
-        /// </summary>
-        /// <returns>Configured HttpClient instance</returns>
-        private HttpClient CreateOccamHttpClient()
-        {
-            var httpClient = new HttpClient();
-            
-            // Get OCCAM configuration from appsettings
-            var occamAddress = _configuration["OrdsDataService_Occam:Address"];
-            var occamUsername = _configuration["OrdsDataService_Occam:Username"];
-            var occamPassword = _configuration["OrdsDataService_Occam:Password"];
-            
-            // Configure the HttpClient
-            httpClient.BaseAddress = new Uri(occamAddress, UriKind.Absolute);
-            
-            // Set basic authentication
-            if (!string.IsNullOrEmpty(occamUsername) && !string.IsNullOrEmpty(occamPassword))
-            {
-                var authenticationString = $"{occamUsername}:{occamPassword}";
-                var base64EncodedAuthenticationString = Convert.ToBase64String(Encoding.ASCII.GetBytes(authenticationString));
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64EncodedAuthenticationString);
-            }
-            
-            // Set default headers
-            httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-            
-            return httpClient;
         }
 
         /// <summary>
@@ -1005,16 +964,19 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 endDate = TimeZoneInfo.ConvertTimeToUtc(endDate, tz); 
                 disputesRequest.Add("submitted_dt_lt", endDate.ToString("yyyy-MM-ddTHH:mm:ssZ"));
 
+                // Add pagination parameters to the disputesRequest dictionary
+                disputesRequest.Add("page_size", "2");
+                disputesRequest.Add("page_number", "1");
+
                 // Step 1: Get disputes with caching from OCCAM database for the given date range
                 var disputesToProcess = await LoadOrFetchDisputeDataAsync(disputesRequest, context.CancellationToken);
 
                 // Step 2: Process the tickets
                 _logger.LogInformation("Step 2: Get ViolationTicket from RSI");
                 
-                // foreach (var ticketNumber in ticketsToProcess) 
+                // foreach (var dispute in disputesToProcess) 
                 // {
-                // TODO: Add your RSI database comparison logic here
-
+                
                 // }
                 if (!disputesToProcess.Any() || disputesToProcess[6] == null)
                 {
@@ -1037,6 +999,11 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 _logger.LogInformation("Fetched violation data for ticket {TicketNumber}: {Data}",
                     dispute.ticket_number_txt, violationTicket?.Dispute?.DisputeId ?? "No data found");
 
+                if (violationTicket == null)
+                {
+                    _logger.LogInformation("No violation ticket data found for ticket {TicketNumber}. Skipping update.", dispute?.ticket_number_txt);
+                    return new { disputesToProcess, rsiTicket = (Ticket?)null, violationTicket };
+                }
 
                 // Example: Get RSI ticket data with caching for one ticket
                 // Use the issuedDt from violationTicket to get the time (hours:minutes) as TimeOnly
@@ -1074,33 +1041,33 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 }
 
                 // Step 4: If data is missing, Update ticket in OCCAM with RSI Counts
-                if (!context.DryRun && disputesToProcess.Any() && correctionResult.HasUpdates)
+                if (false && !context.DryRun && disputesToProcess.Any() && correctionResult.HasUpdates)
                 {
                     _logger.LogInformation("Would update {Count} tickets in OCCAM", disputesToProcess.Count);
                     if (correctionResult.OriginalViolationTicket != null)
                     {
-                        var updateResult = await UpdateViolationTicketAsync(correctionResult.CorrectedViolationTicket, correctionResult.OriginalViolationTicket, context.CancellationToken);
+                        // var updateResult = await UpdateViolationTicketAsync(correctionResult.CorrectedViolationTicket, correctionResult.OriginalViolationTicket, context.CancellationToken);
 
-                        if (updateResult != null)
-                        {
-                            _logger.LogInformation("Updated violation ticket {TicketNumber} in OCCAM with {UpdatedFieldsCount} field updates",
-                            correctionResult.CorrectedViolationTicket.TicketNumberTxt, correctionResult.UpdatedFieldsCount);
+                        // if (updateResult != null)
+                        // {
+                        //     _logger.LogInformation("Updated violation ticket {TicketNumber} in OCCAM with {UpdatedFieldsCount} field updates",
+                        //     correctionResult.CorrectedViolationTicket.TicketNumberTxt, correctionResult.UpdatedFieldsCount);
 
-                            var integrityResult = await PerformDataIntegrityCheckAsync(
-                                Convert.ToInt64(violationTicket!.Dispute.DisputeId),
-                                correctionResult.CorrectedViolationTicket.TicketNumberTxt!,
-                                violationTicket!,
-                                correctionResult.CorrectedViolationTicket!,
-                                context.CancellationToken);
+                        //     var integrityResult = await PerformDataIntegrityCheckAsync(
+                        //         Convert.ToInt64(violationTicket!.Dispute.DisputeId),
+                        //         correctionResult.CorrectedViolationTicket.TicketNumberTxt!,
+                        //         violationTicket!,
+                        //         correctionResult.CorrectedViolationTicket!,
+                        //         context.CancellationToken);
 
-                            _logger.LogInformation("Integrity check for ticket {TicketNumber}: {Result}",
-                                correctionResult.CorrectedViolationTicket.TicketNumberTxt,
-                                integrityResult.IsValid ? "PASSED" : "FAILED");
-                        }
-                        else
-                        {
-                            _logger.LogWarning("Cannot update violation ticket - update result is null");
-                        }
+                        //     _logger.LogInformation("Integrity check for ticket {TicketNumber}: {Result}",
+                        //         correctionResult.CorrectedViolationTicket.TicketNumberTxt,
+                        //         integrityResult.IsValid ? "PASSED" : "FAILED");
+                        // }
+                        // else
+                        // {
+                        //     _logger.LogWarning("Cannot update violation ticket - update result is null");
+                        // }
                     }
                     else
                     {

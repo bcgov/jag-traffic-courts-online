@@ -58,7 +58,7 @@ public static class OrdsDataServiceExtensions
         // Add HttpClient for NSwag generated OCCAM client
         services.AddHttpClient<OCCAMORDSDataServiceClientV1>(client =>
         {
-            client.BaseAddress = new Uri(options_occam.Address);
+            client.BaseAddress = new Uri(options_occam.Address + "occam/");
             client.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue(options_occam.Username, options_occam.Password);
         })
         .AddHttpMessageHandler(sp =>
