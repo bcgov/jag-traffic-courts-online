@@ -5,6 +5,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
     /// </summary>
     public class HotfixExecutionContext
     {
+        public string Step { get; set; }
         public bool DryRun { get; set; }
         public string Environment { get; set; } = "dev";
         public int BatchSize { get; set; } = 100;

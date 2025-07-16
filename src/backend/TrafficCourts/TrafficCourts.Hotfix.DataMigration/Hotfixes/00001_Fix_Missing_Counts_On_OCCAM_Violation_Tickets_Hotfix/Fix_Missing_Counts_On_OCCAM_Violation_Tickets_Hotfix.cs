@@ -965,117 +965,160 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 disputesRequest.Add("submitted_dt_lt", endDate.ToString("yyyy-MM-ddTHH:mm:ssZ"));
 
                 // Add pagination parameters to the disputesRequest dictionary
-                disputesRequest.Add("page_size", "2");
-                disputesRequest.Add("page_number", "1");
+                disputesRequest.Add("pageSize", "2");
+                disputesRequest.Add("pageNumber", "1");
 
                 // Step 1: Get disputes with caching from OCCAM database for the given date range
                 var disputesToProcess = await LoadOrFetchDisputeDataAsync(disputesRequest, context.CancellationToken);
 
                 // Step 2: Process the tickets
                 _logger.LogInformation("Step 2: Get ViolationTicket from RSI");
-                
-                // foreach (var dispute in disputesToProcess) 
-                // {
-                
-                // }
-                if (!disputesToProcess.Any() || disputesToProcess[6] == null)
+
+                if (!disputesToProcess.Any())
                 {
                     _logger.LogInformation("No tickets found to process in OCCAM database for the given date range.");
-                    return new { ticketsToProcess = new List<string>() };
+                    return new { isComplete = false, ticketsToProcess = new List<string>(), results = new List<object>() };
                 }
 
-                var dispute = disputesToProcess[0]; // Example: Get the 1st ticket number for processing
+                var results = new List<object>();
 
-                if (dispute?.ticket_number_txt == null)
+                foreach (var dispute in disputesToProcess) 
                 {
-                    _logger.LogInformation("Ticket number is null, skipping RSI data fetch.");
-                    return new { disputesToProcess };
-                }
-
-                // Step 3; Get Violation ticket with Counts from OCCAM database
-                // Example: Get violation data with caching for the same ticket
-                var violationTicket = await LoadOrFetchViolationTicketDataAsync(dispute.dispute_id, dispute.ticket_number_txt, context.CancellationToken);
-
-                _logger.LogInformation("Fetched violation data for ticket {TicketNumber}: {Data}",
-                    dispute.ticket_number_txt, violationTicket?.Dispute?.DisputeId ?? "No data found");
-
-                if (violationTicket == null)
-                {
-                    _logger.LogInformation("No violation ticket data found for ticket {TicketNumber}. Skipping update.", dispute?.ticket_number_txt);
-                    return new { disputesToProcess, rsiTicket = (Ticket?)null, violationTicket };
-                }
-
-                // Example: Get RSI ticket data with caching for one ticket
-                // Use the issuedDt from violationTicket to get the time (hours:minutes) as TimeOnly
-                TimeOnly? issuedTime = violationTicket.IssuedDt != null
-                    ? TimeOnly.FromDateTime(violationTicket.IssuedDt.DateTime)
-                    : null;
-                _logger.LogInformation("Issued time for ticket {TicketNumber}: {IssuedTime}",
-                    dispute.ticket_number_txt, issuedTime?.ToString() ?? "null");
-                // If issuedTime is null, skip fetching RSI data
-                if (issuedTime == null)
-                {
-                    _logger.LogInformation("Issued time is null for ticket {TicketNumber}, skipping RSI data fetch.", dispute.ticket_number_txt);
-                    return new { disputesToProcess, rsiTicket = (Ticket?)null, violationTicket };
-                }
-
-                var rsiTicket = await LoadOrFetchRSITicketDataAsync(
-                    dispute.ticket_number_txt, (TimeOnly)issuedTime!, context.CancellationToken);
-
-                _logger.LogInformation("Fetched RSI ticket data for {TicketNumber}: {Data}",
-                    dispute.ticket_number_txt, "rsiTicket" ?? "No data found");
-
-                // Step 4: For each ticket check if the data is missing or mismatching data in RSI database 
-                if (violationTicket == null || rsiTicket == null)
-                {
-                    _logger.LogInformation("No violation or RSI ticket data found for ticket {TicketNumber}. Skipping update.", dispute?.ticket_number_txt);
-                    return new { disputesToProcess, rsiTicket, violationTicket };
-                }
-                _logger.LogInformation("Merging missing count data for ticket {TicketNumber}", dispute?.ticket_number_txt);
-                // Merge missing count data from RSI ticket into violation ticket
-                var correctionResult = await CorrectMissingCountDataWithSQLGeneration(violationTicket, rsiTicket);
-                if (correctionResult.CorrectedViolationTicket == null)
-                {
-                    _logger.LogInformation("No counts to merge for ticket {TicketNumber}", dispute?.ticket_number_txt);
-                    return new { disputesToProcess, rsiTicket, violationTicket, correctionResult };
-                }
-
-                // Step 4: If data is missing, Update ticket in OCCAM with RSI Counts
-                if (false && !context.DryRun && disputesToProcess.Any() && correctionResult.HasUpdates)
-                {
-                    _logger.LogInformation("Would update {Count} tickets in OCCAM", disputesToProcess.Count);
-                    if (correctionResult.OriginalViolationTicket != null)
+                    if (dispute?.ticket_number_txt == null)
                     {
-                        // var updateResult = await UpdateViolationTicketAsync(correctionResult.CorrectedViolationTicket, correctionResult.OriginalViolationTicket, context.CancellationToken);
-
-                        // if (updateResult != null)
-                        // {
-                        //     _logger.LogInformation("Updated violation ticket {TicketNumber} in OCCAM with {UpdatedFieldsCount} field updates",
-                        //     correctionResult.CorrectedViolationTicket.TicketNumberTxt, correctionResult.UpdatedFieldsCount);
-
-                        //     var integrityResult = await PerformDataIntegrityCheckAsync(
-                        //         Convert.ToInt64(violationTicket!.Dispute.DisputeId),
-                        //         correctionResult.CorrectedViolationTicket.TicketNumberTxt!,
-                        //         violationTicket!,
-                        //         correctionResult.CorrectedViolationTicket!,
-                        //         context.CancellationToken);
-
-                        //     _logger.LogInformation("Integrity check for ticket {TicketNumber}: {Result}",
-                        //         correctionResult.CorrectedViolationTicket.TicketNumberTxt,
-                        //         integrityResult.IsValid ? "PASSED" : "FAILED");
-                        // }
-                        // else
-                        // {
-                        //     _logger.LogWarning("Cannot update violation ticket - update result is null");
-                        // }
+                        _logger.LogInformation("Ticket number is null, skipping RSI data fetch for dispute {DisputeId}.", dispute?.dispute_id);
+                        results.Add(new { 
+                            isComplete = false, 
+                            disputeId = dispute?.dispute_id,
+                            ticketNumber = dispute?.ticket_number_txt,
+                            error = "Ticket number is null"
+                        });
+                        continue; // Continue to next dispute instead of returning
                     }
-                    else
+
+                    try
                     {
-                        _logger.LogWarning("Cannot update violation ticket - original violation ticket data is null");
+                        // Step 3: Get Violation ticket with Counts from OCCAM database
+                        var violationTicket = await LoadOrFetchViolationTicketDataAsync(dispute.dispute_id, dispute.ticket_number_txt, context.CancellationToken);
+
+                        _logger.LogInformation("Fetched violation data for ticket {TicketNumber}: {Data}",
+                            dispute.ticket_number_txt, violationTicket?.Dispute?.DisputeId ?? "No data found");
+
+                        if (violationTicket == null)
+                        {
+                            _logger.LogInformation("No violation ticket data found for ticket {TicketNumber}. Skipping update.", dispute.ticket_number_txt);
+                            results.Add(new { 
+                                isComplete = false, 
+                                disputeId = dispute.dispute_id,
+                                ticketNumber = dispute.ticket_number_txt,
+                                rsiTicket = (Ticket?)null, 
+                                violationTicket = (ViolationTicket?)null,
+                                error = "No violation ticket data found"
+                            });
+                            continue;
+                        }
+
+                        // Get RSI ticket data with caching
+                        TimeOnly? issuedTime = violationTicket.IssuedDt != null
+                            ? TimeOnly.FromDateTime(violationTicket.IssuedDt.DateTime)
+                            : null;
+
+                        _logger.LogInformation("Issued time for ticket {TicketNumber}: {IssuedTime}",
+                            dispute.ticket_number_txt, issuedTime?.ToString() ?? "null");
+
+                        if (issuedTime == null)
+                        {
+                            _logger.LogInformation("Issued time is null for ticket {TicketNumber}, skipping RSI data fetch.", dispute.ticket_number_txt);
+                            results.Add(new { 
+                                isComplete = false, 
+                                disputeId = dispute.dispute_id,
+                                ticketNumber = dispute.ticket_number_txt,
+                                rsiTicket = (Ticket?)null, 
+                                violationTicket,
+                                error = "Issued time is null"
+                            });
+                            continue;
+                        }
+
+                        var rsiTicket = await LoadOrFetchRSITicketDataAsync(
+                            dispute.ticket_number_txt, (TimeOnly)issuedTime!, context.CancellationToken);
+
+                        _logger.LogInformation("Fetched RSI ticket data for {TicketNumber}: {Data}",
+                            dispute.ticket_number_txt, rsiTicket != null ? "Found" : "No data found");
+
+                        if (rsiTicket == null)
+                        {
+                            _logger.LogInformation("No RSI ticket data found for ticket {TicketNumber}. Skipping update.", dispute.ticket_number_txt);
+                            results.Add(new { 
+                                isComplete = false, 
+                                disputeId = dispute.dispute_id,
+                                ticketNumber = dispute.ticket_number_txt,
+                                rsiTicket = (Ticket?)null, 
+                                violationTicket,
+                                error = "No RSI ticket data found"
+                            });
+                            continue;
+                        }
+
+                        _logger.LogInformation("Merging missing count data for ticket {TicketNumber}", dispute.ticket_number_txt);
+                        
+                        // Merge missing count data from RSI ticket into violation ticket
+                        var correctionResult = await CorrectMissingCountDataWithSQLGeneration(violationTicket, rsiTicket);
+                        
+                        if (correctionResult.CorrectedViolationTicket == null)
+                        {
+                            _logger.LogInformation("No counts to merge for ticket {TicketNumber}", dispute.ticket_number_txt);
+                            results.Add(new { 
+                                isComplete = false, 
+                                disputeId = dispute.dispute_id,
+                                ticketNumber = dispute.ticket_number_txt,
+                                rsiTicket,  
+                                correctionResult,
+                                error = "No counts to merge"
+                            });
+                            continue;
+                        }
+
+                        // Step 4: Update ticket in OCCAM if not dry run and has updates
+                        if (false && !context.DryRun && correctionResult.HasUpdates)
+                        {
+                            _logger.LogInformation("Updating ticket {TicketNumber} in OCCAM", dispute.ticket_number_txt);
+                            // Update logic here...
+                        }
+
+                        // Add successful result
+                        results.Add(new { 
+                            isComplete = true, 
+                            disputeId = dispute.dispute_id,
+                            ticketNumber = dispute.ticket_number_txt,
+                            rsiTicket, 
+                            correctionResult
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Error processing dispute {DisputeId} with ticket {TicketNumber}", 
+                            dispute.dispute_id, dispute.ticket_number_txt);
+                        
+                        results.Add(new { 
+                            isComplete = false, 
+                            disputeId = dispute.dispute_id,
+                            ticketNumber = dispute.ticket_number_txt,
+                            error = ex.Message
+                        });
                     }
                 }
 
-                return new { disputesToProcess, rsiTicket, violationTicket, correctionResult };            
+                // Return all results after processing all disputes
+                return new { 
+                    isComplete = true, 
+                    totalProcessed = results.Count,
+                    newCount = disputesToProcess.Count(d => d?.dispute_status_type_cd == "NEW"),
+                    processingCount = disputesToProcess.Count(d => d?.dispute_status_type_cd == "PROCESSING"),
+                    // hasUpdatesCount = results.Select(r => r.correctionResult).Count(cr => cr.hasUpdates),
+                    disputesToProcess, 
+                    results 
+                };
             }
             catch (Exception ex)
             {
@@ -1223,7 +1266,7 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
             fileName ??= $"Generated_Update_Statements_{DateTime.Now:yyyyMMdd_HHmmss}.sql";
             
             // Use the same directory as the hotfix or a specific output directory
-            var outputPath = Path.Combine(Environment.CurrentDirectory, "GeneratedSQL");
+            var outputPath = Path.Combine(Environment.CurrentDirectory, ".local", "GeneratedSQL");
             Directory.CreateDirectory(outputPath);
             
             var fullPath = Path.Combine(outputPath, fileName);
@@ -1299,15 +1342,15 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
                     var originalCount = JsonSerializer.Deserialize<ViolationTicketCount>(originalCountJson, _jsonOptions);
 
                     // Copy data from rsiCount to violationCount only if the target property is null
-                    if (violationCount.DescriptionTxt == null && rsiCount.Description != null)
+                    if (violationCount.DescriptionTxt == null && rsiCount.Description != null && rsiCount.Description != "")
                     {
                         violationCount.DescriptionTxt = rsiCount.Description;
                         hasUpdates = true;
                         updatedFieldsCount++;
                         updatedFields.Add($"Count {countNumber}: DescriptionTxt");
                     }
-                    
-                    if (violationCount.ActOrRegulationNameCd == null && rsiCount.Act != null)
+
+                    if (violationCount.ActOrRegulationNameCd == null && rsiCount.Act != null && rsiCount.Act != "")
                     {
                         violationCount.ActOrRegulationNameCd = rsiCount.Act;
                         hasUpdates = true;
@@ -1331,7 +1374,7 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
                         updatedFields.Add($"Count {countNumber}: IsRegulationYn");
                     }
                     
-                    if (violationCount.StatSectionTxt == null && rsiCount.Section != null)
+                    if (violationCount.StatSectionTxt == null && rsiCount.Section != null && rsiCount.Section != "")
                     {
                         violationCount.StatSectionTxt = rsiCount.Section;
                         hasUpdates = true;
@@ -1339,7 +1382,7 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
                         updatedFields.Add($"Count {countNumber}: StatSectionTxt");
                     }
                     
-                    if (violationCount.StatSubSectionTxt == null && rsiCount.Subsection != null)
+                    if (violationCount.StatSubSectionTxt == null && rsiCount.Subsection != null && rsiCount.Subsection != "")
                     {
                         violationCount.StatSubSectionTxt = rsiCount.Subsection;
                         hasUpdates = true;
@@ -1347,7 +1390,7 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
                         updatedFields.Add($"Count {countNumber}: StatSubSectionTxt");
                     }
                     
-                    if (violationCount.StatParagraphTxt == null && rsiCount.Paragraph != null)
+                    if (violationCount.StatParagraphTxt == null && rsiCount.Paragraph != null && rsiCount.Paragraph != "")
                     {
                         violationCount.StatParagraphTxt = rsiCount.Paragraph;
                         hasUpdates = true;
@@ -1355,7 +1398,7 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
                         updatedFields.Add($"Count {countNumber}: StatParagraphTxt");
                     }
                     
-                    if (violationCount.StatSubParagraphTxt == null && rsiCount.Subparagraph != null)
+                    if (violationCount.StatSubParagraphTxt == null && rsiCount.Subparagraph != null && rsiCount.Subparagraph != "")
                     {
                         violationCount.StatSubParagraphTxt = rsiCount.Subparagraph;
                         hasUpdates = true;
@@ -1364,14 +1407,13 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
                     }
                     
                     // Update TicketedAmt if it is null and RSI has a value
-                    // if (violationCount.TicketedAmt == null && rsiCount.TicketedAmount != null)
-                    // {
-                        // violationCount.TicketedAmt = rsiCount.TicketedAmount.ToString();
-                        violationCount.TicketedAmt = "345.35";
+                    if (violationCount.TicketedAmt == null && rsiCount.TicketedAmount != null)
+                    {
+                        violationCount.TicketedAmt = rsiCount.TicketedAmount.ToString();
                         hasUpdates = true;
                         updatedFieldsCount++;
                         updatedFields.Add($"Count {countNumber}: TicketedAmt");
-                    // }
+                    }
 
                     // Generate SQL for this count if there were updates
                     if (long.TryParse(violationCount.ViolationTicketCountId, out var countId))
