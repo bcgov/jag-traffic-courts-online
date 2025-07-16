@@ -30,6 +30,8 @@ namespace TrafficCourts.Hotfix.DataMigration.Controllers
             [FromQuery] bool dryRun = true,
             [FromQuery] string environment = "dev", 
             [FromQuery] int batchSize = 100,
+            [FromQuery] int? pageNumber = null,
+            [FromQuery] int? pageSize = null,
             [FromBody] Dictionary<string, object>? additionalData = null,
             CancellationToken cancellationToken = default)
         {
@@ -46,6 +48,8 @@ namespace TrafficCourts.Hotfix.DataMigration.Controllers
                     dryRun, 
                     environment, 
                     batchSize, 
+                    pageNumber,
+                    pageSize,
                     additionalData, 
                     cancellationToken);
                 return Ok(result);

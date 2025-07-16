@@ -9,6 +9,8 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         public bool DryRun { get; set; }
         public string Environment { get; set; } = "dev";
         public int BatchSize { get; set; } = 100;
+        public int? PageNumber { get; set; }
+        public int? PageSize { get; set; }
         public Dictionary<string, object> Request { get; set; } = new();
         public CancellationToken CancellationToken { get; set; }
     }

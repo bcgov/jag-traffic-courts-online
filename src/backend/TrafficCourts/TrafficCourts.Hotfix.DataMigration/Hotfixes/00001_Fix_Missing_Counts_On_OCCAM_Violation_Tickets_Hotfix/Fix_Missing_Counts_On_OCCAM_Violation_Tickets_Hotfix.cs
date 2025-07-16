@@ -77,31 +77,6 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                     "Please close the database connection in VS Code and retry.", ex);
             }
 
-            var cachedData = await context.HotfixOccamDisputes
-                .Select(d => d.BeforeHotfixDataJson)
-                .ToListAsync(cancellationToken);
-
-            if (cachedData.Any())
-            {
-                _logger.LogInformation("Loading {Count} dispute records from SQLite cache: {DbPath}",
-                    cachedData.Count, $"{Name}.db");
-                return cachedData
-                    .Where(json => !string.IsNullOrEmpty(json))
-                    .Select(json => 
-                    {
-                        try
-                        {
-                            return JsonSerializer.Deserialize<OccamDispute>(json!);
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.LogWarning(ex, "Failed to deserialize cached dispute data");
-                            return null;
-                        }
-                    })
-                    .Where(d => d != null)
-                    .ToList()!;
-            }
 
             // Fetch fresh data from OCCAM
             _logger.LogInformation("Fetching fresh dispute data from OCCAM database");
@@ -965,8 +940,17 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 disputesRequest.Add("submitted_dt_lt", endDate.ToString("yyyy-MM-ddTHH:mm:ssZ"));
 
                 // Add pagination parameters to the disputesRequest dictionary
-                disputesRequest.Add("pageSize", "2");
-                disputesRequest.Add("pageNumber", "1");
+                if (context.PageSize != null && context.PageNumber != null)
+                {
+                    int offset = (((int)context.PageNumber - 1) * (int)context.PageSize);
+                    _logger.LogInformation("Pagination: pageSize={PageSize}, pageNumber={PageNumber}, offset={Offset}", context.PageSize, context.PageNumber, offset);
+                    
+                    disputesRequest.Add("fetch_rows", context.PageSize.ToString());
+                    disputesRequest.Add("offset_rows", offset.ToString());
+                } else {
+                    _logger.LogInformation("No pagination parameters provided, fetching all disputes.");
+                    disputesRequest.Add("fetch_rows", "25"); // Default fetch size if not provided
+                }
 
                 // Step 1: Get disputes with caching from OCCAM database for the given date range
                 var disputesToProcess = await LoadOrFetchDisputeDataAsync(disputesRequest, context.CancellationToken);
@@ -1407,7 +1391,7 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
                     }
                     
                     // Update TicketedAmt if it is null and RSI has a value
-                    if (violationCount.TicketedAmt == null && rsiCount.TicketedAmount != null)
+                    if (violationCount.TicketedAmt == null)
                     {
                         violationCount.TicketedAmt = rsiCount.TicketedAmount.ToString();
                         hasUpdates = true;
