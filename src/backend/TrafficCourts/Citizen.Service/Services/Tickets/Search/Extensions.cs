@@ -51,7 +51,7 @@ namespace TrafficCourts.Citizen.Service
                     "TicketSearch",
                     static resilienceBuilder => 
                     {
-                        resilienceBuilder.AddTimeout(TimeSpan.FromSeconds(30)); // This ought to be moved to a environment variable
+                        resilienceBuilder.AddTimeout(TimeSpan.FromSeconds(90)); // This ought to be moved to a environment variable
                     }
                 );
 
