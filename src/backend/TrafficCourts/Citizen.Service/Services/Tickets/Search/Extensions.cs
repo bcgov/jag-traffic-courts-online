@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
+using Polly;
 using Refit;
 using System.Configuration;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search;
@@ -45,7 +46,14 @@ namespace TrafficCourts.Citizen.Service
                 .AddRefitClient<IRoadSafetyTicketSearchApi>()
                 .ConfigureHttpClient(ConfigureClient)
                 .AddHttpMessageHandler((serviceProvider) => CreateOidcDelegatingHandler(serviceProvider, "TicketSearch"))
-                .AddStandardResilienceHandler();
+                //.AddStandardResilienceHandler()
+                .AddResilienceHandler(
+                    "TicketSearch",
+                    static resilienceBuilder => 
+                    {
+                        resilienceBuilder.AddTimeout(TimeSpan.FromSeconds(30)); // This ought to be moved to a environment variable
+                    }
+                );
 
             builder.Services.AddOptions();
             builder.Services.AddMemoryCache();
