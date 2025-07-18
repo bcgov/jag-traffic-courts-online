@@ -129,6 +129,8 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         /// <returns>The cached or freshly fetched ticket data as JSON string</returns>
         private async Task<Ticket?> LoadOrFetchRSITicketDataAsync(string ticketNumber, TimeOnly timeOfViolation, CancellationToken cancellationToken)
         {
+            await Task.Delay(500, cancellationToken); // Wait for 500 milliseconds
+
             using var context = new HotfixSqliteContext(Name, Env);
 
             try
@@ -931,23 +933,31 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 // Cast to the specific request type we expect
                 var disputesRequest = new Dictionary<string, string>();
 
-                DateTime startDate = DateTime.ParseExact("2025-06-25", "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                DateTime startDate = DateTime.ParseExact("2025-06-25T10:12:00", "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
                 startDate = TimeZoneInfo.ConvertTimeToUtc(startDate, tz);
                 disputesRequest.Add("submitted_dt_ge", startDate.ToString("yyyy-MM-ddTHH:mm:ssZ"));
                 
-                DateTime endDate = DateTime.ParseExact("2025-07-09", "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                DateTime endDate = DateTime.ParseExact("2025-07-09T10:30:00", "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
                 endDate = TimeZoneInfo.ConvertTimeToUtc(endDate, tz); 
                 disputesRequest.Add("submitted_dt_lt", endDate.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+                
+                _logger.LogInformation("Fetching disputes from OCCAM database for date range: {StartDate} to {EndDate}",
+                    startDate.ToString("yyyy-MM-ddTHH:mm:ssZ"), endDate.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+
 
                 // Add pagination parameters to the disputesRequest dictionary
                 if (context.PageSize != null && context.PageNumber != null)
                 {
                     int offset = (((int)context.PageNumber - 1) * (int)context.PageSize);
                     _logger.LogInformation("Pagination: pageSize={PageSize}, pageNumber={PageNumber}, offset={Offset}", context.PageSize, context.PageNumber, offset);
-                    
+
                     disputesRequest.Add("fetch_rows", context.PageSize.ToString());
                     disputesRequest.Add("offset_rows", offset.ToString());
-                } else {
+
+                    _logger.LogInformation("fetch_rows: {FetchRows}, offset_rows: {OffsetRows}", disputesRequest["fetch_rows"], disputesRequest["offset_rows"]);
+                }
+                else
+                {
                     _logger.LogInformation("No pagination parameters provided, fetching all disputes.");
                     disputesRequest.Add("fetch_rows", "25"); // Default fetch size if not provided
                 }
@@ -965,6 +975,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 }
 
                 var results = new List<object>();
+                var allSqlStatements = new List<string>(); // Collect all SQL statements from all tickets
 
                 foreach (var dispute in disputesToProcess) 
                 {
@@ -1049,6 +1060,12 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                         // Merge missing count data from RSI ticket into violation ticket
                         var correctionResult = await CorrectMissingCountDataWithSQLGeneration(violationTicket, rsiTicket);
                         
+                        // Collect SQL statements from this ticket
+                        if (correctionResult.GeneratedSQLStatements.Any())
+                        {
+                            allSqlStatements.AddRange(correctionResult.GeneratedSQLStatements);
+                        }
+                        
                         if (correctionResult.CorrectedViolationTicket == null)
                         {
                             _logger.LogInformation("No counts to merge for ticket {TicketNumber}", dispute.ticket_number_txt);
@@ -1093,12 +1110,25 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                     }
                 }
 
+                // Write all collected SQL statements to a single file
+                string? masterSqlFilePath = null;
+                if (allSqlStatements.Any())
+                {
+                    var pagePrefix = context.PageNumber != null ? $"Page_{context.PageNumber}_" : "";
+                    var masterFileName = $"{pagePrefix}Master_Update_Statements_{DateTime.Now:yyyyMMdd_HHmmss}.sql";
+                    masterSqlFilePath = await WriteSQLToFileAsync(allSqlStatements, masterFileName);
+                    _logger.LogInformation("Generated master SQL file: {FilePath} with {StatementCount} total UPDATE statements from {TicketCount} tickets", 
+                        masterSqlFilePath, allSqlStatements.Count, results.Count);
+                }
+
                 // Return all results after processing all disputes
                 return new { 
                     isComplete = true, 
                     totalProcessed = results.Count,
                     newCount = disputesToProcess.Count(d => d?.dispute_status_type_cd == "NEW"),
                     processingCount = disputesToProcess.Count(d => d?.dispute_status_type_cd == "PROCESSING"),
+                    totalSqlStatements = allSqlStatements.Count,
+                    masterSqlFilePath,
                     // hasUpdatesCount = results.Select(r => r.correctionResult).Count(cr => cr.hasUpdates),
                     disputesToProcess, 
                     results 
@@ -1175,13 +1205,13 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             var fieldsToUpdate = new Dictionary<string, (object? original, object? updated)>
             {
                 { "description_txt", (originalCount.DescriptionTxt, updatedCount.DescriptionTxt) },
-                { "act_or_regulation_name_cd", (originalCount.ActOrRegulationNameCd, updatedCount.ActOrRegulationNameCd) },
+                { "act_or_regulation_name_cd", (originalCount.ActOrRegulationNameCd, updatedCount.ActOrRegulationNameCd) }, // Lookup 
                 { "is_act_yn", (originalCount.IsActYn, updatedCount.IsActYn) },
                 { "is_regulation_yn", (originalCount.IsRegulationYn, updatedCount.IsRegulationYn) },
-                { "stat_section_txt", (originalCount.StatSectionTxt, updatedCount.StatSectionTxt) },
-                { "stat_sub_section_txt", (originalCount.StatSubSectionTxt, updatedCount.StatSubSectionTxt) },
-                { "stat_paragraph_txt", (originalCount.StatParagraphTxt, updatedCount.StatParagraphTxt) },
-                { "stat_sub_paragraph_txt", (originalCount.StatSubParagraphTxt, updatedCount.StatSubParagraphTxt) },
+                { "stat_section_txt", (originalCount.StatSectionTxt, updatedCount.StatSectionTxt) }, // Lookup 
+                { "stat_sub_section_txt", (originalCount.StatSubSectionTxt, updatedCount.StatSubSectionTxt) }, // Lookup
+                { "stat_paragraph_txt", (originalCount.StatParagraphTxt, updatedCount.StatParagraphTxt) }, // Lookup
+                { "stat_sub_paragraph_txt", (originalCount.StatSubParagraphTxt, updatedCount.StatSubParagraphTxt) }, // Lookup
                 { "ticketed_amt", (originalCount.TicketedAmt, updatedCount.TicketedAmt) }
             };
 
@@ -1233,7 +1263,7 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
         }
 
         /// <summary>
-        /// Writes SQL statements to a file for database execution
+        /// Writes SQL statements to a single master file for database execution
         /// </summary>
         /// <param name="sqlStatements">List of SQL statements to write</param>
         /// <param name="fileName">Optional custom file name</param>
@@ -1256,7 +1286,8 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
             var fullPath = Path.Combine(outputPath, fileName);
 
             var sqlContent = new StringBuilder();
-            sqlContent.AppendLine("-- Generated SQL UPDATE statements for OCCAM violation ticket counts");
+            sqlContent.AppendLine("-- SQL UPDATE statements for OCCAM violation ticket counts");
+            sqlContent.AppendLine("-- This file contains all SQL statements for multiple tickets");
             sqlContent.AppendLine($"-- Generated at: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
             sqlContent.AppendLine($"-- Hotfix: {Name} v{FixVersion}");
             sqlContent.AppendLine();
@@ -1266,14 +1297,12 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
                 sqlContent.AppendLine(sql);
             }
 
-            sqlContent.AppendLine("-- Commit transaction");
-            sqlContent.AppendLine("COMMIT;");
             sqlContent.AppendLine();
             sqlContent.AppendLine($"-- Total statements: {sqlStatements.Count}");
 
             await File.WriteAllTextAsync(fullPath, sqlContent.ToString());
-            
-            _logger.LogInformation("Generated SQL file: {FilePath} with {StatementCount} UPDATE statements", 
+
+            _logger.LogInformation("Generated SQL file: {FilePath} with {StatementCount} UPDATE statements",
                 fullPath, sqlStatements.Count);
 
             return fullPath;
@@ -1311,6 +1340,16 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
             bool hasUpdates = false;
             int updatedFieldsCount = 0;
             var updatedFields = new List<string>();
+
+            // Add a header comment for this ticket's SQL statements
+            if (rsiCountsByNumber.Any())
+            {
+                sqlStatements.Add($"-- ========================================");
+                sqlStatements.Add($"-- Ticket: {correctedViolationTicket.TicketNumberTxt}");
+                sqlStatements.Add($"-- Dispute ID: {correctedViolationTicket.Dispute?.DisputeId}");
+                sqlStatements.Add($"-- ========================================");
+                sqlStatements.Add("");
+            }
 
             foreach (var violationCount in correctedViolationTicket.ViolationTicketCounts)
             {
@@ -1417,11 +1456,16 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
             result.UpdatedFields = updatedFields;
             result.GeneratedSQLStatements = sqlStatements;
 
-            // Write SQL statements to file if there are any
+            // Note: Individual ticket SQL files are no longer generated
+            // All SQL statements are collected and written to a single master file
+            result.GeneratedSQLFilePath = null;
+
+            // Add a separator after this ticket's SQL statements
             if (sqlStatements.Any())
             {
-                var fileName = $"Update_Statements_{correctedViolationTicket.TicketNumberTxt}_{DateTime.Now:yyyyMMdd_HHmmss}.sql";
-                result.GeneratedSQLFilePath = await WriteSQLToFileAsync(sqlStatements, fileName);
+                sqlStatements.Add("");
+                sqlStatements.Add("-- End of statements for this ticket");
+                sqlStatements.Add("");
             }
 
             if (hasUpdates)
