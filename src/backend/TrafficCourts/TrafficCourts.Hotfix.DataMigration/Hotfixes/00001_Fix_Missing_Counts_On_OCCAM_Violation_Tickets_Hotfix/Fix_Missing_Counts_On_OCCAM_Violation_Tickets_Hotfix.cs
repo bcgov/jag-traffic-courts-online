@@ -944,11 +944,10 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 _logger.LogInformation("Fetching disputes from OCCAM database for date range: {StartDate} to {EndDate}",
                     startDate.ToString("yyyy-MM-ddTHH:mm:ssZ"), endDate.ToString("yyyy-MM-ddTHH:mm:ssZ"));
 
-
                 // Add pagination parameters to the disputesRequest dictionary
                 if (context.PageSize != null && context.PageNumber != null)
                 {
-                    int offset = (((int)context.PageNumber - 1) * (int)context.PageSize);
+                    int offset = ((int)context.PageNumber - 1) * (int)context.PageSize;
                     _logger.LogInformation("Pagination: pageSize={PageSize}, pageNumber={PageNumber}, offset={Offset}", context.PageSize, context.PageNumber, offset);
 
                     disputesRequest.Add("fetch_rows", context.PageSize.ToString());
