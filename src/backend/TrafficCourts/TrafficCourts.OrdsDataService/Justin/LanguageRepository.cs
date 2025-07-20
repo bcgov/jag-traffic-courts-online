@@ -18,6 +18,8 @@ internal class LanguageRepository : OrdsRepository<LanguageRepository>, ILanguag
             ETagCache.OneDay,
             cancellationToken);
 
-        return response?.Rows ?? [];
+        return response?.Rows?
+        .Where(x => x.cdln_active_yn.Equals("Y", StringComparison.OrdinalIgnoreCase))
+        .ToList() ?? [];
     }
 }
