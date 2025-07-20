@@ -568,11 +568,12 @@
           <button type="linkbutton" class="linkbutton" (click)="onGetJustinDocument(DocumentType.NoticeOfDispute)"
             *ngIf="lastUpdatedJJDispute.noticeOfHearingYn === NoticeOfHearing.Y">Notice Of Hearing</button><br /><br />
           <span><b>Uploaded Documents ({{lastUpdatedJJDispute.fileData?.length }})</b></span><br />
-          <div *ngFor="let doc of lastUpdatedJJDispute.fileData">
+          <div *ngFor="let doc of lastUpdatedJJDispute.fileData" style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+            <span class="document-type-label" style="background-color: #e3f2fd; color: #1976d2; padding: 1px 3px; border-radius: 3px; font-size: 9px; font-weight: 200; border: 1px solid #bbdefb; white-space: nowrap;">{{ doc.documentType }}</span>
             <button type="button" class="linkbutton" (click)="onGetFile(doc.fileId)"
-              *ngIf="doc.virusScanStatus === 'clean'">{{ doc.fileName }}</button>&nbsp;
+              *ngIf="doc.virusScanStatus === 'clean'">{{ doc.fileName }}</button>
             <span *ngIf="doc.virusScanStatus !== 'clean'">{{ doc.fileName }} {{ doc.virusScanStatus }}</span>
-            <button *ngIf="!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))" type="button" style="width:50px !important; border:none; background-color:white"
+            <button *ngIf="!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))" type="button" style="width:50px !important; border:none; background-color:white;"
               (click)="onRemoveFile(doc.fileId, doc.fileName)"><mat-icon style="color:red">delete</mat-icon></button>
           </div>
           <div *ngIf="!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))">
