@@ -149,7 +149,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
 
             // Check if ticket data exists in cache
             var cachedTicket = await context.HotfixRSITicketSearches
-                .FirstOrDefaultAsync(t => t.TicketNumber == ticketNumber, cancellationToken);
+                .FirstOrDefaultAsync(t => t.TicketNumber == ticketNumber && t.BeforeHotfixDataJson != null, cancellationToken);
 
             if (cachedTicket != null)
             {
@@ -936,8 +936,8 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 DateTime startDate = DateTime.ParseExact("2025-06-25T10:12:00", "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
                 startDate = TimeZoneInfo.ConvertTimeToUtc(startDate, tz);
                 disputesRequest.Add("submitted_dt_ge", startDate.ToString("yyyy-MM-ddTHH:mm:ssZ"));
-                
-                DateTime endDate = DateTime.ParseExact("2025-07-09T10:30:00", "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
+                // "2025-07-09T10:30:00"
+                DateTime endDate = DateTime.ParseExact("2025-07-21T10:30:00", "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
                 endDate = TimeZoneInfo.ConvertTimeToUtc(endDate, tz); 
                 disputesRequest.Add("submitted_dt_lt", endDate.ToString("yyyy-MM-ddTHH:mm:ssZ"));
                 
@@ -1035,7 +1035,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                         }
 
                         var rsiTicket = await LoadOrFetchRSITicketDataAsync(
-                            dispute.ticket_number_txt, (TimeOnly)issuedTime!, context.CancellationToken);
+                            dispute.ticket_number_txt, (TimeOnly)issuedTime, context.CancellationToken);
 
                         _logger.LogInformation("Fetched RSI ticket data for {TicketNumber}: {Data}",
                             dispute.ticket_number_txt, rsiTicket != null ? "Found" : "No data found");
@@ -1057,7 +1057,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                         _logger.LogInformation("Merging missing count data for ticket {TicketNumber}", dispute.ticket_number_txt);
                         
                         // Merge missing count data from RSI ticket into violation ticket
-                        var correctionResult = await CorrectMissingCountDataWithSQLGeneration(violationTicket, rsiTicket);
+                        var correctionResult = CorrectMissingCountDataWithSQLGeneration(violationTicket, rsiTicket);
                         
                         // Collect SQL statements from this ticket
                         if (correctionResult.GeneratedSQLStatements.Any())
@@ -1313,7 +1313,7 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
         /// <param name="violationTicket">The violation ticket data object</param>
         /// <param name="rsiTicket">The RSI ticket data object</param>
         /// <returns>CountCorrectionResult with SQL statements included</returns>
-        public async Task<CountCorrectionResult> CorrectMissingCountDataWithSQLGeneration(ViolationTicket? violationTicket, Ticket? rsiTicket)
+        public CountCorrectionResult CorrectMissingCountDataWithSQLGeneration(ViolationTicket? violationTicket, Ticket? rsiTicket)
         {
             var result = new CountCorrectionResult();
             var sqlStatements = new List<string>();
