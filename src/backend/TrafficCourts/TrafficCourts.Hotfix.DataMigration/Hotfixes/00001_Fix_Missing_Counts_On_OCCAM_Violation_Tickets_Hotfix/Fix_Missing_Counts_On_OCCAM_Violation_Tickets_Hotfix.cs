@@ -52,7 +52,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
 
         public string FixVersion { get; } = "2.13.3";
         
-        public string Env { get; } = "dev"; // Default environment, can be overridden
+        public string Env { get; } = "production"; // Default environment, can be overridden
 
         // Entity Framework SQLite caching methods
         private async Task<List<OccamDispute>> LoadOrFetchDisputeDataAsync(Dictionary<string, string> disputesRequest, CancellationToken cancellationToken)
@@ -937,7 +937,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 startDate = TimeZoneInfo.ConvertTimeToUtc(startDate, tz);
                 disputesRequest.Add("submitted_dt_ge", startDate.ToString("yyyy-MM-ddTHH:mm:ssZ"));
                 // "2025-07-09T10:30:00"
-                DateTime endDate = DateTime.ParseExact("2025-07-21T10:30:00", "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
+                DateTime endDate = DateTime.ParseExact("2025-07-09T10:30:00", "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
                 endDate = TimeZoneInfo.ConvertTimeToUtc(endDate, tz); 
                 disputesRequest.Add("submitted_dt_lt", endDate.ToString("yyyy-MM-ddTHH:mm:ssZ"));
                 
@@ -954,12 +954,17 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                     disputesRequest.Add("offset_rows", offset.ToString());
 
                     _logger.LogInformation("fetch_rows: {FetchRows}, offset_rows: {OffsetRows}", disputesRequest["fetch_rows"], disputesRequest["offset_rows"]);
-                }
+                }  
                 else
                 {
                     _logger.LogInformation("No pagination parameters provided, fetching all disputes.");
                     disputesRequest.Add("fetch_rows", "25"); // Default fetch size if not provided
                 }
+
+                // tickets starting with E 
+                disputesRequest.Add("ticket_number_txt_like", "E%");
+                // tickets starting with S
+                // disputesRequest.Add("ticket_number_txt_like", "S%");
 
                 // Step 1: Get disputes with caching from OCCAM database for the given date range
                 var disputesToProcess = await LoadOrFetchDisputeDataAsync(disputesRequest, context.CancellationToken);
@@ -1230,9 +1235,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
 
             var sql = $@"-- Update violation_ticket_count_id: {violationTicketCountId}
 UPDATE occam_violation_ticket_counts 
-SET {string.Join(",\n    ", setClause)},
-    upd_dtm = CURRENT_TIMESTAMP,
-    upd_user_id = 'SYSTEM_HOTFIX'
+SET {string.Join(",\n    ", setClause)}
 WHERE violation_ticket_count_id = {violationTicketCountId};
 ";
 
@@ -1279,7 +1282,7 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
             fileName ??= $"Generated_Update_Statements_{DateTime.Now:yyyyMMdd_HHmmss}.sql";
             
             // Use the same directory as the hotfix or a specific output directory
-            var outputPath = Path.Combine(Environment.CurrentDirectory, ".local", "GeneratedSQL");
+            var outputPath = Path.Combine(Environment.CurrentDirectory, ".local", "GeneratedSQL", Env);
             Directory.CreateDirectory(outputPath);
             
             var fullPath = Path.Combine(outputPath, fileName);
