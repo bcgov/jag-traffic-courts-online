@@ -10,5 +10,5 @@ public interface IFileHistoryService
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A collection of FileHistory objects</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<ICollection<FileHistory>> GetFileHistoryForTicketAsync(String ticketNumber, CancellationToken cancellationToken);
+    Task<ICollection<FileHistory>> GetFileHistoryForTicketAsync(string ticketNumber, TimeZoneInfo timeZone, CancellationToken cancellationToken);
 }
