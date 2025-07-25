@@ -26,7 +26,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             return _hotfixes.FirstOrDefault(h => h.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
-        public async Task<dynamic> ExecuteHotfixAsync(string name, string fixVersion, bool dryRun, string environment, int batchSize, int? pageNumber, int? pageSize, Dictionary<string, object> additionalData, CancellationToken cancellationToken)
+        public async Task<dynamic> ExecuteHotfixAsync(string name, string fixVersion, bool dryRun, bool skipCache, string environment, int batchSize, int? pageNumber, int? pageSize, Dictionary<string, object> additionalData, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Attempting to execute hotfix: {HotfixName} with fixVersion={FixVersion}, dryRun={DryRun}, environment={Environment}, batchSize={BatchSize}, pageNumber={PageNumber}, pageSize={PageSize}", 
                 name, fixVersion, dryRun, environment, batchSize, pageNumber, pageSize);
@@ -59,6 +59,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 var context = new HotfixExecutionContext
                 {
                     DryRun = dryRun,
+                    SkipCache = skipCache,
                     Environment = environment,
                     BatchSize = batchSize,
                     PageNumber = pageNumber,

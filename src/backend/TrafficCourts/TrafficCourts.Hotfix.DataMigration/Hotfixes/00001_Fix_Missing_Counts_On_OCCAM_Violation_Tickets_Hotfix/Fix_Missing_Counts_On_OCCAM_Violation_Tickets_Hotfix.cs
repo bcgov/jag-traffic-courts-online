@@ -27,7 +27,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             WriteIndented = true,
-            
+
         };
 
         public Fix_Missing_Counts_On_OCCAM_Violation_Tickets_Hotfix(
@@ -51,7 +51,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         public string Description { get; } = "Fixes missing counts on OCCAM violation tickets by searching and updating ticket data.";
 
         public string FixVersion { get; } = "2.13.3";
-        
+
         public string Env { get; } = "production"; // Default environment, can be overridden
 
         // Entity Framework SQLite caching methods
@@ -64,7 +64,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 // Test if database is accessible for writing
                 await context.Database.OpenConnectionAsync(cancellationToken);
                 await context.Database.CloseConnectionAsync();
-                
+
                 // Ensure database and tables are created
                 await context.EnsureDatabaseCreatedAsync();
             }
@@ -88,7 +88,17 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 return new List<OccamDispute>();
             }
 
-            var disputeData = response.Rows;
+            var disputeData = response.Rows.Select(d =>
+            {
+                // Redact PII
+                if (d.disputant_given_1_nm != null) d.disputant_given_1_nm = "<Redacted>";
+                if (d.disputant_given_2_nm != null) d.disputant_given_2_nm = "<Redacted>";
+                if (d.disputant_given_3_nm != null) d.disputant_given_3_nm = "<Redacted>";
+                if (d.disputant_surname_nm != null) d.disputant_surname_nm = "<Redacted>";
+                if (d.email_address_txt != null) d.email_address_txt = "<Redacted>";
+                
+                return d;
+            }).ToList();
 
             // Cache the data
             await CacheDisputeDataAsync(context, disputeData, cancellationToken);
@@ -116,7 +126,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             await context.HotfixOccamDisputes.AddRangeAsync(cacheEntries, cancellationToken);
             await context.SaveChangesAsync(cancellationToken);
 
-            _logger.LogInformation("Cached {Count} dispute records in SQLite database: {DbPath}", 
+            _logger.LogInformation("Cached {Count} dispute records in SQLite database: {DbPath}",
                 disputeData.Count, $"{Name}.db");
         }
 
@@ -127,7 +137,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         /// <param name="timeOfViolation">Time of the violation</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The cached or freshly fetched ticket data as JSON string</returns>
-        private async Task<Ticket?> LoadOrFetchRSITicketDataAsync(string ticketNumber, TimeOnly timeOfViolation, CancellationToken cancellationToken)
+        private async Task<Ticket?> LoadOrFetchRSITicketDataAsync(HotfixExecutionContext requestContext, string ticketNumber, TimeOnly timeOfViolation, CancellationToken cancellationToken)
         {
             await Task.Delay(500, cancellationToken); // Wait for 500 milliseconds
 
@@ -147,25 +157,32 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                     "Please close the database connection in VS Code and retry.", ex);
             }
 
-            // Check if ticket data exists in cache
-            var cachedTicket = await context.HotfixRSITicketSearches
-                .FirstOrDefaultAsync(t => t.TicketNumber == ticketNumber && t.BeforeHotfixDataJson != null, cancellationToken);
-
-            if (cachedTicket != null)
+            if (!requestContext.SkipCache)
             {
-                _logger.LogInformation("Loading RSI ticket data for {TicketNumber} from SQLite cache: {DbPath}",
-                    ticketNumber, $"{Name}.db");
-                return cachedTicket.BeforeHotfixDataJson != null
-                    ? JsonSerializer.Deserialize<Ticket>(cachedTicket.BeforeHotfixDataJson)
-                    : null;
+                // Check if ticket data exists in cache
+                var cachedTicket = await context.HotfixRSITicketSearches
+                    .FirstOrDefaultAsync(t => t.TicketNumber == ticketNumber && t.BeforeHotfixDataJson != null, cancellationToken);
+
+                if (cachedTicket != null)
+                {
+                    _logger.LogInformation("Loading RSI ticket data for {TicketNumber} from SQLite cache: {DbPath}",
+                        ticketNumber, $"{Name}.db");
+                    return cachedTicket.BeforeHotfixDataJson != null
+                        ? JsonSerializer.Deserialize<Ticket>(cachedTicket.BeforeHotfixDataJson)
+                        : null;
+                }
             }
 
             // Fetch fresh data from RSI
             _logger.LogInformation("Fetching fresh RSI ticket data for {TicketNumber} from RSI service", ticketNumber);
-            
+
             try
             {
                 Ticket? rsiTicketData = await _ticketSearchService.SearchAsync(ticketNumber, timeOfViolation, cancellationToken);
+
+                if (rsiTicketData?.Surname != null) rsiTicketData.Surname = "<Redacted>";
+                if (rsiTicketData?.FirstGivenName != null) rsiTicketData.FirstGivenName = "<Redacted>";
+                if (rsiTicketData?.SecondGivenName != null) rsiTicketData.SecondGivenName = "<Redacted>";
                 
                 // Serialize the ticket data to JSON for caching
                 var jsonData = rsiTicketData != null ? JsonSerializer.Serialize(rsiTicketData) : null;
@@ -178,7 +195,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to fetch RSI ticket data for {TicketNumber}", ticketNumber);
-                
+
                 // Cache null result to avoid repeated failed requests
                 await CacheRSITicketDataAsync(context, ticketNumber, null, cancellationToken);
                 return null;
@@ -219,7 +236,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
 
             await context.SaveChangesAsync(cancellationToken);
 
-            _logger.LogInformation("Cached RSI ticket data for {TicketNumber} in SQLite database: {DbPath}", 
+            _logger.LogInformation("Cached RSI ticket data for {TicketNumber} in SQLite database: {DbPath}",
                 ticketNumber, $"{Name}.db");
         }
 
@@ -229,17 +246,17 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         private async Task InitializeAndValidateDatabaseAsync(CancellationToken cancellationToken)
         {
             using var context = new HotfixSqliteContext(Name, Env);
-            
+
             try
             {
                 // Ensure database is created with proper schema
                 await context.EnsureDatabaseCreatedAsync();
-                
+
                 // Test that both tables exist by performing simple queries
                 var disputeCount = await context.HotfixOccamDisputes.CountAsync(cancellationToken);
                 var ticketSearchCount = await context.HotfixRSITicketSearches.CountAsync(cancellationToken);
-                
-                _logger.LogInformation("Database initialized successfully. OccamDisputes: {DisputeCount}, RSITicketSearches: {TicketSearchCount}", 
+
+                _logger.LogInformation("Database initialized successfully. OccamDisputes: {DisputeCount}, RSITicketSearches: {TicketSearchCount}",
                     disputeCount, ticketSearchCount);
             }
             catch (Exception ex)
@@ -260,9 +277,9 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             {
                 _logger.LogInformation("Fetching violation data for ticket {TicketNumber}: {DisputeId} from OCCAM API", ticketNumber, dispute_id);
 
-                
-                var response = await _occamORDSDataServiceClientV1.ViolationTicketGetAsync(null, dispute_id, cancellationToken);
-                if (response == null)
+
+                var violationTicket = await _occamORDSDataServiceClientV1.ViolationTicketGetAsync(null, dispute_id, cancellationToken);
+                if (violationTicket == null)
                 {
                     _logger.LogWarning("No response received for ticket {TicketNumber}", ticketNumber);
                     return null;
@@ -270,11 +287,73 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 else
                 {
                     _logger.LogInformation("Received response for ticket {TicketNumber}", ticketNumber);
-                    
+
+                    // Redact PII fields in the response
+                    if (violationTicket.AddressCityTxt != null) violationTicket.AddressCityTxt = "<Redacted>"; 
+                    if (violationTicket.AddressCountryTxt != null) violationTicket.AddressCountryTxt = "<Redacted>";
+                    if (violationTicket.AddressPostalCodeTxt != null) violationTicket.AddressPostalCodeTxt = "<Redacted>";
+                    if (violationTicket.AddressTxt != null) violationTicket.AddressTxt = "<Redacted>";
+                    if (violationTicket.CourtLocationTxt != null) violationTicket.CourtLocationTxt = "<Redacted>";
+                    if (violationTicket.DisputantBirthDt != null) violationTicket.DisputantBirthDt = "<Redacted>";
+                    if (violationTicket.DisputantDrvLicNumberTxt != null) violationTicket.DisputantDrvLicNumberTxt = "<Redacted>";
+                    if (violationTicket.DisputantGivenNamesTxt != null) violationTicket.DisputantGivenNamesTxt = "<Redacted>";
+                    if (violationTicket.DisputantOrganizationNmTxt != null) violationTicket.DisputantOrganizationNmTxt = "<Redacted>";
+                    if (violationTicket.DisputantSurnameTxt != null) violationTicket.DisputantSurnameTxt = "<Redacted>";
+                    if (violationTicket.DrvLicExpiryYearNo != null) violationTicket.DrvLicExpiryYearNo = "<Redacted>";
+                    if (violationTicket.DrvLicIssuedCountryTxt != null) violationTicket.DrvLicIssuedCountryTxt = "<Redacted>";
+                    if (violationTicket.DrvLicIssuedProvinceTxt != null) violationTicket.DrvLicIssuedProvinceTxt = "<Redacted>";
+                    if (violationTicket.DrvLicIssuedYearNo != null) violationTicket.DrvLicIssuedYearNo = "<Redacted>";
+                    if (violationTicket.Dispute?.AddressCityCtryId != null) violationTicket.Dispute.AddressCityCtryId = "<Redacted>";
+                    if (violationTicket.Dispute?.AddressCitySeqNo != null) violationTicket.Dispute.AddressCitySeqNo = "<Redacted>";
+                    if (violationTicket.Dispute?.AddressCtryId != null) violationTicket.Dispute.AddressCtryId = "<Redacted>";
+                    if (violationTicket.Dispute?.AddressIntlCityTxt != null) violationTicket.Dispute.AddressIntlCityTxt = "<Redacted>";
+                    if (violationTicket.Dispute?.AddressIntlProvTxt != null) violationTicket.Dispute.AddressIntlProvTxt = "<Redacted>";
+                    if (violationTicket.Dispute?.AddressLine1Txt != null) violationTicket.Dispute.AddressLine1Txt = "<Redacted>";
+                    if (violationTicket.Dispute?.AddressLine2Txt != null) violationTicket.Dispute.AddressLine2Txt = "<Redacted>";
+                    if (violationTicket.Dispute?.AddressLine3Txt != null) violationTicket.Dispute.AddressLine3Txt = "<Redacted>";
+                    if (violationTicket.Dispute?.AddressProvCtryId != null) violationTicket.Dispute.AddressProvCtryId = "<Redacted>";
+                    if (violationTicket.Dispute?.AddressProvSeqNo != null) violationTicket.Dispute.AddressProvSeqNo = "<Redacted>";
+                    if (violationTicket.Dispute?.ContactGiven1Nm != null) violationTicket.Dispute.ContactGiven1Nm = "<Redacted>";
+                    if (violationTicket.Dispute?.ContactGiven2Nm != null) violationTicket.Dispute.ContactGiven2Nm = "<Redacted>";
+                    if (violationTicket.Dispute?.ContactGiven3Nm != null) violationTicket.Dispute.ContactGiven3Nm = "<Redacted>";
+                    if (violationTicket.Dispute?.ContactLawFirmNm != null) violationTicket.Dispute.ContactLawFirmNm = "<Redacted>";
+                    if (violationTicket.Dispute?.ContactSurnameNm != null) violationTicket.Dispute.ContactSurnameNm = "<Redacted>";
+                    if (violationTicket.Dispute?.DisputantBirthDt != null) violationTicket.Dispute.DisputantBirthDt = "<Redacted>";
+                    if (violationTicket.Dispute?.DisputantDrvLicNumberTxt != null) violationTicket.Dispute.DisputantDrvLicNumberTxt = "<Redacted>";
+                    if (violationTicket.Dispute?.DisputantGiven1Nm != null) violationTicket.Dispute.DisputantGiven1Nm = "<Redacted>";
+                    if (violationTicket.Dispute?.DisputantGiven2Nm != null) violationTicket.Dispute.DisputantGiven2Nm = "<Redacted>";
+                    if (violationTicket.Dispute?.DisputantGiven3Nm != null) violationTicket.Dispute.DisputantGiven3Nm = "<Redacted>";
+                    if (violationTicket.Dispute?.DisputantOrganizationNm != null) violationTicket.Dispute.DisputantOrganizationNm = "<Redacted>";
+                    if (violationTicket.Dispute?.DisputantSurnameNm != null) violationTicket.Dispute.DisputantSurnameNm = "<Redacted>";
+                    if (violationTicket.Dispute?.DrvLicIssuedCtryId != null) violationTicket.Dispute.DrvLicIssuedCtryId = "<Redacted>";
+                    if (violationTicket.Dispute?.DrvLicIssuedIntlProvTxt != null) violationTicket.Dispute.DrvLicIssuedIntlProvTxt = "<Redacted>";
+                    if (violationTicket.Dispute?.DrvLicIssuedProvSeqNo != null) violationTicket.Dispute.DrvLicIssuedProvSeqNo = "<Redacted>";
+                    if (violationTicket.Dispute?.EmailAddressTxt != null) violationTicket.Dispute.EmailAddressTxt = "<Redacted>";
+                    if (violationTicket.Dispute?.HomePhoneNumberTxt != null) violationTicket.Dispute.HomePhoneNumberTxt = "<Redacted>";
+                    if (violationTicket.Dispute?.LawFirmAddrCityCtryId != null) violationTicket.Dispute.LawFirmAddrCityCtryId = "<Redacted>";
+                    if (violationTicket.Dispute?.LawFirmAddrCitySeqNo != null) violationTicket.Dispute.LawFirmAddrCitySeqNo = "<Redacted>";
+                    if (violationTicket.Dispute?.LawFirmAddrCtryId != null) violationTicket.Dispute.LawFirmAddrCtryId = "<Redacted>";
+                    if (violationTicket.Dispute?.LawFirmAddrIntlCityTxt != null) violationTicket.Dispute.LawFirmAddrIntlCityTxt = "<Redacted>";
+                    if (violationTicket.Dispute?.LawFirmAddrIntlProvTxt != null) violationTicket.Dispute.LawFirmAddrIntlProvTxt = "<Redacted>";
+                    if (violationTicket.Dispute?.LawFirmAddrLine1Txt != null) violationTicket.Dispute.LawFirmAddrLine1Txt = "<Redacted>";
+                    if (violationTicket.Dispute?.LawFirmAddrLine2Txt != null) violationTicket.Dispute.LawFirmAddrLine2Txt = "<Redacted>";
+                    if (violationTicket.Dispute?.LawFirmAddrLine3Txt != null) violationTicket.Dispute.LawFirmAddrLine3Txt = "<Redacted>";
+                    if (violationTicket.Dispute?.LawFirmAddrPostalCodeTxt != null) violationTicket.Dispute.LawFirmAddrPostalCodeTxt = "<Redacted>";
+                    if (violationTicket.Dispute?.LawFirmAddrProvCtryId != null) violationTicket.Dispute.LawFirmAddrProvCtryId = "<Redacted>";
+                    if (violationTicket.Dispute?.LawFirmAddrProvSeqNo != null) violationTicket.Dispute.LawFirmAddrProvSeqNo = "<Redacted>";
+                    if (violationTicket.Dispute?.LawFirmNm != null) violationTicket.Dispute.LawFirmNm = "<Redacted>";
+                    if (violationTicket.Dispute?.LawyerEmailAddressTxt != null) violationTicket.Dispute.LawyerEmailAddressTxt = "<Redacted>";
+                    if (violationTicket.Dispute?.LawyerGiven1Nm != null) violationTicket.Dispute.LawyerGiven1Nm = "<Redacted>";
+                    if (violationTicket.Dispute?.LawyerGiven2Nm != null) violationTicket.Dispute.LawyerGiven2Nm = "<Redacted>";
+                    if (violationTicket.Dispute?.LawyerGiven3Nm != null) violationTicket.Dispute.LawyerGiven3Nm = "<Redacted>";
+                    if (violationTicket.Dispute?.LawyerPhoneNumberTxt != null) violationTicket.Dispute.LawyerPhoneNumberTxt = "<Redacted>";
+                    if (violationTicket.Dispute?.LawyerSurnameNm != null) violationTicket.Dispute.LawyerSurnameNm = "<Redacted>";
+                    if (violationTicket.Dispute?.PostalCodeTxt != null) violationTicket.Dispute.PostalCodeTxt = "<Redacted>";
+
                     // Clean the response to remove additionalProperties
-                    var jsonString = JsonSerializer.Serialize(response, _jsonOptions);
+                    var jsonString = JsonSerializer.Serialize(violationTicket, _jsonOptions);
                     var cleanedResponse = JsonSerializer.Deserialize<ViolationTicket>(jsonString, _jsonOptions);
-                    
+
                     return cleanedResponse;
                 }
             }
@@ -301,7 +380,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         /// <param name="ticketNumber">The ticket number to get violation data for</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The cached or freshly fetched violation data as JSON string</returns>
-        private async Task<ViolationTicket?> LoadOrFetchViolationTicketDataAsync(long dispute_id, string ticketNumber, CancellationToken cancellationToken)
+        private async Task<ViolationTicket?> LoadOrFetchViolationTicketDataAsync(HotfixExecutionContext requestContext, long dispute_id, string ticketNumber, CancellationToken cancellationToken)
         {
             using var context = new HotfixSqliteContext(Name, Env);
 
@@ -319,27 +398,30 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                     "Please close the database connection in VS Code and retry.", ex);
             }
 
-            // Check if violation data exists in cache
-            var cachedViolation = await context.HotfixViolationTickets
-                .FirstOrDefaultAsync(t => t.TicketNumber == ticketNumber, cancellationToken);
-
-            if (cachedViolation != null && cachedViolation.BeforeHotfixDataJson != null)
+            if (!requestContext.SkipCache)
             {
-                _logger.LogInformation("Loading violation data for {TicketNumber} from SQLite cache",
-                    ticketNumber);
-                return cachedViolation.BeforeHotfixDataJson != null
-                    ? Newtonsoft.Json.JsonConvert.DeserializeObject<ViolationTicket>(cachedViolation.BeforeHotfixDataJson, new Newtonsoft.Json.JsonSerializerSettings
-                    {
-                        NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore,
-                        DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore,
-                        ContractResolver = new TolerantContractResolver()
-                    })
-                    : null;
+                // Check if violation data exists in cache
+                var cachedViolation = await context.HotfixViolationTickets
+                    .FirstOrDefaultAsync(t => t.TicketNumber == ticketNumber, cancellationToken);
+
+                if (cachedViolation != null && cachedViolation.BeforeHotfixDataJson != null)
+                {
+                    _logger.LogInformation("Loading violation data for {TicketNumber} from SQLite cache",
+                        ticketNumber);
+                    return cachedViolation.BeforeHotfixDataJson != null
+                        ? Newtonsoft.Json.JsonConvert.DeserializeObject<ViolationTicket>(cachedViolation.BeforeHotfixDataJson, new Newtonsoft.Json.JsonSerializerSettings
+                        {
+                            NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore,
+                            DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore,
+                            ContractResolver = new TolerantContractResolver()
+                        })
+                        : null;
+                }
             }
 
             // Fetch fresh data from violation API
-            _logger.LogInformation("Fetching fresh violation data for {TicketNumber} from violation API", ticketNumber);
-            
+                _logger.LogInformation("Fetching fresh violation data for {TicketNumber} from violation API", ticketNumber);
+
             var violationData = await GetViolationDataAsync(dispute_id, ticketNumber, cancellationToken);
 
             // Cache the data (using a prefixed key to distinguish from RSI data)
@@ -382,7 +464,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
 
             await context.SaveChangesAsync(cancellationToken);
 
-            _logger.LogInformation("Cached violation data for {TicketNumber} in SQLite database: {DbPath}", 
+            _logger.LogInformation("Cached violation data for {TicketNumber} in SQLite database: {DbPath}",
                 ticketNumber, $"{Name}.db");
         }
 
@@ -396,32 +478,32 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         private async Task<ViolationTicket?> UpdateViolationTicketAsync(ViolationTicket correctedViolationTicket, ViolationTicket originalViolationTicket, CancellationToken cancellationToken)
         {
             using var context = new HotfixSqliteContext(Name, Env);
-            
+
             try
             {
                 // Ensure database is accessible
                 await context.EnsureDatabaseCreatedAsync();
-                
+
                 _logger.LogInformation("Updating violation ticket {TicketNumber} in OCCAM database", correctedViolationTicket.TicketNumberTxt);
-                
+
                 _logger.LogInformation("Corrected ViolationTicket JSON: {Json}", JsonSerializer.Serialize(correctedViolationTicket, _jsonOptions));
                 // Call OCCAM API to update the violation ticket
                 var response = await _occamORDSDataServiceClientV1.UpdateViolationTicketAsync(correctedViolationTicket, cancellationToken);
-                
+
                 if (response.Status == "1")
                 {
                     _logger.LogInformation("Successfully updated violation ticket {TicketNumber} in OCCAM", correctedViolationTicket.TicketNumberTxt);
                     _logger.LogDebug("OCCAM update response: {Response}", JsonSerializer.Serialize(response, _jsonOptions));
-                    
+
                     // Cache the update data in SQLite
-                    await CacheViolationTicketUpdateAsync(context, correctedViolationTicket.TicketNumberTxt!, 
+                    await CacheViolationTicketUpdateAsync(context, correctedViolationTicket.TicketNumberTxt!,
                         originalViolationTicket, correctedViolationTicket, cancellationToken);
-                    
+
                     return correctedViolationTicket;
                 }
                 else
                 {
-                    _logger.LogError("Failed to update violation ticket {TicketNumber} in OCCAM. No response received", 
+                    _logger.LogError("Failed to update violation ticket {TicketNumber} in OCCAM. No response received",
                         correctedViolationTicket.TicketNumberTxt);
                     _logger.LogError("Failed: OCCAM update response: {Response}", JsonSerializer.Serialize(response, _jsonOptions));
 
@@ -443,20 +525,20 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         /// <param name="beforeUpdateData">The violation ticket data before update</param>
         /// <param name="correctedViolationTicketUpdateData">The violation ticket data after update</param>
         /// <param name="cancellationToken">Cancellation token</param>
-        private async Task CacheViolationTicketUpdateAsync(HotfixSqliteContext context, string ticketNumber, 
+        private async Task CacheViolationTicketUpdateAsync(HotfixSqliteContext context, string ticketNumber,
             ViolationTicket beforeUpdateData, ViolationTicket correctedViolationTicketUpdateData, CancellationToken cancellationToken)
         {
             // Find existing violation ticket entry
             var existingEntry = await context.HotfixViolationTickets
                 .FirstOrDefaultAsync(t => t.TicketNumber == ticketNumber, cancellationToken);
-            
+
             if (existingEntry != null)
             {
                 // Update existing entry with hotfix update data
                 existingEntry.HotfixUpdateDataJson = JsonSerializer.Serialize(correctedViolationTicketUpdateData);
                 existingEntry.IsHotfixApplied = true;
                 existingEntry.CachedAt = DateTime.UtcNow;
-                
+
                 // Ensure we have the before data
                 if (string.IsNullOrEmpty(existingEntry.BeforeHotfixDataJson))
                 {
@@ -474,13 +556,13 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                     IsHotfixApplied = true,
                     CachedAt = DateTime.UtcNow
                 };
-                
+
                 await context.HotfixViolationTickets.AddAsync(cacheEntry, cancellationToken);
             }
-            
+
             await context.SaveChangesAsync(cancellationToken);
-            
-            _logger.LogInformation("Cached violation ticket update data for {TicketNumber} in SQLite database: {DbPath}", 
+
+            _logger.LogInformation("Cached violation ticket update data for {TicketNumber} in SQLite database: {DbPath}",
                 ticketNumber, $"{Name}.db");
         }
 
@@ -493,41 +575,41 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         /// <param name="expectedUpdateData">The expected violation ticket data after update</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>ValidationResult with detailed validation information</returns>
-        private async Task<ValidationResult> PerformDataIntegrityCheckAsync(long dispute_id, string ticketNumber, ViolationTicket beforeUpdateData, 
+        private async Task<ValidationResult> PerformDataIntegrityCheckAsync(long dispute_id, string ticketNumber, ViolationTicket beforeUpdateData,
             ViolationTicket expectedUpdateData, CancellationToken cancellationToken)
         {
             using var context = new HotfixSqliteContext(Name, Env);
-            
+
             try
             {
                 await context.EnsureDatabaseCreatedAsync();
-                
+
                 _logger.LogInformation("Performing data integrity check for ticket {TicketNumber}", ticketNumber);
-                
+
                 // Fetch fresh data from OCCAM to verify the update
                 var freshViolationData = await GetViolationDataAsync(dispute_id, ticketNumber, cancellationToken);
-                
+
                 if (freshViolationData == null)
                 {
                     var failureReason = "Failed to fetch fresh violation data for integrity check";
                     _logger.LogError("{FailureReason}. Ticket: {TicketNumber}", failureReason, ticketNumber);
-                    
+
                     var failureResult = new ValidationResult
                     {
                         IsValid = false,
                         FailureReason = failureReason
                     };
-                    
+
                     await UpdateIntegrityCheckResultAsync(context, ticketNumber, null, false, failureReason, cancellationToken);
                     return failureResult;
                 }
-                
+
                 // Compare the fresh data with expected data
                 var validationResult = ValidateCountUpdates(beforeUpdateData, expectedUpdateData, freshViolationData);
-                
+
                 // Update the cache with integrity check results
                 await UpdateIntegrityCheckResultAsync(context, ticketNumber, freshViolationData, validationResult.IsValid, validationResult.FailureReason, cancellationToken);
-                
+
                 if (validationResult.IsValid)
                 {
                     _logger.LogInformation("Data integrity check PASSED for ticket {TicketNumber}", ticketNumber);
@@ -535,7 +617,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 else
                 {
                     _logger.LogWarning("Data integrity check FAILED for ticket {TicketNumber}. Reason: {FailureReason}", ticketNumber, validationResult.FailureReason);
-                    
+
                     // Log all validation errors in detail
                     if (validationResult.ValidationErrors.Any())
                     {
@@ -546,20 +628,20 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                         }
                     }
                 }
-                
+
                 return validationResult;
             }
             catch (Exception ex)
             {
                 var failureReason = $"Error performing data integrity check: {ex.Message}";
                 _logger.LogError(ex, "Error performing data integrity check for ticket {TicketNumber}", ticketNumber);
-                
+
                 var exceptionResult = new ValidationResult
                 {
                     IsValid = false,
                     FailureReason = failureReason
                 };
-                
+
                 await UpdateIntegrityCheckResultAsync(context, ticketNumber, null, false, failureReason, cancellationToken);
                 return exceptionResult;
             }
@@ -576,9 +658,9 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         private ValidationResult ValidateCountUpdates(ViolationTicket beforeData, ViolationTicket expectedData, ViolationTicket actualData)
         {
             var result = new ValidationResult { IsValid = true };
-            
+
             _logger.LogInformation("Starting comprehensive data integrity validation");
-            
+
             // Step 1: Validate all top-level ViolationTicket properties remain unchanged
             var propertyValidationResult = ValidateViolationTicketPropertiesUnchanged(beforeData, actualData);
             if (!propertyValidationResult.IsValid)
@@ -587,7 +669,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 result.ValidationErrors.AddRange(propertyValidationResult.ValidationErrors);
                 _logger.LogError("Top-level ViolationTicket properties validation failed");
             }
-            
+
             // Step 2: Validate ViolationTicketCounts collection
             var collectionValidationResult = ValidateViolationTicketCountsCollection(beforeData, expectedData, actualData);
             if (!collectionValidationResult.IsValid)
@@ -596,7 +678,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 result.ValidationErrors.AddRange(collectionValidationResult.ValidationErrors);
                 _logger.LogError("ViolationTicketCounts collection validation failed");
             }
-            
+
             // Step 3: Validate individual count field updates
             var countValidationResult = ValidateIndividualCountUpdates(beforeData, expectedData, actualData);
             if (!countValidationResult.IsValid)
@@ -605,7 +687,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 result.ValidationErrors.AddRange(countValidationResult.ValidationErrors);
                 _logger.LogError("Individual count field validation failed");
             }
-            
+
             if (result.IsValid)
             {
                 _logger.LogInformation("All data integrity validations passed");
@@ -616,7 +698,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 result.FailureReason = string.Join("; ", result.ValidationErrors);
                 _logger.LogError("Data integrity validation failed: {FailureReason}", result.FailureReason);
             }
-            
+
             return result;
         }
 
@@ -626,7 +708,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         private ValidationResult ValidateViolationTicketPropertiesUnchanged(ViolationTicket beforeData, ViolationTicket actualData)
         {
             var result = new ValidationResult { IsValid = true };
-            
+
             // Compare all primitive properties of ViolationTicket (excluding ViolationTicketCounts)
             var propertiesToValidate = new Dictionary<string, (object? before, object? actual)>
             {
@@ -662,7 +744,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 { "EntUserId", (beforeData.EntUserId, actualData.EntUserId) },
                 // Note: UpdDtm and UpdUserId may change during updates, so we don't validate those
             };
-            
+
             foreach (var (propertyName, (before, actual)) in propertiesToValidate)
             {
                 if (!AreValuesEqual(before, actual))
@@ -671,7 +753,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                     result.ValidationErrors.Add($"Property '{propertyName}' changed from '{before}' to '{actual}'");
                 }
             }
-            
+
             // Validate nested Dispute object if it exists
             var disputeValidationErrors = new List<string>();
             if (!ValidateDisputeObjectUnchanged(beforeData.Dispute, actualData.Dispute, disputeValidationErrors))
@@ -679,13 +761,13 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 result.IsValid = false;
                 result.ValidationErrors.AddRange(disputeValidationErrors);
             }
-            
+
             if (!result.IsValid)
             {
-                _logger.LogError("ViolationTicket property validation failed. Violations: {Violations}", 
+                _logger.LogError("ViolationTicket property validation failed. Violations: {Violations}",
                     string.Join("; ", result.ValidationErrors));
             }
-            
+
             return result;
         }
 
@@ -697,18 +779,18 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             // If both are null, that's fine
             if (beforeDispute == null && actualDispute == null)
                 return true;
-                
+
             // If one is null and the other isn't, that's a change
             if (beforeDispute == null || actualDispute == null)
             {
                 violations.Add($"Dispute object nullability changed: before={beforeDispute != null}, actual={actualDispute != null}");
                 return false;
             }
-            
+
             // Use JSON serialization to compare complex objects
             var beforeJson = JsonSerializer.Serialize(beforeDispute, _jsonOptions);
             var actualJson = JsonSerializer.Serialize(actualDispute, _jsonOptions);
-            
+
             if (beforeJson != actualJson)
             {
                 violations.Add("Dispute object content has changed");
@@ -716,7 +798,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 _logger.LogDebug("Dispute object actual: {Actual}", actualJson);
                 return false;
             }
-            
+
             return true;
         }
 
@@ -726,7 +808,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         private ValidationResult ValidateViolationTicketCountsCollection(ViolationTicket beforeData, ViolationTicket expectedData, ViolationTicket actualData)
         {
             var result = new ValidationResult { IsValid = true };
-            
+
             if (beforeData.ViolationTicketCounts == null || expectedData.ViolationTicketCounts == null || actualData.ViolationTicketCounts == null)
             {
                 result.IsValid = false;
@@ -734,30 +816,30 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 _logger.LogWarning("One or more violation ticket counts collections are null during validation");
                 return result;
             }
-            
+
             // Ensure the count of items hasn't changed
             if (beforeData.ViolationTicketCounts.Count != actualData.ViolationTicketCounts.Count)
             {
                 result.IsValid = false;
                 result.ValidationErrors.Add($"ViolationTicketCounts collection count changed: before={beforeData.ViolationTicketCounts.Count}, actual={actualData.ViolationTicketCounts.Count}");
-                _logger.LogError("ViolationTicketCounts collection count changed: before={Before}, actual={Actual}", 
+                _logger.LogError("ViolationTicketCounts collection count changed: before={Before}, actual={Actual}",
                     beforeData.ViolationTicketCounts.Count, actualData.ViolationTicketCounts.Count);
                 return result;
             }
-            
+
             // Ensure all count numbers are still present
             var beforeCountNos = beforeData.ViolationTicketCounts.Select(c => c.CountNo).OrderBy(x => x).ToList();
             var actualCountNos = actualData.ViolationTicketCounts.Select(c => c.CountNo).OrderBy(x => x).ToList();
-            
+
             if (!beforeCountNos.SequenceEqual(actualCountNos))
             {
                 result.IsValid = false;
                 result.ValidationErrors.Add($"ViolationTicketCounts CountNo values changed: before=[{string.Join(",", beforeCountNos)}], actual=[{string.Join(",", actualCountNos)}]");
-                _logger.LogError("ViolationTicketCounts CountNo values changed: before=[{Before}], actual=[{Actual}]", 
+                _logger.LogError("ViolationTicketCounts CountNo values changed: before=[{Before}], actual=[{Actual}]",
                     string.Join(",", beforeCountNos), string.Join(",", actualCountNos));
                 return result;
             }
-            
+
             return result;
         }
 
@@ -767,12 +849,12 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         private ValidationResult ValidateIndividualCountUpdates(ViolationTicket beforeData, ViolationTicket expectedData, ViolationTicket actualData)
         {
             var result = new ValidationResult { IsValid = true };
-            
+
             // Group counts by count number for easier comparison
             var beforeCounts = beforeData.ViolationTicketCounts!.ToDictionary(c => c.CountNo);
             var expectedCounts = expectedData.ViolationTicketCounts!.ToDictionary(c => c.CountNo);
             var actualCounts = actualData.ViolationTicketCounts!.ToDictionary(c => c.CountNo);
-            
+
             foreach (var countNo in beforeCounts.Keys)
             {
                 if (!expectedCounts.ContainsKey(countNo) || !actualCounts.ContainsKey(countNo))
@@ -781,11 +863,11 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                     _logger.LogWarning("Count number {CountNo} missing in expected or actual data", countNo);
                     continue;
                 }
-                
+
                 var beforeCount = beforeCounts[countNo];
                 var expectedCount = expectedCounts[countNo];
                 var actualCount = actualCounts[countNo];
-                
+
                 // Check that only null fields were updated and all other fields remain unchanged
                 var countValidationResult = ValidateCountFieldUpdate(beforeCount, expectedCount, actualCount);
                 if (!countValidationResult.IsValid)
@@ -795,7 +877,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                     _logger.LogWarning("Count {CountNo} failed validation - unexpected field changes detected", countNo);
                 }
             }
-            
+
             return result;
         }
 
@@ -807,14 +889,14 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             // Handle null cases
             if (value1 == null && value2 == null) return true;
             if (value1 == null || value2 == null) return false;
-            
+
             // For DateTime comparisons, handle potential precision differences
             if (value1 is DateTime dt1 && value2 is DateTime dt2)
             {
                 // Compare with millisecond precision to avoid database precision issues
                 return Math.Abs((dt1 - dt2).TotalMilliseconds) < 1;
             }
-            
+
             // For other types, use Equals
             return value1.Equals(value2);
         }
@@ -829,7 +911,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         private ValidationResult ValidateCountFieldUpdate(ViolationTicketCount beforeCount, ViolationTicketCount expectedCount, ViolationTicketCount actualCount)
         {
             var result = new ValidationResult { IsValid = true };
-            
+
             // List of fields that should be validated
             var fieldsToValidate = new Dictionary<string, (object? before, object? expected, object? actual)>
             {
@@ -843,7 +925,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 { "StatSubParagraphTxt", (beforeCount.StatSubParagraphTxt, expectedCount.StatSubParagraphTxt, actualCount.StatSubParagraphTxt) },
                 { "ticketedAmt", (beforeCount.TicketedAmt, expectedCount.TicketedAmt, actualCount.TicketedAmt) }
             };
-            
+
             foreach (var (fieldName, (before, expected, actual)) in fieldsToValidate)
             {
                 // If field was null before and expected to be updated
@@ -855,7 +937,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                         result.IsValid = false;
                         result.ValidationErrors.Add($"Field {fieldName} validation failed. Expected: {expected}, Actual: {actual}");
                         // _logger.LogWarning("Field {FieldName} validation failed. Expected: {Expected}, Actual: {Actual}", 
-                            // fieldName, expected, actual);
+                        // fieldName, expected, actual);
                     }
                 }
                 // If field was not null before, it should not have changed
@@ -866,11 +948,11 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                         result.IsValid = false;
                         result.ValidationErrors.Add($"Field {fieldName} was modified when it shouldn't have been. Before: {before}, Actual: {actual}");
                         // _logger.LogWarning("Field {FieldName} was modified when it shouldn't have been. Before: {Before}, Actual: {Actual}", 
-                            // fieldName, before, actual);
+                        // fieldName, before, actual);
                     }
                 }
             }
-            
+
             return result;
         }
 
@@ -883,12 +965,12 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         /// <param name="integrityCheckPassed">Whether integrity check passed</param>
         /// <param name="failureReason">Reason for failure if integrity check failed</param>
         /// <param name="cancellationToken">Cancellation token</param>
-        private async Task UpdateIntegrityCheckResultAsync(HotfixSqliteContext context, string ticketNumber, 
+        private async Task UpdateIntegrityCheckResultAsync(HotfixSqliteContext context, string ticketNumber,
             ViolationTicket? freshData, bool integrityCheckPassed, string? failureReason, CancellationToken cancellationToken)
         {
             var existingEntry = await context.HotfixViolationTickets
                 .FirstOrDefaultAsync(t => t.TicketNumber == ticketNumber, cancellationToken);
-            
+
             if (existingEntry != null)
             {
                 if (freshData != null)
@@ -898,15 +980,15 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 existingEntry.IsIntegrityCheckPassed = integrityCheckPassed;
                 existingEntry.IntegrityCheckFailureReason = failureReason;
                 existingEntry.CachedAt = DateTime.UtcNow;
-                
+
                 await context.SaveChangesAsync(cancellationToken);
-                
-                _logger.LogInformation("Updated integrity check result for ticket {TicketNumber}: {Result}", 
+
+                _logger.LogInformation("Updated integrity check result for ticket {TicketNumber}: {Result}",
                     ticketNumber, integrityCheckPassed ? "PASSED" : "FAILED");
-                
+
                 if (!integrityCheckPassed && !string.IsNullOrEmpty(failureReason))
                 {
-                    _logger.LogWarning("Integrity check failure reason for ticket {TicketNumber}: {FailureReason}", 
+                    _logger.LogWarning("Integrity check failure reason for ticket {TicketNumber}: {FailureReason}",
                         ticketNumber, failureReason);
                 }
             }
@@ -926,21 +1008,22 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             {
                 // Initialize and validate database schema first
                 await InitializeAndValidateDatabaseAsync(context.CancellationToken);
-                
+
                 var timeZone = "America/Vancouver";
                 TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
 
                 // Cast to the specific request type we expect
                 var disputesRequest = new Dictionary<string, string>();
 
-                DateTime startDate = DateTime.ParseExact("2025-06-25T10:12:00", "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
+                // "2025-06-25T10:12:00" 
+                DateTime startDate = DateTime.ParseExact("2025-04-25T10:12:00", "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
                 startDate = TimeZoneInfo.ConvertTimeToUtc(startDate, tz);
                 disputesRequest.Add("submitted_dt_ge", startDate.ToString("yyyy-MM-ddTHH:mm:ssZ"));
                 // "2025-07-09T10:30:00"
-                DateTime endDate = DateTime.ParseExact("2025-07-09T10:30:00", "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
-                endDate = TimeZoneInfo.ConvertTimeToUtc(endDate, tz); 
+                DateTime endDate = DateTime.ParseExact("2025-06-25T10:30:00", "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
+                endDate = TimeZoneInfo.ConvertTimeToUtc(endDate, tz);
                 disputesRequest.Add("submitted_dt_lt", endDate.ToString("yyyy-MM-ddTHH:mm:ssZ"));
-                
+
                 _logger.LogInformation("Fetching disputes from OCCAM database for date range: {StartDate} to {EndDate}",
                     startDate.ToString("yyyy-MM-ddTHH:mm:ssZ"), endDate.ToString("yyyy-MM-ddTHH:mm:ssZ"));
 
@@ -954,7 +1037,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                     disputesRequest.Add("offset_rows", offset.ToString());
 
                     _logger.LogInformation("fetch_rows: {FetchRows}, offset_rows: {OffsetRows}", disputesRequest["fetch_rows"], disputesRequest["offset_rows"]);
-                }  
+                }
                 else
                 {
                     _logger.LogInformation("No pagination parameters provided, fetching all disputes.");
@@ -978,16 +1061,17 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                     return new { isComplete = false, ticketsToProcess = new List<string>(), results = new List<object>() };
                 }
 
-                var results = new List<object>();
+                var results = new List<dynamic>();
                 var allSqlStatements = new List<string>(); // Collect all SQL statements from all tickets
 
-                foreach (var dispute in disputesToProcess) 
+                foreach (var dispute in disputesToProcess)
                 {
                     if (dispute?.ticket_number_txt == null)
                     {
                         _logger.LogInformation("Ticket number is null, skipping RSI data fetch for dispute {DisputeId}.", dispute?.dispute_id);
-                        results.Add(new { 
-                            isComplete = false, 
+                        results.Add(new
+                        {
+                            isComplete = false,
                             disputeId = dispute?.dispute_id,
                             ticketNumber = dispute?.ticket_number_txt,
                             error = "Ticket number is null"
@@ -998,7 +1082,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                     try
                     {
                         // Step 3: Get Violation ticket with Counts from OCCAM database
-                        var violationTicket = await LoadOrFetchViolationTicketDataAsync(dispute.dispute_id, dispute.ticket_number_txt, context.CancellationToken);
+                        var violationTicket = await LoadOrFetchViolationTicketDataAsync(context, dispute.dispute_id, dispute.ticket_number_txt, context.CancellationToken);
 
                         _logger.LogInformation("Fetched violation data for ticket {TicketNumber}: {Data}",
                             dispute.ticket_number_txt, violationTicket?.Dispute?.DisputeId ?? "No data found");
@@ -1006,11 +1090,12 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                         if (violationTicket == null)
                         {
                             _logger.LogInformation("No violation ticket data found for ticket {TicketNumber}. Skipping update.", dispute.ticket_number_txt);
-                            results.Add(new { 
-                                isComplete = false, 
+                            results.Add(new
+                            {
+                                isComplete = false,
                                 disputeId = dispute.dispute_id,
                                 ticketNumber = dispute.ticket_number_txt,
-                                rsiTicket = (Ticket?)null, 
+                                rsiTicket = (Ticket?)null,
                                 violationTicket = (ViolationTicket?)null,
                                 error = "No violation ticket data found"
                             });
@@ -1028,18 +1113,19 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                         if (issuedTime == null)
                         {
                             _logger.LogInformation("Issued time is null for ticket {TicketNumber}, skipping RSI data fetch.", dispute.ticket_number_txt);
-                            results.Add(new { 
-                                isComplete = false, 
+                            results.Add(new
+                            {
+                                isComplete = false,
                                 disputeId = dispute.dispute_id,
                                 ticketNumber = dispute.ticket_number_txt,
-                                rsiTicket = (Ticket?)null, 
+                                rsiTicket = (Ticket?)null,
                                 violationTicket,
                                 error = "Issued time is null"
                             });
                             continue;
                         }
 
-                        var rsiTicket = await LoadOrFetchRSITicketDataAsync(
+                        var rsiTicket = await LoadOrFetchRSITicketDataAsync(context, 
                             dispute.ticket_number_txt, (TimeOnly)issuedTime, context.CancellationToken);
 
                         _logger.LogInformation("Fetched RSI ticket data for {TicketNumber}: {Data}",
@@ -1048,11 +1134,12 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                         if (rsiTicket == null)
                         {
                             _logger.LogInformation("No RSI ticket data found for ticket {TicketNumber}. Skipping update.", dispute.ticket_number_txt);
-                            results.Add(new { 
-                                isComplete = false, 
+                            results.Add(new
+                            {
+                                isComplete = false,
                                 disputeId = dispute.dispute_id,
                                 ticketNumber = dispute.ticket_number_txt,
-                                rsiTicket = (Ticket?)null, 
+                                rsiTicket = (Ticket?)null,
                                 violationTicket,
                                 error = "No RSI ticket data found"
                             });
@@ -1060,24 +1147,27 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                         }
 
                         _logger.LogInformation("Merging missing count data for ticket {TicketNumber}", dispute.ticket_number_txt);
-                        
+
+                        var compareCounts = CompareCounts(violationTicket, rsiTicket);
+
                         // Merge missing count data from RSI ticket into violation ticket
                         var correctionResult = CorrectMissingCountDataWithSQLGeneration(violationTicket, rsiTicket);
-                        
+
                         // Collect SQL statements from this ticket
                         if (correctionResult.GeneratedSQLStatements.Any())
                         {
                             allSqlStatements.AddRange(correctionResult.GeneratedSQLStatements);
                         }
-                        
+
                         if (correctionResult.CorrectedViolationTicket == null)
                         {
                             _logger.LogInformation("No counts to merge for ticket {TicketNumber}", dispute.ticket_number_txt);
-                            results.Add(new { 
-                                isComplete = false, 
+                            results.Add(new
+                            {
+                                isComplete = false,
                                 disputeId = dispute.dispute_id,
                                 ticketNumber = dispute.ticket_number_txt,
-                                rsiTicket,  
+                                rsiTicket,
                                 correctionResult,
                                 error = "No counts to merge"
                             });
@@ -1092,21 +1182,24 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                         }
 
                         // Add successful result
-                        results.Add(new { 
-                            isComplete = true, 
+                        results.Add(new
+                        {
+                            isComplete = true,
                             disputeId = dispute.dispute_id,
                             ticketNumber = dispute.ticket_number_txt,
-                            rsiTicket, 
-                            correctionResult
+                            rsiTicket,
+                            correctionResult,
+                            compareCounts
                         });
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, "Error processing dispute {DisputeId} with ticket {TicketNumber}", 
+                        _logger.LogError(ex, "Error processing dispute {DisputeId} with ticket {TicketNumber}",
                             dispute.dispute_id, dispute.ticket_number_txt);
-                        
-                        results.Add(new { 
-                            isComplete = false, 
+
+                        results.Add(new
+                        {
+                            isComplete = false,
                             disputeId = dispute.dispute_id,
                             ticketNumber = dispute.ticket_number_txt,
                             error = ex.Message
@@ -1121,21 +1214,22 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                     var pagePrefix = context.PageNumber != null ? $"Page_{context.PageNumber}_" : "";
                     var masterFileName = $"{pagePrefix}Master_Update_Statements_{DateTime.Now:yyyyMMdd_HHmmss}.sql";
                     masterSqlFilePath = await WriteSQLToFileAsync(allSqlStatements, masterFileName);
-                    _logger.LogInformation("Generated master SQL file: {FilePath} with {StatementCount} total UPDATE statements from {TicketCount} tickets", 
+                    _logger.LogInformation("Generated master SQL file: {FilePath} with {StatementCount} total UPDATE statements from {TicketCount} tickets",
                         masterSqlFilePath, allSqlStatements.Count, results.Count);
                 }
 
                 // Return all results after processing all disputes
-                return new { 
-                    isComplete = true, 
+                return new
+                {
+                    isComplete = true,
                     totalProcessed = results.Count,
                     newCount = disputesToProcess.Count(d => d?.dispute_status_type_cd == "NEW"),
                     processingCount = disputesToProcess.Count(d => d?.dispute_status_type_cd == "PROCESSING"),
                     totalSqlStatements = allSqlStatements.Count,
                     masterSqlFilePath,
                     // hasUpdatesCount = results.Select(r => r.correctionResult).Count(cr => cr.hasUpdates),
-                    disputesToProcess, 
-                    results 
+                    disputesToProcess,
+                    results,
                 };
             }
             catch (Exception ex)
@@ -1280,11 +1374,11 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
 
             // Generate file name with timestamp if not provided
             fileName ??= $"Generated_Update_Statements_{DateTime.Now:yyyyMMdd_HHmmss}.sql";
-            
+
             // Use the same directory as the hotfix or a specific output directory
             var outputPath = Path.Combine(Environment.CurrentDirectory, ".local", "GeneratedSQL", Env);
             Directory.CreateDirectory(outputPath);
-            
+
             var fullPath = Path.Combine(outputPath, fileName);
 
             var sqlContent = new StringBuilder();
@@ -1320,7 +1414,7 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
         {
             var result = new CountCorrectionResult();
             var sqlStatements = new List<string>();
-            
+
             if (violationTicket?.ViolationTicketCounts is null || rsiTicket?.Counts is null)
             {
                 _logger.LogWarning("Violation ticket or RSI ticket data is null or contains no counts to merge.");
@@ -1337,7 +1431,7 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
 
             // Create a copy to work with (don't modify the original)
             var correctedViolationTicket = JsonSerializer.Deserialize<ViolationTicket>(originalJson, _jsonOptions);
-            
+
             var rsiCountsByNumber = rsiTicket.Counts.ToDictionary(c => c.Number);
             bool hasUpdates = false;
             int updatedFieldsCount = 0;
@@ -1382,7 +1476,7 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
                         updatedFieldsCount++;
                         updatedFields.Add($"Count {countNumber}: ActOrRegulationNameCd");
                     }
-                    
+
                     if (violationCount.IsActYn == null)
                     {
                         violationCount.IsActYn = rsiCount.IsAct ? "Y" : "N";
@@ -1390,7 +1484,7 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
                         updatedFieldsCount++;
                         updatedFields.Add($"Count {countNumber}: IsActYn");
                     }
-                    
+
                     if (violationCount.IsRegulationYn == null)
                     {
                         violationCount.IsRegulationYn = rsiCount.IsRegulation ? "Y" : "N";
@@ -1398,7 +1492,7 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
                         updatedFieldsCount++;
                         updatedFields.Add($"Count {countNumber}: IsRegulationYn");
                     }
-                    
+
                     if (violationCount.StatSectionTxt == null && rsiCount.Section != null && rsiCount.Section != "")
                     {
                         violationCount.StatSectionTxt = rsiCount.Section;
@@ -1406,7 +1500,7 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
                         updatedFieldsCount++;
                         updatedFields.Add($"Count {countNumber}: StatSectionTxt");
                     }
-                    
+
                     if (violationCount.StatSubSectionTxt == null && rsiCount.Subsection != null && rsiCount.Subsection != "")
                     {
                         violationCount.StatSubSectionTxt = rsiCount.Subsection;
@@ -1414,7 +1508,7 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
                         updatedFieldsCount++;
                         updatedFields.Add($"Count {countNumber}: StatSubSectionTxt");
                     }
-                    
+
                     if (violationCount.StatParagraphTxt == null && rsiCount.Paragraph != null && rsiCount.Paragraph != "")
                     {
                         violationCount.StatParagraphTxt = rsiCount.Paragraph;
@@ -1422,7 +1516,7 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
                         updatedFieldsCount++;
                         updatedFields.Add($"Count {countNumber}: StatParagraphTxt");
                     }
-                    
+
                     if (violationCount.StatSubParagraphTxt == null && rsiCount.Subparagraph != null && rsiCount.Subparagraph != "")
                     {
                         violationCount.StatSubParagraphTxt = rsiCount.Subparagraph;
@@ -1430,7 +1524,7 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
                         updatedFieldsCount++;
                         updatedFields.Add($"Count {countNumber}: StatSubParagraphTxt");
                     }
-                    
+
                     // Update TicketedAmt if it is null and RSI has a value
                     if (violationCount.TicketedAmt == null)
                     {
@@ -1472,9 +1566,9 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
 
             if (hasUpdates)
             {
-                _logger.LogInformation("Updated {UpdatedFieldsCount} fields for ticket {TicketNumber}. Fields: {UpdatedFields}", 
+                _logger.LogInformation("Updated {UpdatedFieldsCount} fields for ticket {TicketNumber}. Fields: {UpdatedFields}",
                     updatedFieldsCount, correctedViolationTicket.TicketNumberTxt, string.Join(", ", updatedFields));
-                _logger.LogInformation("Generated {SQLCount} SQL statements for ticket {TicketNumber}", 
+                _logger.LogInformation("Generated {SQLCount} SQL statements for ticket {TicketNumber}",
                     sqlStatements.Count, correctedViolationTicket.TicketNumberTxt);
             }
             else
@@ -1483,6 +1577,10 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
             }
 
             return result;
+        }
+
+        private bool CompareCounts(ViolationTicket? violationTicket, Ticket? rsiTicket) {
+            return violationTicket?.ViolationTicketCounts?.Count == rsiTicket?.Counts?.Count;
         }
     }
 

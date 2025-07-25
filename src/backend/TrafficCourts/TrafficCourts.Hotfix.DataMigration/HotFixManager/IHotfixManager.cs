@@ -29,7 +29,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         /// <param name="additionalData">Additional hotfix-specific parameters as key-value pairs</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The result of the hotfix execution</returns>
-        Task<dynamic> ExecuteHotfixAsync(string name, string fixVersion, bool dryRun, string environment, int batchSize, int? pageNumber, int? pageSize, Dictionary<string, object> additionalData, CancellationToken cancellationToken);
+        Task<dynamic> ExecuteHotfixAsync(string name, string fixVersion, bool dryRun, bool skipCache, string environment, int batchSize, int? pageNumber, int? pageSize, Dictionary<string, object> additionalData, CancellationToken cancellationToken);
 
         /// <summary>
         /// Gets the list of hotfix names
