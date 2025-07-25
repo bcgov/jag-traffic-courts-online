@@ -10,7 +10,7 @@ public class OccamDisputeListingParameters : IPagable, ISortable
     /// <summary>
     /// The status to exclude
     /// </summary>
-    [FromQuery(Name = "time_zone")]
+    [FromHeader(Name = "X-Timezone")]
     public string? TimeZone { get; set; }
 
     /// <summary>

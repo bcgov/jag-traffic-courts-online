@@ -29,6 +29,10 @@ public static class DateTimeExtensions
         ArgumentNullException.ThrowIfNull(timeZone);
         dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
 
-        return TimeZoneInfo.ConvertTime(dateTime, timeZone);
+        dateTime = TimeZoneInfo.ConvertTime(dateTime, timeZone);
+
+        // Ensure the DateTime is treated as Unspecified to avoid issues with serialization and comparisons
+        dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Unspecified);
+        return dateTime;
     }
 }
