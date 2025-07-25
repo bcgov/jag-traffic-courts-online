@@ -124,7 +124,7 @@ public partial class JJController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
     public async Task<IActionResult> SearchDisputesAsync(
-        string time_zone,
+        [FromHeader(Name = "X-Timezone")] string time_zone,
         bool? appearances,
         bool? notice_of_hearing_yn,
         bool? multiple_officers_yn,
@@ -148,6 +148,11 @@ public partial class JJController : StaffControllerBase
         int? page_size,
         CancellationToken cancellationToken)
     {
+        if (!ValidateTimeZone(time_zone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
+        {
+            return validationResult; // Return BadRequest if validation fails
+        }
+
         Request request = new Request
         {
             appearances = appearances,
@@ -171,7 +176,7 @@ public partial class JJController : StaffControllerBase
             sort_by = sort_by,
             page_number = page_number,
             page_size = page_size,
-            
+            time_zone = timeZoneInfo
         };
 
         try

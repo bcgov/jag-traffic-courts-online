@@ -121,7 +121,9 @@ public class Handler : IRequestHandler<Request, Response>
 
     private void AddWhere(Dictionary<string, string> parameters, Request request)
     {
-        AddUtcDateRangeFilter(parameters, "submitted_dt", request.Parameters.TimeZone, request.Parameters.From, request.Parameters.Thru);
+        var timeZone = TimeZoneInfo.FindSystemTimeZoneById(request.Parameters.TimeZone);
+
+        AddUtcDateRangeFilter(parameters, "submitted_dt", timeZone, request.Parameters.From, request.Parameters.Thru);
         AddStartFilter(parameters, "ticket_number_txt", request.Parameters.TicketNumber);
         AddStartFilter(parameters, "upper_disputant_surname_nm", request.Parameters.Surname?.ToUpper(), false);
 
@@ -155,21 +157,18 @@ public class Handler : IRequestHandler<Request, Response>
         parameters.Add($"{field}_like", $"{value}%");
     }
 
-    private void AddUtcDateRangeFilter(Dictionary<string, string> parameters, string field, string? timeZone, string? from, string? thru)
+    private void AddUtcDateRangeFilter(Dictionary<string, string> parameters, string field, TimeZoneInfo timeZone, string? from, string? thru)
     {
         if (from is null && thru is null)
         {
             return;
         }
 
-        timeZone = timeZone ?? "America/Vancouver";
-        TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
-
         // convert the from/thru to UTC
         if (from is not null)
         {
             DateTime date = DateTime.ParseExact(from, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            date = TimeZoneInfo.ConvertTimeToUtc(date, tz);
+            date = TimeZoneInfo.ConvertTimeToUtc(date, timeZone);
             parameters.Add($"{field}_ge", date.ToString("yyyy-MM-ddTHH:mm:ssZ"));
         }
 
@@ -178,7 +177,7 @@ public class Handler : IRequestHandler<Request, Response>
             // bump the date by one and search for less than the next day
             DateTime date = DateTime.ParseExact(thru, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             date = date.AddDays(1);
-            date = TimeZoneInfo.ConvertTimeToUtc(date, tz);
+            date = TimeZoneInfo.ConvertTimeToUtc(date, timeZone);
             parameters.Add($"{field}_lt", date.ToString("yyyy-MM-ddTHH:mm:ssZ"));
         }
     }
