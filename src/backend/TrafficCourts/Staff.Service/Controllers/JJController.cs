@@ -213,6 +213,9 @@ public partial class JJController : StaffControllerBase
     /// <response code="403">Forbidden, requires jj-dispute:read permission.</response>
     /// <response code="409">The JJDispute has already been assigned to a user. JJDispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
+#if DEBUG
+    [AllowAnonymous]
+#endif
     [HttpGet("{jjDisputeId}")]
     [ProducesResponseType(typeof(JJDispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
