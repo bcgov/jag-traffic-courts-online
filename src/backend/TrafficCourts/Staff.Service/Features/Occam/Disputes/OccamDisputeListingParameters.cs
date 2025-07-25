@@ -11,7 +11,9 @@ public class OccamDisputeListingParameters : IPagable, ISortable
     /// The status to exclude
     /// </summary>
     [FromHeader(Name = "X-Timezone")]
-    public string? TimeZone { get; set; }
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+    public string TimeZone { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
     /// <summary>
     /// The status to exclude

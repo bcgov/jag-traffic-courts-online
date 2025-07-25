@@ -27,8 +27,7 @@ public class Handler : IRequestHandler<Request, Response>
 
             var pagedCollection = await _repository.GetListAsync(parameters, cancellationToken);
 
-            var timeZone = TimeZoneInfo.FindSystemTimeZoneById(request.time_zone ?? "America/Vancouver");
-            var response = CreateResponse(pagedCollection, timeZone);
+            var response = CreateResponse(pagedCollection, request.time_zone);
 
             return response;
         }
@@ -198,21 +197,18 @@ public class Handler : IRequestHandler<Request, Response>
 
     }
 
-    private void AddUtcDateRangeFilter(Dictionary<string, string> parameters, string field, string? timeZone, string? from, string? thru)
+    private void AddUtcDateRangeFilter(Dictionary<string, string> parameters, string field, TimeZoneInfo timeZone, string? from, string? thru)
     {
         if (from is null && thru is null)
         {
             return;
         }
 
-        timeZone = timeZone ?? "America/Vancouver";
-        TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
-
         // convert the from/thru to UTC
         if (from is not null)
         {
             DateTime date = DateTime.ParseExact(from, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            date = TimeZoneInfo.ConvertTimeToUtc(date, tz);
+            date = TimeZoneInfo.ConvertTimeToUtc(date, timeZone);
             parameters.Add($"{field}_ge", date.ToString("yyyy-MM-ddTHH:mm:ss"));
         }
 
@@ -221,7 +217,7 @@ public class Handler : IRequestHandler<Request, Response>
             // bump the date by one and search for less than the next day
             DateTime date = DateTime.ParseExact(thru, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             date = date.AddDays(1);
-            date = TimeZoneInfo.ConvertTimeToUtc(date, tz);
+            date = TimeZoneInfo.ConvertTimeToUtc(date, timeZone);
             parameters.Add($"{field}_lt", date.ToString("yyyy-MM-ddTHH:mm:ss"));
         }
     }
