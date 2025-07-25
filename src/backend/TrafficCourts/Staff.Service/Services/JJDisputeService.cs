@@ -633,6 +633,7 @@ public partial class JJDisputeService : IJJDisputeService
     {
         record.JjDecisionDate = record.JjDecisionDate.UtcToLocalTime(timeZone);
         record.SubmittedTs = record.SubmittedTs.UtcToLocalTime(timeZone);
+        record.VtcAssignedTs = record.VtcAssignedTs.UtcToLocalTime(timeZone);
     }
 
     [LoggerMessage(EventId = 0, Level = LogLevel.Warning, EventName = "UserAssignedToTicketHasNoPartId", Message = "User assigned to ticket has no PartId attribute in Keycloak")]
