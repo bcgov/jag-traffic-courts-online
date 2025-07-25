@@ -104,6 +104,8 @@ public partial class TicketSearchService : ITicketSearchService
             count.AmountDue = invoice.AmountDue;
             count.DiscountAmount = GetDiscountAmount(invoice);
 
+            if (count.Act == null && !string.IsNullOrEmpty(invoice.Act)) count.Act = invoice.Act;
+
             // 
             if (string.IsNullOrEmpty(invoice.Section) || !LegalSection.TryParse(invoice.Section, out LegalSection? legalSection))
             {
