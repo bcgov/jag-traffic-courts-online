@@ -39,6 +39,10 @@ TestResult.xml
 
 # Docker Environment Files
 .env
+.env.test
+.env.local
+.env.development
+.env.production
 docker-compose.override.yml
 
 # code coverage files
