@@ -9,19 +9,18 @@ namespace TrafficCourts.Staff.Service.Services;
 public class FileHistoryService : IFileHistoryService
 {
     private readonly IOracleDataApiService _oracleDataApi;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public FileHistoryService(
-        IOracleDataApiService oracleDataApi,
-        IHttpContextAccessor httpContextAccessor,
-        ILogger<FileHistoryService> logger)
+    public FileHistoryService(IOracleDataApiService oracleDataApi)
     {
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
-        _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
     }
 
-    public async Task<ICollection<FileHistory>> GetFileHistoryForTicketAsync(String ticketNumber, CancellationToken cancellationToken)
+    public async Task<ICollection<FileHistory>> GetFileHistoryForTicketAsync(string ticketNumber, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
-        return await _oracleDataApi.GetFileHistoryByTicketNumberAsync(ticketNumber, cancellationToken);
+        ArgumentNullException.ThrowIfNull(timeZone);
+
+        var history = await _oracleDataApi.GetFileHistoryByTicketNumberAsync(ticketNumber, cancellationToken);
+
+        return history;
     }
 }

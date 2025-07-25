@@ -8,7 +8,6 @@ namespace TrafficCourts.Staff.Service.Models;
 /// </summary>
 public class DisputeWithUpdates
 {
-
     /// <summary>
     /// ID
     /// </summary>
@@ -25,7 +24,7 @@ public class DisputeWithUpdates
     /// Timestamp that disputant submitted the notice of dispute
     /// </summary>
     [JsonPropertyName("submittedTs")]
-    public System.DateTimeOffset? SubmittedTs { get; set; }
+    public DateTime? SubmittedTs { get; set; }
 
     /// <summary>
     /// Disputant Surname
@@ -67,7 +66,7 @@ public class DisputeWithUpdates
     /// Timestamp that VTC Staff was assigned to dispute
     /// </summary>
     [JsonPropertyName("userAssignedTs")]
-    public System.DateTimeOffset? UserAssignedTs { get; set; }
+    public DateTime? UserAssignedTs { get; set; }
 
     /// <summary>
     /// Whether or Not there is a pending request for an adjournment from the Disputant
@@ -85,7 +84,7 @@ public class DisputeWithUpdates
     /// Date of next upcoming hearing (if there is one)
     /// </summary>
     [JsonPropertyName("hearingDate")]
-    public DateTimeOffset? HearingDate { get; set; }
+    public DateTime? HearingDate { get; set; }
 
     /// <summary>
     /// Email address

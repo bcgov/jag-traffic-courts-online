@@ -1,5 +1,4 @@
-﻿
-namespace TrafficCourts;
+﻿namespace TrafficCourts;
 
 /// <summary>
 /// Provides extension to <see cref="IClock"/>.
@@ -16,5 +15,24 @@ public static class ClockExtensions
         ArgumentNullException.ThrowIfNull(clock);
         DateTimeOffset pacificTime = TimeZoneInfo.ConvertTime(clock.GetUtcNow(), _vancouver);
         return pacificTime;
+    }
+
+    /// <summary>
+    /// Converts a <see cref="DateTime"/> to the specified time zone. The <paramref name="dateTime"/> will be treated as UTC.
+    /// </summary>
+    /// <param name="dateTime"></param>
+    /// <param name="timeZone"></param>
+    /// <returns></returns>
+    public static DateTime? UtcToLocalTime(this DateTime? dateTime, TimeZoneInfo timeZone)
+    {
+        if (dateTime == null)
+        {
+            return null;
+        }
+
+        ArgumentNullException.ThrowIfNull(timeZone);
+        dateTime = DateTime.SpecifyKind(dateTime.Value, DateTimeKind.Utc);
+
+        return TimeZoneInfo.ConvertTime(dateTime.Value, timeZone);
     }
 }
