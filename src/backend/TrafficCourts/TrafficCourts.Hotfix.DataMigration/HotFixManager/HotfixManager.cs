@@ -28,13 +28,12 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
 
         public async Task<dynamic> ExecuteHotfixAsync(string name, string fixVersion, bool dryRun, bool skipCache, string environment, int batchSize, int? pageNumber, int? pageSize, Dictionary<string, object> additionalData, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Attempting to execute hotfix: {HotfixName} with fixVersion={FixVersion}, dryRun={DryRun}, environment={Environment}, batchSize={BatchSize}, pageNumber={PageNumber}, pageSize={PageSize}", 
-                name, fixVersion, dryRun, environment, batchSize, pageNumber, pageSize);
+            _logger.LogInformation("Attempting to execute hotfix");
 
             var hotfix = GetHotfixByName(name);
             if (hotfix == null)
             {
-                var errorMessage = $"Hotfix '{name}' not found.";
+                var errorMessage = "Hotfix not found.";
                 _logger.LogWarning(errorMessage);
                 throw new InvalidOperationException(errorMessage);
             }
@@ -42,7 +41,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             // Validate fix version matches the hotfix version
             if (!hotfix.FixVersion.Equals(fixVersion, StringComparison.OrdinalIgnoreCase))
             {
-                var errorMessage = $"Fix version mismatch for hotfix '{name}'. Expected: {hotfix.FixVersion}, Provided: {fixVersion}.";
+                var errorMessage = "Fix version mismatch for hotfix";
                 _logger.LogWarning(errorMessage);
                 throw new InvalidOperationException(errorMessage);
             }
@@ -52,8 +51,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 // Log additional data if present
                 if (additionalData.Any())
                 {
-                    _logger.LogInformation("Additional data provided: {AdditionalData}", 
-                        string.Join(", ", additionalData.Select(kv => $"{kv.Key}={kv.Value}")));
+                    _logger.LogInformation("Additional data provided");
                 }
 
                 var context = new HotfixExecutionContext
@@ -69,16 +67,15 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 };
 
                 var result = await hotfix.ExecuteAsync(context);
-                _logger.LogInformation("Hotfix execution completed for {HotfixName} version {FixVersion}", name, fixVersion);
+                _logger.LogInformation("Hotfix execution completed.");
                 return result;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to execute hotfix: {HotfixName} version {FixVersion}", name, fixVersion);
+                _logger.LogError(ex, "Failed to execute hotfix");
                 throw;
             }
         }
-
         public List<string> GetHotfixNames()
         {
             return _hotfixes.Select(h => h.Name).OrderBy(name => name).ToList();

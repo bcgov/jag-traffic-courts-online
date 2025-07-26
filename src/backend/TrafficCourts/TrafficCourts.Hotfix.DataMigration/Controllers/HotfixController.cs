@@ -36,8 +36,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Controllers
             [FromBody] Dictionary<string, object>? additionalData = null,
             CancellationToken cancellationToken = default)
         {
-            _logger.LogInformation("Running Hotfix: {HotfixName} with fixVersion={FixVersion}, dryRun={DryRun}, environment={Environment}, batchSize={BatchSize}", 
-                HotfixName, fixVersion, dryRun, environment, batchSize);
+            _logger.LogInformation("Running Hotfix:");
 
             try
             {
@@ -58,12 +57,12 @@ namespace TrafficCourts.Hotfix.DataMigration.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                _logger.LogWarning("Hotfix {HotfixName} is not recognized.", HotfixName);
+                _logger.LogWarning("Hotfix is not recognized.");
                 return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error running Hotfix: {HotfixName}", HotfixName);
+                _logger.LogError(ex, "Error running Hotfix:");
                 return StatusCode(500, $"Error running Hotfix {HotfixName}: {ex.Message}");
             }
         }

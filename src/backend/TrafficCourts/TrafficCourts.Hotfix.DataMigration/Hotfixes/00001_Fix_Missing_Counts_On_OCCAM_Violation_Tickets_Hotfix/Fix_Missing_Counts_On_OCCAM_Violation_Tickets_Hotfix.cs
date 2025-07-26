@@ -52,7 +52,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
 
         public string FixVersion { get; } = "2.13.3";
 
-        public string Env { get; } = "production"; // Default environment, can be overridden
+        public string Env { get; } = "dev"; // Default environment, can be overridden
 
         // Entity Framework SQLite caching methods
         private async Task<List<OccamDispute>> LoadOrFetchDisputeDataAsync(Dictionary<string, string> disputesRequest, CancellationToken cancellationToken)
@@ -1001,8 +1001,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         // Implementation of IHotfix interface
         public async Task<dynamic> ExecuteAsync(HotfixExecutionContext context)
         {
-            _logger.LogInformation("Starting execution of hotfix: {HotfixName} with DryRun={DryRun}, Environment={Environment}",
-                Name, context.DryRun, context.Environment);
+            _logger.LogInformation("Starting execution of hotfix");
 
             try
             {
@@ -1016,11 +1015,11 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 var disputesRequest = new Dictionary<string, string>();
 
                 // "2025-06-25T10:12:00" 
-                DateTime startDate = DateTime.ParseExact("2025-04-25T10:12:00", "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
+                DateTime startDate = DateTime.ParseExact("2025-06-25T10:12:00", "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
                 startDate = TimeZoneInfo.ConvertTimeToUtc(startDate, tz);
                 disputesRequest.Add("submitted_dt_ge", startDate.ToString("yyyy-MM-ddTHH:mm:ssZ"));
                 // "2025-07-09T10:30:00"
-                DateTime endDate = DateTime.ParseExact("2025-06-25T10:30:00", "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
+                DateTime endDate = DateTime.ParseExact("2025-07-27T10:30:00", "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
                 endDate = TimeZoneInfo.ConvertTimeToUtc(endDate, tz);
                 disputesRequest.Add("submitted_dt_lt", endDate.ToString("yyyy-MM-ddTHH:mm:ssZ"));
 
@@ -1062,6 +1061,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 }
 
                 var results = new List<dynamic>();
+                var errors = new List<string>();
                 var allSqlStatements = new List<string>(); // Collect all SQL statements from all tickets
 
                 foreach (var dispute in disputesToProcess)
@@ -1152,7 +1152,11 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
 
                         // Merge missing count data from RSI ticket into violation ticket
                         var correctionResult = CorrectMissingCountDataWithSQLGeneration(violationTicket, rsiTicket);
-
+                        
+                        if (correctionResult.HasErrors)
+                        {
+                            errors.Add(violationTicket.TicketNumberTxt + ": " + string.Join(", ", correctionResult.RsiCountErrors, correctionResult.ViolationTicketCountErrors));
+                        }
                         // Collect SQL statements from this ticket
                         if (correctionResult.GeneratedSQLStatements.Any())
                         {
@@ -1221,6 +1225,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 // Return all results after processing all disputes
                 return new
                 {
+                    errors,
                     isComplete = true,
                     totalProcessed = results.Count,
                     newCount = disputesToProcess.Count(d => d?.dispute_status_type_cd == "NEW"),
@@ -1288,6 +1293,21 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             /// File path where the generated SQL statements were saved
             /// </summary>
             public string? GeneratedSQLFilePath { get; set; }
+            public bool HasErrors { get; set; } = false;
+            public RSICountErrors RsiCountErrors { get; set; } = new RSICountErrors();
+            public ViolationTicketCountErrors ViolationTicketCountErrors { get; set; } = new ViolationTicketCountErrors();
+        }
+
+        public class RSICountErrors
+        {
+            public bool HasNoCounts { get; set; } = false;
+            public bool HasMissingCounts { get; set; } = false;
+        }
+
+        public class ViolationTicketCountErrors
+        {
+            public bool ViolationTicketCountNumberIsNotInt { get; set; } = false;
+            public bool CountDisputedButDoesNotExistInRSI { get; set; } = false;
         }
 
         /// <summary>
@@ -1421,6 +1441,7 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
                 result.OriginalViolationTicket = violationTicket;
                 result.CorrectedViolationTicket = violationTicket;
                 result.HasUpdates = false;
+                result.HasErrors = true;
                 result.GeneratedSQLStatements = sqlStatements;
                 return result;
             }
@@ -1437,8 +1458,31 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
             int updatedFieldsCount = 0;
             var updatedFields = new List<string>();
 
+            // RSI Ticket counts are the source of truth
+            // Flag if RSI Ticket doesnt have at least one count
+            if (!rsiCountsByNumber.Any())
+            {
+                result.HasErrors = true;
+                result.RsiCountErrors.HasNoCounts = true;
+                result.HasUpdates = false;
+                return result;
+            }                     
+
+            // Flag if RSI Ticket is missing previous counts
+            var rsiCountNumbers = rsiCountsByNumber.Keys.OrderBy(n => n).ToList();
+            for (int i = 0; i < rsiCountNumbers.Count; i++)
+            {
+                if (rsiCountNumbers[i] != i + 1)
+                {
+                    result.HasErrors = true;
+                    result.RsiCountErrors.HasMissingCounts = true;
+                    result.HasUpdates = false;
+                    return result;
+                }
+            }
+
             // Add a header comment for this ticket's SQL statements
-            if (rsiCountsByNumber.Any())
+            if (rsiCountsByNumber.Any() || violationTicket.ViolationTicketCounts.Any())
             {
                 sqlStatements.Add($"-- ========================================");
                 sqlStatements.Add($"-- Ticket: {correctedViolationTicket.TicketNumberTxt}");
@@ -1447,11 +1491,35 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
                 sqlStatements.Add("");
             }
 
+   
             foreach (var violationCount in correctedViolationTicket.ViolationTicketCounts)
             {
                 if (!int.TryParse(violationCount.CountNo, out var countNumber))
                 {
+                    result.HasErrors = true;
+                    result.ViolationTicketCountErrors.ViolationTicketCountNumberIsNotInt = true;
                     continue; // Skip if count number is not a valid integer
+                }
+
+                // If a count exists in the violation ticket but not in the RSI ticket, it should be deleted.
+                if (!rsiCountsByNumber.ContainsKey(countNumber))
+                {
+                    // Check if the violation count is associated with a dispute count.
+                    bool hasDisputeCount = violationCount.DisputeCount != null;
+
+                    if (!hasDisputeCount)
+                    {
+                        // Generate SQL statement to remove count from violation ticket
+                        sqlStatements.Add($"-- Deleting count {countNumber} as it does not exist in RSI ticket and is not disputed.");
+                        sqlStatements.Add($"DELETE FROM occam_violation_ticket_counts WHERE violation_ticket_count_id = {violationCount.ViolationTicketCountId};");
+                        hasUpdates = true;
+                    }
+                    else
+                    {
+                        result.HasErrors = true;
+                        result.ViolationTicketCountErrors.CountDisputedButDoesNotExistInRSI = true;
+                    }
+                    continue; // Continue to the next violation count
                 }
 
                 if (rsiCountsByNumber.TryGetValue(countNumber, out var rsiCount))
