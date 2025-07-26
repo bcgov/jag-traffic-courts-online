@@ -1019,7 +1019,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 startDate = TimeZoneInfo.ConvertTimeToUtc(startDate, tz);
                 disputesRequest.Add("submitted_dt_ge", startDate.ToString("yyyy-MM-ddTHH:mm:ssZ"));
                 // "2025-07-09T10:30:00"
-                DateTime endDate = DateTime.ParseExact("2025-07-27T10:30:00", "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
+                DateTime endDate = DateTime.ParseExact("2025-07-09T10:30:00", "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
                 endDate = TimeZoneInfo.ConvertTimeToUtc(endDate, tz);
                 disputesRequest.Add("submitted_dt_lt", endDate.ToString("yyyy-MM-ddTHH:mm:ssZ"));
 
@@ -1223,19 +1223,43 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 }
 
                 // Return all results after processing all disputes
-                return new
+                var response = new
                 {
+                    pageNumber = context.PageNumber,
+                    pageSize = context.PageSize,
                     errors,
                     isComplete = true,
                     totalProcessed = results.Count,
                     newCount = disputesToProcess.Count(d => d?.dispute_status_type_cd == "NEW"),
-                    processingCount = disputesToProcess.Count(d => d?.dispute_status_type_cd == "PROCESSING"),
+                    processingCount = disputesToProcess.Count(d => d?.dispute_status_type_cd == "PROC"),
+                    validCount = disputesToProcess.Count(d => d?.dispute_status_type_cd == "VALD"),
+                    rejectedCount = disputesToProcess.Count(d => d?.dispute_status_type_cd == "REJ"),
+                    cancelledCount = disputesToProcess.Count(d => d?.dispute_status_type_cd == "CANC"),
+                    concludedCount = disputesToProcess.Count(d => d?.dispute_status_type_cd == "CONC"),
                     totalSqlStatements = allSqlStatements.Count,
                     masterSqlFilePath,
                     // hasUpdatesCount = results.Select(r => r.correctionResult).Count(cr => cr.hasUpdates),
                     disputesToProcess,
                     results,
                 };
+
+                // Write results to a file in .local, Results folder for each env
+                string? resultsFilePath = null;
+                if (results.Any())
+                {
+                    var pagePrefix = context.PageNumber != null ? $"Page_{context.PageNumber}_" : "";
+                    var resultsFileName = $"{pagePrefix}Results_{DateTime.Now:yyyyMMdd_HHmmss}.json";
+                    var resultsOutputPath = Path.Combine(Environment.CurrentDirectory, ".local", "Results", Env);
+                    Directory.CreateDirectory(resultsOutputPath);
+                    resultsFilePath = Path.Combine(resultsOutputPath, resultsFileName);
+
+                    var resultsJson = JsonSerializer.Serialize(response, _jsonOptions);
+                    await File.WriteAllTextAsync(resultsFilePath, resultsJson);
+
+                    _logger.LogInformation("Wrote results to file: {FilePath}", resultsFilePath);
+                }
+
+                return response;
             }
             catch (Exception ex)
             {
@@ -1347,7 +1371,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 return string.Empty; // No updates needed
             }
 
-            var sql = $@"-- Update violation_ticket_count_id: {violationTicketCountId}
+            var sql = $@"-- Update violation_ticket_count_id: {violationTicketCountId}: CountNo:{originalCount.CountNo}
 UPDATE occam_violation_ticket_counts 
 SET {string.Join(",\n    ", setClause)}
 WHERE violation_ticket_count_id = {violationTicketCountId};
