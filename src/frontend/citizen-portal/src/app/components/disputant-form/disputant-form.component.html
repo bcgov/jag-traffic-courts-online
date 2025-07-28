@@ -11,6 +11,7 @@
               }}</mat-error>
             <mat-error *ngIf="form.controls.disputant_surname.hasError('maxlength')">{{ "error.max_length" | translate
               }}30</mat-error>
+            <mat-error *ngIf="form.controls.disputant_surname.hasError('asciiOnly')">{{ "error.ascii_only" | translate }}</mat-error>
           </mat-form-field>
         </div>
         <div class="col-md-6">
@@ -22,6 +23,7 @@
             <mat-error *ngIf="form.controls.disputant_given_names.hasError('maxlength')">{{ "error.max_length" |
               translate
               }}30 per name</mat-error>
+            <mat-error *ngIf="form.controls.disputant_given_names.hasError('asciiOnly')">{{ "error.ascii_only" | translate }}</mat-error>
           </mat-form-field>
         </div>
       </div>
@@ -49,6 +51,7 @@
             }}</mat-error>
           <mat-error *ngIf="form.controls.contact_law_firm_name.hasError('maxlength')">{{ "error.max_length" | translate
             }}200</mat-error>
+          <mat-error *ngIf="form.controls.contact_law_firm_name.hasError('asciiOnly')">{{ "error.ascii_only" | translate }}</mat-error>
         </mat-form-field>
       </div>
     </div>
@@ -63,6 +66,7 @@
             }}30</mat-error>
           <mat-error *ngIf="form.controls.contact_surname.hasError('required')">{{ "error.required" | translate
             }}</mat-error>
+          <mat-error *ngIf="form.controls.contact_surname.hasError('asciiOnly')">{{ "error.ascii_only" | translate }}</mat-error>
         </mat-form-field>
       </div>
       <div class="col-md-6">
@@ -75,6 +79,7 @@
             }}30 each name</mat-error>
           <mat-error *ngIf="form.controls.contact_given_names.hasError('required')">{{ "error.required" | translate
             }}</mat-error>
+          <mat-error *ngIf="form.controls.contact_given_names.hasError('asciiOnly')">{{ "error.ascii_only" | translate }}</mat-error>
         </mat-form-field>
       </div>
     </div>
