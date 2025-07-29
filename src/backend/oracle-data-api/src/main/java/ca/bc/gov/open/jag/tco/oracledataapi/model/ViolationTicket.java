@@ -16,13 +16,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer;
+import ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -129,6 +131,8 @@ public class ViolationTicket extends Auditable<String> {
 	 */
 	@Column
 	@Schema(nullable = true)
+	@JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlySerializer.class)
+	@JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlyDeserializer.class)
 	private Date disputantBirthdate;
 
 	/**
@@ -187,7 +191,8 @@ public class ViolationTicket extends Auditable<String> {
 	 */
 	@Column
 	@Schema(nullable = true)
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(using = DateTimeSerializer.class)
+	@JsonDeserialize(using = DateTimeDeserializer.class)
 	private Date issuedTs;
 
 	/**
