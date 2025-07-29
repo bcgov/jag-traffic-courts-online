@@ -60,8 +60,7 @@ public class JJDisputeRemark extends Auditable<String> {
 	/**
 	 * The timestamp when this remark was made.
 	 */
-	@Column(nullable = false)
-	@Schema(nullable = false)
+	@Column
 	@JsonSerialize(using = DateTimeSerializer.class)
 	@JsonDeserialize(using = DateTimeDeserializer.class)
 	private Date remarksMadeTs;
