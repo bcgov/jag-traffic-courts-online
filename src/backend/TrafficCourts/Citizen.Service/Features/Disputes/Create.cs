@@ -170,7 +170,8 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     submitNoticeOfDispute.NoticeOfDisputeGuid = noticeOfDisputeId;
 
                     // SubmittedTs is UTC, but the DateTime.Kind will be unspecified so not time zone conversion will be done
-                    submitNoticeOfDispute.SubmittedTs = _clock.GetUtcNow().DateTime;
+                    // Ensure the submitted is truncated to the nearest second to match the Oracle Data API
+                    submitNoticeOfDispute.SubmittedTs = _clock.GetUtcNow().DateTime.Truncate();
 
                     if (violationTicket != null)
                     {

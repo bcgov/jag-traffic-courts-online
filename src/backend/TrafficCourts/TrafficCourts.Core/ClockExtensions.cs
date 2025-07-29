@@ -35,4 +35,15 @@ public static class ClockExtensions
 
         return TimeZoneInfo.ConvertTime(dateTime.Value, timeZone);
     }
+
+    /// <summary>
+    /// Truncates a <see cref="DateTime"/> to the nearest second.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static DateTime Truncate(this DateTime value)
+    {
+        // Truncate to the nearest second
+        return new DateTime(value.Year, value.Month, value.Day, value.Hour, value.Minute, value.Second, value.Kind);
+    }
 }
