@@ -13,7 +13,11 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer;
+import ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -53,7 +57,13 @@ public class JJDisputeRemark extends Auditable<String> {
 	@Schema(maxLength = 4000)
 	private String note;
 
-	@Column
+	/**
+	 * The timestamp when this remark was made.
+	 */
+	@Column(nullable = false)
+	@Schema(nullable = false)
+	@JsonSerialize(using = DateTimeSerializer.class)
+	@JsonDeserialize(using = DateTimeDeserializer.class)
 	private Date remarksMadeTs;
 
 	@JsonBackReference
