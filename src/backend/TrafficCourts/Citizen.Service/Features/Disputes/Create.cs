@@ -168,7 +168,9 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                         : DisputeAppearanceLessThan14DaysYn.N;
 
                     submitNoticeOfDispute.NoticeOfDisputeGuid = noticeOfDisputeId;
-                    submitNoticeOfDispute.SubmittedTs = _clock.GetUtcNow().UtcDateTime;
+
+                    // SubmittedTs is UTC, but the DateTime.Kind will be unspecified so not time zone conversion will be done
+                    submitNoticeOfDispute.SubmittedTs = _clock.GetUtcNow().DateTime;
 
                     if (violationTicket != null)
                     {

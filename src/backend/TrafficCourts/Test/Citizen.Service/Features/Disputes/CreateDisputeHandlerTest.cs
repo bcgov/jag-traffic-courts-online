@@ -1,24 +1,33 @@
-﻿using Microsoft.Extensions.Logging;
-using Moq;
+﻿using AutoFixture;
+using AutoMapper;
+using HashidsNet;
 using MassTransit;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Time.Testing;
+using Moq;
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Features.Disputes;
 using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Citizen.Service.Services;
+using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
 using Xunit;
-using AutoMapper;
-using HashidsNet;
-using TrafficCourts.Coms.Client;
-using Microsoft.Extensions.Time.Testing;
-using System.Threading.Tasks;
 
 namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
 {
     public class CreateDisputeHandlerTest
     {
         private readonly Mock<ILogger<Create.Handler>> _loggerMock = new Mock<ILogger<Create.Handler>>();
+
+        private readonly AutoFixture.Fixture _fixture;
+
+        public CreateDisputeHandlerTest()
+        {
+            _fixture = new AutoFixture.Fixture();
+            _fixture.Customizations.Add(new DateOnlySpecimenBuilder());
+        }
 
         [Fact]
         public void constructor_throws_ArgumentNullException_when_passed_null()
@@ -48,28 +57,73 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
             var mockRedisCacheService = new Mock<IRedisCacheService>();
             var objectManagementService = new Mock<IObjectManagementService>();
             var memoryStreamManager = new Mock<IMemoryStreamManager>();
-            var mockAutoMapper = new Mock<IMapper>();
             var mockHashids = new Mock<IHashids>();
-            FakeTimeProvider clock = new FakeTimeProvider(DateTime.UtcNow)
+
+            var mapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new TrafficCourts.Citizen.Service.Mappings.NoticeOfDisputeToMessageContractMappingProfile());
+            }).CreateMapper();
+
+            var now = DateTime.UtcNow;
+
+            FakeTimeProvider clock = new FakeTimeProvider(now)
             {
                 AutoAdvanceAmount = TimeSpan.FromSeconds(1)
             };
 
-            mockAutoMapper.Setup(_ => _.Map<SubmitNoticeOfDispute>(It.IsAny<NoticeOfDispute>())).Returns(new SubmitNoticeOfDispute());
+            mockBus.Setup(bus => 
+                bus.Publish(
+                    It.IsAny<SubmitNoticeOfDispute>(), 
+                    It.IsAny<CancellationToken>()));
 
+            var disputeHandler = new Create.Handler(
+                mockBus.Object,
+                mockRedisCacheService.Object, 
+                objectManagementService.Object,
+                memoryStreamManager.Object, 
+                mapper, 
+                clock, mockHashids.Object, 
+                _loggerMock.Object);
 
-            mockBus.Setup(x => x.Publish(It.IsAny<SubmitNoticeOfDispute>(), It.IsAny<CancellationToken>()));
+            NoticeOfDispute dispute = _fixture.Create<NoticeOfDispute>();
+            dispute.TicketId = $"{Guid.NewGuid()}-l"; // Simulate a looked up ticket
 
-            var disputeHandler = new Create.Handler(mockBus.Object, mockRedisCacheService.Object, objectManagementService.Object, memoryStreamManager.Object, mockAutoMapper.Object, clock, mockHashids.Object, _loggerMock.Object);
+            TrafficCourts.Citizen.Service.Models.Tickets.ViolationTicket violationTicket = _fixture.Create<TrafficCourts.Citizen.Service.Models.Tickets.ViolationTicket>();
+            mockRedisCacheService
+                .Setup(service => service.GetRecordAsync<TrafficCourts.Citizen.Service.Models.Tickets.ViolationTicket>(It.Is<string>(key => key == dispute.TicketId)))
+                .ReturnsAsync(violationTicket);
 
-            NoticeOfDispute dispute = new NoticeOfDispute();
             var request = new Create.Request(dispute);
 
             // Act
             Create.Response response = await disputeHandler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.IsType<Create.Response>(response);
+            Assert.NotNull(response);
+            Assert.Null(response.Exception);
+
+            // Verify that the Publish method was called with the expected parameters
+            mockBus.Verify(bus => bus.Publish(
+                It.Is<SubmitNoticeOfDispute>(message => Is(message, now, dispute, violationTicket)),
+                It.IsAny<CancellationToken>()),
+                Times.Once); // Ensure it was called exactly once
+        }
+
+        private static bool Is(SubmitNoticeOfDispute actual, DateTime now, NoticeOfDispute dispute, TrafficCourts.Citizen.Service.Models.Tickets.ViolationTicket violationTicket)
+        {
+            static bool Is(DateTime? actual, DateTime? expected)
+            {
+                return actual.HasValue && actual.Value.Kind == DateTimeKind.Unspecified && actual.Value == expected;
+            }
+
+            return actual != null &&
+                // verify the dispute information
+                Is(actual.DisputantBirthdate, dispute.DisputantBirthdate) &&
+                Is(actual.IssuedTs, dispute.IssuedTs) &&
+                Is(actual.SubmittedTs, now) &&
+                // verify the ticket information
+                actual.ViolationTicket is not null &&
+                Is(actual.ViolationTicket.IssuedTs, violationTicket.IssuedTs);
         }
     }
 }
