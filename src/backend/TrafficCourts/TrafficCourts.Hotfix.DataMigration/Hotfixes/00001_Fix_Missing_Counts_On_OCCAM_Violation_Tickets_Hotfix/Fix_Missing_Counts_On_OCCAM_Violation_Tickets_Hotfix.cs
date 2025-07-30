@@ -139,7 +139,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         /// <returns>The cached or freshly fetched ticket data as JSON string</returns>
         private async Task<Ticket?> LoadOrFetchRSITicketDataAsync(HotfixExecutionContext requestContext, string ticketNumber, TimeOnly timeOfViolation, CancellationToken cancellationToken)
         {
-            await Task.Delay(500, cancellationToken); // Wait for 500 milliseconds
+            await Task.Delay(1500, cancellationToken); // Wait for 500 milliseconds
 
             using var context = new HotfixSqliteContext(Name, Env);
 
@@ -1043,6 +1043,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                     disputesRequest.Add("fetch_rows", "25"); // Default fetch size if not provided
                 }
 
+                var ticketType = "E";
                 // tickets starting with E 
                 disputesRequest.Add("ticket_number_txt_like", "E%");
                 // tickets starting with S
@@ -1074,7 +1075,11 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                             isComplete = false,
                             disputeId = dispute?.dispute_id,
                             ticketNumber = dispute?.ticket_number_txt,
-                            error = "Ticket number is null"
+                            error = "Ticket number is null",
+                            CorrectionResult = new CountCorrectionResult
+                            {
+                                HasUpdates = false,
+                            }
                         });
                         continue; // Continue to next dispute instead of returning
                     }
@@ -1089,7 +1094,8 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
 
                         if (violationTicket == null)
                         {
-                            _logger.LogInformation("No violation ticket data found for ticket {TicketNumber}. Skipping update.", dispute.ticket_number_txt);
+                            errors.Add(dispute.ticket_number_txt + ": Occam violation ticket data not found");
+                            _logger.LogInformation("Occam violation ticket data not found for ticket {TicketNumber}. Skipping update.", dispute.ticket_number_txt);
                             results.Add(new
                             {
                                 isComplete = false,
@@ -1097,7 +1103,11 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                                 ticketNumber = dispute.ticket_number_txt,
                                 rsiTicket = (Ticket?)null,
                                 violationTicket = (ViolationTicket?)null,
-                                error = "No violation ticket data found"
+                                error = "Occam violation ticket data not found",
+                                CorrectionResult = new CountCorrectionResult
+                                {
+                                    HasUpdates = false,
+                                }
                             });
                             continue;
                         }
@@ -1120,12 +1130,16 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                                 ticketNumber = dispute.ticket_number_txt,
                                 rsiTicket = (Ticket?)null,
                                 violationTicket,
-                                error = "Issued time is null"
+                                error = "Issued time is null",
+                                CorrectionResult = new CountCorrectionResult
+                                {
+                                    HasUpdates = false,
+                                }
                             });
                             continue;
                         }
 
-                        var rsiTicket = await LoadOrFetchRSITicketDataAsync(context, 
+                        var rsiTicket = await LoadOrFetchRSITicketDataAsync(context,
                             dispute.ticket_number_txt, (TimeOnly)issuedTime, context.CancellationToken);
 
                         _logger.LogInformation("Fetched RSI ticket data for {TicketNumber}: {Data}",
@@ -1133,7 +1147,8 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
 
                         if (rsiTicket == null)
                         {
-                            _logger.LogInformation("No RSI ticket data found for ticket {TicketNumber}. Skipping update.", dispute.ticket_number_txt);
+                            errors.Add(dispute.ticket_number_txt + ": RSI ticket data not found");
+                            _logger.LogInformation("RSI ticket data not found for ticket {TicketNumber}. Skipping update.", dispute.ticket_number_txt);
                             results.Add(new
                             {
                                 isComplete = false,
@@ -1141,21 +1156,23 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                                 ticketNumber = dispute.ticket_number_txt,
                                 rsiTicket = (Ticket?)null,
                                 violationTicket,
-                                error = "No RSI ticket data found"
+                                error = "RSI ticket data not found",
+                                CorrectionResult = new CountCorrectionResult
+                                {
+                                    HasUpdates = false,
+                                }
                             });
                             continue;
                         }
 
                         _logger.LogInformation("Merging missing count data for ticket {TicketNumber}", dispute.ticket_number_txt);
 
-                        var compareCounts = CompareCounts(violationTicket, rsiTicket);
-
                         // Merge missing count data from RSI ticket into violation ticket
                         var correctionResult = CorrectMissingCountDataWithSQLGeneration(violationTicket, rsiTicket);
-                        
+
                         if (correctionResult.HasErrors)
                         {
-                            errors.Add(violationTicket.TicketNumberTxt + ": " + string.Join(", ", correctionResult.RsiCountErrors, correctionResult.ViolationTicketCountErrors));
+                            errors.Add(violationTicket.TicketNumberTxt);
                         }
                         // Collect SQL statements from this ticket
                         if (correctionResult.GeneratedSQLStatements.Any())
@@ -1172,8 +1189,8 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                                 disputeId = dispute.dispute_id,
                                 ticketNumber = dispute.ticket_number_txt,
                                 rsiTicket,
-                                correctionResult,
-                                error = "No counts to merge"
+                                error = "No counts to merge",
+                                CorrectionResult = correctionResult
                             });
                             continue;
                         }
@@ -1192,8 +1209,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                             disputeId = dispute.dispute_id,
                             ticketNumber = dispute.ticket_number_txt,
                             rsiTicket,
-                            correctionResult,
-                            compareCounts
+                            CorrectionResult = correctionResult,
                         });
                     }
                     catch (Exception ex)
@@ -1206,7 +1222,11 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                             isComplete = false,
                             disputeId = dispute.dispute_id,
                             ticketNumber = dispute.ticket_number_txt,
-                            error = ex.Message
+                            error = ex.Message,
+                            CorrectionResult = new CountCorrectionResult
+                            {
+                                HasUpdates = false,
+                            }
                         });
                     }
                 }
@@ -1216,7 +1236,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 if (allSqlStatements.Any())
                 {
                     var pagePrefix = context.PageNumber != null ? $"Page_{context.PageNumber}_" : "";
-                    var masterFileName = $"{pagePrefix}Master_Update_Statements_{DateTime.Now:yyyyMMdd_HHmmss}.sql";
+                    var masterFileName = $"{ticketType}_{pagePrefix}Master_Update_Statements_{DateTime.Now:yyyyMMdd_HHmmss}.sql";
                     masterSqlFilePath = await WriteSQLToFileAsync(allSqlStatements, masterFileName);
                     _logger.LogInformation("Generated master SQL file: {FilePath} with {StatementCount} total UPDATE statements from {TicketCount} tickets",
                         masterSqlFilePath, allSqlStatements.Count, results.Count);
@@ -1229,6 +1249,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                     pageSize = context.PageSize,
                     errors,
                     isComplete = true,
+                    hotFixUpdatedTicketsCounts = results.Count(r => r?.CorrectionResult?.HasUpdates == true),
                     totalProcessed = results.Count,
                     newCount = disputesToProcess.Count(d => d?.dispute_status_type_cd == "NEW"),
                     processingCount = disputesToProcess.Count(d => d?.dispute_status_type_cd == "PROC"),
@@ -1248,7 +1269,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 if (results.Any())
                 {
                     var pagePrefix = context.PageNumber != null ? $"Page_{context.PageNumber}_" : "";
-                    var resultsFileName = $"{pagePrefix}Results_{DateTime.Now:yyyyMMdd_HHmmss}.json";
+                    var resultsFileName = $"{ticketType}_{pagePrefix}Results_{DateTime.Now:yyyyMMdd_HHmmss}.json";
                     var resultsOutputPath = Path.Combine(Environment.CurrentDirectory, ".local", "Results", Env);
                     Directory.CreateDirectory(resultsOutputPath);
                     resultsFilePath = Path.Combine(resultsOutputPath, resultsFileName);
@@ -1669,10 +1690,6 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
             }
 
             return result;
-        }
-
-        private bool CompareCounts(ViolationTicket? violationTicket, Ticket? rsiTicket) {
-            return violationTicket?.ViolationTicketCounts?.Count == rsiTicket?.Counts?.Count;
         }
     }
 
