@@ -64,7 +64,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
                 cfg.AddProfile(new TrafficCourts.Citizen.Service.Mappings.NoticeOfDisputeToMessageContractMappingProfile());
             }).CreateMapper();
 
-            var now = DateTime.UtcNow;
+            var now = DateTimeOffset.UtcNow;
 
             FakeTimeProvider clock = new FakeTimeProvider(now)
             {
@@ -104,7 +104,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
 
             // Verify that the Publish method was called with the expected parameters
             mockBus.Verify(bus => bus.Publish(
-                It.Is<SubmitNoticeOfDispute>(message => Is(message, now, dispute, violationTicket)),
+                It.Is<SubmitNoticeOfDispute>(message => Is(message, now.DateTime.Truncate(), dispute, violationTicket)),
                 It.IsAny<CancellationToken>()),
                 Times.Once); // Ensure it was called exactly once
         }

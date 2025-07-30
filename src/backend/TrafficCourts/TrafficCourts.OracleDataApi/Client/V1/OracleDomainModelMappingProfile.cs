@@ -6,6 +6,16 @@ namespace TrafficCourts.OracleDataApi.Client.V1;
 [System.CodeDom.Compiler.GeneratedCode("DomainModelMappingTestGenerator.generate_mapper", "")]
 public class OracleDomainModelMappingProfile : AutoMapper.Profile
 {
+    private static DateTime? DefaultMapping(DateTime? value)
+    {
+        if (value is null || value.Value.Year == default(DateTime).Year)
+        {
+            return null;
+        }
+
+        return value;
+    }
+
     public OracleDomainModelMappingProfile()
     {
         // enumerations
@@ -77,7 +87,10 @@ public class OracleDomainModelMappingProfile : AutoMapper.Profile
         CreateMap<Oracle.Dispute, DomainModel.Dispute>()
             .ForMember(dest => dest.FileData, opt => opt.Ignore())
             .ForMember(dest => dest.IcbcName, opt => opt.Ignore())
-            .ReverseMap();
+            .ForMember(dest => dest.DisputantBirthdate, opt => opt.MapFrom(src => DefaultMapping(src.DisputantBirthdate)))
+            .ReverseMap()
+            .ForMember(dest => dest.DisputantBirthdate, opt => opt.MapFrom(src => DefaultMapping(src.DisputantBirthdate)));
+
         CreateMap<Oracle.DisputeCount, DomainModel.DisputeCount>().ReverseMap();
         CreateMap<Oracle.DisputeListItem, DomainModel.DisputeListItem>().ReverseMap();
         CreateMap<Oracle.DisputeResult, DomainModel.DisputeResult>().ReverseMap();
@@ -98,8 +111,11 @@ public class OracleDomainModelMappingProfile : AutoMapper.Profile
         CreateMap<Oracle.ViolationTicket, DomainModel.ViolationTicket>()
             .ForMember(dest => dest.ViolationTicketImage, opt => opt.Ignore())
             .ForMember(dest => dest.OcrViolationTicket, opt => opt.Ignore())
+            .ForMember(dest => dest.DisputantBirthdate, opt => opt.MapFrom(src => DefaultMapping(src.DisputantBirthdate)))
             .ReverseMap()
-            .ForMember(dest => dest.IssuedTs, src => src.MapFrom(s => s.IssuedTs));
+            .ForMember(dest => dest.IssuedTs, src => src.MapFrom(s => s.IssuedTs))
+            .ForMember(dest => dest.DisputantBirthdate, opt => opt.MapFrom(src => DefaultMapping(src.DisputantBirthdate)));
+
         CreateMap<Oracle.ViolationTicketCount, DomainModel.ViolationTicketCount>().ReverseMap();
 
         // FileResponse does not have a default constructor
