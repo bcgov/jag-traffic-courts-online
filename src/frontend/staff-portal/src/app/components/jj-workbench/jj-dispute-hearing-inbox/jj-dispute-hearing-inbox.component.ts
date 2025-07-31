@@ -87,7 +87,6 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     const params = {
       appearances: true,
       multipleOfficersYn: true,
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       jjAssignedTo: this.jjAssignedToFilter.value,
       disputeStatusCodes: [DisputeStatus.HearingScheduled, DisputeStatus.InProgress, DisputeStatus.Review].join(","),
       hearingTypeCd: HearingType.CourtAppearance,
