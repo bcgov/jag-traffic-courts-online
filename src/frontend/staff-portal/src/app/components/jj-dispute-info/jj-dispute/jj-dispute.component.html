@@ -346,15 +346,19 @@
                 <span>{{ courtAppearanceForm?.value.reason }} </span>
             </span>
             <span class="section-grid-cell">
-              <p class="section-grid-header">APP (P/N/A)</p>
+              <p class="section-grid-header">APP (P/N/A)<span style="color: red;">*</span></p>
               <p class="section-grid-text">
                 <span *ngIf="isViewOnly && !isSSEditMode">{{ courtAppearanceForm?.value.appCd }}</span>
-                <mat-form-field appearance="outline" *ngIf="!isViewOnly || isSSEditMode">
-                  <mat-select formControlName="appCd" (selectionChange)="onUpdateAPPCd()">
+                <mat-form-field appearance="outline" *ngIf="!isViewOnly || isSSEditMode" 
+                  [ngClass]="{'mat-form-field-invalid': courtAppearanceForm.get('appCd')?.invalid && courtAppearanceForm.get('appCd')?.touched}">
+                  <mat-select formControlName="appCd" (selectionChange)="onUpdateAPPCd()" required>
                     <mat-option [value]="RoPApp.P">{{ RoPApp.P }}</mat-option>
                     <mat-option [value]="RoPApp.N">{{ RoPApp.N }}</mat-option>
                     <mat-option [value]="RoPApp.A">{{ RoPApp.A }}</mat-option>
                   </mat-select>
+                  <mat-error *ngIf="courtAppearanceForm.get('appCd')?.hasError('required')">
+                    APP field is required
+                  </mat-error>
                 </mat-form-field>
               </p>
             </span>
