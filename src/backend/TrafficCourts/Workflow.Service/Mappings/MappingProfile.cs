@@ -13,10 +13,8 @@ public class MessageContractToDisputeMappingProfile : Profile
             .ForMember(dest => dest.DriversLicenceIssuedProvinceSeqNo, opt => opt.MapFrom(src => src.DriversLicenceProvinceSeqNo));
         
         CreateMap<Messaging.MessageContracts.DisputeCount, Domain.Models.DisputeCount>();
-        
-        CreateMap<Messaging.MessageContracts.ViolationTicket, Domain.Models.ViolationTicket>()
-            // Automapper can't map from DateOnly -> DateTimeOffset
-            .ForMember(dest => dest.DisputantBirthdate, opt => opt.MapFrom(src => new DateTimeOffset(new DateTime(src.DisputantBirthdate.Year, src.DisputantBirthdate.Month, src.DisputantBirthdate.Day))));
+
+        CreateMap<Messaging.MessageContracts.ViolationTicket, Domain.Models.ViolationTicket>();
         
         CreateMap<Messaging.MessageContracts.TicketCount, Domain.Models.ViolationTicketCount>();
         

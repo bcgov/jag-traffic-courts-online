@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using MediatR;
+using System;
 using System.Security.Claims;
 using System.Text.Json;
 using TrafficCourts.Collections;
@@ -77,18 +78,18 @@ public class DisputeService : IDisputeService,
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<ICollection<DisputeListItem>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken)
-    {
-        List<DisputeListItem> disputes = await GetCachedDisputesAsync(cancellationToken);
+    ////public async Task<ICollection<DisputeListItem>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken)
+    ////{
+    ////    List<DisputeListItem> disputes = await GetCachedDisputesAsync(cancellationToken);
 
-        if (excludeStatus is not null)
-        {
-            GetAllDisputesParameters filter = new() { ExcludeStatus = [excludeStatus.Value] };
-            disputes = disputes.Filter(filter).ToList();
-        }
+    ////    if (excludeStatus is not null)
+    ////    {
+    ////        GetAllDisputesParameters filter = new() { ExcludeStatus = [excludeStatus.Value] };
+    ////        disputes = disputes.Filter(filter).ToList();
+    ////    }
 
-        return disputes;
-    }
+    ////    return disputes;
+    ////}
 
     public async Task<GetDisputeCountResponse> GetDisputeCountAsync(DisputeStatus status, CancellationToken cancellationToken)
     {
@@ -101,8 +102,10 @@ public class DisputeService : IDisputeService,
         return new GetDisputeCountResponse(status, count);
     }
 
-    public async Task<PagedDisputeListItemCollection> GetAllDisputesAsync(GetAllDisputesParameters? parameters, CancellationToken cancellationToken)
+    public async Task<PagedDisputeListItemCollection> GetAllDisputesAsync(GetAllDisputesParameters? parameters, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(timeZone);
+
         var disputes = await GetCachedDisputesAsync(cancellationToken);
 
         // apply default sort if none supplied
@@ -117,6 +120,12 @@ public class DisputeService : IDisputeService,
             .Sort(parameters)
             .Page(parameters, 25);
 
+        foreach (var item in paged)
+        {
+            item.SubmittedTs = item.SubmittedTs.UtcToLocalTime(timeZone);
+            item.JjDecisionDate = item.JjDecisionDate.UtcToLocalTime(timeZone);
+        }
+
         return new PagedDisputeListItemCollection(paged);
     }
 
@@ -125,7 +134,7 @@ public class DisputeService : IDisputeService,
         return await _oracleDataApi.SaveDisputeAsync(dispute, cancellationToken);
     }
 
-    public async Task<Dispute> GetDisputeAsync(GetDisputeOptions options, CancellationToken cancellationToken)
+    public async Task<Dispute> GetDisputeAsync(GetDisputeOptions options, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
         Dispute dispute = await _oracleDataApi.GetDisputeAsync(options.DisputeId, options.Assign, cancellationToken);
 
@@ -137,12 +146,16 @@ public class DisputeService : IDisputeService,
         // wait for them all to complete
         await Task.WhenAll(ocrTask, fileTask, icbcTask);
 
+        dispute.SubmittedTs = dispute.SubmittedTs.UtcToLocalTime(timeZone);
+
         return dispute;
     }
 
-    public async Task<Dispute> UpdateDisputeAsync(long disputeId, ClaimsPrincipal user, string? staffComment, Dispute dispute, CancellationToken cancellationToken)
+    public async Task<Dispute> UpdateDisputeAsync(long disputeId, ClaimsPrincipal user, string? staffComment, Dispute dispute, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
         Dispute updatedDispute = await _oracleDataApi.UpdateDisputeAsync(disputeId, dispute, true, cancellationToken);
+
+        dispute.SubmittedTs = dispute.SubmittedTs.UtcToLocalTime(timeZone);
 
         // Publish file history
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
@@ -341,9 +354,10 @@ public class DisputeService : IDisputeService,
     /// <summary>
     /// Returns a list of all disputes with pending update requests.
     /// </summary>
+    /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ICollection<DisputeWithUpdates>> GetAllDisputesWithPendingUpdateRequestsAsync(CancellationToken cancellationToken)
+    public async Task<ICollection<DisputeWithUpdates>> GetAllDisputesWithPendingUpdateRequestsAsync(TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
         ICollection<Domain.Models.DisputeUpdateRequest> pendingDisputeUpdateRequests = await _oracleDataApi.GetDisputeUpdateRequestsAsync(null, Status.PENDING, cancellationToken);
 
@@ -371,7 +385,7 @@ public class DisputeService : IDisputeService,
                         UserAssignedTs = dispute.UserAssignedTs,
                         Status = dispute.Status,
                         TicketNumber = dispute.TicketNumber,
-                        SubmittedTs = dispute.SubmittedTs,
+                        SubmittedTs = dispute.SubmittedTs.UtcToLocalTime(timeZone),
                         EmailAddress = dispute.EmailAddress,
                         EmailAddressVerified = dispute.EmailAddressVerified
                     };

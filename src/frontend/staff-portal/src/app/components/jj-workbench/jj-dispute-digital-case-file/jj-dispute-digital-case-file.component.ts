@@ -59,7 +59,6 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit {
   getTCODisputes() {
     this.logger.log('JJDisputeDigitalCaseFileComponent::getTCODisputes');
     const params = {
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       submittedFrom: this.filters.dateSubmittedFrom,
       submittedThru: this.filters.dateSubmittedTo,
       ticketNumber: this.filters.ticketNumber ? this.filters.ticketNumber.toUpperCase() : "",

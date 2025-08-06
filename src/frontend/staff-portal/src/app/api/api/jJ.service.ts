@@ -193,13 +193,14 @@ export class JJService {
     /**
      * Returns all JJ Disputes from the Oracle Data API
      * @param jjAssignedTo If specified, will retrieve the records which are assigned to the specified jj staff
+     * @param xTimezone 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjDisputesGet(jjAssignedTo?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<JJDispute>>;
-    public apiJjDisputesGet(jjAssignedTo?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<JJDispute>>>;
-    public apiJjDisputesGet(jjAssignedTo?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<JJDispute>>>;
-    public apiJjDisputesGet(jjAssignedTo?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiJjDisputesGet(jjAssignedTo?: string, xTimezone?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<JJDispute>>;
+    public apiJjDisputesGet(jjAssignedTo?: string, xTimezone?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<JJDispute>>>;
+    public apiJjDisputesGet(jjAssignedTo?: string, xTimezone?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<JJDispute>>>;
+    public apiJjDisputesGet(jjAssignedTo?: string, xTimezone?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (jjAssignedTo !== undefined && jjAssignedTo !== null) {
@@ -208,6 +209,9 @@ export class JJService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required
@@ -262,11 +266,11 @@ export class JJService {
 
     /**
      * 
+     * @param timeZone The callers time zone
      * @param appearances Include appearance fields
      * @param noticeOfHearingYn Include notice of hearing flag.
      * @param multipleOfficersYn Include multiple officers flag
      * @param electronicTicketYn Include electronic ticket flag
-     * @param timeZone The callers time zone
      * @param submittedFrom Disputes sumbitted on or after this date
      * @param submittedThru Disputes sumbitted on or before this date
      * @param ticketNumber 
@@ -287,12 +291,16 @@ export class JJService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjDisputesSearchGet(appearances?: boolean, noticeOfHearingYn?: boolean, multipleOfficersYn?: boolean, electronicTicketYn?: boolean, timeZone?: string, submittedFrom?: string, submittedThru?: string, ticketNumber?: string, surname?: string, surnameOrOrgName?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string, jjDecisionDtThru?: string, disputeStatusCodes?: string, appearanceCourthouseIds?: string, appearanceDtFrom?: string, appearanceDtThru?: string, toBeHeardAtCourthouseIds?: string, hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<PagedDisputeCaseFileSummaryCollection>;
-    public apiJjDisputesSearchGet(appearances?: boolean, noticeOfHearingYn?: boolean, multipleOfficersYn?: boolean, electronicTicketYn?: boolean, timeZone?: string, submittedFrom?: string, submittedThru?: string, ticketNumber?: string, surname?: string, surnameOrOrgName?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string, jjDecisionDtThru?: string, disputeStatusCodes?: string, appearanceCourthouseIds?: string, appearanceDtFrom?: string, appearanceDtThru?: string, toBeHeardAtCourthouseIds?: string, hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<PagedDisputeCaseFileSummaryCollection>>;
-    public apiJjDisputesSearchGet(appearances?: boolean, noticeOfHearingYn?: boolean, multipleOfficersYn?: boolean, electronicTicketYn?: boolean, timeZone?: string, submittedFrom?: string, submittedThru?: string, ticketNumber?: string, surname?: string, surnameOrOrgName?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string, jjDecisionDtThru?: string, disputeStatusCodes?: string, appearanceCourthouseIds?: string, appearanceDtFrom?: string, appearanceDtThru?: string, toBeHeardAtCourthouseIds?: string, hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<PagedDisputeCaseFileSummaryCollection>>;
-    public apiJjDisputesSearchGet(appearances?: boolean, noticeOfHearingYn?: boolean, multipleOfficersYn?: boolean, electronicTicketYn?: boolean, timeZone?: string, submittedFrom?: string, submittedThru?: string, ticketNumber?: string, surname?: string, surnameOrOrgName?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string, jjDecisionDtThru?: string, disputeStatusCodes?: string, appearanceCourthouseIds?: string, appearanceDtFrom?: string, appearanceDtThru?: string, toBeHeardAtCourthouseIds?: string, hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiJjDisputesSearchGet(timeZone?: string, appearances?: boolean, noticeOfHearingYn?: boolean, multipleOfficersYn?: boolean, electronicTicketYn?: boolean, submittedFrom?: string, submittedThru?: string, ticketNumber?: string, surname?: string, surnameOrOrgName?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string, jjDecisionDtThru?: string, disputeStatusCodes?: string, appearanceCourthouseIds?: string, appearanceDtFrom?: string, appearanceDtThru?: string, toBeHeardAtCourthouseIds?: string, hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<PagedDisputeCaseFileSummaryCollection>;
+    public apiJjDisputesSearchGet(timeZone?: string, appearances?: boolean, noticeOfHearingYn?: boolean, multipleOfficersYn?: boolean, electronicTicketYn?: boolean, submittedFrom?: string, submittedThru?: string, ticketNumber?: string, surname?: string, surnameOrOrgName?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string, jjDecisionDtThru?: string, disputeStatusCodes?: string, appearanceCourthouseIds?: string, appearanceDtFrom?: string, appearanceDtThru?: string, toBeHeardAtCourthouseIds?: string, hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<PagedDisputeCaseFileSummaryCollection>>;
+    public apiJjDisputesSearchGet(timeZone?: string, appearances?: boolean, noticeOfHearingYn?: boolean, multipleOfficersYn?: boolean, electronicTicketYn?: boolean, submittedFrom?: string, submittedThru?: string, ticketNumber?: string, surname?: string, surnameOrOrgName?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string, jjDecisionDtThru?: string, disputeStatusCodes?: string, appearanceCourthouseIds?: string, appearanceDtFrom?: string, appearanceDtThru?: string, toBeHeardAtCourthouseIds?: string, hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<PagedDisputeCaseFileSummaryCollection>>;
+    public apiJjDisputesSearchGet(timeZone?: string, appearances?: boolean, noticeOfHearingYn?: boolean, multipleOfficersYn?: boolean, electronicTicketYn?: boolean, submittedFrom?: string, submittedThru?: string, ticketNumber?: string, surname?: string, surnameOrOrgName?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string, jjDecisionDtThru?: string, disputeStatusCodes?: string, appearanceCourthouseIds?: string, appearanceDtFrom?: string, appearanceDtThru?: string, toBeHeardAtCourthouseIds?: string, hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (timeZone !== undefined && timeZone !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>timeZone, 'time_zone');
+        }
         if (appearances !== undefined && appearances !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>appearances, 'appearances');
@@ -308,10 +316,6 @@ export class JJService {
         if (electronicTicketYn !== undefined && electronicTicketYn !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>electronicTicketYn, 'electronic_ticket_yn');
-        }
-        if (timeZone !== undefined && timeZone !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>timeZone, 'time_zone');
         }
         if (submittedFrom !== undefined && submittedFrom !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
@@ -441,13 +445,14 @@ export class JJService {
      * @param ticketNumber Ticket number for a specific JJ dispute record.
      * @param assignVTC boolean to indicate need to assign VTC.
      * @param executeUserLock A flag indicating whether to execute a user lock.
+     * @param xTimezone 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjJjDisputeIdGet(jjDisputeId: number, ticketNumber?: string, assignVTC?: boolean, executeUserLock?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<JJDispute>;
-    public apiJjJjDisputeIdGet(jjDisputeId: number, ticketNumber?: string, assignVTC?: boolean, executeUserLock?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<JJDispute>>;
-    public apiJjJjDisputeIdGet(jjDisputeId: number, ticketNumber?: string, assignVTC?: boolean, executeUserLock?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<JJDispute>>;
-    public apiJjJjDisputeIdGet(jjDisputeId: number, ticketNumber?: string, assignVTC?: boolean, executeUserLock?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiJjJjDisputeIdGet(jjDisputeId: number, ticketNumber?: string, assignVTC?: boolean, executeUserLock?: boolean, xTimezone?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<JJDispute>;
+    public apiJjJjDisputeIdGet(jjDisputeId: number, ticketNumber?: string, assignVTC?: boolean, executeUserLock?: boolean, xTimezone?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<JJDispute>>;
+    public apiJjJjDisputeIdGet(jjDisputeId: number, ticketNumber?: string, assignVTC?: boolean, executeUserLock?: boolean, xTimezone?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<JJDispute>>;
+    public apiJjJjDisputeIdGet(jjDisputeId: number, ticketNumber?: string, assignVTC?: boolean, executeUserLock?: boolean, xTimezone?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (jjDisputeId === null || jjDisputeId === undefined) {
             throw new Error('Required parameter jjDisputeId was null or undefined when calling apiJjJjDisputeIdGet.');
         }
@@ -467,6 +472,9 @@ export class JJService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required
@@ -523,13 +531,14 @@ export class JJService {
      * Updates the status of a particular JJDispute record to ACCEPTED.
      * @param ticketNumber Ticket number for a specific JJ Dispute record.
      * @param checkVTC boolean to indicate need to check VTC assigned.
+     * @param xTimezone 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketNumberAcceptPut(ticketNumber: string, checkVTC?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
-    public apiJjTicketNumberAcceptPut(ticketNumber: string, checkVTC?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
-    public apiJjTicketNumberAcceptPut(ticketNumber: string, checkVTC?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
-    public apiJjTicketNumberAcceptPut(ticketNumber: string, checkVTC?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiJjTicketNumberAcceptPut(ticketNumber: string, checkVTC?: boolean, xTimezone?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiJjTicketNumberAcceptPut(ticketNumber: string, checkVTC?: boolean, xTimezone?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiJjTicketNumberAcceptPut(ticketNumber: string, checkVTC?: boolean, xTimezone?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiJjTicketNumberAcceptPut(ticketNumber: string, checkVTC?: boolean, xTimezone?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberAcceptPut.');
         }
@@ -541,6 +550,9 @@ export class JJService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required
@@ -598,13 +610,14 @@ export class JJService {
      * Updates the status of a particular JJDispute record to CANCELLED.
      * @param ticketNumber Ticket number for a specific JJ Dispute record.
      * @param checkVTC boolean to indicate need to check VTC assigned.
+     * @param xTimezone 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketNumberCancelPut(ticketNumber: string, checkVTC?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
-    public apiJjTicketNumberCancelPut(ticketNumber: string, checkVTC?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
-    public apiJjTicketNumberCancelPut(ticketNumber: string, checkVTC?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
-    public apiJjTicketNumberCancelPut(ticketNumber: string, checkVTC?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiJjTicketNumberCancelPut(ticketNumber: string, checkVTC?: boolean, xTimezone?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiJjTicketNumberCancelPut(ticketNumber: string, checkVTC?: boolean, xTimezone?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiJjTicketNumberCancelPut(ticketNumber: string, checkVTC?: boolean, xTimezone?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiJjTicketNumberCancelPut(ticketNumber: string, checkVTC?: boolean, xTimezone?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberCancelPut.');
         }
@@ -616,6 +629,9 @@ export class JJService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required
@@ -672,19 +688,23 @@ export class JJService {
     /**
      * Updates a single JJ Dispute and related Dispute data.  Must have update-admin permission on the JJDispute resource to use this endpoint.
      * @param ticketNumber Unique identifier for a specific JJ Dispute record.
+     * @param xTimezone 
      * @param jJDispute 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketNumberCascadePut(ticketNumber: string, jJDispute?: JJDispute, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<JJDispute>;
-    public apiJjTicketNumberCascadePut(ticketNumber: string, jJDispute?: JJDispute, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<JJDispute>>;
-    public apiJjTicketNumberCascadePut(ticketNumber: string, jJDispute?: JJDispute, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<JJDispute>>;
-    public apiJjTicketNumberCascadePut(ticketNumber: string, jJDispute?: JJDispute, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiJjTicketNumberCascadePut(ticketNumber: string, xTimezone?: string, jJDispute?: JJDispute, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<JJDispute>;
+    public apiJjTicketNumberCascadePut(ticketNumber: string, xTimezone?: string, jJDispute?: JJDispute, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<JJDispute>>;
+    public apiJjTicketNumberCascadePut(ticketNumber: string, xTimezone?: string, jJDispute?: JJDispute, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<JJDispute>>;
+    public apiJjTicketNumberCascadePut(ticketNumber: string, xTimezone?: string, jJDispute?: JJDispute, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberCascadePut.');
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required
@@ -752,13 +772,14 @@ export class JJService {
      * Updates the status of a particular JJDispute record to CONCLUDED.
      * @param ticketNumber Ticket number for a specific JJ Dispute record.
      * @param checkVTC boolean to indicate need to check VTC assigned.
+     * @param xTimezone 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketNumberConcludePut(ticketNumber: string, checkVTC?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
-    public apiJjTicketNumberConcludePut(ticketNumber: string, checkVTC?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
-    public apiJjTicketNumberConcludePut(ticketNumber: string, checkVTC?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
-    public apiJjTicketNumberConcludePut(ticketNumber: string, checkVTC?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiJjTicketNumberConcludePut(ticketNumber: string, checkVTC?: boolean, xTimezone?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiJjTicketNumberConcludePut(ticketNumber: string, checkVTC?: boolean, xTimezone?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiJjTicketNumberConcludePut(ticketNumber: string, checkVTC?: boolean, xTimezone?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiJjTicketNumberConcludePut(ticketNumber: string, checkVTC?: boolean, xTimezone?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberConcludePut.');
         }
@@ -770,6 +791,9 @@ export class JJService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required
@@ -826,33 +850,29 @@ export class JJService {
     /**
      * Returns generated document. This really should be using the tco_dispute.dispute_id.
      * @param ticketNumber The ticket number to print. This really should be using the tco_dispute.dispute_id
-     * @param timeZone The IANA timze zone id
      * @param type The type of template to generate
+     * @param xTimezone The IANA timze zone id
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketNumberPrintGet(ticketNumber: string, timeZone: string, type?: DcfTemplateType, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream' | 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Blob>;
-    public apiJjTicketNumberPrintGet(ticketNumber: string, timeZone: string, type?: DcfTemplateType, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream' | 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Blob>>;
-    public apiJjTicketNumberPrintGet(ticketNumber: string, timeZone: string, type?: DcfTemplateType, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream' | 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Blob>>;
-    public apiJjTicketNumberPrintGet(ticketNumber: string, timeZone: string, type?: DcfTemplateType, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/octet-stream' | 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiJjTicketNumberPrintGet(ticketNumber: string, type?: DcfTemplateType, xTimezone?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream' | 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Blob>;
+    public apiJjTicketNumberPrintGet(ticketNumber: string, type?: DcfTemplateType, xTimezone?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream' | 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Blob>>;
+    public apiJjTicketNumberPrintGet(ticketNumber: string, type?: DcfTemplateType, xTimezone?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream' | 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Blob>>;
+    public apiJjTicketNumberPrintGet(ticketNumber: string, type?: DcfTemplateType, xTimezone?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/octet-stream' | 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberPrintGet.');
         }
-        if (timeZone === null || timeZone === undefined) {
-            throw new Error('Required parameter timeZone was null or undefined when calling apiJjTicketNumberPrintGet.');
-        }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (timeZone !== undefined && timeZone !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>timeZone, 'timeZone');
-        }
         if (type !== undefined && type !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>type, 'type');
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required
@@ -900,14 +920,15 @@ export class JJService {
      * @param ticketNumber Unique identifier for a specific JJ Dispute record.
      * @param jjDisputeId Unique identifier for a specific JJ Dispute record.
      * @param checkVTC boolean to indicate need to check VTC assigned.
+     * @param xTimezone 
      * @param jJDispute 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketNumberPut(ticketNumber: string, jjDisputeId?: number, checkVTC?: boolean, jJDispute?: JJDispute, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<JJDispute>;
-    public apiJjTicketNumberPut(ticketNumber: string, jjDisputeId?: number, checkVTC?: boolean, jJDispute?: JJDispute, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<JJDispute>>;
-    public apiJjTicketNumberPut(ticketNumber: string, jjDisputeId?: number, checkVTC?: boolean, jJDispute?: JJDispute, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<JJDispute>>;
-    public apiJjTicketNumberPut(ticketNumber: string, jjDisputeId?: number, checkVTC?: boolean, jJDispute?: JJDispute, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiJjTicketNumberPut(ticketNumber: string, jjDisputeId?: number, checkVTC?: boolean, xTimezone?: string, jJDispute?: JJDispute, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<JJDispute>;
+    public apiJjTicketNumberPut(ticketNumber: string, jjDisputeId?: number, checkVTC?: boolean, xTimezone?: string, jJDispute?: JJDispute, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<JJDispute>>;
+    public apiJjTicketNumberPut(ticketNumber: string, jjDisputeId?: number, checkVTC?: boolean, xTimezone?: string, jJDispute?: JJDispute, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<JJDispute>>;
+    public apiJjTicketNumberPut(ticketNumber: string, jjDisputeId?: number, checkVTC?: boolean, xTimezone?: string, jJDispute?: JJDispute, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberPut.');
         }
@@ -923,6 +944,9 @@ export class JJService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required
@@ -991,13 +1015,14 @@ export class JJService {
      * Updates the status of a particular JJDispute record to REVIEW when JJ wants to recall and open an ACCEPTED, CONFIRMED or CONCLUDED dispute.
      * @param ticketNumber Unique identifier for a specific JJ Dispute record.
      * @param checkVTC boolean to indicate need to check VTC assigned.
+     * @param xTimezone 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketNumberRecallPut(ticketNumber: string, checkVTC?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
-    public apiJjTicketNumberRecallPut(ticketNumber: string, checkVTC?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
-    public apiJjTicketNumberRecallPut(ticketNumber: string, checkVTC?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
-    public apiJjTicketNumberRecallPut(ticketNumber: string, checkVTC?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiJjTicketNumberRecallPut(ticketNumber: string, checkVTC?: boolean, xTimezone?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiJjTicketNumberRecallPut(ticketNumber: string, checkVTC?: boolean, xTimezone?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiJjTicketNumberRecallPut(ticketNumber: string, checkVTC?: boolean, xTimezone?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiJjTicketNumberRecallPut(ticketNumber: string, checkVTC?: boolean, xTimezone?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberRecallPut.');
         }
@@ -1009,6 +1034,9 @@ export class JJService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required
@@ -1065,19 +1093,23 @@ export class JJService {
     /**
      * Updates the status of a particular JJDispute record to REQUIRE_COURT_HEARING, hearing type to COURT_APPEARANCE as well as adds an optional remark that explaining why the status was set.
      * @param ticketNumber Unique identifier for a specific JJ Dispute record.
+     * @param xTimezone 
      * @param remark The remark or note (max 4000 characters) the JJDispute was set to REVIEW.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketNumberRequirecourthearingPut(ticketNumber: string, remark?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
-    public apiJjTicketNumberRequirecourthearingPut(ticketNumber: string, remark?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
-    public apiJjTicketNumberRequirecourthearingPut(ticketNumber: string, remark?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
-    public apiJjTicketNumberRequirecourthearingPut(ticketNumber: string, remark?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiJjTicketNumberRequirecourthearingPut(ticketNumber: string, xTimezone?: string, remark?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiJjTicketNumberRequirecourthearingPut(ticketNumber: string, xTimezone?: string, remark?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiJjTicketNumberRequirecourthearingPut(ticketNumber: string, xTimezone?: string, remark?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiJjTicketNumberRequirecourthearingPut(ticketNumber: string, xTimezone?: string, remark?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberRequirecourthearingPut.');
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required
@@ -1153,14 +1185,15 @@ export class JJService {
      * Updates the status of a particular JJDispute record to REVIEW as well as adds an optional remark that explaining why the status was set to REVIEW.
      * @param ticketNumber Unique identifier for a specific JJ Dispute record.
      * @param checkVTC boolean to indicate need to check VTC assigned.
+     * @param xTimezone 
      * @param remark The remark or note (max 4000 characters) the JJDispute was set to REVIEW.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketNumberReviewPut(ticketNumber: string, checkVTC?: boolean, remark?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
-    public apiJjTicketNumberReviewPut(ticketNumber: string, checkVTC?: boolean, remark?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
-    public apiJjTicketNumberReviewPut(ticketNumber: string, checkVTC?: boolean, remark?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
-    public apiJjTicketNumberReviewPut(ticketNumber: string, checkVTC?: boolean, remark?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiJjTicketNumberReviewPut(ticketNumber: string, checkVTC?: boolean, xTimezone?: string, remark?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiJjTicketNumberReviewPut(ticketNumber: string, checkVTC?: boolean, xTimezone?: string, remark?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiJjTicketNumberReviewPut(ticketNumber: string, checkVTC?: boolean, xTimezone?: string, remark?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiJjTicketNumberReviewPut(ticketNumber: string, checkVTC?: boolean, xTimezone?: string, remark?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberReviewPut.');
         }
@@ -1172,6 +1205,9 @@ export class JJService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required
@@ -1247,18 +1283,22 @@ export class JJService {
     /**
      * Updates court appearance record as well as the status of a particular JJDispute record to CONFIRMED.
      * @param ticketNumber Ticket number for a specific JJ Dispute record.
+     * @param xTimezone 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
-    public apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
-    public apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
-    public apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber: string, xTimezone?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber: string, xTimezone?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber: string, xTimezone?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber: string, xTimezone?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberUpdatecourtappearanceConfirmPut.');
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required
@@ -1314,18 +1354,22 @@ export class JJService {
     /**
      * Updates court appearance record as well as the status of a particular JJDispute record to REQUIRE_COURT_HEARING, hearing type to COURT_APPEARANCE.
      * @param ticketNumber Ticket number for a specific JJ Dispute record.
+     * @param xTimezone 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketNumberUpdatecourtappearanceRequirecourthearingPut(ticketNumber: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
-    public apiJjTicketNumberUpdatecourtappearanceRequirecourthearingPut(ticketNumber: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
-    public apiJjTicketNumberUpdatecourtappearanceRequirecourthearingPut(ticketNumber: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
-    public apiJjTicketNumberUpdatecourtappearanceRequirecourthearingPut(ticketNumber: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiJjTicketNumberUpdatecourtappearanceRequirecourthearingPut(ticketNumber: string, xTimezone?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiJjTicketNumberUpdatecourtappearanceRequirecourthearingPut(ticketNumber: string, xTimezone?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiJjTicketNumberUpdatecourtappearanceRequirecourthearingPut(ticketNumber: string, xTimezone?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiJjTicketNumberUpdatecourtappearanceRequirecourthearingPut(ticketNumber: string, xTimezone?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberUpdatecourtappearanceRequirecourthearingPut.');
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required

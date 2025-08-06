@@ -3,6 +3,7 @@ using MassTransit;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NSubstitute;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -149,6 +150,8 @@ public class JJDisputeServiceTest
         var _statuteLookupService = new Mock<IStatuteLookupService>();
         var _logger = new Mock<ILogger<JJDisputeService>>();
 
+        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+
         JJDisputeService jJDisputeService = new(_oracleDataApiClient.Object, _bus.Object, _staffDocumentService.Object, _keycloakService.Object, _statuteLookupService.Object, _logger.Object);
 
         var counts = new List<JJDisputedCount>();
@@ -169,7 +172,7 @@ public class JJDisputeServiceTest
         _statuteLookupService.Setup(_ => _.GetByIdAsync(id, CancellationToken.None)).ReturnsAsync(expected);
 
         // Act
-        JJDispute _jjDispute = await jJDisputeService.GetJJDisputeAsync(dispute.TicketNumber, false, CancellationToken.None);
+        JJDispute _jjDispute = await jJDisputeService.GetJJDisputeAsync(dispute.TicketNumber, false, timeZone, CancellationToken.None);
 
         // Assert
         var expectedCount = Assert.Single(_jjDispute.JjDisputedCounts);

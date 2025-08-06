@@ -125,6 +125,14 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "X-Timezone",
+            "in": "header",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -293,6 +301,14 @@
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "X-Timezone",
+            "in": "header",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -444,6 +460,14 @@
             "schema": {
               "maxLength": 500,
               "minLength": 0,
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Timezone",
+            "in": "header",
+            "description": "",
+            "schema": {
               "type": "string"
             }
           }
@@ -1424,6 +1448,16 @@
           "Dispute"
         ],
         "summary": "Returns all Disputes that have pending update requests from the Oracle Data API",
+        "parameters": [
+          {
+            "name": "X-Timezone",
+            "in": "header",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "The Disputes were found.",
@@ -1612,20 +1646,19 @@
             }
           },
           {
-            "name": "timeZone",
-            "in": "query",
-            "description": "The IANA timze zone id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "type",
             "in": "query",
             "description": "The type of template to generate",
             "schema": {
               "$ref": "#/components/schemas/DcfTemplateType"
+            }
+          },
+          {
+            "name": "X-Timezone",
+            "in": "header",
+            "description": "The IANA timze zone id",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -2601,6 +2634,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "X-Timezone",
+            "in": "header",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2672,6 +2713,14 @@
           {
             "name": "ticketNumber",
             "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Timezone",
+            "in": "header",
             "description": "",
             "schema": {
               "type": "string"
@@ -2748,6 +2797,14 @@
             "name": "jjAssignedTo",
             "in": "query",
             "description": "If specified, will retrieve the records which are assigned to the specified jj staff",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Timezone",
+            "in": "header",
+            "description": "",
             "schema": {
               "type": "string"
             }
@@ -2837,6 +2894,14 @@
         "summary": "",
         "parameters": [
           {
+            "name": "time_zone",
+            "in": "query",
+            "description": "The callers time zone",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "appearances",
             "in": "query",
             "description": "Include appearance fields",
@@ -2866,14 +2931,6 @@
             "description": "Include electronic ticket flag",
             "schema": {
               "type": "boolean"
-            }
-          },
-          {
-            "name": "time_zone",
-            "in": "query",
-            "description": "The callers time zone",
-            "schema": {
-              "type": "string"
             }
           },
           {
@@ -3121,6 +3178,14 @@
             "description": "A flag indicating whether to execute a user lock.",
             "schema": {
               "type": "boolean"
+            }
+          },
+          {
+            "name": "X-Timezone",
+            "in": "header",
+            "description": "",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -3399,6 +3464,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "X-Timezone",
+            "in": "header",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -3599,6 +3672,14 @@
             "description": "boolean to indicate need to check VTC assigned.",
             "schema": {
               "type": "boolean"
+            }
+          },
+          {
+            "name": "X-Timezone",
+            "in": "header",
+            "description": "",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -3930,6 +4011,14 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "X-Timezone",
+            "in": "header",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4084,6 +4173,14 @@
             "description": "boolean to indicate need to check VTC assigned.",
             "schema": {
               "type": "boolean"
+            }
+          },
+          {
+            "name": "X-Timezone",
+            "in": "header",
+            "description": "",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -4251,6 +4348,14 @@
             "in": "path",
             "description": "Unique identifier for a specific JJ Dispute record.",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Timezone",
+            "in": "header",
+            "description": "",
             "schema": {
               "type": "string"
             }
@@ -4431,6 +4536,14 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "X-Timezone",
+            "in": "header",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4586,6 +4699,14 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "X-Timezone",
+            "in": "header",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4721,6 +4842,14 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "X-Timezone",
+            "in": "header",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4845,6 +4974,14 @@
             "in": "path",
             "description": "Ticket number for a specific JJ Dispute record.",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Timezone",
+            "in": "header",
+            "description": "",
             "schema": {
               "type": "string"
             }
@@ -4992,6 +5129,14 @@
             "in": "path",
             "description": "Ticket number for a specific JJ Dispute record.",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Timezone",
+            "in": "header",
+            "description": "",
             "schema": {
               "type": "string"
             }
@@ -5144,20 +5289,19 @@
             }
           },
           {
-            "name": "timeZone",
-            "in": "query",
-            "description": "The IANA timze zone id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "type",
             "in": "query",
             "description": "The type of template to generate",
             "schema": {
               "$ref": "#/components/schemas/DcfTemplateType"
+            }
+          },
+          {
+            "name": "X-Timezone",
+            "in": "header",
+            "description": "The IANA timze zone id",
+            "schema": {
+              "type": "string"
             }
           }
         ],
