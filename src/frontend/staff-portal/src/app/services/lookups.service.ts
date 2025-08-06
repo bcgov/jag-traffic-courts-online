@@ -2,7 +2,7 @@ import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
 import { Statute as StatuteBase, LookupService, Language, Agency, Province, Country, DisputeCaseFileStatus } from 'app/api';
-import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
+import { Observable, BehaviorSubject, forkJoin, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 
@@ -72,6 +72,9 @@ export class LookupsService implements ILookupsService {
      * @param none
      */
   public getStatutes(): Observable<Statute[]> {
+    if (this._statutes.value?.length > 0) {
+      return of(this._statutes.value);
+    }
 
     return this.lookupService.apiLookupStatutesV2Get()
       .pipe(
@@ -115,7 +118,10 @@ export class LookupsService implements ILookupsService {
      * @param none
      */
   public getLanguages(): Observable<Language[]> {
-
+    if (this._languages.value?.length > 0) {
+      return of(this._languages.value);
+    }
+    
     return this.lookupService.apiLookupLanguagesGet()
       .pipe(
         map((response: Language[]) =>
@@ -153,6 +159,9 @@ export class LookupsService implements ILookupsService {
      * @param none
      */
   public getProvinces(): Observable<Province[]> {
+    if (this._provinces.value?.length > 0) {
+      return of(this._provinces.value);
+    }
 
     return this.lookupService.apiLookupProvinceGet()
       .pipe(
@@ -184,13 +193,16 @@ export class LookupsService implements ILookupsService {
   public get provinces(): Province[] {
     return this._provinces.value;
   }
-  
+
   /**
      * Get the countries from Redis.
      *
      * @param none
      */
   public getCountries(): Observable<Country[]> {
+    if (this._countries.value?.length > 0) {
+      return of(this._countries.value);
+    }
 
     return this.lookupService.apiLookupCountryGet()
       .pipe(
@@ -235,6 +247,9 @@ export class LookupsService implements ILookupsService {
       * @param none
       */
   public getCourthouseAgencies(): Observable<Agency[]> {
+    if (this._courthouseAgencies.value?.length > 0) {
+      return of(this._courthouseAgencies.value);
+    }
 
     return this.lookupService.apiLookupAgenciesV2Get()
       .pipe(
@@ -283,6 +298,9 @@ export class LookupsService implements ILookupsService {
      * @param none
      */
   public getDisputeStatus(): Observable<DisputeCaseFileStatus[]> {
+    if (this._disputeStatus.value?.length > 0) {
+      return of(this._disputeStatus.value);
+    }
 
     return this.lookupService.apiLookupDisputeCaseFileStatusesV2Get()
       .pipe(
