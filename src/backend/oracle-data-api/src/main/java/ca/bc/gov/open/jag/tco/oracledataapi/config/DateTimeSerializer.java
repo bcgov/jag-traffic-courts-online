@@ -14,13 +14,14 @@ import java.util.Date;
  */
 public class DateTimeSerializer extends JsonSerializer<Date> {
     
-    // Use the same pattern as GlobalDateSerializer for consistency
-    private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    // Pattern constant for consistency
+    private static final String DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
 
     @Override
     public void serialize(Date date, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         if (date != null) {
-            gen.writeString(DATE_TIME_FORMAT.format(date));
+            SimpleDateFormat formatter = new SimpleDateFormat(DATE_TIME_PATTERN);
+            gen.writeString(formatter.format(date));
         }
     }
 }

@@ -14,12 +14,13 @@ import java.util.Date;
  */
 public class DateOnlySerializer extends JsonSerializer<Date> {
     
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final String DATE_PATTERN = "yyyy-MM-dd";
 
     @Override
     public void serialize(Date date, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         if (date != null) {
-            gen.writeString(DATE_FORMAT.format(date));
+            SimpleDateFormat formatter = new SimpleDateFormat(DATE_PATTERN);
+            gen.writeString(formatter.format(date));
         }
     }
 }
