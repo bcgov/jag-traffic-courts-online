@@ -6263,7 +6263,7 @@ namespace TrafficCourts.OracleDataApi.Client.V1
         public bool EmailAddressVerified { get; set; }
 
         [Newtonsoft.Json.JsonProperty("filingDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [JsonConverter(typeof(AsDateOnlyJsonConverter))]
+        [Newtonsoft.Json.JsonConverter(typeof(AsDateOnlyJsonConverter))]
         public System.DateTime? FilingDate { get; set; }
 
         [Newtonsoft.Json.JsonProperty("representedByLawyer", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -6903,7 +6903,7 @@ namespace TrafficCourts.OracleDataApi.Client.V1
         public bool EmailAddressVerified { get; set; }
 
         [Newtonsoft.Json.JsonProperty("filingDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [JsonConverter(typeof(AsDateOnlyJsonConverter))]
+        [Newtonsoft.Json.JsonConverter(typeof(AsDateOnlyJsonConverter))]
         public System.DateTime? FilingDate { get; set; }
 
         [Newtonsoft.Json.JsonProperty("requestCourtAppearanceYn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
