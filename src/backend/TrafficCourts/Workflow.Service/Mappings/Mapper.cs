@@ -10,7 +10,7 @@ public class Mapper
 
         EmailHistory target = new EmailHistory();
 
-        target.EmailSentTs = DateTime.SpecifyKind(src.SentAt.UtcDateTime, DateTimeKind.Unspecified);
+        target.EmailSentTs = DateTime.SpecifyKind(src.SentAt.UtcDateTime, DateTimeKind.Unspecified).Truncate();
         target.ToEmailAddress = src.Message?.To is not null ? src.Message.To : "unknown";
         target.SuccessfullySent = EmailHistorySuccessfullySent.Y;
         target.Subject = src.Message?.Subject is not null ? src.Message.Subject : "unknown";
@@ -28,7 +28,7 @@ public class Mapper
 
         EmailHistory target = new EmailHistory();
 
-        target.EmailSentTs = DateTime.SpecifyKind(src.FilteredAt.UtcDateTime, DateTimeKind.Unspecified);
+        target.EmailSentTs = DateTime.SpecifyKind(src.FilteredAt.UtcDateTime, DateTimeKind.Unspecified).Truncate();
         target.ToEmailAddress = src.Message?.To is not null ? src.Message.To : "unknown";
         target.SuccessfullySent = EmailHistorySuccessfullySent.N;
         target.Subject = src.Message?.Subject is not null ? src.Message.Subject : "unknown";
