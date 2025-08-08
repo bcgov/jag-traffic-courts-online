@@ -96,8 +96,6 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
       }
     } else if (form.controls.drivers_licence_province) {
       if (this.mode !== DisputeFormMode.UPDATE) {
-        this.driversLicenceProvinceFormControl.setValue(this.bc);
-      } else {
         this.driversLicenceProvinceFormControl.setValue(null);
       }
     }
@@ -184,25 +182,24 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
       if (province === null) {
         form.controls.drivers_licence_country_id.setValue(null);
         form.controls.drivers_licence_province_seq_no.setValue(null);
+        form.controls.drivers_licence_number.setValidators([Validators.maxLength(20)]);
       } else {
         form.controls.drivers_licence_country_id.setValue(province.ctryId);
         form.controls.drivers_licence_province_seq_no.setValue(province.provSeqNo);
+        if (province.provId === this.bc.provId) {
+          form.controls.drivers_licence_number.setValidators([
+            Validators.required,
+            Validators.minLength(7),
+            Validators.maxLength(9),
+            Validators.pattern(/^\d+$/)
+          ]);
+        } else {
+          form.controls.drivers_licence_number.setValidators([
+            Validators.required,
+            Validators.maxLength(20)
+          ]);
+        }
       }
-      
-      if (province != null && province.provId === this.bc.provId) {
-        form.controls.drivers_licence_number.setValidators([
-          Validators.required,
-          Validators.minLength(7),
-          Validators.maxLength(9),
-          Validators.pattern(/^\d+$/) // Ensure it's numeric
-        ]);
-      } else {
-        form.controls.drivers_licence_number.setValidators([
-          Validators.required,
-          Validators.maxLength(20)
-        ]);
-      }
-
       form.controls.drivers_licence_number.updateValueAndValidity();
     }, 0)
   }
