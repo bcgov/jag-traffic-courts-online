@@ -1,4 +1,6 @@
 ﻿
+using Newtonsoft.Json;
+
 namespace TrafficCourts.OracleDataApi.Client.V1;
 
 /// <summary>

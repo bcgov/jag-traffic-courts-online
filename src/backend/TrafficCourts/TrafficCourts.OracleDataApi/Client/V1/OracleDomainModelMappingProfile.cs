@@ -1,19 +1,31 @@
 ﻿using Oracle = TrafficCourts.OracleDataApi.Client.V1;
 using DomainModel = TrafficCourts.Domain.Models;
+using System.Reflection.Metadata.Ecma335;
 
 namespace TrafficCourts.OracleDataApi.Client.V1;
 
 [System.CodeDom.Compiler.GeneratedCode("DomainModelMappingTestGenerator.generate_mapper", "")]
 public class OracleDomainModelMappingProfile : AutoMapper.Profile
 {
-    private static DateTime? DefaultMapping(DateTime? value)
+    private static DateOnly? DefaultMapping(DateTime? value)
     {
         if (value is null || value.Value.Year == default(DateTime).Year)
         {
             return null;
         }
 
-        return value;
+        var date = value.Value;
+        return new DateOnly(date.Year, date.Month, date.Day);
+    }
+
+    private static DateTime? DefaultMapping(DateOnly? value)
+    {
+        if (value is null || value.Value.Year == default(DateTime).Year)
+        {
+            return null;
+        }
+
+        return value.Value.ToDateTime(TimeOnly.MinValue);
     }
 
     public OracleDomainModelMappingProfile()
