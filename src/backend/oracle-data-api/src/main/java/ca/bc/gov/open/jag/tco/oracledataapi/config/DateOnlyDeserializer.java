@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Custom Jackson deserializer for Date fields that should only parse date (yyyy-MM-dd)
@@ -16,6 +17,7 @@ import java.util.Date;
 public class DateOnlyDeserializer extends JsonDeserializer<Date> {
     
     private static final String DATE_PATTERN = "yyyy-MM-dd";
+    private static final TimeZone SYSTEM_DEFAULT_TZ = TimeZone.getDefault();
 
     @Override
     public Date deserialize(JsonParser parser, DeserializationContext context) throws IOException {
@@ -33,6 +35,7 @@ public class DateOnlyDeserializer extends JsonDeserializer<Date> {
             }
             
             SimpleDateFormat formatter = new SimpleDateFormat(DATE_PATTERN);
+            formatter.setTimeZone(SYSTEM_DEFAULT_TZ);
             formatter.setLenient(false);
             
             return formatter.parse(trimmed);

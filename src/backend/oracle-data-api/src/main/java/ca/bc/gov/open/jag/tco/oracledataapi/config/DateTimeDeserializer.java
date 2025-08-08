@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Custom Jackson deserializer for Date fields that preserves the exact date/time values
@@ -16,6 +17,7 @@ import java.util.Date;
 public class DateTimeDeserializer extends JsonDeserializer<Date> {
     
     private static final String DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
+    private static final TimeZone SYSTEM_DEFAULT_TZ = TimeZone.getDefault();
     
     @Override
     public Date deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
@@ -33,6 +35,7 @@ public class DateTimeDeserializer extends JsonDeserializer<Date> {
             
             // Parse without timezone interpretation - treats as local time
             SimpleDateFormat formatter = new SimpleDateFormat(DATE_TIME_PATTERN);
+            formatter.setTimeZone(SYSTEM_DEFAULT_TZ);
             formatter.setLenient(false);
             
             return formatter.parse(trimmed);
