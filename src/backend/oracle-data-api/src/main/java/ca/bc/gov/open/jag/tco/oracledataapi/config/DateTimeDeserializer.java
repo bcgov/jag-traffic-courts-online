@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Custom Jackson deserializer for Date fields that preserves the exact date/time values
@@ -15,12 +16,8 @@ import java.util.Date;
  */
 public class DateTimeDeserializer extends JsonDeserializer<Date> {
     
-    private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-    
-    static {
-        // Make parsing strict - don't allow lenient parsing
-        DATE_TIME_FORMAT.setLenient(false);
-    }
+    private static final String DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
+    private static final TimeZone SYSTEM_DEFAULT_TZ = TimeZone.getDefault();
     
     @Override
     public Date deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
@@ -35,8 +32,13 @@ public class DateTimeDeserializer extends JsonDeserializer<Date> {
             if (!trimmed.matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}")) {
                 throw new ParseException("DateTime string does not match expected format yyyy-MM-ddTHH:mm:ss: " + trimmed, 0);
             }
+            
             // Parse without timezone interpretation - treats as local time
-            return DATE_TIME_FORMAT.parse(trimmed);
+            SimpleDateFormat formatter = new SimpleDateFormat(DATE_TIME_PATTERN);
+            formatter.setTimeZone(SYSTEM_DEFAULT_TZ);
+            formatter.setLenient(false);
+            
+            return formatter.parse(trimmed);
         } catch (ParseException e) {
             throw new IOException("Failed to parse date: " + dateString + ". Expected format: yyyy-MM-ddTHH:mm:ss", e);
         }

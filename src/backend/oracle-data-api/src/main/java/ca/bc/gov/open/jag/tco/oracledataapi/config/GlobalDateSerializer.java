@@ -8,21 +8,22 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
- * Timezone-neutral Jackson serializer that preserves database date/time values exactly as stored,
+ * Thread-safe, timezone-neutral Jackson serializer that preserves database date/time values exactly as stored,
  * without any timezone interpretation or conversion. Treats dates as raw timestamp values.
  */
 public class GlobalDateSerializer extends JsonSerializer<Date> {
-    
-    // Create formatters without any timezone - they will use the date's raw millisecond value
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-    private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
+    private static final String DATE_PATTERN = "yyyy-MM-dd";
+    private static final String DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
+    private static final TimeZone SYSTEM_DEFAULT_TZ = TimeZone.getDefault();
 
     @Override
     public void serialize(Date date, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         if (date != null) {
-            // Use default calendar (no timezone override) to check for time components
+        	// Use default calendar (no timezone override) to check for time components
             Calendar cal = Calendar.getInstance();
             cal.setTime(date);
             
@@ -32,11 +33,15 @@ public class GlobalDateSerializer extends JsonSerializer<Date> {
                                      cal.get(Calendar.MILLISECOND) != 0;
             
             if (hasTimeComponent) {
-                // Format as date-time using the date's raw value without timezone conversion
-                gen.writeString(DATE_TIME_FORMAT.format(date));
+            	// Format as date-time using the date's raw value without timezone conversion
+                SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DATE_TIME_PATTERN);
+                dateTimeFormat.setTimeZone(SYSTEM_DEFAULT_TZ);
+                gen.writeString(dateTimeFormat.format(date));
             } else {
-                // Format as date-only using the date's raw value without timezone conversion
-                gen.writeString(DATE_FORMAT.format(date));
+            	// Format as date-only using the date's raw value without timezone conversion
+                SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);
+                dateFormat.setTimeZone(SYSTEM_DEFAULT_TZ);
+                gen.writeString(dateFormat.format(date));
             }
         }
     }
