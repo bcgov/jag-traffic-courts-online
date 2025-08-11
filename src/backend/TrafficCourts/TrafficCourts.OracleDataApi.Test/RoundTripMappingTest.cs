@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using AutoFixture.Kernel;
 using Newtonsoft.Json;
 using TrafficCourts.OracleDataApi.Test;
 using Xunit.Abstractions;
