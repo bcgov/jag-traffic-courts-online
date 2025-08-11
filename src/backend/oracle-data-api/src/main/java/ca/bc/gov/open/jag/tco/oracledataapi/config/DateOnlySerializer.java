@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Custom Jackson serializer for Date fields that should only show date (yyyy-MM-dd)
@@ -14,12 +15,15 @@ import java.util.Date;
  */
 public class DateOnlySerializer extends JsonSerializer<Date> {
     
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final String DATE_PATTERN = "yyyy-MM-dd";
+    private static final TimeZone SYSTEM_DEFAULT_TZ = TimeZone.getDefault();
 
     @Override
     public void serialize(Date date, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         if (date != null) {
-            gen.writeString(DATE_FORMAT.format(date));
+            SimpleDateFormat formatter = new SimpleDateFormat(DATE_PATTERN);
+            formatter.setTimeZone(SYSTEM_DEFAULT_TZ);
+            gen.writeString(formatter.format(date));
         }
     }
 }
