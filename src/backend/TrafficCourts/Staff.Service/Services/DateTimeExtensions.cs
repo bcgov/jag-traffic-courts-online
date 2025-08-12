@@ -51,7 +51,7 @@ public static class DateTimeExtensions
     public static DateTime LocalToUtcTime(this DateTime dateTime, TimeZoneInfo timeZone)
     {
         ArgumentNullException.ThrowIfNull(timeZone);
-        dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Local);
+        dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Unspecified);
 
         dateTime = TimeZoneInfo.ConvertTimeToUtc(dateTime, timeZone);
         // Ensure the DateTime is treated as Unspecified to avoid issues with serialization and comparisons
