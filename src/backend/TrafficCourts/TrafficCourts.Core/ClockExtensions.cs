@@ -33,7 +33,11 @@ public static class ClockExtensions
         ArgumentNullException.ThrowIfNull(timeZone);
         dateTime = DateTime.SpecifyKind(dateTime.Value, DateTimeKind.Utc);
 
-        return TimeZoneInfo.ConvertTime(dateTime.Value, timeZone);
+        dateTime = TimeZoneInfo.ConvertTime(dateTime.Value, timeZone);
+
+        dateTime = DateTime.SpecifyKind(dateTime.Value, DateTimeKind.Unspecified);
+
+        return dateTime;
     }
 
     /// <summary>
