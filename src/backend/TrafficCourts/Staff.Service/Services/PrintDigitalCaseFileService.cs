@@ -88,19 +88,24 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
             driversLicenceProvince = await _provinceLookupService.GetByProvSeqNoCtryIdAsync(provinceSeqNo, countryId, cancellationToken);
         }
 
+        // https://jira.justice.gov.bc.ca/browse/TCVP-3050
+        var surname = !string.IsNullOrEmpty(dispute.IcbcName?.Surname) ? dispute.IcbcName.Surname: dispute.ViolationTicket.DisputantSurname;
+        var givenNames = !string.IsNullOrEmpty(dispute.IcbcName?.FirstGivenName) || !string.IsNullOrEmpty(dispute.IcbcName?.SecondGivenName) ? 
+            ConcatenateWithSpaces(dispute.IcbcName.FirstGivenName, dispute.IcbcName.SecondGivenName) : dispute.ViolationTicket.DisputantGivenNames;
+
         var digitalCaseFile = new DigitalCaseFile();
 
         // set the ticket information
         var ticket = digitalCaseFile.Ticket;
         ticket.Number = dispute.ViolationTicket.TicketNumber;
-        ticket.Surname = dispute.ViolationTicket.DisputantSurname;
-        ticket.GivenNames = dispute.ViolationTicket.DisputantGivenNames;
+        ticket.Surname = surname;
+        ticket.GivenNames = givenNames;
 
         // if the date of birth is the default value (0001-01-01), set it to empty
         ticket.DateOfBirth = dispute.ViolationTicket.DisputantBirthdate is not null && dispute.ViolationTicket.DisputantBirthdate.Value.Year == default(DateTime).Year
             ? FormattedDateOnly.Empty
             : new FormattedDateOnly(dispute.DisputantBirthdate);
-
+        
         ticket.PoliceDetachment = dispute.ViolationTicket.DetachmentLocation;
         ticket.Issued = new FormattedDateTime(dispute.ViolationTicket.IssuedTs);
         if (dispute.SubmittedTs.HasValue)
