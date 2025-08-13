@@ -47,8 +47,8 @@ namespace TrafficCourts.Core.Test
             
             // Assert
             Assert.NotNull(convertedDateTime);
-            Assert.Equal(DateTimeKind.Unspecified, convertedDateTime.Value.Kind);
-            Assert.Equal(new DateTime(2023, 10, 1, 5, 0, 0), convertedDateTime.Value);
+            Assert.Equal(DateTimeKind.Unspecified, convertedDateTime.Kind);
+            Assert.Equal(new DateTime(2023, 10, 1, 5, 0, 0), convertedDateTime);
         }
 
         [Fact]
@@ -86,8 +86,7 @@ namespace TrafficCourts.Core.Test
             var result = ClockExtensions.UtcToLocalTime(dateTime, timeZone);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Equal(new DateTime(2023, 11, 4, 21, 0, 0), result.Value); // Adjusted for DST
+            Assert.Equal(new DateTime(2023, 11, 4, 21, 0, 0), result); // Adjusted for DST
         }
     }
 }

@@ -49,6 +49,8 @@ namespace TrafficCourts.Workflow.Service.Services
                 else if (!string.IsNullOrEmpty(fileHistoryRecord.TicketNumber))
                 {
                     JJDispute dispute = await _oracleDataApiService.GetJJDisputeAsync(fileHistoryRecord.TicketNumber, false, cancellationToken);
+                    // do not use any date fields in this usage
+
                     if (dispute != null)
                     {
                         fileHistoryRecord.DisputeId = dispute.OccamDisputeId;

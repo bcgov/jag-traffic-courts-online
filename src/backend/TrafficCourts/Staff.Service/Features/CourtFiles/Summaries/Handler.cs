@@ -290,7 +290,7 @@ public class Handler : IRequestHandler<Request, Response>
                 }
                 else
                 {
-                    _logger.Warning("{IncludeItem} was not included, sorting on {Column} will be ingored", "appearances", item);
+                    _logger.Warning("{IncludeItem} was not included, sorting on {Column} will be ignored", "appearances", item);
                 }
 
                 continue;
@@ -301,7 +301,7 @@ public class Handler : IRequestHandler<Request, Response>
             {
                 if (request.appearances is not true)
                 {
-                    _logger.Warning("{IncludeItem} was not included, sorting on {Column} will be ingored", "appearances", item);
+                    _logger.Warning("{IncludeItem} was not included, sorting on {Column} will be ignored", "appearances", item);
                     continue;
                 }
             }
@@ -310,7 +310,7 @@ public class Handler : IRequestHandler<Request, Response>
             {
                 if (request.notice_of_hearing_yn is not true)
                 {
-                    _logger.Warning("{IncludeItem} was not included, sorting on {Column} will be ingored", "notice_of_hearing_yn", item);
+                    _logger.Warning("{IncludeItem} was not included, sorting on {Column} will be ignored", "notice_of_hearing_yn", item);
                     continue;
                 }
             }
@@ -319,7 +319,7 @@ public class Handler : IRequestHandler<Request, Response>
             {
                 if (request.multiple_officers_yn is not true)
                 {
-                    _logger.Warning("{IncludeItem} was not included, sorting on {Column} will be ingored", "multiple_officers_yn", item);
+                    _logger.Warning("{IncludeItem} was not included, sorting on {Column} will be ignored", "multiple_officers_yn", item);
                     continue;
                 }
             }
@@ -328,7 +328,7 @@ public class Handler : IRequestHandler<Request, Response>
             {
                 if (request.electronic_ticket_yn is not true)
                 {
-                    _logger.Warning("{IncludeItem} was not included, sorting on {Column} will be ingored", "electronic_ticket_yn", item);
+                    _logger.Warning("{IncludeItem} was not included, sorting on {Column} will be ignored", "electronic_ticket_yn", item);
                     continue;
                 }
             }
@@ -377,8 +377,8 @@ public class Handler : IRequestHandler<Request, Response>
         var summary = new DisputeCaseFileSummary
         {
             Id = dispute.dispute_id,
-            SubmittedTs = dispute.submitted_dt.UtcToLocalTime(timeZone),
-            JjDecisionDate = dispute.jj_decision_dt.UtcToLocalTime(timeZone),
+            SubmittedTs = dispute.submitted_dt,
+            JjDecisionDate = dispute.jj_decision_dt,
             SignatoryName = dispute.signed_by,
             HearingType = dispute.hearing_type_cd,
             TicketNumber = dispute.ticket_number_txt,
@@ -406,13 +406,15 @@ public class Handler : IRequestHandler<Request, Response>
             ElectronicTicketYn = ToYesNo(dispute.electronic_ticket_yn),
             JjAssignedTo = dispute.jj_assigned_to,
             VtcAssignedTo = dispute.vtc_assigned_to,
-            VtcAssignedTs = dispute.vtc_assigned_dtm.UtcToLocalTime(timeZone),
+            VtcAssignedTs = dispute.vtc_assigned_dtm,
             AppearanceCourthouseId = dispute.appr_ctrm_agen_id,
             AppearanceCourthouseName = dispute.appr_ctrm_agen_nm,
             AppearanceRoomCode = dispute.appr_ctrm_room_cd,
             AppearanceTs = dispute.appr_tm,
             AppearanceDuration = (dispute.appr_estimated_duration_hh ?? 0) * 60 + (dispute.appr_estimated_duration_mi ?? 0)
         };
+
+        summary.UtcToLocalTime(timeZone);
 
         return summary;
     }

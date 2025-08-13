@@ -7,8 +7,8 @@
 public class DisputeCaseFileSummary
 {
     public long Id { get; set; }
-    public DateTimeOffset? SubmittedTs { get; set; }
-    public System.DateTimeOffset? JjDecisionDate { get; set; }
+    public DateTime? SubmittedTs { get; set; }
+    public System.DateTime? JjDecisionDate { get; set; }
     public string SignatoryName { get; set; }
     public string? HearingType { get; set; }
     public string TicketNumber { get; set; }

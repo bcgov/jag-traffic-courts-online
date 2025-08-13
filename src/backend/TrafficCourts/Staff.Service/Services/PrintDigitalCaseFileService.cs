@@ -279,6 +279,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         // https://tc39.es/ecma402/#sec-properties-of-intl-datetimeformat-instances
 
         var dispute = await _jjDisputeService.GetJJDisputeAsync(ticketNumber, false, timeZone, cancellationToken);
+        dispute.UtcToLocalTime(timeZone);
 
         Domain.Models.Province? driversLicenceProvince = null;
 
@@ -312,7 +313,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         ticket.Issued = new FormattedDateTime(dispute.IssuedTs);
         if (dispute.SubmittedTs.HasValue)
         {
-            var submitted = dispute.SubmittedTs.UtcToLocalTime(timeZone);
+            var submitted = dispute.SubmittedTs;
             ticket.Submitted = new FormattedDateTime(submitted);
         }   
         ticket.IcbcReceived = new FormattedDateOnly(dispute.IcbcReceivedDate);
@@ -370,7 +371,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         writtenReasons.Signature = dispute.SignatoryName;
         if (dispute.SignatoryName != null && dispute.SubmittedTs.HasValue)
         {
-            var submitted = dispute.SubmittedTs.UtcToLocalTime(timeZone);
+            var submitted = dispute.SubmittedTs;
             writtenReasons.SubmissionTs = new FormattedDateTime(submitted);
         }
 
@@ -412,7 +413,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
                 offenseCount.LatestPlea = ToString(disputedCount.LatestPlea);
                 if (disputedCount.LatestPleaUpdateTs.HasValue)
                 {
-                    var updated = disputedCount.LatestPleaUpdateTs.UtcToLocalTime(timeZone);
+                    var updated = disputedCount.LatestPleaUpdateTs;
                     offenseCount.LatestPleaUpdate = new FormattedDateTime(updated);
                 }
                 if (disputedCount.JjDisputedCountRoP is not null) {
