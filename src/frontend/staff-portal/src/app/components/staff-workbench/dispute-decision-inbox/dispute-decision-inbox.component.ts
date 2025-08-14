@@ -90,7 +90,6 @@ export class DisputeDecisionInboxComponent implements OnInit {
 
     const params = {
       appearances: true,
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       jjDecisionDtFrom: this.filters.decisionDateFrom,
       jjDecisionDtThru: this.filters.decisionDateTo,
       ticketNumber: this.filters.ticketNumber ? this.filters.ticketNumber.toUpperCase() : "",

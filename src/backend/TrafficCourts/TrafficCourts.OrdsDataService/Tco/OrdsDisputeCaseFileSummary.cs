@@ -13,7 +13,7 @@ public class OrdsDisputeCaseFileSummary
     public string signed_by { get; set; }
     public string hearing_type_cd { get; set; }
     public string ticket_number_txt { get; set; }
-    public DateTimeOffset? violation_dt { get; set; }
+    public DateTime? violation_dt { get; set; }
     public int unique_violation_dt_count { get; set; }
     public decimal? to_be_heard_at_agen_id { get; set; }
     public string to_be_heard_at_agen_nm { get; set; }

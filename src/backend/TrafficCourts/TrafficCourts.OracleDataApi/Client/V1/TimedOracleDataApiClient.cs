@@ -1,4 +1,6 @@
 ﻿
+using Newtonsoft.Json;
+
 namespace TrafficCourts.OracleDataApi.Client.V1;
 
 /// <summary>
@@ -335,7 +337,7 @@ internal class TimedOracleDataApiClient : IOracleDataApiClient
         }
     }
 
-    public async global::System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrafficCourts.OracleDataApi.Client.V1.DisputeListItem>> GetAllDisputesAsync(System.DateTimeOffset? newerThan, TrafficCourts.OracleDataApi.Client.V1.ExcludeStatus? excludeStatus)
+    public async global::System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrafficCourts.OracleDataApi.Client.V1.DisputeListItem>> GetAllDisputesAsync(System.DateTime? newerThan, TrafficCourts.OracleDataApi.Client.V1.ExcludeStatus? excludeStatus)
     {
         using var operation = _metrics.BeginOperation();
 
@@ -351,7 +353,7 @@ internal class TimedOracleDataApiClient : IOracleDataApiClient
         }
     }
 
-    public async global::System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrafficCourts.OracleDataApi.Client.V1.DisputeListItem>> GetAllDisputesAsync(System.DateTimeOffset? newerThan, TrafficCourts.OracleDataApi.Client.V1.ExcludeStatus? excludeStatus, System.Threading.CancellationToken cancellationToken)
+    public async global::System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrafficCourts.OracleDataApi.Client.V1.DisputeListItem>> GetAllDisputesAsync(System.DateTime? newerThan, TrafficCourts.OracleDataApi.Client.V1.ExcludeStatus? excludeStatus, System.Threading.CancellationToken cancellationToken)
     {
         using var operation = _metrics.BeginOperation();
 

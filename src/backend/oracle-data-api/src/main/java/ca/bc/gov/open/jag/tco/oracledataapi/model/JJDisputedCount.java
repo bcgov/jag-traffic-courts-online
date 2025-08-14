@@ -12,15 +12,17 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer;
+import ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -97,7 +99,8 @@ public class JJDisputedCount extends Auditable<String> {
 	 */
 	@Column
 	@Schema(nullable = true)
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(using = DateTimeSerializer.class)
+	@JsonDeserialize(using = DateTimeDeserializer.class)
 	private Date dueDate;
 
 	/**
@@ -127,7 +130,8 @@ public class JJDisputedCount extends Auditable<String> {
 	 */
 	@Column
 	@Schema(nullable = true)
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(using = DateTimeSerializer.class)
+	@JsonDeserialize(using = DateTimeDeserializer.class)
 	private Date revisedDueDate;
 
 	/**
@@ -142,7 +146,8 @@ public class JJDisputedCount extends Auditable<String> {
 	 */
 	@Column
 	@Schema(nullable = true)
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(using = DateTimeSerializer.class)
+	@JsonDeserialize(using = DateTimeDeserializer.class)
 	private Date violationDate;
 
 	/**
@@ -165,7 +170,8 @@ public class JJDisputedCount extends Auditable<String> {
 	 */
 	@Column
 	@Schema(description = "The timestamp for when the last time disputant changed their plea.", nullable = true)
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(using = DateTimeSerializer.class)
+	@JsonDeserialize(using = DateTimeDeserializer.class)
 	private Date latestPleaUpdateTs;
 
 	@JsonBackReference(value = "jj_dispute_count_reference")
