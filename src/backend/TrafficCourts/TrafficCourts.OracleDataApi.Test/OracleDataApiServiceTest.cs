@@ -9,7 +9,7 @@ namespace TrafficCourts.OracleDataApi.Test;
 
 public class OracleDataApiServiceTest
 {
-    private readonly Fixture _fixture = new Fixture();
+    private readonly Fixture _fixture;
 
     private readonly Oracle.IOracleDataApiClient _client = Substitute.For<Oracle.IOracleDataApiClient>();
     private readonly IMapper _mapper = Substitute.For<IMapper>();
@@ -27,6 +27,9 @@ public class OracleDataApiServiceTest
         // 5. returns the output of the mapper
         // 6. if ApiException is thrown, common domain ApiException is thrown with same parameters
         // 7. if any other exception is thrown, the exact same exception is re-thrown
+        _fixture = new Fixture();
+        _fixture.Customizations.Add(new DateOnlySpecimenBuilder());
+
     }
 
     [Fact]

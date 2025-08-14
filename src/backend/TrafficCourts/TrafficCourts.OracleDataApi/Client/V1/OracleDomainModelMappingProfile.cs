@@ -100,11 +100,18 @@ public class OracleDomainModelMappingProfile : AutoMapper.Profile
             .ForMember(dest => dest.FileData, opt => opt.Ignore())
             .ForMember(dest => dest.IcbcName, opt => opt.Ignore())
             .ForMember(dest => dest.DisputantBirthdate, opt => opt.MapFrom(src => DefaultMapping(src.DisputantBirthdate)))
+            .ForMember(dest => dest.FilingDate, opt => opt.MapFrom(src => DefaultMapping(src.FilingDate)))
             .ReverseMap()
-            .ForMember(dest => dest.DisputantBirthdate, opt => opt.MapFrom(src => DefaultMapping(src.DisputantBirthdate)));
+            .ForMember(dest => dest.DisputantBirthdate, opt => opt.MapFrom(src => DefaultMapping(src.DisputantBirthdate)))
+            .ForMember(dest => dest.FilingDate, opt => opt.MapFrom(src => DefaultMapping(src.FilingDate)));
 
         CreateMap<Oracle.DisputeCount, DomainModel.DisputeCount>().ReverseMap();
-        CreateMap<Oracle.DisputeListItem, DomainModel.DisputeListItem>().ReverseMap();
+        CreateMap<Oracle.DisputeListItem, DomainModel.DisputeListItem>()
+            .ForMember(dest => dest.FilingDate, opt => opt.MapFrom(src => DefaultMapping(src.FilingDate)))
+            .ReverseMap()
+            .ForMember(dest => dest.FilingDate, opt => opt.MapFrom(src => DefaultMapping(src.FilingDate)));
+
+
         CreateMap<Oracle.DisputeResult, DomainModel.DisputeResult>().ReverseMap();
         CreateMap<Oracle.DisputeUpdateRequest, DomainModel.DisputeUpdateRequest>().ReverseMap();
         CreateMap<Oracle.EmailHistory, DomainModel.EmailHistory>().ReverseMap();
@@ -114,7 +121,10 @@ public class OracleDomainModelMappingProfile : AutoMapper.Profile
             .ForMember(dest => dest.LockId, opt => opt.Ignore())
             .ForMember(dest => dest.LockedBy, opt => opt.Ignore())
             .ForMember(dest => dest.LockExpiresAtUtc, opt => opt.Ignore())
-            .ReverseMap();
+            .ForMember(dest => dest.DisputantBirthdate, opt => opt.MapFrom(src => DefaultMapping(src.DisputantBirthdate)))
+            .ReverseMap()
+            .ForMember(dest => dest.DisputantBirthdate, opt => opt.MapFrom(src => DefaultMapping(src.DisputantBirthdate)));
+
         CreateMap<Oracle.JJDisputeCourtAppearanceRoP, DomainModel.JJDisputeCourtAppearanceRoP>().ReverseMap();
         CreateMap<Oracle.JJDisputedCount, DomainModel.JJDisputedCount>().ReverseMap();
         CreateMap<Oracle.JJDisputedCountRoP, DomainModel.JJDisputedCountRoP>().ReverseMap();

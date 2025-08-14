@@ -324,6 +324,7 @@ public partial class JJDisputeService : IJJDisputeService
     {
         ArgumentNullException.ThrowIfNull(timeZone);
 
+        LocalToUtcTime(jjDispute, timeZone);
         JJDispute dispute = await _oracleDataApi.UpdateJJDisputeCascadeAsync(jjDispute.TicketNumber, true, jjDispute, cancellationToken);
         UtcToLocalTime(dispute, timeZone);
 
@@ -341,6 +342,7 @@ public partial class JJDisputeService : IJJDisputeService
     {
         ArgumentNullException.ThrowIfNull(timeZone);
 
+        LocalToUtcTime(jjDispute, timeZone);
         JJDispute dispute = await _oracleDataApi.UpdateJJDisputeAsync(jjDispute.TicketNumber, checkVTC, jjDispute, cancellationToken);
         UtcToLocalTime(dispute, timeZone);
 
@@ -634,6 +636,13 @@ public partial class JJDisputeService : IJJDisputeService
         record.JjDecisionDate = record.JjDecisionDate.UtcToLocalTime(timeZone);
         record.SubmittedTs = record.SubmittedTs.UtcToLocalTime(timeZone);
         record.VtcAssignedTs = record.VtcAssignedTs.UtcToLocalTime(timeZone);
+    }
+
+    private static void LocalToUtcTime(JJDispute record, TimeZoneInfo timeZone)
+    {
+        record.JjDecisionDate = record.JjDecisionDate.LocalToUtcTime(timeZone)?.Truncate();
+        record.SubmittedTs = record.SubmittedTs.LocalToUtcTime(timeZone)?.Truncate();
+        record.VtcAssignedTs = record.VtcAssignedTs.LocalToUtcTime(timeZone)?.Truncate();
     }
 
     [LoggerMessage(EventId = 0, Level = LogLevel.Warning, EventName = "UserAssignedToTicketHasNoPartId", Message = "User assigned to ticket has no PartId attribute in Keycloak")]
