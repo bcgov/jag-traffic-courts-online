@@ -223,9 +223,6 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   onSelectContactType(newContactType: any) {
     this.form.controls.contact_given_names.setValue(null);
     this.form.controls.contact_surname.setValue(null);
-    this.form.controls.contact_law_firm_name.clearValidators();
-    this.form.controls.contact_surname.clearValidators();
-    this.form.controls.contact_given_names.clearValidators();
     this.form.controls.contact_law_firm_name.setValue(null);
     this.form.controls.address.setValue(null);
     this.form.controls.address.updateValueAndValidity();
@@ -237,6 +234,11 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
     this.form.controls.email_address.updateValueAndValidity();
     this.form.controls.home_phone_number.setValue(null);
     this.form.controls.home_phone_number.updateValueAndValidity();
+
+    // Reset validators while preserving the original validators (maxLength and asciiOnly)
+    this.form.controls.contact_law_firm_name.setValidators([Validators.maxLength(30), FormControlValidators.asciiOnly]);
+    this.form.controls.contact_surname.setValidators([Validators.maxLength(30), FormControlValidators.asciiOnly]);
+    this.form.controls.contact_given_names.setValidators([Validators.maxLength(30), FormControlValidators.asciiOnly]);
 
     if (newContactType == this.ContactType.Lawyer) {
       // make all contact info required
