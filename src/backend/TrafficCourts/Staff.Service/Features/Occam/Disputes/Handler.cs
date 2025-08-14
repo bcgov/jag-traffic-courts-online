@@ -1,9 +1,12 @@
 using MediatR;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Globalization;
 using System.Text;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.OrdsDataService.Occam;
+using TrafficCourts.Staff.Service.Services;
+using static MassTransit.ValidationResultExtensions;
 
 namespace TrafficCourts.Staff.Service.Features.Occam.Disputes;
 
@@ -20,6 +23,8 @@ public class Handler : IRequestHandler<Request, Response>
 
     public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(request);
+
         try
         {
             // todo: add validation on the request
@@ -27,7 +32,14 @@ public class Handler : IRequestHandler<Request, Response>
 
             var pagedCollection = await _repository.GetListAsync(parameters, cancellationToken);
 
-            var response = CreateResponse(pagedCollection);
+            if (!TimeZoneInfo.TryFindSystemTimeZoneById(request?.Parameters?.TimeZone!, out var timeZoneInfo))
+            {
+                // the controller action should have validated the time zone
+                // this shouldn't happen, but if it does, default to Pacific Time
+                timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("America/Vancouver");
+            }
+
+            var response = CreateResponse(pagedCollection, timeZoneInfo);
 
             return response;
         }
@@ -45,11 +57,11 @@ public class Handler : IRequestHandler<Request, Response>
     }
 
 
-    private Response CreateResponse(OrdsDataService.OrdsDataServicePagedCollectionResponse<OccamDispute> pagedCollection)
+    private Response CreateResponse(OrdsDataService.OrdsDataServicePagedCollectionResponse<OccamDispute> pagedCollection, TimeZoneInfo timeZone)
     {
         if (pagedCollection.Rows is not null)
         {
-            var items = pagedCollection.Rows.Select(Map);
+            var items = pagedCollection.Rows.Select(row => Map(row, timeZone));
 
             var offset = pagedCollection.Offset;
             var pageSize = pagedCollection.Fetch;
@@ -109,7 +121,9 @@ public class Handler : IRequestHandler<Request, Response>
 
     private void AddWhere(Dictionary<string, string> parameters, Request request)
     {
-        AddUtcDateRangeFilter(parameters, "submitted_dt", request.Parameters.TimeZone, request.Parameters.From, request.Parameters.Thru);
+        var timeZone = TimeZoneInfo.FindSystemTimeZoneById(request.Parameters.TimeZone);
+
+        AddUtcDateRangeFilter(parameters, "submitted_dt", timeZone, request.Parameters.From, request.Parameters.Thru);
         AddStartFilter(parameters, "ticket_number_txt", request.Parameters.TicketNumber);
         AddStartFilter(parameters, "upper_disputant_surname_nm", request.Parameters.Surname?.ToUpper(), false);
 
@@ -143,21 +157,18 @@ public class Handler : IRequestHandler<Request, Response>
         parameters.Add($"{field}_like", $"{value}%");
     }
 
-    private void AddUtcDateRangeFilter(Dictionary<string, string> parameters, string field, string? timeZone, string? from, string? thru)
+    private void AddUtcDateRangeFilter(Dictionary<string, string> parameters, string field, TimeZoneInfo timeZone, string? from, string? thru)
     {
         if (from is null && thru is null)
         {
             return;
         }
 
-        timeZone = timeZone ?? "America/Vancouver";
-        TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
-
         // convert the from/thru to UTC
         if (from is not null)
         {
             DateTime date = DateTime.ParseExact(from, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            date = TimeZoneInfo.ConvertTimeToUtc(date, tz);
+            date = TimeZoneInfo.ConvertTimeToUtc(date, timeZone);
             parameters.Add($"{field}_ge", date.ToString("yyyy-MM-ddTHH:mm:ssZ"));
         }
 
@@ -166,7 +177,7 @@ public class Handler : IRequestHandler<Request, Response>
             // bump the date by one and search for less than the next day
             DateTime date = DateTime.ParseExact(thru, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             date = date.AddDays(1);
-            date = TimeZoneInfo.ConvertTimeToUtc(date, tz);
+            date = TimeZoneInfo.ConvertTimeToUtc(date, timeZone);
             parameters.Add($"{field}_lt", date.ToString("yyyy-MM-ddTHH:mm:ssZ"));
         }
     }
@@ -295,14 +306,14 @@ public class Handler : IRequestHandler<Request, Response>
         };
     }
 
-    private OccamDisputeListItemModel Map(OccamDispute dispute)
+    private OccamDisputeListItemModel Map(OccamDispute dispute, TimeZoneInfo timeZone)
     {
         // all of the == "Y" stuff is a temporary hack to maintain V1 support in the front-end - should probably all be YesNo properties instead of unique enums
         var listItem = new OccamDisputeListItemModel
         {
             disputeId = dispute.dispute_id,
             ticketNumber = dispute.ticket_number_txt,
-            submittedTs = dispute.submitted_dt,
+            submittedTs = dispute.submitted_dt.UtcToLocalTime(timeZone), // submited date is always in UTC, convert to local time
             disputantSurname = dispute.disputant_surname_nm,
             disputantGivenName1 = dispute.disputant_given_1_nm,
             disputantGivenName2 = dispute.disputant_given_2_nm,
@@ -319,8 +330,8 @@ public class Handler : IRequestHandler<Request, Response>
             violationDate = dispute.violation_dt,
             jjAssignedTo = dispute.jj_assigned_to,
             decisionMadeBy = dispute.most_recent_decision_made_by,
-            jjDecisionDate = dispute.jj_decision_dt,
-            courtAgenId = dispute.court_agen_id.ToString(),
+            jjDecisionDate = dispute.jj_decision_dt.UtcToLocalTime(timeZone),
+            courtAgenId = dispute.court_agen_id?.ToString() ?? string.Empty,
             courtAgenName = dispute.court_agen_nm
         };
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
 using TrafficCourts.Domain.Models;
@@ -29,6 +30,7 @@ public class FileHistoryController : StaffControllerBase
     /// Returns all File History Records from the Oracle Data API related to a specific ticket number.
     /// </summary>
     /// <param name="ticketNumber"></param>
+    /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <response code="200">The File history records were found.</response>
     /// <response code="401">Unauthenticated.</response>
@@ -40,13 +42,18 @@ public class FileHistoryController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
-    public async Task<IActionResult> GetFileHistoryRecordsAsync(String ticketNumber, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetFileHistoryRecordsAsync(string ticketNumber, [FromHeader(Name = "X-Timezone")] string timeZone, CancellationToken cancellationToken)
     {
+        if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
+        {
+            return validationResult; // Return BadRequest if validation fails
+        }
+
         _logger.LogDebug("Retrieving all file history records from oracle-data-api for a specified ticket");
 
         try
         {
-            ICollection<FileHistory> fileHistories = await _fileHistoryService.GetFileHistoryForTicketAsync(ticketNumber, cancellationToken);
+            ICollection<FileHistory> fileHistories = await _fileHistoryService.GetFileHistoryForTicketAsync(ticketNumber, timeZoneInfo, cancellationToken);
             return Ok(fileHistories);
         }
         catch (Exception e)

@@ -66,14 +66,14 @@ export class JJDisputeService {
   }
 
   public getTCODisputes(params: { appearances?: boolean, noticeOfHearingYn?: boolean, multipleOfficersYn?: boolean,
-    electronicTicketYn?: boolean, timeZone?: string, submittedFrom?: string, submittedThru?: string,
+    electronicTicketYn?: boolean, submittedFrom?: string, submittedThru?: string,
     ticketNumber?: string, surname?: string, surnameOrOrgName?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string,
     jjDecisionDtThru?: string, disputeStatusCodes?: string, appearanceCourthouseIds?: string,
     appearanceDtFrom?: string, appearanceDtThru?: string, toBeHeardAtCourthouseIds?: string,
     hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number }):
     Observable<PagedDisputeCaseFileSummaryCollection> {
-    return this.jjApiService.apiJjDisputesSearchGet(params.appearances, params.noticeOfHearingYn,
-      params.multipleOfficersYn, params.electronicTicketYn, params.timeZone, params.submittedFrom,
+    return this.jjApiService.apiJjDisputesSearchGet(null, params.appearances, params.noticeOfHearingYn,
+      params.multipleOfficersYn, params.electronicTicketYn, params.submittedFrom,
       params.submittedThru, params.ticketNumber, params.surname, params.surnameOrOrgName, params.jjAssignedTo,
       params.jjDecisionDtFrom, params.jjDecisionDtThru, params.disputeStatusCodes, params.appearanceCourthouseIds,
       params.appearanceDtFrom, params.appearanceDtThru, params.toBeHeardAtCourthouseIds,
@@ -104,7 +104,7 @@ export class JJDisputeService {
     if (remarks) {
       this.addRemarks(input, remarks);
     }
-    return this.jjApiService.apiJjTicketNumberPut(ticketNumber, disputeId, checkVTC, input)
+    return this.jjApiService.apiJjTicketNumberPut(ticketNumber, disputeId, checkVTC, null, input)
       .pipe(
         map((response: any) => {
           this.logger.info('jj-DisputeService::putJJDispute', response)
@@ -220,7 +220,7 @@ export class JJDisputeService {
    * @returns update JJDispute
    */
   public apiJjTicketNumberCascadePut(ticketNumber: string, jjDispute: JJDispute): Observable<any> {
-    return this.jjApiService.apiJjTicketNumberCascadePut(ticketNumber, jjDispute)
+    return this.jjApiService.apiJjTicketNumberCascadePut(ticketNumber, null, jjDispute)
       .pipe(
         map((response: any) => {
           this.logger.info('jj-DisputeService::apiJjTicketNumberCascadePut', response)
@@ -428,9 +428,9 @@ export class JJDisputeService {
     return jjDispute;
   }
 
-  public apiJjTicketNumberPrintGet(ticketNumber: string, type: DcfTemplateType, timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone): Observable<any> {
+  public apiJjTicketNumberPrintGet(ticketNumber: string, type: DcfTemplateType): Observable<any> {
     return this.http
-    .get(`/api/jj/${ticketNumber}/print?timeZone=${timeZone}&type=${type}`, {
+    .get(`/api/jj/${ticketNumber}/print?type=${type}`, {
       observe: 'response',
       responseType: 'blob',
       context: new HttpContext(),

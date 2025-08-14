@@ -14,7 +14,8 @@ public interface IPrintDigitalCaseFileService
     /// Renders the ticket validation view for a given OCCAM dispute data based on dispute id.
     /// </summary>
     /// <param name="disputeId"></param>
-    /// <param name="timeZoneId"></param>
+    /// <param name="timeZone"></param>
+    /// <param name="type"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<RenderedReport> PrintTicketValidationViewAsync(long disputeId, TimeZoneInfo timeZone, DcfTemplateType type, CancellationToken cancellationToken);

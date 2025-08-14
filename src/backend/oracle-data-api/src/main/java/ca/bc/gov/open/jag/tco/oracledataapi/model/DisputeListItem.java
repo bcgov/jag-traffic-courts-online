@@ -8,8 +8,14 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlyDeserializer;
+import ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlySerializer;
+import ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer;
+import ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,7 +52,8 @@ public class DisputeListItem {
 	 */
 	@Column
 	@Schema(nullable = true)
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(using = DateTimeSerializer.class)
+	@JsonDeserialize(using = DateTimeDeserializer.class)
 	private Date submittedTs;
 
 	/**
@@ -95,7 +102,8 @@ public class DisputeListItem {
 
 	@Column
 	@Schema(nullable = true)
-	@Temporal(TemporalType.DATE)
+	@JsonSerialize(using = DateOnlySerializer.class)
+	@JsonDeserialize(using = DateOnlyDeserializer.class)
 	private Date filingDate;
 
 	@Column(nullable = true)
@@ -117,7 +125,8 @@ public class DisputeListItem {
 	 */
 	@Column
 	@Schema(nullable = true)
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(using = DateTimeSerializer.class)
+	@JsonDeserialize(using = DateTimeDeserializer.class)
 	private Date userAssignedTs;
 
 	/**
@@ -143,7 +152,8 @@ public class DisputeListItem {
 	 */
 	@Column
 	@Schema(nullable = true)
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(using = DateTimeSerializer.class)
+	@JsonDeserialize(using = DateTimeDeserializer.class)
 	private Date violationDate;
 	
 	@Column
@@ -170,7 +180,8 @@ public class DisputeListItem {
 	 */
 	@Column
 	@Schema(nullable = true)
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(using = DateTimeSerializer.class)
+	@JsonDeserialize(using = DateTimeDeserializer.class)
 	private Date jjDecisionDate;
 	
 	/**

@@ -258,7 +258,7 @@ export class DisputeService implements IDisputeService {
     dispute = this.splitLawyerNames(dispute);
     dispute = this.splitAddressLines(dispute);
 
-    return this.disputeApiService.apiDisputeDisputeIdPut(disputeId, staffComment, dispute)
+    return this.disputeApiService.apiDisputeDisputeIdPut(disputeId, staffComment, null, dispute)
       .pipe(
         map((response: Dispute) => {
           this.logger.info('DisputeService::putDispute', response)
@@ -589,9 +589,9 @@ export class DisputeService implements IDisputeService {
     return dispute;
   }
 
-  public apiTicketValidationPrintGet(disputeId: number, type: DcfTemplateType, timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone): Observable<any> {
+  public apiTicketValidationPrintGet(disputeId: number, type: DcfTemplateType): Observable<any> {
     return this.http
-    .get(`/api/dispute/${disputeId}/print?timeZone=${timeZone}&type=${type}`, {
+    .get(`/api/dispute/${disputeId}/print?type=${type}`, {
       observe: 'response',
       responseType: 'blob',
       context: new HttpContext(),
