@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
 using TrafficCourts.Staff.Service.Authentication;
@@ -61,7 +62,13 @@ public class DisputeController : StaffControllerBase
     {
         _logger.LogDebug("Retrieving Data from ORDS - OCCAM Disputes");
 
+        if (!ValidateTimeZone(parameters?.TimeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
+        {
+            return validationResult; // Return BadRequest if validation fails
+        }
+
         parameters ??= OccamDisputeListingParameters.Default;
+
         try
         {
             Features.Occam.Disputes.Request request = new() { Parameters = parameters };

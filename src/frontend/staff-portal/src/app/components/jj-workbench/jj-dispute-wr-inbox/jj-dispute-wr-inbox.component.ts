@@ -58,7 +58,6 @@ export class JJDisputeWRInboxComponent implements OnInit {
   getTCODisputes() {
     this.logger.log('JJDisputeWRInboxComponent::getTCODisputes');
     const params = {
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       jjAssignedTo: this.jjIDIR,
       disputeStatusCodes: [DisputeStatus.New, DisputeStatus.InProgress, DisputeStatus.Review].join(","),
       hearingTypeCd: HearingType.WrittenReasons,

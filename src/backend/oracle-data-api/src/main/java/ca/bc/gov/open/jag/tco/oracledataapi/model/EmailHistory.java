@@ -9,10 +9,13 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer;
+import ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,8 +42,9 @@ public class EmailHistory extends Auditable<String> {
 	 * The date and time the email was sent
 	 */
 	@Column(nullable = false)
-	@Temporal(TemporalType.TIMESTAMP)
 	@Schema(nullable = false)
+	@JsonSerialize(using = DateTimeSerializer.class)
+	@JsonDeserialize(using = DateTimeDeserializer.class)
 	private Date emailSentTs;
 
 	/**

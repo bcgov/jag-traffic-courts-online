@@ -23,7 +23,8 @@ namespace TrafficCourts.Staff.Service.Test.Controllers;
 
 public class DisputeControllerTest
 {
-    
+    private readonly TimeZoneInfo _timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+
     [Fact]
     public async Task TestGetDisputes200Result()
     {
@@ -32,7 +33,7 @@ public class DisputeControllerTest
         var disputeService = new Mock<IDisputeService>();
         
         disputeService
-            .Setup(_ => _.GetAllDisputesAsync(It.IsAny<GetAllDisputesParameters>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetAllDisputesAsync(It.IsAny<GetAllDisputesParameters>(), _timeZone, It.IsAny<CancellationToken>()))
             .ReturnsAsync(expected);
         var mockLogger = new Mock<ILogger<DisputeController>>();
         var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
@@ -40,7 +41,7 @@ public class DisputeControllerTest
 
         // Act
         GetAllDisputesParameters? parameters = null;
-        IActionResult? result = await disputeController.GetDisputesAsync(parameters!, CancellationToken.None);
+        IActionResult? result = await disputeController.GetDisputesAsync(parameters!, _timeZone.Id, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -60,14 +61,14 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.GetDisputeAsync(It.Is<GetDisputeOptions>(_ => _.DisputeId == id && _.Assign == true), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetDisputeAsync(It.Is<GetDisputeOptions>(_ => _.DisputeId == id && _.Assign == true), _timeZone, It.IsAny<CancellationToken>()))
             .ReturnsAsync(dispute);
         var mockLogger = new Mock<ILogger<DisputeController>>();
         var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
         DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await disputeController.GetDisputeAsync(id, CancellationToken.None);
+        IActionResult? result = await disputeController.GetDisputeAsync(id, _timeZone.Id, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -85,14 +86,14 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.GetDisputeAsync(It.Is<GetDisputeOptions>(_ => _.DisputeId == id && _.Assign == true), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetDisputeAsync(It.Is<GetDisputeOptions>(_ => _.DisputeId == id && _.Assign == true), _timeZone, It.IsAny<CancellationToken>()))
             .Throws(new TrafficCourts.Exceptions.ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
         DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await disputeController.GetDisputeAsync(id, CancellationToken.None);
+        IActionResult? result = await disputeController.GetDisputeAsync(id, _timeZone.Id, CancellationToken.None);
 
         // Assert
         var badRequestResult = Assert.IsType<HttpError>(result);
@@ -110,14 +111,14 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.GetDisputeAsync(It.Is<GetDisputeOptions>(_ => _.DisputeId == id && _.Assign == true), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetDisputeAsync(It.Is<GetDisputeOptions>(_ => _.DisputeId == id && _.Assign == true), _timeZone, It.IsAny<CancellationToken>()))
             .Throws(new TrafficCourts.Exceptions.ApiException("msg", StatusCodes.Status404NotFound, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
         DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await disputeController.GetDisputeAsync(id, CancellationToken.None);
+        IActionResult? result = await disputeController.GetDisputeAsync(id, _timeZone.Id, CancellationToken.None);
 
         // Assert
         var notFoundResult = Assert.IsType<HttpError>(result);
@@ -135,14 +136,14 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<ClaimsPrincipal>(), It.IsAny<string>(), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<ClaimsPrincipal>(), It.IsAny<string>(), It.IsAny<Dispute>(), _timeZone, It.IsAny<CancellationToken>()))
             .ReturnsAsync(dispute);
         var mockLogger = new Mock<ILogger<DisputeController>>();
         var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
         DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await disputeController.UpdateDisputeAsync(id, dispute, "test comment", CancellationToken.None);
+        IActionResult? result = await disputeController.UpdateDisputeAsync(id, dispute, "test comment", _timeZone.Id, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -160,14 +161,14 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<ClaimsPrincipal>(), It.IsAny<string>(), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<ClaimsPrincipal>(), It.IsAny<string>(), It.IsAny<Dispute>(), _timeZone, It.IsAny<CancellationToken>()))
             .Throws(new TrafficCourts.Exceptions.ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
         DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await disputeController.UpdateDisputeAsync(id, dispute, "test comment", CancellationToken.None);
+        IActionResult? result = await disputeController.UpdateDisputeAsync(id, dispute, "test comment", _timeZone.Id, CancellationToken.None);
 
         // Assert
         var badRequestResult = Assert.IsType<HttpError>(result);
@@ -186,14 +187,14 @@ public class DisputeControllerTest
         var disputeService = new Mock<IDisputeService>();
         long updatedId = 2;
         disputeService
-            .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == updatedId), It.IsAny<ClaimsPrincipal>(), It.IsAny<string>(), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == updatedId), It.IsAny<ClaimsPrincipal>(), It.IsAny<string>(), It.IsAny<Dispute>(), _timeZone, It.IsAny<CancellationToken>()))
             .Throws(new TrafficCourts.Exceptions.ApiException("msg", StatusCodes.Status404NotFound, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
         DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await disputeController.UpdateDisputeAsync(updatedId, dispute, "test comment", CancellationToken.None);
+        IActionResult? result = await disputeController.UpdateDisputeAsync(updatedId, dispute, "test comment", _timeZone.Id,CancellationToken.None);
 
         // Assert
         var notFoundResult = Assert.IsType<HttpError>(result);
@@ -283,14 +284,14 @@ public class DisputeControllerTest
 
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.GetAllDisputesWithPendingUpdateRequestsAsync(It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetAllDisputesWithPendingUpdateRequestsAsync(It.IsAny<TimeZoneInfo>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(disputes);
         var mockLogger = new Mock<ILogger<DisputeController>>();
         var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
         DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await disputeController.GetDisputesWithPendingUpdateRequestsAsync(CancellationToken.None);
+        IActionResult? result = await disputeController.GetDisputesWithPendingUpdateRequestsAsync(TimeZoneInfo.Local.Id, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -349,11 +350,11 @@ public class DisputeControllerTest
         DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         disputeService
-            .Setup(_ => _.GetDisputeAsync(It.Is<GetDisputeOptions>(_ => _.DisputeId == id && _.Assign == true), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetDisputeAsync(It.Is<GetDisputeOptions>(_ => _.DisputeId == id && _.Assign == true), _timeZone, It.IsAny<CancellationToken>()))
             .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
 
         // Act
-        IActionResult? result = await disputeController.GetDisputeAsync(1, CancellationToken.None);
+        IActionResult? result = await disputeController.GetDisputeAsync(1, _timeZone.Id, CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
