@@ -5,7 +5,7 @@ namespace TrafficCourts.OrdsDataService.Justin;
 
 internal class LanguageRepository : OrdsRepository<LanguageRepository>, ILanguageRepository
 {
-    public LanguageRepository(TcoOrdsDataServiceClient client, ILogger<LanguageRepository> logger) 
+    public LanguageRepository(TcoOrdsDataServiceClient client, ILogger<LanguageRepository> logger)
         : base(client, "/v2/justin_languages", logger)
     {
     }
@@ -18,6 +18,13 @@ internal class LanguageRepository : OrdsRepository<LanguageRepository>, ILanguag
             ETagCache.OneDay,
             cancellationToken);
 
-        return response?.Rows ?? [];
+        var result = response?.Rows?
+            .Where(x =>
+            x.cdln_active_yn.Equals("Y", StringComparison.OrdinalIgnoreCase) &&
+            !string.Equals(x.cdln_language_dsc, "Chinese", StringComparison.OrdinalIgnoreCase) &&
+            !string.Equals(x.cdln_language_dsc, "Other", StringComparison.OrdinalIgnoreCase))
+            .ToList() ?? new List<Language>();
+
+        return result;
     }
 }
