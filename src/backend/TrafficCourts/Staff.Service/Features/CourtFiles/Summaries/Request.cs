@@ -9,7 +9,9 @@ public class Request : IRequest<Response>
     public bool? multiple_officers_yn { get; set; }
     public bool? electronic_ticket_yn { get; set; }
 
-    public string? time_zone { get; set; }
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+    public TimeZoneInfo time_zone { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     public string? submitted_from { get; set; }
     public string? submitted_thru { get; set; }
 
