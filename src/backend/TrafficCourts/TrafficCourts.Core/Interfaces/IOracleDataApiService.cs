@@ -15,7 +15,7 @@ public interface IOracleDataApiService
     Task DeleteDisputeAsync(long id, CancellationToken cancellationToken);
     Task DeleteJJDisputeAsync(long? jjDisputeId, string ticketNumber, CancellationToken cancellationToken);
     Task<ICollection<DisputeResult>> FindDisputeStatusesAsync(string ticketNumber, string? issuedTime, string? noticeOfDisputeGuid, ExcludeStatus2? excludeStatus, CancellationToken cancellationToken);
-    Task<ICollection<DisputeListItem>> GetAllDisputesAsync(DateTimeOffset? newerThan, ExcludeStatus? excludeStatus, CancellationToken cancellationToken);
+    Task<ICollection<DisputeListItem>> GetAllDisputesAsync(DateTime? newerThan, ExcludeStatus? excludeStatus, CancellationToken cancellationToken);
     Task<Dispute> GetDisputeAsync(long id, bool isAssign, CancellationToken cancellationToken);
     Task<Dispute> GetDisputeByNoticeOfDisputeGuidAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<DisputeUpdateRequest>> GetDisputeUpdateRequestsAsync(long? id, Status? status, CancellationToken cancellationToken);

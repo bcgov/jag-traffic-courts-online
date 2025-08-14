@@ -1,12 +1,10 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
-import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Temporal;
 
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
@@ -16,6 +14,11 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer;
+import ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,8 +49,9 @@ public abstract class Auditable<U> {
 
 	/** The timestamp this record was created. This should always be in UTC date-time (ISO 8601) format */
 	@CreatedDate
-	@Temporal(TIMESTAMP)
 	@Column(updatable = false)
+	@JsonSerialize(using = DateTimeSerializer.class)
+	@JsonDeserialize(using = DateTimeDeserializer.class)
 	private Date createdTs;
 
 	/** The username of the individual (or system) who modified this record. */
@@ -57,8 +61,9 @@ public abstract class Auditable<U> {
 
 	/** The timestamp this record was last modified. This should always be in UTC date-time (ISO 8601) format*/
 	@LastModifiedDate
-	@Temporal(TIMESTAMP)
 	@Schema(nullable = true)
+	@JsonSerialize(using = DateTimeSerializer.class)
+	@JsonDeserialize(using = DateTimeDeserializer.class)
 	private Date modifiedTs;
 
 }

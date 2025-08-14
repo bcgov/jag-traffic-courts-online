@@ -91,13 +91,14 @@ export class EmailHistoryService {
     /**
      * Returns all File History Records from the Oracle Data API related to a specific ticket number.
      * @param ticketNumber 
+     * @param xTimezone 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiEmailhistoryEmailhistoryGet(ticketNumber?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<EmailHistory>>;
-    public apiEmailhistoryEmailhistoryGet(ticketNumber?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<EmailHistory>>>;
-    public apiEmailhistoryEmailhistoryGet(ticketNumber?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<EmailHistory>>>;
-    public apiEmailhistoryEmailhistoryGet(ticketNumber?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiEmailhistoryEmailhistoryGet(ticketNumber?: string, xTimezone?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<EmailHistory>>;
+    public apiEmailhistoryEmailhistoryGet(ticketNumber?: string, xTimezone?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<EmailHistory>>>;
+    public apiEmailhistoryEmailhistoryGet(ticketNumber?: string, xTimezone?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<EmailHistory>>>;
+    public apiEmailhistoryEmailhistoryGet(ticketNumber?: string, xTimezone?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (ticketNumber !== undefined && ticketNumber !== null) {
@@ -106,6 +107,9 @@ export class EmailHistoryService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required
