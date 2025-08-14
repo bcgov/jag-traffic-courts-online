@@ -130,7 +130,7 @@ export class JJDisputeService {
      * @param ticketNumber, jjDispute
      */
   public apiJjRequireCourtHearingPut(ticketNumber: string, remarks?: string): Observable<any> {
-    return this.jjApiService.apiJjTicketNumberRequirecourthearingPut(ticketNumber, remarks)
+    return this.jjApiService.apiJjTicketNumberRequirecourthearingPut(ticketNumber, null, remarks)
       .pipe(
         map((response: any) => {
           this.logger.info('jj-DisputeService::apiJjRequireCourtHearingPut', response)
@@ -151,7 +151,7 @@ export class JJDisputeService {
   }
 
   public apiJjDisputeIdReviewPut(ticketNumber: string, checkVTC: boolean, remarks?: string): Observable<any> {
-    return this.jjApiService.apiJjTicketNumberReviewPut(ticketNumber, checkVTC, remarks)
+    return this.jjApiService.apiJjTicketNumberReviewPut(ticketNumber, checkVTC, null, remarks)
       .pipe(
         map((response: any) => {
           this.logger.info('jj-DisputeService::apiJjTicketNumberReviewPut', response)

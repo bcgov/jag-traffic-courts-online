@@ -21,11 +21,7 @@ public class EmailHistoryService : IEmailHistoryService
 
         var history = await _oracleDataApi.GetEmailHistoryByTicketNumberAsync(ticketNumber, cancellationToken);
 
-        foreach (var record in history)
-        {
-            // Convert the timestamp to the specified time zone
-            record.EmailSentTs = record.EmailSentTs.UtcToLocalTime(timeZone);
-        }   
+        history.UtcToLocalTime(timeZone);
 
         return history;
     }

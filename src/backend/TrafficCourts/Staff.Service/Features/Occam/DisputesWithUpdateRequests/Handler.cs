@@ -337,7 +337,7 @@ public class Handler : IRequestHandler<Request, Response>
         {
             disputeId = dispute.dispute_id,
             ticketNumber = dispute.ticket_number_txt,
-            submittedTs = dispute.submitted_dt.UtcToLocalTime(timeZone),
+            submittedTs = dispute.submitted_dt,
             disputantSurname = dispute.disputant_surname_nm,
             disputantGivenName1 = dispute.disputant_given_1_nm,
             disputantGivenName2 = dispute.disputant_given_2_nm,
@@ -354,7 +354,7 @@ public class Handler : IRequestHandler<Request, Response>
             violationDate = dispute.violation_dt,
             jjAssignedTo = dispute.jj_assigned_to,
             decisionMadeBy = dispute.most_recent_decision_made_by,
-            jjDecisionDate = dispute.jj_decision_dt.UtcToLocalTime(timeZone),
+            jjDecisionDate = dispute.jj_decision_dt,
             courtAgenId = dispute.court_agen_id?.ToString() ?? string.Empty,
             courtAgenName = dispute.court_agen_nm,
             hearingDate = dispute.hearing_dt,
@@ -362,6 +362,8 @@ public class Handler : IRequestHandler<Request, Response>
             updateRequest_HasChangeOfPlea = dispute.update_request_change_of_plea_yn,
             updateRequest_HasAdjournmentDocument = dispute.update_request_adjournment_document_yn,
         };
+
+        listItem.UtcToLocalTime(timeZone);
 
         return listItem;
     }
