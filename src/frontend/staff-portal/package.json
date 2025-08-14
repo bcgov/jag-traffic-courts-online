@@ -101,6 +101,9 @@
     "yarn-audit-fix": "^7.0.4"
   },
   "resolutions": {
-    "postcss": "^8.1.0"
+    "postcss": "^8.1.0",
+    "glob": "^10.4.5",
+    "@nestjs/core": "^10.4.19",
+    "file-type": "^19.6.0"
   }
 }
