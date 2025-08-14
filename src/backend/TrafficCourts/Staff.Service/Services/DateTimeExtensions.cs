@@ -35,4 +35,27 @@ public static class DateTimeExtensions
         dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Unspecified);
         return dateTime;
     }
+
+
+    public static DateTime? LocalToUtcTime(this DateTime? dateTime, TimeZoneInfo timeZone)
+    {
+        ArgumentNullException.ThrowIfNull(timeZone);
+        if (dateTime == null)
+        {
+            return null;
+        }
+
+        return dateTime.Value.LocalToUtcTime(timeZone);
+    }
+
+    public static DateTime LocalToUtcTime(this DateTime dateTime, TimeZoneInfo timeZone)
+    {
+        ArgumentNullException.ThrowIfNull(timeZone);
+        dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Local);
+
+        dateTime = TimeZoneInfo.ConvertTimeToUtc(dateTime, timeZone);
+        // Ensure the DateTime is treated as Unspecified to avoid issues with serialization and comparisons
+        dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Unspecified);
+        return dateTime;
+    }
 }

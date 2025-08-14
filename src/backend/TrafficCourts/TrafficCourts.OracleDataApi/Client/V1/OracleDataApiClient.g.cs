@@ -24,6 +24,7 @@ using System.Text.Json.Serialization;
 
 namespace TrafficCourts.OracleDataApi.Client.V1
 {
+    using System.Text;
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -794,7 +795,7 @@ namespace TrafficCourts.OracleDataApi.Client.V1
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
                     var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(body, JsonSerializerSettings);
-                    var content_ = new System.Net.Http.StringContent(json_);
+                    var content_ = new StringContent(body, Encoding.UTF8, "application/json");
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("PUT");
@@ -5621,8 +5622,7 @@ namespace TrafficCourts.OracleDataApi.Client.V1
         public string AddressPostalCode { get; set; }
 
         [Newtonsoft.Json.JsonProperty("disputantBirthdate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [JsonConverter(typeof(AsDateOnlyJsonConverter))]
-        public System.DateTime? DisputantBirthdate { get; set; }
+        public System.DateOnly? DisputantBirthdate { get; set; }
 
         /// <summary>
         /// Surname of the disputant on violation ticket.
@@ -6193,8 +6193,7 @@ namespace TrafficCourts.OracleDataApi.Client.V1
         public string DisputantGivenName3 { get; set; }
 
         [Newtonsoft.Json.JsonProperty("disputantBirthdate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [JsonConverter(typeof(AsDateOnlyJsonConverter))]
-        public System.DateTime? DisputantBirthdate { get; set; }
+        public System.DateOnly? DisputantBirthdate { get; set; }
 
         [Newtonsoft.Json.JsonProperty("driversLicenceNumber", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.StringLength(30)]
@@ -6263,8 +6262,7 @@ namespace TrafficCourts.OracleDataApi.Client.V1
         public bool EmailAddressVerified { get; set; }
 
         [Newtonsoft.Json.JsonProperty("filingDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [JsonConverter(typeof(AsDateOnlyJsonConverter))]
-        public System.DateTime? FilingDate { get; set; }
+        public System.DateOnly? FilingDate { get; set; }
 
         [Newtonsoft.Json.JsonProperty("representedByLawyer", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
@@ -6515,8 +6513,7 @@ namespace TrafficCourts.OracleDataApi.Client.V1
         public int? DriversLicenceExpiryYear { get; set; }
 
         [Newtonsoft.Json.JsonProperty("disputantBirthdate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [JsonConverter(typeof(AsDateOnlyJsonConverter))]
-        public System.DateTime? DisputantBirthdate { get; set; }
+        public System.DateOnly? DisputantBirthdate { get; set; }
 
         [Newtonsoft.Json.JsonProperty("address", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.StringLength(100)]
@@ -6903,8 +6900,7 @@ namespace TrafficCourts.OracleDataApi.Client.V1
         public bool EmailAddressVerified { get; set; }
 
         [Newtonsoft.Json.JsonProperty("filingDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [JsonConverter(typeof(AsDateOnlyJsonConverter))]
-        public System.DateTime? FilingDate { get; set; }
+        public System.DateOnly? FilingDate { get; set; }
 
         [Newtonsoft.Json.JsonProperty("requestCourtAppearanceYn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]

@@ -300,7 +300,11 @@ export class JJDisputeComponent implements OnInit {
     this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action: any) => {
         if (action) {
-          this.lastUpdatedJJDispute.jjDecisionDate = new Date().toISOString();
+          const now = new Date();
+          const pad = (n: number) => n.toString().padStart(2, '0');
+          // pass the jjDecisionDate as the user's local time, on the server we will convert to UTC
+          // we do this to ensure when the jjDecisionDate is set or fetched, it is always in user local time
+          this.lastUpdatedJJDispute.jjDecisionDate = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
           this.putJJDispute().subscribe(response => {
             this.jjDisputeService.apiJjTicketNumberConfirmPut(this.lastUpdatedJJDispute.ticketNumber).subscribe(response => {
               this.onBackClicked();
