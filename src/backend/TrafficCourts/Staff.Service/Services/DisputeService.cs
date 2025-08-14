@@ -78,18 +78,6 @@ public class DisputeService : IDisputeService,
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    ////public async Task<ICollection<DisputeListItem>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken)
-    ////{
-    ////    List<DisputeListItem> disputes = await GetCachedDisputesAsync(cancellationToken);
-
-    ////    if (excludeStatus is not null)
-    ////    {
-    ////        GetAllDisputesParameters filter = new() { ExcludeStatus = [excludeStatus.Value] };
-    ////        disputes = disputes.Filter(filter).ToList();
-    ////    }
-
-    ////    return disputes;
-    ////}
 
     public async Task<GetDisputeCountResponse> GetDisputeCountAsync(DisputeStatus status, CancellationToken cancellationToken)
     {
@@ -114,29 +102,21 @@ public class DisputeService : IDisputeService,
 
         var agencies = await _agencyLookupService.GetListAsync(cancellationToken);
 
-        // apply fitler, sorting and paging
+        // apply filter, sorting and paging
         var paged = disputes
             .Filter(parameters, agencies)
             .Sort(parameters)
             .Page(parameters, 25);
 
-        foreach (var item in paged)
-        {
-            item.SubmittedTs = item.SubmittedTs.UtcToLocalTime(timeZone);
-            item.JjDecisionDate = item.JjDecisionDate.UtcToLocalTime(timeZone);
-        }
+        paged.UtcToLocalTime(timeZone);
 
         return new PagedDisputeListItemCollection(paged);
-    }
-
-    public async Task<long> SaveDisputeAsync(Dispute dispute, CancellationToken cancellationToken)
-    {
-        return await _oracleDataApi.SaveDisputeAsync(dispute, cancellationToken);
     }
 
     public async Task<Dispute> GetDisputeAsync(GetDisputeOptions options, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
         Dispute dispute = await _oracleDataApi.GetDisputeAsync(options.DisputeId, options.Assign, cancellationToken);
+        dispute.UtcToLocalTime(timeZone);
 
         // this should be safe since are updating different parts of the dispute in each of these calls
         var ocrTask = GetOcrImageAndResults(dispute, cancellationToken);
@@ -146,16 +126,14 @@ public class DisputeService : IDisputeService,
         // wait for them all to complete
         await Task.WhenAll(ocrTask, fileTask, icbcTask);
 
-        dispute.SubmittedTs = dispute.SubmittedTs.UtcToLocalTime(timeZone);
-
         return dispute;
     }
 
     public async Task<Dispute> UpdateDisputeAsync(long disputeId, ClaimsPrincipal user, string? staffComment, Dispute dispute, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
+        dispute.UtcToLocalTime(timeZone);
         Dispute updatedDispute = await _oracleDataApi.UpdateDisputeAsync(disputeId, dispute, true, cancellationToken);
-
-        dispute.SubmittedTs = dispute.SubmittedTs.UtcToLocalTime(timeZone);
+        dispute.UtcToLocalTime(timeZone);
 
         // Publish file history
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
@@ -255,6 +233,7 @@ public class DisputeService : IDisputeService,
 
         // Check for other disputes in processing status with same ticket number
         Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, false, cancellationToken);
+        
         string? issuedTime = dispute.IssuedTs is not null ? dispute.IssuedTs.Value.ToString("HH:mm") : "";
         ICollection<DisputeResult> disputeResults = await _oracleDataApi.FindDisputeStatusesAsync(dispute.TicketNumber, null, null, null, cancellationToken);
         disputeResults = disputeResults.Where(x => x.DisputeStatus == DisputeResultDisputeStatus.PROCESSING).ToList();
@@ -370,8 +349,8 @@ public class DisputeService : IDisputeService,
             {
                 try
                 {
-
                     Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeUpdateRequest.DisputeId, false, cancellationToken);
+                    dispute.UtcToLocalTime(timeZone);
 
                     // Fill in record to return
                     disputeWithUpdates = new DisputeWithUpdates
@@ -385,7 +364,7 @@ public class DisputeService : IDisputeService,
                         UserAssignedTs = dispute.UserAssignedTs,
                         Status = dispute.Status,
                         TicketNumber = dispute.TicketNumber,
-                        SubmittedTs = dispute.SubmittedTs.UtcToLocalTime(timeZone),
+                        SubmittedTs = dispute.SubmittedTs,
                         EmailAddress = dispute.EmailAddress,
                         EmailAddressVerified = dispute.EmailAddressVerified
                     };
@@ -444,7 +423,7 @@ public class DisputeService : IDisputeService,
             return;
         }
 
-        // check whether this udpate request is for an adjournment document
+        // check whether this update request is for an adjournment document
         dispute.AdjournmentDocument = false;
         if (disputeUpdateRequest.UpdateType == DisputeUpdateRequestUpdateType.DISPUTANT_DOCUMENT)
         {
@@ -664,6 +643,8 @@ public class DisputeService : IDisputeService,
     {
         // TODO-DKAY: Can we just replace this call with a direct ORDS call? What does that look like?
         ICollection<DisputeListItem> values = await _oracleDataApi.GetAllDisputesAsync(null, null, cancellationToken);
+
+        // items are cached as they are fetched and time zone conversion is done when using the cached data.
 
         if (values is List<DisputeListItem> listOfDisputes)
         {

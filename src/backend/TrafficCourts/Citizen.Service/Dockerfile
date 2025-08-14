@@ -1,6 +1,7 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 ARG BUILD_IMAGE=mcr.microsoft.com/dotnet/sdk
 ARG RUNTIME_IMAGE=mcr.microsoft.com/dotnet/aspnet
+ARG BUILD_MODE=Release
 
 FROM $RUNTIME_IMAGE:8.0 AS base
 WORKDIR /app
@@ -8,6 +9,7 @@ EXPOSE 80
 EXPOSE 443
 
 FROM $BUILD_IMAGE:8.0 AS build
+ARG BUILD_MODE
 WORKDIR /src
 COPY ["Citizen.Service/TrafficCourts.Citizen.Service.csproj", "Citizen.Service/"]
 COPY ["Common/TrafficCourts.Common.csproj", "Common/"]
@@ -15,10 +17,11 @@ COPY ["Messaging/TrafficCourts.Messaging.csproj", "Messaging/"]
 RUN dotnet restore "Citizen.Service/TrafficCourts.Citizen.Service.csproj"
 COPY . .
 WORKDIR "/src/Citizen.Service"
-RUN dotnet build "TrafficCourts.Citizen.Service.csproj" -c Release -o /app/build
+RUN dotnet build "TrafficCourts.Citizen.Service.csproj" -c $BUILD_MODE -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "TrafficCourts.Citizen.Service.csproj" -c Release -o /app/publish
+ARG BUILD_MODE
+RUN dotnet publish "TrafficCourts.Citizen.Service.csproj" -c $BUILD_MODE -o /app/publish
 COPY entrypoint.sh /app/publish
 
 FROM base AS final

@@ -402,7 +402,9 @@ export class JJDisputeComponent implements OnInit {
         actionType: "primary",
         icon: "done"
       };
-      this.dialog.open(ConfirmDialogComponent, { data, width: "200px" });
+      this.dialog.open(ConfirmDialogComponent, { data, width: "200px" }).afterClosed().subscribe(() => {
+      this.router.navigate(['/jj']);
+    });
     });
   }
 

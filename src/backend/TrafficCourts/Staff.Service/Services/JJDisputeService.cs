@@ -253,13 +253,11 @@ public partial class JJDisputeService : IJJDisputeService
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-
-
     public async Task<ICollection<JJDispute>> GetAllJJDisputesAsync(string? jjAssignedTo, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(timeZone);
         var records = await _oracleDataApi.GetJJDisputesAsync(jjAssignedTo, null, cancellationToken);
-        UtcToLocalTime(records, timeZone);
+        records.UtcToLocalTime(timeZone);
         return records;
     }
 
@@ -268,7 +266,7 @@ public partial class JJDisputeService : IJJDisputeService
         ArgumentNullException.ThrowIfNull(timeZone);
 
         JJDispute dispute = await _oracleDataApi.GetJJDisputeAsync(ticketNumber, assignVTC, cancellationToken);
-        UtcToLocalTime(dispute, timeZone);
+        dispute.UtcToLocalTime(timeZone);
 
         // Search by dispute id
         Domain.Models.DocumentProperties properties = new() { TcoDisputeId = dispute.Id };
@@ -324,9 +322,9 @@ public partial class JJDisputeService : IJJDisputeService
     {
         ArgumentNullException.ThrowIfNull(timeZone);
 
-        LocalToUtcTime(jjDispute, timeZone);
+        jjDispute.LocalToUtcTime(timeZone);
         JJDispute dispute = await _oracleDataApi.UpdateJJDisputeCascadeAsync(jjDispute.TicketNumber, true, jjDispute, cancellationToken);
-        UtcToLocalTime(dispute, timeZone);
+        dispute.UtcToLocalTime(timeZone);
 
         // TCVP-2522 save FileHistory
         SaveFileHistoryRecord fileHistoryRecord = new();
@@ -342,9 +340,9 @@ public partial class JJDisputeService : IJJDisputeService
     {
         ArgumentNullException.ThrowIfNull(timeZone);
 
-        LocalToUtcTime(jjDispute, timeZone);
+        jjDispute.LocalToUtcTime(timeZone);
         JJDispute dispute = await _oracleDataApi.UpdateJJDisputeAsync(jjDispute.TicketNumber, checkVTC, jjDispute, cancellationToken);
-        UtcToLocalTime(dispute, timeZone);
+        dispute.UtcToLocalTime(timeZone);
 
         // Populate the statute description of each count of the JJDispute
         foreach (var count in dispute.JjDisputedCounts)
@@ -383,7 +381,7 @@ public partial class JJDisputeService : IJJDisputeService
         ArgumentNullException.ThrowIfNull(timeZone);
 
         JJDispute dispute = await _oracleDataApi.ReviewJJDisputeAsync(ticketNumber, checkVTC, recalled, remark, cancellationToken);
-        UtcToLocalTime(dispute, timeZone);
+        dispute.UtcToLocalTime(timeZone);
 
         FileHistoryAuditLogEntryType fileHistoryType = FileHistoryAuditLogEntryType.VREV; // Dispute returned to JJ for review
 
@@ -409,7 +407,7 @@ public partial class JJDisputeService : IJJDisputeService
         try
         {
             JJDispute dispute = await _oracleDataApi.RequireCourtHearingJJDisputeAsync(ticketNumber, remark, cancellationToken);
-            UtcToLocalTime(dispute, timeZone);
+            dispute.UtcToLocalTime(timeZone);
 
             SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
                 dispute.TicketNumber,
@@ -436,7 +434,7 @@ public partial class JJDisputeService : IJJDisputeService
         string partId = await GetDisputeAssignToPartIdAsync(ticketNumber, cancellationToken);
 
         JJDispute dispute = await _oracleDataApi.AcceptJJDisputeAsync(ticketNumber, checkVTC, partId, cancellationToken);
-        UtcToLocalTime(dispute, timeZone);
+        dispute.UtcToLocalTime(timeZone);
 
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
             dispute.TicketNumber, 
@@ -453,7 +451,7 @@ public partial class JJDisputeService : IJJDisputeService
         ArgumentNullException.ThrowIfNull(timeZone);
 
         JJDispute dispute = await _oracleDataApi.ConcludeJJDisputeAsync(ticketNumber, checkVTC, cancellationToken);
-        UtcToLocalTime(dispute, timeZone);
+        dispute.UtcToLocalTime(timeZone);
 
         return dispute;
     }
@@ -463,7 +461,7 @@ public partial class JJDisputeService : IJJDisputeService
         ArgumentNullException.ThrowIfNull(timeZone);
 
         JJDispute dispute = await _oracleDataApi.CancelJJDisputeAsync(ticketNumber, checkVTC, cancellationToken);
-        UtcToLocalTime(dispute, timeZone);
+        dispute.UtcToLocalTime(timeZone);
 
         return dispute;
     }
@@ -473,7 +471,7 @@ public partial class JJDisputeService : IJJDisputeService
         ArgumentNullException.ThrowIfNull(timeZone);
         
         JJDispute dispute = await _oracleDataApi.ConfirmJJDisputeAsync(ticketNumber, cancellationToken);
-        UtcToLocalTime(dispute, timeZone);
+        dispute.UtcToLocalTime(timeZone);
 
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
             dispute.TicketNumber,
@@ -499,6 +497,8 @@ public partial class JJDisputeService : IJJDisputeService
         //  - throw error if either jjAssignedTo or partId is null
         //  - pass partId to _oracleDataApi.AcceptJJDisputeAsync()
         JJDispute jjDispute = await _oracleDataApi.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
+        // do not use any date fields in this usage
+
         string? assignedTo = jjDispute.JjAssignedTo;
 
         if (string.IsNullOrEmpty(assignedTo))
@@ -621,28 +621,6 @@ public partial class JJDisputeService : IJJDisputeService
 
         _logger.LogWarning("Failed to return Statute based on the provided {statuteId}", count.Description);
         return string.Empty;
-    }
-
-    private static void UtcToLocalTime(ICollection<JJDispute> records, TimeZoneInfo timeZone)
-    {
-        foreach (var record in records)
-        {
-            UtcToLocalTime(record, timeZone);
-        }
-    }
-
-    private static void UtcToLocalTime(JJDispute record, TimeZoneInfo timeZone)
-    {
-        record.JjDecisionDate = record.JjDecisionDate.UtcToLocalTime(timeZone);
-        record.SubmittedTs = record.SubmittedTs.UtcToLocalTime(timeZone);
-        record.VtcAssignedTs = record.VtcAssignedTs.UtcToLocalTime(timeZone);
-    }
-
-    private static void LocalToUtcTime(JJDispute record, TimeZoneInfo timeZone)
-    {
-        record.JjDecisionDate = record.JjDecisionDate.LocalToUtcTime(timeZone)?.Truncate();
-        record.SubmittedTs = record.SubmittedTs.LocalToUtcTime(timeZone)?.Truncate();
-        record.VtcAssignedTs = record.VtcAssignedTs.LocalToUtcTime(timeZone)?.Truncate();
     }
 
     [LoggerMessage(EventId = 0, Level = LogLevel.Warning, EventName = "UserAssignedToTicketHasNoPartId", Message = "User assigned to ticket has no PartId attribute in Keycloak")]
