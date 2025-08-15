@@ -403,7 +403,7 @@ export class JJDisputeComponent implements OnInit {
         icon: "done"
       };
       this.dialog.open(ConfirmDialogComponent, { data, width: "200px" }).afterClosed().subscribe(() => {
-      this.router.navigate(['/jj']);
+      this.onBackClicked();
     });
     });
   }
