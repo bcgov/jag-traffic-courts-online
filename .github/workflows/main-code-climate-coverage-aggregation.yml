@@ -24,9 +24,10 @@ jobs:
       # Get Code Climate binary
       - name: Download Code Climate Binary
         run: |
-          curl -L https://github.com/codeclimate/test-reporter/releases/download/v0.11.1/artifacts.tar.gz | \
-          tar -xzf - --strip-components=2 -C . artifacts/bin/test-reporter-0.11.1-linux-amd64
+          wget -O cc-test-reporter.tar.gz https://github.com/codeclimate/test-reporter/releases/download/v0.11.1/artifacts.tar.gz
+          tar -xzf cc-test-reporter.tar.gz --strip-components=2 artifacts/bin/test-reporter-0.11.1-linux-amd64
           mv test-reporter-0.11.1-linux-amd64 cc-test-reporter
+          rm cc-test-reporter.tar.gz
 
       # Permissions applied to the Code Climate Executable
       - name: Apply executable perms to Code Climate Binary
@@ -122,9 +123,10 @@ jobs:
       # Get Code Climate binary
       - name: Download Code Climate Binary
         run: |
-          curl -L https://github.com/codeclimate/test-reporter/releases/download/v0.11.1/artifacts.tar.gz | \
-          tar -xzf - --strip-components=2 -C . artifacts/bin/test-reporter-0.11.1-linux-amd64
+          wget -O cc-test-reporter.tar.gz https://github.com/codeclimate/test-reporter/releases/download/v0.11.1/artifacts.tar.gz
+          tar -xzf cc-test-reporter.tar.gz --strip-components=2 artifacts/bin/test-reporter-0.11.1-linux-amd64
           mv test-reporter-0.11.1-linux-amd64 cc-test-reporter
+          rm cc-test-reporter.tar.gz
 
       # Permissions applied to the Code Climate Executable
       - name: Apply executable perms to Code Climate Binary
@@ -188,9 +190,10 @@ jobs:
       # Get Code Climate binary
       - name: Download Code Climate Binary
         run: |
-          curl -L https://github.com/codeclimate/test-reporter/releases/download/v0.11.1/artifacts.tar.gz | \
-          tar -xzf - --strip-components=2 -C . artifacts/bin/test-reporter-0.11.1-linux-amd64
+          wget -O cc-test-reporter.tar.gz https://github.com/codeclimate/test-reporter/releases/download/v0.11.1/artifacts.tar.gz
+          tar -xzf cc-test-reporter.tar.gz --strip-components=2 artifacts/bin/test-reporter-0.11.1-linux-amd64
           mv test-reporter-0.11.1-linux-amd64 cc-test-reporter
+          rm cc-test-reporter.tar.gz
 
       # Permissions applied to the Code Climate Executable
       - name: Apply executable perms to Code Climate Binary
