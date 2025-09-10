@@ -23,7 +23,10 @@ jobs:
 
       # Get Code Climate binary
       - name: Download Code Climate Binary
-        run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        run: |
+          curl -L https://github.com/codeclimate/test-reporter/releases/download/v0.11.1/artifacts.tar.gz | \
+          tar -xzf - --strip-components=2 -C . artifacts/bin/test-reporter-0.11.1-linux-amd64
+          mv test-reporter-0.11.1-linux-amd64 cc-test-reporter
 
       # Permissions applied to the Code Climate Executable
       - name: Apply executable perms to Code Climate Binary
@@ -45,8 +48,8 @@ jobs:
       # Set required Git env vars for a push to master
       - name: Set ENV for codeclimate (push)
         run: |
-          echo "GIT_BRANCH=$GITHUB_REF" >> GITHUB_ENV
-          echo "GIT_COMMIT_SHA=$GITHUB_SHA" >> GITHUB_ENV
+          echo "GIT_BRANCH=$GITHUB_REF" >> $GITHUB_ENV
+          echo "GIT_COMMIT_SHA=$GITHUB_SHA" >> $GITHUB_ENV
           #echo "::set-env name=GIT_BRANCH::$GITHUB_REF"
           #echo "::set-env name=GIT_COMMIT_SHA::$GITHUB_SHA"
         if: github.event_name == 'push'
@@ -118,7 +121,10 @@ jobs:
 
       # Get Code Climate binary
       - name: Download Code Climate Binary
-        run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        run: |
+          curl -L https://github.com/codeclimate/test-reporter/releases/download/v0.11.1/artifacts.tar.gz | \
+          tar -xzf - --strip-components=2 -C . artifacts/bin/test-reporter-0.11.1-linux-amd64
+          mv test-reporter-0.11.1-linux-amd64 cc-test-reporter
 
       # Permissions applied to the Code Climate Executable
       - name: Apply executable perms to Code Climate Binary
@@ -140,8 +146,8 @@ jobs:
       # Set required Git env vars for a push to master
       - name: Set ENV for codeclimate (push)
         run: |
-          echo "GIT_BRANCH=$GITHUB_REF" >> GITHUB_ENV
-          echo "GIT_COMMIT_SHA=$GITHUB_SHA" >> GITHUB_ENV
+          echo "GIT_BRANCH=$GITHUB_REF" >> $GITHUB_ENV
+          echo "GIT_COMMIT_SHA=$GITHUB_SHA" >> $GITHUB_ENV
           #echo "::set-env name=GIT_BRANCH::$GITHUB_REF"
           #echo "::set-env name=GIT_COMMIT_SHA::$GITHUB_SHA"
         if: github.event_name == 'push'
@@ -181,7 +187,10 @@ jobs:
     steps:
       # Get Code Climate binary
       - name: Download Code Climate Binary
-        run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        run: |
+          curl -L https://github.com/codeclimate/test-reporter/releases/download/v0.11.1/artifacts.tar.gz | \
+          tar -xzf - --strip-components=2 -C . artifacts/bin/test-reporter-0.11.1-linux-amd64
+          mv test-reporter-0.11.1-linux-amd64 cc-test-reporter
 
       # Permissions applied to the Code Climate Executable
       - name: Apply executable perms to Code Climate Binary
