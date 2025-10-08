@@ -17,12 +17,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlyDeserializer;
+import ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlySerializer;
+import ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer;
+import ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -66,8 +71,9 @@ public class Dispute extends Auditable<String> {
 	 * minutes. This should always be in UTC date-time (ISO 8601) format
 	 */
 	@Column
-	@Temporal(TemporalType.TIMESTAMP)
 	@Schema(nullable=true)
+	@JsonSerialize(using = DateTimeSerializer.class)
+	@JsonDeserialize(using = DateTimeDeserializer.class)
 	private Date issuedTs;
 
 	/**
@@ -76,7 +82,8 @@ public class Dispute extends Auditable<String> {
 	 */
 	@Column
 	@Schema(nullable = true)
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(using = DateTimeSerializer.class)
+	@JsonDeserialize(using = DateTimeDeserializer.class)
 	private Date submittedTs;
 
 	/**
@@ -112,7 +119,8 @@ public class Dispute extends Auditable<String> {
 	 */
 	@Column
 	@Schema(nullable = true)
-	@Temporal(TemporalType.DATE)
+	@JsonSerialize(using = DateOnlySerializer.class)
+	@JsonDeserialize(using = DateOnlyDeserializer.class)
 	private Date disputantBirthdate;
 
 	/**
@@ -258,7 +266,8 @@ public class Dispute extends Auditable<String> {
 
 	@Column
 	@Schema(nullable = true)
-	@Temporal(TemporalType.DATE)
+	@JsonSerialize(using = DateOnlySerializer.class)
+	@JsonDeserialize(using = DateOnlyDeserializer.class)
 	private Date filingDate;
 
 	//Legal Representation Section
@@ -375,7 +384,8 @@ public class Dispute extends Auditable<String> {
 
 	@Column(nullable = true)
 	@Schema(nullable = true)
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(using = DateTimeSerializer.class)
+	@JsonDeserialize(using = DateTimeDeserializer.class)
 	private Date appearanceDtm;
 
 	@Column(nullable = true)
@@ -464,7 +474,8 @@ public class Dispute extends Auditable<String> {
 	 */
 	@Column
 	@Schema(nullable = true)
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(using = DateTimeSerializer.class)
+	@JsonDeserialize(using = DateTimeDeserializer.class)
 	private Date userAssignedTs;
 
 	/**

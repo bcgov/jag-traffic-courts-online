@@ -1,16 +1,10 @@
-﻿using FluentAssertions;
-using FluentAssertions.Types;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using TrafficCourts.Common.Authorization;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.Staff.Service.Controllers;
 using TrafficCourts.Staff.Service.Services;
@@ -26,6 +20,8 @@ public class FileHistoryControllerTest
     {
         // Mock the IFileHistoryService to return a couple File history records, confirm controller returns them.
 
+        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+
         // Arrange
         FileHistory fileHistory1 = new();
         fileHistory1.FileHistoryId = 1;
@@ -36,13 +32,13 @@ public class FileHistoryControllerTest
         List<FileHistory> fileHistories = new() { fileHistory1, fileHistory2 };
         var fileHistoryService = new Mock<IFileHistoryService>();
         fileHistoryService
-            .Setup(_ => _.GetFileHistoryForTicketAsync("TestTicket01", It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetFileHistoryForTicketAsync("TestTicket01", timeZone, It.IsAny<CancellationToken>()))
             .ReturnsAsync(fileHistories);
         var mockLogger = new Mock<ILogger<FileHistoryController>>();
         FileHistoryController fileHistoryController = new(fileHistoryService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await fileHistoryController.GetFileHistoryRecordsAsync("TestTicket01", CancellationToken.None);
+        IActionResult? result = await fileHistoryController.GetFileHistoryRecordsAsync("TestTicket01", "Pacific Standard Time", CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
