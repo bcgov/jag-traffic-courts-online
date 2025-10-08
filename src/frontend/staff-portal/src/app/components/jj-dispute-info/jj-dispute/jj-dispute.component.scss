@@ -310,3 +310,18 @@ label {
 .return-jj-select{
   padding: 0.188rem;
 }
+
+// Mandatory field styling for APP dropdown
+.mat-form-field-invalid {
+  .mat-form-field-outline {
+    color: #f44336 !important;
+  }
+  
+  .mat-select-arrow {
+    color: #f44336 !important;
+  }
+  
+  .mat-form-field-outline-thick {
+    color: #f44336 !important;
+  }
+}

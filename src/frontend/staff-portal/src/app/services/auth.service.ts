@@ -4,7 +4,7 @@ import { AppRoutes } from 'app/app.routes';
 import { KeycloakEventType, KeycloakService } from 'keycloak-angular';
 import { KeycloakService as KeycloakAPIService } from 'app/api'
 import { KeycloakProfile as KeycloakProfileJS } from 'keycloak-js';
-import { BehaviorSubject, from, Observable, map, catchError, forkJoin, first } from 'rxjs';
+import { BehaviorSubject, from, Observable, map, catchError, forkJoin, first, of } from 'rxjs';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
 import { ConfigService } from '@config/config.service';
@@ -60,7 +60,7 @@ export class AuthService {
               this._isLoggedIn.next(response);
               if (this.isLoggedIn && this.isInit) {
                 this.userProfile$.pipe(first()).subscribe(() => {
-                  this.isInit = false;                  
+                  this.isInit = false;
                 })
               }
               return response;
@@ -194,7 +194,7 @@ export class AuthService {
   checkRole(role: string): boolean {
     return this.keycloak.isUserInRole(role, this.site);
   }
-  
+
   /**
    * Check if the user has any of the specified roles.
    *
@@ -206,6 +206,14 @@ export class AuthService {
   }
 
   getUsersInGroup(group: string): Observable<Array<UserRepresentation>> {
+    if (group === UserGroup.JUDICIAL_JUSTICE && this._jjList.value?.length > 0) {
+      return of(this._jjList.value);
+    }
+
+    if (group === UserGroup.VTC_STAFF && this._vtcList.value?.length > 0) {
+      return of(this._vtcList.value);
+    }
+
     return this.keycloakAPI.apiKeycloakGroupNameUsersGet(group)
       .pipe(
         map((response: UserRepresentation[]) => {

@@ -2,6 +2,7 @@ import {
   AbstractControl, ValidationErrors, ValidatorFn,
   Validators
 } from '@angular/forms';
+import { StringNormalizer } from '@core/utils/string-normalizer.util';
 
 export class FormControlValidators {
   /**
@@ -214,6 +215,73 @@ export class FormControlValidators {
         currentLength <= maxLength;
       return valid ? null : { length: true };
     };
+  }
+
+  /**
+   * @description
+   * Validates that the form control value contains only ASCII characters.
+   * Automatically normalizes common problematic Unicode characters before validation.
+   * 
+   * This validator implements a two-phase approach:
+   * Phase 1: Normalize common problematic characters (Unicode quotes, dashes, etc.)
+   * Phase 2: Validate that no non-ASCII characters remain after normalization
+   * 
+   * @returns ValidationErrors with 'asciiOnly' property if validation fails, null otherwise
+   */
+  public static asciiOnly(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) {
+      return null;
+    }
+
+    const result = StringNormalizer.normalizeAndValidate(control.value);
+    
+    // Update the control value with the normalized version if it changed
+    if (result.normalized !== control.value) {
+      // Use setTimeout to avoid ExpressionChangedAfterItHasBeenCheckedError
+      setTimeout(() => {
+        control.setValue(result.normalized, { emitEvent: false });
+      });
+    }
+
+    if (!result.isValid) {
+      const errorMessage = StringNormalizer.getValidationErrorMessage(result.nonASCIICharacters);
+      return { 
+        asciiOnly: {
+          message: errorMessage,
+          invalidCharacters: result.nonASCIICharacters
+        }
+      };
+    }
+
+    return null;
+  }
+
+  /**
+   * @description
+   * Validates ASCII characters without automatic normalization.
+   * Use this when you want to strictly validate without modifying the input.
+   * 
+   * @returns ValidationErrors with 'asciiOnlyStrict' property if validation fails, null otherwise
+   */
+  public static asciiOnlyStrict(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) {
+      return null;
+    }
+
+    const isValid = StringNormalizer.isASCII(control.value);
+    
+    if (!isValid) {
+      const nonASCIIChars = StringNormalizer.getNonASCIICharacters(control.value);
+      const errorMessage = StringNormalizer.getValidationErrorMessage(nonASCIIChars);
+      return { 
+        asciiOnlyStrict: {
+          message: errorMessage,
+          invalidCharacters: nonASCIIChars
+        }
+      };
+    }
+
+    return null;
   }
 
 }

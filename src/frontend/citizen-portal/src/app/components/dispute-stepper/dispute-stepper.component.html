@@ -268,8 +268,8 @@
               <div class="col-md-12">
                 <mat-form-field class="w-100">
                   <mat-label>
-                    Please enter your reasons for why you are requesting a <strong>fine reduction</strong>
-                    (must not contain a defence of the allegation)
+                    Please enter your reasons, <strong>including any financial information,</strong> why you are requesting a <strong>fine reduction</strong>
+                    <span style="font-weight:bolder; font-size: larger;"> (must not contain a defence of the allegation)</span>
                   </mat-label>
                   <input matInput formControlName="fine_reduction_reason" [errorStateMatcher]="matcher" />
                   <mat-error *ngIf="(additionalForm.controls.fine_reduction_reason.dirty
@@ -293,8 +293,8 @@
               <div class="col-md-12">
                 <mat-form-field class="w-100">
                   <mat-label>
-                    Please enter your reasons for why you are requesting <strong>time to pay</strong>
-                    (must not contain a defence of the allegation)
+                    Please enter your reasons, <strong>including any financial information,</strong> why you are requesting <strong>time to pay</strong>
+                    <span style="font-weight:bolder; font-size: larger;"> (must not contain a defence of the allegation)</span>
                   </mat-label>
                   <input matInput formControlName="time_to_pay_reason" [errorStateMatcher]="matcher" />
                   <mat-error *ngIf="(additionalForm.controls.time_to_pay_reason.dirty
