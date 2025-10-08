@@ -219,7 +219,9 @@
     "positive_number": "Enter positive number",
     "required": "Required",
     "max_length": "Maximum length is ",
-    "max_number": "must be a number less than "
+    "max_number": "must be a number less than ",
+    "ascii_only": "Contains invalid characters. Please use only standard English letters, numbers, and common punctuation.",
+    "ascii_only_strict": "Contains non-ASCII characters. Please use only standard English characters."
   },
   "shell_ticket_confirmation": {
     "cancel": "No, do not create ticket",

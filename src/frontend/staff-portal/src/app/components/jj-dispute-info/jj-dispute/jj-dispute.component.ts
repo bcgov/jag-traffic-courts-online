@@ -92,7 +92,7 @@ export class JJDisputeComponent implements OnInit {
     disputantAttendanceType: [null, Validators.maxLength(20)]
   });
   courtAppearanceForm: FormGroup = this.formBuilder.group({
-    appCd: [null],
+    appCd: [null, Validators.required],
     room: [null],
     duration: [null],
     reason: [null],
@@ -255,7 +255,38 @@ export class JJDisputeComponent implements OnInit {
     element?.nativeElement.scrollIntoView({ behavior: 'smooth' });
   }
 
+  /**
+   * Validates that mandatory fields in Court Appearance section are completed
+   * Shows warning dialog if APP field is blank for Court Appearance hearing types
+   */
+  private validateCourtAppearanceFields(): boolean {
+    // Only validate for Court Appearance hearing types
+    if (this.tcoDisputeInfo.hearingType === this.HearingTypeCodes.CourtAppearance) {
+      const appCdControl = this.courtAppearanceForm.get('appCd');
+      if (!appCdControl?.value) {
+        // Mark the field as touched to show validation errors
+        appCdControl?.markAsTouched();
+        
+        const data: DialogOptions = {
+          titleKey: "Mandatory Data Missing",
+          messageKey: "Mandatory data is incomplete in Court Appearance section.",
+          actionTextKey: "OK",
+          actionType: "warn",
+          cancelHide: true,
+          icon: "warning"
+        };
+        this.dialog.open(ConfirmDialogComponent, { data, width: "40%" });
+        return false;
+      }
+    }
+    return true;
+  }
+
   onConfirm(): void {
+    // Validate mandatory fields before proceeding
+    if (!this.validateCourtAppearanceFields()) {
+      return;
+    }
 
     const data: DialogOptions = {
       titleKey: "Submit to VTC Staff?",
@@ -284,6 +315,10 @@ export class JJDisputeComponent implements OnInit {
   }
 
   onRequireCourtHearing() {
+    // Validate mandatory fields before proceeding
+    if (!this.validateCourtAppearanceFields()) {
+      return;
+    }
 
     const data: DialogOptions = {
       titleKey: this.lastUpdatedJJDispute.hearingType === this.HearingType.WrittenReasons ? "Adjourn / Require Hearing?" : "Adjourn / Continue?",
@@ -367,7 +402,9 @@ export class JJDisputeComponent implements OnInit {
         actionType: "primary",
         icon: "done"
       };
-      this.dialog.open(ConfirmDialogComponent, { data, width: "200px" });
+      this.dialog.open(ConfirmDialogComponent, { data, width: "200px" }).afterClosed().subscribe(() => {
+      this.onBackClicked();
+    });
     });
   }
 
@@ -415,6 +452,11 @@ export class JJDisputeComponent implements OnInit {
   }
 
   onAccept(): void {
+    // Validate mandatory fields before proceeding
+    if (!this.validateCourtAppearanceFields()) {
+      return;
+    }
+    
     const data: DialogOptions = {
       titleKey: "Submit to JUSTIN?",
       messageKey: "Are you sure this dispute is ready to be submitted to JUSTIN?",

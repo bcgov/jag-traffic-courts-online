@@ -96,8 +96,6 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
       }
     } else if (form.controls.drivers_licence_province) {
       if (this.mode !== DisputeFormMode.UPDATE) {
-        this.driversLicenceProvinceFormControl.setValue(this.bc);
-      } else {
         this.driversLicenceProvinceFormControl.setValue(null);
       }
     }
@@ -184,25 +182,24 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
       if (province === null) {
         form.controls.drivers_licence_country_id.setValue(null);
         form.controls.drivers_licence_province_seq_no.setValue(null);
+        form.controls.drivers_licence_number.setValidators([Validators.maxLength(20)]);
       } else {
         form.controls.drivers_licence_country_id.setValue(province.ctryId);
         form.controls.drivers_licence_province_seq_no.setValue(province.provSeqNo);
+        if (province.provId === this.bc.provId) {
+          form.controls.drivers_licence_number.setValidators([
+            Validators.required,
+            Validators.minLength(7),
+            Validators.maxLength(9),
+            Validators.pattern(/^\d+$/)
+          ]);
+        } else {
+          form.controls.drivers_licence_number.setValidators([
+            Validators.required,
+            Validators.maxLength(20)
+          ]);
+        }
       }
-      
-      if (province != null && province.provId === this.bc.provId) {
-        form.controls.drivers_licence_number.setValidators([
-          Validators.required,
-          Validators.minLength(7),
-          Validators.maxLength(9),
-          Validators.pattern(/^\d+$/) // Ensure it's numeric
-        ]);
-      } else {
-        form.controls.drivers_licence_number.setValidators([
-          Validators.required,
-          Validators.maxLength(20)
-        ]);
-      }
-
       form.controls.drivers_licence_number.updateValueAndValidity();
     }, 0)
   }
@@ -226,9 +223,6 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   onSelectContactType(newContactType: any) {
     this.form.controls.contact_given_names.setValue(null);
     this.form.controls.contact_surname.setValue(null);
-    this.form.controls.contact_law_firm_name.clearValidators();
-    this.form.controls.contact_surname.clearValidators();
-    this.form.controls.contact_given_names.clearValidators();
     this.form.controls.contact_law_firm_name.setValue(null);
     this.form.controls.address.setValue(null);
     this.form.controls.address.updateValueAndValidity();
@@ -240,6 +234,11 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
     this.form.controls.email_address.updateValueAndValidity();
     this.form.controls.home_phone_number.setValue(null);
     this.form.controls.home_phone_number.updateValueAndValidity();
+
+    // Reset validators while preserving the original validators (maxLength and asciiOnly)
+    this.form.controls.contact_law_firm_name.setValidators([Validators.maxLength(30), FormControlValidators.asciiOnly]);
+    this.form.controls.contact_surname.setValidators([Validators.maxLength(30), FormControlValidators.asciiOnly]);
+    this.form.controls.contact_given_names.setValidators([Validators.maxLength(30), FormControlValidators.asciiOnly]);
 
     if (newContactType == this.ContactType.Lawyer) {
       // make all contact info required

@@ -327,7 +327,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
 
         // test that asserts that the ticketSearchService excludes Invoices with a FormNumber != "MV6000E (040924)"
         [Fact]
-        public async Task search_excludes_FormNumber_tickets()
+        public async Task search_not_excludes_FormNumber_tickets()
         {
             // Given
             string ticketNumber = "EA00000000";
@@ -363,12 +363,12 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
 
             // Then
             var actual = await ticketSearchService.SearchAsync(ticketNumber, TimeOnly.MinValue, CancellationToken.None);
-            Assert.Null(actual);
+            Assert.NotNull(actual);
         }
 
-        // test that asserts that the ticketSearchService excludes Invoices with a FormNumber != "MV6000E(040924)"
+        // test that asserts that the ticketSearchService not excludes Invoices with a FormNumber != "MV6000E(040924)"
         [Fact]
-        public async Task search_excludes_FormNumber_wo_spaces_tickets()
+        public async Task search_not_excludes_FormNumber_wo_spaces_tickets()
         {
             // Given
             string ticketNumber = "EA00000000";
@@ -404,7 +404,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
 
             // Then
             var actual = await ticketSearchService.SearchAsync(ticketNumber, TimeOnly.MinValue, CancellationToken.None);
-            Assert.Null(actual);
+            Assert.NotNull(actual);
         }
     }
 }

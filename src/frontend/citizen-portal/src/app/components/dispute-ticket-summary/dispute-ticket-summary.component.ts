@@ -59,7 +59,7 @@ export class DisputeTicketSummaryComponent implements OnInit, OnChanges {
     return this.ticketCounts?.filter(i => i.count_no === disputeCount.count_no).shift();
   }
 
-  getProvinceName(provSeqNo: number): string {
-    return this.provincesAndStates?.filter(i => i.provSeqNo === provSeqNo).shift()?.provNm;
+  getProvinceName(provSeqNo: number, ctryId: number): string {
+    return this.provincesAndStates?.filter(i =>i.ctryId === ctryId && i.provSeqNo === provSeqNo).shift()?.provNm;
   }
 }

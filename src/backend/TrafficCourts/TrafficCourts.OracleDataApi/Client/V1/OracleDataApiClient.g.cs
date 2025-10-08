@@ -24,6 +24,7 @@ using System.Text.Json.Serialization;
 
 namespace TrafficCourts.OracleDataApi.Client.V1
 {
+    using System.Text;
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -794,7 +795,7 @@ namespace TrafficCourts.OracleDataApi.Client.V1
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
                     var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(body, JsonSerializerSettings);
-                    var content_ = new System.Net.Http.StringContent(json_);
+                    var content_ = new StringContent(body, Encoding.UTF8, "application/json");
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("PUT");
