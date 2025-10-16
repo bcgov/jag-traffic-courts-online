@@ -1,9 +1,9 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-ARG BUILD_IMAGE=mcr.microsoft.com/dotnet/sdk
-ARG RUNTIME_IMAGE=mcr.microsoft.com/dotnet/aspnet
+ARG BUILD_IMAGE=mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim
+ARG RUNTIME_IMAGE=mcr.microsoft.com/dotnet/aspnet:8.0-bookworm-slim
 ARG BUILD_MODE=Release
 
-FROM $RUNTIME_IMAGE:8.0 AS base
+FROM $RUNTIME_IMAGE AS base
 WORKDIR /app
 EXPOSE 8080
 
@@ -21,7 +21,7 @@ LABEL git.commit.date="$GIT_COMMIT_DATE" \
 ENV APP_VERSION=$GIT_VERSION
 ENV GIT_SHA=$GIT_SHA
 
-FROM $BUILD_IMAGE:8.0 AS build
+FROM $BUILD_IMAGE AS build
 ARG BUILD_MODE
 WORKDIR /src
 COPY ["TrafficCourts.Arc.Dispute.Service/TrafficCourts.Arc.Dispute.Service.csproj", "TrafficCourts.Arc.Dispute.Service/"]

@@ -795,10 +795,10 @@ containerSecurityContext:
 resources:
   requests:
     cpu: 500m
-    memory: 512Mi
+    memory: 768Mi
   limits:
     cpu: 750m
-    memory: 768Mi
+    memory: 1536Mi
 ## Configure RabbitMQ containers' extra options for liveness probe
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
 ## @param livenessProbe.enabled Enable livenessProbe
