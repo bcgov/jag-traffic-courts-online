@@ -205,12 +205,14 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         digitalCaseFile.History = await GetFileHistory(dispute.DisputeId, dispute.TicketNumber, cancellationToken);
 
         // Set Rejected Reason in File remarks
-        var remarks = digitalCaseFile.FileRemarks;
-
-           remarks.Add(new FileRemark
-           {
-               Note = dispute.RejectedReason
-           });
+        if (!string.IsNullOrWhiteSpace(dispute.RejectedReason))
+        {
+            var remarks = digitalCaseFile.FileRemarks;
+            remarks.Add(new FileRemark
+            {
+                Note = dispute.RejectedReason
+            });
+        }
         
         return digitalCaseFile;
     }
