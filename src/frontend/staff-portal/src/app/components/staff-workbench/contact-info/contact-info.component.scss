@@ -49,6 +49,19 @@ h3 {
   background-color: rgba(0, 0, 0, 0.04) !important;
 }
 
+.action-button-row {
+  display: flex;
+  width: 100%;
+  gap: 16px;
+
+  // Override global rule WITH HIGHER SPECIFICITY
+  .mat-flat-button {
+    width: 100% !important;
+    float: none !important; // remove right-float
+    margin-right: 0 !important;
+  }
+}
+
 .contact-info {
   .contact-info {
     button {
