@@ -3,6 +3,7 @@ using System.Diagnostics.Metrics;
 using System.Net.Http.Headers;
 using System.Text;
 using TrafficCourts.OrdsDataService;
+using TrafficCourts.OrdsDataService.Generated.OCCAM.Client.V1;
 using TrafficCourts.OrdsDataService.Justin;
 using TrafficCourts.OrdsDataService.Occam;
 using TrafficCourts.OrdsDataService.Tco;
@@ -53,6 +54,23 @@ public static class OrdsDataServiceExtensions
             ETagHandler handler = new ETagHandler(cache, metrics);
             return handler;
         });
+
+        // Add HttpClient for NSwag generated OCCAM client
+        services.AddHttpClient<OCCAMORDSDataServiceClientV1>(client =>
+        {
+            client.BaseAddress = new Uri(options_occam.Address + "occam/");
+            client.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue(options_occam.Username, options_occam.Password);
+        })
+        .AddHttpMessageHandler(sp =>
+        {
+            var cache = sp.GetRequiredService<Caching.Memory.IMemoryCache>();
+            var metrics = sp.GetRequiredService<IOrdsDataServiceOperationMetrics>();
+            ETagHandler handler = new ETagHandler(cache, metrics);
+            return handler;
+        });
+
+        // Register the interface for the OCCAM client
+        services.AddTransient<IOCCAMORDSDataServiceClientV1>(sp => sp.GetRequiredService<OCCAMORDSDataServiceClientV1>());
 
         services.AddSingleton<IOrdsDataServiceOperationMetrics, OrdsDataServiceOperationMetrics>();
 

@@ -33,11 +33,11 @@ export class NoticeOfDisputeService {
   ContactType = DisputeContactTypeCd;
 
   noticeOfDisputeFormConfigs: NoticeOfDisputeFormConfigs = {
-    disputant_surname: { value: null, options: { validators: [Validators.required, Validators.maxLength(30)] } },
-    disputant_given_names: { value: null, options: { validators: [Validators.required, Validators.maxLength(92)] } },
-    contact_given_names: { value: null, options: { validators: [Validators.maxLength(92)] } },
-    contact_surname: { value: null, options: { validators: [Validators.maxLength(30)] } },
-    contact_law_firm_name: { value: null, options: { validators: [Validators.maxLength(200)] } },
+    disputant_surname: { value: null, options: { validators: [Validators.required, Validators.maxLength(30), FormControlValidators.asciiOnly] } },
+    disputant_given_names: { value: null, options: { validators: [Validators.required, Validators.maxLength(30), FormControlValidators.asciiOnly] } },
+    contact_given_names: { value: null, options: { validators: [Validators.maxLength(30), FormControlValidators.asciiOnly] } },
+    contact_surname: { value: null, options: { validators: [Validators.maxLength(30), FormControlValidators.asciiOnly] } },
+    contact_law_firm_name: { value: null, options: { validators: [Validators.maxLength(30), FormControlValidators.asciiOnly] } },
     contact_type: { value: null, options: { validators: [Validators.required] } },
     address: { value: null, options: { validators: [Validators.required, Validators.maxLength(304), FormControlValidators.containsEmailPattern] } },
     address_city: { value: null, options: { validators: [Validators.required, Validators.maxLength(30)] } },

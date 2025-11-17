@@ -7,12 +7,12 @@
 public class DisputeCaseFileSummary
 {
     public long Id { get; set; }
-    public DateTimeOffset? SubmittedTs { get; set; }
-    public System.DateTimeOffset? JjDecisionDate { get; set; }
+    public DateTime? SubmittedTs { get; set; }
+    public System.DateTime? JjDecisionDate { get; set; }
     public string SignatoryName { get; set; }
     public string? HearingType { get; set; }
     public string TicketNumber { get; set; }
-    public DateTimeOffset? ViolationDate { get; set; }
+    public DateTime? ViolationDate { get; set; }
     public int ViolationDateCount { get; set; }
     public decimal? ToBeHeardAtCourthouseId { get; set; }
     public string ToBeHeardAtCourthouseName { get; set; }
@@ -33,12 +33,12 @@ public class DisputeCaseFileSummary
 
     public string JjAssignedTo { get; set; }
     public string VtcAssignedTo { get; set; }
-    public DateTimeOffset? VtcAssignedTs { get; set; }
+    public DateTime? VtcAssignedTs { get; set; }
 
     public decimal? AppearanceCourthouseId { get; set; }
     public string? AppearanceCourthouseName { get; set; }
     public string? AppearanceRoomCode { get; set; }
-    public DateTimeOffset? AppearanceTs { get; set; }
+    public DateTime? AppearanceTs { get; set; }
 
     /// <summary>
     /// The estimated appearnce duration in minutes.

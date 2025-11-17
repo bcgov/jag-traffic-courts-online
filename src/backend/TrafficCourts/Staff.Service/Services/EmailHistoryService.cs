@@ -10,17 +10,19 @@ public class EmailHistoryService : IEmailHistoryService
 {
     private readonly IOracleDataApiService _oracleDataApi;
 
-
-    public EmailHistoryService(
-        IOracleDataApiService oracleDataApi,
-        IHttpContextAccessor httpContextAccessor,
-        ILogger<EmailHistoryService> logger)
+    public EmailHistoryService(IOracleDataApiService oracleDataApi)
     {
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
     }
 
-    public async Task<ICollection<EmailHistory>> GetEmailHistoryForTicketAsync(String ticketNumber, CancellationToken cancellationToken)
+    public async Task<ICollection<EmailHistory>> GetEmailHistoryForTicketAsync(string ticketNumber, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
-        return await _oracleDataApi.GetEmailHistoryByTicketNumberAsync(ticketNumber, cancellationToken);
+        ArgumentNullException.ThrowIfNull(timeZone);
+
+        var history = await _oracleDataApi.GetEmailHistoryByTicketNumberAsync(ticketNumber, cancellationToken);
+
+        history.UtcToLocalTime(timeZone);
+
+        return history;
     }
 }

@@ -83,7 +83,7 @@ namespace TrafficCourts.Coms.Client.Test
         private async Task<PostgreSqlContainer> BuildAndStartPostgreSqlContainer(CancellationToken cancellationToken)
         {
             var container = new PostgreSqlBuilder()
-                .WithImage("postgres:15.1")
+                .WithImage("postgres:16.4")
                 .WithHostname("postgres")
                 .WithPortBinding(5432, 5432)
                 .WithNetwork(_network)

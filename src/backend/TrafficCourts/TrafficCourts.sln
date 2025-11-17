@@ -53,6 +53,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficCourts.OrdsDataServi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficCourts.OrdsDataService.Test", "TrafficCourts.OrdsDataService.Test\TrafficCourts.OrdsDataService.Test.csproj", "{147092E8-3AF8-444C-9DBE-4D64F5224FB1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficCourts.Hotfix.DataMigration", "TrafficCourts.Hotfix.DataMigration\TrafficCourts.Hotfix.DataMigration.csproj", "{AAD4F0F7-F17F-4278-B0AD-E220F77169B8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hotfix", "Hotfix", "{A051CFB7-C69D-4837-924D-EA1FED819BB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -151,6 +155,10 @@ Global
 		{147092E8-3AF8-444C-9DBE-4D64F5224FB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{147092E8-3AF8-444C-9DBE-4D64F5224FB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{147092E8-3AF8-444C-9DBE-4D64F5224FB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAD4F0F7-F17F-4278-B0AD-E220F77169B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAD4F0F7-F17F-4278-B0AD-E220F77169B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAD4F0F7-F17F-4278-B0AD-E220F77169B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAD4F0F7-F17F-4278-B0AD-E220F77169B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -166,6 +174,7 @@ Global
 		{A3C93E4F-5A45-4028-9820-20E037FF5F2F} = {7B716295-C23B-4849-B1B9-0BBF9800D8E9}
 		{C0059080-9EB3-4503-BD9B-BA24427F3B2C} = {7B716295-C23B-4849-B1B9-0BBF9800D8E9}
 		{147092E8-3AF8-444C-9DBE-4D64F5224FB1} = {7B716295-C23B-4849-B1B9-0BBF9800D8E9}
+		{AAD4F0F7-F17F-4278-B0AD-E220F77169B8} = {A051CFB7-C69D-4837-924D-EA1FED819BB8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F53B0D46-E55D-4CE9-8617-6CD7FD73C49B}

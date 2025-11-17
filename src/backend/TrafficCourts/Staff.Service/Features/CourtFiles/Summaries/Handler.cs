@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Text;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.OrdsDataService.Tco;
-using X.PagedList;
 
 namespace TrafficCourts.Staff.Service.Features.CourtFiles.Summaries;
 
@@ -28,7 +27,7 @@ public class Handler : IRequestHandler<Request, Response>
 
             var pagedCollection = await _repository.GetListAsync(parameters, cancellationToken);
 
-            var response = CreateResponse(pagedCollection);
+            var response = CreateResponse(pagedCollection, request.time_zone);
 
             return response;
         }
@@ -45,11 +44,11 @@ public class Handler : IRequestHandler<Request, Response>
         }
     }
 
-    private Response CreateResponse(OrdsDataService.OrdsDataServicePagedCollectionResponse<OrdsDisputeCaseFileSummary> pagedCollection)
+    private Response CreateResponse(OrdsDataService.OrdsDataServicePagedCollectionResponse<OrdsDisputeCaseFileSummary> pagedCollection, TimeZoneInfo timeZone)
     {
         if (pagedCollection.Rows is not null)
         {
-            var items = pagedCollection.Rows.Select(Map);
+            var items = pagedCollection.Rows.Select(_ => Map(_, timeZone));
 
             var offset = pagedCollection.Offset;
             var pageSize = pagedCollection.Fetch;
@@ -198,22 +197,19 @@ public class Handler : IRequestHandler<Request, Response>
 
     }
 
-    private void AddUtcDateRangeFilter(Dictionary<string, string> parameters, string field, string? timeZone, string? from, string? thru)
+    private void AddUtcDateRangeFilter(Dictionary<string, string> parameters, string field, TimeZoneInfo timeZone, string? from, string? thru)
     {
         if (from is null && thru is null)
         {
             return;
         }
 
-        timeZone = timeZone ?? "America/Vancouver";
-        TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
-
         // convert the from/thru to UTC
         if (from is not null)
         {
             DateTime date = DateTime.ParseExact(from, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            date = TimeZoneInfo.ConvertTimeToUtc(date, tz);
-            parameters.Add($"{field}_ge", date.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+            date = TimeZoneInfo.ConvertTimeToUtc(date, timeZone);
+            parameters.Add($"{field}_ge", date.ToString("yyyy-MM-ddTHH:mm:ss"));
         }
 
         if (thru is not null)
@@ -221,8 +217,8 @@ public class Handler : IRequestHandler<Request, Response>
             // bump the date by one and search for less than the next day
             DateTime date = DateTime.ParseExact(thru, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             date = date.AddDays(1);
-            date = TimeZoneInfo.ConvertTimeToUtc(date, tz);
-            parameters.Add($"{field}_lt", date.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+            date = TimeZoneInfo.ConvertTimeToUtc(date, timeZone);
+            parameters.Add($"{field}_lt", date.ToString("yyyy-MM-ddTHH:mm:ss"));
         }
     }
 
@@ -294,7 +290,7 @@ public class Handler : IRequestHandler<Request, Response>
                 }
                 else
                 {
-                    _logger.Warning("{IncludeItem} was not included, sorting on {Column} will be ingored", "appearances", item);
+                    _logger.Warning("{IncludeItem} was not included, sorting on {Column} will be ignored", "appearances", item);
                 }
 
                 continue;
@@ -305,7 +301,7 @@ public class Handler : IRequestHandler<Request, Response>
             {
                 if (request.appearances is not true)
                 {
-                    _logger.Warning("{IncludeItem} was not included, sorting on {Column} will be ingored", "appearances", item);
+                    _logger.Warning("{IncludeItem} was not included, sorting on {Column} will be ignored", "appearances", item);
                     continue;
                 }
             }
@@ -314,7 +310,7 @@ public class Handler : IRequestHandler<Request, Response>
             {
                 if (request.notice_of_hearing_yn is not true)
                 {
-                    _logger.Warning("{IncludeItem} was not included, sorting on {Column} will be ingored", "notice_of_hearing_yn", item);
+                    _logger.Warning("{IncludeItem} was not included, sorting on {Column} will be ignored", "notice_of_hearing_yn", item);
                     continue;
                 }
             }
@@ -323,7 +319,7 @@ public class Handler : IRequestHandler<Request, Response>
             {
                 if (request.multiple_officers_yn is not true)
                 {
-                    _logger.Warning("{IncludeItem} was not included, sorting on {Column} will be ingored", "multiple_officers_yn", item);
+                    _logger.Warning("{IncludeItem} was not included, sorting on {Column} will be ignored", "multiple_officers_yn", item);
                     continue;
                 }
             }
@@ -332,7 +328,7 @@ public class Handler : IRequestHandler<Request, Response>
             {
                 if (request.electronic_ticket_yn is not true)
                 {
-                    _logger.Warning("{IncludeItem} was not included, sorting on {Column} will be ingored", "electronic_ticket_yn", item);
+                    _logger.Warning("{IncludeItem} was not included, sorting on {Column} will be ignored", "electronic_ticket_yn", item);
                     continue;
                 }
             }
@@ -376,7 +372,7 @@ public class Handler : IRequestHandler<Request, Response>
     }
 
 
-    private DisputeCaseFileSummary Map(OrdsDisputeCaseFileSummary dispute)
+    private DisputeCaseFileSummary Map(OrdsDisputeCaseFileSummary dispute, TimeZoneInfo timeZone)
     {
         var summary = new DisputeCaseFileSummary
         {
@@ -418,6 +414,8 @@ public class Handler : IRequestHandler<Request, Response>
             AppearanceDuration = (dispute.appr_estimated_duration_hh ?? 0) * 60 + (dispute.appr_estimated_duration_mi ?? 0)
         };
 
+        summary.UtcToLocalTime(timeZone);
+
         return summary;
     }
 
@@ -429,25 +427,6 @@ public class Handler : IRequestHandler<Request, Response>
             "N" => YesNo.No,
             null => null,
             _ => YesNo.Unknown
-        };
-    }
-
-    private static JJDisputeStatus ToJJDisputeStatus(string value)
-    {
-        return value switch
-        {
-            "NEW" => JJDisputeStatus.NEW,
-            "PROG" => JJDisputeStatus.IN_PROGRESS,
-            "UPD" => JJDisputeStatus.DATA_UPDATE,
-            "CONF" => JJDisputeStatus.CONFIRMED,
-            "REQH" => JJDisputeStatus.REQUIRE_COURT_HEARING,
-            "REQM" => JJDisputeStatus.REQUIRE_MORE_INFO,
-            "ACCP" => JJDisputeStatus.ACCEPTED,
-            "REV" => JJDisputeStatus.REVIEW,
-            "HEAR" => JJDisputeStatus.HEARING_SCHEDULED,
-            "CNLD" => JJDisputeStatus.CONCLUDED,
-            "CANC" => JJDisputeStatus.CANCELLED,
-            _ => JJDisputeStatus.UNKNOWN
         };
     }
 }
