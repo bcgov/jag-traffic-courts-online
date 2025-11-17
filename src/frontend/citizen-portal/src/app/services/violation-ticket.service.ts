@@ -117,7 +117,7 @@ export class ViolationTicketService {
       );
   }
 
-  analyseTicket(ticketFile: File, progressRef: NgProgressRef, dialogRef: MatDialogRef<WaitForOcrDialogComponent>): void {
+  async analyseTicket(ticketFile: File, progressRef: NgProgressRef, dialogRef: MatDialogRef<WaitForOcrDialogComponent>): Promise<void> {
     this.clearCache();
     this.logger.info("file target", ticketFile);
     // catch if no ticketFile passed in
@@ -132,6 +132,15 @@ export class ViolationTicketService {
     const validImageTypes = ['image/jpeg', 'image/png'];
     if(!validImageTypes.includes(ticketFile.type)) {
       this.logger.error("ViolationTicketService::analyseTicket error has occurred: ", "Not a valid file type.");
+      this.openErrorScenarioOneDialog();
+      dialogRef.close();
+      return;
+    }
+
+    // Check if file content is HEIC/HEIF/HEVC
+    var fileContentTypeError = await this.fileUtilsService.checkFileContentType(ticketFile);
+    if (fileContentTypeError !== "") {
+      this.logger.error("ViolationTicketService::analyseTicket error has occurred:", fileContentTypeError);
       this.openErrorScenarioOneDialog();
       dialogRef.close();
       return;
