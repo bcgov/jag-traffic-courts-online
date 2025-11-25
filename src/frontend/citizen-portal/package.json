@@ -5,7 +5,7 @@
     "ng": "ng",
     "configure": "ts-node setenv.ts",
     "debug": "yarn start --configuration debug --port 8080",
-    "start": "yarn run configure --environment=dev && ng serve --proxy-config proxy.conf.json",
+    "start": "yarn run configure --environment=dev && ng serve --proxy-config proxy.conf.json --port 5200",
     "build-dev": "yarn run configure --environment=dev && ng build --source-map=false",
     "build-prod": "yarn run configure --environment=prod && ng build --configuration production --source-map=false",
     "api:clean": "npx del-cli \"src/app/api/**\" \"!src/app/api/templates\"",
