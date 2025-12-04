@@ -1,4 +1,4 @@
-<app-page *ngIf="!showTicket">
+<app-page *ngIf="!showTicket && !showManualEntry">
   <ng-container stickyToolBar>
     <div class="busy-container app-width">
       <div [ngBusy]="busy">
@@ -44,6 +44,9 @@
     <app-jj-dispute-digital-case-file [tabIndex]="3" (tcoDisputeInfo)="changeTCODispute($event, tabTypes.DCF)"></app-jj-dispute-digital-case-file>
   </ng-container>
 </app-page>
+<ng-container *ngIf="showManualEntry">
+  <app-manual-dispute-entry (backInbox)="backInbox()"></app-manual-dispute-entry>
+</ng-container>
 <ng-container *ngIf="showTicket">
   <app-contact-info *ngIf="decidePopup === 'A' && tabSelected.value === 0" (backInbox)="backInbox()"
     [disputeInfo]="disputeInfo"></app-contact-info>

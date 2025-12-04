@@ -1,0 +1,469 @@
+<app-page>
+  <ng-container stickyToolBar>
+    <div class="app-width" style="padding-top: 1.5vh; padding-bottom: 1.5vh;" fxLayout="row">
+      <div fxFlex>
+        <button mat-button (click)="onBack()" color="primary">
+          <mat-icon inline="true">arrow_back</mat-icon> Back
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="manual-dispute-content">
+    <div class="page-header">
+      <h2>Submit New Dispute</h2>
+      <p class="subtitle">Enter dispute information, for staff-submitted disputes</p>
+    </div>
+
+    <div class="wizard-container">
+      <!-- Left Sidebar with Steps -->
+      <div class="wizard-sidebar">
+        <div class="steps-list">
+          <div *ngFor="let step of steps; let i = index" 
+               class="step-item"
+               [class.active]="currentStep === i"
+               [class.completed]="step.completed"
+               [class.clickable]="i < currentStep || step.completed"
+               [class.invalid]="i < currentStep && !step.completed && !isStepValid(i)"
+               (click)="goToStep(i)">
+            <div class="step-icon">
+              <mat-icon *ngIf="!step.completed">{{ step.icon }}</mat-icon>
+              <mat-icon *ngIf="step.completed" class="check-icon">check_circle</mat-icon>
+            </div>
+            <div class="step-content">
+              <div class="step-number">Step {{ i + 1 }}</div>
+              <div class="step-label">
+                {{ step.label }}
+                <mat-icon *ngIf="i < currentStep && !step.completed && !isStepValid(i)" class="warning-icon">error</mat-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="wizard-content">
+        <!-- Step 0: Ticket Details (Basic Info) -->
+        <div *ngIf="currentStep === 0" class="step-container">
+          <div class="form-section">
+            <div class="section-header">
+              <h3>Ticket Details</h3>
+            </div>
+
+            <form [formGroup]="ticketDetailsForm" class="form-content">
+          <div class="row">
+            <!-- Ticket Number -->
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>Violation Ticket Number</mat-label>
+                <input matInput formControlName="ticketNumber" 
+                       placeholder="XX00000000" 
+                       oninput="this.value = this.value.toUpperCase()"
+                       maxlength="10" />
+                <mat-error *ngIf="ticketDetailsForm.controls.ticketNumber.hasError('required')">
+                  Ticket number is required
+                </mat-error>
+                <mat-error *ngIf="ticketDetailsForm.controls.ticketNumber.hasError('pattern')">
+                  Must be 2 letters followed by 8 digits (e.g., EA12345678)
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            
+          </div>
+
+          <div class="row">
+            <!-- Violation Date -->
+            <div class="col-md-3">
+              <mat-form-field class="w-100">
+                <mat-label>Violation Date</mat-label>
+                <input matInput formControlName="violationDate" type="text" 
+                       placeholder="DD-MMM-YYYY"
+                       bsDatepicker
+                       [maxDate]="todayDate"
+                       [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true, showWeekNumbers: false, adaptivePosition: true }" />
+                <mat-error *ngIf="ticketDetailsForm.controls.violationDate.hasError('required')">
+                  Violation date is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Violation Time -->
+            <div class="col-md-3">
+              <mat-form-field class="w-100">
+                <mat-label>Violation Time (24-hour format)</mat-label>
+                <input matInput hidden aria-label="violation time" formControlName="violationTime" />
+                <ngx-timepicker-field formControlName="violationTime" [format]="24"></ngx-timepicker-field>
+                <mat-error *ngIf="ticketDetailsForm.controls.violationTime.hasError('required')">
+                  Violation time is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3">
+              <button mat-raised-button color="primary" (click)="onFindTicket()" class="find-ticket-btn" type="button">
+                <mat-icon>search</mat-icon>
+                Find Ticket
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <!-- Court Location -->
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>Courthouse Location</mat-label>
+                <mat-select formControlName="courtLocation">
+                  <mat-option *ngFor="let courthouse of lookupsService.courthouseAgencies" [value]="courthouse.name">
+                    {{ courthouse.name }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="ticketDetailsForm.controls.courtLocation.hasError('required')">
+                  Courthouse location is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <h4 class="subsection-title">Name on Ticket</h4>
+          <div class="row">
+            <!-- Surname -->
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>Surname</mat-label>
+                <input matInput formControlName="disputantSurname" maxlength="30" />
+                <mat-error *ngIf="ticketDetailsForm.controls.disputantSurname.hasError('required')">
+                  Surname is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Given Names -->
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>Given Name(s)</mat-label>
+                <input matInput formControlName="disputantGivenNames" maxlength="92" />
+                <mat-error *ngIf="ticketDetailsForm.controls.disputantGivenNames.hasError('required')">
+                  Given name(s) is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <h4 class="subsection-title">Driver's Licence</h4>
+          <div class="row">
+            <!-- DL Province/State -->
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>DL Province/State</mat-label>
+                <mat-select formControlName="driversLicenceProvince">
+                  <mat-option [value]="bc.provId">BC</mat-option>
+                  <mat-optgroup label="Other Canadian Provinces">
+                    <mat-option *ngFor="let prov of provinces" [value]="prov.provId">
+                      {{ prov.provNm }}
+                    </mat-option>
+                  </mat-optgroup>
+                  <mat-optgroup label="US States">
+                    <mat-option *ngFor="let state of states" [value]="state.provId">
+                      {{ state.provNm }}
+                    </mat-option>
+                  </mat-optgroup>
+                </mat-select>
+                <mat-error *ngIf="ticketDetailsForm.controls.driversLicenceProvince.hasError('required')">
+                  Province/State is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- DL Number -->
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>DL Number</mat-label>
+                <input matInput formControlName="driversLicenceNumber" 
+                       [maxlength]="ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value === bc.provSeqNo ? 8 : 25"
+                       (keypress)="onKeyPressNumbers($event, ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value === bc.provSeqNo)" />
+                <mat-hint *ngIf="ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value === bc.provSeqNo">
+                  BC: 8 digits required
+                </mat-hint>
+                <mat-hint *ngIf="ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value !== bc.provSeqNo">
+                  Optional alphanumeric
+                </mat-hint>
+                <mat-error *ngIf="ticketDetailsForm.controls.driversLicenceNumber.hasError('required')">
+                  DL number is required for BC
+                </mat-error>
+                <mat-error *ngIf="ticketDetailsForm.controls.driversLicenceNumber.hasError('pattern')">
+                  BC DL must be 8 digits
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Step 1: Ticket Counts -->
+        <div *ngIf="currentStep === 1" class="step-container">
+          <div class="form-section">
+            <div class="section-header">
+              <h3>Ticket Counts</h3>
+            </div>
+
+            <div class="form-content">
+          <div *ngFor="let count of ticketCounts; let i = index" class="count-section">
+            <div class="count-header">
+              <h5>Count {{ count.countNo }}</h5>
+              <button mat-icon-button (click)="removeTicketCount(count.countNo)" 
+                      *ngIf="ticketCounts.length > 1"
+                      type="button"
+                      class="delete-count-btn">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+
+            <div [formGroup]="disputeInfoForm.get('count' + count.countNo)">
+              <div class="row">
+                <!-- Act/Regulation -->
+                <div class="col-md-2">
+                  <mat-form-field class="w-100" appearance="fill">
+                  <mat-label>Act/Regulation</mat-label>
+                  <input matInput formControlName="actOrRegulationNameCode" maxlength="3" readonly 
+                       style="cursor: default; background-color: #f5f5f5;" />
+                  </mat-form-field>
+                </div>
+                <!-- Description (with autocomplete) -->
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Description</mat-label>
+                    <input matInput 
+                           formControlName="description"
+                           [matAutocomplete]="auto"
+                           (input)="onDescriptionChange(count.countNo, $event.target.value)" />
+                    <mat-autocomplete #auto="matAutocomplete" 
+                                      (optionSelected)="onDescriptionChange(count.countNo, $event.option.value)">
+                      <mat-option *ngFor="let statute of filterStatutes(disputeInfoForm.get('count' + count.countNo).get('description').value)" 
+                                  [value]="statute.shortDescriptionText">
+                       {{ statute.actCode }}  {{ statute.code }}  {{ statute.shortDescriptionText }}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <mat-error>Description is required</mat-error>
+                  </mat-form-field>
+                </div>
+                <!-- Fine Amount -->
+                <div class="col-md-4">
+                  <mat-form-field class="w-100">
+                    <mat-label>Fine Amount</mat-label>
+                    <input matInput formControlName="ticketedAmount" type="number" min="0" step="0.01" />
+                    <span matPrefix>$&nbsp;</span>
+                    <mat-error>Fine amount is required</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <button mat-raised-button (click)="addTicketCount()" 
+                      type="button"
+                      [disabled]="ticketCounts.length >= 3"
+                      class="add-count-btn">
+                <mat-icon>add</mat-icon>
+                Add Count
+              </button>
+            </div>
+          </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Contact Information -->
+        <div *ngIf="currentStep === 2" class="step-container">
+          <div class="form-section">
+            <div class="section-header">
+              <h3>Contact Information</h3>
+            </div>
+
+        <form [formGroup]="contactInfoForm" class="form-content">
+          <h4 class="subsection-title">Contact Type</h4>
+          <div class="row">
+            <div class="col-md-12">
+              <mat-radio-group formControlName="contactTypeCd" class="contact-type-group">
+                <mat-radio-button [value]="ContactType.Individual">Individual</mat-radio-button>
+                <mat-radio-button [value]="ContactType.Lawyer">Lawyer</mat-radio-button>
+                <mat-radio-button [value]="ContactType.Other">Agent</mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+
+          <!-- Lawyer Firm Name (only for lawyers) -->
+          <div class="row" *ngIf="contactInfoForm.get('contactTypeCd').value === ContactType.Lawyer">
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>Law Firm Name</mat-label>
+                <input matInput formControlName="contactLawFirmNm" maxlength="200" />
+                <mat-error>Law firm name is required</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Contact Name (for Individual and Lawyer) -->
+          <div class="row" *ngIf="contactInfoForm.get('contactTypeCd').value !== ContactType.Other">
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>Contact Surname</mat-label>
+                <input matInput formControlName="contactSurnameNm" maxlength="30" />
+                <mat-error>Surname is required</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>Contact Given Name(s)</mat-label>
+                <input matInput formControlName="contactGivenNames" maxlength="92" />
+                <mat-error>Given name(s) is required</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <h4 class="subsection-title">Address</h4>
+          <div class="row">
+            <!-- Address -->
+            <div class="col-md-12">
+              <mat-form-field class="w-100">
+                <mat-label>Address</mat-label>
+                <input matInput formControlName="address" maxlength="300" />
+                <mat-error>Address is required</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- City -->
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>City</mat-label>
+                <input matInput formControlName="addressCity" maxlength="30" />
+                <mat-error>City is required</mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Country -->
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>Country</mat-label>
+                <mat-select formControlName="addressCountryId">
+                  <mat-option [value]="canada.ctryId">Canada</mat-option>
+                  <mat-option [value]="usa.ctryId">USA</mat-option>
+                </mat-select>
+                <mat-error>Country is required</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- Province/State -->
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>Province/State</mat-label>
+                <mat-select formControlName="addressProvince" 
+                            (selectionChange)="onAddressProvinceChange($event.value)">
+                  <mat-option [value]="bc.provId" *ngIf="contactInfoForm.get('addressCountryId').value === canada.ctryId">BC</mat-option>
+                  <mat-optgroup label="Other Canadian Provinces" *ngIf="contactInfoForm.get('addressCountryId').value === canada.ctryId">
+                    <mat-option *ngFor="let prov of provinces" [value]="prov.provId">
+                      {{ prov.provNm }}
+                    </mat-option>
+                  </mat-optgroup>
+                  <mat-optgroup label="US States" *ngIf="contactInfoForm.get('addressCountryId').value === usa.ctryId">
+                    <mat-option *ngFor="let state of states" [value]="state.provId">
+                      {{ state.provNm }}
+                    </mat-option>
+                  </mat-optgroup>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <!-- Postal Code -->
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>Postal Code / ZIP Code</mat-label>
+                <input matInput formControlName="postalCode" 
+                       [placeholder]="contactInfoForm.get('addressCountryId').value === canada.ctryId ? 'A1A1A1' : contactInfoForm.get('addressCountryId').value === usa.ctryId ? '12345 or 12345-6789' : ''"
+                       [maxlength]="contactInfoForm.get('addressCountryId').value === canada.ctryId ? 6 : 10"
+                       oninput="this.value = this.value.toUpperCase()" />
+                <mat-hint *ngIf="contactInfoForm.get('addressCountryId').value === canada.ctryId">
+                  Canada: A1A1A1 format
+                </mat-hint>
+                <mat-hint *ngIf="contactInfoForm.get('addressCountryId').value === usa.ctryId">
+                  USA: 12345 or 12345-6789 format
+                </mat-hint>
+                <mat-error *ngIf="contactInfoForm.controls.postalCode.hasError('required')">
+                  <span *ngIf="contactInfoForm.get('addressCountryId').value === canada.ctryId">Required (A1A1A1 format)</span>
+                  <span *ngIf="contactInfoForm.get('addressCountryId').value === usa.ctryId">Required (12345 or 12345-6789 format)</span>
+                  <span *ngIf="contactInfoForm.get('addressCountryId').value !== canada.ctryId && contactInfoForm.get('addressCountryId').value !== usa.ctryId">Postal/ZIP code is required</span>
+                </mat-error>
+                <mat-error *ngIf="contactInfoForm.controls.postalCode.hasError('pattern')">
+                  <span *ngIf="contactInfoForm.get('addressCountryId').value === canada.ctryId">Invalid format</span>
+                  <span *ngIf="contactInfoForm.get('addressCountryId').value === usa.ctryId">Invalid format</span>
+                  <span *ngIf="contactInfoForm.get('addressCountryId').value !== canada.ctryId && contactInfoForm.get('addressCountryId').value !== usa.ctryId">Invalid format</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <h4 class="subsection-title">Contact Details</h4>
+          <div class="row">
+            <!-- Email -->
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>Email Address</mat-label>
+                <input matInput formControlName="emailAddress" type="email" maxlength="100" />
+                <mat-error *ngIf="contactInfoForm.controls.emailAddress.hasError('email')">
+                  Invalid email format
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Phone -->
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>Phone Number</mat-label>
+                <input matInput formControlName="homePhoneNumber" maxlength="20" />
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+          </div>
+        </div>
+
+        
+        <!-- Wizard Navigation Buttons -->
+        <div class="wizard-navigation">
+          <button mat-raised-button (click)="previousStep()" 
+                  *ngIf="currentStep !== 0"
+                  class="nav-button">
+            <mat-icon>arrow_back</mat-icon>
+            Back
+          </button>
+
+          <button mat-raised-button color="primary" 
+                  *ngIf="currentStep < steps.length - 1"
+                  (click)="nextStep()" 
+                  class="nav-button">
+            Next
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+
+          <button mat-raised-button color="primary" 
+                  *ngIf="currentStep === steps.length - 1"
+                  (click)="onSubmit()" 
+                  [disabled]="!ticketDetailsForm.valid || !contactInfoForm.valid || !disputeInfoForm.valid"
+                  class="nav-button submit-final">
+            <mat-icon>save</mat-icon>
+            Submit Dispute
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-page>

@@ -52,7 +52,7 @@
       </mat-form-field>
     </div>
   </div>
-  <div fxFlex fxFlex.gt-md="20">
+  <div style="margin-right: 1rem; margin-left: 1rem;">
     <div class="vcenter">
       <button mat-button (click)="resetSearchFilters()" class="reset-filters">Reset Filters</button>
     </div>
@@ -113,7 +113,7 @@
       </div>
     </div>
   </div>
-  <ng-content select="[recordCount]"></ng-content>
+  <div class="record-count-container"><ng-content select="[recordCount]"></ng-content></div>
   <div fxFlex fxFlex.gt-md="30" *ngIf="tableFilterConfigs.courthouseLocation">
     <div fxFlex="30">
       <label class="vcenter" for="courthouseLocation"><span class="BC-Gov-15px-blue-text"><b>Courthouse
@@ -133,4 +133,5 @@
       </ng-multiselect-dropdown>
     </div>
   </div>
+  <ng-content select="[submitNewDispute]"></ng-content>
 </div>

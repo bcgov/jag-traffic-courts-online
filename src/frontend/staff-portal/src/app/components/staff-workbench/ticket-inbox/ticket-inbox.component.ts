@@ -124,6 +124,10 @@ export class TicketInboxComponent implements OnInit {
       }
     });
   }
+  submitNewDispute() {
+    // Emit an event to navigate to manual dispute entry
+    this.disputeInfo.emit({ action: 'createNew' } as any);
+  }
 
   // called on keyup in filter field
   onApplyFilter(dataFilters: TableFilter) {

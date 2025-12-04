@@ -1,10 +1,20 @@
 <app-table-filters [tabIndex]="tabIndex" [tableFilterKeys]="tableFilterKeys" [statusFilterOptions]="statusFilterOptions"
 [defaultStatusFilter]="defaultStatusFilter" (onFilterChanged)="onApplyFilter($event)">
   <ng-container recordCount *ngIf="newCountShow">
-    <div fxFlex fxFlex.gt-md="20">
+    <div>
       <div class="vcenter">
         <span class="BC-Gov-15px-black-text" style="color:green;"><b>{{ newCount }} NEW ticket
             records</b></span>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container submitNewDispute>
+    <div>
+      <div class="vcenter">
+        <button mat-button (click)="submitNewDispute()" class="submit-new-dispute">
+          <mat-icon>upload</mat-icon>
+          Submit New Dispute
+        </button>
       </div>
     </div>
   </ng-container>
