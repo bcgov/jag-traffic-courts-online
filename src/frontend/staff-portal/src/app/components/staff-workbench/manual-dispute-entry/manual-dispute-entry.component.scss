@@ -1,12 +1,10 @@
 @import '../../../../scss/palette';
 
 .manual-dispute-content {
-  padding: 2rem;
-  background-color: theme-palette(grey, lightest);
+  padding-left: 2rem;
 }
 
 .page-header {
-  padding: 1.5rem 0;
   background-color: transparent;
   margin-bottom: 2rem;
   max-width: 1200px;
@@ -110,7 +108,7 @@
 }
 
 .form-content {
-  padding: 1.5rem;
+  padding: 3.5rem;
 }
 
 .subsection-title {
@@ -458,7 +456,7 @@
 .wizard-container {
   display: flex;
   gap: 0;
-  min-height: 600px;
+  min-height: 900px;
   background-color: #fff;
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -600,7 +598,6 @@
 
 .step-container {
   flex: 1;
-  padding: 2rem;
   overflow-y: auto;
   animation: fadeIn 0.3s ease-in;
 }
@@ -620,8 +617,6 @@
   display: flex;
   justify-content: flex-end;
   padding: 1.5rem 2rem;
-  border-top: 2px solid theme-palette(grey, lighter);
-  background-color: theme-palette(blue, lightest);
   gap: 1rem;
 
   .nav-button {

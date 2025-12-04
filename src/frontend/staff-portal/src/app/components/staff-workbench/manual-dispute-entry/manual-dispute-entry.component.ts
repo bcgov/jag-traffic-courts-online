@@ -18,7 +18,8 @@ import {
   DisputeCount,
   DisputeCountRequestCourtAppearance,
   DisputeCountRequestReduction,
-  DisputeCountRequestTimeToPay
+  DisputeCountRequestTimeToPay,
+  RoadSafetyTicketSearchService
 } from 'app/api';
 import { ToastService } from '@core/services/toast.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -77,7 +78,8 @@ export class ManualDisputeEntryComponent implements OnInit {
     public lookupsService: LookupsService,
     private toastService: ToastService,
     private dialog: MatDialog,
-    private authService: AuthService
+    private authService: AuthService,
+    private roadSafetyTicketSearchService: RoadSafetyTicketSearchService
   ) {
     this.bc = this.config.bcCodeValue;
     this.canada = this.config.canadaCodeValue;
@@ -541,8 +543,17 @@ export class ManualDisputeEntryComponent implements OnInit {
   }
 
   public onFindTicket() {
-    // TODO: Implement find ticket functionality
-    // This will search for an existing ticket based on ticket number and violation time
+    this.roadSafetyTicketSearchService.apiRoadsafetyticketsearchGet('EB02000254', '09:09').subscribe({
+      next: (result) => {
+        this.logger.log('ManualDisputeEntryComponent::onFindTicket - Ticket found:', result);
+        console.log('Ticket Search Result:', result);
+      },
+      error: (error) => {
+        this.logger.error('ManualDisputeEntryComponent::onFindTicket - Error:', error);
+        console.error('Ticket Search Error:', error);
+        this.toastService.openErrorToast('Failed to find ticket. Please try again.');
+      }
+    });
   }
 
   public onSubmit() {
