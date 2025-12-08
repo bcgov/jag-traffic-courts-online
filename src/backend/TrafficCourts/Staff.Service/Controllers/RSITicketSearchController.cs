@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 using TrafficCourts.TicketSearch;
@@ -8,8 +8,9 @@ using TrafficCourts.Staff.Service.Authentication;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
-[Route("api/[controller]")]
+[Authorize]
 [ApiController]
+[Route("api/[controller]")]
 public class RoadSafetyTicketSearchController : ControllerBase
 {
     private const string TicketNumberRegex = "^[A-Z]{2}[0-9]{8}$";
