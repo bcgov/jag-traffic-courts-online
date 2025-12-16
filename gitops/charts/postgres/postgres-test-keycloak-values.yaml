@@ -344,7 +344,7 @@ pgBouncerConfig:
   config:
     global:
       client_tls_sslmode: disable
-
+      ignore_startup_parameters: search_path,extra_float_digits
 
 #######################
 # Monitoring Settings #
