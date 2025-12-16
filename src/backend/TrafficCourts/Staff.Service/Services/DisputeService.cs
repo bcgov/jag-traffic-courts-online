@@ -241,20 +241,31 @@ public class DisputeService : IDisputeService,
         {
             throw new BadHttpRequestException("Another dispute with the same ticket number is currently being processed.");
         }
- 
+
+        try
+        {
+            // These processes are necessary for the correct update and submit to ARC, but they can fail (for example if the RSI API is down). 
+            // If they fail, we need to leave the Dispute Status as NEW, otherwise it'll be PROCESSING, but not actually submitted to ARC... and then it will sit there forever stalled.
+            // TCVP-3361 for more detail
+
+            // TCVP-2977: Get disputant name data from ICBC RSI ticket search and update dispute's IcbcNameDetail
+            GetDisputeOptions options = new() { DisputeId = disputeId, Assign = false, GetNameFromIcbc = true };
+            await GetIcbcTicketInformation(dispute, options, cancellationToken);
+
+            // set AddressProvince to 2 character abbreviation code if prov seq no & ctry id present
+            if (dispute.AddressProvinceSeqNo is not null && dispute.AddressCountryId is not null)
+            {
+                var provFound = await _provinceLookupService.GetByProvSeqNoCtryIdAsync(dispute.AddressProvinceSeqNo.Value, dispute.AddressCountryId.Value, cancellationToken);
+                if (provFound != null) { dispute.AddressProvince = provFound.ProvAbbreviationCd; }
+            }
+        }
+        catch (Exception)
+        {
+            throw new BadHttpRequestException("Unable to update Dispute data (ICBCName) from RSI - Submit failed - Dispute status was not changed - please try again.");
+        }
+
         // Status to PROCESSING
         dispute = await _oracleDataApi.SubmitDisputeAsync(disputeId, cancellationToken);
-
-        // TCVP-2977: Get disputant name data from ICBC RSI ticket search and update dispute's IcbcNameDetail
-        GetDisputeOptions options = new() {  DisputeId = disputeId, Assign = false, GetNameFromIcbc = true };
-        await GetIcbcTicketInformation(dispute, options, cancellationToken);
-
-        // set AddressProvince to 2 character abbreviation code if prov seq no & ctry id present
-        if (dispute.AddressProvinceSeqNo is not null && dispute.AddressCountryId is not null)
-        {
-            var provFound = await _provinceLookupService.GetByProvSeqNoCtryIdAsync(dispute.AddressProvinceSeqNo.Value, dispute.AddressCountryId.Value, cancellationToken);
-            if (provFound != null) { dispute.AddressProvince = provFound.ProvAbbreviationCd; }
-        }
 
         // Publish submit event (consumer(s) will push event to ARC and generate email)
         DisputeApproved approvedEvent = Mapper.ToDisputeApproved(dispute);
