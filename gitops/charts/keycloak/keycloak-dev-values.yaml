@@ -1273,11 +1273,11 @@ externalDatabase:
   database: bitnami_keycloak
   password: ""
   existingSecret: "postgres-dev-pguser-keycloak"
-  existingSecretHostKey: "host"
-  existingSecretPortKey: "port"
+  existingSecretHostKey: "pgbouncer-host"
+  existingSecretPortKey: "pgbouncer-port"
   existingSecretUserKey: "user"
   existingSecretDatabaseKey: "dbname"
-  existingSecretPasswordKey: ""
+  existingSecretPasswordKey: "password"
   annotations: {}
 ## @section Keycloak Cache parameters
 
