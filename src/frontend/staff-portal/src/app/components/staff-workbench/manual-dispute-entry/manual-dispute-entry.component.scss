@@ -437,12 +437,6 @@
     gap: 0.5rem;
   }
 
-  // Wizard responsive
-  .wizard-steps {
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 1rem;
-  }
 
   .step-arrow {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
@@ -478,7 +472,6 @@
   display: flex;
   justify-content: center;
   align-items: stretch;
-  padding: 2rem 1rem 0 1rem;
   background-color: #fff !important;
   border-bottom: 2px solid #dee2e6;
   gap: 1rem;
