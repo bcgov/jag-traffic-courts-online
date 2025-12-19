@@ -16,24 +16,23 @@
     </div>
 
     <div class="wizard-container">
-      <!-- Left Sidebar with Steps -->
-      <div class="wizard-sidebar">
-        <div class="steps-list">
-          <div *ngFor="let step of steps; let i = index" 
-               class="step-item"
-               [class.active]="currentStep === i"
-               [class.completed]="step.completed"
-               [class.clickable]="i < currentStep || step.completed"
-               [class.invalid]="i < currentStep && !step.completed && !isStepValid(i)"
-               (click)="goToStep(i)">
+      <!-- Arrow-Style Horizontal Steps -->
+      <div class="wizard-steps">
+        <div *ngFor="let step of steps; let i = index" 
+             class="step-arrow"
+             [class.active]="currentStep === i"
+             [class.completed]="step.completed"
+             [class.clickable]="i < currentStep || step.completed"
+             [class.invalid]="i < currentStep && !step.completed && !isStepValid(i)"
+             (click)="goToStep(i)">
+          <div class="step-arrow-content">
             <div class="step-icon">
               <mat-icon *ngIf="!step.completed">{{ step.icon }}</mat-icon>
               <mat-icon *ngIf="step.completed" class="check-icon">check_circle</mat-icon>
             </div>
-            <div class="step-content">
-              <div class="step-number">Step {{ i + 1 }}</div>
-              <div class="step-label">
-                {{ step.label }}
+            <div class="step-text">
+              <div class="step-title">
+                {{ i + 1 }}. {{ step.label }}
                 <mat-icon *ngIf="i < currentStep && !step.completed && !isStepValid(i)" class="warning-icon">error</mat-icon>
               </div>
             </div>
@@ -237,13 +236,28 @@
                     <mat-label>Description</mat-label>
                     <input matInput 
                            formControlName="description"
-                           [matAutocomplete]="auto"
-                           (input)="onDescriptionChange(count.countNo, $event.target.value)" />
-                    <mat-autocomplete #auto="matAutocomplete" 
-                                      (optionSelected)="onDescriptionChange(count.countNo, $event.option.value)">
-                      <mat-option *ngFor="let statute of filterStatutes(disputeInfoForm.get('count' + count.countNo).get('description').value)" 
-                                  [value]="statute.shortDescriptionText">
-                       {{ statute.actCode }}  {{ statute.code }}  {{ statute.shortDescriptionText }}
+                           [matAutocomplete]="count.countNo === 1 ? auto1 : count.countNo === 2 ? auto2 : auto3"
+                           (keyup)="onDescriptionKeyup(count.countNo)"
+                           (change)="onDescriptionChange(count.countNo, $event.target.value)" />
+                    <mat-autocomplete #auto1="matAutocomplete" 
+                                      (optionSelected)="onDescriptionChange(1, $event.option.value)">
+                      <mat-option *ngFor="let statute of filteredCount1Statutes" 
+                                  [value]="statute.__statuteString">
+                       {{ statute.__statuteString }}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <mat-autocomplete #auto2="matAutocomplete" 
+                                      (optionSelected)="onDescriptionChange(2, $event.option.value)">
+                      <mat-option *ngFor="let statute of filteredCount2Statutes" 
+                                  [value]="statute.__statuteString">
+                       {{ statute.__statuteString }}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <mat-autocomplete #auto3="matAutocomplete" 
+                                      (optionSelected)="onDescriptionChange(3, $event.option.value)">
+                      <mat-option *ngFor="let statute of filteredCount3Statutes" 
+                                  [value]="statute.__statuteString">
+                       {{ statute.__statuteString }}
                       </mat-option>
                     </mat-autocomplete>
                     <mat-error>Description is required</mat-error>
@@ -307,32 +321,38 @@
             </div>
           </div>
 
-          <!-- Contact Name (for Individual and Lawyer) -->
-          <div class="row" *ngIf="contactInfoForm.get('contactTypeCd').value !== ContactType.Other">
+          <!-- Contact Name (for Lawyer and Agent, but not Individual) -->
+          <div class="row" *ngIf="contactInfoForm.get('contactTypeCd').value !== ContactType.Individual && contactInfoForm.get('contactTypeCd').value">
             <div class="col-md-6">
               <mat-form-field class="w-100">
-                <mat-label>Contact Surname</mat-label>
+                <mat-label *ngIf="contactInfoForm.get('contactTypeCd').value === ContactType.Lawyer">Lawyer surname</mat-label>
+                <mat-label *ngIf="contactInfoForm.get('contactTypeCd').value === ContactType.Other">Agent surname</mat-label>
                 <input matInput formControlName="contactSurnameNm" maxlength="30" />
-                <mat-error>Surname is required</mat-error>
+                <mat-error *ngIf="contactInfoForm.get('contactSurnameNm').hasError('required')">Required</mat-error>
+                <mat-error *ngIf="contactInfoForm.get('contactSurnameNm').hasError('maxlength')">Maximum 30 characters</mat-error>
               </mat-form-field>
             </div>
 
             <div class="col-md-6">
               <mat-form-field class="w-100">
-                <mat-label>Contact Given Name(s)</mat-label>
+                <mat-label *ngIf="contactInfoForm.get('contactTypeCd').value === ContactType.Lawyer">Lawyer given name(s)</mat-label>
+                <mat-label *ngIf="contactInfoForm.get('contactTypeCd').value === ContactType.Other">Agent given name(s)</mat-label>
                 <input matInput formControlName="contactGivenNames" maxlength="92" />
-                <mat-error>Given name(s) is required</mat-error>
+                <mat-error *ngIf="contactInfoForm.get('contactGivenNames').hasError('required')">Required</mat-error>
+                <mat-error *ngIf="contactInfoForm.get('contactGivenNames').hasError('maxlength')">Maximum 92 characters</mat-error>
               </mat-form-field>
             </div>
           </div>
 
           <h4 class="subsection-title">Address</h4>
-          <div class="row">
+          <div class="row" *ngIf="contactInfoForm.get('contactTypeCd').value">
             <!-- Address -->
             <div class="col-md-12">
               <mat-form-field class="w-100">
-                <mat-label>Address</mat-label>
-                <input matInput formControlName="address" maxlength="300" />
+                <mat-label *ngIf="contactInfoForm.get('contactTypeCd').value === ContactType.Individual">Mailing address</mat-label>
+                <mat-label *ngIf="contactInfoForm.get('contactTypeCd').value === ContactType.Lawyer">Lawyer mailing address</mat-label>
+                <mat-label *ngIf="contactInfoForm.get('contactTypeCd').value === ContactType.Other">Agent address</mat-label>
+                <input matInput formControlName="address" maxlength="100" />
                 <mat-error>Address is required</mat-error>
               </mat-form-field>
             </div>
@@ -412,11 +432,13 @@
           </div>
 
           <h4 class="subsection-title">Contact Details</h4>
-          <div class="row">
+          <div class="row" *ngIf="contactInfoForm.get('contactTypeCd').value">
             <!-- Email -->
             <div class="col-md-6">
               <mat-form-field class="w-100">
-                <mat-label>Email Address</mat-label>
+                <mat-label *ngIf="contactInfoForm.get('contactTypeCd').value === ContactType.Individual">Email address</mat-label>
+                <mat-label *ngIf="contactInfoForm.get('contactTypeCd').value === ContactType.Lawyer">Lawyer email address</mat-label>
+                <mat-label *ngIf="contactInfoForm.get('contactTypeCd').value === ContactType.Other">Agent email address</mat-label>
                 <input matInput formControlName="emailAddress" type="email" maxlength="100" />
                 <mat-error *ngIf="contactInfoForm.controls.emailAddress.hasError('email')">
                   Invalid email format
@@ -427,14 +449,533 @@
             <!-- Phone -->
             <div class="col-md-6">
               <mat-form-field class="w-100">
-                <mat-label>Phone Number</mat-label>
+                <mat-label *ngIf="contactInfoForm.get('contactTypeCd').value === ContactType.Individual">Phone number</mat-label>
+                <mat-label *ngIf="contactInfoForm.get('contactTypeCd').value === ContactType.Lawyer">Lawyer phone number</mat-label>
+                <mat-label *ngIf="contactInfoForm.get('contactTypeCd').value === ContactType.Other">Agent phone number</mat-label>
                 <input matInput formControlName="homePhoneNumber" maxlength="20" />
               </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Email Opt-Out Checkbox -->
+          <div class="row mt-3">
+            <div class="col-md-12">
+              <mat-checkbox color="primary" [(ngModel)]="optOut" [ngModelOptions]="{standalone: true}" (change)="onOptOut()">
+                I prefer to be contacted by regular mail.
+              </mat-checkbox>
+              <div class="mt-2" style="color: #d32f2f; font-size: 0.85em;" *ngIf="optOut">
+                <mat-icon style="vertical-align: middle; font-size: 18px;">warning</mat-icon>
+                You have chosen to not be contacted by email about this dispute. It is recommended that you use
+                email for online ticket disputes so that you can receive more information about your dispute.
+              </div>
             </div>
           </div>
         </form>
           </div>
         </div>
+        <!-- Step 3: Dispute Information -->
+        <div *ngIf="currentStep === 3" class="step-container">
+          <div class="form-section">
+            <div class="section-header">
+              <h3>Dispute Information</h3>
+            </div>
+
+        <form [formGroup]="disputeInfoForm" class="form-content">
+          <div class="row">
+            <!-- Filing Date -->
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>Filing Date</mat-label>
+                <input matInput formControlName="filingDate" type="text" 
+                       placeholder="DD-MMM-YYYY"
+                       bsDatepicker
+                       [maxDate]="maxFilingDate"
+                       [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true, showWeekNumbers: false, adaptivePosition: true }" />                
+                <mat-error>Filing date is required</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <h4 class="subsection-title">Court Appearance?</h4>
+          <div class="row">
+            <div class="col-md-12">
+              <mat-radio-group formControlName="requestCourtAppearance" (change)="onChangeRequestCourtAppearance($event.value)">
+                <div class="mb-3">
+                  <div class="mb-2">
+                    <strong>I do <u>not</u> want to attend a court hearing</strong>
+                    <mat-icon matTooltip="Plead guilty and ask for a fine reduction or time to pay for each count." class="info-icon">info</mat-icon>
+                  </div>
+                  <mat-radio-button [value]="RequestCourtAppearance.N">
+                    I agree that I committed the offence and do not wish to make a submission at a hearing. I waive my right to dispute the allegation against me and dispute only the fine amount or request time to pay.
+                  </mat-radio-button>
+                </div>
+
+                <div class="mb-3">
+                  <div class="mb-2">
+                    <strong>I <u>want</u> my dispute heard at an in-person court hearing</strong>
+                    <mat-icon matTooltip="Dispute any count or plead guilty and ask for a fine reduction or more time to pay for any count." class="info-icon">info</mat-icon>
+                  </div>
+                  <mat-radio-button [value]="RequestCourtAppearance.Y">
+                    I want my dispute heard at an in-person court hearing.
+                  </mat-radio-button>
+                </div>
+
+                <mat-error *ngIf="disputeInfoForm.get('requestCourtAppearance').touched && disputeInfoForm.get('requestCourtAppearance').hasError('required')">
+                  You must select an option
+                </mat-error>
+              </mat-radio-group>
+            </div>
+          </div>
+
+          <!-- Signature Panel for Written Reasons -->
+          <div class="signature-box mt-4" *ngIf="disputeInfoForm.get('requestCourtAppearance').value === RequestCourtAppearance.N">
+            <h5>Signature</h5>
+            <p>By typing your name below, you are providing your electronic signature to confirm this information is correct.</p>
+            
+            <div class="row">
+              <div class="col-md-12">
+                <mat-radio-group formControlName="signatoryType" (change)="onChangeSignatureType($event.value)">
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <mat-radio-button [value]="SignatoryType.D" class="signature-radio">
+                        <strong>Disputant Signature</strong>
+                      </mat-radio-button>
+                      <mat-form-field class="w-100 mt-2" *ngIf="disputeInfoForm.get('signatoryType').value === SignatoryType.D">
+                        <mat-label>Type your full name</mat-label>
+                        <input matInput formControlName="signatoryName" maxlength="100" />
+                        <mat-error>Signature is required</mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <mat-radio-button [value]="SignatoryType.A" class="signature-radio">
+                        <strong>Agent/Lawyer Signature</strong>
+                      </mat-radio-button>
+                      <mat-form-field class="w-100 mt-2" *ngIf="disputeInfoForm.get('signatoryType').value === SignatoryType.A">
+                        <mat-label>Type agent's full name</mat-label>
+                        <input matInput formControlName="signatoryName" maxlength="100" />
+                        <mat-error>Signature is required</mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </mat-radio-group>
+              </div>
+            </div>
+          </div>
+
+          <h4 class="subsection-title">Per-Count Actions</h4>
+          <div *ngFor="let count of ticketCounts" class="count-card">
+            <div class="count-header-card">
+              <div class="count-label-section">
+                <span class="count-label">COUNT {{ count.countNo }}</span>
+              </div>
+              <div class="count-amount-section">
+                <span class="count-amount">${{ disputeInfoForm.get('count' + count.countNo)?.get('ticketedAmount')?.value || '0.00' }}</span>
+              </div>
+              <div class="count-description-section">
+                <span class="count-description">{{ disputeInfoForm.get('count' + count.countNo)?.get('description')?.value || 'No description' }}</span>
+              </div>
+            </div>
+            
+            <div [formGroup]="disputeInfoForm.get('count' + count.countNo)" class="count-actions-content">
+              
+              <!-- For Written Reasons (No Court Hearing) -->
+              <div *ngIf="disputeInfoForm.get('requestCourtAppearance').value === RequestCourtAppearance.N && !disputeInfoForm.get('count' + count.countNo).get('__skip').value">
+                <p class="mb-3"><strong>Please provide additional selections below:</strong></p>
+                
+                <div class="row">
+                  <div class="col-md-12 mb-2">
+                    <mat-checkbox [checked]="disputeInfoForm.get('count' + count.countNo).get('requestReduction').value === RequestReduction.Y"
+                                  (change)="disputeInfoForm.get('count' + count.countNo).patchValue({requestReduction: $event.checked ? RequestReduction.Y : RequestReduction.N})">
+                      I would like to request a fine reduction on this count.
+                    </mat-checkbox>
+                  </div>
+                </div>
+
+                <div class="row" style="padding-left: 15px; color: #666;">
+                  <div class="col-md-12 mb-2">
+                    and/or
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12 mb-3">
+                    <mat-checkbox [checked]="disputeInfoForm.get('count' + count.countNo).get('requestTimeToPay').value === RequestTimeToPay.Y"
+                                  (change)="disputeInfoForm.get('count' + count.countNo).patchValue({requestTimeToPay: $event.checked ? RequestTimeToPay.Y : RequestTimeToPay.N})">
+                      I would like to request time to pay on this count.
+                    </mat-checkbox>
+                  </div>
+                </div>
+              </div>
+
+              <!-- For Court Hearing -->
+              <div *ngIf="disputeInfoForm.get('requestCourtAppearance').value === RequestCourtAppearance.Y && !disputeInfoForm.get('count' + count.countNo).get('__skip').value">
+                <p class="mb-3"><strong>Please provide additional selections below:</strong></p>
+                
+                <div class="row">
+                  <div class="col-md-12">
+                    <mat-radio-group formControlName="pleaCode" class="plea-radio-group">
+                      <mat-radio-button value="G" class="mb-3">
+                        I agree I committed this offence and would like to request a fine reduction and/or time to pay on this count.
+                      </mat-radio-button>
+                      <div class="or-divider mb-2">or</div>
+                      <mat-radio-button value="N" class="mb-3">
+                        I do not agree I committed this offence, but if found guilty, I may request a fine reduction and/or time to pay on this count.
+                      </mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Skip Count Option (always shown at bottom) -->
+              <div class="row mt-3">
+                <div class="col-md-12">
+                  <mat-checkbox formControlName="__skip">
+                    Skip this count, no action required.
+                  </mat-checkbox>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Additional Information section -->
+          <div>
+            <h4 class="subsection-title">Additional Information</h4>
+            
+            <!-- Consolidated Reason Fields for Written Reasons -->
+            <div *ngIf="disputeInfoForm.get('requestCourtAppearance').value === RequestCourtAppearance.N">
+              <div class="row mt-3" *ngIf="getCountsRequestingReduction().length > 0">
+                <div class="col-md-12">
+                  <mat-form-field class="w-100">
+                    <mat-label>{{ getReductionLabel() }}</mat-label>
+                    <textarea matInput formControlName="fineReductionReason" rows="4" maxlength="500" placeholder="Tell your reason about Request for Fine Reduction"></textarea>
+                    <mat-hint align="end">{{disputeInfoForm.get('fineReductionReason').value?.length || 0}}/500</mat-hint>
+                    <mat-error>Reason is required (max 500 characters)</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row mt-3" *ngIf="getCountsRequestingTimeToPay().length > 0">
+                <div class="col-md-12">
+                  <mat-form-field class="w-100">
+                    <mat-label>{{ getTimeToPayLabel() }}</mat-label>
+                    <textarea matInput formControlName="timeToPayReason" rows="4" maxlength="500" placeholder="Tell your reason about Request for Time To Pay"></textarea>
+                    <mat-hint align="end">{{disputeInfoForm.get('timeToPayReason').value?.length || 0}}/500</mat-hint>
+                    <mat-error>Reason is required (max 500 characters)</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <!-- Court Hearing Additional Info -->
+            <div *ngIf="disputeInfoForm.get('requestCourtAppearance').value === RequestCourtAppearance.Y">
+              <div class="alert alert-info mb-4" style="background-color: #e3f2fd; border-left: 4px solid #2196F3; padding: 12px;">
+                <mat-icon style="vertical-align: middle; color: #2196F3;">info</mat-icon>
+                <span style="margin-left: 8px;">The following information is used to schedule enough time for the court hearing. Changes to this information may cause delays.</span>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <mat-checkbox [checked]="disputeInfoForm.get('representedByLawyer').value === RepresentedByLawyer.Y"
+                                (change)="onChangeRepresentedByLawyer($event.checked)">
+                    I intend to be represented by a lawyer or agent in court. Enter contact details below.
+                  </mat-checkbox>
+                </div>
+              </div>
+
+              <!-- Legal Representation Fields -->
+              <div *ngIf="disputeInfoForm.get('representedByLawyer').value === RepresentedByLawyer.Y" [formGroup]="legalRepresentationForm">
+                <div class="row mt-3">
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Name of law firm or agency</mat-label>
+                      <input matInput formControlName="lawFirmName" />
+                      <mat-error *ngIf="legalRepresentationForm.get('lawFirmName').hasError('required')">
+                        This field is required
+                      </mat-error>
+                      <mat-error *ngIf="legalRepresentationForm.get('lawFirmName').hasError('maxlength')">
+                        Maximum length is 200 characters
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Full name of lawyer or agent</mat-label>
+                      <input matInput formControlName="lawyerFullName" />
+                      <mat-error *ngIf="legalRepresentationForm.get('lawyerFullName').hasError('required')">
+                        This field is required
+                      </mat-error>
+                      <mat-error *ngIf="legalRepresentationForm.get('lawyerFullName').hasError('maxlength')">
+                        Maximum length is 100 characters
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <mat-form-field class="w-100">
+                      <mat-label>Address of law firm or agency</mat-label>
+                      <input matInput formControlName="lawyerAddress" />
+                      <mat-error *ngIf="legalRepresentationForm.get('lawyerAddress').hasError('required')">
+                        This field is required
+                      </mat-error>
+                      <mat-error *ngIf="legalRepresentationForm.get('lawyerAddress').hasError('maxlength')">
+                        Maximum length is 304 characters
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Lawyer or agent phone number</mat-label>
+                      <input matInput formControlName="lawyerPhoneNumber" />
+                      <mat-error *ngIf="legalRepresentationForm.get('lawyerPhoneNumber').hasError('required')">
+                        This field is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Lawyer or agent email</mat-label>
+                      <input matInput formControlName="lawyerEmail" autocomplete="off" />
+                      <mat-error *ngIf="legalRepresentationForm.get('lawyerEmail').hasError('required')">
+                        This field is required
+                      </mat-error>
+                      <mat-error *ngIf="legalRepresentationForm.get('lawyerEmail').hasError('email')">
+                        Please enter a valid email address
+                      </mat-error>
+                      <mat-error *ngIf="legalRepresentationForm.get('lawyerEmail').hasError('maxlength')">
+                        Maximum length is 100 characters
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-md-12">
+                  <mat-checkbox [checked]="disputeInfoForm.get('interpreterRequired').value === InterpreterRequired.Y"
+                                (change)="onChangeInterpreterRequired($event.checked)">
+                    I require a language interpreter at the hearing.
+                  </mat-checkbox>
+                </div>
+              </div>
+
+              <div *ngIf="disputeInfoForm.get('interpreterRequired').value === InterpreterRequired.Y">
+                <div class="row mt-3">
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Interpreter Language</mat-label>
+                      <mat-select formControlName="interpreterLanguageCd">
+                        <mat-option *ngFor="let language of languages" [value]="language.code">
+                          {{ language.description }}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error>Language is required</mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <p class="text-muted" style="font-size: 14px;">If you don't see your language listed, please contact your nearest court registry.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-md-12">
+                  <mat-checkbox [checked]="disputeInfoForm.get('witnessNo').value > 0"
+                                (change)="disputeInfoForm.patchValue({witnessNo: $event.checked ? 1 : 0})">
+                    I intend to call a witness(es).
+                  </mat-checkbox>
+                </div>
+              </div>
+
+              <div class="row mt-3" *ngIf="disputeInfoForm.get('witnessNo').value > 0">
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Number of witnesses</mat-label>
+                    <input matInput formControlName="witnessNo" type="number" min="1" max="99" />
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        </div>
+        </div>
+
+        <!-- Step 4: Review & Submit -->
+        <div *ngIf="currentStep === 4" class="step-container">
+          <div class="form-section">
+            <div class="section-header">
+              <h3>Review & Submit</h3>
+            </div>
+
+            <div class="form-content review-content">
+              <p class="review-intro">Please review all the information below before submitting your dispute.</p>
+
+              <div class="review-section">
+                <h4 class="review-section-title">
+                  <span><mat-icon>description</mat-icon> Ticket Details</span>
+                  <button mat-button color="primary" (click)="goToStep(0)" class="edit-link">
+                    <mat-icon>edit</mat-icon> Edit
+                  </button>
+                </h4>
+                <div class="review-grid">
+                  <div class="review-item">
+                    <span class="label">Ticket Number:</span>
+                    <span class="value">{{ ticketDetailsForm.get('ticketNumber')?.value }}</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="label">Violation Date:</span>
+                    <span class="value">{{ ticketDetailsForm.get('violationDate')?.value }}</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="label">Violation Time:</span>
+                    <span class="value">{{ ticketDetailsForm.get('violationTime')?.value }}</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="label">Courthouse:</span>
+                    <span class="value">{{ ticketDetailsForm.get('courtLocation')?.value }}</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="label">Name on Ticket:</span>
+                    <span class="value">{{ ticketDetailsForm.get('disputantGivenNames')?.value }} {{ ticketDetailsForm.get('disputantSurname')?.value }}</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="label">Driver's Licence:</span>
+                    <span class="value">{{ ticketDetailsForm.get('driversLicenceNumber')?.value || 'Not provided' }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="review-section">
+                <h4 class="review-section-title">
+                  <span><mat-icon>list_alt</mat-icon> Ticket Counts</span>
+                  <button mat-button color="primary" (click)="goToStep(1)" class="edit-link">
+                    <mat-icon>edit</mat-icon> Edit
+                  </button>
+                </h4>
+                <div *ngFor="let count of ticketCounts" class="review-count">
+                  <strong>Count {{ count.countNo }}:</strong>
+                  <div class="review-grid">
+                    <div class="review-item">
+                      <span class="label">Act/Regulation:</span>
+                      <span class="value">{{ disputeInfoForm.get('count' + count.countNo)?.get('actOrRegulationNameCode')?.value }}</span>
+                    </div>
+                    <div class="review-item">
+                      <span class="label">Description:</span>
+                      <span class="value">{{ disputeInfoForm.get('count' + count.countNo)?.get('description')?.value }}</span>
+                    </div>
+                    <div class="review-item">
+                      <span class="label">Fine Amount:</span>
+                      <span class="value">${{ disputeInfoForm.get('count' + count.countNo)?.get('ticketedAmount')?.value }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="review-section">
+                <h4 class="review-section-title">
+                  <span><mat-icon>contact_mail</mat-icon> Contact Information</span>
+                  <button mat-button color="primary" (click)="goToStep(2)" class="edit-link">
+                    <mat-icon>edit</mat-icon> Edit
+                  </button>
+                </h4>
+                <div class="review-grid">
+                  <div class="review-item">
+                    <span class="label">Contact Type:</span>
+                    <span class="value">{{ contactInfoForm.get('contactTypeCd')?.value }}</span>
+                  </div>
+                  <div class="review-item" *ngIf="contactInfoForm.get('contactTypeCd')?.value === ContactType.Lawyer">
+                    <span class="label">Law Firm:</span>
+                    <span class="value">{{ contactInfoForm.get('contactLawFirmNm')?.value }}</span>
+                  </div>
+                  <div class="review-item" *ngIf="contactInfoForm.get('contactTypeCd')?.value !== ContactType.Other">
+                    <span class="label">Contact Name:</span>
+                    <span class="value">{{ contactInfoForm.get('contactGivenNames')?.value }} {{ contactInfoForm.get('contactSurnameNm')?.value }}</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="label">Address:</span>
+                    <span class="value">{{ contactInfoForm.get('address')?.value }}, {{ contactInfoForm.get('addressCity')?.value }}</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="label">Postal Code:</span>
+                    <span class="value">{{ contactInfoForm.get('postalCode')?.value }}</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="label">Email:</span>
+                    <span class="value">{{ contactInfoForm.get('emailAddress')?.value || 'Not provided' }}</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="label">Phone:</span>
+                    <span class="value">{{ contactInfoForm.get('homePhoneNumber')?.value || 'Not provided' }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="review-section">
+                <h4 class="review-section-title">
+                  <span><mat-icon>gavel</mat-icon> Dispute Information</span>
+                  <button mat-button color="primary" (click)="goToStep(3)" class="edit-link">
+                    <mat-icon>edit</mat-icon> Edit
+                  </button>
+                </h4>
+                <div class="review-grid">
+                  <div class="review-item">
+                    <span class="label">Filing Date:</span>
+                    <span class="value">{{ disputeInfoForm.get('filingDate')?.value }}</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="label">Represented by Lawyer:</span>
+                    <span class="value">{{ disputeInfoForm.get('representedByLawyer')?.value === RepresentedByLawyer.Y ? 'Yes' : 'No' }}</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="label">Interpreter Required:</span>
+                    <span class="value">{{ disputeInfoForm.get('interpreterRequired')?.value === InterpreterRequired.Y ? 'Yes' : 'No' }}</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="label">Number of Witnesses:</span>
+                    <span class="value">{{ disputeInfoForm.get('witnessNo')?.value || '0' }}</span>
+                  </div>
+                  <div class="review-item">
+                    <span class="label">Signatory:</span>
+                    <span class="value">{{ disputeInfoForm.get('signatoryName')?.value }} ({{ disputeInfoForm.get('signatoryType')?.value === SignatoryType.D ? 'Disputant' : 'Agent' }})</span>
+                  </div>
+                </div>
+
+                <h5 class="review-subsection-title">Count Actions</h5>
+                <div *ngFor="let count of ticketCounts" class="review-count-action">
+                  <strong>Count {{ count.countNo }}: {{ disputeInfoForm.get('count' + count.countNo)?.get('description')?.value }}</strong>
+                  <div class="review-grid">
+                    <div class="review-item">
+                      <span class="label">Court Appearance:</span>
+                      <span class="value">{{ disputeInfoForm.get('count' + count.countNo)?.get('requestCourtAppearance')?.value === 'Y' ? 'Yes' : 'No' }}</span>
+                    </div>
+                    <div class="review-item">
+                      <span class="label">Fine Reduction:</span>
+                      <span class="value">{{ disputeInfoForm.get('count' + count.countNo)?.get('requestReduction')?.value === 'Y' ? 'Yes' : 'No' }}</span>
+                    </div>
+                    <div class="review-item">
+                      <span class="label">Time to Pay:</span>
+                      <span class="value">{{ disputeInfoForm.get('count' + count.countNo)?.get('requestTimeToPay')?.value === 'Y' ? 'Yes' : 'No' }}</span>
+                    </div>
+                  </div>
+                  <div *ngIf="disputeInfoForm.get('count' + count.countNo)?.get('requestReduction')?.value === 'Y' && disputeInfoForm.get('count' + count.countNo)?.get('reductionReason')?.value" class="review-reason">
+                    <span class="label">Reduction Reason:</span>
+                    <span class="value">{{ disputeInfoForm.get('count' + count.countNo)?.get('reductionReason')?.value }}</span>
+                  </div>
+                  <div *ngIf="disputeInfoForm.get('count' + count.countNo)?.get('requestTimeToPay')?.value === 'Y' && disputeInfoForm.get('count' + count.countNo)?.get('timeToPayReason')?.value" class="review-reason">
+                    <span class="label">Time to Pay Reason:</span>
+                    <span class="value">{{ disputeInfoForm.get('count' + count.countNo)?.get('timeToPayReason')?.value }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
 
         
         <!-- Wizard Navigation Buttons -->
