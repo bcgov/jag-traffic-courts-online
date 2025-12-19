@@ -1,13 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 using TrafficCourts.TicketSearch;
+using TrafficCourts.Common.Authorization;
+using TrafficCourts.Staff.Service.Authentication;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
-[Route("api/[controller]")]
+[Authorize]
 [ApiController]
+[Route("api/[controller]")]
 public class RoadSafetyTicketSearchController : ControllerBase
 {
     private const string TicketNumberRegex = "^[A-Z]{2}[0-9]{8}$";
@@ -36,12 +39,13 @@ public class RoadSafetyTicketSearchController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.Dispute, Scopes.Submit)]
     public async Task<IActionResult> SearchAsync(
-        [FromQuery] 
-        [Required] 
-        string ticketNumber, 
-        [FromQuery] 
-        [Required] 
+        [FromQuery]
+        [Required]
+        string ticketNumber,
+        [FromQuery]
+        [Required]
         string issuedTime,
         CancellationToken cancellationToken
     )
@@ -64,14 +68,14 @@ public class RoadSafetyTicketSearchController : ControllerBase
         {
             throw new ArgumentException("time must be properly formatted 24 hour clock with only hours and minutes", nameof(issuedTime));
         }
-       
+
         var ticket = await _ticketSearchService.SearchAsync(ticketNumber, timeOnly, cancellationToken);
-        
+
         if (ticket == null)
         {
             return NotFound();
         }
-        
+
         return Ok(ticket);
     }
 }
