@@ -76,13 +76,6 @@ public partial class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerifi
             fileHistoryRecord.ActionByApplicationUser = "Disputant";
             await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
 
-            if (!message.IsUpdateEmailVerification)
-            {
-                // File History 
-                fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.SUB; // Dispute submitted for staff review
-                await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
-            }
-
             // since the dispute is re-retrieved in this consumer, the email address may have been blanked out in the meantime
             // if it was dont send another email :)
             if (!string.IsNullOrEmpty(dispute.EmailAddress))
