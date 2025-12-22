@@ -1,0 +1,26 @@
+meta {
+  name: TicketSearch (localhost - oc port-forward)
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8080/api/tickets/search
+  body: none
+  auth: none
+}
+
+params:query {
+  ticketNumber: EA00819082
+  time: 16:56
+  ~ticketNumber: EA00796095
+  ~time: 14:16
+}
+
+headers {
+  User-Agent: insomnia/11.6.1
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,29 @@
+meta {
+  name: Count Details
+  type: http
+  seq: 3
+}
+
+get {
+  url: https://{{host}}/ride/paybc/paymentsvc/api/v1/ticket/{% request 'parameter', 'countId', 0 %}
+  body: none
+  auth: bearer
+}
+
+params:query {
+  ~countId: EA008360322
+  ~countId: EA007708891
+  ~countId: EA008360321
+}
+
+headers {
+  User-Agent: insomnia/11.3.0
+}
+
+auth:bearer {
+  token: {{bearer_token}}
+}
+
+settings {
+  encodeUrl: true
+}

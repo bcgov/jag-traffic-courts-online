@@ -1,0 +1,27 @@
+meta {
+  name: Auth Token
+  type: http
+  seq: 1
+}
+
+post {
+  url: https://{{host}}/auth/oauth/v2/token
+  body: formUrlEncoded
+  auth: none
+}
+
+headers {
+  Content-Type: application/x-www-form-urlencoded
+  User-Agent: insomnia/11.3.0
+}
+
+body:form-urlencoded {
+  client_id: {{client_id}}
+  client_secret: {{client_secret}}
+  scope: openid
+  grant_type: client_credentials
+}
+
+settings {
+  encodeUrl: true
+}

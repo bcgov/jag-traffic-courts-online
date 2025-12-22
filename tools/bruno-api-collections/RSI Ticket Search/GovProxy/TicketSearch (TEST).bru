@@ -1,0 +1,26 @@
+meta {
+  name: TicketSearch (TEST)
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://test.tickets.gov.bc.ca/api/tickets/search
+  body: none
+  auth: none
+}
+
+params:query {
+  ticketNumber: EA00796095
+  time: 14:16
+  ~ticketNumber: EZ04000276
+  ~time: 23:00
+}
+
+headers {
+  User-Agent: insomnia/11.6.1
+}
+
+settings {
+  encodeUrl: true
+}
