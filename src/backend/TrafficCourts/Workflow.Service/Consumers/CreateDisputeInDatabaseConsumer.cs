@@ -41,6 +41,14 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 {
                     _logger.LogDebug("Dispute has been saved with {DisputeId}: ", disputeId);
 
+                    // File History 
+                    SaveFileHistoryRecord fileHistoryRecord = new SaveFileHistoryRecord();
+                    fileHistoryRecord.DisputeId = disputeId;
+                    fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.SUB; // Dispute submitted for staff review
+                    fileHistoryRecord.ActionByApplicationUser = "Disputant";
+                    
+                    await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
+
                     await context.PublishWithLog(_logger, new NoticeOfDisputeSubmitted
                     {
                         NoticeOfDisputeGuid = context.Message.NoticeOfDisputeGuid,
