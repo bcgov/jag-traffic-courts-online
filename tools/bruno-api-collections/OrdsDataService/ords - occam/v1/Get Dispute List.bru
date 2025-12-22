@@ -1,17 +1,13 @@
 meta {
-  name: Get Dispute
+  name: Get Dispute List
   type: http
-  seq: 1
+  seq: 2
 }
 
 get {
-  url: {{occam.base_url}}/occam/v1/dispute/:id
+  url: {{occam.base_url}}/occam/v1/disputeList
   body: none
   auth: inherit
-}
-
-params:path {
-  id: 4609
 }
 
 headers {
