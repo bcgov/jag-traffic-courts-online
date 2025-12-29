@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "name": "RSI Ticket Search",
+  "name": "RSI_TicketSearch",
   "type": "collection",
   "ignore": [
     "node_modules",
