@@ -7,11 +7,13 @@ using TrafficCourts.Common.Errors;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Features.Occam.Disputes;
 using TrafficCourts.Staff.Service.Features.Occam.DisputesWithUpdateRequests;
-using TrafficCourts.Staff.Service.Models;
 using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers.Occam;
 
+#if DEBUG
+    [AllowAnonymous]
+#endif
 [Route("api/[controller]/[action]")]
 public class DisputeController : StaffControllerBase
 {
@@ -46,9 +48,6 @@ public class DisputeController : StaffControllerBase
     /// <response code="403">Forbidden, requires dispute:read permission.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A collection of Dispute records</returns>
-#if DEBUG
-    [AllowAnonymous]
-#endif
     [HttpGet]
     [Route("/api/v2/occam/dispute/disputes")]
     [Produces("application/json")]
@@ -92,9 +91,6 @@ public class DisputeController : StaffControllerBase
     /// <response code="403">Forbidden, requires dispute:read permission.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A collection of Dispute records</returns>
-#if DEBUG
-    [AllowAnonymous]
-#endif
     [HttpGet]
     [Route("/api/v2/occam/dispute/disputesWithUpdateRequests")]
     [Produces("application/json")]

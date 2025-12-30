@@ -1,5 +1,5 @@
 meta {
-  name: Dispute Save
+  name: Create Dispute
   type: http
   seq: 1
 }
@@ -18,18 +18,21 @@ headers {
 body:json {
   {
     "fileData": [],
-    "icbcName": null,
+    "icbcName": {
+      "Surname": "StaffCreated",
+      "FirstGivenName": "API",
+      "SecondGivenName": ""
+    },
     "createdBy": "OCCAMORDS",
     "createdTs": "2025-07-29T12:57:23",
     "modifiedBy": "OCCAMORDS",
     "modifiedTs": "2025-08-07T10:51:30",
-    "disputeId": 4412,
-    "noticeOfDisputeGuid": "08ddce19-ba11-fda8-0a58-0b6101000000",
-    "ticketNumber": "EZ05000499",
+    
+    "ticketNumber": "TT05000501",
     "issuedTs": "2025-07-29T13:45:52",
     "submittedTs": "2025-07-29T06:45:52",
-    "disputantSurname": "Doe",
-    "disputantGivenName1": "John",
+    "disputantSurname": "StaffCreated",
+    "disputantGivenName1": "API",
     "disputantGivenName2": null,
     "disputantGivenName3": null,
     "disputantBirthdate": "2001-01-01",
@@ -82,8 +85,6 @@ body:json {
     "timeToPayReason": null,
     "disputantComment": null,
     "rejectedReason": null,
-    "userAssignedTo": "DAVEKAY",
-    "userAssignedTs": "2025-08-07T10:51:30",
     "disputantDetectedOcrIssues": "N",
     "disputantOcrIssues": null,
     "systemDetectedOcrIssues": "N",
@@ -96,10 +97,10 @@ body:json {
       "modifiedBy": null,
       "modifiedTs": null,
       "violationTicketId": 5328,
-      "ticketNumber": "EZ05000499",
+      "ticketNumber": "TT05000501",
       "disputantOrganizationName": null,
-      "disputantSurname": "Doe",
-      "disputantGivenNames": "John",
+      "disputantSurname": "StaffCreated",
+      "disputantGivenNames": "API",
       "isYoungPerson": null,
       "disputantDriversLicenceNumber": null,
       "disputantClientNumber": null,
@@ -161,7 +162,7 @@ body:json {
       }
     ],
     "additionalProperties": {},
-    "disputantGivenNames": "John",
+    "disputantGivenNames": "API",
     "contactGivenNames": null,
     "lawyerFullName": null,
     "address": "123 Oak Street",

@@ -1,0 +1,89 @@
+meta {
+  name: Create Dispute
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{occam.base_url}}/api/v1.0/dispute
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "createdBy": "OCCAMORDS",
+    "createdTs": "2025-07-29T12:57:23",
+    "modifiedBy": "OCCAMORDS",
+    "modifiedTs": "2025-08-07T10:51:30",
+    "disputeId": 0,
+    "noticeOfDisputeGuid": "08ddce19-ba11-fda8-0a58-0b6101000000",
+    "ticketNumber": "EZ05000499",
+    "issuedTs": "2025-07-29T13:45:52",
+    "submittedTs": "2025-07-28T23:45:52",
+    "disputantSurname": "Doe",
+    "disputantGivenName1": "John",
+    "disputantBirthdate": "2001-01-01",
+    "driversLicenceIssuedCountryId": 1,
+    "driversLicenceIssuedProvinceSeqNo": 10,
+    "status": "NEW",
+    "addressLine1": "123 Oak Street",
+    "addressCity": "Vancouver",
+    "addressProvinceCountryId": 1,
+    "addressProvinceSeqNo": 1,
+    "addressCountryId": 1,
+    "postalCode": "V3V3V3",
+    "homePhoneNumber": "5555555555",
+    "emailAddress": "asdf@email.com",
+    "emailAddressVerified": true,
+    "representedByLawyer": "N",
+    "contactTypeCd": "INDIVIDUAL",
+    "requestCourtAppearanceYn": "Y",
+    "appearanceLessThan14DaysYn": "N",
+    "interpreterRequired": "N",
+    "witnessNo": 0,
+    "userAssignedTo": "DAVEKAY",
+    "userAssignedTs": "2025-08-07T10:51:30",
+    "disputantDetectedOcrIssues": "N",
+    "systemDetectedOcrIssues": "N",
+    "violationTicket": {
+      "createdBy": "OCCAMORDS",
+      "createdTs": "2025-07-29T12:57:23",
+      "violationTicketId": 5328,
+      "ticketNumber": "EZ05000499",
+      "disputantSurname": "Doe",
+      "disputantGivenNames": "John",
+      "disputantBirthdate": "1975-07-29",
+      "issuedTs": "2025-07-29T13:45:52",
+      "violationTicketCounts": [
+        {
+          "createdBy": "OCCAMORDS",
+          "createdTs": "2025-07-29T12:57:23",
+          "violationTicketCountId": 8273,
+          "countNo": 1,
+          "description": "SPEED AGAINST HIGHWAY SIGN IF THE SPEED LIMIT IS EXCEEDED BY 21 KM/HR TO 40 KM/HR",
+          "actOrRegulationNameCode": "MVA",
+          "isAct": "Y",
+          "isRegulation": "N",
+          "ticketedAmount": 196.0
+        }
+      ]
+    },
+    "disputeCounts": [
+      {
+        "createdBy": "OCCAMORDS",
+        "createdTs": "2025-07-29T12:57:23",
+        "countNo": 1,
+        "pleaCode": "N",
+        "requestTimeToPay": "N",
+        "requestReduction": "N",
+        "requestCourtAppearance": "Y"
+      }
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
