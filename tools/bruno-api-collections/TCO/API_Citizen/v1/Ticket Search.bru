@@ -1,0 +1,21 @@
+meta {
+  name: Ticket Search
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{citizen-api.host}}/api/disputes/search?ticketNumber=EA08226523&time=14:01
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ticketNumber: EA08226523
+  time: 14:01
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

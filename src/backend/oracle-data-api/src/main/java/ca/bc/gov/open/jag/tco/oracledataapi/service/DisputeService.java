@@ -345,7 +345,7 @@ public class DisputeService {
 	 * Unassigns all Disputes whose assignedTs is older than 1 hour ago, resetting the assignedTo and assignedTs fields.
 	 */
 	public void unassignDisputes() {
-		disputeRepository.unassignDisputes(DateUtils.addHours(new Date(), -1));
+		disputeRepository.unassignDisputes(DateUtils.addMinutes(new Date(), -30));
 	}
 
 	/**

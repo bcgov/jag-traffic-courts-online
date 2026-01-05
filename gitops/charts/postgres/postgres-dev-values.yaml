@@ -350,11 +350,11 @@ pgBackRestConfig:
 
 # pgBouncerConfig sets all of the pgBouncer portions of the spec except for
 # image. To set image, you need to set the "pgBouncer" setting.
-# pgBouncerConfig:
-#   config:
-#     global:
-#       client_tls_sslmode: disable
-
+pgBouncerConfig:
+  config:
+    global:
+      client_tls_sslmode: disable
+      ignore_startup_parameters: search_path,extra_float_digits
 
 #######################
 # Monitoring Settings #

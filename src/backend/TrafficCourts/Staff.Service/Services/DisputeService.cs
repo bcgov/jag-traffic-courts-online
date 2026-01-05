@@ -129,6 +129,26 @@ public class DisputeService : IDisputeService,
         return dispute;
     }
 
+    public async Task<Dispute> CreateDisputeAsync(ClaimsPrincipal user, Dispute dispute, TimeZoneInfo timeZone, CancellationToken cancellationToken)
+    {
+        dispute.UtcToLocalTime(timeZone);
+        long disputeId = await _oracleDataApi.SaveDisputeAsync(dispute, cancellationToken);
+        dispute.UtcToLocalTime(timeZone);
+
+        var savedDispute = await _oracleDataApi.GetDisputeAsync(disputeId, false, cancellationToken);
+
+        // Publish file history
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
+            savedDispute.NoticeOfDisputeGuid,
+            FileHistoryAuditLogEntryType.FRMK, // VTC staff has added a file remark for saving or updating a dispute in Ticket Validation
+            GetUserName(user),
+            "Staff have Submitted a Dispute on behalf of a Citizen");
+
+        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
+
+        return savedDispute;
+    }
+
     public async Task<Dispute> UpdateDisputeAsync(long disputeId, ClaimsPrincipal user, string? staffComment, Dispute dispute, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
         dispute.UtcToLocalTime(timeZone);

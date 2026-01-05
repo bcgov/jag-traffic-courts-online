@@ -249,33 +249,33 @@ services:
   #############################################################################################
   ###                                 TrafficCourt FRONTEND                                 ###
   #############################################################################################
-  # citizen-portal:
-  #   container_name: citizen-portal
-  #   build:
-  #     context: ./src/frontend/citizen-portal
-  #   restart: always
-  #   ports:
-  #     - "8080:8080"
-  #   ## following is used for testing nginx.conf locally. No need to build the citizen-portal every
-  #   ## time we change the nginx.conf, start a shell in the container and run 'service nginx reload' or '/etc/init.d/nginx reload'
-  #   #volumes:
-  #   #  - ./src/frontend/citizen-portal/nginx.conf:/opt/app-root/etc/nginx.default.d/default.conf
-  #   depends_on:
-  #     - citizen-api
+  citizen-portal:
+    container_name: citizen-portal
+    build:
+      context: ./src/frontend/citizen-portal
+    restart: always
+    ports:
+      - "8080:8080"
+    ## following is used for testing nginx.conf locally. No need to build the citizen-portal every
+    ## time we change the nginx.conf, start a shell in the container and run 'service nginx reload' or '/etc/init.d/nginx reload'
+    #volumes:
+    #  - ./src/frontend/citizen-portal/nginx.conf:/opt/app-root/etc/nginx.default.d/default.conf
+    depends_on:
+      - citizen-api
 
   #############################################################################################
   ###                                 TrafficCourt Staff FRONTEND                           ###
   #############################################################################################
-  # staff-portal:
-  #   container_name: staff-portal
-  #   build:
-  #     context: ./src/frontend/staff-portal
-  #   restart: always
-  #   ports:
-  #     - "8090:8080"
-  #   depends_on:
-  #     - staff-api
-    
+  staff-portal:
+    container_name: staff-portal
+    build:
+      context: ./src/frontend/staff-portal
+    restart: always
+    ports:
+      - "8090:8080"
+    depends_on:
+      - staff-api
+   
   #############################################################################################
   ###                           RABBITMQ                                                    ###
   #############################################################################################
