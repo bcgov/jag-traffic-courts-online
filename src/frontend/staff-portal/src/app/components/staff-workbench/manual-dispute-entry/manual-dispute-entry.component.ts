@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormControlValidators } from '@core/validators/form-control.validators';
 import { DisputeService, Dispute } from 'app/services/dispute.service';
 import { LoggerService } from '@core/services/logger.service';
 import { AuthService } from 'app/services/auth.service';
@@ -13,6 +14,8 @@ import {
   DisputeRepresentedByLawyer,
   DisputeInterpreterRequired,
   DisputeSignatoryType,
+  DisputeDisputantDetectedOcrIssues,
+  DisputeSystemDetectedOcrIssues,
   ViolationTicket,
   ViolationTicketCount,
   DisputeCount,
@@ -24,7 +27,7 @@ import {
   Count
 } from 'app/api';
 import { ToastService } from '@core/services/toast.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 
@@ -42,6 +45,7 @@ export class ManualDisputeEntryComponent implements OnInit {
   public disputeInfoForm: FormGroup;
   public provinces: any[];
   public states: any[];
+  public countries: any[];
   public bc: any;
   public canada: any;
   public usa: any;
@@ -110,6 +114,9 @@ export class ManualDisputeEntryComponent implements OnInit {
       );
       this.states = this.config.provincesAndStates.filter(
         x => x.ctryId === this.usa.ctryId
+      );
+      this.countries = this.config.countries.filter(
+        x => x.ctryId !== this.canada.ctryId && x.ctryId !== this.usa.ctryId
       );
     }
   }
@@ -362,6 +369,7 @@ export class ManualDisputeEntryComponent implements OnInit {
         // Canada or USA specific validators
         provinceSeqControl.addValidators([Validators.required]);
         postalControl.addValidators([Validators.required]);
+        phoneControl.addValidators([FormControlValidators.phone]);
         
         if (ctryId === this.canada.ctryId) {
           // Canada: Postal code format and set BC as default
@@ -779,9 +787,9 @@ export class ManualDisputeEntryComponent implements OnInit {
       titleKey: "Submit Manual Dispute Entry?",
       messageKey: "Are you sure you want to submit this manually entered dispute? Please verify all information is correct.",
       actionTextKey: "Submit Dispute",
-      actionType: "green",
+      actionType: "primary",
       cancelTextKey: "Cancel",
-      icon: "info",
+      icon: "help",
     };
 
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
@@ -803,24 +811,26 @@ export class ManualDisputeEntryComponent implements OnInit {
   }
 
   private submitDispute() {
-    // TODO: Implement API call once backend endpoint is ready
-    const dispute: Dispute = this.buildDisputeObject();
-    
-    this.logger.log('ManualDisputeEntryComponent::submitDispute', dispute);
-    this.toastService.openSuccessToast('Dispute data logged to console (API call pending backend implementation)');
-    
-    // Uncomment when API is ready:
-    // this.disputeService.createDispute(dispute).subscribe({
-    //   next: (response: Dispute) => {
-    //     this.logger.info('ManualDisputeEntryComponent::submitDispute response', response);
-    //     this.toastService.openSuccessToast('Dispute created successfully');
-    //     this.backInbox.emit();
-    //   },
-    //   error: (error: any) => {
-    //     this.logger.error('ManualDisputeEntryComponent::submitDispute error', error);
-    //     this.toastService.openErrorToast('Failed to create dispute. Please try again.');
-    //   }
-    // });
+    try {
+      const dispute: Dispute = this.buildDisputeObject();
+      
+      this.logger.log('ManualDisputeEntryComponent::submitDispute - Submitting dispute:', dispute);
+      
+      this.disputeService.createDispute(dispute).subscribe({
+        next: (response: Dispute) => {
+          this.logger.info('ManualDisputeEntryComponent::submitDispute - Success:', response);
+          this.toastService.openSuccessToast('Dispute created successfully');
+          this.backInbox.emit();
+        },
+        error: (error: any) => {
+          this.logger.error('ManualDisputeEntryComponent::submitDispute - Error:', error);
+          // Error toast is already shown by the service
+        }
+      });
+    } catch (error) {
+      this.logger.error('ManualDisputeEntryComponent::submitDispute - Exception:', error);
+      this.toastService.openErrorToast('Failed to build dispute object. Please check all fields.');
+    }
   }
 
   private buildDisputeObject(): Dispute {
@@ -837,7 +847,8 @@ export class ManualDisputeEntryComponent implements OnInit {
       driversLicenceProvince: this.getProvinceCode(ticketData.driversLicenceProvince),
       driversLicenceCountry: ticketData.driversLicenceCountry,
       issuedTs: this.formatDateTime(ticketData.violationDate, ticketData.violationTime),
-      courtLocation: ticketData.courtLocation
+      courtLocation: ticketData.courtLocation,
+      violationTicketCounts: this.buildViolationTicketCounts()
     };
 
     // Build dispute counts
@@ -850,8 +861,8 @@ export class ManualDisputeEntryComponent implements OnInit {
       // Ticket information
       ticketNumber: ticketData.ticketNumber,
       issuedTs: violationTicket.issuedTs,
-      submittedTs: new Date().toISOString(),
-      filingDate: disputeData.filingDate ? disputeData.filingDate.toISOString() : new Date().toISOString(),
+      submittedTs: this.formatDateTimeForApi(new Date()),
+      filingDate: disputeData.filingDate ? this.formatDateTimeForApi(disputeData.filingDate) : this.formatDateTimeForApi(new Date()),
       
       // Disputant information
       disputantSurname: ticketData.disputantSurname,
@@ -869,9 +880,9 @@ export class ManualDisputeEntryComponent implements OnInit {
       contactGiven2Nm: contactData.contactGivenNames?.split(' ')[1] || null,
       contactGiven3Nm: contactData.contactGivenNames?.split(' ')[2] || null,
       contactLawFirmNm: contactData.contactLawFirmNm,
-      address: contactData.address,
+      addressLine1: contactData.address,
       addressCity: contactData.addressCity,
-      addressProvince: this.getProvinceCode(contactData.addressProvince),
+      addressProvince: this.getAddressProvince(contactData),
       addressProvinceSeqNo: contactData.addressProvinceSeqNo,
       addressProvinceCountryId: contactData.addressProvinceCountryId,
       addressCountryId: contactData.addressCountryId,
@@ -881,12 +892,19 @@ export class ManualDisputeEntryComponent implements OnInit {
       homePhoneNumber: contactData.homePhoneNumber,
       
       // Dispute information
+      requestCourtAppearanceYn: disputeData.requestCourtAppearance,
       representedByLawyer: disputeData.representedByLawyer,
       interpreterRequired: disputeData.interpreterRequired,
       interpreterLanguageCd: disputeData.interpreterLanguageCd,
       witnessNo: disputeData.witnessNo || 0,
       signatoryType: disputeData.signatoryType,
       signatoryName: disputeData.signatoryName,
+      fineReductionReason: disputeData.fineReductionReason,
+      timeToPayReason: disputeData.timeToPayReason,
+      
+      // OCR fields - set to 'N' for manual entry (no OCR involved)
+      disputantDetectedOcrIssues: DisputeDisputantDetectedOcrIssues.N,
+      systemDetectedOcrIssues: DisputeSystemDetectedOcrIssues.N,
       
       // Status
       status: DisputeStatus.New,
@@ -925,14 +943,45 @@ export class ManualDisputeEntryComponent implements OnInit {
   private buildDisputeCounts(): DisputeCount[] {
     return this.disputeCounts.map((count, index) => {
       const countFormData = this.disputeInfoForm.get(`count${count.countNo}`).value;
+      
+      // Determine pleaCode based on requestReduction value:
+      // 'Y' = "I agree I committed this offence..." → Guilty plea
+      // 'N' = "I do not agree I committed this offence..." → Not Guilty plea
+      // 'UNKNOWN' or null = Skip count → Unknown plea
+      let pleaCode: any;
+      if (countFormData.requestReduction === DisputeCountRequestReduction.Y) {
+        pleaCode = 'G'; // Guilty
+      } else if (countFormData.requestReduction === DisputeCountRequestReduction.N) {
+        pleaCode = 'N'; // Not Guilty
+      } else {
+        pleaCode = 'UNKNOWN'; // Skip or unknown
+      }
+      
       return {
         countNo: count.countNo,
         requestCourtAppearance: countFormData.requestCourtAppearance,
         requestReduction: countFormData.requestReduction,
         requestTimeToPay: countFormData.requestTimeToPay,
-        pleaCode: null
+        pleaCode: pleaCode
       };
     });
+  }
+
+  /**
+   * Format date to Oracle API format: yyyy-MM-ddTHH:mm:ss (no milliseconds)
+   */
+  private formatDateTimeForApi(date: Date): string {
+    if (!date) return null;
+    
+    const d = date instanceof Date ? date : new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    const seconds = String(d.getSeconds()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
   }
 
   private formatDateTime(date: any, time: string): string {
@@ -954,6 +1003,37 @@ export class ManualDisputeEntryComponent implements OnInit {
     if (!provId) return null;
     const prov = this.config.provincesAndStates.find(x => x.provId === provId);
     return prov?.provNm || null;
+  }
+
+  private getAddressProvince(contactData: any): string {
+    // Check if country is Canada or USA (province is selected from dropdown)
+    if (contactData.addressCountryId === this.canada.ctryId || contactData.addressCountryId === this.usa.ctryId) {
+      // Province/State was selected from dropdown, so addressProvince contains provId
+      return this.getProvinceCode(contactData.addressProvince);
+    } else {
+      // Province/State was entered as free text
+      return contactData.addressProvince;
+    }
+  }
+
+  /**
+   * Get country name for display
+   */
+  public getCountryName(ctryId: number): string {
+    if (!ctryId) return '';
+    const country = this.config.countries.find(x => x.ctryId === ctryId);
+    if (country) return country.ctryLongNm;
+    if (ctryId === this.canada.ctryId) return this.canada.ctryLongNm;
+    if (ctryId === this.usa.ctryId) return this.usa.ctryLongNm;
+    return '';
+  }
+
+  /**
+   * Get province/state name for display in review
+   */
+  public getProvinceNameForDisplay(contactData: any): string {
+    if (!contactData.addressProvince) return 'Not provided';
+    return this.getAddressProvince(contactData);
   }
 
   private getCourtAgencyId(courtLocation: string): string {
@@ -991,7 +1071,7 @@ export class ManualDisputeEntryComponent implements OnInit {
     if (value === this.RequestCourtAppearance.N) {
       // When not requesting court appearance, set signatory type required
       this.disputeInfoForm.get('signatoryType').setValidators([Validators.required]);
-      this.disputeInfoForm.get('signatoryType').updateValueAndValidity();
+      this.disputeInfoForm.get('signatoryType').updateValueAndValidity({ emitEvent: false });
       
       // Reset interpreter and witness for written reasons
       this.disputeInfoForm.patchValue({
@@ -1003,8 +1083,10 @@ export class ManualDisputeEntryComponent implements OnInit {
       // When requesting court appearance, signatory not needed
       this.disputeInfoForm.get('signatoryType').clearValidators();
       this.disputeInfoForm.get('signatoryType').setValue(null);
+      this.disputeInfoForm.get('signatoryName').clearValidators();
       this.disputeInfoForm.get('signatoryName').setValue(null);
-      this.disputeInfoForm.get('signatoryType').updateValueAndValidity();
+      this.disputeInfoForm.get('signatoryType').updateValueAndValidity({ emitEvent: false });
+      this.disputeInfoForm.get('signatoryName').updateValueAndValidity({ emitEvent: false });
     }
   }
 
@@ -1015,12 +1097,13 @@ export class ManualDisputeEntryComponent implements OnInit {
     const sigNameControl = this.disputeInfoForm.get('signatoryName');
     
     if (value === this.SignatoryType.D || value === this.SignatoryType.A) {
+      // Set validators when a signature type is selected
       sigNameControl.setValidators([Validators.required, Validators.maxLength(100)]);
     } else {
+      // Clear validators when no type selected
       sigNameControl.clearValidators();
-      sigNameControl.setValue(null);
     }
-    sigNameControl.updateValueAndValidity();
+    sigNameControl.updateValueAndValidity({ emitEvent: false });
   }
 
   /**
@@ -1100,8 +1183,10 @@ export class ManualDisputeEntryComponent implements OnInit {
     } else {
       reductionReasonControl.clearValidators();
       reductionReasonControl.setValue(null);
+      reductionReasonControl.markAsPristine();
+      reductionReasonControl.markAsUntouched();
     }
-    reductionReasonControl.updateValueAndValidity();
+    reductionReasonControl.updateValueAndValidity({ emitEvent: false });
     
     // Update time to pay reason validators
     if (countsRequestingTimeToPay.length > 0) {
@@ -1109,8 +1194,10 @@ export class ManualDisputeEntryComponent implements OnInit {
     } else {
       timeToPayReasonControl.clearValidators();
       timeToPayReasonControl.setValue(null);
+      timeToPayReasonControl.markAsPristine();
+      timeToPayReasonControl.markAsUntouched();
     }
-    timeToPayReasonControl.updateValueAndValidity();
+    timeToPayReasonControl.updateValueAndValidity({ emitEvent: false });
   }
 
   /**

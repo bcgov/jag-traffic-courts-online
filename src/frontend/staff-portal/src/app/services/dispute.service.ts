@@ -247,6 +247,41 @@ export class DisputeService implements IDisputeService {
   }
 
   /**
+   * Creates a new dispute by calling PUT /api/dispute/ endpoint
+   * @param dispute The dispute object to create
+   * @returns Observable of the created Dispute
+   */
+  public createDispute(dispute: Dispute): Observable<Dispute> {
+    dispute.disputantBirthdate = "2001-01-01"; // TODO: remove this after disputant birthdate gone from schema
+    dispute = this.splitDisputantGivenNames(dispute);
+    dispute = this.splitContactGivenNames(dispute);
+    dispute = this.splitLawyerNames(dispute);
+    dispute = this.splitAddressLines(dispute);
+
+    // Use HTTP client directly since PUT /api/dispute/ endpoint is not in the generated API
+    const headers = new HttpHeaders({ 
+      'Content-Type': 'application/json',
+      'X-Timezone': Intl.DateTimeFormat().resolvedOptions().timeZone
+    });
+    const url = `${this.disputeApiService.configuration.basePath}/api/dispute/?disputeId=0`;
+    
+    return this.http.put<Dispute>(url, dispute, { headers })
+      .pipe(
+        map((response: Dispute) => {
+          this.logger.info('DisputeService::createDispute', response);
+          this.refreshDisputes.next(response);
+          return response;
+        }),
+        catchError((error: any) => {
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.logger.error('DisputeService::createDispute error has occurred: ', error);
+          throw error;
+        })
+      );
+  }
+
+  /**
      * Put the dispute to RSI by Id.
      *
      * @param disputeId

@@ -20,7 +20,7 @@ namespace TrafficCourts.Staff.Service.Controllers;
 #endif
 public class DisputeController : StaffControllerBase
 {
-    private readonly IDisputeService _disputeService;
+    private readonly DisputeController _disputeService;
     private readonly IPrintDigitalCaseFileService _printService;
     private readonly ILogger<DisputeController> _logger;
 
