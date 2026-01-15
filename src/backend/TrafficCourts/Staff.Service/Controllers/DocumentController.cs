@@ -40,7 +40,6 @@ public class DocumentController : StaffControllerBase
     /// <response code="500">There was a server error that prevented the file upload from completing successfully.</response>
     /// <returns>The ID of the uploaded file</returns>
     [HttpPost]
-    [RequestSizeLimit(10485760)] // 10 MB limit
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
