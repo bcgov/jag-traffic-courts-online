@@ -8,10 +8,16 @@ data:
 {{ include "staff-web.tplvalues.render" ( dict "value" .Values.appConfig "context" $ ) | indent 4 }}
   keycloak.config.json: |-
 {{ include "staff-web.tplvalues.render" ( dict "value" .Values.keycloakConfig "context" $ ) | indent 4 }}
-  nginx-api-proxy-pass.conf: |-
+   nginx-api-proxy-pass.conf: |-
+    client_max_body_size 10M;
+    
     location /api {
       proxy_pass http://{{ .Release.Name }}-staff-api.{{ .Values.global.namespace }}.svc.cluster.local:8080/api;
       client_max_body_size 10M;
+      proxy_send_timeout 600s;
+      proxy_read_timeout 600s;
+      proxy_connect_timeout 600s;
+      send_timeout 600s;
     }
     error_log stderr warn;
   {{ if .Values.courtHouseDataConfig }}
