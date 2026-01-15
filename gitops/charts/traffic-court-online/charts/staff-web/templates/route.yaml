@@ -8,6 +8,7 @@ metadata:
   annotations:
     haproxy.router.openshift.io/ip_whitelist: {{ .Values.route.allowedIPs }}
     haproxy.router.openshift.io/disable_cookies: "true"
+    haproxy.router.openshift.io/proxy-body-size: 10m
 spec:
   host: staff-web-for-jag-proxy-{{ .Values.global.namespace }}.apps.silver.devops.gov.bc.ca
   to:
