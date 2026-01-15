@@ -298,11 +298,12 @@ export class ManualDisputeEntryComponent implements OnInit {
         driversLicenceCountry: selectedProv.ctryId === this.canada.ctryId ? 'Canada' : 'USA'
       });
 
-      // BC requires 8-digit numeric DL
+      // BC requires 7-9 digit numeric DL
       if (selectedProv.provSeqNo === this.bc.provSeqNo && selectedProv.ctryId === this.canada.ctryId) {
-        dlNumberControl.setValidators([Validators.required, Validators.pattern(/^\d{8}$/)]);
+        dlNumberControl.setValidators([Validators.required, Validators.minLength(7), Validators.maxLength(9), Validators.pattern(/^\d+$/)]);
       } else {
-        dlNumberControl.setValidators([Validators.maxLength(25)]);
+        // Other provinces/states: 7-30 characters
+        dlNumberControl.setValidators([Validators.minLength(7), Validators.maxLength(30)]);
       }
       dlNumberControl.updateValueAndValidity();
     }
@@ -837,6 +838,7 @@ export class ManualDisputeEntryComponent implements OnInit {
     const ticketData = this.ticketDetailsForm.value;
     const contactData = this.contactInfoForm.value;
     const disputeData = this.disputeInfoForm.value;
+    const legalRepData = this.legalRepresentationForm.value;
 
     // Build violation ticket
     const violationTicket: ViolationTicket = {
@@ -856,6 +858,13 @@ export class ManualDisputeEntryComponent implements OnInit {
 
     // Split given names if needed
     const givenNames = ticketData.disputantGivenNames ? ticketData.disputantGivenNames.split(' ') : [];
+
+    // Split lawyer full name into surname and given names
+    const lawyerNames = legalRepData.lawyerFullName ? legalRepData.lawyerFullName.split(' ') : [];
+    const lawyerSurname = lawyerNames.length > 0 ? lawyerNames[lawyerNames.length - 1] : null;
+    const lawyerGivenName1 = lawyerNames.length > 1 ? lawyerNames[0] : null;
+    const lawyerGivenName2 = lawyerNames.length > 2 ? lawyerNames[1] : null;
+    const lawyerGivenName3 = lawyerNames.length > 3 ? lawyerNames[2] : null;
 
     const dispute: Dispute = {
       // Ticket information
@@ -901,6 +910,16 @@ export class ManualDisputeEntryComponent implements OnInit {
       signatoryName: disputeData.signatoryName,
       fineReductionReason: disputeData.fineReductionReason,
       timeToPayReason: disputeData.timeToPayReason,
+      
+      // Legal representation information (from legalRepresentationForm)
+      lawFirmName: legalRepData.lawFirmName || null,
+      lawyerSurname: lawyerSurname,
+      lawyerGivenName1: lawyerGivenName1,
+      lawyerGivenName2: lawyerGivenName2,
+      lawyerGivenName3: lawyerGivenName3,
+      lawyerAddress: legalRepData.lawyerAddress || null,
+      lawyerPhoneNumber: legalRepData.lawyerPhoneNumber || null,
+      lawyerEmail: legalRepData.lawyerEmail || null,
       
       // OCR fields - set to 'N' for manual entry (no OCR involved)
       disputantDetectedOcrIssues: DisputeDisputantDetectedOcrIssues.N,

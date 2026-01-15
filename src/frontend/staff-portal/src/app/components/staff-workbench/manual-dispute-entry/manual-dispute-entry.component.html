@@ -180,19 +180,22 @@
               <mat-form-field class="w-100">
                 <mat-label>DL Number</mat-label>
                 <input matInput formControlName="driversLicenceNumber" 
-                       [maxlength]="ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value === bc.provSeqNo ? 8 : 25"
+                       minlength="7" maxlength="30"
                        (keypress)="onKeyPressNumbers($event, ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value === bc.provSeqNo)" />
                 <mat-hint *ngIf="ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value === bc.provSeqNo">
-                  BC: 8 digits required
+                  BC: 7-9 digits
                 </mat-hint>
                 <mat-hint *ngIf="ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value !== bc.provSeqNo">
-                  Optional alphanumeric
+                  7-30 characters
                 </mat-hint>
                 <mat-error *ngIf="ticketDetailsForm.controls.driversLicenceNumber.hasError('required')">
                   DL number is required for BC
                 </mat-error>
+                <mat-error *ngIf="ticketDetailsForm.controls.driversLicenceNumber.hasError('minlength') || ticketDetailsForm.controls.driversLicenceNumber.hasError('maxlength')">
+                  Must be between 7 and 30 characters
+                </mat-error>
                 <mat-error *ngIf="ticketDetailsForm.controls.driversLicenceNumber.hasError('pattern')">
-                  BC DL must be 8 digits
+                  BC DL must be numeric
                 </mat-error>
               </mat-form-field>
             </div>
@@ -478,7 +481,7 @@
                        *ngIf="contactInfoForm.get('addressCountryId').value === canada.ctryId || contactInfoForm.get('addressCountryId').value === usa.ctryId"
                        [showMaskTyped]="true" />
                 
-                <input matInput formControlName="homePhoneNumber" maxlength="20"
+                <input matInput formControlName="homePhoneNumber" mask="99999999999999999999"
                        *ngIf="contactInfoForm.get('addressCountryId').value !== canada.ctryId && contactInfoForm.get('addressCountryId').value !== usa.ctryId" />
                 
                 <mat-error *ngIf="contactInfoForm.get('homePhoneNumber')?.hasError('phone')">Must be a valid phone number</mat-error>
