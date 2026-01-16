@@ -1,5 +1,6 @@
 using FastEndpoints;
 using MassTransit;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
@@ -25,6 +26,12 @@ public static class Startup
         Assembly assembly = Assembly.GetExecutingAssembly();
 
         builder.Services.AddSingleton(TimeProvider.System);
+
+        //allow larger file uploads
+        builder.Services.Configure<KestrelServerOptions>(options =>
+        {
+            options.Limits.MaxRequestBodySize = 10_485_760; // 10 MB
+        });
 
         // Add services to the container.
         builder.AddSerilog();
