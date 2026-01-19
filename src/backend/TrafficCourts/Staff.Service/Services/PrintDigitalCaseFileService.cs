@@ -523,6 +523,8 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         appearance.Crown = ToString(appearanceRop.Crown);
         appearance.Seized = ToString(appearanceRop.JjSeized);
         appearance.JudicialJustice = jjDisplayName ?? appearanceRop.Adjudicator;
+        appearance.LanguageRightsAdvised = appearanceRop.LanguageRightsAdvised;
+        appearance.LanguageChoice = appearanceRop.LanguageChoice;
         appearance.Comments = appearanceRop.Comments;
 
         return appearance;

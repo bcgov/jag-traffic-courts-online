@@ -363,6 +363,12 @@ namespace TrafficCourts.Domain.Models
         [System.ComponentModel.DataAnnotations.StringLength(4000)]
         public string Comments { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("languageRightsAdvised", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string LanguageRightsAdvised { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("languageChoice", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string LanguageChoice { get; set; }
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
 
         [Newtonsoft.Json.JsonExtensionData]

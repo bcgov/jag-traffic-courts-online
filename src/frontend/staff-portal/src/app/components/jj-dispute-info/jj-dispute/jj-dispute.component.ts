@@ -104,7 +104,9 @@ export class JJDisputeComponent implements OnInit {
     adjudicator: [null],
     comments: [null],
     dattCd: [null],
-    adjudicatorName: [{ value: null, disabled: true }]
+    adjudicatorName: [{ value: null, disabled: true }],
+    languageRightsAdvised: [null],
+    languageChoice: [null]
   });
 
   lastUpdatedJJDispute: JJDispute;

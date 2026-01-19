@@ -146,6 +146,20 @@ public class JJDisputeCourtAppearanceRoP {
 	@Schema(nullable = true, maxLength = 4000)
 	private String comments;
 
+	/**
+	 * Language Rights Advised - indicates if court notified disputant of language rights
+	 */
+	@Column
+	@Schema(nullable = true)
+	private String languageRightsAdvised;
+
+	/**
+	 * Language Choice - the language choice indicated by disputant (English, French, or Bilingual)
+	 */
+	@Column
+	@Schema(nullable = true)
+	private String languageChoice;
+
 	@JsonBackReference(value="jj_dispute_court_appearance_rop_reference")
 	@ManyToOne(targetEntity=JJDispute.class, fetch = FetchType.LAZY)
 	@Schema(hidden = true)

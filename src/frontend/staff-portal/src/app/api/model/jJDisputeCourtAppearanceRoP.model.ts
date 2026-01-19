@@ -31,6 +31,8 @@ export interface JJDisputeCourtAppearanceRoP {
     jjSeized?: JJDisputeCourtAppearanceRoPJjSeized;
     adjudicator?: string | null;
     comments?: string | null;
+    languageRightsAdvised?: string | null;
+    languageChoice?: string | null;
     additionalProperties?: { [key: string]: any; } | null;
 }
 

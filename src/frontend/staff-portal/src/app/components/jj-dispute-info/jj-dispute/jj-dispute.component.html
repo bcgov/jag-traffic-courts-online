@@ -443,6 +443,22 @@
               </p>
             </span>
             <span class="section-grid-cell" style="grid-column: span 11">
+              <p class="section-grid-header">Trial Language Rights Advised. Language Choice:</p>
+              <p class="section-grid-text" style="display: flex; align-items: center; gap: 10px;">
+                <mat-form-field appearance="outline" *ngIf="!isViewOnly" style="flex: 0 0 auto; width: 200px;">
+                  <input matInput formControlName="languageRightsAdvised" maxlength="100" placeholder="Enter text">
+                </mat-form-field>
+                <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.languageRightsAdvised }}</span>
+                
+                <mat-radio-group formControlName="languageChoice" *ngIf="!isViewOnly" style="display: flex; gap: 15px;">
+                  <mat-radio-button value="English">English</mat-radio-button>
+                  <mat-radio-button value="French">French</mat-radio-button>
+                  <mat-radio-button value="Bilingual">Bilingual</mat-radio-button>
+                </mat-radio-group>
+                <span *ngIf="isViewOnly" style="margin-left: 10px;">{{ courtAppearanceForm?.value.languageChoice }}</span>
+              </p>
+            </span>
+            <span class="section-grid-cell" style="grid-column: span 11">
               <p class="section-grid-header">JJ Endorsements:</p>
               <p class="section-grid-text">
                 <textarea *ngIf="!isViewOnly" formControlName="comments" style="width:100%; background:#fffee6"

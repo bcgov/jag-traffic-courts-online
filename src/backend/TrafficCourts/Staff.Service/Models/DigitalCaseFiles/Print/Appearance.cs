@@ -53,6 +53,12 @@ public class Appearance
     [JsonProperty("judicialJustice")]
     public string JudicialJustice { get; set; } = string.Empty;
 
+    [JsonProperty("languageRightsAdvised")]
+    public string LanguageRightsAdvised { get; set; } = string.Empty;
+
+    [JsonProperty("languageChoice")]
+    public string LanguageChoice { get; set; } = string.Empty;
+
     [JsonProperty("comments")]
     public string Comments { get; set; } = string.Empty;
 }
