@@ -13,15 +13,6 @@ data:
     
     location /api {
       proxy_pass http://{{ .Release.Name }}-staff-api.{{ .Values.global.namespace }}.svc.cluster.local:8080/api;
-      client_max_body_size 10M;
-      send_timeout 600s;
-      proxy_read_timeout 600s;
-      proxy_send_timeout 600s;
-      sendfile on;
-      tcp_nopush on;
-      tcp_nodelay on;
-      keepalive_timeout 65;
-      types_hash_max_size 2048;
     }
     error_log stderr warn;
   {{ if .Values.courtHouseDataConfig }}
