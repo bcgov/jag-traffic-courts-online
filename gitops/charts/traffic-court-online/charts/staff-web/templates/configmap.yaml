@@ -9,6 +9,8 @@ data:
   keycloak.config.json: |-
 {{ include "staff-web.tplvalues.render" ( dict "value" .Values.keycloakConfig "context" $ ) | indent 4 }}
   nginx-api-proxy-pass.conf: |-
+    client_max_body_size 10M;
+    
     location /api {
       proxy_pass http://{{ .Release.Name }}-staff-api.{{ .Values.global.namespace }}.svc.cluster.local:8080/api;
     }
