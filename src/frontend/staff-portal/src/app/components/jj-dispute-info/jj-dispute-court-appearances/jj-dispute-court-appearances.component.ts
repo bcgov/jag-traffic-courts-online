@@ -27,7 +27,6 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
     "crown",
     "jjSeized",
     "adjudicator",
-    "languageRightsAdvised",
     "languageChoice"
   ];
   jjList: UserRepresentation[];

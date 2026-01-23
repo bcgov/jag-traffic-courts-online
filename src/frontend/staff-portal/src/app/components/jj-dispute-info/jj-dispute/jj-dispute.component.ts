@@ -105,7 +105,6 @@ export class JJDisputeComponent implements OnInit {
     comments: [null],
     dattCd: [null],
     adjudicatorName: [{ value: null, disabled: true }],
-    languageRightsAdvised: [null],
     languageChoice: [null]
   });
 

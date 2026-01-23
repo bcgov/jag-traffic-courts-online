@@ -147,13 +147,6 @@ public class JJDisputeCourtAppearanceRoP {
 	private String comments;
 
 	/**
-	 * Language Rights Advised - indicates if court notified disputant of language rights
-	 */
-	@Column
-	@Schema(nullable = true)
-	private String languageRightsAdvised;
-
-	/**
 	 * Language Choice - the language choice indicated by disputant (English, French, or Bilingual)
 	 */
 	@Column
