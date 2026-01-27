@@ -26,6 +26,7 @@ public static class Startup
 
         builder.Services.AddSingleton(TimeProvider.System);
 
+
         // Add services to the container.
         builder.AddSerilog();
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
