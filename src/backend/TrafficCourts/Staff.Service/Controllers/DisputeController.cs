@@ -20,7 +20,7 @@ namespace TrafficCourts.Staff.Service.Controllers;
 #endif
 public class DisputeController : StaffControllerBase
 {
-    private readonly DisputeController _disputeService;
+    private readonly IDisputeService _disputeService;
     private readonly IPrintDigitalCaseFileService _printService;
     private readonly ILogger<DisputeController> _logger;
 
@@ -736,7 +736,6 @@ public class DisputeController : StaffControllerBase
     /// Creates a Dispute record, similar to a Citizen Dispute Submit, but from Staff instead
     /// </summary>
     /// <param name="disputeId">Unique identifier for a specific Dispute record.</param>
-    /// <param name="disputeId">Unique identifier for a specific Dispute record.</param>debug
     /// <param name="dispute"></param>
     /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
