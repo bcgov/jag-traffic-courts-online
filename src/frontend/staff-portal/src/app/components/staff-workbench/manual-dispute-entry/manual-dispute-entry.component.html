@@ -854,7 +854,7 @@
                   </div>
                   <div class="review-item">
                     <span class="label">Violation Date:</span>
-                    <span class="value">{{ ticketDetailsForm.get('violationDate')?.value }}</span>
+                    <span class="value">{{ ticketDetailsForm.get('violationDate')?.value?.toDateString() }}</span>
                   </div>
                   <div class="review-item">
                     <span class="label">Violation Time:</span>
@@ -958,7 +958,7 @@
                 <div class="review-grid">
                   <div class="review-item">
                     <span class="label">Date Submitted:</span>
-                    <span class="value">{{ disputeInfoForm.get('dateSubmitted')?.value }}</span>
+                    <span class="value">{{ disputeInfoForm.get('dateSubmitted')?.value?.toDateString() }}</span>
                   </div>
                   <div class="review-item">
                     <span class="label">Represented by Lawyer:</span>
