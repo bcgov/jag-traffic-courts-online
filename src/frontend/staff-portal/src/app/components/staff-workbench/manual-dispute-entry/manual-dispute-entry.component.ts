@@ -50,7 +50,7 @@ export class ManualDisputeEntryComponent implements OnInit {
   public canada: any;
   public usa: any;
   public todayDate: Date = new Date();
-  public maxFilingDate: Date = new Date();
+  public maxDateSubmitted: Date = new Date();
   public filteredCount1Statutes: Statute[];
   public filteredCount2Statutes: Statute[];
   public filteredCount3Statutes: Statute[];
@@ -188,7 +188,7 @@ export class ManualDisputeEntryComponent implements OnInit {
 
   private initializeDisputeInfoForm() {
     this.disputeInfoForm = this.formBuilder.group({
-      filingDate: [new Date(), [Validators.required]],
+      dateSubmitted: [new Date(new Date().toDateString()), [Validators.required]],
       requestCourtAppearance: [null, [Validators.required]],
       representedByLawyer: [DisputeRepresentedByLawyer.N],
       interpreterRequired: [DisputeInterpreterRequired.N],
@@ -870,8 +870,7 @@ export class ManualDisputeEntryComponent implements OnInit {
       // Ticket information
       ticketNumber: ticketData.ticketNumber,
       issuedTs: violationTicket.issuedTs,
-      submittedTs: this.formatDateTimeForApi(new Date()),
-      filingDate: disputeData.filingDate ? this.formatDateTimeForApi(disputeData.filingDate) : this.formatDateTimeForApi(new Date()),
+      submittedTs: disputeData.dateSubmitted ? this.formatDateTimeForApi(disputeData.dateSubmitted) : this.formatDateTimeForApi(new Date()),
       
       // Disputant information
       disputantSurname: ticketData.disputantSurname,
