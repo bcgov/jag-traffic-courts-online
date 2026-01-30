@@ -772,10 +772,6 @@ public class DisputeController : StaffControllerBase
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
-        {
-            return new HttpError(e.StatusCode, e.Message);
-        }
         catch (ApiException e)
         {
             _logger.LogError(e, "Error retrieving Dispute from oracle-data-api");
