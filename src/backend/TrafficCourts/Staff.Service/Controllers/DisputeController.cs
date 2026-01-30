@@ -743,8 +743,6 @@ public class DisputeController : StaffControllerBase
     /// <response code="400">The request was not well formed. Check the parameters.</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires dispute:update permission.</response>
-    /// <response code="404">The Dispute to update was not found.</response>
-    /// <response code="409">The Dispute has already been assigned to a user. Dispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
 
     [HttpPost("")]
