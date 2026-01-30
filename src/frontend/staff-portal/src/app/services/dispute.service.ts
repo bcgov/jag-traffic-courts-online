@@ -247,7 +247,7 @@ export class DisputeService implements IDisputeService {
   }
 
   /**
-   * Creates a new dispute by calling PUT /api/dispute/ endpoint
+   * Creates a new dispute by calling POST /api/dispute/ endpoint
    * @param dispute The dispute object to create
    * @returns Observable of the created Dispute
    */
@@ -257,15 +257,8 @@ export class DisputeService implements IDisputeService {
     dispute = this.splitContactGivenNames(dispute);
     dispute = this.splitLawyerNames(dispute);
     dispute = this.splitAddressLines(dispute);
-
-    // Use HTTP client directly since PUT /api/dispute/ endpoint is not in the generated API
-    const headers = new HttpHeaders({ 
-      'Content-Type': 'application/json',
-      'X-Timezone': Intl.DateTimeFormat().resolvedOptions().timeZone
-    });
-    const url = `${this.disputeApiService.configuration.basePath}/api/dispute/?disputeId=0`;
     
-    return this.http.put<Dispute>(url, dispute, { headers })
+    return this.disputeApiService.apiDisputePost(null, dispute)
       .pipe(
         map((response: Dispute) => {
           this.logger.info('DisputeService::createDispute', response);

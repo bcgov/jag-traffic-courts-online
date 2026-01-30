@@ -87,6 +87,11 @@
             record.SubmittedTs = record.SubmittedTs.UtcToLocalTime(timeZone);
         }
 
+        public static void LocalToUtcTime(this Dispute record, TimeZoneInfo timeZone)
+        {
+            record.SubmittedTs = record.SubmittedTs.LocalToUtcTime(timeZone);
+        }
+
         #endregion
 
         public static void UtcToLocalTime(this IEnumerable<EmailHistory> records, TimeZoneInfo timeZone)

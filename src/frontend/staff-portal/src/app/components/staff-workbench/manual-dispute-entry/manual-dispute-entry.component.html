@@ -514,16 +514,16 @@
 
         <form [formGroup]="disputeInfoForm" class="form-content">
           <div class="row">
-            <!-- Filing Date -->
+            <!-- Date Submitted -->
             <div class="col-md-6">
               <mat-form-field class="w-100">
-                <mat-label>Filing Date</mat-label>
-                <input matInput formControlName="filingDate" type="text" 
+                <mat-label>Date Submitted</mat-label>
+                <input matInput formControlName="dateSubmitted" type="text" 
                        placeholder="DD-MMM-YYYY"
                        bsDatepicker
-                       [maxDate]="maxFilingDate"
+                       [maxDate]="maxDateSubmitted"
                        [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true, showWeekNumbers: false, adaptivePosition: true }" />                
-                <mat-error>Filing date is required</mat-error>
+                <mat-error>Date submitted is required</mat-error>
               </mat-form-field>
             </div>
           </div>
@@ -854,7 +854,7 @@
                   </div>
                   <div class="review-item">
                     <span class="label">Violation Date:</span>
-                    <span class="value">{{ ticketDetailsForm.get('violationDate')?.value }}</span>
+                    <span class="value">{{ ticketDetailsForm.get('violationDate')?.value?.toDateString() }}</span>
                   </div>
                   <div class="review-item">
                     <span class="label">Violation Time:</span>
@@ -957,8 +957,8 @@
                 </h4>
                 <div class="review-grid">
                   <div class="review-item">
-                    <span class="label">Filing Date:</span>
-                    <span class="value">{{ disputeInfoForm.get('filingDate')?.value }}</span>
+                    <span class="label">Date Submitted:</span>
+                    <span class="value">{{ disputeInfoForm.get('dateSubmitted')?.value?.toDateString() }}</span>
                   </div>
                   <div class="review-item">
                     <span class="label">Represented by Lawyer:</span>

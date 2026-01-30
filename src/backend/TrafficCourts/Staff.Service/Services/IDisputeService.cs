@@ -152,5 +152,5 @@ public interface IDisputeService
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>The created Dispute record.</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<Dispute> CreateDisputeAsync(ClaimsPrincipal user, Dispute dispute, TimeZoneInfo timeZoneInfo, CancellationToken cancellationToken);
+    Task<Dispute> CreateDisputeAsync(ClaimsPrincipal user, Dispute dispute, TimeZoneInfo timeZone, CancellationToken cancellationToken);
 }

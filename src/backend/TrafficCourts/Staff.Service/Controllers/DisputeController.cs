@@ -20,7 +20,7 @@ namespace TrafficCourts.Staff.Service.Controllers;
 #endif
 public class DisputeController : StaffControllerBase
 {
-    private readonly DisputeController _disputeService;
+    private readonly IDisputeService _disputeService;
     private readonly IPrintDigitalCaseFileService _printService;
     private readonly ILogger<DisputeController> _logger;
 
@@ -735,8 +735,6 @@ public class DisputeController : StaffControllerBase
     /// <summary>
     /// Creates a Dispute record, similar to a Citizen Dispute Submit, but from Staff instead
     /// </summary>
-    /// <param name="disputeId">Unique identifier for a specific Dispute record.</param>
-    /// <param name="disputeId">Unique identifier for a specific Dispute record.</param>debug
     /// <param name="dispute"></param>
     /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
@@ -745,21 +743,16 @@ public class DisputeController : StaffControllerBase
     /// <response code="400">The request was not well formed. Check the parameters.</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires dispute:update permission.</response>
-    /// <response code="404">The Dispute to update was not found.</response>
-    /// <response code="409">The Dispute has already been assigned to a user. Dispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
 
-    [HttpPut("")]
+    [HttpPost("")]
     [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.Dispute, Scopes.Update)]
-    public async Task<IActionResult> CreateDisputeAsync(long disputeId,
-        Dispute dispute,
+    public async Task<IActionResult> CreateDisputeAsync(Dispute dispute,
         [FromHeader(Name = "X-Timezone")] string timeZone,
         CancellationToken cancellationToken)
     {
@@ -776,10 +769,6 @@ public class DisputeController : StaffControllerBase
             return Ok(updatedDispute);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
-        {
-            return new HttpError(e.StatusCode, e.Message);
-        }
-        catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
         {
             return new HttpError(e.StatusCode, e.Message);
         }
