@@ -1,0 +1,20 @@
+meta {
+  name: Get Dispute
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{staff-api.host}}/api/dispute/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 2100
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
