@@ -981,10 +981,20 @@
                 <h5 class="review-subsection-title">Count Actions</h5>
                 <div *ngFor="let count of ticketCounts" class="review-count-action">
                   <strong>Count {{ count.countNo }}: {{ disputeInfoForm.get('count' + count.countNo)?.get('description')?.value }}</strong>
-                  <div class="review-grid">
+                  
+                  <!-- Show "Skipped" if count is skipped -->
+                  <div *ngIf="disputeInfoForm.get('count' + count.countNo)?.get('__skip')?.value" class="review-grid">
+                    <div class="review-item">
+                      <span class="label">Status:</span>
+                      <span class="value" style="color: #f57c00; font-weight: bold;">Skipped</span>
+                    </div>
+                  </div>
+                  
+                  <!-- Show details if count is not skipped -->
+                  <div *ngIf="!disputeInfoForm.get('count' + count.countNo)?.get('__skip')?.value" class="review-grid">
                     <div class="review-item">
                       <span class="label">Court Appearance:</span>
-                      <span class="value">{{ disputeInfoForm.get('count' + count.countNo)?.get('requestCourtAppearance')?.value === 'Y' ? 'Yes' : 'No' }}</span>
+                      <span class="value">{{ disputeInfoForm.get('requestCourtAppearance')?.value === 'Y' ? 'Yes' : 'No' }}</span>
                     </div>
                     <div class="review-item">
                       <span class="label">Fine Reduction:</span>
@@ -995,11 +1005,11 @@
                       <span class="value">{{ disputeInfoForm.get('count' + count.countNo)?.get('requestTimeToPay')?.value === 'Y' ? 'Yes' : 'No' }}</span>
                     </div>
                   </div>
-                  <div *ngIf="disputeInfoForm.get('count' + count.countNo)?.get('requestReduction')?.value === 'Y' && disputeInfoForm.get('count' + count.countNo)?.get('reductionReason')?.value" class="review-reason">
+                  <div *ngIf="!disputeInfoForm.get('count' + count.countNo)?.get('__skip')?.value && disputeInfoForm.get('count' + count.countNo)?.get('requestReduction')?.value === 'Y' && disputeInfoForm.get('count' + count.countNo)?.get('reductionReason')?.value" class="review-reason">
                     <span class="label">Reduction Reason:</span>
                     <span class="value">{{ disputeInfoForm.get('count' + count.countNo)?.get('reductionReason')?.value }}</span>
                   </div>
-                  <div *ngIf="disputeInfoForm.get('count' + count.countNo)?.get('requestTimeToPay')?.value === 'Y' && disputeInfoForm.get('count' + count.countNo)?.get('timeToPayReason')?.value" class="review-reason">
+                  <div *ngIf="!disputeInfoForm.get('count' + count.countNo)?.get('__skip')?.value && disputeInfoForm.get('count' + count.countNo)?.get('requestTimeToPay')?.value === 'Y' && disputeInfoForm.get('count' + count.countNo)?.get('timeToPayReason')?.value" class="review-reason">
                     <span class="label">Time to Pay Reason:</span>
                     <span class="value">{{ disputeInfoForm.get('count' + count.countNo)?.get('timeToPayReason')?.value }}</span>
                   </div>
