@@ -1085,6 +1085,85 @@ export class DisputeService {
     }
 
     /**
+     * Creates a Dispute record, similar to a Citizen Dispute Submit, but from Staff instead
+     * @param xTimezone 
+     * @param dispute 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public apiDisputePost(xTimezone?: string, dispute?: Dispute, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Dispute>;
+    public apiDisputePost(xTimezone?: string, dispute?: Dispute, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Dispute>>;
+    public apiDisputePost(xTimezone?: string, dispute?: Dispute, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Dispute>>;
+    public apiDisputePost(xTimezone?: string, dispute?: Dispute, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+
+        let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
+
+        let localVarCredential: string | undefined;
+        // authentication (Bearer) required
+        localVarCredential = this.configuration.lookupCredential('Bearer');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'text/plain',
+                'application/json',
+                'text/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json',
+            'text/json',
+            'application/*+json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        return this.httpClient.post<Dispute>(`${this.configuration.basePath}/api/dispute`,
+            dispute,
+            {
+                context: localVarHttpContext,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Approves a DisputeUpdateRequest record, setting it\&#39;s status to ACCEPTED.
      * @param updateStatusId Unique identifier for a specific DisputeUpdateRequest record to accept.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -1277,7 +1356,7 @@ export class DisputeService {
 
     /**
      * Returns all Disputes from the Oracle Data API with given parameters.
-     * @param timeZone The status to exclude
+     * @param xTimezone The status to exclude
      * @param excludeStatus The status to exclude
      * @param ticket The optional ticket number to search on. The value will be searched using contains.
      * @param surname The optional surname to search on. The value will be searched using contains.
@@ -1293,16 +1372,12 @@ export class DisputeService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiV2OccamDisputeDisputesGet(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PagedOccamDisputeListItemCollection>;
-    public apiV2OccamDisputeDisputesGet(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PagedOccamDisputeListItemCollection>>;
-    public apiV2OccamDisputeDisputesGet(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PagedOccamDisputeListItemCollection>>;
-    public apiV2OccamDisputeDisputesGet(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+    public apiV2OccamDisputeDisputesGet(xTimezone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PagedOccamDisputeListItemCollection>;
+    public apiV2OccamDisputeDisputesGet(xTimezone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PagedOccamDisputeListItemCollection>>;
+    public apiV2OccamDisputeDisputesGet(xTimezone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PagedOccamDisputeListItemCollection>>;
+    public apiV2OccamDisputeDisputesGet(xTimezone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (timeZone !== undefined && timeZone !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>timeZone, 'time_zone');
-        }
         if (excludeStatus) {
             excludeStatus.forEach((element) => {
                 localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
@@ -1363,6 +1438,9 @@ export class DisputeService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required
@@ -1415,7 +1493,7 @@ export class DisputeService {
 
     /**
      * Returns all Disputes that have pending update requests from the Oracle Data API
-     * @param timeZone The status to exclude
+     * @param xTimezone The status to exclude
      * @param excludeStatus The status to exclude
      * @param ticket The optional ticket number to search on. The value will be searched using contains.
      * @param surname The optional surname to search on. The value will be searched using contains.
@@ -1432,16 +1510,12 @@ export class DisputeService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiV2OccamDisputeDisputeswithupdaterequestsGet(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, requestStatus?: Array<DisputeUpdateRequestStatus>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PagedOccamDisputeWithUpdateRequestListItemCollection>;
-    public apiV2OccamDisputeDisputeswithupdaterequestsGet(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, requestStatus?: Array<DisputeUpdateRequestStatus>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PagedOccamDisputeWithUpdateRequestListItemCollection>>;
-    public apiV2OccamDisputeDisputeswithupdaterequestsGet(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, requestStatus?: Array<DisputeUpdateRequestStatus>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PagedOccamDisputeWithUpdateRequestListItemCollection>>;
-    public apiV2OccamDisputeDisputeswithupdaterequestsGet(timeZone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, requestStatus?: Array<DisputeUpdateRequestStatus>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+    public apiV2OccamDisputeDisputeswithupdaterequestsGet(xTimezone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, requestStatus?: Array<DisputeUpdateRequestStatus>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PagedOccamDisputeWithUpdateRequestListItemCollection>;
+    public apiV2OccamDisputeDisputeswithupdaterequestsGet(xTimezone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, requestStatus?: Array<DisputeUpdateRequestStatus>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PagedOccamDisputeWithUpdateRequestListItemCollection>>;
+    public apiV2OccamDisputeDisputeswithupdaterequestsGet(xTimezone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, requestStatus?: Array<DisputeUpdateRequestStatus>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PagedOccamDisputeWithUpdateRequestListItemCollection>>;
+    public apiV2OccamDisputeDisputeswithupdaterequestsGet(xTimezone?: string, excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courthouseId?: Array<string>, requestStatus?: Array<DisputeUpdateRequestStatus>, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (timeZone !== undefined && timeZone !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>timeZone, 'time_zone');
-        }
         if (excludeStatus) {
             excludeStatus.forEach((element) => {
                 localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
@@ -1508,6 +1582,9 @@ export class DisputeService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required

@@ -131,11 +131,11 @@ public class DisputeService : IDisputeService,
 
     public async Task<Dispute> CreateDisputeAsync(ClaimsPrincipal user, Dispute dispute, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
-        dispute.UtcToLocalTime(timeZone);
+        dispute.LocalToUtcTime(timeZone);
         long disputeId = await _oracleDataApi.SaveDisputeAsync(dispute, cancellationToken);
-        dispute.UtcToLocalTime(timeZone);
 
         var savedDispute = await _oracleDataApi.GetDisputeAsync(disputeId, false, cancellationToken);
+        savedDispute.UtcToLocalTime(timeZone);
 
         // Publish file history
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
@@ -689,6 +689,5 @@ public class DisputeService : IDisputeService,
     {
         var key = Cache.OracleData.DisputeListItems();
         await _cache.RemoveAsync(key, token: cancellationToken);
-
     }
 }

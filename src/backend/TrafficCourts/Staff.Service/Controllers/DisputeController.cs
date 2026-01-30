@@ -735,7 +735,6 @@ public class DisputeController : StaffControllerBase
     /// <summary>
     /// Creates a Dispute record, similar to a Citizen Dispute Submit, but from Staff instead
     /// </summary>
-    /// <param name="disputeId">Unique identifier for a specific Dispute record.</param>
     /// <param name="dispute"></param>
     /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
@@ -748,7 +747,7 @@ public class DisputeController : StaffControllerBase
     /// <response code="409">The Dispute has already been assigned to a user. Dispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
 
-    [HttpPut("")]
+    [HttpPost("")]
     [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -757,8 +756,7 @@ public class DisputeController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.Dispute, Scopes.Update)]
-    public async Task<IActionResult> CreateDisputeAsync(long disputeId,
-        Dispute dispute,
+    public async Task<IActionResult> CreateDisputeAsync(Dispute dispute,
         [FromHeader(Name = "X-Timezone")] string timeZone,
         CancellationToken cancellationToken)
     {
