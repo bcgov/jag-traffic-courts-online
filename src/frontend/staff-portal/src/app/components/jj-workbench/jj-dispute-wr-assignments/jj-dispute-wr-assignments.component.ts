@@ -35,6 +35,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit {
     "submittedTs",
     "surnameOrOrgName",
     "toBeHeardAtCourthouseName",
+    "appearanceRoomCode",
     "policeDetachment",
     "timeToPayReason",
     "accidentYn",
@@ -84,6 +85,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit {
   getTCODisputes() {
     this.logger.log('JJDisputeWRAssignmentsComponent::getTCODisputes');
     const params = {
+      appearances: true,
       disputeStatusCodes: [DisputeStatus.New, DisputeStatus.Review, DisputeStatus.InProgress].join(","),
       hearingTypeCd: HearingType.WrittenReasons,
       toBeHeardAtCourthouseIds: this.courthouseTeamIds[this.currentTeam] ? 
