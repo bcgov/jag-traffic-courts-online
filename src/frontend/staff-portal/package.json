@@ -103,6 +103,6 @@
   "resolutions": {
     "postcss": "^8.1.0",
     "glob": "^10.4.5",
-    "@nestjs/core": "^10.4.19",
+    "@nestjs/core": "^10.4.19"
   }
 }
