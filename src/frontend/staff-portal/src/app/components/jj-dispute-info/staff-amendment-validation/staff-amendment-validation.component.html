@@ -1,0 +1,56 @@
+<div class="block" style="border: 1px solid #ddd;" *ngIf="hasAmendments">
+  <p class="section-grid-header" style="color: #d32f2f; font-weight: bold;">
+    Amendment:
+  </p>
+  <div class="block">
+    <div style="margin-bottom: 15px;">
+      <span style="font-weight: bold;">Last Name:</span> {{ amendmentData?.lastName || '' }}
+      <span style="margin-left: 20px; font-weight: bold;">Given Name:</span> {{ amendmentData?.givenName || '' }}
+      <span style="margin-left: 20px; font-weight: bold;">Violation Date:</span> {{ amendmentData?.violationDate || '' }}
+      <span style="margin-left: 20px; font-weight: bold;">Other:</span> {{ amendmentData?.other || '' }}
+    </div>
+
+    <!-- Amendment Counts -->
+    <div *ngFor="let countNumber of amendedCounts" style="margin-top: 15px;">
+      <div style="border: 1px solid #ddd; border-radius: 4px; padding: 15px; background-color: #fafafa;">
+      <p style="font-weight: 600; margin-bottom: 15px; font-size: 16px;">Count {{ countNumber }}</p>
+      
+      <ng-container *ngIf="getAmendmentForCount(countNumber) as amendment">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div>
+          <span style="font-weight: bold;">Amended MVA/Act:</span> {{ amendment.mvaSection || '' }}
+        </div>
+        <div>
+          <span style="font-weight: bold;">Amended Section:</span> {{ amendment.section || '' }}
+        </div>
+        <div>
+          <span style="font-weight: bold;">Amended Offence Description:</span> {{ amendment.offence || '' }}
+        </div>
+        <div>
+          <span style="font-weight: bold;">Other:</span> {{ amendment.other || '' }}
+        </div>
+        </div>
+      </ng-container>
+      </div>
+    </div>
+
+    <!-- Single Acknowledged Checkbox -->
+    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;" *ngIf="!isViewOnly">
+      <mat-checkbox 
+        [checked]="isAcknowledged"
+        (change)="onAcknowledgedChange($event.checked)"
+        color="primary">
+        Acknowledged
+      </mat-checkbox>
+    </div>
+
+    <div *ngIf="isViewOnly && isAcknowledged" style="margin-top: 20px;">
+      <strong>Acknowledged</strong>
+    </div>
+  </div>
+</div>
+
+<!-- No Amendments Message -->
+<div *ngIf="!hasAmendments">
+  <p class="section-grid-text">No amendments were made to this ticket during the hearing.</p>
+</div>

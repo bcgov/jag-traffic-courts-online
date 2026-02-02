@@ -54,6 +54,7 @@
         <mat-menu #gotoMenu="matMenu" yPosition="below">
           <button mat-menu-item (click)="goTo('disputeDetails')">Dispute Details</button>
           <button mat-menu-item (click)="goTo('uploadedDocuments')">Uploaded Documents</button>
+          <button mat-menu-item (click)="goTo('amendments')" *ngIf="amendmentData?.isAmended || type === tabTypes.HEARING_INBOX">Amendments</button>
           <button mat-menu-item (click)="goTo('fileHistory')">Administrative Activity</button>
           <button mat-menu-item (click)="goTo('fileRemarks')">File Remarks</button>
         </mat-menu>
@@ -443,6 +444,17 @@
               </p>
             </span>
             <span class="section-grid-cell" style="grid-column: span 11">
+              <p class="section-grid-header">Language Choice:</p>
+              <p class="section-grid-text">
+                <mat-radio-group formControlName="languageChoice" *ngIf="!isViewOnly" style="display: flex; gap: 15px;">
+                  <mat-radio-button value="English">English</mat-radio-button>
+                  <mat-radio-button value="French">French</mat-radio-button>
+                  <mat-radio-button value="Bilingual">Bilingual</mat-radio-button>
+                </mat-radio-group>
+                <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.languageChoice }}</span>
+              </p>
+            </span>
+            <span class="section-grid-cell" style="grid-column: span 11">
               <p class="section-grid-header">JJ Endorsements:</p>
               <p class="section-grid-text">
                 <textarea *ngIf="!isViewOnly" formControlName="comments" style="width:100%; background:#fffee6"
@@ -636,6 +648,20 @@
           </div>
         </mat-expansion-panel>
       </mat-accordion>
+
+      <!-- STAFF AMENDMENT VALIDATION - Now inline in Court Appearance section above -->
+
+      <!-- VIEW AMENDMENTS (Read-Only) in DCF -->
+      <section *ngIf="type === tabTypes.DCF && amendmentData?.isAmended" 
+               class="section-sticky"
+               id="amendments-readonly">
+        <app-jj-amendments 
+          [jjDisputeInfo]="lastUpdatedJJDispute"
+          [isViewOnly]="true"
+          [existingAmendmentData]="amendmentData">
+        </app-jj-amendments>
+      </section>
+
       <section *ngIf="!isViewOnly" class="section-sticky">
         <ng-container subHeader>
           <span>
@@ -690,7 +716,10 @@
             Cancel
           </button>
           <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onAccept()"
-            *ngIf="lastUpdatedJJDispute.status === DisputeStatus.Confirmed && cancelStatusOnly === false && concludeStatusOnly === false">
+            *ngIf="lastUpdatedJJDispute.status === DisputeStatus.Confirmed && cancelStatusOnly === false && concludeStatusOnly === false"
+            [disabled]="amendmentData?.isAmended && !amendmentValidationResult?.allAmendmentsProcessed"
+            [matTooltip]="(amendmentData?.isAmended && !amendmentValidationResult?.allAmendmentsProcessed) ? 'All amendments must be completed in JUSTIN before accepting' : ''"
+            matTooltipPosition="above">
             Accept
           </button>
           <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onBackClicked()"

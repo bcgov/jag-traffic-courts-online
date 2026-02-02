@@ -1,0 +1,194 @@
+<div class="amendments-container" [ngClass]="{'embedded-mode': !showCheckbox}" *ngIf="!isViewOnly || (isViewOnly && amendmentCheckbox)">
+  <!-- Amendment Checkbox Section (only shown when showCheckbox is true) -->
+  <section class="section-sticky" *ngIf="showCheckbox">
+    <ng-container subHeader>
+      <span>
+        <h3>Amendments</h3>
+      </span>
+    </ng-container>
+    
+    <div class="amendment-checkbox-container">
+      <mat-checkbox 
+        [(ngModel)]="amendmentCheckbox" 
+        (change)="onAmendmentCheckboxChange()"
+        [disabled]="isViewOnly">
+        <strong>This ticket requires amendments</strong>
+      </mat-checkbox>
+      <p class="helper-text" *ngIf="!amendmentCheckbox">
+        Check this box if the Judicial Justice needs to amend any information on the traffic ticket during this hearing.
+      </p>
+    </div>
+  </section>
+
+  <!-- Amendment Forms (shown when checkbox is checked OR in embedded mode) -->
+  <div class="amendment-section" *ngIf="showAmendmentSection || !showCheckbox" [@slideDown]>
+      
+      <!-- Common Amendment Fields (Above Counts) -->
+      <div class="row">
+        <div class="col-md-6">
+          <div class="section-grid-header">Last Name</div>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Enter last name">
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <div class="section-grid-header">Given Name</div>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Enter given name">
+          </mat-form-field>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-6">
+          <div class="section-grid-header">Violation Date</div>
+          <mat-form-field appearance="outline">
+            <input matInput type="text" class="latest-plea-text"
+              bsDatepicker placeholder="DD-MMM-YYYY" 
+              [bsConfig]="{ withTimepicker: false, keepDatepickerOpened: true,
+              dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', 
+              isAnimated: true, showWeekNumbers: false, adaptivePosition: true }">
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <div class="section-grid-header">Other</div>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Other amendments">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <mat-divider style="margin: 20px 0;"></mat-divider>
+
+      <!-- Amendment Forms for Each Count -->
+      <div *ngFor="let count of counts; let i = index" class="count-amendment-form">
+        <form [formGroup]="amendmentForms[i]" [ngClass]="{'greyed-out': !isCountDisputed(count)}">
+          
+          <!-- Count Header -->
+          <div class="count-header">
+            <h4>
+              Count {{ getCountNumber(i) }}
+              <span class="count-status" *ngIf="!isCountDisputed(count)">(Not Disputed)</span>
+              <span class="count-status active" *ngIf="isCountDisputed(count)">(Disputed)</span>
+            </h4>
+            <mat-checkbox 
+              formControlName="isAmended" 
+              [disabled]="!isCountDisputed(count)"
+              *ngIf="isCountDisputed(count)">
+              Amend this count
+            </mat-checkbox>
+          </div>
+
+          <!-- Original Count Information (Read-only) -->
+          <div class="original-info" *ngIf="isCountDisputed(count)">
+            <div class="info-grid">
+              <div class="info-item">
+                <label class="info-label">Current MVA/Section:</label>
+                <span class="info-value">{{ count?.section || 'N/A' }}</span>
+              </div>
+              <div class="info-item">
+                <label class="info-label">Current Description:</label>
+                <span class="info-value">{{ count?.description || 'N/A' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Amendment Input Fields -->
+          <div class="amendment-inputs" *ngIf="isCountDisputed(count) && amendmentForms[i].get('isAmended')?.value">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="section-grid-header">Amended MVA/Act</div>
+                <mat-form-field appearance="outline">
+                  <input 
+                    matInput 
+                    formControlName="mvaSection" 
+                    placeholder="e.g., MVA"
+                    maxlength="50">
+                  <mat-error *ngIf="amendmentForms[i].get('mvaSection')?.hasError('maxlength')">
+                    Maximum 50 characters
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-md-6">
+                <div class="section-grid-header">Amended Section</div>
+                <mat-form-field appearance="outline">
+                  <input 
+                    matInput 
+                    formControlName="section" 
+                    placeholder="e.g., 144(1)(a)"
+                    maxlength="50">
+                  <mat-error *ngIf="amendmentForms[i].get('section')?.hasError('maxlength')">
+                    Maximum 50 characters
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="section-grid-header">Amended Offence Description</div>
+                <mat-form-field appearance="outline">
+                  <textarea 
+                    matInput 
+                    formControlName="offence" 
+                    placeholder="Enter the amended offence description"
+                    rows="3"
+                    maxlength="500"></textarea>
+                  <mat-error *ngIf="amendmentForms[i].get('offence')?.hasError('maxlength')">
+                    Maximum 500 characters
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-md-6">
+                <div class="section-grid-header">Other</div>
+                <mat-form-field appearance="outline">
+                  <textarea 
+                    matInput 
+                    placeholder="Other amendments"
+                    rows="3"></textarea>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <mat-divider *ngIf="i < counts.length - 1"></mat-divider>
+        </form>
+      </div>
+    </div>
+</div>
+
+<!-- View-Only Mode (for Decision Validation) -->
+<div class="amendments-view-only" *ngIf="isViewOnly && existingAmendmentData?.isAmended">
+  <section class="section-sticky">
+    <ng-container subHeader>
+      <span>
+        <h3>Amendments (View Only)</h3>
+      </span>
+    </ng-container>
+    
+    <div *ngFor="let amendment of existingAmendmentData?.amendments" class="count-amendment-view">
+      <div *ngIf="amendment.isAmended" class="amendment-display">
+        <h4>Count {{ amendment.count }} - Amended</h4>
+        
+        <div class="amendment-details">
+          <div class="detail-row" *ngIf="amendment.mvaSection">
+            <label class="detail-label">Amended MVA/Act:</label>
+            <span class="detail-value">{{ amendment.mvaSection }}</span>
+          </div>
+          
+          <div class="detail-row" *ngIf="amendment.section">
+            <label class="detail-label">Amended Section:</label>
+            <span class="detail-value">{{ amendment.section }}</span>
+          </div>
+          
+          <div class="detail-row" *ngIf="amendment.offence">
+            <label class="detail-label">Amended Offence:</label>
+            <span class="detail-value">{{ amendment.offence }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
