@@ -163,7 +163,7 @@ export class ManualDisputeEntryComponent implements OnInit {
       addressProvinceCountryId: [null],
       addressCountryId: [this.canada.ctryId, [Validators.required]],
       postalCode: [null, [Validators.maxLength(6)]],
-      emailAddress: [null, [Validators.email, Validators.maxLength(100)]],
+      emailAddress: [null, [Validators.required, Validators.email, Validators.maxLength(100)]],
       homePhoneNumber: [null, [Validators.maxLength(20)]],
       emailVerified: [false]
     });
@@ -557,7 +557,7 @@ export class ManualDisputeEntryComponent implements OnInit {
   public goToStep(stepIndex: number) {
     //if (stepIndex < this.currentStep || this.validateCurrentStep())
     this.currentStep = stepIndex;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    this.scrollToTop();
   }
 
   public nextStep() {
@@ -566,15 +566,28 @@ export class ManualDisputeEntryComponent implements OnInit {
     }
     if (this.currentStep < this.steps.length - 1) {
         this.currentStep++;
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.scrollToTop();
     }
   }
 
   public previousStep() {
     if (this.currentStep > 0) {
       this.currentStep--;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.scrollToTop();
     }
+  }
+
+  private scrollToTop() {
+    // Scroll window to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Also try scrolling any parent scroll containers
+    setTimeout(() => {
+      const wizardContainer = document.querySelector('.wizard-container');
+      if (wizardContainer) {
+        wizardContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 0);
   }
 
   public isStepValid(stepIndex: number): boolean {
@@ -666,6 +679,24 @@ export class ManualDisputeEntryComponent implements OnInit {
 
   public onBack() {
     this.backInbox.emit();
+  }
+
+  public onBackWithConfirmation() {
+    const data: DialogOptions = {
+      titleKey: "Discard Changes?",
+      messageKey: "Are you sure you want to leave this page? All unsaved data will be lost.",
+      actionTextKey: "Discard",
+      actionType: "warn",
+      cancelTextKey: "Cancel",
+      icon: "warning",
+    };
+
+    this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
+      .subscribe((action: any) => {
+        if (action) {
+          this.onBack();
+        }
+      });
   }
 
   public onFindTicket() {
@@ -1076,10 +1107,14 @@ export class ManualDisputeEntryComponent implements OnInit {
     const emailControl = this.contactInfoForm.get('emailAddress');
     if (this.optOut) {
       emailControl.setValue(null);
+      emailControl.clearValidators();
+      emailControl.setValidators([Validators.email, Validators.maxLength(100)]);
       emailControl.disable();
     } else {
       emailControl.enable();
+      emailControl.setValidators([Validators.required, Validators.email, Validators.maxLength(100)]);
     }
+    emailControl.updateValueAndValidity();
   }
 
   /**
@@ -1097,6 +1132,14 @@ export class ManualDisputeEntryComponent implements OnInit {
         interpreterRequired: DisputeInterpreterRequired.N,
         witnessNo: 0
       });
+      
+      // Clear plea codes when switching to written reasons
+      this.ticketCounts.forEach(count => {
+        const countFormGroup = this.disputeInfoForm.get(`count${count.countNo}`);
+        if (countFormGroup) {
+          countFormGroup.patchValue({ pleaCode: null });
+        }
+      });
     } else if (value === this.RequestCourtAppearance.Y) {
       // When requesting court appearance, signatory not needed
       this.disputeInfoForm.get('signatoryType').clearValidators();
@@ -1105,6 +1148,17 @@ export class ManualDisputeEntryComponent implements OnInit {
       this.disputeInfoForm.get('signatoryName').setValue(null);
       this.disputeInfoForm.get('signatoryType').updateValueAndValidity({ emitEvent: false });
       this.disputeInfoForm.get('signatoryName').updateValueAndValidity({ emitEvent: false });
+      
+      // Clear fine reduction and time to pay when switching to court appearance
+      this.ticketCounts.forEach(count => {
+        const countFormGroup = this.disputeInfoForm.get(`count${count.countNo}`);
+        if (countFormGroup) {
+          countFormGroup.patchValue({
+            requestReduction: DisputeCountRequestReduction.N,
+            requestTimeToPay: DisputeCountRequestTimeToPay.N
+          });
+        }
+      });
     }
   }
 

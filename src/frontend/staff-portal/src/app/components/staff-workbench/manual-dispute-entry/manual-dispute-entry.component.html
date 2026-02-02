@@ -2,7 +2,7 @@
   <ng-container stickyToolBar>
     <div class="app-width" style="padding-top: 1.5vh; padding-bottom: 1.5vh;" fxLayout="row">
       <div fxFlex>
-        <button mat-button (click)="onBack()" color="primary">
+        <button mat-button (click)="onBackWithConfirmation()" color="primary">
           <mat-icon inline="true">arrow_back</mat-icon> Back
         </button>
       </div>
@@ -464,6 +464,9 @@
                 <mat-label *ngIf="contactInfoForm.get('contactTypeCd').value === ContactType.Lawyer">Lawyer email address</mat-label>
                 <mat-label *ngIf="contactInfoForm.get('contactTypeCd').value === ContactType.Other">Agent email address</mat-label>
                 <input matInput formControlName="emailAddress" type="email" maxlength="100" />
+                <mat-error *ngIf="contactInfoForm.controls.emailAddress.hasError('required')">
+                  Email address is required
+                </mat-error>
                 <mat-error *ngIf="contactInfoForm.controls.emailAddress.hasError('email')">
                   Invalid email format
                 </mat-error>
@@ -534,11 +537,11 @@
               <mat-radio-group formControlName="requestCourtAppearance" (change)="onChangeRequestCourtAppearance($event.value)">
                 <div class="mb-3">
                   <div class="mb-2">
-                    <strong>I do <u>not</u> want to attend a court hearing</strong>
+                    <strong>I <u>do not</u> want to attend a court hearing</strong>
                     <mat-icon matTooltip="Plead guilty and ask for a fine reduction or time to pay for each count." class="info-icon">info</mat-icon>
                   </div>
                   <mat-radio-button [value]="RequestCourtAppearance.N">
-                    I agree that I committed the offence and do not wish to make a submission at a hearing. I waive my right to dispute the allegation against me and dispute only the fine amount or request time to pay.
+                    I agree that I committed the offence(s) and would like to request a fine reduction and/or time to pay by supplying written reasons to the court for review.
                   </mat-radio-button>
                 </div>
 
@@ -1027,7 +1030,7 @@
                   *ngIf="currentStep !== 0"
                   class="nav-button">
             <mat-icon>arrow_back</mat-icon>
-            Back
+            Previous
           </button>
 
           <button mat-raised-button color="primary" 
