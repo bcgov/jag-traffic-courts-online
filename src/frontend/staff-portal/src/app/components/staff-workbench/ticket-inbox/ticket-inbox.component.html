@@ -8,7 +8,7 @@
       </div>
     </div>
   </ng-container>
-  <ng-container submitNewDispute>
+  <ng-container submitNewDispute *appFeatureFlag="featureType.staffDisputeIntake">
     <div>
       <div class="vcenter">
         <button mat-button (click)="submitNewDispute()" class="submit-new-dispute">
