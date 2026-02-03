@@ -3,6 +3,7 @@ import { AppConfigService } from 'app/services/app-config.service';
 
 export const featureType = {
   dispute: 'dispute',
+  staffDisputeIntake: 'staffDisputeIntake',
 } as const;
 
 @Directive({

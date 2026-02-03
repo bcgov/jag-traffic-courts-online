@@ -7,6 +7,7 @@ import { LoggerService } from '@core/services/logger.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 import { TableFilter, TableFilterKeys, TableFilterStatusOptions, TicketValidationTableStatusDefault } from '@shared/models/table-filter-options.model';
 import { TableFilterService } from 'app/services/table-filter.service';
+import { featureType } from 'app/shared/directives/feature-flag.directive';
 
 @Component({
   selector: 'app-ticket-inbox',
@@ -20,6 +21,7 @@ export class TicketInboxComponent implements OnInit {
   disputes: Dispute[] = [];
   disputesCollection: PagedDisputeListItemCollection = {};
   dataSource = new MatTableDataSource(this.disputes);
+  featureType = featureType;
 
   tableFilterKeys: TableFilterKeys[] = ["dateSubmittedFrom", "dateSubmittedTo", "disputantSurname", "status", "ticketNumber", /*"courthouseLocation"*/ ]; // TCVP-3258 - temporarily hiding 'courthouseLocation'
   statusFilterOptions = TableFilterStatusOptions;
