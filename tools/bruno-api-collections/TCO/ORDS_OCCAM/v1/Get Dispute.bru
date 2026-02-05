@@ -1,0 +1,24 @@
+meta {
+  name: Get Dispute
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{occam.base_url}}/occam/v1/dispute/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 4609
+}
+
+headers {
+  User-Agent: bruno/2.15.1
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

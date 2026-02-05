@@ -1,5 +1,6 @@
 export * from './agency.model';
 export * from './boundingBox.model';
+export * from './count.model';
 export * from './country.model';
 export * from './credentialRepresentation.model';
 export * from './dcfTemplateType.model';
@@ -90,6 +91,7 @@ export * from './province.model';
 export * from './socialLinkRepresentation.model';
 export * from './sortDirection.model';
 export * from './statute.model';
+export * from './ticket.model';
 export * from './ticketImageDataJustinDocument.model';
 export * from './ticketImageDataJustinDocumentReportType.model';
 export * from './userConsentRepresentation.model';

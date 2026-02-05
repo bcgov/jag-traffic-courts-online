@@ -144,4 +144,13 @@ public interface IDisputeService
     /// <returns></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
     Task DeleteViolationTicketCountAsync(long violationTicketCountId, CancellationToken cancellationToken);
+
+    /// <summary>Updates the properties of a particular Dispute record based on the given values.</summary>
+    /// <param name="user"></param>
+    /// <param name="dispute">The Dispute record to save.</param>
+    /// <param name="timeZone"></param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>The created Dispute record.</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    Task<Dispute> CreateDisputeAsync(ClaimsPrincipal user, Dispute dispute, TimeZoneInfo timeZone, CancellationToken cancellationToken);
 }

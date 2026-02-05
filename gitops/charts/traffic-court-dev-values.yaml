@@ -7,14 +7,14 @@ global:
 
 arc-dispute-api:
   image:
-    tag: "2.18.6"
+    tag: "2.19.1"
     pullPolicy: Always
   env: 
     "Swagger__Enabled": "true"
 
 citizen-api:
   image:
-    tag: "2.18.6"
+    tag: "2.19.1"
     pullPolicy: Always
   env:
     "FormRecognizer__ApiVersion": "2022-08-31"
@@ -30,7 +30,7 @@ citizen-api:
 
 citizen-web:
   image:
-    tag: "2.18.6"
+    tag: "2.19.1"
     pullPolicy: Always
   route:
     # https://dev.justice.gov.bc.ca
@@ -39,14 +39,15 @@ citizen-web:
     {
         "production": false,
         "environment": "Dev",
-        "version": "2.18.6",
+        "version": "2.19.1",
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "understandYourTicketLink": "https://understandmyticket.gov.bc.ca/",
         "paymentOptionsLink": "https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/pay-ticket",
         "resolutionOptionsLink": "https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket",
         "features": {
-          "dispute":true
+          "dispute": true,
+          "staffDisputeIntake": true
         }
       }
   authConfig: |
@@ -193,7 +194,7 @@ citizen-web:
 
 oracle-data-api:
   image:
-    tag: "2.18.6"
+    tag: "2.19.1"
     pullPolicy: Always
   env:
     "JAVA_OPTS": "-Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG"
@@ -208,7 +209,7 @@ oracle-data-api:
 
 staff-api:
   image:
-    tag: "2.18.6"
+    tag: "2.19.1"
     pullPolicy: Always
   env:    
     "Jwt__Audience": "staff-api"
@@ -222,7 +223,7 @@ staff-api:
     "TicketSearch__SearchType": "RoadSafety"
 staff-web:
   image:
-    tag: "2.18.6"
+    tag: "2.19.1"
     pullPolicy: Always
   route:
     # https://dev.jag.gov.bc.ca
@@ -241,7 +242,7 @@ staff-web:
     {
         "production": false,
         "environment": "Dev",
-        "version": "2.18.6",
+        "version": "2.19.1",
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "features": {
@@ -251,7 +252,7 @@ staff-web:
 
 workflow-service:
   image:
-    tag: "2.18.6"
+    tag: "2.19.1"
     pullPolicy: Always
   env:
     "EmailConfiguration__Sender": "DoNotReply@gov.bc.ca"

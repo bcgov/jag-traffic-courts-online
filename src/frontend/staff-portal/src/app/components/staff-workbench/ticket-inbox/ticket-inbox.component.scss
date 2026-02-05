@@ -11,6 +11,18 @@ th {
   justify-content: center !important;
 }
 
+.submit-new-dispute{
+  color: #fff;
+  background-color: #38598a;
+  border-color: #38598a;  
+  font-size: 14px;
+
+  &:hover {
+    background-color: #2d476f;
+    border-color: #294266;
+  }
+}
+
 .page-color{
   color: rgba(0, 0, 0, 0.54);
   margin: 0;

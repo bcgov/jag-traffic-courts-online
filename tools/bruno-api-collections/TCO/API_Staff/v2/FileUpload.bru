@@ -1,0 +1,27 @@
+meta {
+  name: FileUpload
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{staff-api.host}}/api/document
+  body: multipartForm
+  auth: inherit
+}
+
+headers {
+  documentType: Certified Extract
+  noticeOfDisputeId: 47B1FC0FC9EC1CFBE06400144FFBC109
+}
+
+body:multipart-form {
+  file: @file(C:\projects\TestFiles-Safe\PDF_SIZE_MB_6.pdf)
+  ~file: @file(C:\projects\TestFiles-Safe\PDF_SIZE_KB_500.pdf)
+  ~file: @file(C:\projects\TestFiles-Safe\PDF_SIZE_MB_1.0.pdf)
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

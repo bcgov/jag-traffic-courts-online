@@ -1,0 +1,31 @@
+meta {
+  name: Ticket Search
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://{{host}}/ride/paybc/paymentsvc/api/v1/ticket
+  body: none
+  auth: bearer
+}
+
+params:query {
+  prn: 10006
+  in: EA00836032
+  time: 06:55
+  ~in: EA00776243
+  ~time: 2044
+}
+
+headers {
+  User-Agent: insomnia/11.3.0
+}
+
+auth:bearer {
+  token: {{bearer_token}}
+}
+
+settings {
+  encodeUrl: true
+}

@@ -11,12 +11,14 @@ api/jJ.service.ts
 api/keycloak.service.ts
 api/lookup.service.ts
 api/permissions.service.ts
+api/roadSafetyTicketSearch.service.ts
 configuration.ts
 encoder.ts
 git_push.sh
 index.ts
 model/agency.model.ts
 model/boundingBox.model.ts
+model/count.model.ts
 model/country.model.ts
 model/credentialRepresentation.model.ts
 model/dcfTemplateType.model.ts
@@ -108,6 +110,7 @@ model/province.model.ts
 model/socialLinkRepresentation.model.ts
 model/sortDirection.model.ts
 model/statute.model.ts
+model/ticket.model.ts
 model/ticketImageDataJustinDocument.model.ts
 model/ticketImageDataJustinDocumentReportType.model.ts
 model/userConsentRepresentation.model.ts

@@ -1,0 +1,15 @@
+vars {
+  tco.base_url: https://{{wsgw_host}}/tco/ords/{{db_name}}/tcoords
+  occam.base_url: https://{{wsgw_host}}/occam/ords/{{db_name}}/occamords
+  wsgw_host: wsgw.dev.jag.gov.bc.ca
+  db_name: devj
+  staff-api.host: https://staff-web-0198bb-dev.apps.silver.devops.gov.bc.ca/
+  citizen-api.host: http://localhost:8080
+  staff-api.proxybypass: https://staff-api-0198bb-dev.apps.silver.devops.gov.bc.ca/
+}
+vars:secret [
+  tco.username,
+  tco.password,
+  occam.username,
+  occam.password
+]

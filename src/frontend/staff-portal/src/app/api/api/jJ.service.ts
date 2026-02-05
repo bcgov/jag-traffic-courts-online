@@ -266,7 +266,7 @@ export class JJService {
 
     /**
      * 
-     * @param timeZone The callers time zone
+     * @param xTimezone The callers time zone
      * @param appearances Include appearance fields
      * @param noticeOfHearingYn Include notice of hearing flag.
      * @param multipleOfficersYn Include multiple officers flag
@@ -291,16 +291,12 @@ export class JJService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjDisputesSearchGet(timeZone?: string, appearances?: boolean, noticeOfHearingYn?: boolean, multipleOfficersYn?: boolean, electronicTicketYn?: boolean, submittedFrom?: string, submittedThru?: string, ticketNumber?: string, surname?: string, surnameOrOrgName?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string, jjDecisionDtThru?: string, disputeStatusCodes?: string, appearanceCourthouseIds?: string, appearanceDtFrom?: string, appearanceDtThru?: string, toBeHeardAtCourthouseIds?: string, hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<PagedDisputeCaseFileSummaryCollection>;
-    public apiJjDisputesSearchGet(timeZone?: string, appearances?: boolean, noticeOfHearingYn?: boolean, multipleOfficersYn?: boolean, electronicTicketYn?: boolean, submittedFrom?: string, submittedThru?: string, ticketNumber?: string, surname?: string, surnameOrOrgName?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string, jjDecisionDtThru?: string, disputeStatusCodes?: string, appearanceCourthouseIds?: string, appearanceDtFrom?: string, appearanceDtThru?: string, toBeHeardAtCourthouseIds?: string, hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<PagedDisputeCaseFileSummaryCollection>>;
-    public apiJjDisputesSearchGet(timeZone?: string, appearances?: boolean, noticeOfHearingYn?: boolean, multipleOfficersYn?: boolean, electronicTicketYn?: boolean, submittedFrom?: string, submittedThru?: string, ticketNumber?: string, surname?: string, surnameOrOrgName?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string, jjDecisionDtThru?: string, disputeStatusCodes?: string, appearanceCourthouseIds?: string, appearanceDtFrom?: string, appearanceDtThru?: string, toBeHeardAtCourthouseIds?: string, hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<PagedDisputeCaseFileSummaryCollection>>;
-    public apiJjDisputesSearchGet(timeZone?: string, appearances?: boolean, noticeOfHearingYn?: boolean, multipleOfficersYn?: boolean, electronicTicketYn?: boolean, submittedFrom?: string, submittedThru?: string, ticketNumber?: string, surname?: string, surnameOrOrgName?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string, jjDecisionDtThru?: string, disputeStatusCodes?: string, appearanceCourthouseIds?: string, appearanceDtFrom?: string, appearanceDtThru?: string, toBeHeardAtCourthouseIds?: string, hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiJjDisputesSearchGet(xTimezone?: string, appearances?: boolean, noticeOfHearingYn?: boolean, multipleOfficersYn?: boolean, electronicTicketYn?: boolean, submittedFrom?: string, submittedThru?: string, ticketNumber?: string, surname?: string, surnameOrOrgName?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string, jjDecisionDtThru?: string, disputeStatusCodes?: string, appearanceCourthouseIds?: string, appearanceDtFrom?: string, appearanceDtThru?: string, toBeHeardAtCourthouseIds?: string, hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<PagedDisputeCaseFileSummaryCollection>;
+    public apiJjDisputesSearchGet(xTimezone?: string, appearances?: boolean, noticeOfHearingYn?: boolean, multipleOfficersYn?: boolean, electronicTicketYn?: boolean, submittedFrom?: string, submittedThru?: string, ticketNumber?: string, surname?: string, surnameOrOrgName?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string, jjDecisionDtThru?: string, disputeStatusCodes?: string, appearanceCourthouseIds?: string, appearanceDtFrom?: string, appearanceDtThru?: string, toBeHeardAtCourthouseIds?: string, hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<PagedDisputeCaseFileSummaryCollection>>;
+    public apiJjDisputesSearchGet(xTimezone?: string, appearances?: boolean, noticeOfHearingYn?: boolean, multipleOfficersYn?: boolean, electronicTicketYn?: boolean, submittedFrom?: string, submittedThru?: string, ticketNumber?: string, surname?: string, surnameOrOrgName?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string, jjDecisionDtThru?: string, disputeStatusCodes?: string, appearanceCourthouseIds?: string, appearanceDtFrom?: string, appearanceDtThru?: string, toBeHeardAtCourthouseIds?: string, hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<PagedDisputeCaseFileSummaryCollection>>;
+    public apiJjDisputesSearchGet(xTimezone?: string, appearances?: boolean, noticeOfHearingYn?: boolean, multipleOfficersYn?: boolean, electronicTicketYn?: boolean, submittedFrom?: string, submittedThru?: string, ticketNumber?: string, surname?: string, surnameOrOrgName?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string, jjDecisionDtThru?: string, disputeStatusCodes?: string, appearanceCourthouseIds?: string, appearanceDtFrom?: string, appearanceDtThru?: string, toBeHeardAtCourthouseIds?: string, hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (timeZone !== undefined && timeZone !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>timeZone, 'time_zone');
-        }
         if (appearances !== undefined && appearances !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>appearances, 'appearances');
@@ -387,6 +383,9 @@ export class JJService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (xTimezone !== undefined && xTimezone !== null) {
+            localVarHeaders = localVarHeaders.set('X-Timezone', String(xTimezone));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required

@@ -11,6 +11,7 @@ import { JJService } from './api/jJ.service';
 import { KeycloakService } from './api/keycloak.service';
 import { LookupService } from './api/lookup.service';
 import { PermissionsService } from './api/permissions.service';
+import { RoadSafetyTicketSearchService } from './api/roadSafetyTicketSearch.service';
 
 @NgModule({
   imports:      [],

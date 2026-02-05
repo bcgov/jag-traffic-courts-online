@@ -1,0 +1,16 @@
+meta {
+  name: LOOKUP - Dispute Statuses
+  type: http
+  seq: 1
+}
+
+get {
+  url: /api/lookup/dispute-case-file-statuses/v2
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
