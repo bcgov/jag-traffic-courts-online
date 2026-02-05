@@ -927,7 +927,7 @@ export class ManualDisputeEntryComponent implements OnInit {
       addressCountryId: contactData.addressCountryId,
       postalCode: contactData.postalCode,
       emailAddress: contactData.emailAddress,
-      emailAddressVerified: false,
+      emailAddressVerified: undefined,
       homePhoneNumber: contactData.homePhoneNumber,
       
       // Dispute information

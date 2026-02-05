@@ -131,6 +131,8 @@ public class DisputeService : IDisputeService,
 
     public async Task<Dispute> CreateDisputeAsync(ClaimsPrincipal user, Dispute dispute, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
+        dispute.EmailAddressVerified = false;
+        dispute.NoticeOfDisputeGuid = Guid.NewGuid().ToString("d");
         dispute.LocalToUtcTime(timeZone);
         long disputeId = await _oracleDataApi.SaveDisputeAsync(dispute, cancellationToken);
 
@@ -138,13 +140,21 @@ public class DisputeService : IDisputeService,
         savedDispute.UtcToLocalTime(timeZone);
 
         // Publish file history
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
-            savedDispute.NoticeOfDisputeGuid,
-            FileHistoryAuditLogEntryType.FRMK, // VTC staff has added a file remark for saving or updating a dispute in Ticket Validation
-            GetUserName(user),
-            "Staff have Submitted a Dispute on behalf of a Citizen");
-
-        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
+        await _bus.PublishWithLog(_logger,
+            Mapper.ToFileHistoryWithNoticeOfDisputeId(
+                savedDispute.NoticeOfDisputeGuid,
+                FileHistoryAuditLogEntryType.FRMK, // VTC staff has added a file remark for saving or updating a dispute in Ticket Validation
+                GetUserName(user),
+                "Staff have Submitted a Dispute on behalf of a Citizen"
+            ), cancellationToken);
+        
+        // send notification that a dispute has been created (which will kick off email validation)
+        await _bus.PublishWithLog(_logger, new DisputeCreated
+        {
+            NoticeOfDisputeGuid = new Guid(savedDispute.NoticeOfDisputeGuid),
+            TicketNumber = savedDispute.TicketNumber,
+            EmailAddress = savedDispute.EmailAddress
+        }, cancellationToken);
 
         return savedDispute;
     }

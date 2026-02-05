@@ -1,8 +1,10 @@
-﻿using System.Text.Json.Serialization;
-using TrafficCourts.Domain.Models;
+﻿using TrafficCourts.Domain.Models;
 
 namespace TrafficCourts.Messaging.MessageContracts;
 
+/// <summary>
+/// This command is issued to create a dispute after receiving notice from a citizen.
+/// </summary>
 public class SubmitNoticeOfDispute
 {
     /// <summary>
