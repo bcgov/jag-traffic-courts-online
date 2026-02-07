@@ -255,7 +255,7 @@ public partial class JJController : StaffControllerBase
             // Otherwise, return the dispute without a lock.
             if (executeUserLock)
             {
-                var lockInfo = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
+                var lockInfo = _disputeLockService.GetLock(ticketNumber, User.GetUsername());
 
                 if (lockInfo is not null)
                 {
@@ -433,7 +433,7 @@ public partial class JJController : StaffControllerBase
         {
             _logger.LogDebug("Updating the JJ Dispute in oracle-data-api");
 
-            var disputeLock = _disputeLockService.GetLock(jjDispute.TicketNumber, GetUserName(User));
+            var disputeLock = _disputeLockService.GetLock(jjDispute.TicketNumber, User.GetUsername());
 
             var updatedJJDispute = await _jjDisputeService.UpdateJJDisputeCascadeAsync(jjDispute, User, timeZoneInfo, cancellationToken);
 
@@ -514,7 +514,7 @@ public partial class JJController : StaffControllerBase
 
         try
         {
-            var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
+            var disputeLock = _disputeLockService.GetLock(ticketNumber, User.GetUsername());
 
             var updatedJJDispute = await _jjDisputeService.SubmitAdminResolutionAsync(jjDisputeId, checkVTC, jjDispute, User, timeZoneInfo, cancellationToken);
 
@@ -649,7 +649,7 @@ public partial class JJController : StaffControllerBase
 
         try
         {
-            var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
+            var disputeLock = _disputeLockService.GetLock(ticketNumber, User.GetUsername());
 
             await _jjDisputeService.ReviewJJDisputeAsync(ticketNumber, null!, checkVTC, User, true, timeZoneInfo, cancellationToken);
             return Ok();
@@ -728,7 +728,7 @@ public partial class JJController : StaffControllerBase
 
         try
         {
-            var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
+            var disputeLock = _disputeLockService.GetLock(ticketNumber, User.GetUsername());
 
             await _jjDisputeService.ReviewJJDisputeAsync(ticketNumber, remark, checkVTC, User, false, timeZoneInfo, cancellationToken);
             return Ok();
@@ -805,7 +805,7 @@ public partial class JJController : StaffControllerBase
 
         try
         {
-            var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
+            var disputeLock = _disputeLockService.GetLock(ticketNumber, User.GetUsername());
             await _jjDisputeService.RequireCourtHearingJJDisputeAsync(ticketNumber, remark, User, timeZoneInfo, cancellationToken);
             return Ok();
         }
@@ -880,7 +880,7 @@ public partial class JJController : StaffControllerBase
 
         try
         {
-            var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
+            var disputeLock = _disputeLockService.GetLock(ticketNumber, User.GetUsername());
             await _jjDisputeService.AcceptJJDisputeAsync(ticketNumber, checkVTC, User, timeZoneInfo, cancellationToken);
             return Ok();
         }
@@ -967,7 +967,7 @@ public partial class JJController : StaffControllerBase
 
         try
         {
-            var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
+            var disputeLock = _disputeLockService.GetLock(ticketNumber, User.GetUsername());
             await _jjDisputeService.ConcludeJJDisputeAsync(ticketNumber, checkVTC, User, timeZoneInfo, cancellationToken);
             return Ok();
         }
@@ -1039,7 +1039,7 @@ public partial class JJController : StaffControllerBase
 
         try
         {
-            var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
+            var disputeLock = _disputeLockService.GetLock(ticketNumber, User.GetUsername());
             await _jjDisputeService.CancelJJDisputeAsync(ticketNumber, checkVTC, User, timeZoneInfo, cancellationToken);
             return Ok();
         }
@@ -1108,7 +1108,7 @@ public partial class JJController : StaffControllerBase
         try
         {
             // TODO: Call Oracle API to update court appearance when TCVP-1999 is completed as per TCVP-1978
-            var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
+            var disputeLock = _disputeLockService.GetLock(ticketNumber, User.GetUsername());
             await _jjDisputeService.RequireCourtHearingJJDisputeAsync(ticketNumber, null, User, timeZoneInfo, cancellationToken);
             return Ok();
         }
@@ -1178,7 +1178,7 @@ public partial class JJController : StaffControllerBase
         try
         {
             // TODO: Call Oracle API to update court appearance when TCVP-1999 is completed as per TCVP-1978
-            var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
+            var disputeLock = _disputeLockService.GetLock(ticketNumber, User.GetUsername());
             await _jjDisputeService.ConfirmJJDisputeAsync(ticketNumber, User, timeZoneInfo, cancellationToken);
             return Ok();
         }
@@ -1250,10 +1250,5 @@ public partial class JJController : StaffControllerBase
             _logger.LogError(e, "Error when generating print version of dispute");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
-    }
-
-    private static string GetUserName(ClaimsPrincipal user)
-    {
-        return user?.Identity?.Name ?? string.Empty;
     }
 }

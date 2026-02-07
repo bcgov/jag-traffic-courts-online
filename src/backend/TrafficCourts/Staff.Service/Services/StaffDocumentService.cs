@@ -3,6 +3,7 @@ using System.Security.Claims;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
+using TrafficCourts.Staff.Service;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -72,7 +73,7 @@ public partial class StaffDocumentService : IStaffDocumentService
         {
             NoticeOfDisputeId = properties?.NoticeOfDisputeId?.ToString("d"),
             AuditLogEntryType = FileHistoryAuditLogEntryType.FDLS,
-            ActionByApplicationUser = GetUserName(user)
+            ActionByApplicationUser = user.GetUsername()
         };
 
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
@@ -148,7 +149,7 @@ public partial class StaffDocumentService : IStaffDocumentService
             {
                 NoticeOfDisputeId = properties.NoticeOfDisputeId?.ToString("d"),
                 AuditLogEntryType = FileHistoryAuditLogEntryType.SUPL,
-                ActionByApplicationUser = GetUserName(user)
+                ActionByApplicationUser = user.GetUsername()
             };
 
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
@@ -169,13 +170,6 @@ public partial class StaffDocumentService : IStaffDocumentService
 
         return memoryStream;
     }
-
-    private static string GetUserName(ClaimsPrincipal user)
-    {
-        string? username = user.Identity?.Name;
-        return username ?? string.Empty;
-    }
-
 
     [LoggerMessage(EventId = 0, Level = LogLevel.Information, Message = "Filename from search results does not match document property filename")]
     public partial void LogFilenameDoesNotMatch(

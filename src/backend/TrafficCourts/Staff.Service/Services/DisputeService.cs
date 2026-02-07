@@ -144,7 +144,7 @@ public class DisputeService : IDisputeService,
             Mapper.ToFileHistoryWithNoticeOfDisputeId(
                 savedDispute.NoticeOfDisputeGuid,
                 FileHistoryAuditLogEntryType.FRMK, // VTC staff has added a file remark for saving or updating a dispute in Ticket Validation
-                GetUserName(user),
+                user.GetUsername(),
                 "Staff have Submitted a Dispute on behalf of a Citizen"
             ), cancellationToken);
         
@@ -169,7 +169,7 @@ public class DisputeService : IDisputeService,
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
             updatedDispute.NoticeOfDisputeGuid,
             FileHistoryAuditLogEntryType.FRMK, // VTC staff has added a file remark for saving or updating a dispute in Ticket Validation
-            GetUserName(user),
+            user.GetUsername(),
             staffComment!);
 
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
@@ -195,7 +195,7 @@ public class DisputeService : IDisputeService,
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
             validatedDispute.NoticeOfDisputeGuid,
             FileHistoryAuditLogEntryType.SVAL,  // Handwritten ticket OCR details validated by staff
-            GetUserName(user));
+            user.GetUsername());
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
@@ -211,14 +211,14 @@ public class DisputeService : IDisputeService,
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
             dispute.NoticeOfDisputeGuid,
             FileHistoryAuditLogEntryType.SCAN, // Dispute canceled by staff
-            GetUserName(user));
+            user.GetUsername());
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         // Publish file history for cancelled remarks
         SaveFileHistoryRecord fileHistoryRecordRemark = Mapper.ToFileHistoryWithNoticeOfDisputeId(
             dispute.NoticeOfDisputeGuid,
             FileHistoryAuditLogEntryType.FRMK,
-            GetUserName(user),
+            user.GetUsername(),
             cancelledReason);
         await _bus.PublishWithLog(_logger, fileHistoryRecordRemark, cancellationToken);
 
@@ -239,14 +239,14 @@ public class DisputeService : IDisputeService,
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
             dispute.NoticeOfDisputeGuid,
             FileHistoryAuditLogEntryType.SREJ, // Dispute rejected by staff
-            GetUserName(user));
+            user.GetUsername());
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         // Publish file history for rejected remarks
         SaveFileHistoryRecord fileHistoryRecordRemark = Mapper.ToFileHistoryWithNoticeOfDisputeId(
             dispute.NoticeOfDisputeGuid,
             FileHistoryAuditLogEntryType.FRMK,
-            GetUserName(user),
+            user.GetUsername(),
             rejectedReason);
         await _bus.PublishWithLog(_logger, fileHistoryRecordRemark, cancellationToken);
 
@@ -305,7 +305,7 @@ public class DisputeService : IDisputeService,
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
             dispute.NoticeOfDisputeGuid,
             FileHistoryAuditLogEntryType.SPRC, // Dispute submitted to ARC by staff
-            GetUserName(user));
+            user.GetUsername());
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         // publish file history of email sent
@@ -350,7 +350,7 @@ public class DisputeService : IDisputeService,
         // - call oracle-data-api to update request status in OCCAM.
         // - send confirmation email indicating request was accepted
         // - populate file/email history records
-        DisputeUpdateRequestAccepted message = new(updateStatusId, GetUserName(user));
+        DisputeUpdateRequestAccepted message = new(updateStatusId, user.GetUsername());
         await _bus.PublishWithLog(_logger, message, cancellationToken);
     }
 
@@ -367,7 +367,7 @@ public class DisputeService : IDisputeService,
         // - call oracle-data-api to update request status in OCCAM.
         // - send confirmation email indicating request was rejected
         // - populate file/email history records
-        DisputeUpdateRequestRejected message = new(updateStatusId, GetUserName(user));
+        DisputeUpdateRequestRejected message = new(updateStatusId, user.GetUsername());
         await _bus.PublishWithLog(_logger, message, cancellationToken);
     }
 
@@ -664,8 +664,6 @@ public class DisputeService : IDisputeService,
         Coms.Client.File file = await _objectManagementService.GetFileAsync(searchResult.Id, cancellationToken);
         return file;
     }
-
-    private string GetUserName(ClaimsPrincipal user) => user.Identity?.Name ?? string.Empty;
 
     private async Task<List<DisputeListItem>> GetCachedDisputesAsync(CancellationToken cancellationToken)
     {
