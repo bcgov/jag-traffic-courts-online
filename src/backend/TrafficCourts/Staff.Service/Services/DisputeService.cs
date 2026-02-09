@@ -132,6 +132,7 @@ public class DisputeService : IDisputeService,
     public async Task<Dispute> CreateDisputeAsync(ClaimsPrincipal user, Dispute dispute, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
         dispute.LocalToUtcTime(timeZone);
+        dispute.CreatedBy = GetUserName(user);
         long disputeId = await _oracleDataApi.SaveDisputeAsync(dispute, cancellationToken);
 
         var savedDispute = await _oracleDataApi.GetDisputeAsync(disputeId, false, cancellationToken);
