@@ -46,8 +46,7 @@ citizen-web:
         "paymentOptionsLink": "https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/pay-ticket",
         "resolutionOptionsLink": "https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket",
         "features": {
-          "dispute": true,
-          "staffDisputeIntake": true
+          "dispute": true
         }
       }
   authConfig: |
@@ -246,7 +245,7 @@ staff-web:
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "features": {
-          "dispute":true
+          "staffDisputeIntake": true
         }
       }
 
