@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Cdogs.Client;
+using TrafficCourts.Common.Features.DisputeCreation;
 using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v22_0;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Domain.Models;
@@ -63,6 +64,7 @@ namespace TrafficCourts.Staff.Service.Test.Services.PrintDigialCaseFile
                 Mock.Of<IProvinceLookupService>(),
                 mock.Object,
                 Substitute.For<ITicketSearchService>(),
+                Mock.Of<IDisputeCreationService>(),
                 Mock.Of<IFusionCache>(),
                 Mock.Of<ILogger<DisputeService>>());
 

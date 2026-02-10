@@ -4,6 +4,7 @@ using System;
 using System.Security.Claims;
 using System.Text.Json;
 using TrafficCourts.Collections;
+using TrafficCourts.Common.Features.DisputeCreation;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Domain.Events;
 using TrafficCourts.Domain.Models;
@@ -55,6 +56,7 @@ public class DisputeService : IDisputeService,
     private readonly IProvinceLookupService _provinceLookupService;
     private readonly IStaffDocumentService _documentService;
     private readonly ITicketSearchService _ticketSearchService;
+    private readonly IDisputeCreationService _disputeCreationService;
 
     public DisputeService(
         IOracleDataApiService oracleDataApi,
@@ -64,6 +66,7 @@ public class DisputeService : IDisputeService,
         IProvinceLookupService provinceLookupService,
         IStaffDocumentService documentService,
         ITicketSearchService ticketSearchService,
+        IDisputeCreationService disputeCreationService,
         IFusionCache cache,
         ILogger<DisputeService> logger)
     {
@@ -76,6 +79,7 @@ public class DisputeService : IDisputeService,
         _ticketSearchService = ticketSearchService ?? throw new ArgumentNullException(nameof(ticketSearchService));
         _cache = cache ?? throw new ArgumentNullException(nameof(cache));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _disputeCreationService = disputeCreationService;
     }
 
 
@@ -131,6 +135,12 @@ public class DisputeService : IDisputeService,
 
     public async Task<Dispute> CreateDisputeAsync(ClaimsPrincipal user, Dispute dispute, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
+        bool canCreateDispute = await _disputeCreationService.CanCreateDispute(dispute.TicketNumber, cancellationToken);
+        if (!canCreateDispute)
+        {
+            throw new DisputeAlreadyExistsException("Dispute already exists");
+        }
+        
         dispute.EmailAddressVerified = false;
         dispute.NoticeOfDisputeGuid = Guid.NewGuid().ToString("d");
         dispute.LocalToUtcTime(timeZone);

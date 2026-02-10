@@ -244,6 +244,7 @@
     "dispute_validation_error": "Votre litige comporte une erreur qui doit être corrigée avant que vous ne puissiez soumettre",
     "ticket_error": "Le ticket n'a pas pu être récupéré",
     "dispute_create_error": "Le litige n'a pas pu être créé",
+    "dispute_create_duplicate_error": "Un litige pour cette ticket de violation existe déjà",
     "statute_error": "Les statuts n’ont pas pu être chargés",
     "language_error": "Les langs n’ont pas pu être chargés",
     "agency_error": "Les agences n’ont pas pu être chargées",
