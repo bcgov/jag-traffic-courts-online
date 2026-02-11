@@ -1,4 +1,4 @@
-<mat-card *ngIf="updateRequested.UploadedDocuments?.length > 0 && disputantUpdateRequest.status === 'PENDING'">
+<mat-card appearance="outlined" *ngIf="updateRequested.UploadedDocuments?.length > 0 && disputantUpdateRequest.status === 'PENDING'">
   <span>
     <span><b>Uploaded Documents ({{ disputantUpdateRequest.status }})</b></span>
     <span style="float:right">

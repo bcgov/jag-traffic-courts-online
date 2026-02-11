@@ -1,5 +1,5 @@
 import { Component, ViewChild, Input, OnDestroy, SimpleChanges } from '@angular/core';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { FileHistory, JJDisputeRemark } from 'app/api';
 import { HistoryRecordService } from 'app/services/history-records.service';

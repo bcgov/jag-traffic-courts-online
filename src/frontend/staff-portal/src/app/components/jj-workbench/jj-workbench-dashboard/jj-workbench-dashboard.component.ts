@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { AuthService } from 'app/services/auth.service';
-import { MatLegacyTab as MatTab } from '@angular/material/legacy-tabs';
+import { MatTab } from '@angular/material/tabs';
 import { BusyService } from '@core/services/busy.service';
 import { UserGroup } from '@shared/enums/user-group.enum';
 import { TabType } from '@shared/enums/tab-type.enum';

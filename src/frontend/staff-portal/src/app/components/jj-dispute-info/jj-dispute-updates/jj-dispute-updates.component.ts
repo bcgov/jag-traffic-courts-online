@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { DisputantUpdateRequestExpanded } from '@shared/models/disputant-update-request-expanded';
 import { DisputeUpdateRequestUpdateType, Province } from 'app/api';
 import { DisputantUpdateRequest, DisputeService } from 'app/services/dispute.service';

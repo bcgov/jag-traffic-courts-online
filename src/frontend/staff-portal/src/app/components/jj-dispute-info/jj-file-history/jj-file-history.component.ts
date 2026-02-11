@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Input, OnDestroy } from '@angular/core';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { FileHistory, EmailHistory, EmailHistorySuccessfullySent, JJDisputeRemark } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';

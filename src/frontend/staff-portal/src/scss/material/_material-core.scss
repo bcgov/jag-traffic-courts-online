@@ -18,5 +18,5 @@
 //  If you don't need the default component typographies but still want the hierarchy styles,
 //  you can delete this line and instead use:
 //    `@include mat.legacy-typography-hierarchy($tco-typography);`
-@include mat.all-legacy-component-typographies($tco-typography);
-@include mat.legacy-core();
+@include mat.all-component-typographies($tco-typography);
+@include mat.core();

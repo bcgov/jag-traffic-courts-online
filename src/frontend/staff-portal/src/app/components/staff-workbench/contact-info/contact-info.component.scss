@@ -27,7 +27,7 @@ h3 {
   background-color: #f3f3f3;
   }
 
-.mat-flat-button {
+.mat-mdc-unelevated-button {
   width: 30% !important;
   float: right;
   margin-top: 1em;
@@ -45,7 +45,7 @@ h3 {
   }
 }
 
-.mat-flat-button[disabled] {
+.mat-mdc-unelevated-button[disabled] {
   background-color: rgba(0, 0, 0, 0.04) !important;
 }
 
@@ -55,7 +55,7 @@ h3 {
   gap: 16px;
 
   // Override global rule WITH HIGHER SPECIFICITY
-  .mat-flat-button {
+  .mat-mdc-unelevated-button {
     width: 100% !important;
     float: none !important; // remove right-float
     margin-right: 0 !important;

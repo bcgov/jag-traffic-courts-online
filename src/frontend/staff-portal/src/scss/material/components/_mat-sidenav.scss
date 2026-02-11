@@ -15,7 +15,7 @@
   background-color: theme-palette(blue, lightest);
   border-right: 1px solid theme-palette(blue);
 
-  .mat-list-item {
+  .mat-mdc-list-item {
     color: theme-palette(blue) !important;
 
     .extend-content-width {
@@ -31,13 +31,13 @@
 
   .active,
   .active:focus,
-  // Alias for active for forcing an equivalent to "routerLinkActive"
-  // for dashboard navigation that are associated to multiple views.
-  // The order of operations in view rendering between ngClass
-  // and router bindings where ".active" is removed immediately
+  
+  
+  
+  
   .force-active,
   .force-active:focus,
-  .mat-list-item:focus {
+  .mat-mdc-list-item:focus {
     background-color: theme-palette(blue, lighter) !important;
   }
 
@@ -46,12 +46,12 @@
     a {
       font-weight: bold !important;
     }
-
+    /*TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
     .mat-list-item-content {
       border-right: 5px solid theme-palette(yellow) !important;
     }
   }
-
+  /*TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
   .mat-list-item-content {
     // Add a border for spacing to prevent the sidenav from jumping when an nav item is active
     border-right: 5px solid transparent !important;

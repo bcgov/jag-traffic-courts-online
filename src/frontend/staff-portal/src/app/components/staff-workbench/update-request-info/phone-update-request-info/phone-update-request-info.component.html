@@ -1,4 +1,4 @@
-<mat-card *ngIf="disputantUpdateRequest.status === 'PENDING' && updateRequested.HomePhoneNumber !== disputeInfo.homePhoneNumber">
+<mat-card appearance="outlined" *ngIf="disputantUpdateRequest.status === 'PENDING' && updateRequested.HomePhoneNumber !== disputeInfo.homePhoneNumber">
   <span>
     <span><b>Home Phone Number ({{ disputantUpdateRequest.status }})</b></span>
     <span style="float:right">

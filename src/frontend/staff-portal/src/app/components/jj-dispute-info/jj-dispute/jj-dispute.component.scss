@@ -132,7 +132,7 @@ label {
   color: #fff;
 }
 
-.mat-flat-button {
+.mat-mdc-unelevated-button {
   min-width: 30% !important;
   margin-top: 1em;
 
@@ -148,7 +148,7 @@ label {
   }
 }
 
-.mat-flat-button[disabled] {
+.mat-mdc-unelevated-button[disabled] {
   background-color: rgba(0, 0, 0, 0.04) !important;
 }
 
@@ -203,13 +203,13 @@ label {
     color: #1d4a77;
   }
 
-  .mat-form-field.datetime-picker {
+  .mat-mdc-form-field.datetime-picker {
     margin-right: 0px;
     vertical-align: top;
-
+    /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
     .mat-form-field-flex {
       margin-right: 0px;
-
+      /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
       .mat-form-field-suffix {
         top: -2px;
         height: 36px;
@@ -217,19 +217,19 @@ label {
     }
   }
 
-  .mat-form-field {
+  .mat-mdc-form-field {
     width: 100%;
     margin-bottom: 0px !important;
-
+    /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
     .mat-form-field-wrapper {
       padding-bottom: 0 !important;
       margin: 0px;
-
+      /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
       .mat-form-field-flex {
         margin-top: 0 !important;
         padding-right: 5px;
         border: none !important;
-
+        /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
         .mat-form-field-infix {
           padding: 0px 0px 7px 0px !important;
           line-height: 1;
@@ -239,7 +239,7 @@ label {
           }
         }
       }
-
+      /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
       .mat-form-field-subscript-wrapper {
         position: relative;
         overflow: unset;
@@ -263,20 +263,22 @@ label {
     margin: 0px !important;
     padding: 0px !important;
     border: none !important;
-
+    /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
     .mat-form-field-wrapper {
+      /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
       .mat-form-field-flex {
         padding: 0px 5px 0px 10px !important;
-
+        /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
         .mat-form-field-outline {
           background-color: #ffffff;
         }
-
+        /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
         .mat-form-field-infix {
+          /*TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
           .mat-select-value {
             line-height: normal;
           }
-
+          /*TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
           .mat-select-arrow-wrapper {
             transform: none;
           }
@@ -313,14 +315,15 @@ label {
 
 // Mandatory field styling for APP dropdown
 .mat-form-field-invalid {
+  /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
   .mat-form-field-outline {
     color: #f44336 !important;
   }
-  
+  /*TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
   .mat-select-arrow {
     color: #f44336 !important;
   }
-  
+  /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
   .mat-form-field-outline-thick {
     color: #f44336 !important;
   }
