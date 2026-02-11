@@ -53,9 +53,7 @@
               "keycloak-js",
               "base64-js",
               "js-sha256",
-              "luxon",
-              "lodash",
-              "faker"
+              "luxon"
             ],
             "scripts": [],
             "vendorChunk": true,
