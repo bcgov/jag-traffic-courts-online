@@ -55,7 +55,7 @@ import { reducers, JJDisputeStore } from './store';
 import { CourtOptionsUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/court-options-update-request-info/court-options-update-request-info.component';
 import { CountUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/count-update-request-info/count-update-request-info.component';
 import { DocumentUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/document-update-request-info/document-update-request-info.component';
-import { NgxMatDatetimePickerModule, NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
+import { NgxMatDatetimePickerModule, NgxMatNativeDateModule } from '@nng-components/angular-material-datetime-picker';
 import { TableFiltersComponent } from '@components/table-filters/table-filters.component';
 import { JjDisputeUpdatesComponent } from './components/jj-dispute-info/jj-dispute-updates/jj-dispute-updates.component';
 import { PagingComponent } from '@components/paging/paging.component';

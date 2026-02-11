@@ -127,22 +127,22 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "staff-portal:build",
-            "proxyConfig": "proxy.conf.json"
+            "proxyConfig": "proxy.conf.json",
+            "buildTarget": "staff-portal:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "staff-portal:build:production"
+              "buildTarget": "staff-portal:build:production"
             },
             "debug": {
-              "browserTarget": "staff-portal:build:debug"
+              "buildTarget": "staff-portal:build:debug"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "staff-portal:build"
+            "buildTarget": "staff-portal:build"
           }
         },
         "test": {
