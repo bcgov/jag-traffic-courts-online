@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe, TranslateDirective } from '@ngx-translate/core';
 import { ConfigModule } from 'app/config/config.module';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { AlertComponent } from './components/alert/alert.component';
@@ -62,7 +62,8 @@ import { TicketImageContainerComponent } from './dialogs/ticket-image-container/
         NgxMaskPipe,
         NgxProgressModule,
         ConfigModule,
-        TranslateModule,
+        TranslatePipe,
+        TranslateDirective,
         FlexLayoutModule
     ],
     exports: [
@@ -91,7 +92,9 @@ import { TicketImageContainerComponent } from './dialogs/ticket-image-container/
         HeaderComponent,
         FeatureFlagDirective,
         FlexLayoutModule,
-        TicketImageContainerComponent
+        TicketImageContainerComponent,
+        TranslatePipe,
+        TranslateDirective,
     ],
     providers: [provideNgxMask()]
 })

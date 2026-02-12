@@ -4,7 +4,8 @@ import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.mod
 
 import { ConfirmDialogComponent } from './confirm-dialog.component';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 import { of } from 'rxjs';
 import {
@@ -19,7 +20,7 @@ describe('ConfirmDialogComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ConfirmDialogComponent],
-      imports: [NgxMaterialModule, TranslateModule.forRoot()],
+      imports: [NgxMaterialModule],
       providers: [
         {
           provide: MatDialogRef,
@@ -39,6 +40,10 @@ describe('ConfirmDialogComponent', () => {
         },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
+        provideTranslateService({
+          loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json'}),
+          extend: true,
+        })
       ],
     }).compileComponents();
   }));

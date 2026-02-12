@@ -37,7 +37,7 @@ export class HeaderComponent implements OnInit {
     private title: Title,
     private authService: AuthService,
   ) {
-    this.languageCode = this.translateService.getDefaultLang();
+    this.languageCode = this.translateService.getFallbackLang();
     this.onLanguage();
 
     this.environment = this.appConfigService.environment;
@@ -74,7 +74,7 @@ export class HeaderComponent implements OnInit {
   }
 
   onLanguage(): void {
-    this.translateService.setDefaultLang(this.languageCode);
+    this.translateService.setFallbackLang(this.languageCode);
     const { languageCode, languageDesc } = this.toggleLanguage(
       this.languageCode
     );

@@ -6,8 +6,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfigModule } from './config/config.module';
 import { SharedModule } from './shared/shared.module';
-import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { CustomDatePipe as DatePipe } from '@shared/pipes/custom-date.pipe';
@@ -64,10 +64,6 @@ import { ClickOutsideDirective } from './directives/click-outside.directive';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
-
-export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
 
 function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
   return async () => {
@@ -126,22 +122,13 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     CdkAccordionModule,
     BrowserAnimationsModule,
     FormsModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient],
-      },
-      isolate: false,
-      extend: true,
-    }),
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([JJDisputeStore.Effects]),
     BsDatepickerModule.forRoot(),
     NgMultiSelectDropDownModule.forRoot()
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  exports: [NgBusyModule, TranslateModule],
+  exports: [NgBusyModule],
   providers: [
     CurrencyPipe,
     DatePipe,
@@ -158,7 +145,11 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
       useValue: { showError: true }
     },
     BsDatepickerConfig,
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withInterceptorsFromDi()),
+    provideTranslateService({
+      loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json'}),
+      extend: true,
+    })
   ],
   bootstrap: [AppComponent]
 })
@@ -171,10 +162,10 @@ export class AppModule {
     const currentLanguage = window.navigator.language.substring(0, 2);
     // console.log('Current Browser Language', currentLanguage);
 
-    let defaultLanguage = 'en';
+    let fallbackLanguage = 'en';
     if (this.availableLanguages.includes(currentLanguage)) {
-      defaultLanguage = currentLanguage;
+      fallbackLanguage = currentLanguage;
     }
-    this.translateService.setDefaultLang(defaultLanguage);
+    this.translateService.setFallbackLang(fallbackLanguage);
   }
 }

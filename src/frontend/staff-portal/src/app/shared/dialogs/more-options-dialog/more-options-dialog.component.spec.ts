@@ -3,7 +3,8 @@ import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.mod
 
 import { MoreOptionsDialogComponent } from './more-options-dialog.component';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 describe('ConfirmDialogComponent', () => {
   let component: MoreOptionsDialogComponent;
@@ -12,7 +13,7 @@ describe('ConfirmDialogComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [NgxMaterialModule, TranslateModule.forRoot()],
+        imports: [NgxMaterialModule],
         declarations: [MoreOptionsDialogComponent],
         providers: [
           {
@@ -25,6 +26,10 @@ describe('ConfirmDialogComponent', () => {
             provide: MAT_DIALOG_DATA,
             useValue: {},
           },
+          provideTranslateService({
+            loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json'}),
+            extend: true,
+          })
         ],
       }).compileComponents();
     })
