@@ -1108,6 +1108,24 @@ export class ManualDisputeEntryComponent implements OnInit {
     const lawyerGivenName2 = lawyerNames.length > 2 ? lawyerNames[1] : null;
     const lawyerGivenName3 = lawyerNames.length > 3 ? lawyerNames[2] : null;
 
+    // Determine if fine reduction or time to pay is requested for any count
+    const hasFineReduction = this.ticketCounts.some(count => {
+      const countFormData = this.disputeInfoForm.get(`count${count.countNo}`)?.value;
+      return countFormData?.requestReduction === DisputeCountRequestReduction.Y;
+    });
+    
+    const hasTimeToPay = this.ticketCounts.some(count => {
+      const countFormData = this.disputeInfoForm.get(`count${count.countNo}`)?.value;
+      return countFormData?.requestTimeToPay === DisputeCountRequestTimeToPay.Y;
+    });
+
+    // For written reasons (RequestCourtAppearance.N), set signature and reason fields to "See uploaded document"
+    const isWrittenReasons = disputeData.requestCourtAppearance === this.RequestCourtAppearance.N;
+    const signatoryName = isWrittenReasons ? 'See uploaded document' : null;
+    const signatoryType = isWrittenReasons ? DisputeSignatoryType.D : null;
+    const fineReductionReason = hasFineReduction ? 'See uploaded document' : null;
+    const timeToPayReason = hasTimeToPay ? 'See uploaded document' : null;
+
     const dispute: Dispute = {
       // Ticket information
       ticketNumber: ticketData.ticketNumber,
@@ -1147,8 +1165,10 @@ export class ManualDisputeEntryComponent implements OnInit {
       interpreterRequired: disputeData.interpreterRequired,
       interpreterLanguageCd: disputeData.interpreterLanguageCd,
       witnessNo: disputeData.witnessNo || 0,
-      fineReductionReason: disputeData.fineReductionReason,
-      timeToPayReason: disputeData.timeToPayReason,
+      fineReductionReason: fineReductionReason,
+      timeToPayReason: timeToPayReason,
+      signatoryName: signatoryName,
+      signatoryType: signatoryType,
       
       // Legal representation information (from legalRepresentationForm)
       lawFirmName: legalRepData.lawFirmName || null,
