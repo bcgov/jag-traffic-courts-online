@@ -1907,6 +1907,9 @@ namespace TrafficCourts.OrdsDataService.Generated.TCO.Client.V1
         [Newtonsoft.Json.JsonProperty("occamViolationTicketUpldId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string OccamViolationTicketUpldId { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("occamDisputeCreatedBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OccamDisputeCreatedBy { get; set; }
+
         [Newtonsoft.Json.JsonProperty("offenceLocationTxt", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string OffenceLocationTxt { get; set; }
 

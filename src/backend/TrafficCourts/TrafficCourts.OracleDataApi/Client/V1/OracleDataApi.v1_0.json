@@ -3104,6 +3104,10 @@
             "type": "string",
             "nullable": true
           },
+          "occamDisputeCreatedBy": {
+            "type": "string",
+            "nullable": true
+          },
           "submittedTs": {
             "type": "string",
             "format": "date-time",

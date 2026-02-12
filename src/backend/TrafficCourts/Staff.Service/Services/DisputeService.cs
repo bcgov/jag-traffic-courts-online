@@ -1,4 +1,4 @@
-﻿using MassTransit;
+using MassTransit;
 using MediatR;
 using System;
 using System.Security.Claims;
@@ -144,6 +144,7 @@ public class DisputeService : IDisputeService,
         dispute.EmailAddressVerified = false;
         dispute.NoticeOfDisputeGuid = Guid.NewGuid().ToString("d");
         dispute.LocalToUtcTime(timeZone);
+        dispute.CreatedBy = user.GetUsername();
         long disputeId = await _oracleDataApi.SaveDisputeAsync(dispute, cancellationToken);
 
         var savedDispute = await _oracleDataApi.GetDisputeAsync(disputeId, false, cancellationToken);
