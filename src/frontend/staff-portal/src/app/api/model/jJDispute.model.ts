@@ -65,6 +65,7 @@ export interface JJDispute {
     occamDisputantPhoneNumber?: string | null;
     occamDisputeId?: number;
     occamViolationTicketUpldId?: string | null;
+    occamDisputeCreatedBy?: string | null;
     submittedTs?: string | null;
     issuedTs?: string | null;
     violationDate?: string | null;
