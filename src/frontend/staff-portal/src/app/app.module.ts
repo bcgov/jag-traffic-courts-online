@@ -1,4 +1,4 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgBusyModule } from 'ng-busy';
@@ -20,7 +20,6 @@ import { CoreModule } from './core/core.module';
 
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
-import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TicketInboxComponent } from '@components/staff-workbench/ticket-inbox/ticket-inbox.component';
@@ -55,7 +54,6 @@ import { reducers, JJDisputeStore } from './store';
 import { CourtOptionsUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/court-options-update-request-info/court-options-update-request-info.component';
 import { CountUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/count-update-request-info/count-update-request-info.component';
 import { DocumentUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/document-update-request-info/document-update-request-info.component';
-import { NgxMatDatetimePickerModule, NgxMatNativeDateModule } from '@nng-components/angular-material-datetime-picker';
 import { TableFiltersComponent } from '@components/table-filters/table-filters.component';
 import { JjDisputeUpdatesComponent } from './components/jj-dispute-info/jj-dispute-updates/jj-dispute-updates.component';
 import { PagingComponent } from '@components/paging/paging.component';
@@ -77,7 +75,7 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     const config = await response.json();
     config.initOptions.silentCheckSsoRedirectUri = window.location.origin + config.initOptions.silentCheckSsoRedirectUri;
     await keycloak.init(config);
-  }
+  };
 }
 
 @NgModule({
@@ -125,12 +123,8 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     CoreModule,
     SharedModule,
     ConfigModule,
-    HttpClientModule,
     CdkAccordionModule,
     BrowserAnimationsModule,
-    NgxMaterialTimepickerModule,
-    NgxMatDatetimePickerModule,
-    NgxMatNativeDateModule,
     FormsModule,
     TranslateModule.forRoot({
       loader: {
@@ -164,6 +158,7 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
       useValue: { showError: true }
     },
     BsDatepickerConfig,
+    provideHttpClient(withInterceptorsFromDi())
   ],
   bootstrap: [AppComponent]
 })

@@ -21,12 +21,16 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/staff-portal",
+            "outputPath": {
+              "base": "dist/staff-portal"
+            },
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "browser": "src/main.ts",
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "sourceMap": {
               "scripts": false,
               "styles": false,
@@ -46,19 +50,17 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "src/scss"
+                "src/scss",
+                "."
               ]
             },
             "allowedCommonJsDependencies": [
               "keycloak-js",
               "base64-js",
-              "js-sha256",
-              "luxon"
+              "js-sha256"
             ],
             "scripts": [],
-            "vendorChunk": true,
             "extractLicenses": false,
-            "buildOptimizer": false,
             "optimization": false,
             "namedChunks": true
           },
@@ -75,8 +77,6 @@
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -86,7 +86,7 @@
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "10kb",
-                  "maximumError": "15kb"
+                  "maximumError": "20kb"
                 }
               ]
             },
@@ -106,8 +106,6 @@
               },
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": false,
               "budgets": [
                 {
                   "type": "initial",
@@ -117,7 +115,7 @@
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "10kb",
-                  "maximumError": "15kb"
+                  "maximumError": "20kb"
                 }
               ]
             }

@@ -41,7 +41,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatDatetimepickerModule, MatNativeDatetimeModule } from '@mat-datetimepicker/core';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 export const APP_DATE_FORMAT = 'D MMM YYYY';
@@ -84,8 +83,6 @@ export const GRI_DATE_FORMATS: MatDateFormats = {
     MatCheckboxModule,
     MatChipsModule,
     MatDatepickerModule,
-    MatDatetimepickerModule,
-    MatNativeDatetimeModule,
     MatDialogModule,
     MatExpansionModule,
     MatIconModule,
