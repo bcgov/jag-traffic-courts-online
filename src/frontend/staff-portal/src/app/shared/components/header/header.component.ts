@@ -51,15 +51,15 @@ export class HeaderComponent implements OnInit {
         this.headingText = this.title.getTitle();
       });
 
-    this.authService.checkAuth().subscribe(() => {
+    this.authService.checkAuth().then(() => {
       this.authService.isLoggedIn$.subscribe(isLoggedIn => {
         this.isLoggedIn = isLoggedIn;
         this.fullName = this.authService.userProfile?.fullName;
         if(this.router.url.indexOf(AppRoutes.UNAUTHORIZED) === -1){
           this.authService.loadLookupData();
         }
-      })
-    })
+      });
+    });
   }
 
   private toggleLanguage(lang: string): {
@@ -82,11 +82,11 @@ export class HeaderComponent implements OnInit {
     this.languageDesc = languageDesc;
   }
 
-  login() {
+  async login() {
     this.authService.login();
   }
 
-  logout() {
+  async logout() {
     this.authService.logout();
   }
 }

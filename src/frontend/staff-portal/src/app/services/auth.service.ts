@@ -51,26 +51,26 @@ export class AuthService {
     });
   }
 
-  checkAuth(): Observable<boolean> {
-    return from(this.keycloak.isLoggedIn())
-      .pipe(
-        map((response: boolean) => {
-          if (response) {
-            this.loadUserProfile().subscribe(() => {
-              this._isLoggedIn.next(response);
-              if (this.isLoggedIn && this.isInit) {
-                this.userProfile$.pipe(first()).subscribe(() => {
-                  this.isInit = false;
-                })
-              }
-              return response;
-            });
-          } else {
+  async checkAuth(): Promise<boolean> {
+    if (!this.keycloak.isLoggedIn()) {
+        await this.login();
+    }
+
+    const response = this.keycloak.isLoggedIn();
+    if (response) {
+        this.loadUserProfile().subscribe(() => {
             this._isLoggedIn.next(response);
+            if (this.isLoggedIn && this.isInit) {
+            this.userProfile$.pipe(first()).subscribe(() => {
+                this.isInit = false;
+            })
+            }
             return response;
-          }
-        })
-      );
+        });
+    } else {
+        this._isLoggedIn.next(response);
+        return response;
+    }
   }
 
   loadLookupData(){
@@ -166,12 +166,12 @@ export class AuthService {
     return user.attributes?.display_name.length > 0 ? user.attributes?.display_name[0] : "";
   }
 
-  login() {
+  async login() {
     this.keycloak.login({ redirectUri: window.location.toString() });
   }
 
-  logout() {
-    this.keycloak.logout();
+  async logout() {
+    await this.keycloak.logout();
     this._isLoggedIn.next(false);
     this._userProfile.next(null);
   }

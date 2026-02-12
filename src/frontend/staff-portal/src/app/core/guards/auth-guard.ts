@@ -20,7 +20,7 @@ export class AuthorizationGuard extends KeycloakAuthGuard {
     // Force the user to log in if currently unauthenticated.
     let permission;
     if (!this.authenticated) {
-      this.authService.login();
+      await this.authService.login();
     }
 
     // Get the roles required from the route.
