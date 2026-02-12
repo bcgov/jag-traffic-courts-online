@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { DisputeService, Dispute } from 'app/services/dispute.service';
@@ -54,6 +54,7 @@ export class ManualDisputeEntryComponent implements OnInit {
   public filteredCount1Statutes: Statute[];
   public filteredCount2Statutes: Statute[];
   public filteredCount3Statutes: Statute[];
+  public filteredCourthouses: any[] = [];
   
   public ContactType = DisputeContactTypeCd;
   public RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
@@ -78,6 +79,7 @@ export class ManualDisputeEntryComponent implements OnInit {
 
   // Wizard step management
   public currentStep: number = 0;
+  public visitedSteps: Set<number> = new Set([0]); // Track visited steps, start with step 0
   public steps = [
     { label: 'Ticket Details', icon: 'description', completed: false },
     { label: 'Ticket Counts', icon: 'list_alt', completed: false },
@@ -96,7 +98,8 @@ export class ManualDisputeEntryComponent implements OnInit {
     private toastService: ToastService,
     private dialog: MatDialog,
     private authService: AuthService,
-    private roadSafetyTicketSearchService: RoadSafetyTicketSearchService
+    private roadSafetyTicketSearchService: RoadSafetyTicketSearchService,
+    private cdr: ChangeDetectorRef
   ) {
     this.bc = this.config.bcCodeValue;
     this.canada = this.config.canadaCodeValue;
@@ -127,6 +130,12 @@ export class ManualDisputeEntryComponent implements OnInit {
     this.initializeDisputeInfoForm();
     this.initializeLegalRepresentationForm();
     this.addTicketCount(); // Start with one count
+    this.filteredCourthouses = this.lookupsService.courthouseAgencies;
+    
+    // Initialize filtered statutes arrays
+    this.filteredCount1Statutes = this.lookupsService.statutes;
+    this.filteredCount2Statutes = this.lookupsService.statutes;
+    this.filteredCount3Statutes = this.lookupsService.statutes;
   }
 
   private initializeTicketDetailsForm() {
@@ -136,8 +145,8 @@ export class ManualDisputeEntryComponent implements OnInit {
       violationTime: [null, [Validators.required, Validators.pattern(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)]],
       disputantSurname: [null, [Validators.required, Validators.maxLength(30)]],
       disputantGivenNames: [null, [Validators.required, Validators.maxLength(92)]],
-      driversLicenceProvince: [null, [Validators.required]],
-      driversLicenceNumber: [null],
+      driversLicenceProvince: [null],
+      driversLicenceNumber: [{value: null, disabled: true}],
       driversLicenceCountry: [null],
       driversLicenceProvinceSeqNo: [null],
       driversLicenceCountryId: [null],
@@ -194,8 +203,6 @@ export class ManualDisputeEntryComponent implements OnInit {
       interpreterRequired: [DisputeInterpreterRequired.N],
       interpreterLanguageCd: [null],
       witnessNo: [0],
-      signatoryType: [null],
-      signatoryName: [null],
       fineReductionReason: [null],
       timeToPayReason: [null]
     });
@@ -265,8 +272,22 @@ export class ManualDisputeEntryComponent implements OnInit {
       this.updateReasonValidators();
     });
 
-    countFormGroup.get('__skip').valueChanges.subscribe(() => {
+    countFormGroup.get('__skip').valueChanges.subscribe((isSkipped) => {
       this.updateReasonValidators();
+      
+      // Update pleaCode validators based on skip status and court appearance choice
+      const pleaCodeControl = countFormGroup.get('pleaCode');
+      const requestCourtAppearance = this.disputeInfoForm.get('requestCourtAppearance')?.value;
+      
+      if (isSkipped || requestCourtAppearance !== this.RequestCourtAppearance.Y) {
+        // Clear pleaCode validator if skipped or not requesting court hearing
+        pleaCodeControl.clearValidators();
+        pleaCodeControl.setValue(null);
+      } else if (requestCourtAppearance === this.RequestCourtAppearance.Y) {
+        // Add required validator if not skipped and requesting court hearing
+        pleaCodeControl.setValidators([Validators.required]);
+      }
+      pleaCodeControl.updateValueAndValidity();
     });
 
     this.disputeInfoForm.addControl(`count${countNumber}`, countFormGroup);
@@ -275,8 +296,23 @@ export class ManualDisputeEntryComponent implements OnInit {
   public removeTicketCount(countNumber: number) {
     const index = this.ticketCounts.findIndex(c => c.countNo === countNumber);
     if (index > -1) {
+      // Save form values before removal
+      const savedValues: any[] = [];
+      this.ticketCounts.forEach((count, idx) => {
+        if (idx !== index) {
+          const formGroup = this.disputeInfoForm.get(`count${count.countNo}`);
+          savedValues.push(formGroup?.value);
+        }
+      });
+
+      // Remove from arrays
       this.ticketCounts.splice(index, 1);
       this.disputeCounts.splice(index, 1);
+      
+      // Remove all count form controls
+      this.ticketCounts.forEach((count) => {
+        this.disputeInfoForm.removeControl(`count${count.countNo}`);
+      });
       this.disputeInfoForm.removeControl(`count${countNumber}`);
       
       // Renumber remaining counts
@@ -284,26 +320,109 @@ export class ManualDisputeEntryComponent implements OnInit {
         count.countNo = idx + 1;
         this.disputeCounts[idx].countNo = idx + 1;
       });
+
+      // Re-add form controls with new numbers and restore values
+      this.ticketCounts.forEach((count, idx) => {
+        const countFormGroup = this.formBuilder.group({
+          description: [savedValues[idx]?.description || null, [Validators.required]],
+          actOrRegulationNameCode: [savedValues[idx]?.actOrRegulationNameCode || null, [Validators.required]],
+          ticketedAmount: [savedValues[idx]?.ticketedAmount || null, [Validators.required, Validators.min(0)]],
+          section: [savedValues[idx]?.section || null],
+          subsection: [savedValues[idx]?.subsection || null],
+          paragraph: [savedValues[idx]?.paragraph || null],
+          subparagraph: [savedValues[idx]?.subparagraph || null],
+          pleaCode: [savedValues[idx]?.pleaCode || null],
+          requestCourtAppearance: [savedValues[idx]?.requestCourtAppearance || DisputeCountRequestCourtAppearance.N],
+          requestReduction: [savedValues[idx]?.requestReduction || DisputeCountRequestReduction.N],
+          requestTimeToPay: [savedValues[idx]?.requestTimeToPay || DisputeCountRequestTimeToPay.N],
+          __skip: [savedValues[idx]?.__skip || false]
+        });
+
+        // Set up watchers
+        countFormGroup.get('requestReduction').valueChanges.subscribe(() => {
+          this.updateReasonValidators();
+        });
+
+        countFormGroup.get('requestTimeToPay').valueChanges.subscribe(() => {
+          this.updateReasonValidators();
+        });
+
+        countFormGroup.get('__skip').valueChanges.subscribe((isSkipped) => {
+          this.updateReasonValidators();
+          
+          // Update pleaCode validators based on skip status and court appearance choice
+          const pleaCodeControl = countFormGroup.get('pleaCode');
+          const requestCourtAppearance = this.disputeInfoForm.get('requestCourtAppearance')?.value;
+          
+          if (isSkipped || requestCourtAppearance !== this.RequestCourtAppearance.Y) {
+            // Clear pleaCode validator if skipped or not requesting court hearing
+            pleaCodeControl.clearValidators();
+            pleaCodeControl.setValue(null);
+          } else if (requestCourtAppearance === this.RequestCourtAppearance.Y) {
+            // Add required validator if not skipped and requesting court hearing
+            pleaCodeControl.setValidators([Validators.required]);
+          }
+          pleaCodeControl.updateValueAndValidity();
+        });
+
+        this.disputeInfoForm.addControl(`count${count.countNo}`, countFormGroup);
+      });
+
+      // Update filtered statutes for renumbered counts
+      this.ticketCounts.forEach((count) => {
+        const descValue = this.disputeInfoForm.get(`count${count.countNo}`)?.get('description')?.value;
+        switch (count.countNo) {
+          case 1:
+            this.filteredCount1Statutes = descValue ? this.filterStatutes(descValue) : this.lookupsService.statutes;
+            break;
+          case 2:
+            this.filteredCount2Statutes = descValue ? this.filterStatutes(descValue) : this.lookupsService.statutes;
+            break;
+          case 3:
+            this.filteredCount3Statutes = descValue ? this.filterStatutes(descValue) : this.lookupsService.statutes;
+            break;
+        }
+      });
+
+      this.updateReasonValidators();
     }
   }
 
   public onDLProvinceChange(provId: number) {
     const dlNumberControl = this.ticketDetailsForm.get('driversLicenceNumber');
     
+    // If no province selected, clear DL fields and remove validators
+    if (!provId) {
+      this.ticketDetailsForm.patchValue({
+        driversLicenceProvinceSeqNo: null,
+        driversLicenceCountryId: null,
+        driversLicenceCountry: null,
+        driversLicenceNumber: null
+      });
+      dlNumberControl.clearValidators();
+      dlNumberControl.disable();
+      dlNumberControl.updateValueAndValidity();
+      return;
+    }
+    
     const selectedProv = this.config.provincesAndStates.find(x => x.provId === provId);
     if (selectedProv) {
       this.ticketDetailsForm.patchValue({
         driversLicenceProvinceSeqNo: selectedProv.provSeqNo,
         driversLicenceCountryId: selectedProv.ctryId,
-        driversLicenceCountry: selectedProv.ctryId === this.canada.ctryId ? 'Canada' : 'USA'
+        driversLicenceCountry: selectedProv.ctryId === this.canada.ctryId ? 'Canada' : 'USA',
+        driversLicenceNumber: null  // Clear DL number when province changes
       });
 
-      // BC requires 7-9 digit numeric DL
+      // Enable the field when province is selected
+      dlNumberControl.enable();
+      
+      // BC requires 7-9 digit numeric DL - and it's required
       if (selectedProv.provSeqNo === this.bc.provSeqNo && selectedProv.ctryId === this.canada.ctryId) {
         dlNumberControl.setValidators([Validators.required, Validators.minLength(7), Validators.maxLength(9), Validators.pattern(/^\d+$/)]);
       } else {
-        // Other provinces/states: 7-30 characters
-        dlNumberControl.setValidators([Validators.minLength(7), Validators.maxLength(30)]);
+        // Other provinces/states: 7-30 characters - and it's required
+        dlNumberControl.setValidators([Validators.required, Validators.minLength(7), Validators.maxLength(30)]);
       }
       dlNumberControl.updateValueAndValidity();
     }
@@ -556,24 +675,87 @@ export class ManualDisputeEntryComponent implements OnInit {
   // Wizard Navigation Methods
   public goToStep(stepIndex: number) {
     //if (stepIndex < this.currentStep || this.validateCurrentStep())
+    const wasVisited = this.visitedSteps.has(stepIndex);
+    this.visitedSteps.add(stepIndex); // Mark step as visited
     this.currentStep = stepIndex;
     this.scrollToTop();
+    
+    // Mark form as touched if step was previously visited to show validation errors
+    if (wasVisited) {
+      this.markStepFormAsTouched(stepIndex);
+    }
+    
+    // Force timepicker to refresh by re-patching the value when navigating to step 0
+    if (stepIndex === 0) {
+      const violationTime = this.ticketDetailsForm.get('violationTime')?.value;
+      if (violationTime) {
+        setTimeout(() => {
+          this.ticketDetailsForm.patchValue({ violationTime: violationTime });
+          this.cdr.detectChanges();
+        }, 100);
+      }
+    } else {
+      // Trigger change detection to ensure form controls are properly rendered
+      setTimeout(() => this.cdr.detectChanges(), 0);
+    }
   }
 
   public nextStep() {
-    if (this.validateCurrentStep()) {
-      this.steps[this.currentStep].completed = true;
-    }
     if (this.currentStep < this.steps.length - 1) {
-        this.currentStep++;
-        this.scrollToTop();
+      this.visitedSteps.add(this.currentStep + 1); // Mark next step as visited
+      this.currentStep++;
+      this.scrollToTop();
+      // Trigger change detection to ensure form controls are properly rendered
+      setTimeout(() => this.cdr.detectChanges(), 0);
     }
   }
 
   public previousStep() {
     if (this.currentStep > 0) {
+      this.visitedSteps.add(this.currentStep - 1); // Mark previous step as visited
       this.currentStep--;
       this.scrollToTop();
+      
+      // Mark form as touched to show validation errors
+      this.markStepFormAsTouched(this.currentStep);
+      
+      // Force timepicker to refresh by re-patching the value
+      if (this.currentStep === 0) {
+        const violationTime = this.ticketDetailsForm.get('violationTime')?.value;
+        if (violationTime) {
+          setTimeout(() => {
+            this.ticketDetailsForm.patchValue({ violationTime: violationTime });
+            this.cdr.detectChanges();
+          }, 100);
+        }
+      }
+    }
+  }
+
+  private markStepFormAsTouched(stepIndex: number) {
+    switch (stepIndex) {
+      case 0: // Ticket Details
+        this.ticketDetailsForm.markAllAsTouched();
+        break;
+      case 1: // Ticket Counts (handled in Dispute Info Form)
+        // Mark all count form groups as touched
+        this.ticketCounts.forEach(count => {
+          const countFormGroup = this.disputeInfoForm.get(`count${count.countNo}`);
+          if (countFormGroup) {
+            countFormGroup.markAllAsTouched();
+          }
+        });
+        break;
+      case 2: // Contact Information
+        this.contactInfoForm.markAllAsTouched();
+        break;
+      case 3: // Dispute Information
+        this.disputeInfoForm.markAllAsTouched();
+        this.legalRepresentationForm.markAllAsTouched();
+        break;
+      case 4: // Review & Submit
+        // Already handled by validateAllForms in submit
+        break;
     }
   }
 
@@ -599,7 +781,11 @@ export class ManualDisputeEntryComponent implements OnInit {
       case 2: // Contact Information
         return this.contactInfoForm.valid;
       case 3: // Dispute Information
-        return this.disputeInfoForm.valid;
+        // Check disputeInfoForm and conditionally check legalRepresentationForm
+        const disputeFormValid = this.disputeInfoForm.valid;
+        const lawyerSelected = this.disputeInfoForm.get('representedByLawyer')?.value === DisputeRepresentedByLawyer.Y;
+        const legalFormValid = lawyerSelected ? this.legalRepresentationForm.valid : true;
+        return disputeFormValid && legalFormValid;
       case 4: // Review & Submit
         return this.validateAllForms();
       default:
@@ -609,19 +795,22 @@ export class ManualDisputeEntryComponent implements OnInit {
 
   private isTicketBasicInfoValid(): boolean {
     const form = this.ticketDetailsForm;
+    const hasProvince = form.get('driversLicenceProvince')?.value;
+    
     return form.get('ticketNumber')?.valid &&
            form.get('violationDate')?.valid &&
            form.get('violationTime')?.valid &&
            form.get('courtLocation')?.valid &&
            form.get('disputantSurname')?.valid &&
            form.get('disputantGivenNames')?.valid &&
-           form.get('driversLicenceProvince')?.valid &&
-           (form.get('driversLicenceProvinceSeqNo')?.value !== this.bc.provSeqNo || 
-            form.get('driversLicenceNumber')?.valid);
+           // If a province is selected, DL number must be valid
+           (!hasProvince || form.get('driversLicenceNumber')?.valid);
   }
 
   private isTicketCountsValid(): boolean {
     if (this.ticketCounts.length === 0) return false;
+    
+    const requestCourtAppearance = this.disputeInfoForm.get('requestCourtAppearance')?.value;
     
     for (const count of this.ticketCounts) {
       const countFormGroup = this.disputeInfoForm.get(`count${count.countNo}`);
@@ -630,9 +819,22 @@ export class ManualDisputeEntryComponent implements OnInit {
       const description = countFormGroup.get('description')?.value;
       const actCode = countFormGroup.get('actOrRegulationNameCode')?.value;
       const amount = countFormGroup.get('ticketedAmount')?.value;
+      const isSkipped = countFormGroup.get('__skip')?.value;
       
+      // Basic fields must always be filled
       if (!description || !actCode || !amount) {
         return false;
+      }
+      
+      // If count is not skipped, validate dispute actions based on court appearance choice
+      if (!isSkipped) {
+        if (requestCourtAppearance === this.RequestCourtAppearance.Y) {
+          // For court hearing: pleaCode is required
+          const pleaCode = countFormGroup.get('pleaCode')?.value;
+          if (!pleaCode) {
+            return false;
+          }
+        }
       }
     }
     return true;
@@ -836,10 +1038,19 @@ export class ManualDisputeEntryComponent implements OnInit {
     this.ticketDetailsForm.markAllAsTouched();
     this.contactInfoForm.markAllAsTouched();
     this.disputeInfoForm.markAllAsTouched();
+    
+    // If lawyer representation is selected, also validate legal representation form
+    const lawyerSelected = this.disputeInfoForm.get('representedByLawyer')?.value === DisputeRepresentedByLawyer.Y;
+    if (lawyerSelected) {
+      this.legalRepresentationForm.markAllAsTouched();
+    }
+
+    const legalFormValid = lawyerSelected ? this.legalRepresentationForm.valid : true;
 
     return this.ticketDetailsForm.valid && 
            this.contactInfoForm.valid && 
-           this.disputeInfoForm.valid;
+           this.disputeInfoForm.valid &&
+           legalFormValid;
   }
 
   private submitDispute() {
@@ -897,6 +1108,24 @@ export class ManualDisputeEntryComponent implements OnInit {
     const lawyerGivenName2 = lawyerNames.length > 2 ? lawyerNames[1] : null;
     const lawyerGivenName3 = lawyerNames.length > 3 ? lawyerNames[2] : null;
 
+    // Determine if fine reduction or time to pay is requested for any count
+    const hasFineReduction = this.ticketCounts.some(count => {
+      const countFormData = this.disputeInfoForm.get(`count${count.countNo}`)?.value;
+      return countFormData?.requestReduction === DisputeCountRequestReduction.Y;
+    });
+    
+    const hasTimeToPay = this.ticketCounts.some(count => {
+      const countFormData = this.disputeInfoForm.get(`count${count.countNo}`)?.value;
+      return countFormData?.requestTimeToPay === DisputeCountRequestTimeToPay.Y;
+    });
+
+    // For written reasons (RequestCourtAppearance.N), set signature and reason fields to "See uploaded document"
+    const isWrittenReasons = disputeData.requestCourtAppearance === this.RequestCourtAppearance.N;
+    const signatoryName = isWrittenReasons ? 'See uploaded document' : null;
+    const signatoryType = isWrittenReasons ? DisputeSignatoryType.D : null;
+    const fineReductionReason = hasFineReduction ? 'See uploaded document' : null;
+    const timeToPayReason = hasTimeToPay ? 'See uploaded document' : null;
+
     const dispute: Dispute = {
       // Ticket information
       ticketNumber: ticketData.ticketNumber,
@@ -936,10 +1165,10 @@ export class ManualDisputeEntryComponent implements OnInit {
       interpreterRequired: disputeData.interpreterRequired,
       interpreterLanguageCd: disputeData.interpreterLanguageCd,
       witnessNo: disputeData.witnessNo || 0,
-      signatoryType: disputeData.signatoryType,
-      signatoryName: disputeData.signatoryName,
-      fineReductionReason: disputeData.fineReductionReason,
-      timeToPayReason: disputeData.timeToPayReason,
+      fineReductionReason: fineReductionReason,
+      timeToPayReason: timeToPayReason,
+      signatoryName: signatoryName,
+      signatoryType: signatoryType,
       
       // Legal representation information (from legalRepresentationForm)
       lawFirmName: legalRepData.lawFirmName || null,
@@ -1085,6 +1314,31 @@ export class ManualDisputeEntryComponent implements OnInit {
     return this.getAddressProvince(contactData);
   }
 
+  /**
+   * Get contact type display name
+   */
+  public getContactTypeDisplay(contactType: string): string {
+    if (contactType === DisputeContactTypeCd.Other) {
+      return 'Agent or Other';
+    }
+    return contactType;
+  }
+
+  public formatPhoneNumber(phoneNumber: string): string {
+    if (!phoneNumber) return '';
+    
+    // Remove all non-digit characters
+    const cleaned = phoneNumber.replace(/\D/g, '');
+    
+    // Format as (XXX) XXX-XXXX for 10-digit numbers
+    if (cleaned.length === 10) {
+      return `(${cleaned.substring(0, 3)}) ${cleaned.substring(3, 6)}-${cleaned.substring(6)}`;
+    }
+    
+    // For other lengths, return original or cleaned version
+    return phoneNumber;
+  }
+
   private getCourtAgencyId(courtLocation: string): string {
     if (!courtLocation) return null;
     const court = this.lookupsService.courthouseAgencies.find(x => x.name === courtLocation);
@@ -1122,10 +1376,6 @@ export class ManualDisputeEntryComponent implements OnInit {
    */
   public onChangeRequestCourtAppearance(value: DisputeRequestCourtAppearanceYn) {
     if (value === this.RequestCourtAppearance.N) {
-      // When not requesting court appearance, set signatory type required
-      this.disputeInfoForm.get('signatoryType').setValidators([Validators.required]);
-      this.disputeInfoForm.get('signatoryType').updateValueAndValidity({ emitEvent: false });
-      
       // Reset interpreter and witness for written reasons
       this.disputeInfoForm.patchValue({
         representedByLawyer: DisputeRepresentedByLawyer.N,
@@ -1133,22 +1383,17 @@ export class ManualDisputeEntryComponent implements OnInit {
         witnessNo: 0
       });
       
-      // Clear plea codes when switching to written reasons
+      // Clear plea codes and remove validators when switching to written reasons
       this.ticketCounts.forEach(count => {
         const countFormGroup = this.disputeInfoForm.get(`count${count.countNo}`);
         if (countFormGroup) {
-          countFormGroup.patchValue({ pleaCode: null });
+          const pleaCodeControl = countFormGroup.get('pleaCode');
+          pleaCodeControl.clearValidators();
+          pleaCodeControl.setValue(null);
+          pleaCodeControl.updateValueAndValidity();
         }
       });
     } else if (value === this.RequestCourtAppearance.Y) {
-      // When requesting court appearance, signatory not needed
-      this.disputeInfoForm.get('signatoryType').clearValidators();
-      this.disputeInfoForm.get('signatoryType').setValue(null);
-      this.disputeInfoForm.get('signatoryName').clearValidators();
-      this.disputeInfoForm.get('signatoryName').setValue(null);
-      this.disputeInfoForm.get('signatoryType').updateValueAndValidity({ emitEvent: false });
-      this.disputeInfoForm.get('signatoryName').updateValueAndValidity({ emitEvent: false });
-      
       // Clear fine reduction and time to pay when switching to court appearance
       this.ticketCounts.forEach(count => {
         const countFormGroup = this.disputeInfoForm.get(`count${count.countNo}`);
@@ -1157,6 +1402,16 @@ export class ManualDisputeEntryComponent implements OnInit {
             requestReduction: DisputeCountRequestReduction.N,
             requestTimeToPay: DisputeCountRequestTimeToPay.N
           });
+          
+          // Add required validator to pleaCode for court hearing (unless skipped)
+          const isSkipped = countFormGroup.get('__skip')?.value;
+          const pleaCodeControl = countFormGroup.get('pleaCode');
+          if (!isSkipped) {
+            pleaCodeControl.setValidators([Validators.required]);
+          } else {
+            pleaCodeControl.clearValidators();
+          }
+          pleaCodeControl.updateValueAndValidity();
         }
       });
     }
@@ -1165,19 +1420,6 @@ export class ManualDisputeEntryComponent implements OnInit {
   /**
    * Handles signature type change
    */
-  public onChangeSignatureType(value: DisputeSignatoryType) {
-    const sigNameControl = this.disputeInfoForm.get('signatoryName');
-    
-    if (value === this.SignatoryType.D || value === this.SignatoryType.A) {
-      // Set validators when a signature type is selected
-      sigNameControl.setValidators([Validators.required, Validators.maxLength(100)]);
-    } else {
-      // Clear validators when no type selected
-      sigNameControl.clearValidators();
-    }
-    sigNameControl.updateValueAndValidity({ emitEvent: false });
-  }
-
   /**
    * Handles represented by lawyer checkbox change
    */
@@ -1190,7 +1432,15 @@ export class ManualDisputeEntryComponent implements OnInit {
       this.legalRepresentationForm.get('lawFirmName').setValidators([Validators.required, Validators.maxLength(200)]);
       this.legalRepresentationForm.get('lawyerFullName').setValidators([Validators.required, Validators.maxLength(100)]);
       this.legalRepresentationForm.get('lawyerAddress').setValidators([Validators.required, Validators.maxLength(304)]);
-      this.legalRepresentationForm.get('lawyerPhoneNumber').setValidators([Validators.required]);
+      
+      // Apply phone validators based on country
+      const countryId = this.contactInfoForm.get('addressCountryId').value;
+      if (countryId === this.canada.ctryId || countryId === this.usa.ctryId) {
+        this.legalRepresentationForm.get('lawyerPhoneNumber').setValidators([Validators.required, Validators.maxLength(20), FormControlValidators.phone]);
+      } else {
+        this.legalRepresentationForm.get('lawyerPhoneNumber').setValidators([Validators.required, Validators.maxLength(20)]);
+      }
+      
       this.legalRepresentationForm.get('lawyerEmail').setValidators([Validators.required, Validators.email, Validators.maxLength(100)]);
     } else {
       // Clear validators and reset form
@@ -1241,34 +1491,16 @@ export class ManualDisputeEntryComponent implements OnInit {
 
   /**
    * Update validators for consolidated reason fields based on selected counts
+   * reasons are in uploaded documents
    */
   private updateReasonValidators() {
     const reductionReasonControl = this.disputeInfoForm.get('fineReductionReason');
     const timeToPayReasonControl = this.disputeInfoForm.get('timeToPayReason');
     
-    const countsRequestingReduction = this.getCountsRequestingReduction();
-    const countsRequestingTimeToPay = this.getCountsRequestingTimeToPay();
-    
-    // Update reduction reason validators
-    if (countsRequestingReduction.length > 0) {
-      reductionReasonControl.setValidators([Validators.required, Validators.maxLength(500)]);
-    } else {
-      reductionReasonControl.clearValidators();
-      reductionReasonControl.setValue(null);
-      reductionReasonControl.markAsPristine();
-      reductionReasonControl.markAsUntouched();
-    }
+    reductionReasonControl.clearValidators();
     reductionReasonControl.updateValueAndValidity({ emitEvent: false });
     
-    // Update time to pay reason validators
-    if (countsRequestingTimeToPay.length > 0) {
-      timeToPayReasonControl.setValidators([Validators.required, Validators.maxLength(500)]);
-    } else {
-      timeToPayReasonControl.clearValidators();
-      timeToPayReasonControl.setValue(null);
-      timeToPayReasonControl.markAsPristine();
-      timeToPayReasonControl.markAsUntouched();
-    }
+    timeToPayReasonControl.clearValidators();
     timeToPayReasonControl.updateValueAndValidity({ emitEvent: false });
   }
 
@@ -1316,5 +1548,25 @@ export class ManualDisputeEntryComponent implements OnInit {
     
     const countNumbers = counts.map(count => `Count ${count.countNo}`).join(', ');
     return `Reason For Time To Pay (${countNumbers})`;
+  }
+
+  /**
+   * Filter courthouses based on user input
+   */
+  public filterCourthouses(searchText: string): any[] {
+    if (!searchText || searchText.trim() === '') {
+      return this.lookupsService.courthouseAgencies;
+    }
+    const filterValue = searchText.toLowerCase();
+    return this.lookupsService.courthouseAgencies.filter(courthouse => 
+      courthouse.name?.toLowerCase().includes(filterValue)
+    );
+  }
+
+  /**
+   * Handles courthouse keyup event for autocomplete filtering
+   */
+  public onCourthouseKeyup(searchText: string) {
+    this.filteredCourthouses = this.filterCourthouses(searchText);
   }
 }
