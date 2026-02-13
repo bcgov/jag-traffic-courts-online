@@ -7,6 +7,7 @@ import { Subscription, filter } from 'rxjs';
   selector: 'app-page',
   templateUrl: './page.component.html',
   styleUrls: ['./page.component.scss'],
+  standalone: false,
 })
 export class PageComponent implements OnDestroy {
   @Input() public mode: 'default' | 'full';

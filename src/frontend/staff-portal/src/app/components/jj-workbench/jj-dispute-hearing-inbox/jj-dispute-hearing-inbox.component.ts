@@ -14,6 +14,7 @@ import { LoggerService } from '@core/services/logger.service';
   selector: 'app-jj-dispute-hearing-inbox',
   templateUrl: './jj-dispute-hearing-inbox.component.html',
   styleUrls: ['./jj-dispute-hearing-inbox.component.scss'],
+  standalone: false,
 })
 export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   @Output() tcoDisputeInfo: EventEmitter<DisputeCaseFileSummary> = new EventEmitter();

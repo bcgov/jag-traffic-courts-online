@@ -9,7 +9,8 @@ import { TabType } from '@shared/enums/tab-type.enum';
 @Component({
   selector: 'app-jj-count',
   templateUrl: './jj-count.component.html',
-  styleUrls: ['./jj-count.component.scss']
+  styleUrls: ['./jj-count.component.scss'],
+  standalone: false,
 })
 export class JJCountComponent implements OnInit, OnChanges {
   @Input() jjDisputeInfo: JJDispute;

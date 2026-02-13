@@ -26,7 +26,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-jj-dispute',
   templateUrl: './jj-dispute.component.html',
-  styleUrls: ['./jj-dispute.component.scss']
+  styleUrls: ['./jj-dispute.component.scss'],
+  standalone: false,
 })
 export class JJDisputeComponent implements OnInit {
   @ViewChild("disputeDetails") disputeDetailsAnchor: ElementRef;

@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
   selector: 'app-jj-dispute-remarks',
   templateUrl: './jj-dispute-remarks.component.html',
   styleUrls: ['./jj-dispute-remarks.component.scss'],
+  standalone: false,
 })
 export class JJDisputeRemarksComponent implements OnDestroy {
   @Input() data: JJDisputeRemark[];

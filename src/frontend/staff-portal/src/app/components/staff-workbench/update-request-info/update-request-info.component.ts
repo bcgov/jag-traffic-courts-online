@@ -13,7 +13,8 @@ import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-update-request-info',
   templateUrl: './update-request-info.component.html',
-  styleUrls: ['./update-request-info.component.scss']
+  styleUrls: ['./update-request-info.component.scss'],
+  standalone: false,
 })
 export class UpdateRequestInfoComponent implements OnInit {
   @Input() disputeInfo: Dispute;

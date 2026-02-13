@@ -12,7 +12,11 @@ import {
 } from '@angular/common/http';
 
 // Added the declaration of BlankComponent to be used for routing
-@Component({ selector: 'app-test-blank', template: `` })
+@Component({
+  selector: 'app-test-blank',
+  template: ``,
+  standalone: false,
+})
 class BlankComponent {}
 
 describe('ConfigCodePipe', () => {

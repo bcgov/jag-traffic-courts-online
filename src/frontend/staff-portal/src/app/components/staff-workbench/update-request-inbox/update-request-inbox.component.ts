@@ -14,6 +14,7 @@ import { Sort } from '@angular/material/sort';
   selector: 'app-update-request-inbox',
   templateUrl: './update-request-inbox.component.html',
   styleUrls: ['./update-request-inbox.component.scss'],
+  standalone: false,
 })
 export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
   @Input() tabIndex: number;

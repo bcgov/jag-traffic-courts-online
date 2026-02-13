@@ -13,6 +13,7 @@ import { DisputeCaseFileSummary } from 'app/api';
   selector: 'app-jj-workbench-dashboard',
   templateUrl: './jj-workbench-dashboard.component.html',
   styleUrls: ['./jj-workbench-dashboard.component.scss'],
+  standalone: false,
 })
 export class JjWorkbenchDashboardComponent implements OnInit {
   @ViewChild("DCF") dcfTab: MatTab;

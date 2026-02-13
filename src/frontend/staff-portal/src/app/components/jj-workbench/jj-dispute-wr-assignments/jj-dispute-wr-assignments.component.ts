@@ -14,6 +14,7 @@ import { DisputeStatus } from '@shared/consts/DisputeStatus.model';
   selector: 'app-jj-dispute-wr-assignments',
   templateUrl: './jj-dispute-wr-assignments.component.html',
   styleUrls: ['./jj-dispute-wr-assignments.component.scss'],
+  standalone: false,
 })
 export class JJDisputeWRAssignmentsComponent implements OnInit {
   @Output() tcoDisputeInfo: EventEmitter<DisputeCaseFileSummary> = new EventEmitter();

@@ -9,6 +9,7 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
   selector: 'app-table-filters',
   templateUrl: './table-filters.component.html',
   styleUrls: ['./table-filters.component.scss'],
+  standalone: false,
 })
 export class TableFiltersComponent implements OnInit {
   @Input() tabIndex: number;

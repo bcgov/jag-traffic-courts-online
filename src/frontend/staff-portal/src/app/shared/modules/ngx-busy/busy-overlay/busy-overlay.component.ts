@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
   selector: 'app-busy-overlay',
   templateUrl: './busy-overlay.component.html',
   styleUrls: ['./busy-overlay.component.scss'],
+  standalone: false,
 })
 export class BusyOverlayComponent {
   @Input() public busy: Subscription;

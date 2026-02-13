@@ -12,6 +12,7 @@ import { AuthService } from 'app/services/auth.service';
   templateUrl: './confirm-reason-dialog.component.html',
   styleUrls: ['./confirm-reason-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ConfirmReasonDialogComponent {
   public options: DialogOptions;

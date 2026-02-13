@@ -5,6 +5,7 @@ import { DialogContentDirective } from './dialog-content.directive';
 
 @Component({
   template: `<ng-template appDialogContent></ng-template>`,
+  standalone: false,
 })
 class TestDialogContentComponent {
   constructor(public viewContainerRef: ViewContainerRef) {}

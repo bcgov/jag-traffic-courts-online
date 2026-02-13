@@ -11,6 +11,7 @@ import { DialogContentOutput } from '../dialog-output.model';
   templateUrl: './more-options-dialog.component.html',
   styleUrls: ['./more-options-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class MoreOptionsDialogComponent {
   public options: DialogOptions;

@@ -13,6 +13,7 @@ import { featureType } from 'app/shared/directives/feature-flag.directive';
   selector: 'app-ticket-inbox',
   templateUrl: './ticket-inbox.component.html',
   styleUrls: ['./ticket-inbox.component.scss'],
+  standalone: false,
 })
 export class TicketInboxComponent implements OnInit {
   @Input() tabIndex: number;

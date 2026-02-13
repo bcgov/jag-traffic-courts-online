@@ -11,7 +11,8 @@ import { DisputeStatus } from '@shared/consts/DisputeStatus.model';
 @Component({
   selector: 'app-jj-dispute-digital-case-file',
   templateUrl: './jj-dispute-digital-case-file.component.html',
-  styleUrls: ['./jj-dispute-digital-case-file.component.scss']
+  styleUrls: ['./jj-dispute-digital-case-file.component.scss'],
+  standalone: false,
 })
 export class JJDisputeDigitalCaseFileComponent implements OnInit {
   @Input() tabIndex: number;

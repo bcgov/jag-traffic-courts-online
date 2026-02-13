@@ -12,6 +12,7 @@ import { filter } from 'rxjs';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default,
+  standalone: false,
 })
 export class HeaderComponent implements OnInit {
   fullName: string;

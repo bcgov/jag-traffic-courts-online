@@ -10,6 +10,7 @@ import { Observable, Subscription, forkJoin } from 'rxjs';
   selector: 'app-jj-file-history',
   templateUrl: './jj-file-history.component.html',
   styleUrls: ['./jj-file-history.component.scss'],
+  standalone: false,
 })
 export class JJFileHistoryComponent implements OnInit, OnDestroy {
   @Input() ticketNumber: string;

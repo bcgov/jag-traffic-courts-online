@@ -17,7 +17,8 @@ import { DcfTemplateType, DisputeContactTypeCd, DisputeStatus } from 'app/api';
 @Component({
   selector: 'app-contact-info',
   templateUrl: './contact-info.component.html',
-  styleUrls: ['./contact-info.component.scss']
+  styleUrls: ['./contact-info.component.scss'],
+  standalone: false,
 })
 export class ContactInfoComponent implements OnInit {
   @Input() public disputeInfo: Dispute;

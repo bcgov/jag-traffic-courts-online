@@ -16,6 +16,7 @@ import { DisputeCaseFileSummary } from 'app/api';
   selector: 'app-staff-workbench-dashboard',
   templateUrl: './staff-workbench-dashboard.component.html',
   styleUrls: ['./staff-workbench-dashboard.component.scss'],
+  standalone: false,
 })
 export class StaffWorkbenchDashboardComponent implements OnInit {
   @ViewChild("DCF") dcfTab: MatTab;

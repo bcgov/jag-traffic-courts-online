@@ -12,6 +12,7 @@ import { HearingType } from '@shared/consts/HearingType.model';
   selector: 'app-jj-dispute-wr-inbox',
   templateUrl: './jj-dispute-wr-inbox.component.html',
   styleUrls: ['./jj-dispute-wr-inbox.component.scss'],
+  standalone: false,
 })
 export class JJDisputeWRInboxComponent implements OnInit {
   @Output() tcoDisputeInfo: EventEmitter<DisputeCaseFileSummary> = new EventEmitter();

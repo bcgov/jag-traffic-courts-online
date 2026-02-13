@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
   selector: 'app-busy-loading',
   templateUrl: './busy-loading.component.html',
   styleUrls: ['./busy-loading.component.scss'],
+  standalone: false,
 })
 export class BusyLoadingComponent {
   @Input() busy: Subscription;

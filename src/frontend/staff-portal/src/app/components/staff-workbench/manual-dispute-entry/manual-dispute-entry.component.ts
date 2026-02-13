@@ -34,7 +34,8 @@ import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 @Component({
   selector: 'app-manual-dispute-entry',
   templateUrl: './manual-dispute-entry.component.html',
-  styleUrls: ['./manual-dispute-entry.component.scss']
+  styleUrls: ['./manual-dispute-entry.component.scss'],
+  standalone: false,
 })
 export class ManualDisputeEntryComponent implements OnInit {
   @Output() public backInbox: EventEmitter<any> = new EventEmitter();

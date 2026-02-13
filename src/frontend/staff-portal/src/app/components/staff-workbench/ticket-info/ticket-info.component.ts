@@ -44,6 +44,7 @@ import { TicketImageContainerComponent } from '@shared/dialogs/ticket-image-cont
   selector: 'app-ticket-info',
   templateUrl: './ticket-info.component.html',
   styleUrls: ['./ticket-info.component.scss'],
+  standalone: false,
 })
 export class TicketInfoComponent implements OnInit {
   @Input() public disputeInfo: Dispute;

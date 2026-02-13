@@ -8,6 +8,7 @@ import { AuthService, UserRepresentation } from 'app/services/auth.service';
   selector: 'app-jj-dispute-court-appearances',
   templateUrl: './jj-dispute-court-appearances.component.html',
   styleUrls: ['./jj-dispute-court-appearances.component.scss'],
+  standalone: false,
 })
 export class JJDisputeCourtAppearancesComponent implements OnInit {
   @Input() data: JJDisputeCourtAppearanceRoP[];

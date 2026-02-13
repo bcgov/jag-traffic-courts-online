@@ -8,7 +8,8 @@ import { LookupsService } from 'app/services/lookups.service';
 @Component({
   selector: 'app-jj-dispute-updates',
   templateUrl: './jj-dispute-updates.component.html',
-  styleUrls: ['./jj-dispute-updates.component.scss']
+  styleUrls: ['./jj-dispute-updates.component.scss'],
+  standalone: false,
 })
 export class JjDisputeUpdatesComponent {
   @Input() disputeId: number;

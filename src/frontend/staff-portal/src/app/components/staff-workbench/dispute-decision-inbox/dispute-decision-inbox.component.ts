@@ -14,6 +14,7 @@ import { DisputeStatus } from '@shared/consts/DisputeStatus.model';
   selector: 'app-dispute-decision-inbox',
   templateUrl: './dispute-decision-inbox.component.html',
   styleUrls: ['./dispute-decision-inbox.component.scss'],
+  standalone: false,
 })
 export class DisputeDecisionInboxComponent implements OnInit {
   @Input() tabIndex: number;

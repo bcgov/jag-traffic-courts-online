@@ -7,6 +7,7 @@ import {MAT_DIALOG_DATA} from "@angular/material/dialog";
   selector: 'app-ticket-image-dialog',
   templateUrl: './ticket-image-dialog.component.html',
   styleUrls: ['./ticket-image-dialog.component.scss'],
+  standalone: false,
 })
 export class TicketImageDialogComponent {
   // to hide bug: mat-expansion-panel animates expanded to closed when nested in a mat-dialog

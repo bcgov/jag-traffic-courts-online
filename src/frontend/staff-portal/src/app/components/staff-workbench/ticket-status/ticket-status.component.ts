@@ -4,7 +4,8 @@ import { Dispute } from 'app/services/dispute.service';
 @Component({
   selector: 'app-ticket-status',
   templateUrl: './ticket-status.component.html',
-  styleUrls: ['./ticket-status.component.scss']
+  styleUrls: ['./ticket-status.component.scss'],
+  standalone: false,
 })
 export class TicketStatusComponent {
   @Input() public dispute: Dispute;

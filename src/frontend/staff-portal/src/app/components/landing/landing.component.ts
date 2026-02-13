@@ -6,7 +6,8 @@ import { AuthService } from 'app/services/auth.service';
   selector: 'app-landing',
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class LandingComponent implements OnInit {
   public isLoggedIn = false;
