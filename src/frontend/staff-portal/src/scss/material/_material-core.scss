@@ -18,4 +18,5 @@
 //  you can delete this line and instead use:
 //    `@include mat.legacy-typography-hierarchy($tco-typography);`
 @include mat.all-component-typographies($tco-typography);
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();

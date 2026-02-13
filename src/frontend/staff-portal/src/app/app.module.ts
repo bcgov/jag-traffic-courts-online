@@ -1,5 +1,5 @@
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule, inject, provideAppInitializer } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgBusyModule } from 'ng-busy';
 import { AppRoutingModule } from './app-routing.module';
@@ -133,12 +133,9 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     CurrencyPipe,
     DatePipe,
     MockConfigService,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeKeycloak,
-      multi: true,
-      deps: [KeycloakService]
-    },
+    provideAppInitializer(() => {
+      return initializeKeycloak(inject(KeycloakService))();
+    }),
     AuthService,
     {
       provide: STEPPER_GLOBAL_OPTIONS,
