@@ -28,7 +28,7 @@
               style="width:250px; background-color: #f2f2f2;">
               <mat-option value="unassigned"><i>choose a jj</i></mat-option>
               <mat-option value=""><i>all JJs</i></mat-option>
-              @for (jj of jjList; track jj) {
+              @for (jj of jjList; track jj.idir) {
                 <mat-option [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i></mat-option>
               }
             </mat-select>

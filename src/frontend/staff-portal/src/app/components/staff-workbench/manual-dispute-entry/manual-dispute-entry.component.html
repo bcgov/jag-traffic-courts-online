@@ -18,7 +18,7 @@
     <div class="wizard-container">
       <!-- Arrow-Style Horizontal Steps -->
       <div class="wizard-steps">
-        @for (step of steps; track step; let i = $index) {
+        @for (step of steps; track step.label; let i = $index) {
           <div
             class="step-arrow"
             [class.active]="currentStep === i"
@@ -166,14 +166,14 @@
                               <mat-option [value]="null">-- Select Province/State --</mat-option>
                               <mat-option [value]="bc.provId">BC</mat-option>
                               <mat-optgroup label="Other Canadian Provinces">
-                                @for (prov of provinces; track prov) {
+                                @for (prov of provinces; track prov.provId) {
                                   <mat-option [value]="prov.provId">
                                     {{ prov.provNm }}
                                   </mat-option>
                                 }
                               </mat-optgroup>
                               <mat-optgroup label="US States">
-                                @for (state of states; track state) {
+                                @for (state of states; track state.provId) {
                                   <mat-option [value]="state.provId">
                                     {{ state.provNm }}
                                   </mat-option>
@@ -255,7 +255,7 @@
                                (keyup)="onDescriptionKeyup(count.countNo)"
                                (change)="onDescriptionChange(count.countNo, $event.target.value)" />
                           <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="onDescriptionChange(1, $event.option.value)">
-                            @for (statute of filteredCount1Statutes; track statute) {
+                            @for (statute of filteredCount1Statutes; track statute.__statuteString) {
                               <mat-option
                                 [value]="statute.__statuteString">
                                 {{ statute.__statuteString }}
@@ -263,7 +263,7 @@
                             }
                           </mat-autocomplete>
                           <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="onDescriptionChange(2, $event.option.value)">
-                            @for (statute of filteredCount2Statutes; track statute) {
+                            @for (statute of filteredCount2Statutes; track statute.__statuteString) {
                               <mat-option
                                 [value]="statute.__statuteString">
                                 {{ statute.__statuteString }}
@@ -271,7 +271,7 @@
                             }
                           </mat-autocomplete>
                           <mat-autocomplete #auto3="matAutocomplete" (optionSelected)="onDescriptionChange(3, $event.option.value)">
-                            @for (statute of filteredCount3Statutes; track statute) {
+                            @for (statute of filteredCount3Statutes; track statute.__statuteString) {
                               <mat-option
                                 [value]="statute.__statuteString">
                                 {{ statute.__statuteString }}
@@ -416,7 +416,7 @@
                     <mat-select formControlName="addressCountryId">
                       <mat-option [value]="canada.ctryId">{{ canada.ctryLongNm }}</mat-option>
                       <mat-option [value]="usa.ctryId">{{ usa.ctryLongNm }}</mat-option>
-                      @for (country of countries; track country) {
+                      @for (country of countries; track country.ctryId) {
                         <mat-option [value]="country.ctryId">{{ country.ctryLongNm }}</mat-option>
                       }
                     </mat-select>
@@ -439,7 +439,7 @@
                         @if (contactInfoForm.get('addressCountryId').value === canada.ctryId) {
                           <div>
                             <mat-option [value]="bc.provId">{{ bc.provNm }}</mat-option>
-                            @for (prov of provinces; track prov) {
+                            @for (prov of provinces; track prov.provId) {
                               <mat-option [value]="prov.provId">
                                 {{ prov.provNm }}
                               </mat-option>
@@ -448,7 +448,7 @@
                         }
                         @if (contactInfoForm.get('addressCountryId').value === usa.ctryId) {
                           <div>
-                            @for (state of states; track state) {
+                            @for (state of states; track state.provId) {
                               <mat-option [value]="state.provId">
                                 {{ state.provNm }}
                               </mat-option>
@@ -863,7 +863,7 @@
                               <mat-form-field class="w-100">
                                 <mat-label>Interpreter Language</mat-label>
                                 <mat-select formControlName="interpreterLanguageCd">
-                                  @for (language of languages; track language) {
+                                  @for (language of languages; track language.code) {
                                     <mat-option [value]="language.code">{{ language.description }}</mat-option>
                                   }
                                 </mat-select>

@@ -109,7 +109,7 @@
                           <mat-form-field appearance="outline">
                             <mat-select #statusCtl matNativeControl name="status" [ngModel]="dataFilters.status"
                               (selectionChange)="onApplyFilter('status', $event.value)">
-                              @for (item of statusFilterOptions; track item) {
+                              @for (item of statusFilterOptions; track item.label) {
                                 <mat-option [value]="item">{{item.label}}</mat-option>
                               }
                             </mat-select>

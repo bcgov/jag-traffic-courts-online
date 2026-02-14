@@ -5,7 +5,7 @@
         <span aria-hidden="true">&laquo;</span>
       </a>
     </li>
-    @for (in of counter(totalPages); track in; let i = $index) {
+    @for (in of counter(totalPages); track i; let i = $index) {
       @if (showPage(i+1)) {
         <li class="page-item" [class.active]="i+1 === currentPage" (click)="changePage(i+1)">
           <a class="page-link" href="javascript:void(0)">{{i+1}}</a>

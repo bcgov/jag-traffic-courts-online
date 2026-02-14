@@ -9,7 +9,7 @@
     @if (requestReadable === true) {
       <div style="display: grid; grid-template-columns: auto">
         <span><b>Citizen Uploaded Documents ({{updateRequested.UploadedDocuments.length }})</b></span><br/>
-        @for (doc of updateRequested.UploadedDocuments; track doc) {
+        @for (doc of updateRequested.UploadedDocuments; track doc.DocumentId) {
           <div>
             @if (disputantUpdateRequest.status !== UpdateRequestStatus.Rejected) {
               <button type="button" class="linkbutton" (click)="onGetFile(doc.DocumentId)">{{ doc.DocumentType }}</button>

@@ -37,7 +37,7 @@
         </ng-container>
         <div style="display: grid;"
           [ngStyle]="{ 'grid-template-columns' : options.data.length == 3 ? '33% 33% 33%' : (options.data.length == 2 ? '50% 50%' : '100%')}">
-          @for (count of options.data; track count) {
+          @for (count of options.data; track count.count) {
             @if (count) {
               <div style="display: grid; grid-template-columns: 100%">
                 <span class="section-jj-grid-cell">

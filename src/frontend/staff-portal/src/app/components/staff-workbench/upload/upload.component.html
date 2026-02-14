@@ -16,7 +16,7 @@
 
     <div class="upload-body">
       <span><b>Uploaded Documents ({{disputeInfo.fileData?.length }})</b></span><br />
-      @for (doc of disputeInfo.fileData; track doc) {
+      @for (doc of disputeInfo.fileData; track doc.fileId) {
         <div>
           @if (doc.virusScanStatus === 'clean') {
             <button type="button" class="linkbutton" (click)="onGetFile(doc.fileId)"

@@ -262,7 +262,7 @@
                 (keyup)="onLesserDescriptionKeyup()"
                 [matTooltip]="form.get('jjDisputedCountRoP').get('lesserDescription').value" />
                 <mat-autocomplete #auto="matAutocomplete">
-                  @for (statute of lesserDescriptionFilteredStatutes; track statute) {
+                  @for (statute of lesserDescriptionFilteredStatutes; track statute.__statuteString) {
                     <mat-option
                       [matTooltip]="statute.__statuteString" [value]="statute.__statuteString">
                     {{ statute.__statuteString }}</mat-option>
@@ -596,7 +596,7 @@
                           (keyup)="onDrivingProhibitionMVASectionKeyup()"
                           [matTooltip]="form.get('jjDisputedCountRoP').get('drivingProhibitionMVASection').value" />
                           <mat-autocomplete #auto="matAutocomplete">
-                            @for (statute of drivingProhibitionFilteredStatutes; track statute) {
+                            @for (statute of drivingProhibitionFilteredStatutes; track statute.__statuteString) {
                               <mat-option
                                 [matTooltip]="statute.__statuteString" [value]="statute.__statuteString">
                               {{ statute.__statuteString }}</mat-option>

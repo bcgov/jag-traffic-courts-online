@@ -2,7 +2,7 @@
   <!-- filter by teams -->
   <div class="row" style="width:97%">
     <mat-button-toggle-group style="border: 0px" (change)="filterByTeam($event.value)" [value]="currentTeam">
-      @for (courthouseTeamCount of courthouseTeamCounts; track courthouseTeamCount) {
+      @for (courthouseTeamCount of courthouseTeamCounts; track courthouseTeamCount.team) {
         <mat-button-toggle [value]="courthouseTeamCount.team"
           class="teamFilterButton">
           <span style="float: left; margin-right: 20px !important; vertical-align: middle; color: #003366">
@@ -19,7 +19,7 @@
     <div style="display: flex; flex-direction: row; flex-direction: flex-start;">
       <mat-select [(ngModel)]="bulkjjAssignedTo" style="width:250px; background-color: #f2f2f2;">
         <mat-option [value]="valueOfUnassigned"><i>choose a jj</i></mat-option>
-        @for (jj of jjList; track jj) {
+        @for (jj of jjList; track jj.idir) {
           <mat-option [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i></mat-option>
         }
       </mat-select>
@@ -59,7 +59,7 @@
           <mat-select [(ngModel)]="element.jjAssignedTo" (selectionChange)="onAssign(element)"
             >
             <mat-option [value]="valueOfUnassigned">unassigned</mat-option>
-            @for (jj of jjList; track jj) {
+            @for (jj of jjList; track jj.idir) {
               <mat-option [value]="jj.idir">{{ jj.jjDisplayName }}</mat-option>
             }
           </mat-select>

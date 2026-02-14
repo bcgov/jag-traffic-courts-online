@@ -95,7 +95,7 @@
             <p class="section-grid-text">{{ initialDisputeValues.submittedTs | date: "dd-MMM-yyyy" }}</p>
           </span>
         </div>
-        @for (disputantUpdateRequest of disputeUpdateRequests; track disputantUpdateRequest) {
+        @for (disputantUpdateRequest of disputeUpdateRequests; track disputantUpdateRequest.disputeUpdateRequestId) {
           <div>
             @if (disputantUpdateRequest.updateType === RequestUpdateType.DisputantPhone) {
               <app-phone-update-request-info

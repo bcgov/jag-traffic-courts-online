@@ -207,12 +207,12 @@
                                               [readonly]="isTicketInformationReadOnly">
                                               <mat-option [value]=null></mat-option>
                                               <mat-option [value]="bc.provAbbreviationCd">{{bc.provNm}}</mat-option>
-                                              @for (province of provinces; track province) {
+                                              @for (province of provinces; track province.provId) {
                                                 <mat-option [value]="province.provAbbreviationCd">{{
                                                   province.provNm }}
                                                 </mat-option>
                                               }
-                                              @for (state of states; track state) {
+                                              @for (state of states; track state.provId) {
                                                 <mat-option [value]="state.provAbbreviationCd">{{
                                                   state.provNm }}
                                                 </mat-option>
@@ -290,7 +290,7 @@
                                                 <mat-option
                                                   [value]="getCountLegalParagraphing(1, initialDisputeValues.violationTicket)">{{
                                                 getCountLegalParagraphing(1, initialDisputeValues.violationTicket) }}</mat-option>
-                                                @for (statute of filteredCount1Statutes; track statute) {
+                                                @for (statute of filteredCount1Statutes; track statute.__statuteString) {
                                                   <mat-option
                                                     [value]="statute.__statuteString">
                                                   {{ statute.__statuteString }}</mat-option>
@@ -351,7 +351,7 @@
                                                   <mat-option
                                                     [value]="getCountLegalParagraphing(2, initialDisputeValues.violationTicket)">{{
                                                   getCountLegalParagraphing(2, initialDisputeValues.violationTicket) }}</mat-option>
-                                                  @for (statute of filteredCount2Statutes; track statute) {
+                                                  @for (statute of filteredCount2Statutes; track statute.__statuteString) {
                                                     <mat-option
                                                       [value]="statute.__statuteString">
                                                     {{ statute.__statuteString }}</mat-option>
@@ -412,7 +412,7 @@
                                                     <mat-option
                                                       [value]="getCountLegalParagraphing(3, initialDisputeValues.violationTicket)">{{
                                                     getCountLegalParagraphing(3, initialDisputeValues.violationTicket) }}</mat-option>
-                                                    @for (statute of filteredCount3Statutes; track statute) {
+                                                    @for (statute of filteredCount3Statutes; track statute.__statuteString) {
                                                       <mat-option
                                                         [value]="statute.__statuteString">
                                                       {{ statute.__statuteString }}</mat-option>
@@ -467,7 +467,7 @@
                                                     [readonly]="isTicketInformationReadOnly">
                                                     <mat-option [value]="initialDisputeValues.violationTicket.courtLocation">{{
                                                     initialDisputeValues.violationTicket.courtLocation }}</mat-option>
-                                                    @for (courtLocation of lookupsService.courthouseAgencies; track courtLocation) {
+                                                    @for (courtLocation of lookupsService.courthouseAgencies; track courtLocation.id) {
                                                       <mat-option
                                                         [value]="courtLocation.name">{{
                                                       courtLocation.name }}</mat-option>
@@ -719,7 +719,7 @@
                         (selectionChange)="onCountryChange($event.value)">
                         <mat-option [value]="canada.ctryId">{{ canada.ctryLongNm }}</mat-option>
                         <mat-option [value]="usa.ctryId">{{ usa.ctryLongNm }}</mat-option>
-                        @for (country of config.countries; track country) {
+                        @for (country of config.countries; track country.ctryId) {
                           <mat-option [value]="country.ctryId">{{
                           country.ctryLongNm }}</mat-option>
                         }
@@ -762,7 +762,7 @@
                           @if (form.get('addressCountryId').value === canada.ctryId) {
                             <div>
                               <mat-option [value]="bc.provId">{{bc.provNm }}</mat-option>
-                              @for (province of provinces; track province) {
+                              @for (province of provinces; track province.provId) {
                                 <mat-option [value]="province.provId">{{ province.provNm
                                   }}
                                 </mat-option>
@@ -771,7 +771,7 @@
                           }
                           @if (form.get('addressCountryId').value === usa.ctryId) {
                             <div>
-                              @for (state of states; track state) {
+                              @for (state of states; track state.provId) {
                                 <mat-option [value]="state.provId">{{ state.provNm }}
                                 </mat-option>
                               }
@@ -897,11 +897,11 @@
                       (selectionChange)="onNoticeOfDisputeDLProvinceChange($event.value)">
                       <mat-option [value]=null></mat-option>
                       <mat-option [value]="bc.provId">{{bc.provNm}}</mat-option>
-                      @for (province of provinces; track province) {
+                      @for (province of provinces; track province.provId) {
                         <mat-option [value]="province.provId">{{ province.provNm }}
                         </mat-option>
                       }
-                      @for (state of states; track state) {
+                      @for (state of states; track state.provId) {
                         <mat-option [value]="state.provId">{{ state.provNm }}</mat-option>
                       }
                     </mat-select>

@@ -427,7 +427,7 @@
                     <mat-form-field appearance="outline">
                       <mat-select formControlName="interpreterLanguageCd" placeholder="Language">
                         <mat-option [value]=""></mat-option>
-                        @for (lang of languages; track lang) {
+                        @for (lang of languages; track lang.code) {
                           <mat-option [value]="lang.code">{{ lang.description }}</mat-option>
                         }
                       </mat-select>
@@ -755,7 +755,7 @@
                 >Notice Of Hearing</button>
                 }<br /><br />
                 <span><b>Uploaded Documents ({{lastUpdatedJJDispute.fileData?.length }})</b></span><br />
-                @for (doc of lastUpdatedJJDispute.fileData; track doc) {
+                @for (doc of lastUpdatedJJDispute.fileData; track doc.fileId) {
                   <div style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
                     <span class="document-type-label" style="background-color: #e3f2fd; color: #1976d2; padding: 1px 3px; border-radius: 3px; font-size: 9px; font-weight: 200; border: 1px solid #bbdefb; white-space: nowrap;">{{ doc.documentType }}</span>
                     @if (doc.virusScanStatus === 'clean') {
@@ -858,7 +858,7 @@
                   <mat-form-field appearance="outline" class="h-auto return-jj-align">
                     <mat-select [(ngModel)]="selectedJJ" placeholder="choose a JJ" class="return-jj-select">
                       <mat-option [value]=""></mat-option>
-                      @for (jj of jjList; track jj) {
+                      @for (jj of jjList; track jj.idir) {
                         <mat-option [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i>
                       </mat-option>
                     }
