@@ -1,16 +1,20 @@
 <app-page>
-  <div class="container" *ngIf="!isLoggedIn">
-    <br />
-    <h1 class="BC-Gov-32px-blue-text">You must be signed into IDIR to use Ticket Resolution Management</h1>
-    <button mat-flat-button color="primary" (click)="login()" class="login-btn" disableRipple>
-      <h2>
-        <mat-icon inline="true">login</mat-icon>IDIR Sign in
-      </h2>
-    </button>
-  </div>
-  <div class="container" *ngIf="isLoggedIn">
-    <br />
-    <h1 class="BC-Gov-32px-blue-text">Authorizing...</h1>
-    <hr style="opacity: 1; color: #fcba19" />
-  </div>
+  @if (!isLoggedIn) {
+    <div class="container">
+      <br />
+      <h1 class="BC-Gov-32px-blue-text">You must be signed into IDIR to use Ticket Resolution Management</h1>
+      <button mat-flat-button color="primary" (click)="login()" class="login-btn" disableRipple>
+        <h2>
+          <mat-icon inline="true">login</mat-icon>IDIR Sign in
+        </h2>
+      </button>
+    </div>
+  }
+  @if (isLoggedIn) {
+    <div class="container">
+      <br />
+      <h1 class="BC-Gov-32px-blue-text">Authorizing...</h1>
+      <hr style="opacity: 1; color: #fcba19" />
+    </div>
+  }
 </app-page>

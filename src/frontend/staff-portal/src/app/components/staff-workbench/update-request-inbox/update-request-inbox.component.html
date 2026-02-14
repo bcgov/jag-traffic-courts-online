@@ -16,106 +16,120 @@
     <ng-container matColumnDef="__RedGreenAlert">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell  *matCellDef="let element">
-        <mat-icon [ngStyle]="{ 'color':'red' }" *ngIf="element.__RedGreenAlert ==='Red'">cancel</mat-icon>
-        <mat-icon [ngStyle]="{ 'color':'grey' }" *ngIf="element.__RedGreenAlert ==='Green' && (element.emailAddressVerified === false && element.emailAdddress)">check_circle</mat-icon>
-        <mat-icon [ngStyle]="{ 'color':'green' }" *ngIf="element.__RedGreenAlert ==='Green' && (element.emailAddressVerified === true || !(element.emailAdddress))">check_circle</mat-icon>
+        @if (element.__RedGreenAlert ==='Red') {
+          <mat-icon [ngStyle]="{ 'color':'red' }">cancel</mat-icon>
+        }
+        @if (element.__RedGreenAlert ==='Green' && (element.emailAddressVerified === false && element.emailAdddress)) {
+          <mat-icon [ngStyle]="{ 'color':'grey' }">check_circle</mat-icon>
+        }
+        @if (element.__RedGreenAlert ==='Green' && (element.emailAddressVerified === true || !(element.emailAdddress))) {
+          <mat-icon [ngStyle]="{ 'color':'green' }">check_circle</mat-icon>
+        }
       </td>
     </ng-container>
 
     <ng-container matColumnDef="updateRequest_OldestDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Update Submitted
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <span>{{ element.updateRequest_OldestDate | date: 'dd-MMM-yyyy' }}</span>
-        </td>
-      </ng-container>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Update Submitted
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{ element.updateRequest_OldestDate | date: 'dd-MMM-yyyy' }}</span>
+      </td>
+    </ng-container>
 
-      <ng-container matColumnDef="ticketNumber">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Ticket
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <span *ngIf="!element.userAssignedTo || element.userAssignedTo === userProfile.idir"><a (click)="backWorkbench(element)" href="javascript:void(0)">{{ element.ticketNumber }}</a></span>
-          <span *ngIf="element.userAssignedTo && element.userAssignedTo !== userProfile.idir">{{ element.ticketNumber }}</span>
-        </td>
-      </ng-container>
+    <ng-container matColumnDef="ticketNumber">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Ticket
+      </th>
+      <td mat-cell *matCellDef="let element">
+        @if (!element.userAssignedTo || element.userAssignedTo === userProfile.idir) {
+          <span><a (click)="backWorkbench(element)" href="javascript:void(0)">{{ element.ticketNumber }}</a></span>
+        }
+        @if (element.userAssignedTo && element.userAssignedTo !== userProfile.idir) {
+          <span>{{ element.ticketNumber }}</span>
+        }
+      </td>
+    </ng-container>
 
-      <ng-container matColumnDef="disputantSurname">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Surname
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <span>{{ element.disputantSurname }}</span>
-        </td>
-      </ng-container>
+    <ng-container matColumnDef="disputantSurname">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Surname
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{ element.disputantSurname }}</span>
+      </td>
+    </ng-container>
 
-      <ng-container matColumnDef="disputantGivenName1">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Given Name(s)
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <span>{{element.disputantGivenNames}} </span>
-        </td>
-      </ng-container>
+    <ng-container matColumnDef="disputantGivenName1">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Given Name(s)
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{element.disputantGivenNames}} </span>
+      </td>
+    </ng-container>
 
-      <ng-container matColumnDef="hearingDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+    <ng-container matColumnDef="hearingDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Hearing Date
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <span>{{ element.hearingDate ? (element.hearingDate | date: "dd-MMM-yyyy") : "" }}</span>
-        </td>
-      </ng-container>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{ element.hearingDate ? (element.hearingDate | date: "dd-MMM-yyyy") : "" }}</span>
+      </td>
+    </ng-container>
 
-      <ng-container matColumnDef="changeOfPlea">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="centerColumn">
-          Change of Plea
-        </th>
-        <td mat-cell *matCellDef="let element" class="centerColumn">
-          <mat-checkbox [checked]="element.changeOfPlea === true" [disabled]="true"></mat-checkbox>
-        </td>
-      </ng-container>
+    <ng-container matColumnDef="changeOfPlea">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="centerColumn">
+        Change of Plea
+      </th>
+      <td mat-cell *matCellDef="let element" class="centerColumn">
+        <mat-checkbox [checked]="element.changeOfPlea === true" [disabled]="true"></mat-checkbox>
+      </td>
+    </ng-container>
 
-      <ng-container matColumnDef="adjournmentDocument">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="centerColumn">
-          Adjournment Document
-        </th>
-        <td mat-cell *matCellDef="let element" class="centerColumn">
-          <mat-checkbox [checked]="element.adjournmentDocument === true" [disabled]="true"></mat-checkbox>
-        </td>
-      </ng-container>
+    <ng-container matColumnDef="adjournmentDocument">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="centerColumn">
+        Adjournment Document
+      </th>
+      <td mat-cell *matCellDef="let element" class="centerColumn">
+        <mat-checkbox [checked]="element.adjournmentDocument === true" [disabled]="true"></mat-checkbox>
+      </td>
+    </ng-container>
 
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Status
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <span *ngIf="element.emailAddressVerified === true || !(element.emailAddress)">{{ element.status }}</span>
-          <span *ngIf="element.emailAddressVerified === false && element.emailAddress">Email Address Not Verified</span>
-        </td>
-      </ng-container>
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Status
+      </th>
+      <td mat-cell *matCellDef="let element">
+        @if (element.emailAddressVerified === true || !(element.emailAddress)) {
+          <span>{{ element.status }}</span>
+        }
+        @if (element.emailAddressVerified === false && element.emailAddress) {
+          <span>Email Address Not Verified</span>
+        }
+      </td>
+    </ng-container>
 
-      <ng-container matColumnDef="courthouseLocation">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Courthouse Location
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <span>{{ element.courtAgenName }} </span>
-        </td>
-      </ng-container>
+    <ng-container matColumnDef="courthouseLocation">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Courthouse Location
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{ element.courtAgenName }} </span>
+      </td>
+    </ng-container>
 
-      <ng-container matColumnDef="userAssignedTo">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Assigned
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <span>{{ element.userAssignedTo ? element.userAssignedTo : "Unassigned" }}</span>
-        </td>
-      </ng-container>
+    <ng-container matColumnDef="userAssignedTo">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Assigned
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{ element.userAssignedTo ? element.userAssignedTo : "Unassigned" }}</span>
+      </td>
+    </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
   </table>
 </div>

@@ -39,743 +39,868 @@
       <div style="display: grid; grid-template-columns: auto auto">
         <span class="section-grid-cell" style="grid-column: span 2">
           <p class="section-grid-header">{{ "label.disputant_statement" | translate }}</p>
-          <p class="section-grid-text" *ngIf="!jjDisputedCount">&nbsp;</p>
-          <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.plea === Plea.G">{{ 'label.plea_guilty'
+          @if (!jjDisputedCount) {
+            <p class="section-grid-text">&nbsp;</p>
+          }
+          @if (jjDisputedCount && jjDisputedCount.plea === Plea.G) {
+            <p class="section-grid-text">{{ 'label.plea_guilty'
             | translate }}</p>
-          <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.plea !== Plea.G">{{
+          }
+          @if (jjDisputedCount && jjDisputedCount.plea !== Plea.G) {
+            <p class="section-grid-text">{{
             'label.plea_not_guilty' | translate }}</p>
+          }
         </span>
         <span class="section-grid-cell" style="grid-column: span 2">
           <p class="section-grid-header">{{ "label.appearInCourt" | translate }}</p>
-          <p class="section-grid-text" *ngIf="!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.Y">
+          @if (!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.Y) {
+            <p class="section-grid-text">
             I want to appear in court</p>
-          <p class="section-grid-text" *ngIf="!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.N">
+          }
+          @if (!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.N) {
+            <p class="section-grid-text">
             I do not want to appear in court</p>
-          <p class="section-grid-text" *ngIf="!isSSEditMode && !jjDisputedCount">&nbsp;</p>
-          <mat-form-field appearance="outline" *ngIf="jjDisputedCount && isSSEditMode">
-            <mat-select formControlName="appearInCourt">
-              <mat-option [value]="AppearInCourt.Y">{{ "appearInCourtType.yes" | translate }}</mat-option>
-              <mat-option [value]="AppearInCourt.N">{{ "appearInCourtType.no" | translate }}</mat-option>
-            </mat-select>
-          </mat-form-field>
+          }
+          @if (!isSSEditMode && !jjDisputedCount) {
+            <p class="section-grid-text">&nbsp;</p>
+          }
+          @if (jjDisputedCount && isSSEditMode) {
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="appearInCourt">
+                <mat-option [value]="AppearInCourt.Y">{{ "appearInCourtType.yes" | translate }}</mat-option>
+                <mat-option [value]="AppearInCourt.N">{{ "appearInCourtType.no" | translate }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          }
         </span>
         <span class="section-grid-cell mr-10px">
           <p class="section-grid-header">Request fine reduction</p>
-          <p class="section-grid-text" *ngIf="!isSSEditMode && !jjDisputedCount">&nbsp;</p>
-          <p class="section-grid-text"
-            *ngIf="!isSSEditMode && jjDisputedCount?.requestReduction === RequestReduction.Y">
+          @if (!isSSEditMode && !jjDisputedCount) {
+            <p class="section-grid-text">&nbsp;</p>
+          }
+          @if (!isSSEditMode && jjDisputedCount?.requestReduction === RequestReduction.Y) {
+            <p class="section-grid-text"
+              >
             yes</p>
-          <p class="section-grid-text"
-            *ngIf="!isSSEditMode && jjDisputedCount && jjDisputedCount?.requestReduction !== RequestReduction.Y">
+          }
+          @if (!isSSEditMode && jjDisputedCount && jjDisputedCount?.requestReduction !== RequestReduction.Y) {
+            <p class="section-grid-text"
+              >
             no</p>
-          <mat-form-field appearance="outline" *ngIf="jjDisputedCount && isSSEditMode">
-            <mat-select formControlName="requestReduction">
-              <mat-option [value]="RequestReduction.Y">{{ "yesNo.yes" | translate }}</mat-option>
-              <mat-option [value]="RequestReduction.N">{{ "yesNo.no" | translate }}</mat-option>
-            </mat-select>
-          </mat-form-field>
+          }
+          @if (jjDisputedCount && isSSEditMode) {
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="requestReduction">
+                <mat-option [value]="RequestReduction.Y">{{ "yesNo.yes" | translate }}</mat-option>
+                <mat-option [value]="RequestReduction.N">{{ "yesNo.no" | translate }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          }
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Request time to pay</p>
-          <p class="section-grid-text" *ngIf="!isSSEditMode && !jjDisputedCount">&nbsp;</p>
-          <p class="section-grid-text"
-            *ngIf="!isSSEditMode && jjDisputedCount?.requestTimeToPay === RequestTimeToPay.Y">
+          @if (!isSSEditMode && !jjDisputedCount) {
+            <p class="section-grid-text">&nbsp;</p>
+          }
+          @if (!isSSEditMode && jjDisputedCount?.requestTimeToPay === RequestTimeToPay.Y) {
+            <p class="section-grid-text"
+              >
             yes</p>
-          <p class="section-grid-text"
-            *ngIf="!isSSEditMode && jjDisputedCount && jjDisputedCount?.requestTimeToPay !== RequestTimeToPay.Y">
+          }
+          @if (!isSSEditMode && jjDisputedCount && jjDisputedCount?.requestTimeToPay !== RequestTimeToPay.Y) {
+            <p class="section-grid-text"
+              >
             no</p>
-          <mat-form-field appearance="outline" *ngIf="jjDisputedCount && isSSEditMode">
-            <mat-select formControlName="requestTimeToPay">
-              <mat-option [value]="RequestTimeToPay.Y">{{ "yesNo.yes" | translate }}</mat-option>
-              <mat-option [value]="RequestTimeToPay.N">{{ "yesNo.no" | translate }}</mat-option>
-            </mat-select>
-          </mat-form-field>
+          }
+          @if (jjDisputedCount && isSSEditMode) {
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="requestTimeToPay">
+                <mat-option [value]="RequestTimeToPay.Y">{{ "yesNo.yes" | translate }}</mat-option>
+                <mat-option [value]="RequestTimeToPay.N">{{ "yesNo.no" | translate }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          }
         </span>
       </div>
     </form>
   </section>
 
   <!-- JJ Latest Change Plea -->
-  <section [formGroup]="form" [ngClass]="{'greyed-out': !jjDisputedCount}" *ngIf="(jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !(isSSEditMode && jjDisputedCount)">
-    <ng-container subHeader>
-      <span class="count-text">
-        <h3>{{ "label.jj_decision" | translate }} - Count {{ count }}</h3>
-      </span>
-    </ng-container>
-    <div class="row">
-      <div class="col-md-4">
-        <span class="section-grid-header">{{ "label.plea" | translate }}</span>
-
-      </div>
-      <div class="col-md-8" *ngIf="jjDisputedCount">
-        <mat-select class="section-grid-text" formControlName="latestPlea"
-          *ngIf="type !== tabTypes.DECISION_VALIDATION && type !== tabTypes.DCF && !isViewOnly; else view_plea_content" style="width:75%; background:#fffee6">
-          <mat-option [value]="LatestPlea.G">Guilty</mat-option>
-          <mat-option [value]="LatestPlea.N">Not guilty</mat-option>
-        </mat-select>
-        <ng-template #view_plea_content>
-          <span class="section-grid-text" *ngIf="jjDisputedCount?.latestPlea === LatestPlea.G">Guilty</span>
-          <span class="section-grid-text" *ngIf="jjDisputedCount?.latestPlea === LatestPlea.N">Not guilty</span>
-        </ng-template>
-      </div>
-    </div>
-    <div class="row mt-1">
-      <div class="col-md-4">
-        <span class="section-grid-header">Date</span>
-      </div>
-      <div class="col-md-8" *ngIf="jjDisputedCount">
-        <div *ngIf="type !== tabTypes.DECISION_VALIDATION && type !== tabTypes.DCF && !isViewOnly; else view_plea_date_content ">
-          <input type="text" formControlName="latestPleaUpdateTs" class="section-grid-text latest-plea-text"
-            bsDatepicker placeholder="DD-MMM-YYYY" [bsConfig]="{ withTimepicker: false, keepDatepickerOpened: true,
-            dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true, showWeekNumbers: false,
-            adaptivePosition: true }">
-        </div>
-        <ng-template #view_plea_date_content>
-          <span class="section-grid-text">{{ jjDisputedCount?.latestPleaUpdateTs | date: "dd-MMM-YYYY" }}</span>
-        </ng-template>
-      </div>
-    </div>
-  </section>
-
-  <section [ngClass]="{'greyed-out': !jjDisputedCount}" *ngIf="(jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && (isSSEditMode && jjDisputedCount)">
-    <form [formGroup]="countForm">
+  @if ((jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !(isSSEditMode && jjDisputedCount)) {
+    <section [formGroup]="form" [ngClass]="{'greyed-out': !jjDisputedCount}">
       <ng-container subHeader>
         <span class="count-text">
           <h3>{{ "label.jj_decision" | translate }} - Count {{ count }}</h3>
         </span>
       </ng-container>
-      <!-- Change Plea -->
       <div class="row">
-        <label class="col-4">{{ "label.change_plea" | translate }}</label>
-        <div class="col-8">
-          <mat-form-field appearance="outline">
-            <mat-select formControlName="latestPlea">
-              <mat-option [value]=""></mat-option>
-              <mat-option [value]="LatestPlea.G">{{ "pleaType.guilty" | translate }}</mat-option>
-              <mat-option [value]="LatestPlea.N">{{ "pleaType.not_guilty" | translate }}</mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="col-md-4">
+          <span class="section-grid-header">{{ "label.plea" | translate }}</span>
         </div>
-      </div>
-    </form>
-  </section>
-
-  <!-- JJ RoP for Court Appearance -->
-  <section [ngClass]="{'greyed-out': !jjDisputedCount}" *ngIf="type !== tabTypes.DECISION_VALIDATION && type !== tabTypes.DCF && (jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !isSSEditMode">
-    <ng-container subHeader>
-      <span class="count-text">
-        <h3>{{ "label.findings" | translate }}</h3>
-      </span>
-    </ng-container>
-    <div [formGroup]="form?.get('jjDisputedCountRoP')">
-      <mat-select #matSelectFindings formControlName="finding"
-        (selectionChange)="onFindingChange($event.value)" class="section-grid-text"
-        *ngIf="!isViewOnly && jjDisputedCount" style="margin-left:20px !important; width:85%; background:#fffee6">
-        <mat-option [value]="Finding.Guilty">Guilty as charged</mat-option>
-        <mat-option [value]="Finding.NotGuilty">Not guilty</mat-option>
-        <mat-option [value]="Finding.GuiltyLesser">Not Guilty as Charged, but Guilty to lesser / included offence</mat-option>
-      </mat-select>
-      <div *ngIf="isViewOnly" style="margin-left:20px;">
-        <span class="section-grid-header">Finding:<br /></span>
-      </div>
-      <div *ngIf="isViewOnly && jjDisputedCount" style="margin-left:20px;">
-        <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.Guilty"
-          class="section-grid-text">Guilty as charged</span>
-        <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty"
-          class="section-grid-text">Not guilty</span>
-        <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.Cancelled"
-          class="section-grid-text">Cancelled</span>
-        <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.PaidPriorToAppearance"
-          class="section-grid-text">Paid Prior to Appearance</span>
-        <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.GuiltyLesser"
-          class="section-grid-text">Not guilty as charged but guilty of lesser / included
-          other offence</span>
-        <span *ngIf="!form?.get('jjDisputedCountRoP').get('finding').value">&nbsp;</span>
-      </div>
-
-      <div *ngIf="!isViewOnly && jjDisputedCount && form?.get('jjDisputedCountRoP').get('finding').value === Finding.GuiltyLesser" >
-        <mat-label class="section-grid-header">MVA Section</mat-label><br />
-        <input  matInput (placeholder)="isViewOnly ? '' : 'start typing section, then select'"
-          formControlName="lesserDescription" [matAutocomplete]="auto" style="margin-left:20px !important; width:85%; background:#fffee6"
-          (keyup)="onLesserDescriptionKeyup()"
-          [matTooltip]="form.get('jjDisputedCountRoP').get('lesserDescription').value" />
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let statute of lesserDescriptionFilteredStatutes"
-            [matTooltip]="statute.__statuteString" [value]="statute.__statuteString">
-            {{ statute.__statuteString }}</mat-option>
-        </mat-autocomplete><br />
-        <mat-tooltip style="font-size:x-small">Hover over section to see full description
-        </mat-tooltip>
-      </div>
-      
-      <div *ngIf="!jjDisputedCount">
-        <span>&nbsp;</span>
-      </div>
-    </div>
-  </section>
-  <section [ngClass]="{'greyed-out': !jjDisputedCount}" *ngIf="(type === tabTypes.DECISION_VALIDATION || type === tabTypes.DCF) && (jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !isSSEditMode">
-    <ng-container subHeader>
-      <span class="count-text">
-        <h3>{{ "label.findings" | translate }}</h3>
-      </span>
-    </ng-container>
-    <div [formGroup]="form?.get('jjDisputedCountRoP')">
-      <div style="margin-left:20px;"><span class="section-grid-header">Finding:<br /></span>
-        <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.Guilty"
-          class="section-grid-text">Guilty as charged</span>
-        <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty"
-          class="section-grid-text">Not guilty</span>
-        <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.Cancelled"
-          class="section-grid-text">Cancelled</span>
-        <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.PaidPriorToAppearance"
-          class="section-grid-text">Paid Prior to Appearance</span>
-        <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.GuiltyLesser"
-          class="section-grid-text">Not guilty as charged but guilty of lesser / included
-          other offence</span>
-        <span *ngIf="!form?.get('jjDisputedCountRoP').get('finding').value">&nbsp;</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Findings -->
-  <section [ngClass]="{'greyed-out': !jjDisputedCount}" *ngIf="(jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && isSSEditMode">
-    <ng-container subHeader>
-      <span class="count-text">
-        <h3>{{ "label.findings" | translate }}</h3>
-      </span>
-    </ng-container>
-
-    <!-- Finding -->
-    <div>
-      <div class="section-grid-header">{{ "label.finding" | translate }}</div>
-      <form [formGroup]="countRoPForm">
-        <mat-form-field appearance="outline" *ngIf="jjDisputedCount">
-          <mat-select formControlName="finding">
-            <mat-option [value]="Finding.Guilty">{{ "findingType.guilty" | translate }}</mat-option>
-            <mat-option [value]="Finding.GuiltyLesser">{{ "findingType.guilty_lesser" | translate }}</mat-option>
-            <mat-option [value]="Finding.NotGuilty">{{ "findingType.not_guilty" | translate }}</mat-option>
-            <mat-option [value]="Finding.PaidPriorToAppearance">{{ "findingType.paid_prior" | translate }}</mat-option>
-            <mat-option [value]="Finding.Cancelled">{{ "findingType.cancelled" | translate }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </form>
-    </div>
-  </section>
-
-  <!-- Final disposition -->
-  <section [ngClass]="{'greyed-out': !jjDisputedCount}">
-    <ng-container subHeader>
-      <span class="count-text">
-        <h3>{{ "label.final_disposition" | translate }}</h3>
-      </span>
-    </ng-container>
-    <!-- Final disposition input for court appeaances, form for Non Staff Support Edit mode -->
-    <form [formGroup]="form" novalidate
-      *ngIf="(jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !(jjDisputedCount && isSSEditMode)">
-      <!-- Fine amount -->
-      <ng-container *ngIf="!isViewOnly">
-        <div class="row">
-          <div class="col-md-5">
-            <span class="section-grid-header">Revise fine</span>
+        @if (jjDisputedCount) {
+          <div class="col-md-8">
+            @if (type !== tabTypes.DECISION_VALIDATION && type !== tabTypes.DCF && !isViewOnly) {
+              <mat-select class="section-grid-text" formControlName="latestPlea"
+                style="width:75%; background:#fffee6">
+                <mat-option [value]="LatestPlea.G">Guilty</mat-option>
+                <mat-option [value]="LatestPlea.N">Not guilty</mat-option>
+              </mat-select>
+            } @else {
+              @if (jjDisputedCount?.latestPlea === LatestPlea.G) {
+                <span class="section-grid-text">Guilty</span>
+              }
+              @if (jjDisputedCount?.latestPlea === LatestPlea.N) {
+                <span class="section-grid-text">Not guilty</span>
+              }
+            }
           </div>
-          <div class="col-md-7">
-            <mat-radio-group [(ngModel)]="fineReduction" [ngModelOptions]="{standalone: true}"
+        }
+      </div>
+      <div class="row mt-1">
+        <div class="col-md-4">
+          <span class="section-grid-header">Date</span>
+        </div>
+        @if (jjDisputedCount) {
+          <div class="col-md-8">
+            @if (type !== tabTypes.DECISION_VALIDATION && type !== tabTypes.DCF && !isViewOnly) {
+              <div>
+                <input type="text" formControlName="latestPleaUpdateTs" class="section-grid-text latest-plea-text"
+            bsDatepicker placeholder="DD-MMM-YYYY" [bsConfig]="{ withTimepicker: false, keepDatepickerOpened: true,
+            dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true, showWeekNumbers: false,
+            adaptivePosition: true }">
+                </div>
+              } @else {
+                <span class="section-grid-text">{{ jjDisputedCount?.latestPleaUpdateTs | date: "dd-MMM-YYYY" }}</span>
+              }
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    @if ((jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && (isSSEditMode && jjDisputedCount)) {
+      <section [ngClass]="{'greyed-out': !jjDisputedCount}">
+        <form [formGroup]="countForm">
+          <ng-container subHeader>
+            <span class="count-text">
+              <h3>{{ "label.jj_decision" | translate }} - Count {{ count }}</h3>
+            </span>
+          </ng-container>
+          <!-- Change Plea -->
+          <div class="row">
+            <label class="col-4">{{ "label.change_plea" | translate }}</label>
+            <div class="col-8">
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="latestPlea">
+                  <mat-option [value]=""></mat-option>
+                  <mat-option [value]="LatestPlea.G">{{ "pleaType.guilty" | translate }}</mat-option>
+                  <mat-option [value]="LatestPlea.N">{{ "pleaType.not_guilty" | translate }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+      </section>
+    }
+
+    <!-- JJ RoP for Court Appearance -->
+    @if (type !== tabTypes.DECISION_VALIDATION && type !== tabTypes.DCF && (jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !isSSEditMode) {
+      <section [ngClass]="{'greyed-out': !jjDisputedCount}">
+        <ng-container subHeader>
+          <span class="count-text">
+            <h3>{{ "label.findings" | translate }}</h3>
+          </span>
+        </ng-container>
+        <div [formGroup]="form?.get('jjDisputedCountRoP')">
+          @if (!isViewOnly && jjDisputedCount) {
+            <mat-select #matSelectFindings formControlName="finding"
+              (selectionChange)="onFindingChange($event.value)" class="section-grid-text"
+              style="margin-left:20px !important; width:85%; background:#fffee6">
+              <mat-option [value]="Finding.Guilty">Guilty as charged</mat-option>
+              <mat-option [value]="Finding.NotGuilty">Not guilty</mat-option>
+              <mat-option [value]="Finding.GuiltyLesser">Not Guilty as Charged, but Guilty to lesser / included offence</mat-option>
+            </mat-select>
+          }
+          @if (isViewOnly) {
+            <div style="margin-left:20px;">
+              <span class="section-grid-header">Finding:<br /></span>
+            </div>
+          }
+          @if (isViewOnly && jjDisputedCount) {
+            <div style="margin-left:20px;">
+              @if (form?.get('jjDisputedCountRoP').get('finding').value === Finding.Guilty) {
+                <span
+                class="section-grid-text">Guilty as charged</span>
+              }
+              @if (form?.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty) {
+                <span
+                class="section-grid-text">Not guilty</span>
+              }
+              @if (form?.get('jjDisputedCountRoP').get('finding').value === Finding.Cancelled) {
+                <span
+                class="section-grid-text">Cancelled</span>
+              }
+              @if (form?.get('jjDisputedCountRoP').get('finding').value === Finding.PaidPriorToAppearance) {
+                <span
+                class="section-grid-text">Paid Prior to Appearance</span>
+              }
+              @if (form?.get('jjDisputedCountRoP').get('finding').value === Finding.GuiltyLesser) {
+                <span
+                  class="section-grid-text">Not guilty as charged but guilty of lesser / included
+                other offence</span>
+              }
+              @if (!form?.get('jjDisputedCountRoP').get('finding').value) {
+                <span>&nbsp;</span>
+              }
+            </div>
+          }
+          @if (!isViewOnly && jjDisputedCount && form?.get('jjDisputedCountRoP').get('finding').value === Finding.GuiltyLesser) {
+            <div >
+              <mat-label class="section-grid-header">MVA Section</mat-label><br />
+              <input  matInput (placeholder)="isViewOnly ? '' : 'start typing section, then select'"
+                formControlName="lesserDescription" [matAutocomplete]="auto" style="margin-left:20px !important; width:85%; background:#fffee6"
+                (keyup)="onLesserDescriptionKeyup()"
+                [matTooltip]="form.get('jjDisputedCountRoP').get('lesserDescription').value" />
+                <mat-autocomplete #auto="matAutocomplete">
+                  @for (statute of lesserDescriptionFilteredStatutes; track statute) {
+                    <mat-option
+                      [matTooltip]="statute.__statuteString" [value]="statute.__statuteString">
+                    {{ statute.__statuteString }}</mat-option>
+                  }
+                </mat-autocomplete><br />
+                <mat-tooltip style="font-size:x-small">Hover over section to see full description
+                </mat-tooltip>
+              </div>
+            }
+            @if (!jjDisputedCount) {
+              <div>
+                <span>&nbsp;</span>
+              </div>
+            }
+          </div>
+        </section>
+      }
+      @if ((type === tabTypes.DECISION_VALIDATION || type === tabTypes.DCF) && (jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !isSSEditMode) {
+        <section [ngClass]="{'greyed-out': !jjDisputedCount}">
+          <ng-container subHeader>
+            <span class="count-text">
+              <h3>{{ "label.findings" | translate }}</h3>
+            </span>
+          </ng-container>
+          <div [formGroup]="form?.get('jjDisputedCountRoP')">
+            <div style="margin-left:20px;"><span class="section-grid-header">Finding:<br /></span>
+            @if (form?.get('jjDisputedCountRoP').get('finding').value === Finding.Guilty) {
+              <span
+              class="section-grid-text">Guilty as charged</span>
+            }
+            @if (form?.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty) {
+              <span
+              class="section-grid-text">Not guilty</span>
+            }
+            @if (form?.get('jjDisputedCountRoP').get('finding').value === Finding.Cancelled) {
+              <span
+              class="section-grid-text">Cancelled</span>
+            }
+            @if (form?.get('jjDisputedCountRoP').get('finding').value === Finding.PaidPriorToAppearance) {
+              <span
+              class="section-grid-text">Paid Prior to Appearance</span>
+            }
+            @if (form?.get('jjDisputedCountRoP').get('finding').value === Finding.GuiltyLesser) {
+              <span
+                class="section-grid-text">Not guilty as charged but guilty of lesser / included
+              other offence</span>
+            }
+            @if (!form?.get('jjDisputedCountRoP').get('finding').value) {
+              <span>&nbsp;</span>
+            }
+          </div>
+        </div>
+      </section>
+    }
+
+    <!-- Findings -->
+    @if ((jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && isSSEditMode) {
+      <section [ngClass]="{'greyed-out': !jjDisputedCount}">
+        <ng-container subHeader>
+          <span class="count-text">
+            <h3>{{ "label.findings" | translate }}</h3>
+          </span>
+        </ng-container>
+        <!-- Finding -->
+        <div>
+          <div class="section-grid-header">{{ "label.finding" | translate }}</div>
+          <form [formGroup]="countRoPForm">
+            @if (jjDisputedCount) {
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="finding">
+                  <mat-option [value]="Finding.Guilty">{{ "findingType.guilty" | translate }}</mat-option>
+                  <mat-option [value]="Finding.GuiltyLesser">{{ "findingType.guilty_lesser" | translate }}</mat-option>
+                  <mat-option [value]="Finding.NotGuilty">{{ "findingType.not_guilty" | translate }}</mat-option>
+                  <mat-option [value]="Finding.PaidPriorToAppearance">{{ "findingType.paid_prior" | translate }}</mat-option>
+                  <mat-option [value]="Finding.Cancelled">{{ "findingType.cancelled" | translate }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            }
+          </form>
+        </div>
+      </section>
+    }
+
+    <!-- Final disposition -->
+    <section [ngClass]="{'greyed-out': !jjDisputedCount}">
+      <ng-container subHeader>
+        <span class="count-text">
+          <h3>{{ "label.final_disposition" | translate }}</h3>
+        </span>
+      </ng-container>
+      <!-- Final disposition input for court appeaances, form for Non Staff Support Edit mode -->
+      @if ((jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !(jjDisputedCount && isSSEditMode)) {
+        <form [formGroup]="form" novalidate
+          >
+          <!-- Fine amount -->
+          @if (!isViewOnly) {
+            <div class="row">
+              <div class="col-md-5">
+                <span class="section-grid-header">Revise fine</span>
+              </div>
+              <div class="col-md-7">
+                <mat-radio-group [(ngModel)]="fineReduction" [ngModelOptions]="{standalone: true}"
               (change)="updateFineAmount($event)" [disabled]="(!jjDisputedCount ||
               this.form.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty)">
-              <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
-              <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
-            </mat-radio-group>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-5">
-            <span class="section-grid-header">Fine Amount</span>
-          </div>
-          <div class="col-md-7">
-            <span class="section-grid-text"
-              [hidden]="(fineReduction==='' || !jjDisputedCount.totalFineAmount)">
-              {{ jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
-          </div>
-        </div>
-        <div class="row" *ngIf="fineReduction==='yes'">
-          <div class="col-md-5">
-            <span class="section-grid-header">Lesser/Greater Amount</span>
-          </div>
-          <div class="col-md-7">
-            <input type="number" formControlName="lesserOrGreaterAmount" max="9999" min="0"
-              (change)="onChangelesserOrGreaterAmount()" class="section-grid-text final-disposition-text"/><br>
-            <span class="section-grid-text text-body" *ngIf="!(form.get('lesserOrGreaterAmount').hasError('min') ||
-              form.get('lesserOrGreaterAmount').hasError('max'))"><i>
-              {{ lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0'}} +
-              {{ surcharge | currency:'CAD':'symbol-narrow':'1.0-0' }} (surcharge) =
-              {{ (lesserOrGreaterAmount + surcharge) | currency:'CAD':'symbol-narrow':'1.0-0' }}</i>
-            </span>
-            <span
-              *ngIf="form.get('lesserOrGreaterAmount').hasError('min') ||
-              form.get('lesserOrGreaterAmount').hasError('max')" class="section-grid-header" style="color: red;">
-              0 < Fine < 10 000
-            </span>
-          </div>
-        </div>
-        <div class="row" *ngIf="fineReduction==='yes'">
-          <div class="col-md-5">
-            <span class="section-grid-header">Includes Surcharge</span>
-          </div>
-          <div class="col-md-7">
-            <mat-radio-group [(ngModel)]="inclSurcharge" [ngModelOptions]="{standalone: true}"
+                  <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
+                  <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-5">
+                <span class="section-grid-header">Fine Amount</span>
+              </div>
+              <div class="col-md-7">
+                <span class="section-grid-text"
+                  [hidden]="(fineReduction==='' || !jjDisputedCount.totalFineAmount)">
+                {{ jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+            </div>
+            @if (fineReduction==='yes') {
+              <div class="row">
+                <div class="col-md-5">
+                  <span class="section-grid-header">Lesser/Greater Amount</span>
+                </div>
+                <div class="col-md-7">
+                  <input type="number" formControlName="lesserOrGreaterAmount" max="9999" min="0"
+                    (change)="onChangelesserOrGreaterAmount()" class="section-grid-text final-disposition-text"/><br>
+                    @if (!(form.get('lesserOrGreaterAmount').hasError('min') ||
+                      form.get('lesserOrGreaterAmount').hasError('max'))) {
+                      <span class="section-grid-text text-body"><i>
+                        {{ lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0'}} +
+                        {{ surcharge | currency:'CAD':'symbol-narrow':'1.0-0' }} (surcharge) =
+                      {{ (lesserOrGreaterAmount + surcharge) | currency:'CAD':'symbol-narrow':'1.0-0' }}</i>
+                    </span>
+                  }
+                  @if (form.get('lesserOrGreaterAmount').hasError('min') ||
+                    form.get('lesserOrGreaterAmount').hasError('max')) {
+                    <span
+                      class="section-grid-header" style="color: red;">
+                      0 < Fine < 10 000
+                    </span>
+                  }
+                </div>
+              </div>
+            }
+            @if (fineReduction==='yes') {
+              <div class="row">
+                <div class="col-md-5">
+                  <span class="section-grid-header">Includes Surcharge</span>
+                </div>
+                <div class="col-md-7">
+                  <mat-radio-group [(ngModel)]="inclSurcharge" [ngModelOptions]="{standalone: true}"
               (change)="updateInclSurcharge($event.value)" [disabled]="(!jjDisputedCount ||
                 this.form.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty)">
-              <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
-              <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
-            </mat-radio-group>
-          </div>
-        </div>
-        <!-- Time to pay -->
-        <div class="row">
-          <div class="col-md-5">
-            <span class="section-grid-header">Time to pay</span>
-          </div>
-          <div class="col-md-7">
-            <mat-radio-group [(ngModel)]="timeToPay" [ngModelOptions]="{standalone: true}" layout="row"
+                    <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
+                    <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+              </div>
+            }
+            <!-- Time to pay -->
+            <div class="row">
+              <div class="col-md-5">
+                <span class="section-grid-header">Time to pay</span>
+              </div>
+              <div class="col-md-7">
+                <mat-radio-group [(ngModel)]="timeToPay" [ngModelOptions]="{standalone: true}" layout="row"
               (change)="updateRevisedDueDate($event)" [disabled]="(!jjDisputedCount ||
               this.form.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty)">
-              <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
-              <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
-            </mat-radio-group>
-          </div>
-        </div>
-        <div class="row" *ngIf="timeToPay==='yes'">
-          <div class="col-md-5">
-            <span class="section-grid-header">&nbsp;</span>
-          </div>
-          <div class="col-md-7">
-            <input formControlName="revisedDueDate" type="text" placeholder="DD-MMM-YYYY"
-              bsDatepicker class="section-grid-text final-disposition-text"
+                  <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
+                  <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+            @if (timeToPay==='yes') {
+              <div class="row">
+                <div class="col-md-5">
+                  <span class="section-grid-header">&nbsp;</span>
+                </div>
+                <div class="col-md-7">
+                  <input formControlName="revisedDueDate" type="text" placeholder="DD-MMM-YYYY"
+                    bsDatepicker class="section-grid-text final-disposition-text"
               [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true,
               showWeekNumbers: false, adaptivePosition: true }">
-          </div>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="isViewOnly">
-        <div class="row">
-          <div class="col-md-5">
-            <span class="section-grid-header">Fine Amount</span>
-          </div>
-          <div class="col-md-7">
-            <span class="section-grid-text">{{ jjDisputedCount?.totalFineAmount ? (jjDisputedCount?.ticketedFineAmount |
-              currency:'CAD':'symbol-narrow':'1.0-0') : '' }}</span>
-          </div>
-        </div>
-        <ng-container *ngIf="jjDisputedCount?.lesserOrGreaterAmount &&
-          lesserOrGreaterAmount !== jjDisputedCount?.ticketedFineAmount">
-          <div class="row">
-            <div class="col-md-5">
-              <span class="section-grid-header">Lesser/Greater Amount</span>
-            </div>
-            <div class="col-md-7">
-              <span class="section-grid-text">{{ jjDisputedCount?.lesserOrGreaterAmount |
-                currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
-            </div>
-          </div>
-        </ng-container>
-        <ng-container *ngIf="jjDisputedCount?.totalFineAmount">
-          <div class="row">
-            <div class="col-md-5">
-              &nbsp;
-            </div>
-            <div class="col-md-7">
-              <span class="section-grid-text text-body"><i>
-                {{ lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0'}} +
-                {{ surcharge | currency:'CAD':'symbol-narrow':'1.0-0' }} (surcharge) =
-                {{ (lesserOrGreaterAmount + surcharge) | currency:'CAD':'symbol-narrow':'1.0-0' }}</i>
-              </span>
-            </div>
-          </div>
-        </ng-container>
-        <ng-container *ngIf="jjDisputedCount?.lesserOrGreaterAmount &&
-          lesserOrGreaterAmount !== jjDisputedCount?.ticketedFineAmount">
-          <div class="row">
-            <div class="col-md-5">
-              <span class="section-grid-header">Includes Surcharge</span>
-            </div>
-            <div class="col-md-7">
-              <span class="section-grid-text">{{ jjDisputedCount?.includesSurcharge === IncludesSurcharge.Y ?
-                "Yes" : "No" }}</span>
-            </div>
-          </div>
-        </ng-container>
-        <div class="row">
-          <div class="col-md-5">
-            <span class="section-grid-header">Time to pay</span>
-          </div>
-          <div class="col-md-7" *ngIf="timeToPay">
-            <span class="section-grid-text">{{ timeToPay === 'no' ? 'No' : 'Yes' }}</span><br>
-            <span class="section-grid-header text-body"
-              *ngIf="(jjDisputedCount?.revisedDueDate && timeToPay === 'yes')">{{
-              jjDisputedCount?.revisedDueDate |
-              date: "dd-MMM-yyyy" : "UTC" }}</span>
-          </div>
-        </div>
-      </ng-container>
-      <div style="display: grid; grid-template-columns: 33% 33% 33%">
-        <ng-container [formGroup]="form?.get('jjDisputedCountRoP')">
-          <!-- Suspended Sentence -->
-          <span class="section-grid-cell" style="grid-column: span 3">
-            <mat-checkbox *ngIf="isViewOnly === false" [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"
-              formControlName="ssProbationCheckbox" (change)="onSuspSentenceCheck($event.checked)">
-              <span class="count-text" style="font-size: small"><b>Suspended Sentence</b></span>
-            </mat-checkbox>
-            <ng-container *ngIf="form?.controls.jjDisputedCountRoP?.controls.ssProbationCheckbox.value">
-              <br />
-              <div style="padding-left: 0.75rem;">
-                <mat-label class="section-grid-header">Probation</mat-label><br />
-                <input matInput (placeholder)="isViewOnly ? '' : 'duration'"
-                  formControlName="ssProbationDuration" /><br />
-                <mat-label class="section-grid-header">Conditions</mat-label><br />
-                <textarea matInput formControlName="ssProbationConditions" maxlength="500" rows="5"></textarea>
+                  </div>
+                </div>
+              }
+            }
+            @if (isViewOnly) {
+              <div class="row">
+                <div class="col-md-5">
+                  <span class="section-grid-header">Fine Amount</span>
+                </div>
+                <div class="col-md-7">
+                  <span class="section-grid-text">{{ jjDisputedCount?.totalFineAmount ? (jjDisputedCount?.ticketedFineAmount |
+                  currency:'CAD':'symbol-narrow':'1.0-0') : '' }}</span>
+                </div>
               </div>
-            </ng-container>
-          </span>
-          <!-- Jail -->
-          <span class="section-grid-cell" style="grid-column: span 3">
-            <mat-checkbox *ngIf="isViewOnly === false" [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons" formControlName="jailCheckbox"
-              (change)="onJailCheck($event.checked)">
-              <span class="count-text" style="font-size: small"><b>Jail</b></span>
-            </mat-checkbox>
-            <ng-container *ngIf="form?.controls.jjDisputedCountRoP?.controls.jailCheckbox.value">
-              <br />
-              <div style="padding-left: 0.75rem;">
-                <mat-label class="section-grid-header">Duration</mat-label><br />
-                <input matInput formControlName="jailDuration" /><br />
-                <mat-checkbox
-                  [checked]="form.get('jjDisputedCountRoP').get('jailIntermittent').value === JailIntermittent.Y"
-                  color="primary" (change)="onJailIntermittentChange($event.checked)"
-                  [disabled]="isViewOnly || form.get('jjDisputedCountRoP').get('jailCheckbox').value !== true || !jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"><span
-                    class="section-grid-header">Intermittent</span></mat-checkbox>
+              @if (jjDisputedCount?.lesserOrGreaterAmount &&
+                lesserOrGreaterAmount !== jjDisputedCount?.ticketedFineAmount) {
+                <div class="row">
+                  <div class="col-md-5">
+                    <span class="section-grid-header">Lesser/Greater Amount</span>
+                  </div>
+                  <div class="col-md-7">
+                    <span class="section-grid-text">{{ jjDisputedCount?.lesserOrGreaterAmount |
+                    currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
+                  </div>
+                </div>
+              }
+              @if (jjDisputedCount?.totalFineAmount) {
+                <div class="row">
+                  <div class="col-md-5">
+                    &nbsp;
+                  </div>
+                  <div class="col-md-7">
+                    <span class="section-grid-text text-body"><i>
+                      {{ lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0'}} +
+                      {{ surcharge | currency:'CAD':'symbol-narrow':'1.0-0' }} (surcharge) =
+                    {{ (lesserOrGreaterAmount + surcharge) | currency:'CAD':'symbol-narrow':'1.0-0' }}</i>
+                  </span>
+                </div>
               </div>
-            </ng-container>
-          </span>
-          <!-- Probation -->
-          <span class="section-grid-cell" style="grid-column: span 3">
-            <mat-checkbox *ngIf="isViewOnly === false" [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons" formControlName="probationCheckbox"
-              (change)="onProbationCheck($event.checked)">
-              <span class="count-text" style="font-size: small"><b>Probation</b></span>
-            </mat-checkbox>
-            <ng-container *ngIf="form?.controls.jjDisputedCountRoP?.controls.probationCheckbox.value">
-              <br />
-              <div style="padding-left: 0.75rem;">
-                <mat-label class="section-grid-header">Duration</mat-label><br />
-                <input matInput (placeholder)="isViewOnly ? '' : 'duration'"
-                  formControlName="probationDuration" /><br />
-                <mat-label class="section-grid-header">Conditions</mat-label><br />
-                <textarea matInput formControlName="probationConditions" maxlength="500" rows="5"></textarea>
+            }
+            @if (jjDisputedCount?.lesserOrGreaterAmount &&
+              lesserOrGreaterAmount !== jjDisputedCount?.ticketedFineAmount) {
+              <div class="row">
+                <div class="col-md-5">
+                  <span class="section-grid-header">Includes Surcharge</span>
+                </div>
+                <div class="col-md-7">
+                  <span class="section-grid-text">{{ jjDisputedCount?.includesSurcharge === IncludesSurcharge.Y ?
+                  "Yes" : "No" }}</span>
+                </div>
               </div>
-            </ng-container>
-          </span>
-          <!-- Driving Prohibition -->
-          <span class="section-grid-cell" style="grid-column: span 3">
-            <mat-checkbox *ngIf="isViewOnly === false" [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"
-              formControlName="drivingProhibitionCheckbox" (change)="onDrivingProhibitionCheck($event.checked)">
-              <span class="count-text" style="font-size: small"><b>Driving Prohibition</b></span>
-            </mat-checkbox>
-            <br />
-            <div *ngIf="form?.controls.jjDisputedCountRoP?.controls.drivingProhibitionCheckbox.value" style="padding-left: 0.75rem;">
-              <mat-label class="section-grid-header">Duration</mat-label><br />
-              <input matInput (placeholder)="isViewOnly ? '' : 'duration'" formControlName="drivingProhibition" /><br />
-              <mat-label class="section-grid-header">MVA Section</mat-label><br />
-              <input matInput (placeholder)="isViewOnly ? '' : 'start typing section, then select'"
-                formControlName="drivingProhibitionMVASection" [matAutocomplete]="auto"
-                (keyup)="onDrivingProhibitionMVASectionKeyup()"
-                [matTooltip]="form.get('jjDisputedCountRoP').get('drivingProhibitionMVASection').value" />
-              <mat-autocomplete #auto="matAutocomplete">
-                <mat-option *ngFor="let statute of drivingProhibitionFilteredStatutes"
-                  [matTooltip]="statute.__statuteString" [value]="statute.__statuteString">
-                  {{ statute.__statuteString }}</mat-option>
-              </mat-autocomplete><br />
-              <mat-tooltip style="font-size:x-small">Hover over section to see full description
-              </mat-tooltip>
+            }
+            <div class="row">
+              <div class="col-md-5">
+                <span class="section-grid-header">Time to pay</span>
+              </div>
+              @if (timeToPay) {
+                <div class="col-md-7">
+                  <span class="section-grid-text">{{ timeToPay === 'no' ? 'No' : 'Yes' }}</span><br>
+                  @if ((jjDisputedCount?.revisedDueDate && timeToPay === 'yes')) {
+                    <span class="section-grid-header text-body"
+                      >{{
+                      jjDisputedCount?.revisedDueDate |
+                    date: "dd-MMM-yyyy" : "UTC" }}</span>
+                  }
+                </div>
+              }
             </div>
-          </span>
-          <span class="section-grid-cell checkboxes" style="grid-column: span 3;">
-            <mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('dismissed').value === Dismissed.Y"
-              color="primary" (change)="onDismissedChange($event.checked)"
-              [disabled]="isViewOnly || !jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"><span class="section-grid-header">Dismissed</span>
-            </mat-checkbox>
-            <mat-checkbox
-              [checked]="form.get('jjDisputedCountRoP').get('forWantOfProsecution').value === ForWantOfProsecution.Y"
-              color="primary" (change)="onForWantOfProsecutionChange($event.checked)"
-              [disabled]="isViewOnly || !jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"><span class="section-grid-header">For Want of
-                Prosecution</span></mat-checkbox><br />
-            <mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('withdrawn').value === Withdrawn.Y"
-              color="primary" (change)="onWithdrawnChange($event.checked)"
-              [disabled]="isViewOnly || !jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"><span class="section-grid-header">Withdrawn</span>
-            </mat-checkbox>
-            <mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('abatement').value === Abatement.Y"
-              color="primary" (change)="onAbatementChange($event.checked)"
-              [disabled]="isViewOnly || !jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"><span class="section-grid-header">Abatement</span>
-            </mat-checkbox><br /><br />
-            <mat-checkbox *ngIf="isViewOnly === false" [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"
-              formControlName="stayOfProceedingsByCheckbox" (change)="onStayOfProceedingsByCheck($event.checked)">
-              <span class="count-text" style="font-size: small;display: block;"><b>Stay of Proceedings By</b></span>
-            </mat-checkbox><br />
-            <ng-container *ngIf="form?.controls.jjDisputedCountRoP?.controls.stayOfProceedingsByCheckbox.value">
-              <input matInput (placeholder)="isViewOnly ? '' : 'JJ'" formControlName="stayOfProceedingsBy" /><br />
-            </ng-container>
-            <mat-checkbox *ngIf="isViewOnly === false" [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"
-              formControlName="otherCheckbox" (change)="onOtherCheck($event.checked)">
-              <span class="count-text" style="font-size: small"><b>Other</b></span>
-            </mat-checkbox>
-            <ng-container *ngIf="form?.controls.jjDisputedCountRoP?.controls.otherCheckbox.value">
-              <br />
-              <input matInput formControlName="other" /><br />
-            </ng-container>
-          </span>
-        </ng-container>
-        <!-- Remarks -->
-        <span class="section-grid-cell" style="grid-column: span 3">
-          <mat-label class="section-grid-header">Remarks</mat-label><br />
-          <mat-label class="small-note">
-            <i><span style="color:red;">*</span> These comments will be shared to all parties</i>
-          </mat-label>
-          <textarea matInput formControlName="comments" maxlength="4000" rows="5" style="width: 100%;">
-          </textarea>
-        </span>
-      </div>
-    </form>
+          }
+          <div style="display: grid; grid-template-columns: 33% 33% 33%">
+            <ng-container [formGroup]="form?.get('jjDisputedCountRoP')">
+              <!-- Suspended Sentence -->
+              <span class="section-grid-cell" style="grid-column: span 3">
+                @if (isViewOnly === false) {
+                  <mat-checkbox [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"
+                    formControlName="ssProbationCheckbox" (change)="onSuspSentenceCheck($event.checked)">
+                    <span class="count-text" style="font-size: small"><b>Suspended Sentence</b></span>
+                  </mat-checkbox>
+                }
+                @if (form?.controls.jjDisputedCountRoP?.controls.ssProbationCheckbox.value) {
+                  <br />
+                  <div style="padding-left: 0.75rem;">
+                    <mat-label class="section-grid-header">Probation</mat-label><br />
+                    <input matInput (placeholder)="isViewOnly ? '' : 'duration'"
+                      formControlName="ssProbationDuration" /><br />
+                      <mat-label class="section-grid-header">Conditions</mat-label><br />
+                      <textarea matInput formControlName="ssProbationConditions" maxlength="500" rows="5"></textarea>
+                    </div>
+                  }
+                </span>
+                <!-- Jail -->
+                <span class="section-grid-cell" style="grid-column: span 3">
+                  @if (isViewOnly === false) {
+                    <mat-checkbox [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons" formControlName="jailCheckbox"
+                      (change)="onJailCheck($event.checked)">
+                      <span class="count-text" style="font-size: small"><b>Jail</b></span>
+                    </mat-checkbox>
+                  }
+                  @if (form?.controls.jjDisputedCountRoP?.controls.jailCheckbox.value) {
+                    <br />
+                    <div style="padding-left: 0.75rem;">
+                      <mat-label class="section-grid-header">Duration</mat-label><br />
+                      <input matInput formControlName="jailDuration" /><br />
+                      <mat-checkbox
+                        [checked]="form.get('jjDisputedCountRoP').get('jailIntermittent').value === JailIntermittent.Y"
+                        color="primary" (change)="onJailIntermittentChange($event.checked)"
+                        [disabled]="isViewOnly || form.get('jjDisputedCountRoP').get('jailCheckbox').value !== true || !jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"><span
+                      class="section-grid-header">Intermittent</span></mat-checkbox>
+                    </div>
+                  }
+                </span>
+                <!-- Probation -->
+                <span class="section-grid-cell" style="grid-column: span 3">
+                  @if (isViewOnly === false) {
+                    <mat-checkbox [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons" formControlName="probationCheckbox"
+                      (change)="onProbationCheck($event.checked)">
+                      <span class="count-text" style="font-size: small"><b>Probation</b></span>
+                    </mat-checkbox>
+                  }
+                  @if (form?.controls.jjDisputedCountRoP?.controls.probationCheckbox.value) {
+                    <br />
+                    <div style="padding-left: 0.75rem;">
+                      <mat-label class="section-grid-header">Duration</mat-label><br />
+                      <input matInput (placeholder)="isViewOnly ? '' : 'duration'"
+                        formControlName="probationDuration" /><br />
+                        <mat-label class="section-grid-header">Conditions</mat-label><br />
+                        <textarea matInput formControlName="probationConditions" maxlength="500" rows="5"></textarea>
+                      </div>
+                    }
+                  </span>
+                  <!-- Driving Prohibition -->
+                  <span class="section-grid-cell" style="grid-column: span 3">
+                    @if (isViewOnly === false) {
+                      <mat-checkbox [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"
+                        formControlName="drivingProhibitionCheckbox" (change)="onDrivingProhibitionCheck($event.checked)">
+                        <span class="count-text" style="font-size: small"><b>Driving Prohibition</b></span>
+                      </mat-checkbox>
+                    }
+                    <br />
+                    @if (form?.controls.jjDisputedCountRoP?.controls.drivingProhibitionCheckbox.value) {
+                      <div style="padding-left: 0.75rem;">
+                        <mat-label class="section-grid-header">Duration</mat-label><br />
+                        <input matInput (placeholder)="isViewOnly ? '' : 'duration'" formControlName="drivingProhibition" /><br />
+                        <mat-label class="section-grid-header">MVA Section</mat-label><br />
+                        <input matInput (placeholder)="isViewOnly ? '' : 'start typing section, then select'"
+                          formControlName="drivingProhibitionMVASection" [matAutocomplete]="auto"
+                          (keyup)="onDrivingProhibitionMVASectionKeyup()"
+                          [matTooltip]="form.get('jjDisputedCountRoP').get('drivingProhibitionMVASection').value" />
+                          <mat-autocomplete #auto="matAutocomplete">
+                            @for (statute of drivingProhibitionFilteredStatutes; track statute) {
+                              <mat-option
+                                [matTooltip]="statute.__statuteString" [value]="statute.__statuteString">
+                              {{ statute.__statuteString }}</mat-option>
+                            }
+                          </mat-autocomplete><br />
+                          <mat-tooltip style="font-size:x-small">Hover over section to see full description
+                          </mat-tooltip>
+                        </div>
+                      }
+                    </span>
+                    <span class="section-grid-cell checkboxes" style="grid-column: span 3;">
+                      <mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('dismissed').value === Dismissed.Y"
+                        color="primary" (change)="onDismissedChange($event.checked)"
+                        [disabled]="isViewOnly || !jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"><span class="section-grid-header">Dismissed</span>
+                      </mat-checkbox>
+                      <mat-checkbox
+                        [checked]="form.get('jjDisputedCountRoP').get('forWantOfProsecution').value === ForWantOfProsecution.Y"
+                        color="primary" (change)="onForWantOfProsecutionChange($event.checked)"
+                        [disabled]="isViewOnly || !jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"><span class="section-grid-header">For Want of
+                      Prosecution</span></mat-checkbox><br />
+                      <mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('withdrawn').value === Withdrawn.Y"
+                        color="primary" (change)="onWithdrawnChange($event.checked)"
+                        [disabled]="isViewOnly || !jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"><span class="section-grid-header">Withdrawn</span>
+                      </mat-checkbox>
+                      <mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('abatement').value === Abatement.Y"
+                        color="primary" (change)="onAbatementChange($event.checked)"
+                        [disabled]="isViewOnly || !jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"><span class="section-grid-header">Abatement</span>
+                      </mat-checkbox><br /><br />
+                      @if (isViewOnly === false) {
+                        <mat-checkbox [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"
+                          formControlName="stayOfProceedingsByCheckbox" (change)="onStayOfProceedingsByCheck($event.checked)">
+                          <span class="count-text" style="font-size: small;display: block;"><b>Stay of Proceedings By</b></span>
+                        </mat-checkbox>
+                        }<br />
+                        @if (form?.controls.jjDisputedCountRoP?.controls.stayOfProceedingsByCheckbox.value) {
+                          <input matInput (placeholder)="isViewOnly ? '' : 'JJ'" formControlName="stayOfProceedingsBy" /><br />
+                        }
+                        @if (isViewOnly === false) {
+                          <mat-checkbox [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"
+                            formControlName="otherCheckbox" (change)="onOtherCheck($event.checked)">
+                            <span class="count-text" style="font-size: small"><b>Other</b></span>
+                          </mat-checkbox>
+                        }
+                        @if (form?.controls.jjDisputedCountRoP?.controls.otherCheckbox.value) {
+                          <br />
+                          <input matInput formControlName="other" /><br />
+                        }
+                      </span>
+                    </ng-container>
+                    <!-- Remarks -->
+                    <span class="section-grid-cell" style="grid-column: span 3">
+                      <mat-label class="section-grid-header">Remarks</mat-label><br />
+                      <mat-label class="small-note">
+                        <i><span style="color:red;">*</span> These comments will be shared to all parties</i>
+                      </mat-label>
+                      <textarea matInput formControlName="comments" maxlength="4000" rows="5" style="width: 100%;">
+                      </textarea>
+                    </span>
+                  </div>
+                </form>
+              }
 
-    <!-- Form for Staff Support Edit mode -->
-    <div *ngIf="(jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && jjDisputedCount && isSSEditMode">
-      <form [formGroup]="countForm">
-        <!-- Fine calculation -->
-        <div class="row">
-          <label class="col-4">{{ "label.fine_calculation" | translate }}</label>
-          <div class="col-8">
-            <mat-form-field appearance="outline">
-              <input matInput formControlName="lesserOrGreaterAmount" currencyMask placeholder="Ex. $120.00">
-            </mat-form-field>
-          </div>
-        </div>
-
-        <!-- Includes surcharge -->
-        <div class="row">
-          <label class="col-4">{{ "label.includes_surcharge" | translate }}</label>
-          <div class="col-8">
-            <mat-form-field appearance="outline">
-              <mat-select formControlName="includesSurcharge">
-                <mat-option [value]="IncludesSurcharge.Y">{{ "yesNo.yes" | translate }}</mat-option>
-                <mat-option [value]="IncludesSurcharge.N">{{ "yesNo.no" | translate }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </div>
-
-        <!-- Time to pay -->
-        <div class="row">
-          <label class="col-4">{{ "label.time_to_pay" | translate }}</label>
-          <div class="col-8">
-            <input formControlName="revisedDueDate" type="text"
-              bsDatepicker class="revised-due-date" placeholder="DD-MMM-YYYY"
+              <!-- Form for Staff Support Edit mode -->
+              @if ((jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && jjDisputedCount && isSSEditMode) {
+                <div>
+                  <form [formGroup]="countForm">
+                    <!-- Fine calculation -->
+                    <div class="row">
+                      <label class="col-4">{{ "label.fine_calculation" | translate }}</label>
+                      <div class="col-8">
+                        <mat-form-field appearance="outline">
+                          <input matInput formControlName="lesserOrGreaterAmount" currencyMask placeholder="Ex. $120.00">
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <!-- Includes surcharge -->
+                    <div class="row">
+                      <label class="col-4">{{ "label.includes_surcharge" | translate }}</label>
+                      <div class="col-8">
+                        <mat-form-field appearance="outline">
+                          <mat-select formControlName="includesSurcharge">
+                            <mat-option [value]="IncludesSurcharge.Y">{{ "yesNo.yes" | translate }}</mat-option>
+                            <mat-option [value]="IncludesSurcharge.N">{{ "yesNo.no" | translate }}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <!-- Time to pay -->
+                    <div class="row">
+                      <label class="col-4">{{ "label.time_to_pay" | translate }}</label>
+                      <div class="col-8">
+                        <input formControlName="revisedDueDate" type="text"
+                          bsDatepicker class="revised-due-date" placeholder="DD-MMM-YYYY"
               [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true,
               showWeekNumbers: false, adaptivePosition: true }">
-          </div>
-        </div>
-      </form>
+                        </div>
+                      </div>
+                    </form>
+                    <form [formGroup]="countRoPForm">
+                      <!-- Suspended Sentence Probation Duration -->
+                      <label>{{ "label.ss_probation_duration" | translate }}</label>
+                      <div class="row textarea-row">
+                        <div class="col">
+                          <mat-form-field appearance="outline">
+                            <textarea matInput formControlName="ssProbationDuration" maxlength="500" rows="3"></textarea>
+                            <mat-hint>500 characters</mat-hint>
+                            @if (countRoPForm.controls.ssProbationDuration.hasError('maxlength')) {
+                              <mat-error>{{ "error.max_length" |
+                              translate }}500</mat-error>
+                            }
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <!-- Suspended Sentence Probation Conditions -->
+                      <label>{{ "label.ss_probation_conditions" | translate }}</label>
+                      <div class="row textarea-row">
+                        <div class="col">
+                          <mat-form-field appearance="outline">
+                            <textarea matInput formControlName="ssProbationConditions" maxlength="500" rows="3"></textarea>
+                            <mat-hint>500 characters</mat-hint>
+                            @if (countRoPForm.controls.ssProbationConditions.hasError('maxlength')) {
+                              <mat-error>{{ "error.max_length"
+                              | translate }}500</mat-error>
+                            }
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <!-- Jail Duration -->
+                      <label>{{ "label.jail_duration" | translate }}</label>
+                      <div class="row textarea-row">
+                        <div class="col">
+                          <mat-form-field appearance="outline">
+                            <textarea matInput formControlName="jailDuration" maxlength="500" rows="3"></textarea>
+                            <mat-hint>500 characters</mat-hint>
+                            @if (countRoPForm.controls.jailDuration.hasError('maxlength')) {
+                              <mat-error>{{ "error.max_length" |
+                              translate }}500</mat-error>
+                            }
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <!-- Jail Intermittent -->
+                      <div class="row">
+                        <label class="col-4">{{ "label.jail_intermittent" | translate }}</label>
+                        <div class="col-8">
+                          <mat-checkbox formControlName="_jailIntermittent"></mat-checkbox>
+                        </div>
+                      </div>
+                      <!-- Probation Duration -->
+                      <label>{{ "label.probation_duration" | translate }}</label>
+                      <div class="row textarea-row">
+                        <div class="col">
+                          <mat-form-field appearance="outline">
+                            <textarea matInput formControlName="probationDuration" maxlength="500" rows="3"></textarea>
+                            <mat-hint>500 characters</mat-hint>
+                            @if (countRoPForm.controls.probationDuration.hasError('maxlength')) {
+                              <mat-error>{{ "error.max_length" |
+                              translate }}500</mat-error>
+                            }
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <!-- Probation Conditions -->
+                      <label>{{ "label.probation_conditions" | translate }}</label>
+                      <div class="row textarea-row">
+                        <div class="col">
+                          <mat-form-field appearance="outline">
+                            <textarea matInput formControlName="probationConditions" maxlength="1000" rows="5"></textarea>
+                            <mat-hint>1000 characters</mat-hint>
+                            @if (countRoPForm.controls.probationConditions.hasError('maxlength')) {
+                              <mat-error>{{ "error.max_length" |
+                              translate }}1000</mat-error>
+                            }
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <!-- Driving Prohibition -->
+                      <label>{{ "label.driving_prohibition" | translate }}</label>
+                      <div class="row textarea-row">
+                        <div class="col">
+                          <mat-form-field appearance="outline">
+                            <textarea matInput formControlName="drivingProhibition" maxlength="500" rows="3"></textarea>
+                            <mat-hint>500 characters</mat-hint>
+                            @if (countRoPForm.controls.drivingProhibition.hasError('maxlength')) {
+                              <mat-error>{{ "error.max_length" |
+                              translate }}500</mat-error>
+                            }
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <!-- Driving Prohibition MVA Section -->
+                      <label>{{ "label.driving_prohibition_mva" | translate }}</label>
+                      <div class="row textarea-row">
+                        <div class="col">
+                          <mat-form-field appearance="outline">
+                            <textarea matInput formControlName="drivingProhibitionMVASection" maxlength="240" rows="3"></textarea>
+                            <mat-hint>240 characters</mat-hint>
+                            @if (countRoPForm.controls.drivingProhibitionMVASection.hasError('maxlength')) {
+                              <mat-error>{{
+                              "error.max_length" | translate }}240</mat-error>
+                            }
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <!-- Dismissed -->
+                      <div class="row">
+                        <label class="col-4">{{ "label.dismissed" | translate }}</label>
+                        <div class="col-8">
+                          <mat-checkbox formControlName="_dismissed"></mat-checkbox>
+                        </div>
+                      </div>
+                      <!-- For Want of Prosection -->
+                      <div class="row">
+                        <label class="col-4">{{ "label.for_want_of_prosection" | translate }}</label>
+                        <div class="col-8">
+                          <mat-checkbox formControlName="_forWantOfProsecution"></mat-checkbox>
+                        </div>
+                      </div>
+                      <!-- Withdrawn -->
+                      <div class="row">
+                        <label class="col-4">{{ "label.withdrawn" | translate }}</label>
+                        <div class="col-8">
+                          <mat-checkbox formControlName="_withdrawn"></mat-checkbox>
+                        </div>
+                      </div>
+                      <!-- Abatement -->
+                      <div class="row">
+                        <label class="col-4">{{ "label.abatement" | translate }}</label>
+                        <div class="col-8">
+                          <mat-checkbox formControlName="_abatement"></mat-checkbox>
+                        </div>
+                      </div>
+                      <!-- Stay of Proceedings -->
+                      <label>{{ "label.stay_of_proceedings" | translate }}</label>
+                      <div class="row textarea-row">
+                        <div class="col">
+                          <mat-form-field appearance="outline">
+                            <textarea matInput formControlName="stayOfProceedingsBy" maxlength="500" rows="3"></textarea>
+                            <mat-hint>500 characters</mat-hint>
+                            @if (countRoPForm.controls.stayOfProceedingsBy.hasError('maxlength')) {
+                              <mat-error>{{ "error.max_length" |
+                              translate }}500</mat-error>
+                            }
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <!-- Other -->
+                      <label>{{ "label.other" | translate }}</label>
+                      <div class="row textarea-row">
+                        <div class="col">
+                          <mat-form-field appearance="outline">
+                            <textarea matInput formControlName="other" maxlength="500" rows="3"></textarea>
+                            <mat-hint>500 characters</mat-hint>
+                            @if (countRoPForm.controls.other.hasError('maxlength')) {
+                              <mat-error>{{ "error.max_length" | translate
+                              }}500</mat-error>
+                            }
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </form>
+                    <form [formGroup]="countForm">
+                      <!-- Remarks -->
+                      <label>{{ "label.remarks" | translate }}</label>
+                      <div class="row textarea-row">
+                        <div class="col">
+                          <mat-form-field appearance="outline">
+                            <textarea matInput formControlName="comments" maxlength="4000" rows="8"></textarea>
+                            <mat-hint>4000 characters</mat-hint>
+                            @if (countForm.controls.comments.hasError('maxlength')) {
+                              <mat-error>{{ "error.max_length" | translate
+                              }}4000</mat-error>
+                            }
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                }
 
-      <form [formGroup]="countRoPForm">
-        <!-- Suspended Sentence Probation Duration -->
-        <label>{{ "label.ss_probation_duration" | translate }}</label>
-        <div class="row textarea-row">
-          <div class="col">
-            <mat-form-field appearance="outline">
-              <textarea matInput formControlName="ssProbationDuration" maxlength="500" rows="3"></textarea>
-              <mat-hint>500 characters</mat-hint>
-              <mat-error *ngIf="countRoPForm.controls.ssProbationDuration.hasError('maxlength')">{{ "error.max_length" |
-                translate }}500</mat-error>
-            </mat-form-field>
-          </div>
-        </div>
-
-        <!-- Suspended Sentence Probation Conditions -->
-        <label>{{ "label.ss_probation_conditions" | translate }}</label>
-        <div class="row textarea-row">
-          <div class="col">
-            <mat-form-field appearance="outline">
-              <textarea matInput formControlName="ssProbationConditions" maxlength="500" rows="3"></textarea>
-              <mat-hint>500 characters</mat-hint>
-              <mat-error *ngIf="countRoPForm.controls.ssProbationConditions.hasError('maxlength')">{{ "error.max_length"
-                | translate }}500</mat-error>
-            </mat-form-field>
-          </div>
-        </div>
-
-        <!-- Jail Duration -->
-        <label>{{ "label.jail_duration" | translate }}</label>
-        <div class="row textarea-row">
-          <div class="col">
-            <mat-form-field appearance="outline">
-              <textarea matInput formControlName="jailDuration" maxlength="500" rows="3"></textarea>
-              <mat-hint>500 characters</mat-hint>
-              <mat-error *ngIf="countRoPForm.controls.jailDuration.hasError('maxlength')">{{ "error.max_length" |
-                translate }}500</mat-error>
-            </mat-form-field>
-          </div>
-        </div>
-
-        <!-- Jail Intermittent -->
-        <div class="row">
-          <label class="col-4">{{ "label.jail_intermittent" | translate }}</label>
-          <div class="col-8">
-            <mat-checkbox formControlName="_jailIntermittent"></mat-checkbox>
-          </div>
-        </div>
-
-        <!-- Probation Duration -->
-        <label>{{ "label.probation_duration" | translate }}</label>
-        <div class="row textarea-row">
-          <div class="col">
-            <mat-form-field appearance="outline">
-              <textarea matInput formControlName="probationDuration" maxlength="500" rows="3"></textarea>
-              <mat-hint>500 characters</mat-hint>
-              <mat-error *ngIf="countRoPForm.controls.probationDuration.hasError('maxlength')">{{ "error.max_length" |
-                translate }}500</mat-error>
-            </mat-form-field>
-          </div>
-        </div>
-
-        <!-- Probation Conditions -->
-        <label>{{ "label.probation_conditions" | translate }}</label>
-        <div class="row textarea-row">
-          <div class="col">
-            <mat-form-field appearance="outline">
-              <textarea matInput formControlName="probationConditions" maxlength="1000" rows="5"></textarea>
-              <mat-hint>1000 characters</mat-hint>
-              <mat-error *ngIf="countRoPForm.controls.probationConditions.hasError('maxlength')">{{ "error.max_length" |
-                translate }}1000</mat-error>
-            </mat-form-field>
-          </div>
-        </div>
-
-        <!-- Driving Prohibition -->
-        <label>{{ "label.driving_prohibition" | translate }}</label>
-        <div class="row textarea-row">
-          <div class="col">
-            <mat-form-field appearance="outline">
-              <textarea matInput formControlName="drivingProhibition" maxlength="500" rows="3"></textarea>
-              <mat-hint>500 characters</mat-hint>
-              <mat-error *ngIf="countRoPForm.controls.drivingProhibition.hasError('maxlength')">{{ "error.max_length" |
-                translate }}500</mat-error>
-            </mat-form-field>
-          </div>
-        </div>
-
-        <!-- Driving Prohibition MVA Section -->
-        <label>{{ "label.driving_prohibition_mva" | translate }}</label>
-        <div class="row textarea-row">
-          <div class="col">
-            <mat-form-field appearance="outline">
-              <textarea matInput formControlName="drivingProhibitionMVASection" maxlength="240" rows="3"></textarea>
-              <mat-hint>240 characters</mat-hint>
-              <mat-error *ngIf="countRoPForm.controls.drivingProhibitionMVASection.hasError('maxlength')">{{
-                "error.max_length" | translate }}240</mat-error>
-            </mat-form-field>
-          </div>
-        </div>
-
-        <!-- Dismissed -->
-        <div class="row">
-          <label class="col-4">{{ "label.dismissed" | translate }}</label>
-          <div class="col-8">
-            <mat-checkbox formControlName="_dismissed"></mat-checkbox>
-          </div>
-        </div>
-
-        <!-- For Want of Prosection -->
-        <div class="row">
-          <label class="col-4">{{ "label.for_want_of_prosection" | translate }}</label>
-          <div class="col-8">
-            <mat-checkbox formControlName="_forWantOfProsecution"></mat-checkbox>
-          </div>
-        </div>
-
-        <!-- Withdrawn -->
-        <div class="row">
-          <label class="col-4">{{ "label.withdrawn" | translate }}</label>
-          <div class="col-8">
-            <mat-checkbox formControlName="_withdrawn"></mat-checkbox>
-          </div>
-        </div>
-
-        <!-- Abatement -->
-        <div class="row">
-          <label class="col-4">{{ "label.abatement" | translate }}</label>
-          <div class="col-8">
-            <mat-checkbox formControlName="_abatement"></mat-checkbox>
-          </div>
-        </div>
-
-        <!-- Stay of Proceedings -->
-        <label>{{ "label.stay_of_proceedings" | translate }}</label>
-        <div class="row textarea-row">
-          <div class="col">
-            <mat-form-field appearance="outline">
-              <textarea matInput formControlName="stayOfProceedingsBy" maxlength="500" rows="3"></textarea>
-              <mat-hint>500 characters</mat-hint>
-              <mat-error *ngIf="countRoPForm.controls.stayOfProceedingsBy.hasError('maxlength')">{{ "error.max_length" |
-                translate }}500</mat-error>
-            </mat-form-field>
-          </div>
-        </div>
-
-        <!-- Other -->
-        <label>{{ "label.other" | translate }}</label>
-        <div class="row textarea-row">
-          <div class="col">
-            <mat-form-field appearance="outline">
-              <textarea matInput formControlName="other" maxlength="500" rows="3"></textarea>
-              <mat-hint>500 characters</mat-hint>
-              <mat-error *ngIf="countRoPForm.controls.other.hasError('maxlength')">{{ "error.max_length" | translate
-                }}500</mat-error>
-            </mat-form-field>
-          </div>
-        </div>
-      </form>
-
-      <form [formGroup]="countForm">
-        <!-- Remarks -->
-        <label>{{ "label.remarks" | translate }}</label>
-        <div class="row textarea-row">
-          <div class="col">
-            <mat-form-field appearance="outline">
-              <textarea matInput formControlName="comments" maxlength="4000" rows="8"></textarea>
-              <mat-hint>4000 characters</mat-hint>
-              <mat-error *ngIf="countForm.controls.comments.hasError('maxlength')">{{ "error.max_length" | translate
-                }}4000</mat-error>
-            </mat-form-field>
-          </div>
-        </div>
-      </form>
-    </div>
-
-    <div style="display: grid; grid-template-columns: 49% 49%">
-      <span class="section-jj-grid-cell text-center">
-        <p>
-          <span class="section-grid-header">Due date</span><br />
-          <span class="section-grid-text"
-            *ngIf="jjDisputeInfo.status == DisputeStatus.Confirmed || jjDisputeInfo.status == DisputeStatus.Review ||
-            jjDisputeInfo.status == DisputeStatus.RequireCourtHearing || jjDisputeInfo.status == DisputeStatus.Concluded" >
-            {{ jjDisputedCount?.revisedDueDate | date: "dd-MMM-yyyy" : "UTC" }}</span>
-        </p>
-      </span>
-      <span class="section-grid-cell text-center">
-        <p>
-          <span class="section-grid-header">Total Amount</span><br />
-          <span class="section-grid-text"
-            *ngIf="jjDisputeInfo.status == DisputeStatus.Confirmed || jjDisputeInfo.status == DisputeStatus.Review ||
-            jjDisputeInfo.status == DisputeStatus.RequireCourtHearing || jjDisputeInfo.status == DisputeStatus.Concluded" >
-            {{ jjDisputedCount ? ( jjDisputedCount.totalFineAmount ?
-            (jjDisputedCount.totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0') : '&nbsp;') : '&nbsp;' }}</span>
-        </p>
-      </span>
-    </div>
-  </section>
-</div>
+                <div style="display: grid; grid-template-columns: 49% 49%">
+                  <span class="section-jj-grid-cell text-center">
+                    <p>
+                      <span class="section-grid-header">Due date</span><br />
+                      @if (jjDisputeInfo.status == DisputeStatus.Confirmed || jjDisputeInfo.status == DisputeStatus.Review ||
+                        jjDisputeInfo.status == DisputeStatus.RequireCourtHearing || jjDisputeInfo.status == DisputeStatus.Concluded) {
+                        <span class="section-grid-text"
+                          >
+                        {{ jjDisputedCount?.revisedDueDate | date: "dd-MMM-yyyy" : "UTC" }}</span>
+                      }
+                    </p>
+                  </span>
+                  <span class="section-grid-cell text-center">
+                    <p>
+                      <span class="section-grid-header">Total Amount</span><br />
+                      @if (jjDisputeInfo.status == DisputeStatus.Confirmed || jjDisputeInfo.status == DisputeStatus.Review ||
+                        jjDisputeInfo.status == DisputeStatus.RequireCourtHearing || jjDisputeInfo.status == DisputeStatus.Concluded) {
+                        <span class="section-grid-text"
+                          >
+                          {{ jjDisputedCount ? ( jjDisputedCount.totalFineAmount ?
+                        (jjDisputedCount.totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0') : '&nbsp;') : '&nbsp;' }}</span>
+                      }
+                    </p>
+                  </span>
+                </div>
+              </section>
+            </div>

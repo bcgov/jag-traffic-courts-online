@@ -1,37 +1,47 @@
-<app-page *ngIf="!showDispute">
-  <mat-tab-group class="dashTabs" mat-align-tabs="start" [selectedIndex]="tabSelected.value"
-    (selectedIndexChange)="tabSelected.setValue($event)">
-    <mat-tab *ngIf="hasAssignmentsPermission">
-      <ng-template mat-tab-label>
-        <h2>WR Assignments</h2>
-      </ng-template>
-      <br>
-      <app-jj-dispute-wr-assignments (tcoDisputeInfo)="changeTCODispute($event, tabTypes.WR_ASSIGNMENTS)"></app-jj-dispute-wr-assignments>
-    </mat-tab>
-    <mat-tab *ngIf="hasWRInboxPermission">
-      <ng-template mat-tab-label>
-        <h2>WR Inbox</h2>
-      </ng-template>
-      <br>
-      <app-jj-dispute-wr-inbox (tcoDisputeInfo)="changeTCODispute($event, tabTypes.WR_INBOX)"></app-jj-dispute-wr-inbox>
-    </mat-tab>
-    <mat-tab *ngIf="hasHearingInboxPermission">
-      <ng-template mat-tab-label>
-        <h2>Hearing Inbox</h2>
-      </ng-template>
-      <br>
-      <app-jj-dispute-hearing-inbox (tcoDisputeInfo)="changeTCODispute($event, tabTypes.HEARING_INBOX)"></app-jj-dispute-hearing-inbox>
-    </mat-tab>
-    <mat-tab #DCF *ngIf="hasDCFPermission">
-      <ng-template mat-tab-label>
-        <h2>DCF</h2>
-      </ng-template>
-      <br>
-      <app-jj-dispute-digital-case-file [tabIndex]="3" (tcoDisputeInfo)="changeTCODispute($event, tabTypes.DCF)"></app-jj-dispute-digital-case-file>
-    </mat-tab>
-  </mat-tab-group>
-</app-page>
-<ng-container *ngIf="showDispute">
-  <app-jj-dispute (backInbox)="backInbox()" [tcoDisputeInfo]="tcoDisputeInfo" [isViewOnly]="!isInfoEditable"
-    [enableStaffSupport]="false" [type]="tabTypeSelected"></app-jj-dispute>
-</ng-container>
+@if (!showDispute) {
+  <app-page>
+    <mat-tab-group class="dashTabs" mat-align-tabs="start" [selectedIndex]="tabSelected.value"
+      (selectedIndexChange)="tabSelected.setValue($event)">
+      @if (hasAssignmentsPermission) {
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <h2>WR Assignments</h2>
+          </ng-template>
+          <br>
+            <app-jj-dispute-wr-assignments (tcoDisputeInfo)="changeTCODispute($event, tabTypes.WR_ASSIGNMENTS)"></app-jj-dispute-wr-assignments>
+          </mat-tab>
+        }
+        @if (hasWRInboxPermission) {
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <h2>WR Inbox</h2>
+            </ng-template>
+            <br>
+              <app-jj-dispute-wr-inbox (tcoDisputeInfo)="changeTCODispute($event, tabTypes.WR_INBOX)"></app-jj-dispute-wr-inbox>
+            </mat-tab>
+          }
+          @if (hasHearingInboxPermission) {
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <h2>Hearing Inbox</h2>
+              </ng-template>
+              <br>
+                <app-jj-dispute-hearing-inbox (tcoDisputeInfo)="changeTCODispute($event, tabTypes.HEARING_INBOX)"></app-jj-dispute-hearing-inbox>
+              </mat-tab>
+            }
+            @if (hasDCFPermission) {
+              <mat-tab #DCF>
+                <ng-template mat-tab-label>
+                  <h2>DCF</h2>
+                </ng-template>
+                <br>
+                  <app-jj-dispute-digital-case-file [tabIndex]="3" (tcoDisputeInfo)="changeTCODispute($event, tabTypes.DCF)"></app-jj-dispute-digital-case-file>
+                </mat-tab>
+              }
+            </mat-tab-group>
+          </app-page>
+        }
+        @if (showDispute) {
+          <app-jj-dispute (backInbox)="backInbox()" [tcoDisputeInfo]="tcoDisputeInfo" [isViewOnly]="!isInfoEditable"
+          [enableStaffSupport]="false" [type]="tabTypeSelected"></app-jj-dispute>
+        }

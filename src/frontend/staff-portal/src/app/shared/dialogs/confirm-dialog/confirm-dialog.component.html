@@ -1,79 +1,97 @@
 <h3 mat-dialog-title class="d-flex align-items-stretch">
-  <mat-icon *ngIf="options.icon && !options.imageSrc" [color]="options.actionType"
-    [ngStyle]="{'color': options.actionType === 'green' ? '#2ba242 !important' : ''}">
-    {{ options.icon }}
-  </mat-icon>
-  <img *ngIf="options.imageSrc" [attr.src]="options.imageSrc" alt="" />
-  <strong class="flex-grow-1" *ngIf="options.titleKey">
-    <span [ngStyle]="{'color': options.actionType === 'green' ? '#2ba242' : ''}">
-      {{ options.titleKey | translate }}
-    </span>
-  </strong>
+  @if (options.icon && !options.imageSrc) {
+    <mat-icon [color]="options.actionType"
+      [ngStyle]="{'color': options.actionType === 'green' ? '#2ba242 !important' : ''}">
+      {{ options.icon }}
+    </mat-icon>
+  }
+  @if (options.imageSrc) {
+    <img [attr.src]="options.imageSrc" alt="" />
+  }
+  @if (options.titleKey) {
+    <strong class="flex-grow-1">
+      <span [ngStyle]="{'color': options.actionType === 'green' ? '#2ba242' : ''}">
+        {{ options.titleKey | translate }}
+      </span>
+    </strong>
+  }
 </h3>
 <mat-dialog-content>
-  <p *ngIf="options.messageKey">{{ options.messageKey | translate }}</p>
+  @if (options.messageKey) {
+    <p>{{ options.messageKey | translate }}</p>
+  }
   <ng-template appDialogContent></ng-template>
-  <section *ngIf="options.data">
-    <div class="row">
-      <div class="col-md-3">
-        <span class="section-grid-header">Signed By:</span>
-      </div>
-      <div class="col-md-9">
-        <span class="section-grid-text">{{ jjIDIR }}</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-3">
-        <span class="section-grid-header">Date Signed:</span>
-      </div>
-      <div class="col-md-9">
-        <span class="section-grid-text">{{ currentDate | date: "dd-MMM-yyyy" }}</span>
-      </div>
-    </div>
-    <ng-container subHeader>
-      <h3>{{ "label.final_disposition" | translate }}</h3>
-    </ng-container>
-    <div style="display: grid;" 
-      [ngStyle]="{ 'grid-template-columns' : options.data.length == 3 ? '33% 33% 33%' : (options.data.length == 2 ? '50% 50%' : '100%')}">
-      <ng-container *ngFor="let count of options.data">
-        <div *ngIf="count" style="display: grid; grid-template-columns: 100%">
-          <span class="section-jj-grid-cell">
-            <h3>Count {{count.count}}</h3>
-          </span>
-          <span class="section-jj-grid-cell">
-            <span class="section-grid-header">Total Amount: </span>
-            <span class="section-grid-text">{{ (count.totalFineAmount ? 
-              (count.totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0') : '') }}</span>
-          </span>
-          <span class="section-jj-grid-cell">
-            <span class="section-grid-header">Due Date: </span>
-            <span class="section-grid-text">
-              {{
-                count.jjDisputedCountRoP?.finding === 'NOT_GUILTY' ? '' :
-                (count.revisedDueDate ? (count.revisedDueDate | date: "dd-MMM-yyyy" : "UTC") : '')
-              }}
-            </span>
-          </span>
+  @if (options.data) {
+    <section>
+      <div class="row">
+        <div class="col-md-3">
+          <span class="section-grid-header">Signed By:</span>
         </div>
+        <div class="col-md-9">
+          <span class="section-grid-text">{{ jjIDIR }}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <span class="section-grid-header">Date Signed:</span>
+        </div>
+        <div class="col-md-9">
+          <span class="section-grid-text">{{ currentDate | date: "dd-MMM-yyyy" }}</span>
+        </div>
+      </div>
+      <ng-container subHeader>
+        <h3>{{ "label.final_disposition" | translate }}</h3>
       </ng-container>
-    </div>
-  </section>
+      <div style="display: grid;"
+        [ngStyle]="{ 'grid-template-columns' : options.data.length == 3 ? '33% 33% 33%' : (options.data.length == 2 ? '50% 50%' : '100%')}">
+        @for (count of options.data; track count) {
+          @if (count) {
+            <div style="display: grid; grid-template-columns: 100%">
+              <span class="section-jj-grid-cell">
+                <h3>Count {{count.count}}</h3>
+              </span>
+              <span class="section-jj-grid-cell">
+                <span class="section-grid-header">Total Amount: </span>
+                <span class="section-grid-text">{{ (count.totalFineAmount ?
+                (count.totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0') : '') }}</span>
+              </span>
+              <span class="section-jj-grid-cell">
+                <span class="section-grid-header">Due Date: </span>
+                <span class="section-grid-text">
+                  {{
+                  count.jjDisputedCountRoP?.finding === 'NOT_GUILTY' ? '' :
+                  (count.revisedDueDate ? (count.revisedDueDate | date: "dd-MMM-yyyy" : "UTC") : '')
+                  }}
+                </span>
+              </span>
+            </div>
+          }
+        }
+      </div>
+    </section>
+  }
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button *ngIf="!options.cancelHide" mat-stroked-button color="primary" [mat-dialog-close]="false" cdkFocusInitial
-    class="my-2 me-2">
-    {{ options.cancelTextKey }}
-  </button>
+  @if (!options.cancelHide) {
+    <button mat-stroked-button color="primary" [mat-dialog-close]="false" cdkFocusInitial
+      class="my-2 me-2">
+      {{ options.cancelTextKey }}
+    </button>
+  }
 
   <span class="flex-grow-1"></span>
 
-  <button *ngIf="!options.actionHide" [color]="options.actionType" mat-flat-button
-    [ngStyle]="{'background-color': options.actionType === 'green' ? '#2ba242' : ''}" (click)="onConfirm()"
-    class="my-2 me-1">
-    {{ options.actionTextKey }}
-  </button>
+  @if (!options.actionHide) {
+    <button [color]="options.actionType" mat-flat-button
+      [ngStyle]="{'background-color': options.actionType === 'green' ? '#2ba242' : ''}" (click)="onConfirm()"
+      class="my-2 me-1">
+      {{ options.actionTextKey }}
+    </button>
+  }
 
-  <a *ngIf="options.actionLink" [attr.href]="options.actionLink.href" [attr.target]="options.actionLink.target">
-    {{ options.actionLink.text }}
-  </a>
+  @if (options.actionLink) {
+    <a [attr.href]="options.actionLink.href" [attr.target]="options.actionLink.target">
+      {{ options.actionLink.text }}
+    </a>
+  }
 </mat-dialog-actions>

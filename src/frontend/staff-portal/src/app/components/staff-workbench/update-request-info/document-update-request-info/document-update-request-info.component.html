@@ -1,28 +1,43 @@
-<mat-card appearance="outlined" *ngIf="updateRequested.UploadedDocuments?.length > 0 && disputantUpdateRequest.status === 'PENDING'">
-  <span>
-    <span><b>Uploaded Documents ({{ disputantUpdateRequest.status }})</b></span>
-    <span style="float:right">
-      {{ disputantUpdateRequest.createdTs | date: "dd-MMM-yyyy" }}
-    </span>
-  </span><br /><br />
-
-  <div style="display: grid; grid-template-columns: auto" *ngIf="requestReadable === true">
-    <span><b>Citizen Uploaded Documents ({{updateRequested.UploadedDocuments.length }})</b></span><br/>
-        <div *ngFor="let doc of updateRequested.UploadedDocuments">
-          <button type="button" class="linkbutton" (click)="onGetFile(doc.DocumentId)" *ngIf="disputantUpdateRequest.status !== UpdateRequestStatus.Rejected">{{ doc.DocumentType }}</button>&nbsp;
-          <span *ngIf="disputantUpdateRequest.status === UpdateRequestStatus.Rejected">{{ doc.DocumentType }}&nbsp;</span>
+@if (updateRequested.UploadedDocuments?.length > 0 && disputantUpdateRequest.status === 'PENDING') {
+  <mat-card appearance="outlined">
+    <span>
+      <span><b>Uploaded Documents ({{ disputantUpdateRequest.status }})</b></span>
+      <span style="float:right">
+        {{ disputantUpdateRequest.createdTs | date: "dd-MMM-yyyy" }}
+      </span>
+    </span><br /><br />
+    @if (requestReadable === true) {
+      <div style="display: grid; grid-template-columns: auto">
+        <span><b>Citizen Uploaded Documents ({{updateRequested.UploadedDocuments.length }})</b></span><br/>
+        @for (doc of updateRequested.UploadedDocuments; track doc) {
+          <div>
+            @if (disputantUpdateRequest.status !== UpdateRequestStatus.Rejected) {
+              <button type="button" class="linkbutton" (click)="onGetFile(doc.DocumentId)">{{ doc.DocumentType }}</button>
+              }&nbsp;
+              @if (disputantUpdateRequest.status === UpdateRequestStatus.Rejected) {
+                <span>{{ doc.DocumentType }}&nbsp;</span>
+              }
+            </div>
+          }
+          <br />
         </div>
-    <br />
-  </div>
-  <div>
-    <span style="float:right" *ngIf="disputantUpdateRequest.status === 'PENDING'">
-      <mat-button-toggle-group [(ngModel)]="disputantUpdateRequest.newStatus" aria-label="Decision" (change)="statusChange($event)">
-        <mat-button-toggle value="ACCEPTED" *ngIf="requestReadable === true">Accept</mat-button-toggle>
-        <mat-button-toggle value="REJECTED">Reject</mat-button-toggle>
-        <mat-button-toggle value="PENDING">Pending</mat-button-toggle>
-      </mat-button-toggle-group>
-    </span>
-  </div>
-  <div *ngIf="requestReadable === false">Update Request Unreadable {{ disputantUpdateRequest.updateJson }}</div>
-  <br /><br />
-</mat-card>
+      }
+      <div>
+        @if (disputantUpdateRequest.status === 'PENDING') {
+          <span style="float:right">
+            <mat-button-toggle-group [(ngModel)]="disputantUpdateRequest.newStatus" aria-label="Decision" (change)="statusChange($event)">
+              @if (requestReadable === true) {
+                <mat-button-toggle value="ACCEPTED">Accept</mat-button-toggle>
+              }
+              <mat-button-toggle value="REJECTED">Reject</mat-button-toggle>
+              <mat-button-toggle value="PENDING">Pending</mat-button-toggle>
+            </mat-button-toggle-group>
+          </span>
+        }
+      </div>
+      @if (requestReadable === false) {
+        <div>Update Request Unreadable {{ disputantUpdateRequest.updateJson }}</div>
+      }
+      <br /><br />
+    </mat-card>
+  }

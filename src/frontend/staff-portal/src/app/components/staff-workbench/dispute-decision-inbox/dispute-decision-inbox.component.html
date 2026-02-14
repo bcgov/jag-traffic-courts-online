@@ -18,10 +18,14 @@
         &nbsp;&nbsp; VT Number
       </th>
       <td mat-cell *matCellDef="let element">
-        <span *ngIf="element.vtcAssignedTo === IDIR || !(element.vtcAssignedTo)">&nbsp;&nbsp;<a
-            (click)="backWorkbench(element)" href="javascript:void(0)">{{ element.ticketNumber }}</a></span>
-        <span *ngIf="element.vtcAssignedTo !== IDIR && element.vtcAssignedTo">&nbsp;&nbsp;{{ element.ticketNumber
+        @if (element.vtcAssignedTo === IDIR || !(element.vtcAssignedTo)) {
+          <span>&nbsp;&nbsp;<a
+          (click)="backWorkbench(element)" href="javascript:void(0)">{{ element.ticketNumber }}</a></span>
+        }
+        @if (element.vtcAssignedTo !== IDIR && element.vtcAssignedTo) {
+          <span>&nbsp;&nbsp;{{ element.ticketNumber
           }}</span>
+        }
       </td>
     </ng-container>
 
@@ -57,12 +61,16 @@
         Surname, Given Name(s)
       </th>
       <td mat-cell *matCellDef="let element">
-        <span *ngIf="element.disputantSurname">{{ element.disputantSurname + (element.disputantGivenName1 || 
-          element.disputantGivenName2 || element.disputantGivenName3 ? "," : "") + 
-          (element.disputantGivenName1 ? " " + element.disputantGivenName1 : "") + 
-          (element.disputantGivenName2 ? " " + element.disputantGivenName2 : "") + 
+        @if (element.disputantSurname) {
+          <span>{{ element.disputantSurname + (element.disputantGivenName1 ||
+            element.disputantGivenName2 || element.disputantGivenName3 ? "," : "") +
+            (element.disputantGivenName1 ? " " + element.disputantGivenName1 : "") +
+            (element.disputantGivenName2 ? " " + element.disputantGivenName2 : "") +
           (element.disputantGivenName3 ? " " + element.disputantGivenName3 : "") }}</span>
-        <span *ngIf="!element.disputantSurname">{{ element.disputantOrganizationName }}</span>
+        }
+        @if (!element.disputantSurname) {
+          <span>{{ element.disputantOrganizationName }}</span>
+        }
       </td>
     </ng-container>
 

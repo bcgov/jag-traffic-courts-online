@@ -1,42 +1,60 @@
-<mat-card appearance="outlined" *ngIf="disputantUpdateRequest.status === 'PENDING' && updateRequested.HomePhoneNumber !== disputeInfo.homePhoneNumber">
-  <span>
-    <span><b>Home Phone Number ({{ disputantUpdateRequest.status }})</b></span>
-    <span style="float:right">
-      {{ disputantUpdateRequest.createdTs | date: "dd-MMM-yyyy" }}
-    </span>
-  </span><br /><br />
-  <div style="display: grid; grid-template-columns: auto auto auto" *ngIf="requestReadable === true">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">&nbsp;</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Current</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Requested Update</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Home Phone Number</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" *ngIf="disputeInfo.addressCountryId === 1 || disputeInfo.addressCountryId === 2">{{ disputeInfo.homePhoneNumber | phone}}</p>
-      <p class="section-grid-text" *ngIf="disputeInfo.addressCountryId !== 1 && disputeInfo.addressCountryId !== 2">{{ disputeInfo.homePhoneNumber }}</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" *ngIf="disputeInfo.addressCountryId === 1 || disputeInfo.addressCountryId === 2">{{ updateRequested.HomePhoneNumber | phone }}</p>
-      <p class="section-grid-text" *ngIf="disputeInfo.addressCountryId !== 1 && disputeInfo.addressCountryId !== 2">{{ updateRequested.HomePhoneNumber }}</p>
-    </span>
-    <br />
-  </div>
-  <div>
-    <span style="float:right" *ngIf="disputantUpdateRequest.status === 'PENDING'">
-      <mat-button-toggle-group [(ngModel)]="disputantUpdateRequest.newStatus" aria-label="Decision" (change)="statusChange($event)">
-        <mat-button-toggle value="ACCEPTED" *ngIf="requestReadable === true">Accept</mat-button-toggle>
-        <mat-button-toggle value="REJECTED">Reject</mat-button-toggle>
-        <mat-button-toggle value="PENDING">Pending</mat-button-toggle>
-      </mat-button-toggle-group>
-    </span>
-  </div>
-  <div *ngIf="requestReadable === false">Update Request Unreadable {{ disputantUpdateRequest.updateJson }}</div>
-  <br /><br />
-</mat-card>
+@if (disputantUpdateRequest.status === 'PENDING' && updateRequested.HomePhoneNumber !== disputeInfo.homePhoneNumber) {
+  <mat-card appearance="outlined">
+    <span>
+      <span><b>Home Phone Number ({{ disputantUpdateRequest.status }})</b></span>
+      <span style="float:right">
+        {{ disputantUpdateRequest.createdTs | date: "dd-MMM-yyyy" }}
+      </span>
+    </span><br /><br />
+    @if (requestReadable === true) {
+      <div style="display: grid; grid-template-columns: auto auto auto">
+        <span class="section-grid-cell">
+          <p class="section-grid-header">&nbsp;</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Current</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Requested Update</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Home Phone Number</p>
+        </span>
+        <span class="section-grid-cell">
+          @if (disputeInfo.addressCountryId === 1 || disputeInfo.addressCountryId === 2) {
+            <p class="section-grid-text">{{ disputeInfo.homePhoneNumber | phone}}</p>
+          }
+          @if (disputeInfo.addressCountryId !== 1 && disputeInfo.addressCountryId !== 2) {
+            <p class="section-grid-text">{{ disputeInfo.homePhoneNumber }}</p>
+          }
+        </span>
+        <span class="section-grid-cell">
+          @if (disputeInfo.addressCountryId === 1 || disputeInfo.addressCountryId === 2) {
+            <p class="section-grid-text">{{ updateRequested.HomePhoneNumber | phone }}</p>
+          }
+          @if (disputeInfo.addressCountryId !== 1 && disputeInfo.addressCountryId !== 2) {
+            <p class="section-grid-text">{{ updateRequested.HomePhoneNumber }}</p>
+          }
+        </span>
+        <br />
+      </div>
+    }
+    <div>
+      @if (disputantUpdateRequest.status === 'PENDING') {
+        <span style="float:right">
+          <mat-button-toggle-group [(ngModel)]="disputantUpdateRequest.newStatus" aria-label="Decision" (change)="statusChange($event)">
+            @if (requestReadable === true) {
+              <mat-button-toggle value="ACCEPTED">Accept</mat-button-toggle>
+            }
+            <mat-button-toggle value="REJECTED">Reject</mat-button-toggle>
+            <mat-button-toggle value="PENDING">Pending</mat-button-toggle>
+          </mat-button-toggle-group>
+        </span>
+      }
+    </div>
+    @if (requestReadable === false) {
+      <div>Update Request Unreadable {{ disputantUpdateRequest.updateJson }}</div>
+    }
+    <br /><br />
+  </mat-card>
+}
