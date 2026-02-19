@@ -6686,10 +6686,10 @@ jose@^6.1.3:
   resolved "https://registry.yarnpkg.com/jose/-/jose-6.1.3.tgz#8453d7be88af7bb7d64a0481d6a35a0145ba3ea5"
   integrity sha512-0TpaTfihd4QMNwrz/ob2Bp7X04yuxJkjRGi4aKmOqwhov54i6u79oCv7T+C7lo70MKH6BesI3vscD1yb/yzKXQ==
 
-js-sha256@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/js-sha256/-/js-sha256-0.9.0.tgz#0b89ac166583e91ef9123644bd3c5334ce9d0966"
-  integrity sha512-sga3MHh9sgQN2+pJ9VYZ+1LPwXOxuBJBA5nrR5/ofPfuiJBE2hnjsaN8se8JznOmGLN2p49Pe5U/ttafcs/apA==
+js-sha256@^0.10.1:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/js-sha256/-/js-sha256-0.10.1.tgz#b40104ba1368e823fdd5f41b66b104b15a0da60d"
+  integrity sha512-5obBtsz9301ULlsgggLg542s/jqtddfOpV5KJc4hajc9JV8GeY2gZHSVpYBn4nWqAUTJ9v+xwtbJ1mIBgIH5Vw==
 
 js-tokens@^4.0.0:
   version "4.0.0"
@@ -6819,6 +6819,11 @@ jszip@^3.1.3:
     readable-stream "~2.3.6"
     setimmediate "^1.0.5"
 
+jwt-decode@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-4.0.0.tgz#2270352425fd413785b2faf11f6e755c5151bd4b"
+  integrity sha512-+KJGIyHgkGuIq3IEBNftfhW/LfWhXUIY6OmyVWjliu5KH1y0fw7VQ8YndE2O4qZdMSd9SqbnC8GOcZEy0Om7sA==
+
 karma-chrome-launcher@~3.1.0:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/karma-chrome-launcher/-/karma-chrome-launcher-3.1.1.tgz#baca9cc071b1562a1db241827257bfe5cab597ea"
@@ -6887,20 +6892,21 @@ karma@^6.3.16:
     ua-parser-js "^0.7.30"
     yargs "^16.1.1"
 
-keycloak-angular@^16.1.0:
-  version "16.1.0"
-  resolved "https://registry.yarnpkg.com/keycloak-angular/-/keycloak-angular-16.1.0.tgz#50cabab7508be2f1e88eea1c61d0996bb3791918"
-  integrity sha512-y2Eow2mISE0tY+ZOGzgiDISJ69faInYyV1ONwv+8mzU9Rn0xMPEjw7rQCRm9XsyFZiqM0LLucx9m73FCnl4wAg==
+keycloak-angular@^21.0.0:
+  version "21.0.0"
+  resolved "https://registry.yarnpkg.com/keycloak-angular/-/keycloak-angular-21.0.0.tgz#75076883b8cb9f22cd7855981efae9981aabba0b"
+  integrity sha512-55kkEndHu0iMa1VqyddEaymC/hcrbjOag7S/Jce3Wx00iIaCjlCQ/HRAtKgtYNb4hfzHRoi6DvZ09BXRoydtaQ==
   dependencies:
     tslib "^2.3.1"
 
-keycloak-js@^22.0.4:
-  version "22.0.5"
-  resolved "https://registry.yarnpkg.com/keycloak-js/-/keycloak-js-22.0.5.tgz#8264cec1ff27015e1e53310e108cef3f796a5809"
-  integrity sha512-a7ZwCZeHl8tpeJBy102tZtAnHslDUOA1Nf/sHNF3HYLchKpwoDuaitwIUiS2GnNUe+tlNKLlCqZS+Mi5K79m1w==
+keycloak-js@23.0.7:
+  version "23.0.7"
+  resolved "https://registry.yarnpkg.com/keycloak-js/-/keycloak-js-23.0.7.tgz#9d2fad3253e087a49573bd9ee0569e327531135c"
+  integrity sha512-OmszsKzBhhm5yP4W1q/tMd+nNnKpOAdeVYcoGhphlv8Fj1bNk4wRTYzp7pn5BkvueLz7fhvKHz7uOc33524YrA==
   dependencies:
     base64-js "^1.5.1"
-    js-sha256 "^0.9.0"
+    js-sha256 "^0.10.1"
+    jwt-decode "^4.0.0"
 
 keyv@^4.5.3:
   version "4.5.4"

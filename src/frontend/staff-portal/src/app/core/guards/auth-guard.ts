@@ -1,57 +1,57 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
+import { inject } from '@angular/core';
+import {
+  ActivatedRouteSnapshot,
+  CanActivateFn,
+  Router,
+  RouterStateSnapshot,
+  UrlTree,
+} from '@angular/router';
+import { createAuthGuard, AuthGuardData } from 'keycloak-angular';
+
 import { AppRoutes } from 'app/app.routes';
 import { AuthService } from 'app/services/auth.service';
-import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class AuthorizationGuard extends KeycloakAuthGuard {
-  constructor(
-    protected readonly router: Router,
-    protected readonly keycloak: KeycloakService,
-    protected readonly authService: AuthService,
-  ) {
-    super(router, keycloak);
+const isAccessAllowed = async (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+  authData: AuthGuardData,
+): Promise<boolean | UrlTree> => {
+  const { authenticated } = authData;
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  // Force the user to log in if currently unauthenticated.
+  let permission: boolean;
+  if (!authenticated) {
+    await authService.login();
   }
 
-  public async isAccessAllowed(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    // Force the user to log in if currently unauthenticated.
-    let permission;
-    if (!this.authenticated) {
-      await this.authService.login();
-    }
+  // Get the roles required from the route.
+  const requiredRoles = route.data.roles;
 
-    // Get the roles required from the route.
-    const requiredRoles = route.data.roles;
+  // Allow the user to to proceed if no additional roles are required to access the route.
+  if (!requiredRoles || requiredRoles.length === 0) {
+    permission = true;
+  } else {
+    // Allow the user to proceed if any of the required role(s) is/are present.
+    permission = authService.checkRoles(requiredRoles);
+  }
 
-    // Allow the user to to proceed if no additional roles are required to access the route.
-    if (!requiredRoles || requiredRoles.length === 0) {
-      permission = true;
+  if (!permission) {
+    let application: string;
+    if (state.url.indexOf(AppRoutes.JJ) > -1) {
+      application = 'JJ';
     } else {
-      if (!this.roles || this.roles.length === 0) {
-        permission = false;
-      }
-      // Allow the user to proceed if any of the required role(s) is/are present.
-      if (requiredRoles.some((role) => this.roles.indexOf(role) > -1))
-      {
-        permission = true;
-      } else {
-        permission = false;
-      };
+      application = 'Staff';
     }
 
-    if(!permission){
-      let application;
-      if(state.url.indexOf(AppRoutes.JJ) > -1) {
-        application = "JJ";
-      } else {
-        application = "Staff";
-      }
-      this.router.navigate([AppRoutes.UNAUTHORIZED], {queryParams: {application: application}});
-    }
-
-    return permission;
+    router.navigate([AppRoutes.UNAUTHORIZED], {
+      queryParams: { application: application },
+    });
   }
-}
+
+  return permission;
+};
+
+export const authorizationGuard =
+  createAuthGuard<CanActivateFn>(isAccessAllowed);

@@ -274,8 +274,6 @@ staff-web:
         "url": "https://keycloak-0198bb-prod.apps.silver.devops.gov.bc.ca/",
         "realm": "traffic-court",
         "clientId": "staff-portal"
-      },
-      "initOptions": {
       }
     }
   appConfig: |

@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { UserRepresentation as UserRepresentationBase } from 'app/api';
 import { AppRoutes } from 'app/app.routes';
-import { KeycloakEventType, KeycloakService } from 'keycloak-angular';
 import { KeycloakService as KeycloakAPIService } from 'app/api'
-import { KeycloakProfile as KeycloakProfileJS } from 'keycloak-js';
+import Keycloak, { KeycloakProfile as KeycloakProfileJS } from 'keycloak-js';
 import { BehaviorSubject, from, Observable, map, catchError, forkJoin, first, of } from 'rxjs';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
@@ -12,6 +11,8 @@ import { UserGroup } from '@shared/enums/user-group.enum';
 import { AppState, JJDisputeStore } from 'app/store';
 import { Store } from '@ngrx/store';
 import { LookupsService } from './lookups.service';
+
+const clientId = "staff-api";
 
 @Injectable({
   providedIn: 'root',
@@ -23,40 +24,27 @@ export class AuthService {
   private _jjList: BehaviorSubject<UserRepresentation[]> = new BehaviorSubject<UserRepresentation[]>([]);
   private _vtcList: BehaviorSubject<UserRepresentation[]> = new BehaviorSubject<UserRepresentation[]>([]);
 
-  private site: string = "staff-api";
   private roles = [
     { name: [UserGroup.JUDICIAL_JUSTICE, UserGroup.ADMIN_JUDICIAL_JUSTICE, UserGroup.SUPPORT_STAFF], redirectUrl: AppRoutes.JJ },
     { name: [UserGroup.VTC_STAFF, UserGroup.SUPPORT_STAFF], redirectUrl: AppRoutes.STAFF },
   ]
 
   constructor(
-    private keycloak: KeycloakService,
+    private keycloak: Keycloak,
     private keycloakAPI: KeycloakAPIService,
     private toastService: ToastService,
     private logger: LoggerService,
     private configService: ConfigService,
     private lookupsService: LookupsService,
     private store: Store<AppState>,
-  ) {
-    this.keycloak.keycloakEvents$.subscribe({
-      next(event) {
-        if (event.type == KeycloakEventType.OnTokenExpired) {
-          keycloak.updateToken().then(refreshed => {
-            if (!refreshed) {
-              keycloak.login({ redirectUri: window.location.toString() });
-            }
-          })
-        }
-      }
-    });
-  }
+  ) {}
 
   async checkAuth(): Promise<boolean> {
-    if (!this.keycloak.isLoggedIn()) {
+    if (!this.keycloak.authenticated) {
         await this.login();
     }
 
-    const response = this.keycloak.isLoggedIn();
+    const response = this.keycloak.authenticated;
     if (response) {
         this.loadUserProfile().subscribe(() => {
             this._isLoggedIn.next(response);
@@ -80,17 +68,17 @@ export class AuthService {
     ];
 
     forkJoin(observables).subscribe({
-      next: results => {
+      next: _results => {
         this.store.dispatch(JJDisputeStore.Actions.Get());
       },
-      error: err => {
+      error: _err => {
         this.logger.error("Landing Page Init: Initial data loading failed");
       }
     });
   }
 
   get token(): string {
-    return this.keycloak.getKeycloakInstance().token;
+    return this.keycloak.token;
   }
 
   get isLoggedIn$(): Observable<boolean> {
@@ -177,10 +165,10 @@ export class AuthService {
   }
 
   getRedirectUrl(): string {
-    var result;
+    let result: string;
     this.roles.forEach(r => {
       r.name.forEach(n => {
-        if (this.keycloak.isUserInRole(n, this.site)) {
+        if (this.checkRole(n)) {
           result = r.redirectUrl;
         }
       });
@@ -192,7 +180,7 @@ export class AuthService {
   }
 
   checkRole(role: string): boolean {
-    return this.keycloak.isUserInRole(role, this.site);
+    return this.keycloak.hasResourceRole(role, clientId);
   }
 
   /**
@@ -202,7 +190,7 @@ export class AuthService {
    * @return {boolean} - true if the user has any of the specified roles, false otherwise.
    */
   checkRoles(roles: string[]): boolean {
-    return roles.some(role => this.keycloak.isUserInRole(role, this.site));
+    return roles.some(role => this.checkRole(role));
   }
 
   getUsersInGroup(group: string): Observable<Array<UserRepresentation>> {

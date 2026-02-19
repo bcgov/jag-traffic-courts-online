@@ -1,5 +1,5 @@
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule, inject, provideAppInitializer } from '@angular/core';
+import { provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgBusyModule } from 'ng-busy';
 import { AppRoutingModule } from './app-routing.module';
@@ -11,7 +11,8 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { CustomDatePipe as DatePipe } from '@shared/pipes/custom-date.pipe';
-import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
+import { INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG, IncludeBearerTokenCondition, createInterceptorCondition, includeBearerTokenInterceptor, provideKeycloak, withAutoRefreshToken, AutoRefreshTokenService, UserActivityService } from 'keycloak-angular';
+import { KeycloakConfig } from 'keycloak-js';
 
 import localeEn from '@angular/common/locales/en';
 import localeFr from '@angular/common/locales/fr';
@@ -47,7 +48,6 @@ import { JJDisputeRemarksComponent } from '@components/jj-dispute-info/jj-disput
 import { JJDisputeCourtAppearancesComponent } from '@components/jj-dispute-info/jj-dispute-court-appearances/jj-dispute-court-appearances.component';
 import { JJFileHistoryComponent } from '@components/jj-dispute-info/jj-file-history/jj-file-history.component';
 import { JJDisputeDigitalCaseFileComponent } from '@components/jj-workbench/jj-dispute-digital-case-file/jj-dispute-digital-case-file.component';
-import { AuthService } from './services/auth.service';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { reducers, JJDisputeStore } from './store';
@@ -62,17 +62,10 @@ import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
 
+export function createAppModule(keycloakConfig: KeycloakConfig) {
+
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
-
-function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
-  return async () => {
-    const response = await fetch('./assets/config/keycloak.config.json');
-    const config = await response.json();
-    config.initOptions.silentCheckSsoRedirectUri = window.location.origin + config.initOptions.silentCheckSsoRedirectUri;
-    await keycloak.init(config);
-  };
-}
 
 @NgModule({
   declarations: [
@@ -115,7 +108,6 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     CommonModule,
     BrowserModule,
     AppRoutingModule,
-    KeycloakAngularModule,
     CoreModule,
     SharedModule,
     ConfigModule,
@@ -133,16 +125,34 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     CurrencyPipe,
     DatePipe,
     MockConfigService,
-    provideAppInitializer(() => {
-      return initializeKeycloak(inject(KeycloakService))();
+    provideKeycloak({
+      config: keycloakConfig,
+      initOptions: {
+        onLoad: "check-sso",
+        silentCheckSsoRedirectUri: window.location.origin + "/assets/silent-check-sso.html",
+      },
+      features: [
+        withAutoRefreshToken({
+          onInactivityTimeout: 'login',
+          sessionTimeout: 3600000 // 60 minutes
+        })
+      ],
+      providers: [AutoRefreshTokenService, UserActivityService]
     }),
-    AuthService,
+    {
+      provide: INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
+      useValue: [
+        createInterceptorCondition<IncludeBearerTokenCondition>({
+          urlPattern: new RegExp(`^/api/.*$`, "i"),
+        }),
+      ]
+    },
     {
       provide: STEPPER_GLOBAL_OPTIONS,
       useValue: { showError: true }
     },
     BsDatepickerConfig,
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withInterceptorsFromDi(), withInterceptors([includeBearerTokenInterceptor])),
     provideTranslateService({
       loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json'}),
       extend: true,
@@ -150,7 +160,7 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {
+class AppModule {
   private availableLanguages = ['en', 'fr'];
 
   constructor(private translateService: TranslateService) {
@@ -165,4 +175,7 @@ export class AppModule {
     }
     this.translateService.setFallbackLang(fallbackLanguage);
   }
+}
+
+return AppModule;
 }
