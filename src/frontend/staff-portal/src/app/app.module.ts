@@ -6,6 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfigModule } from './config/config.module';
 import { SharedModule } from './shared/shared.module';
+import { provideNgProgressOptions } from 'ngx-progressbar';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
@@ -61,6 +62,8 @@ import { UploadComponent } from './components/staff-workbench/upload/upload.comp
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
+import { ProgressOptions } from '@shared/modules/ngx-progress/ngx-progress.options';
+import { progressInterceptor } from 'ngx-progressbar/http';
 
 export function createAppModule(keycloakConfig: KeycloakConfig) {
 
@@ -152,7 +155,8 @@ registerLocaleData(localeFr, 'fr');
       useValue: { showError: true }
     },
     BsDatepickerConfig,
-    provideHttpClient(withInterceptorsFromDi(), withInterceptors([includeBearerTokenInterceptor])),
+    provideNgProgressOptions(ProgressOptions),
+    provideHttpClient(withInterceptorsFromDi(), withInterceptors([includeBearerTokenInterceptor, progressInterceptor])),
     provideTranslateService({
       loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json'}),
       extend: true,

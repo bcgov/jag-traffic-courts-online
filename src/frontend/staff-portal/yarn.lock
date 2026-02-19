@@ -7562,12 +7562,12 @@ ngx-mask@^21.0.1:
   dependencies:
     tslib "^2.3.0"
 
-ngx-progressbar@^11.1.0:
-  version "11.1.0"
-  resolved "https://registry.yarnpkg.com/ngx-progressbar/-/ngx-progressbar-11.1.0.tgz#aee3c4088bf0a90d78daeb15053919433487704b"
-  integrity sha512-OClROEQn+hXIcE+JO6FPfjUrFOPbRUs4McUN9ZFZsRSt1lqpPNuHW19ANhClXr0sPPBlUuOKhoenB6xNAFe/aQ==
+ngx-progressbar@^14.0.0:
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-progressbar/-/ngx-progressbar-14.0.0.tgz#941dd19a20bf1846f94685cda5f8aa030711934f"
+  integrity sha512-tDj7h5F2aSI4/XaJjs50FnELVe6qFqyz3vVq22acacd3oDW2EyJB4c+IYaxMf5972OdTw0WL4n6UwQ3dqC+gCA==
   dependencies:
-    tslib "^2.0.0"
+    tslib "^2.3.0"
 
 nmtree@^1.0.6:
   version "1.0.6"
