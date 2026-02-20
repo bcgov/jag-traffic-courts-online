@@ -15,7 +15,6 @@ import { ConfirmReasonDialogComponent } from './dialogs/confirm-reason-dialog/co
 import { DialogContentDirective } from './dialogs/dialog-content.directive';
 import { TicketImageDialogComponent } from './dialogs/ticket-image-dialog/ticket-image-dialog.component';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
-import { NgxBusyModule } from './modules/ngx-busy/ngx-busy.module';
 import { NgxMaterialModule } from './modules/ngx-material/ngx-material.module';
 import { NgxProgressModule } from './modules/ngx-progress/ngx-progress.module';
 import { CapitalizePipe } from './pipes/capitalize.pipe';
@@ -56,7 +55,6 @@ import { TicketImageContainerComponent } from './dialogs/ticket-image-container/
         CommonModule,
         RouterModule,
         ReactiveFormsModule,
-        NgxBusyModule,
         NgxMaterialModule,
         NgxMaskDirective, 
         NgxMaskPipe,
@@ -70,7 +68,6 @@ import { TicketImageContainerComponent } from './dialogs/ticket-image-container/
         CommonModule,
         RouterModule,
         ReactiveFormsModule,
-        NgxBusyModule,
         NgxMaterialModule,
         NgxMaskDirective, 
         NgxMaskPipe,

@@ -21,7 +21,6 @@ import { DisputeCaseFileSummary } from 'app/api';
 export class StaffWorkbenchDashboardComponent implements OnInit {
   @ViewChild("DCF") dcfTab: MatTab;
 
-  busy: Subscription;
   tabSelected = new FormControl(0);
   showTicket: boolean = false;
   showManualEntry: boolean = false;

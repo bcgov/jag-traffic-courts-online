@@ -46,7 +46,6 @@
     "bootstrap": "^5.3.8",
     "keycloak-angular": "^21.0.0",
     "keycloak-js": "23.0.7",
-    "ng-busy": "^18.0.0",
     "ng-multiselect-dropdown": "^1.0.0",
     "ng2-currency-mask": "^13.0.3",
     "ngx-bootstrap": "^21.0.1",

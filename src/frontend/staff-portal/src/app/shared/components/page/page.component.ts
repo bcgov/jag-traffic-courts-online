@@ -1,7 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
-import { LoadingStore } from '@core/store';
-import { Store } from '@ngrx/store';
-import { Subscription, filter } from 'rxjs';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-page',
@@ -9,29 +6,11 @@ import { Subscription, filter } from 'rxjs';
   styleUrls: ['./page.component.scss'],
   standalone: false,
 })
-export class PageComponent implements OnDestroy {
+export class PageComponent {
   @Input() public mode: 'default' | 'full';
 
-  private subscriptions: Subscription[] = [];
-  public busy: Subscription;
-
   constructor(
-    private store: Store
   ) {
     this.mode = 'default';
-    let busySubscription = this.store.select(LoadingStore.Selectors.IsLoading).pipe(filter(i => !!i)).subscribe(() => {
-      if (!this.busy || this.busy.closed) {
-        this.busy = this.store.select(LoadingStore.Selectors.IsLoading).subscribe(isLoading => {
-          if (!isLoading) {
-            this.busy.unsubscribe();
-          }
-        });
-      }
-    });
-    this.subscriptions.push(busySubscription);
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(i => i.unsubscribe());
   }
 }
