@@ -6,7 +6,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
-describe('ConfirmDialogComponent', () => {
+describe('MoreOptionsDialogComponent', () => {
   let component: MoreOptionsDialogComponent;
   let fixture: ComponentFixture<MoreOptionsDialogComponent>;
 
