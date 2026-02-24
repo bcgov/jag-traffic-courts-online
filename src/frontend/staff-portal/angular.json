@@ -52,7 +52,10 @@
               "includePaths": [
                 "src/scss",
                 "."
-              ]
+              ],
+              "sass": {
+                "silenceDeprecations": ["color-functions", "global-builtin", "if-function", "import"]
+              }
             },
             "allowedCommonJsDependencies": [
               "keycloak-js",
