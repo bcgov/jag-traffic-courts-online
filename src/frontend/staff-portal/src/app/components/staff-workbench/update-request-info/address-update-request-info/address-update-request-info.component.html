@@ -1,130 +1,140 @@
-<mat-card *ngIf="isUpdateRequested && disputantUpdateRequest.status === 'PENDING'">
-  <span>
-    <span><b>Disputant Address ({{ disputantUpdateRequest.status }})</b></span>
-    <span style="float:right">
-      {{ disputantUpdateRequest.createdTs | date: "dd-MMM-yyyy" }}
-    </span>
-  </span><br /><br />
-  <div style="display: grid; grid-template-columns: auto auto auto" *ngIf="requestReadable === true">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">&nbsp;</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Current</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Requested Update</p>
-    </span>
-    <ng-container *ngIf="updateRequested.AddressLine1 && updateRequested.AddressLine1 !== disputeInfo.addressLine1">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Address Line One</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" >{{ disputeInfo.addressLine1 }}</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text">{{ updateRequested.AddressLine1 }}</p>
-    </span>
-    </ng-container>
-    <ng-container *ngIf="updateRequested.AddressLine2 && updateRequested.AddressLine2 !== disputeInfo.addressLine2">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Address Line Two</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" >{{ disputeInfo.addressLine2 }}</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text">{{ updateRequested.AddressLine2 }}</p>
-    </span>
-    </ng-container>
-    <ng-container *ngIf="updateRequested.AddressLine3 && updateRequested.AddressLine3 !== disputeInfo.addressLine3">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Address Line Three</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" >{{ disputeInfo.addressLine3 }}</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text">{{ updateRequested.AddressLine3 }}</p>
-    </span>
-    </ng-container>
-    <ng-container *ngIf="updateRequested.AddressCity && updateRequested.AddressCity !== disputeInfo.addressCity">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">City</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" >{{ disputeInfo.addressCity }}</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text">{{ updateRequested.AddressCity }}</p>
-    </span>
-    </ng-container>
-    <ng-container *ngIf="(updateRequested.AddressProvinceCountryId || updateRequested.AddressProvince) && oldProvince !== newProvince">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Province/State</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" >{{ oldProvince }}</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text">{{ newProvince }}</p>
-    </span>
-    </ng-container>
-    <ng-container *ngIf="updateRequested.AddressCountryId && oldCountry !== newCountry">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Country</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" >{{ oldCountry }}</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text">{{ newCountry }}</p>
-    </span>
-    </ng-container>
-    <ng-container *ngIf="updateRequested.PostalCode && updateRequested.PostalCode !== disputeInfo.postalCode">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Postal/Zip Code</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" >{{ disputeInfo.postalCode }}</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text">{{ updateRequested.PostalCode }}</p>
-    </span>
-    </ng-container>
-    <ng-container *ngIf="updateRequested.DriversLicenceNumber && updateRequested.DriversLicenceNumber !== disputeInfo.driversLicenceNumber">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Driver's Licence Number</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" >{{ disputeInfo.driversLicenceNumber }}</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text">{{ updateRequested.DriversLicenceNumber }}</p>
-    </span>
-    </ng-container>
-    <ng-container *ngIf="oldDLProvince !== newDLProvince">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Driver's Licence Province/State</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" >{{ oldDLProvince }}</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text">{{ newDLProvince }}</p>
-    </span>
-    </ng-container>
-    <br />
-  </div>
-  <div>
-    <span style="float:right" *ngIf="disputantUpdateRequest.status === 'PENDING'">
-      <mat-button-toggle-group [(ngModel)]="disputantUpdateRequest.newStatus" aria-label="Decision" (change)="statusChange($event)">
-        <mat-button-toggle value="ACCEPTED" *ngIf="requestReadable === true">Accept</mat-button-toggle>
-        <mat-button-toggle value="REJECTED">Reject</mat-button-toggle>
-        <mat-button-toggle value="PENDING">Pending</mat-button-toggle>
-      </mat-button-toggle-group>
-    </span>
-  </div>
-  <div *ngIf="requestReadable === false">Update Request Unreadable {{ disputantUpdateRequest.updateJson }}</div>
-  <br /><br />
-</mat-card>
+@if (isUpdateRequested && disputantUpdateRequest.status === 'PENDING') {
+  <mat-card appearance="outlined">
+    <span>
+      <span><b>Disputant Address ({{ disputantUpdateRequest.status }})</b></span>
+      <span style="float:right">
+        {{ disputantUpdateRequest.createdTs | date: "dd-MMM-yyyy" }}
+      </span>
+    </span><br /><br />
+    @if (requestReadable === true) {
+      <div style="display: grid; grid-template-columns: auto auto auto">
+        <span class="section-grid-cell">
+          <p class="section-grid-header">&nbsp;</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Current</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Requested Update</p>
+        </span>
+        @if (updateRequested.AddressLine1 && updateRequested.AddressLine1 !== disputeInfo.addressLine1) {
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Address Line One</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text" >{{ disputeInfo.addressLine1 }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text">{{ updateRequested.AddressLine1 }}</p>
+          </span>
+        }
+        @if (updateRequested.AddressLine2 && updateRequested.AddressLine2 !== disputeInfo.addressLine2) {
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Address Line Two</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text" >{{ disputeInfo.addressLine2 }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text">{{ updateRequested.AddressLine2 }}</p>
+          </span>
+        }
+        @if (updateRequested.AddressLine3 && updateRequested.AddressLine3 !== disputeInfo.addressLine3) {
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Address Line Three</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text" >{{ disputeInfo.addressLine3 }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text">{{ updateRequested.AddressLine3 }}</p>
+          </span>
+        }
+        @if (updateRequested.AddressCity && updateRequested.AddressCity !== disputeInfo.addressCity) {
+          <span class="section-grid-cell">
+            <p class="section-grid-header">City</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text" >{{ disputeInfo.addressCity }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text">{{ updateRequested.AddressCity }}</p>
+          </span>
+        }
+        @if ((updateRequested.AddressProvinceCountryId || updateRequested.AddressProvince) && oldProvince !== newProvince) {
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Province/State</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text" >{{ oldProvince }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text">{{ newProvince }}</p>
+          </span>
+        }
+        @if (updateRequested.AddressCountryId && oldCountry !== newCountry) {
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Country</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text" >{{ oldCountry }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text">{{ newCountry }}</p>
+          </span>
+        }
+        @if (updateRequested.PostalCode && updateRequested.PostalCode !== disputeInfo.postalCode) {
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Postal/Zip Code</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text" >{{ disputeInfo.postalCode }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text">{{ updateRequested.PostalCode }}</p>
+          </span>
+        }
+        @if (updateRequested.DriversLicenceNumber && updateRequested.DriversLicenceNumber !== disputeInfo.driversLicenceNumber) {
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Driver's Licence Number</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text" >{{ disputeInfo.driversLicenceNumber }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text">{{ updateRequested.DriversLicenceNumber }}</p>
+          </span>
+        }
+        @if (oldDLProvince !== newDLProvince) {
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Driver's Licence Province/State</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text" >{{ oldDLProvince }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text">{{ newDLProvince }}</p>
+          </span>
+        }
+        <br />
+      </div>
+    }
+    <div>
+      @if (disputantUpdateRequest.status === 'PENDING') {
+        <span style="float:right">
+          <mat-button-toggle-group [(ngModel)]="disputantUpdateRequest.newStatus" aria-label="Decision" (change)="statusChange($event)">
+            @if (requestReadable === true) {
+              <mat-button-toggle value="ACCEPTED">Accept</mat-button-toggle>
+            }
+            <mat-button-toggle value="REJECTED">Reject</mat-button-toggle>
+            <mat-button-toggle value="PENDING">Pending</mat-button-toggle>
+          </mat-button-toggle-group>
+        </span>
+      }
+    </div>
+    @if (requestReadable === false) {
+      <div>Update Request Unreadable {{ disputantUpdateRequest.updateJson }}</div>
+    }
+    <br /><br />
+  </mat-card>
+}

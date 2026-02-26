@@ -2,7 +2,7 @@ ARG BUILD_IMAGE=docker.io/node
 ARG RUNTIME_IMAGE=registry.access.redhat.com/ubi8/nginx-120
 
 # Build image
-FROM $BUILD_IMAGE:18.12 AS build-deps
+FROM $BUILD_IMAGE:24 AS build-deps
 
 # set working directory
 ENV NODE_ROOT /usr/src/app
@@ -37,7 +37,7 @@ ENV APP_VERSION=$GIT_VERSION
 ENV GIT_SHA=$GIT_SHA
 
 COPY --from=build-deps /usr/src/app/src/favicon.ico /usr/share/nginx/html
-COPY --from=build-deps /usr/src/app/dist/staff-portal /usr/share/nginx/html
+COPY --from=build-deps /usr/src/app/dist/staff-portal/browser /usr/share/nginx/html
 COPY --from=build-deps /usr/src/app/nginx.conf /opt/app-root/etc/nginx.default.d/default.conf
 COPY --from=build-deps /usr/src/app/nginx-api-proxy-pass.conf /opt/app-root/etc/nginx.default.d/nginx-api-proxy-pass.conf
 

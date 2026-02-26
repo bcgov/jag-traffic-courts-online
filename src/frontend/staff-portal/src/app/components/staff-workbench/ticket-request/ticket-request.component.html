@@ -5,18 +5,22 @@
       <app-page-header>
         <ng-container subHeader>
           <span>Ticket Request Information </span>
-          <i *ngIf="collapseObj?.contactInformation" class="fa fa-minus-circle"
+          @if (collapseObj?.contactInformation) {
+            <i class="fa fa-minus-circle"
             style="font-size:18px; color:#009cde"></i>
-          <i *ngIf="!collapseObj?.contactInformation" class="fa fa-plus-circle"
+          }
+          @if (!collapseObj?.contactInformation) {
+            <i class="fa fa-plus-circle"
             style="font-size:18px; color:#009cde"></i>
+          }
         </ng-container>
       </app-page-header>
 
     </mat-expansion-panel-header>
 
     <!-- Counts -->
-    
-    <ng-container *ngFor="let disputeCount of disputeCounts.controls; let i = index">
+
+    @for (disputeCount of disputeCounts.controls; track i; let i = $index) {
       <div class="row mt-2 card-section py-2 px-4 mb-3 pt-3 col-9">
         <div class="col-lg-2">
           <div style="display: flex">
@@ -25,16 +29,13 @@
             </span>
           </div>
         </div>
-        
         <div class="col-lg-7">
           <small class="d-block">For this count I would like to</small>
           <strong><div>{{ disputeCount.get('requestType').value }}</div></strong>
         </div>
-
         <div class="row mb-2 justify-content-end">
           <hr class="d-print-none col-lg-10 pull-right" />
         </div>
-
         <div class="row mb-2">
           <div class="offset-lg-2 col-lg-7">
             <small class="d-block">Description of offence</small>
@@ -46,110 +47,124 @@
           </div>
         </div>
       </div>
-    </ng-container>
+    }
 
     <!-- Additional Information -->
     <div class="row mt-2 card-section py-2 px-4 mb-3 pt-3 col-9">
       <div class="page-subheader pagebreak additional-info">
         <strong><span class="contact-body">Additional information</span></strong>
-        <div *ngIf="disputeInfo.requestCourtAppearanceYn === RequestCourtAppearance.N">
-          <ng-container *ngIf="countsActions?.requestReduction?.length > 0">
-            <hr />
-            <strong class="fs-5">
-              <div>{{ countsActions?.requestReduction }}</div>
-            </strong>
-            <h3 class="mb-0 additional-info-desc">I do not want to attend a court hearing and want to plead guilty and supply written
+        @if (disputeInfo.requestCourtAppearanceYn === RequestCourtAppearance.N) {
+          <div>
+            @if (countsActions?.requestReduction?.length > 0) {
+              <hr />
+              <strong class="fs-5">
+                <div>{{ countsActions?.requestReduction }}</div>
+              </strong>
+              <h3 class="mb-0 additional-info-desc">I do not want to attend a court hearing and want to plead guilty and supply written
               reasons.</h3>
-            <small>Written reasons for <strong>fine reduction</strong> request</small>
-            <div>{{ disputeInfo.fineReductionReason }}</div>
-          </ng-container>
-          <ng-container *ngIf="countsActions?.requestReduction !== countsActions.requestTimeToPay">
-            <hr />
-            <strong class="fs-5">
-              <div>{{ countsActions?.requestTimeToPay }}</div>
-            </strong>
-          </ng-container>
-          <ng-container *ngIf="countsActions?.requestTimeToPay?.length > 0">
-            <h3 class="mb-0 additional-info-desc">I do not want to attend a court hearing and want to plead guilty and supply written
+              <small>Written reasons for <strong>fine reduction</strong> request</small>
+              <div>{{ disputeInfo.fineReductionReason }}</div>
+            }
+            @if (countsActions?.requestReduction !== countsActions.requestTimeToPay) {
+              <hr />
+              <strong class="fs-5">
+                <div>{{ countsActions?.requestTimeToPay }}</div>
+              </strong>
+            }
+            @if (countsActions?.requestTimeToPay?.length > 0) {
+              <h3 class="mb-0 additional-info-desc">I do not want to attend a court hearing and want to plead guilty and supply written
               reasons.</h3>
-            <small>Written reasons for <strong>time to pay</strong> request</small>
-            <div>{{ disputeInfo.timeToPayReason }}</div>
-          </ng-container>
-        </div>
-        
-        <div *ngIf="disputeInfo.requestCourtAppearanceYn === RequestCourtAppearance.Y">
-          <hr />
-          <div *ngIf="countsActions?.Guilty.length > 0">
-            <strong class="fs-5 mb-3">
-              <div>{{ countsActions?.Guilty }}</div>
-            </strong>
-            <h3 class="mb-2 additional-info-desc">
-              I want to attend a court hearing to plead guilty and request a fine reduction and/or time to pay.
-            </h3>
-            <br />
+              <small>Written reasons for <strong>time to pay</strong> request</small>
+              <div>{{ disputeInfo.timeToPayReason }}</div>
+            }
           </div>
-          <div *ngIf="countsActions?.NotGuilty.length > 0">
-            <strong class="fs-5 mb-3">
-              <div>{{ countsActions?.NotGuilty }}</div>
-            </strong>
-            <h3 class="mb-2 additional-info-desc">
-              I want to attend a court hearing and dispute the charge.
-            </h3>
-            <br />
+        }
+
+        @if (disputeInfo.requestCourtAppearanceYn === RequestCourtAppearance.Y) {
+          <div>
+            <hr />
+            @if (countsActions?.Guilty.length > 0) {
+              <div>
+                <strong class="fs-5 mb-3">
+                  <div>{{ countsActions?.Guilty }}</div>
+                </strong>
+                <h3 class="mb-2 additional-info-desc">
+                  I want to attend a court hearing to plead guilty and request a fine reduction and/or time to pay.
+                </h3>
+                <br />
+              </div>
+            }
+            @if (countsActions?.NotGuilty.length > 0) {
+              <div>
+                <strong class="fs-5 mb-3">
+                  <div>{{ countsActions?.NotGuilty }}</div>
+                </strong>
+                <h3 class="mb-2 additional-info-desc">
+                  I want to attend a court hearing and dispute the charge.
+                </h3>
+                <br />
+              </div>
+            }
+            @if (disputeInfo.representedByLawyer === RepresentedByLawyer.Y) {
+              <div class="row mb-2">
+                <div class="row mb-3">
+                  <small>Action</small>
+                  <div><strong>I intend to be represented by a lawyer in court</strong></div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col">
+                    <small>Name of law firm</small>
+                    <div><strong>{{ disputeInfo.lawFirmName }}</strong></div>
+                  </div>
+                  <div class="col">
+                    <small>Full name of lawyer</small>
+                    <div><strong>{{ disputeInfo.lawyerFullName }}</strong></div>
+                  </div>
+                  <div class="col">
+                    <small>Contact Email</small>
+                    <div><strong>{{ disputeInfo.lawyerEmail }}</strong></div>
+                  </div>
+                  <div class="col">
+                    <small>Phone Number</small>
+                    <div><strong>{{ disputeInfo.lawyerPhoneNumber }}</strong></div>
+                  </div>
+                </div>
+                <div class="row">
+                  <small>Address of the law firm</small>
+                  <div><strong>{{ disputeInfo.lawyerAddress }}</strong></div>
+                </div>
+              </div>
+            }
+            @if (disputeInfo.interpreterLanguageCd) {
+              <div class="row mb-2">
+                <div class="row">
+                  <div class="col-lg-8">
+                    <small>Action</small>
+                    <div><strong>I require a language interpreter at the hearing</strong></div>
+                  </div>
+                  <div class="col">
+                    <small>Language</small>
+                    <div><strong>{{ lookups.getLanguageDescription(disputeInfo.interpreterLanguageCd)}}</strong></div>
+                  </div>
+                </div>
+              </div>
+            }
+            @if (disputeInfo.witnessNo > 0) {
+              <div class="row mb-2">
+                <div class="row">
+                  <div class="col-lg-8">
+                    <small>Action</small>
+                    <div><strong>I intend to call witness(es)</strong></div>
+                  </div>
+                  <div class="col">
+                    <small># of witness(es)</small>
+                    <div><strong>{{disputeInfo.witnessNo}}</strong></div>
+                  </div>
+                </div>
+              </div>
+            }
           </div>
-          <div class="row mb-2" *ngIf="disputeInfo.representedByLawyer === RepresentedByLawyer.Y">
-            <div class="row mb-3">
-              <small>Action</small>
-              <div><strong>I intend to be represented by a lawyer in court</strong></div>
-            </div>
-            <div class="row mb-3">
-              <div class="col">
-                <small>Name of law firm</small>
-                <div><strong>{{ disputeInfo.lawFirmName }}</strong></div>
-              </div>
-              <div class="col">
-                <small>Full name of lawyer</small>
-                <div><strong>{{ disputeInfo.lawyerFullName }}</strong></div>
-              </div>
-              <div class="col">
-                <small>Contact Email</small>
-                <div><strong>{{ disputeInfo.lawyerEmail }}</strong></div>
-              </div>
-              <div class="col">
-                <small>Phone Number</small>
-                <div><strong>{{ disputeInfo.lawyerPhoneNumber }}</strong></div>
-              </div>
-            </div>
-            <div class="row">
-              <small>Address of the law firm</small>
-              <div><strong>{{ disputeInfo.lawyerAddress }}</strong></div>
-            </div>
-          </div>
-          <div class="row mb-2" *ngIf="disputeInfo.interpreterLanguageCd">
-            <div class="row">
-              <div class="col-lg-8">
-                <small>Action</small>
-                <div><strong>I require a language interpreter at the hearing</strong></div>
-              </div>
-              <div class="col">
-                <small>Language</small>
-                <div><strong>{{ lookups.getLanguageDescription(disputeInfo.interpreterLanguageCd)}}</strong></div>
-              </div>
-            </div>
-          </div>
-          <div class="row mb-2" *ngIf="disputeInfo.witnessNo > 0">
-            <div class="row">
-              <div class="col-lg-8">
-                <small>Action</small>
-                <div><strong>I intend to call witness(es)</strong></div>
-              </div>
-              <div class="col">
-                <small># of witness(es)</small>
-                <div><strong>{{disputeInfo.witnessNo}}</strong></div>
-              </div>
-            </div>
-          </div>
-        </div>
+        }
       </div>
     </div>
 

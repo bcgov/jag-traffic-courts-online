@@ -1,141 +1,151 @@
-<mat-card *ngIf="disputantUpdateRequest.status === 'PENDING'">
-  <span>
-    <span><b>Name ({{ disputantUpdateRequest.status }})</b></span>
-    <span style="float:right">
-      {{ disputantUpdateRequest.createdTs | date: "dd-MMM-yyyy" }}
-    </span>
-  </span><br /><br />
-  <div style="display: grid; grid-template-columns: auto auto auto" *ngIf="requestReadable === true">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">&nbsp;</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Current</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Requested Update</p>
-    </span>
-    <ng-container *ngIf="updateRequested.ContactType !== null && updateRequested.ContactType !== disputeInfo.contactTypeCd">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Contact Type</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" >{{ disputeInfo.contactTypeCd }}</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text">{{ updateRequested.ContactType }}</p>
-    </span>
-    </ng-container>
-    <ng-container *ngIf="updateRequested.DisputantSurname && updateRequested.DisputantSurname !== disputeInfo.disputantSurname">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Disputant Surname</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" >{{ disputeInfo.disputantSurname }}</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text">{{ updateRequested.DisputantSurname }}</p>
-    </span>
-    </ng-container>
-    <ng-container *ngIf="updateRequested.DisputantGivenName1 && updateRequested.DisputantGivenName1 !== disputeInfo.disputantGivenName1">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Disputant Given Name One</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" >{{ disputeInfo.disputantGivenName1 }}</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text">{{ updateRequested.DisputantGivenName1 }}</p>
-    </span>
-    </ng-container>
-    <ng-container *ngIf="updateRequested.DisputantGivenName2 && updateRequested.DisputantGivenName2 !== disputeInfo.disputantGivenName2">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Disputant Given Name Two</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" >{{ disputeInfo.disputantGivenName2 }}</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text">{{ updateRequested.DisputantGivenName2 }}</p>
-    </span>
-    </ng-container>
-    <ng-container *ngIf="updateRequested.DisputantGivenName3 && updateRequested.DisputantGivenName3 !== disputeInfo.disputantGivenName3">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Disputant Given Name Three</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" >{{ disputeInfo.disputantGivenName3 }}</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text">{{ updateRequested.DisputantGivenName3 }}</p>
-    </span>
-    </ng-container>
-    <ng-container *ngIf="updateRequested.ContactSurnameNm && updateRequested.ContactType !== ContactTypeCd.Individual && updateRequested.ContactSurnameNm !== disputeInfo.contactSurnameNm">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Contact Surname</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" >{{ disputeInfo.contactSurnameNm }}</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text">{{ updateRequested.ContactSurnameNm }}</p>
-    </span>
-    </ng-container>
-    <ng-container *ngIf="updateRequested.ContactGiven1Nm && updateRequested.ContactType !== ContactTypeCd.Individual && updateRequested.ContactGiven1Nm !== disputeInfo.contactGiven1Nm">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Contact Given Name One</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" >{{ disputeInfo.contactGiven1Nm }}</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text">{{ updateRequested.ContactGiven1Nm }}</p>
-    </span>
-    </ng-container>
-    <ng-container *ngIf="updateRequested.ContactGiven2Nm && updateRequested.ContactType !== ContactTypeCd.Individual && updateRequested.ContactGiven2Nm !== disputeInfo.contactGiven2Nm">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Contact Given Name Two</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" >{{ disputeInfo.contactGiven2Nm }}</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text">{{ updateRequested.ContactGiven2Nm }}</p>
-    </span>
-    </ng-container>
-    <ng-container *ngIf="updateRequested.ContactGiven3Nm && updateRequested.ContactType !== ContactTypeCd.Individual && updateRequested.ContactGiven3Nm !== disputeInfo.contactGiven3Nm">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Contact Given Name Three</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" >{{ disputeInfo.contactGiven3Nm }}</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text">{{ updateRequested.ContactGiven3Nm }}</p>
-    </span>
-    </ng-container>
-    <ng-container *ngIf="updateRequested.ContactLawFirmNm && updateRequested.ContactType === ContactTypeCd.Lawyer && updateRequested.ContactLawFirmNm !== disputeInfo.contactLawFirmNm">
-    <span class="section-grid-cell">
-      <p class="section-grid-header">Contact Law Firm Name</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text" >{{ disputeInfo.contactLawFirmNm }}</p>
-    </span>
-    <span class="section-grid-cell">
-      <p class="section-grid-text">{{ updateRequested.ContactLawFirmNm }}</p>
-    </span>
-    </ng-container>
-    <br />
-  </div>
-  <div>
-    <span style="float:right" *ngIf="disputantUpdateRequest.status === 'PENDING'">
-      <mat-button-toggle-group [(ngModel)]="disputantUpdateRequest.newStatus" aria-label="Decision" (change)="statusChange($event)">
-        <mat-button-toggle value="ACCEPTED" *ngIf="requestReadable === true">Accept</mat-button-toggle>
-        <mat-button-toggle value="REJECTED">Reject</mat-button-toggle>
-        <mat-button-toggle value="PENDING">Pending</mat-button-toggle>
-      </mat-button-toggle-group>
-    </span>
-  </div>
-  <div *ngIf="requestReadable === false">Update Request Unreadable {{ disputantUpdateRequest.updateJson }}</div>
-  <br /><br />
-</mat-card>
+@if (disputantUpdateRequest.status === 'PENDING') {
+  <mat-card appearance="outlined">
+    <span>
+      <span><b>Name ({{ disputantUpdateRequest.status }})</b></span>
+      <span style="float:right">
+        {{ disputantUpdateRequest.createdTs | date: "dd-MMM-yyyy" }}
+      </span>
+    </span><br /><br />
+    @if (requestReadable === true) {
+      <div style="display: grid; grid-template-columns: auto auto auto">
+        <span class="section-grid-cell">
+          <p class="section-grid-header">&nbsp;</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Current</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Requested Update</p>
+        </span>
+        @if (updateRequested.ContactType !== null && updateRequested.ContactType !== disputeInfo.contactTypeCd) {
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Contact Type</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text" >{{ disputeInfo.contactTypeCd }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text">{{ updateRequested.ContactType }}</p>
+          </span>
+        }
+        @if (updateRequested.DisputantSurname && updateRequested.DisputantSurname !== disputeInfo.disputantSurname) {
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Disputant Surname</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text" >{{ disputeInfo.disputantSurname }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text">{{ updateRequested.DisputantSurname }}</p>
+          </span>
+        }
+        @if (updateRequested.DisputantGivenName1 && updateRequested.DisputantGivenName1 !== disputeInfo.disputantGivenName1) {
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Disputant Given Name One</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text" >{{ disputeInfo.disputantGivenName1 }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text">{{ updateRequested.DisputantGivenName1 }}</p>
+          </span>
+        }
+        @if (updateRequested.DisputantGivenName2 && updateRequested.DisputantGivenName2 !== disputeInfo.disputantGivenName2) {
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Disputant Given Name Two</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text" >{{ disputeInfo.disputantGivenName2 }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text">{{ updateRequested.DisputantGivenName2 }}</p>
+          </span>
+        }
+        @if (updateRequested.DisputantGivenName3 && updateRequested.DisputantGivenName3 !== disputeInfo.disputantGivenName3) {
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Disputant Given Name Three</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text" >{{ disputeInfo.disputantGivenName3 }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text">{{ updateRequested.DisputantGivenName3 }}</p>
+          </span>
+        }
+        @if (updateRequested.ContactSurnameNm && updateRequested.ContactType !== ContactTypeCd.Individual && updateRequested.ContactSurnameNm !== disputeInfo.contactSurnameNm) {
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Contact Surname</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text" >{{ disputeInfo.contactSurnameNm }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text">{{ updateRequested.ContactSurnameNm }}</p>
+          </span>
+        }
+        @if (updateRequested.ContactGiven1Nm && updateRequested.ContactType !== ContactTypeCd.Individual && updateRequested.ContactGiven1Nm !== disputeInfo.contactGiven1Nm) {
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Contact Given Name One</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text" >{{ disputeInfo.contactGiven1Nm }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text">{{ updateRequested.ContactGiven1Nm }}</p>
+          </span>
+        }
+        @if (updateRequested.ContactGiven2Nm && updateRequested.ContactType !== ContactTypeCd.Individual && updateRequested.ContactGiven2Nm !== disputeInfo.contactGiven2Nm) {
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Contact Given Name Two</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text" >{{ disputeInfo.contactGiven2Nm }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text">{{ updateRequested.ContactGiven2Nm }}</p>
+          </span>
+        }
+        @if (updateRequested.ContactGiven3Nm && updateRequested.ContactType !== ContactTypeCd.Individual && updateRequested.ContactGiven3Nm !== disputeInfo.contactGiven3Nm) {
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Contact Given Name Three</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text" >{{ disputeInfo.contactGiven3Nm }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text">{{ updateRequested.ContactGiven3Nm }}</p>
+          </span>
+        }
+        @if (updateRequested.ContactLawFirmNm && updateRequested.ContactType === ContactTypeCd.Lawyer && updateRequested.ContactLawFirmNm !== disputeInfo.contactLawFirmNm) {
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Contact Law Firm Name</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text" >{{ disputeInfo.contactLawFirmNm }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-text">{{ updateRequested.ContactLawFirmNm }}</p>
+          </span>
+        }
+        <br />
+      </div>
+    }
+    <div>
+      @if (disputantUpdateRequest.status === 'PENDING') {
+        <span style="float:right">
+          <mat-button-toggle-group [(ngModel)]="disputantUpdateRequest.newStatus" aria-label="Decision" (change)="statusChange($event)">
+            @if (requestReadable === true) {
+              <mat-button-toggle value="ACCEPTED">Accept</mat-button-toggle>
+            }
+            <mat-button-toggle value="REJECTED">Reject</mat-button-toggle>
+            <mat-button-toggle value="PENDING">Pending</mat-button-toggle>
+          </mat-button-toggle-group>
+        </span>
+      }
+    </div>
+    @if (requestReadable === false) {
+      <div>Update Request Unreadable {{ disputantUpdateRequest.updateJson }}</div>
+    }
+    <br /><br />
+  </mat-card>
+}

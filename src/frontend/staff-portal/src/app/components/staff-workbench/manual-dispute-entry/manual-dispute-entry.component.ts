@@ -27,14 +27,15 @@ import {
   Count
 } from 'app/api';
 import { ToastService } from '@core/services/toast.service';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 
 @Component({
   selector: 'app-manual-dispute-entry',
   templateUrl: './manual-dispute-entry.component.html',
-  styleUrls: ['./manual-dispute-entry.component.scss']
+  styleUrls: ['./manual-dispute-entry.component.scss'],
+  standalone: false,
 })
 export class ManualDisputeEntryComponent implements OnInit {
   @Output() public backInbox: EventEmitter<any> = new EventEmitter();

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { JJDisputeCourtAppearanceRoP } from 'app/api';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
@@ -8,6 +8,7 @@ import { AuthService, UserRepresentation } from 'app/services/auth.service';
   selector: 'app-jj-dispute-court-appearances',
   templateUrl: './jj-dispute-court-appearances.component.html',
   styleUrls: ['./jj-dispute-court-appearances.component.scss'],
+  standalone: false,
 })
 export class JJDisputeCourtAppearancesComponent implements OnInit {
   @Input() data: JJDisputeCourtAppearanceRoP[];

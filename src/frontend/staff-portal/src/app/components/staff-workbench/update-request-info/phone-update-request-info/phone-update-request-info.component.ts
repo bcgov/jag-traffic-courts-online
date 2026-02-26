@@ -7,7 +7,8 @@ import { DisputeUpdateRequestStatus2 } from 'app/api';
 @Component({
   selector: 'app-phone-update-request-info',
   templateUrl: './phone-update-request-info.component.html',
-  styleUrls: ['./phone-update-request-info.component.scss']
+  styleUrls: ['./phone-update-request-info.component.scss'],
+  standalone: false,
 })
 export class PhoneUpdateRequestInfoComponent implements OnInit {
   @Input() public disputeInfo: Dispute;

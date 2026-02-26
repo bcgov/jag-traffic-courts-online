@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LookupsService } from 'app/services/lookups.service';
 import { JJDisputeService } from 'app/services/jj-dispute.service';
 import { LoggerService } from '@core/services/logger.service';
-import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { DisputeCaseFileSummary, PagedDisputeCaseFileSummaryCollection, SortDirection, YesNo, Agency } from 'app/api';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
 import { HearingType } from '@shared/consts/HearingType.model';
@@ -14,6 +14,7 @@ import { DisputeStatus } from '@shared/consts/DisputeStatus.model';
   selector: 'app-jj-dispute-wr-assignments',
   templateUrl: './jj-dispute-wr-assignments.component.html',
   styleUrls: ['./jj-dispute-wr-assignments.component.scss'],
+  standalone: false,
 })
 export class JJDisputeWRAssignmentsComponent implements OnInit {
   @Output() tcoDisputeInfo: EventEmitter<DisputeCaseFileSummary> = new EventEmitter();

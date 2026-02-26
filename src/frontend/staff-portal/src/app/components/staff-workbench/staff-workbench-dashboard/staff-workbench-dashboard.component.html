@@ -1,59 +1,74 @@
-<app-page *ngIf="!showTicket && !showManualEntry">
-  <ng-container stickyToolBar>
-    <div class="busy-container app-width">
-      <div [ngBusy]="busy">
+@if (!showTicket && !showManualEntry) {
+  <app-page>
+    <ng-container stickyToolBar>
+      <div class="app-width">
         <div class="content">
           <mat-tab-group class="dashTabs" mat-align-tabs="start" [selectedIndex]="tabSelected.value"
             (selectedIndexChange)="tabSelected.setValue($event)">
-            <mat-tab *ngIf="hasTicketValidationPermission">
-              <ng-template mat-tab-label>
-                <h2>Ticket Validation</h2>
-              </ng-template>
-            </mat-tab>
-            <mat-tab *ngIf="hasDecisionValidationPermission">
-              <ng-template mat-tab-label>
-                <h2>Decision Validation</h2>
-              </ng-template>
-            </mat-tab>
-            <mat-tab *ngIf="hasUpdateRequestsPermission">
-              <ng-template mat-tab-label>
-                <h2>Update Requests</h2>
-              </ng-template>
-            </mat-tab>
-            <mat-tab #DCF *ngIf="hasDCFPermission">
-              <ng-template mat-tab-label>
-                <h2>DCF</h2>
-              </ng-template>
-            </mat-tab>
+            @if (hasTicketValidationPermission) {
+              <mat-tab>
+                <ng-template mat-tab-label>
+                  <h2>Ticket Validation</h2>
+                </ng-template>
+              </mat-tab>
+            }
+            @if (hasDecisionValidationPermission) {
+              <mat-tab>
+                <ng-template mat-tab-label>
+                  <h2>Decision Validation</h2>
+                </ng-template>
+              </mat-tab>
+            }
+            @if (hasUpdateRequestsPermission) {
+              <mat-tab>
+                <ng-template mat-tab-label>
+                  <h2>Update Requests</h2>
+                </ng-template>
+              </mat-tab>
+            }
+            @if (hasDCFPermission) {
+              <mat-tab #DCF>
+                <ng-template mat-tab-label>
+                  <h2>DCF</h2>
+                </ng-template>
+              </mat-tab>
+            }
           </mat-tab-group>
         </div>
       </div>
-    </div>
-  </ng-container>
-
-  <ng-container *ngIf="tabSelected?.value === 0">
-    <app-ticket-inbox [tabIndex]="0" (disputeInfo)="changeDispute($event, tabTypes.TICKET_VALIDATION)"></app-ticket-inbox>
-  </ng-container>
-  <ng-container *ngIf="tabSelected?.value === 1">
-    <app-dispute-decision-inbox [tabIndex]="1" (tcoDisputeInfo)="changeTCODispute($event, tabTypes.DECISION_VALIDATION)"></app-dispute-decision-inbox>
-  </ng-container>
-  <ng-container *ngIf="tabSelected?.value === 2">
-    <app-update-request-inbox [tabIndex]="2" (disputeInfo)="changeDispute($event, tabTypes.UPDATE_REQUESTS)"></app-update-request-inbox>
-  </ng-container>
-  <ng-container *ngIf="tabSelected?.value === 3">
-    <app-jj-dispute-digital-case-file [tabIndex]="3" (tcoDisputeInfo)="changeTCODispute($event, tabTypes.DCF)"></app-jj-dispute-digital-case-file>
-  </ng-container>
-</app-page>
-<ng-container *ngIf="showManualEntry">
+    </ng-container>
+    @if (tabSelected?.value === 0) {
+      <app-ticket-inbox [tabIndex]="0" (disputeInfo)="changeDispute($event, tabTypes.TICKET_VALIDATION)"></app-ticket-inbox>
+    }
+    @if (tabSelected?.value === 1) {
+      <app-dispute-decision-inbox [tabIndex]="1" (tcoDisputeInfo)="changeTCODispute($event, tabTypes.DECISION_VALIDATION)"></app-dispute-decision-inbox>
+    }
+    @if (tabSelected?.value === 2) {
+      <app-update-request-inbox [tabIndex]="2" (disputeInfo)="changeDispute($event, tabTypes.UPDATE_REQUESTS)"></app-update-request-inbox>
+    }
+    @if (tabSelected?.value === 3) {
+      <app-jj-dispute-digital-case-file [tabIndex]="3" (tcoDisputeInfo)="changeTCODispute($event, tabTypes.DCF)"></app-jj-dispute-digital-case-file>
+    }
+  </app-page>
+}
+@if (showManualEntry) {
   <app-manual-dispute-entry (backInbox)="backInbox()"></app-manual-dispute-entry>
-</ng-container>
-<ng-container *ngIf="showTicket">
-  <app-contact-info *ngIf="decidePopup === 'A' && tabSelected.value === 0" (backInbox)="backInbox()"
+}
+@if (showTicket) {
+  @if (decidePopup === 'A' && tabSelected.value === 0) {
+    <app-contact-info (backInbox)="backInbox()"
     [disputeInfo]="disputeInfo"></app-contact-info>
-  <app-ticket-info *ngIf="decidePopup === 'E' && tabSelected.value === 0" (backInbox)="backInbox()"
+  }
+  @if (decidePopup === 'E' && tabSelected.value === 0) {
+    <app-ticket-info (backInbox)="backInbox()"
     [disputeInfo]="disputeInfo"></app-ticket-info>
-  <app-update-request-info *ngIf="tabSelected.value === 2" (backInbox)="backInbox()"
+  }
+  @if (tabSelected.value === 2) {
+    <app-update-request-info (backInbox)="backInbox()"
     [disputeInfo]="disputeInfo"></app-update-request-info>
-  <app-jj-dispute *ngIf="tabSelected.value === 1 || tabSelected.value === 3" (backInbox)="backInbox()"
+  }
+  @if (tabSelected.value === 1 || tabSelected.value === 3) {
+    <app-jj-dispute (backInbox)="backInbox()"
     [tcoDisputeInfo]="tcoDisputeInfo" [type]="tabTypeSelected" [isViewOnly]="true" [enableStaffSupport]="true"></app-jj-dispute>
-</ng-container>
+  }
+}

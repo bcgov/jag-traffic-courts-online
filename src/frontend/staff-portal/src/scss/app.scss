@@ -52,9 +52,10 @@ body.mat-typography {
   overflow: hidden;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
 .dashTabs .mat-tab-label {
   height: auto !important;
-
+  /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
   .mat-tab-label-content h2 {
     margin: 1rem 0;
   }

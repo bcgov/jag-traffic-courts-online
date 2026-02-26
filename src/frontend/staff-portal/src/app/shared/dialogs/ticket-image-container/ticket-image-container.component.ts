@@ -1,9 +1,10 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'app-ticket-image-container',
-    templateUrl: './ticket-image-container.component.html',
-    styleUrls: ['./ticket-image-container.component.scss']
+  selector: 'app-ticket-image-container',
+  templateUrl: './ticket-image-container.component.html',
+  styleUrls: ['./ticket-image-container.component.scss'],
+  standalone: false,
 })
 export class TicketImageContainerComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() public imageToShow: any;

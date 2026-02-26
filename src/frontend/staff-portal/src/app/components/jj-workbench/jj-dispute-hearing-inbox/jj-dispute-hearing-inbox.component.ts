@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
 import { JJDisputeService } from 'app/services/jj-dispute.service';
 import { SortDirection, YesNo, DisputeCaseFileSummary, PagedDisputeCaseFileSummaryCollection } from 'app/api';
@@ -14,6 +14,7 @@ import { LoggerService } from '@core/services/logger.service';
   selector: 'app-jj-dispute-hearing-inbox',
   templateUrl: './jj-dispute-hearing-inbox.component.html',
   styleUrls: ['./jj-dispute-hearing-inbox.component.scss'],
+  standalone: false,
 })
 export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   @Output() tcoDisputeInfo: EventEmitter<DisputeCaseFileSummary> = new EventEmitter();

@@ -1,13 +1,15 @@
 <app-table-filters [tabIndex]="tabIndex" [tableFilterKeys]="tableFilterKeys" [statusFilterOptions]="statusFilterOptions"
-[defaultStatusFilter]="defaultStatusFilter" (onFilterChanged)="onApplyFilter($event)">
-  <ng-container recordCount *ngIf="newCountShow">
-    <div>
-      <div class="vcenter">
-        <span class="BC-Gov-15px-black-text" style="color:green;"><b>{{ newCount }} NEW ticket
-            records</b></span>
+  [defaultStatusFilter]="defaultStatusFilter" (onFilterChanged)="onApplyFilter($event)">
+  @if (newCountShow) {
+    <ng-container recordCount>
+      <div>
+        <div class="vcenter">
+          <span class="BC-Gov-15px-black-text" style="color:green;"><b>{{ newCount }} NEW ticket
+          records</b></span>
+        </div>
       </div>
-    </div>
-  </ng-container>
+    </ng-container>
+  }
   <ng-container submitNewDispute *appFeatureFlag="featureType.staffDisputeIntake">
     <div>
       <div class="vcenter">
@@ -34,11 +36,17 @@
     <ng-container matColumnDef="__RedGreenAlert">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let element">
-        <mat-icon [ngStyle]="{ 'color':'red' }" *ngIf="element.__RedGreenAlert ==='Red'">cancel</mat-icon>
-        <mat-icon [ngStyle]="{ 'color':'grey' }"
-          *ngIf="element.__RedGreenAlert ==='Green' && (element.emailAddressVerified === false && element.emailAdddress)">check_circle</mat-icon>
-        <mat-icon [ngStyle]="{ 'color':'green' }"
-          *ngIf="element.__RedGreenAlert ==='Green' && (element.emailAddressVerified === true || !(element.emailAdddress))">check_circle</mat-icon>
+        @if (element.__RedGreenAlert ==='Red') {
+          <mat-icon [ngStyle]="{ 'color':'red' }">cancel</mat-icon>
+        }
+        @if (element.__RedGreenAlert ==='Green' && (element.emailAddressVerified === false && element.emailAdddress)) {
+          <mat-icon [ngStyle]="{ 'color':'grey' }"
+          >check_circle</mat-icon>
+        }
+        @if (element.__RedGreenAlert ==='Green' && (element.emailAddressVerified === true || !(element.emailAdddress))) {
+          <mat-icon [ngStyle]="{ 'color':'green' }"
+          >check_circle</mat-icon>
+        }
       </td>
     </ng-container>
 
@@ -58,11 +66,15 @@
         Ticket
       </th>
       <td mat-cell *matCellDef="let element">
-        <span [style.font-weight]="isNew(element) ? 'bold' : 'none'"
-          *ngIf="!element.userAssignedTo || element.userAssignedTo === userProfile.idir"><a
-            (click)="backWorkbench(element)" href="javascript:void(0)">{{ element.ticketNumber }}</a></span>
-        <span [style.font-weight]="isNew(element) ? 'bold' : 'none'"
-          *ngIf="element.userAssignedTo && element.userAssignedTo !== userProfile.idir">{{ element.ticketNumber}}</span>
+        @if (!element.userAssignedTo || element.userAssignedTo === userProfile.idir) {
+          <span [style.font-weight]="isNew(element) ? 'bold' : 'none'"
+            ><a
+          (click)="backWorkbench(element)" href="javascript:void(0)">{{ element.ticketNumber }}</a></span>
+        }
+        @if (element.userAssignedTo && element.userAssignedTo !== userProfile.idir) {
+          <span [style.font-weight]="isNew(element) ? 'bold' : 'none'"
+          >{{ element.ticketNumber}}</span>
+        }
       </td>
     </ng-container>
 
@@ -89,9 +101,13 @@
         Status
       </th>
       <td mat-cell *matCellDef="let element">
-        <span [style.font-weight]="isNew(element) ? 'bold' : 'none'"
-          *ngIf="element.emailAddressVerified || !(element.emailAddress)">{{ element.status }}</span>
-        <span *ngIf="!element.emailAddressVerified && element.emailAddress">Email Address Not Verified</span>
+        @if (element.emailAddressVerified || !(element.emailAddress)) {
+          <span [style.font-weight]="isNew(element) ? 'bold' : 'none'"
+          >{{ element.status }}</span>
+        }
+        @if (!element.emailAddressVerified && element.emailAddress) {
+          <span>Email Address Not Verified</span>
+        }
       </td>
     </ng-container>
 
@@ -101,7 +117,7 @@
       </th>
       <td mat-cell *matCellDef="let element" class="centerColumn">
         <mat-checkbox [checked]="element.requestCourtAppearanceYn === RequestCourtAppearance.Y"
-          [disabled]="true"></mat-checkbox>
+        [disabled]="true"></mat-checkbox>
       </td>
     </ng-container>
 
@@ -111,7 +127,7 @@
       </th>
       <td mat-cell *matCellDef="let element" class="centerColumn">
         <mat-checkbox [checked]="element.disputantDetectedOcrIssues === DisputantDetectedOcrIssues.Y"
-          [disabled]="true"></mat-checkbox>
+        [disabled]="true"></mat-checkbox>
       </td>
     </ng-container>
 
@@ -121,7 +137,7 @@
       </th>
       <td mat-cell *matCellDef="let element" class="centerColumn">
         <mat-checkbox [checked]="element.interpreterRequired === DisputeInterpreterRequired.Y"
-          [disabled]="true"></mat-checkbox>
+        [disabled]="true"></mat-checkbox>
       </td>
     </ng-container>
 
@@ -141,7 +157,7 @@
       <td mat-cell *matCellDef="let element">
         <span [style.font-weight]="isNew(element) ? 'bold' : 'none'"
           title="{{ element.userAssignedTs | date: 'dd-MMM-yyyy' }}">{{
-          element.userAssignedTo ? element.userAssignedTo : "Unassigned" }}</span>
+        element.userAssignedTo ? element.userAssignedTo : "Unassigned" }}</span>
       </td>
     </ng-container>
 
