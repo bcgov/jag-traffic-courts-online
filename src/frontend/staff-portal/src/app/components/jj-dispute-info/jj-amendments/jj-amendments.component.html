@@ -72,7 +72,8 @@
               <span class="count-status active" *ngIf="isCountDisputed(count)">(Disputed)</span>
             </h4>
             <mat-checkbox 
-              formControlName="isAmended" 
+              [checked]="amendmentForms[i].get('isAmended')?.value"
+              (change)="onCountCheckboxChange(i, $event.checked)"
               [disabled]="!isCountDisputed(count)"
               *ngIf="isCountDisputed(count)">
               Amend this count
@@ -146,8 +147,13 @@
                 <mat-form-field appearance="outline">
                   <textarea 
                     matInput 
+                    formControlName="other"
                     placeholder="Other amendments"
-                    rows="3"></textarea>
+                    rows="3"
+                    maxlength="500"></textarea>
+                  <mat-error *ngIf="amendmentForms[i].get('other')?.hasError('maxlength')">
+                    Maximum 500 characters
+                  </mat-error>
                 </mat-form-field>
               </div>
             </div>

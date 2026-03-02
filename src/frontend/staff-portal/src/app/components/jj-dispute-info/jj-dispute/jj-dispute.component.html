@@ -320,7 +320,7 @@
           </div>
         </form>
       </section>
-      <section *ngIf="tcoDisputeInfo.hearingType === HearingTypeCodes.CourtAppearance" class="section-sticky">
+      <section #courtAppearance *ngIf="tcoDisputeInfo.hearingType === HearingTypeCodes.CourtAppearance" class="section-sticky">
         <ng-container subHeader>
           <span>
             <h3>Court Appearance</h3>
@@ -454,6 +454,55 @@
                 <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.languageChoice }}</span>
               </p>
             </span>
+            
+            <!-- AMENDMENT CHECKBOX - Under Language Choice -->
+            <span class="section-grid-cell" style="grid-column: span 11" *ngIf="!isViewOnly" #amendments>
+              <p class="section-grid-text">
+                <mat-checkbox 
+                  [(ngModel)]="amendmentCheckbox" 
+                  [ngModelOptions]="{standalone: true}"
+                  (change)="onAmendmentCheckboxChange()"
+                  [style.color]="amendmentCheckbox ? '#d32f2f' : 'inherit'"
+                  [style.font-weight]="amendmentCheckbox ? 'bold' : 'normal'">
+                  Amendment
+                </mat-checkbox>
+              </p>
+              
+              <!-- Expandable Amendment Fields -->
+              <div *ngIf="showAmendmentSection" style="margin-top: 20px;">
+                <app-jj-amendments 
+                  [jjDisputeInfo]="lastUpdatedJJDispute"
+                  [isViewOnly]="isViewOnly"
+                  [existingAmendmentData]="amendmentData"
+                  [showCheckbox]="false"
+                  (amendmentDataChange)="onAmendmentDataChange($event)">
+                </app-jj-amendments>
+              </div>
+            </span>
+            
+            <!-- AMENDMENT LABEL - For Decision Validation/View Only -->
+            <span class="section-grid-cell" style="grid-column: span 11" *ngIf="isViewOnly && hasAmendmentData() && type !== tabTypes.DECISION_VALIDATION">
+              <p class="section-grid-header" 
+                 style="color: #d32f2f; font-weight: bold;">
+                Amendment:
+              </p>
+              <p class="section-grid-text" style="color: #d32f2f; font-weight: 600;">
+                ⚠ This ticket has amendments that require processing
+              </p>
+            </span>
+            
+            <!-- STAFF AMENDMENT VALIDATION - Inline in Decision Validation -->
+            <span #amendmentValidation class="section-grid-cell" style="grid-column: span 11;">
+              <app-staff-amendment-validation
+                *ngIf="type === tabTypes.DECISION_VALIDATION && amendmentData?.isAmended"
+                [amendmentData]="amendmentData"
+                [isViewOnly]="false"
+                (amendmentStatusChange)="onAmendmentStatusChange($event)"
+                (validationStatusChange)="onAmendmentValidationChange($event)">
+              </app-staff-amendment-validation>
+            </span>
+            
+            <!-- JJ Endorsements - Keep in same card -->
             <span class="section-grid-cell" style="grid-column: span 11">
               <p class="section-grid-header">JJ Endorsements:</p>
               <p class="section-grid-text">

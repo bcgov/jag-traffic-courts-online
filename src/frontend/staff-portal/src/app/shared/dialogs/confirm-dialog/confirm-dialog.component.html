@@ -1,6 +1,7 @@
 <h3 mat-dialog-title class="d-flex align-items-stretch">
-  <mat-icon *ngIf="options.icon && !options.imageSrc" [color]="options.actionType"
-    [ngStyle]="{'color': options.actionType === 'green' ? '#2ba242 !important' : ''}">
+  <mat-icon *ngIf="options.icon && !options.imageSrc" 
+    [color]="options.iconColor ? null : options.actionType"
+    [ngStyle]="{'color': options.iconColor ? options.iconColor : (options.actionType === 'green' ? '#2ba242 !important' : '')}">
     {{ options.icon }}
   </mat-icon>
   <img *ngIf="options.imageSrc" [attr.src]="options.imageSrc" alt="" />

@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { JJDispute, JJDisputedCount } from 'app/api';
 
 export interface Amendment {
@@ -54,7 +55,8 @@ export class JJAmendmentsComponent implements OnInit {
           isAmended: [false],
           mvaSection: ['', Validators.maxLength(50)],
           section: ['', Validators.maxLength(50)],
-          offence: ['', Validators.maxLength(500)]
+          offence: ['', Validators.maxLength(500)],
+          other: ['', Validators.maxLength(500)]
         });
         
         this.amendmentForms.push(form);
@@ -76,7 +78,8 @@ export class JJAmendmentsComponent implements OnInit {
               isAmended: amendment.isAmended,
               mvaSection: amendment.mvaSection,
               section: amendment.section,
-              offence: amendment.offence
+              offence: amendment.offence,
+              other: amendment.other
             });
           }
         });
@@ -91,25 +94,26 @@ export class JJAmendmentsComponent implements OnInit {
         form.get('isAmended')?.value || 
         form.get('mvaSection')?.value || 
         form.get('section')?.value || 
-        form.get('offence')?.value
+        form.get('offence')?.value ||
+        form.get('other')?.value
       );
 
       if (hasData) {
         // Show confirmation dialog
-        const data = {
-          title: 'Confirm Discard Changes',
-          message: 'You have entered amendment data. Are you sure you want to discard these changes?',
-          actionText: 'Yes, Discard',
-          cancelText: 'No, Keep'
+        const data: DialogOptions = {
+          titleKey: 'Clear Amendments?',
+          messageKey: 'Are you sure you want to clear all amendment data? This action cannot be undone.',
+          actionTextKey: 'Clear All',
+          actionType: 'warn',
+          cancelTextKey: 'Cancel',
+          icon: 'warning'
         };
 
-        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        this.dialog.open(ConfirmDialogComponent, {
           data: data,
-          width: '500px'
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-          if (result) {
+          width: '40%'
+        }).afterClosed().subscribe((confirmed: any) => {
+          if (confirmed) {
             // User confirmed - clear all data
             this.showAmendmentSection = false;
             this.clearAllAmendmentForms();
@@ -137,7 +141,8 @@ export class JJAmendmentsComponent implements OnInit {
         isAmended: false,
         mvaSection: '',
         section: '',
-        offence: ''
+        offence: '',
+        other: ''
       });
     });
   }
@@ -148,7 +153,8 @@ export class JJAmendmentsComponent implements OnInit {
       isAmended: form.get('isAmended')?.value || false,
       mvaSection: form.get('mvaSection')?.value || '',
       section: form.get('section')?.value || '',
-      offence: form.get('offence')?.value || ''
+      offence: form.get('offence')?.value || '',
+      other: form.get('other')?.value || ''
     }));
 
     const amendmentData: AmendmentData = {
@@ -165,5 +171,40 @@ export class JJAmendmentsComponent implements OnInit {
 
   getCountNumber(index: number): number {
     return index + 1;
+  }
+
+  onCountCheckboxChange(countIndex: number, isChecked: boolean): void {
+    const form = this.amendmentForms[countIndex];
+    
+    if (isChecked) {
+      // Checkbox is being checked - just update the form
+      form.patchValue({ isAmended: true });
+    } else {
+      // Checkbox is being unchecked - confirm with user
+      const data: DialogOptions = {
+        titleKey: "Clear Amendment for Count " + this.getCountNumber(countIndex) + "?",
+        messageKey: "Are you sure you want to clear the amendment data for this count? This action cannot be undone.",
+        actionTextKey: "Clear",
+        actionType: "warn",
+        cancelTextKey: "Cancel",
+        icon: "warning"
+      };
+      
+      this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
+        .subscribe((confirmed: any) => {
+          if (confirmed) {
+            // User confirmed - clear the amendment data for this count
+            form.patchValue({
+              isAmended: false,
+              mvaSection: '',
+              section: '',
+              offence: '',
+              other: ''
+            });
+          }
+          // If not confirmed, the checkbox model binding will keep it checked
+          // We need to manually trigger change detection
+        });
+    }
   }
 }

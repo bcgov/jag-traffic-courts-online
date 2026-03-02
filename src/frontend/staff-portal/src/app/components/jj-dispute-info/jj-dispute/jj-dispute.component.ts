@@ -36,6 +36,8 @@ export class JJDisputeComponent implements OnInit {
   @ViewChild("fileHistory") fileHistoryAnchor: ElementRef;
   @ViewChild("fileRemarks") fileRemarksAnchor: ElementRef;
   @ViewChild("amendments") amendmentsAnchor: ElementRef;
+  @ViewChild("courtAppearance") courtAppearanceAnchor: ElementRef;
+  @ViewChild("amendmentValidation") amendmentValidationAnchor: ElementRef;
   @ViewChild('remarksDialog') remarksDialog!: TemplateRef<any>;
 
   @Input() tcoDisputeInfo: DisputeCaseFileSummary;
@@ -244,25 +246,89 @@ export class JJDisputeComponent implements OnInit {
 
       this.isNoAppEnabled = this.RoPApp.N === this.lastUpdatedJJDispute.mostRecentCourtAppearance.appCd;
       
+      // DEMO: Add mock court appearance history records for testing
+      // Remove this block for production
+      if (!this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs) {
+        this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs = [];
+      }
+      
+      // Add historical appearances with different amendment scenarios
+      const mockHistoricalAppearances = [
+        {
+          id: 103,
+          appearanceTs: '2024-06-15T10:00:00',
+          room: '002',
+          reason: 'HR',
+          appCd: JJDisputeCourtAppearanceRoPAppCd.P,
+          clerkRecord: null,
+          defenceCounsel: null,
+          dattCd: null,
+          crown: null,
+          jjSeized: JJDisputeCourtAppearanceRoPJjSeized.N,
+          adjudicator: 'J. Anderson',
+          comments: 'Appeared, reviewed evidence'
+        },
+        {
+          id: 102,
+          appearanceTs: '2024-05-20T14:30:00',
+          room: '001',
+          reason: 'HR',
+          appCd: JJDisputeCourtAppearanceRoPAppCd.P,
+          clerkRecord: null,
+          defenceCounsel: null,
+          dattCd: null,
+          crown: null,
+          jjSeized: JJDisputeCourtAppearanceRoPJjSeized.N,
+          adjudicator: 'J. Smith',
+          comments: 'Adjourned for further documents'
+        },
+        {
+          id: 101,
+          appearanceTs: '2024-04-10T09:00:00',
+          room: '003',
+          reason: 'HR',
+          appCd: JJDisputeCourtAppearanceRoPAppCd.P,
+          clerkRecord: null,
+          defenceCounsel: null,
+          dattCd: null,
+          crown: null,
+          jjSeized: JJDisputeCourtAppearanceRoPJjSeized.N,
+          adjudicator: 'J. Williams',
+          comments: 'Initial appearance'
+        }
+      ];
+      
+      // Add mock records to the beginning (they'll be sorted by date)
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs = [
+        ...mockHistoricalAppearances,
+        ...this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs
+      ];
+      
       // DEMO: Populate mock amendment data for demonstration purposes
       // Remove this block for production - amendments should come from API
       if (this.type === TabType.DECISION_VALIDATION) {
         this.amendmentData = {
           isAmended: true,
+          lastName: 'Doe',
+          givenName: 'John',
+          violationDate: '15-Jan-2026',
+          other: 'Changed per court hearing',
           amendments: [
             {
               count: 1,
               isAmended: true,
-              mvaSection: 'Motor Vehicle Act',
-              section: '144(1)(a)',
-              offence: 'Speeding in municipality - Changed from 140(1) per court hearing'
+              mvaSection: '',
+              section: '',
+              offence: 'MVR 6.07 Emergency brake inadequate',
+              other: ''
             },
             {
               count: 2,
               isAmended: true,
-              mvaSection: 'Motor Vehicle Act',
-              section: '191(1)',
-              offence: 'Fail to display "L" or "N"'
+              mvaSection: '',
+              section: '144(1)(a)',
+              offence: '',
+              other: ''
             }
           ]
         };
@@ -296,8 +362,29 @@ export class JJDisputeComponent implements OnInit {
       case "amendments":
         element = this.amendmentsAnchor;
         break;
+      case "courtAppearance":
+        element = this.courtAppearanceAnchor;
+        // Scroll to court appearance and highlight the amendment validation section
+        if (this.amendmentValidationAnchor) {
+          setTimeout(() => {
+            this.highlightElement(this.amendmentValidationAnchor);
+          }, 800); // Wait for scroll to complete
+        }
+        break;
     }
     element?.nativeElement.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  private highlightElement(element: ElementRef): void {
+    if (element?.nativeElement) {
+      // Add highlight class
+      element.nativeElement.classList.add('highlight-pulse');
+      
+      // Remove highlight class after animation completes
+      setTimeout(() => {
+        element.nativeElement.classList.remove('highlight-pulse');
+      }, 2000);
+    }
   }
 
   /**
@@ -780,6 +867,41 @@ export class JJDisputeComponent implements OnInit {
   }
 
   onBackClicked() {
+    // Check if on Decision Validation page with unacknowledged amendments
+    if (this.type === TabType.DECISION_VALIDATION && 
+        this.amendmentData?.isAmended && 
+        !this.amendmentValidationResult?.allAmendmentsProcessed) {
+      
+      const dialogOptions: DialogOptions = {
+        titleKey: 'Amendments Not Acknowledged',
+        messageKey: 'You haven\'t acknowledged the amendments. Do you want to proceed anyway?',
+        actionTextKey: 'Stay and Acknowledge',
+        cancelTextKey: 'Proceed Anyway',
+        actionType: 'primary',
+        icon: 'info',
+        iconColor: '#FFC107' // Yellow/amber color for icon
+      };
+
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: dialogOptions
+      });
+
+      dialogRef.afterClosed().subscribe((action: any) => {
+        // If user clicks "Stay and Acknowledge" (action button), scroll to Court Appearance
+        if (action) {
+          this.goTo('courtAppearance');
+        } else if (action === false) {
+          // If user clicks "Proceed Anyway" (cancel button), navigate back
+          this.jjDisputeService.refreshDisputes.emit();
+          this.backInbox.emit();
+        }
+        // If dialog is closed without selection, do nothing and stay on page
+      });
+      
+      return; // Wait for user decision
+    }
+
+    // Normal back navigation
     this.jjDisputeService.refreshDisputes.emit();
     this.backInbox.emit();
   }
