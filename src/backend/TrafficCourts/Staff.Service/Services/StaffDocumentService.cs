@@ -111,7 +111,7 @@ public partial class StaffDocumentService : IStaffDocumentService
                 FileName = properties.DocumentName, // or result.FileName which should be the same
                 DocumentType = properties.DocumentType,
                 DocumentSource = properties.DocumentSource,
-                DocumentStatus = properties.StaffReviewStatus,
+                StaffReviewStatus = properties.StaffReviewStatus,
                 NoticeOfDisputeGuid = properties.NoticeOfDisputeId?.ToString("d"),
                 VirusScanStatus = properties.VirusScanStatus,
                 DisputeId = properties.TcoDisputeId

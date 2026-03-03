@@ -39,9 +39,9 @@ public class FileMetadata
     public string? VirusScanStatus { get; set; }
 
     /// <summary>
-    /// Document status (can be pending for disputant uploaded) document-status
+    /// Staff review status (can be pending for disputant uploaded) staff-review-status
     /// </summary>
-    public string? DocumentStatus { get; set; }
+    public string? StaffReviewStatus { get; set; }
 
     /// <summary>
     /// The ticket number ticket-number
