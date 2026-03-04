@@ -110,6 +110,7 @@ public partial class StaffDocumentService : IStaffDocumentService
                 FileId = result.Id,
                 FileName = properties.DocumentName, // or result.FileName which should be the same
                 DocumentType = properties.DocumentType,
+                DocumentStatus = properties.DocumentStatus,
                 DocumentSource = properties.DocumentSource,
                 StaffReviewStatus = properties.StaffReviewStatus,
                 NoticeOfDisputeGuid = properties.NoticeOfDisputeId?.ToString("d"),

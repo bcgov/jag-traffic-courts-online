@@ -432,7 +432,22 @@ public class DisputesController : ControllerBase
                         continue;
                     }
 
-                    Domain.Models.DocumentProperties properties = new() { NoticeOfDisputeId = noticeOfDisputeGuid, DocumentType = fileMetadata.DocumentType };
+                    if (fileMetadata.DocumentType != "Adjournment" && fileMetadata.DocumentType != "Other")
+                    {
+                        _logger.LogWarning("Uploaded file has invalid document type");
+                        continue;
+                    }
+                    
+                    Domain.Models.DocumentProperties properties = new()
+                    {
+                        NoticeOfDisputeId = noticeOfDisputeGuid,
+                        DocumentType = fileMetadata.DocumentType,
+                        DocumentStatus = fileMetadata.DocumentType switch
+                        {
+                            "Adjournment" => DocumentStatus.Pending,
+                            _ => DocumentStatus.Filed,
+                        },
+                    };
 
                     // can throw
                     Guid id = await _documentService.SaveFileAsync(fileMetadata.PendingFileStream!, fileMetadata.FileName, properties, cancellationToken);

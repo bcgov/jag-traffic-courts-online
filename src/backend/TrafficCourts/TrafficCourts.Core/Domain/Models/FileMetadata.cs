@@ -34,6 +34,11 @@ public class FileMetadata
     public string? DocumentType { get; set; }
 
     /// <summary>
+    /// The document status document-status
+    /// </summary>
+    public DocumentStatus? DocumentStatus { get; set; }
+
+    /// <summary>
     /// The virus scan status virus-scan-status
     /// </summary>
     public string? VirusScanStatus { get; set; }

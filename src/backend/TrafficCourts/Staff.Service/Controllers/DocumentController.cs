@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
+using TrafficCourts.Domain.Models;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Services;
 
@@ -65,7 +66,17 @@ public class DocumentController : StaffControllerBase
 
         try
         {
-            Domain.Models.DocumentProperties properties = new() { NoticeOfDisputeId = new Guid(noticeOfDisputeId), TcoDisputeId = disputeId, DocumentType = documentType };
+            Domain.Models.DocumentProperties properties = new()
+            {
+                NoticeOfDisputeId = new Guid(noticeOfDisputeId),
+                TcoDisputeId = disputeId,
+                DocumentType = documentType,
+                DocumentStatus = documentType switch
+                {
+                    "Adjournment" => DocumentStatus.Pending,
+                    _ => DocumentStatus.Filed,
+                },
+            };
             Guid id = await _documentService.SaveFileAsync(file, properties, User, cancellationToken);
             return Ok(id);
         }
