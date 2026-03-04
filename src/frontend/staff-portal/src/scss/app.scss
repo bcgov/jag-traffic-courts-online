@@ -36,6 +36,10 @@
 // Import application overridden styles
 @import './overrides/index.scss';
 
+:root, html {
+  --color-primary: #003366;
+}
+
 .app-width {
   max-width: 1920px;
   padding: 0 5vw;
@@ -52,13 +56,26 @@ body.mat-typography {
   overflow: hidden;
 }
 
-/* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
-.dashTabs .mat-tab-label {
-  height: auto !important;
-  /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
-  .mat-tab-label-content h2 {
+.mat-mdc-input-element {
+  width: 100%;
+}
+
+.mat-mdc-tab-group {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.dashTabs .mat-mdc-tab {
+  height: auto;
+  opacity: 0.6;
+
+  h2 {
     margin: 1rem 0;
   }
+}
+
+.dashTabs .mat-mdc-tab.mat-mdc-tab--active,
+.dashTabs .mat-mdc-tab[aria-selected="true"] {
+  opacity: 1;
 }
 
 .mat-step-label-selected .mat-step-text-label {
@@ -82,7 +99,7 @@ table {
 }
 
 table th {
-  font-size: 15px;
+  font-size: 14px;
   color: #003366;
   font-weight: 600;
   padding: 10px;

@@ -21,7 +21,7 @@
       <div class="w-80 col-md-10">
         <div style="display:flex; flex-direction: row; justify-content: left;">
           <input matInput [matDatepicker]="picker" [formControl]="appearanceDateFilter" (click)='picker.open()'
-            placeholder="Hearing date" style="background-color: #f2f2f2; width:250px;" />
+            placeholder="Hearing date" style="background-color: #f2f2f2; width:250px; border: 0;" />
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
             <mat-select [formControl]="jjAssignedToFilter" placeholder="choose a jj"

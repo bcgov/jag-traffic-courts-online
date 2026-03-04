@@ -24,13 +24,6 @@ mat-error {
 // Forms
 //
 
-/*TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
-.mat-checkbox-layout,
-.mat-slide-toggle-content {
-  // Force checkbox and slide labels to line wrap if required
-  // instead of overflowing their container
-  white-space: normal !important;
-}
 
 .mat-mdc-form-field {
   // Provide a bit more spacing under form fields so error
@@ -38,9 +31,40 @@ mat-error {
   margin-bottom: 0.3rem;
 }
 
-/*TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
-.mat-checkbox-checked label,
-.mat-radio-checked label {
+.mat-mdc-form-field {
+  --mat-form-field-container-height: auto;
+  --mat-form-field-container-vertical-padding: 8px;
+  --mat-form-field-outlined-label-text-populated-size: 12px;
+  --mat-form-field-container-text-line-height: 18px;
+
+  width: 100%;
+  margin-bottom: 0px;
+  padding: 0.5rem 0.5rem 0.5rem 0;
+
+  & .mat-mdc-text-field-wrapper {
+    --mat-form-field-filled-container-color: white;
+
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  & [matformfieldlineripple] {
+    display:none;
+  }
+}
+
+.mat-mdc-form-field.mat-form-field-invalid {
+  & .mat-mdc-text-field-wrapper {
+    border-color: red;
+  }
+}
+
+.mat-mdc-form-field-type-mat-select {
+  --mat-form-field-container-vertical-padding: 4px;
+}
+
+.mat-mdc-checkbox-checked label,
+.mat-mdc-radio-checked label {
   font-weight: 700;
 }
 
@@ -85,16 +109,6 @@ mat-error {
   font-size: 24px;
 }
 
-/*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-.mat-mdc-form-field .mat-form-field-label-wrapper label {
-  line-height: 21px;
-}
-
-/*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-.mat-mdc-form-field .mat-form-field-infix input {
-  line-height: 21px;
-}
-
 .mat-vertical-content {
   padding: 0 24px 0px 24px !important;
 }
@@ -106,7 +120,7 @@ mat-error {
 
 /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
 .mat-form-field-ripple {
-  background-color:  theme-palette(blue);
+  background-color: theme-palette(blue);
 }
 
 /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
@@ -124,6 +138,7 @@ mat-error {
   & mat-icon {
     color: theme-palette(red);
   }
+
   /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
   & .mat-form-field-wrapper .mat-form-field-flex {
     border: 2px theme-palette(red) solid;
@@ -140,11 +155,6 @@ mat-error {
   max-height: 290px;
 }
 
-/*TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version.*/
-.mat-radio-container {
-  margin: 4px 0 auto !important;
-}
-
 @media (max-width: 767px) {
   .mat-vertical-content {
     padding: 0 0 0px 14px !important;
@@ -158,26 +168,4 @@ mat-error {
   .mat-vertical-stepper-header {
     padding: 24px 0;
   }
-  /*TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version.*/
-  mat-radio-button .mat-radio-label-content {
-    white-space: normal;
-    line-height: 1.3em;
-  }
-  /*TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version.*/
-  mat-radio-button .mat-radio-label {
-    align-items: normal;
-  }
-  /*TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version.*/
-  .mat-radio-container {
-    top: -5px;
-  }
-}
-/*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-.mat-mdc-form-field .mat-form-field-label-wrapper label {
-  line-height: 27px;
-}
-
-/*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-.mat-mdc-form-field .mat-form-field-infix input {
-  line-height: 27px;
 }

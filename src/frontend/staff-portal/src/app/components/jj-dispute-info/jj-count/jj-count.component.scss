@@ -27,32 +27,29 @@ label {
   width: 140px !important;
 }
 
-/* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
-::ng-deep .mat-radio-label-content {
+// Updated for MDC migration - using MDC-based class names
+::ng-deep .mdc-label,
+::ng-deep .mat-mdc-radio-button .mdc-form-field {
   font-size: small !important;
 
   .select-box-only {
     margin-top: 1em;
     margin-bottom: 0 !important;
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-    .mat-form-field-wrapper {
+    // MDC form fields use different structure - target the container
+    .mat-mdc-text-field-wrapper {
       padding-bottom: 0 !important;
-      /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-      .mat-form-field-flex {
-        padding-top: 0 !important;
-      }
-      /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
-      .mat-select-trigger .mat-select-arrow-wrapper {
-        transform: none !important;
-      }
     }
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-    .mat-form-field-underline {
+    // MDC uses mdc-line-ripple instead of underline
+    .mdc-line-ripple {
       bottom: 0;
     }
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-    .mat-form-field-subscript-wrapper {
+    // MDC form fields use different subscript structure
+    .mat-mdc-form-field-subscript-wrapper {
       display: none;
+    }
+    // MDC select uses different arrow structure
+    .mat-mdc-select-arrow-wrapper {
+      transform: none !important;
     }
   }
 }

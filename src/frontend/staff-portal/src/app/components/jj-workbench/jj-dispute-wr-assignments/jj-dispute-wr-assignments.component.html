@@ -1,7 +1,7 @@
 <div class="overflow-auto">
   <!-- filter by teams -->
   <div class="row" style="width:97%">
-    <mat-button-toggle-group style="border: 0px" (change)="filterByTeam($event.value)" [value]="currentTeam">
+    <mat-button-toggle-group [hideSingleSelectionIndicator]="true" style="border: 0px" (change)="filterByTeam($event.value)" [value]="currentTeam">
       @for (courthouseTeamCount of courthouseTeamCounts; track courthouseTeamCount.team) {
         <mat-button-toggle [value]="courthouseTeamCount.team"
           class="teamFilterButton">

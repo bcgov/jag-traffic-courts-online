@@ -3,9 +3,11 @@ input[name="ticketNumber"] {
 }
 
 .reset-filters {
+  --mat-button-text-label-text-color: #fff;
+
   color: #fff;
   background-color: #38598a;
-  border-color: #38598a;  
+  border-color: #38598a;
   font-size: 14px;
 
   &:hover {
@@ -20,53 +22,10 @@ input[name="ticketNumber"] {
 }
 
 :host ::ng-deep {
-  /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
-  .mat-select-value {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
 
   .mat-mdc-form-field.dateField{
     width: 50% !important;
     margin-right: 0;
-  }
-
-  .mat-mdc-form-field {
-    width: 100%;
-    margin-bottom: 0px !important;
-    padding: 0.5rem 0.5rem 0.5rem 0;
-    margin-right: 0.5rem;
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-    .mat-form-field-wrapper {
-      padding-bottom: 0 !important;
-      /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-      .mat-form-field-flex {
-        margin-top: 0 !important;
-        padding-right: 5px;
-        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-        .mat-form-field-infix {
-          padding: 0px 0px 7px 0px !important;
-          line-height: 0px;
-
-          input {
-            line-height: 18px !important;
-          }
-
-          input::placeholder {
-            font-size: 0.813rem;
-          }
-          /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
-          .mat-select-arrow-wrapper {
-            transform: translate(-15px, 0px);
-          }
-          /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
-          .mat-select-value {
-            padding-left: 0px;
-            overflow: visible;
-          }
-        }
-      }
-    }
   }
 
   .multiselect-dropdown {

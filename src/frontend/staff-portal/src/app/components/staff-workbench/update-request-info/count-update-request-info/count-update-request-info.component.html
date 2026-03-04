@@ -108,7 +108,7 @@
     <div>
       @if (disputantUpdateRequest.status === 'PENDING') {
         <span style="float:right">
-          <mat-button-toggle-group [(ngModel)]="disputantUpdateRequest.newStatus" aria-label="Decision" (change)="statusChange($event)">
+          <mat-button-toggle-group [hideSingleSelectionIndicator]="true" [(ngModel)]="disputantUpdateRequest.newStatus" aria-label="Decision" (change)="statusChange($event)">
             @if (requestReadable === true) {
               <mat-button-toggle value="ACCEPTED">Accept</mat-button-toggle>
             }

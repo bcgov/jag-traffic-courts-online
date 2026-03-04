@@ -96,7 +96,7 @@
                         <mat-form-field class="w-100">
                           <mat-label>Violation Time (24-hour format)</mat-label>
                           <input matInput hidden aria-label="violation time" formControlName="violationTime" />
-                          <ngx-timepicker-field formControlName="violationTime" [format]="24" [value]="ticketDetailsForm.get('violationTime')?.value"></ngx-timepicker-field>
+                          <ngx-mat-timepicker-field #picker formControlName="violationTime" [format]="24" [value]="ticketDetailsForm.get('violationTime')?.value"></ngx-mat-timepicker-field>
                           @if (ticketDetailsForm.controls.violationTime.hasError('required')) {
                             <mat-error>Violation time is required</mat-error>
                           }

@@ -3,7 +3,7 @@
     <ng-container stickyToolBar>
       <div class="app-width">
         <div class="content">
-          <mat-tab-group class="dashTabs" mat-align-tabs="start" [selectedIndex]="tabSelected.value"
+          <mat-tab-group class="dashTabs" mat-align-tabs="start" mat-stretch-tabs="false" [selectedIndex]="tabSelected.value"
             (selectedIndexChange)="tabSelected.setValue($event)">
             @if (hasTicketValidationPermission) {
               <mat-tab>

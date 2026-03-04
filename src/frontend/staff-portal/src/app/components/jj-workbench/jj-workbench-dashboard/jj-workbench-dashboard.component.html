@@ -1,6 +1,6 @@
 @if (!showDispute) {
   <app-page>
-    <mat-tab-group class="dashTabs" mat-align-tabs="start" [selectedIndex]="tabSelected.value"
+    <mat-tab-group class="dashTabs" mat-align-tabs="start" mat-stretch-tabs="false" [selectedIndex]="tabSelected.value"
       (selectedIndexChange)="tabSelected.setValue($event)">
       @if (hasAssignmentsPermission) {
         <mat-tab>

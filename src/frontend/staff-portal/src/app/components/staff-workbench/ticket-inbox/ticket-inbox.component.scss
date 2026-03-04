@@ -12,9 +12,11 @@ th {
 }
 
 .submit-new-dispute{
+  --mat-button-text-label-text-color: #fff;
+  
   color: #fff;
   background-color: #38598a;
-  border-color: #38598a;  
+  border-color: #38598a;
   font-size: 14px;
 
   &:hover {

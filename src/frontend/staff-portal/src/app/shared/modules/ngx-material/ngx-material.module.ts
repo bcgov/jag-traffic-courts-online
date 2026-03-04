@@ -42,6 +42,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
+
 
 export const APP_DATE_FORMAT = 'D MMM YYYY';
 export const APP_DATE_FORMATS = {
@@ -61,6 +63,7 @@ const matFormFieldCustomOptions: MatFormFieldDefaultOptions = {
   hideRequiredMarker: true,
   floatLabel: 'always',
   appearance: 'fill',
+  subscriptSizing: 'dynamic',
 };
 
 export const GRI_DATE_FORMATS: MatDateFormats = {
@@ -105,6 +108,7 @@ export const GRI_DATE_FORMATS: MatDateFormats = {
     MatTabsModule,
     MatNativeDateModule,
     MatButtonToggleModule,
+    NgxMatTimepickerModule,
   ],
   providers: [
     {
@@ -128,4 +132,4 @@ export const GRI_DATE_FORMATS: MatDateFormats = {
     },
   ],
 })
-export class NgxMaterialModule {}
+export class NgxMaterialModule { }
