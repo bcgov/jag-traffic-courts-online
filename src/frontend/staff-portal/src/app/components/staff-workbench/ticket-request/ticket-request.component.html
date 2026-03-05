@@ -1,11 +1,11 @@
 <div class="request-info">
 
-  <mat-expansion-panel [expanded]="true">
-    <mat-expansion-panel-header (click)="handleCollapse('contactInformation')">
+  <mat-expansion-panel [expanded]="true" hideToggle>
+    <mat-expansion-panel-header (click)="handleCollapse('ticketRequestInformation')">
       <app-page-header>
         <ng-container subHeader>
           <span>Ticket Request Information </span>
-          @if (collapseObj?.contactInformation) {
+          @if (collapseObj?.ticketRequestInformation) {
             <mat-icon class="expand-collapse-icon">do_not_disturb_on</mat-icon>
           }
           @else {

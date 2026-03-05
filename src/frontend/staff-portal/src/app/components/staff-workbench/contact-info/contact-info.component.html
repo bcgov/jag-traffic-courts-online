@@ -40,7 +40,7 @@
       <div class="contact-info">
         @if (lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)) {
           <mat-expansion-panel [expanded]="true" hideToggle>
-            <mat-expansion-panel-header (click)="handleCollapse('contactInformation')">
+            <mat-expansion-panel-header (click)="handleCollapse('ticketInformation')">
               <app-page-header>
                 <ng-container subHeader>
                   <span>Ticket Information  
@@ -112,7 +112,7 @@
             }
           </mat-expansion-panel>
         }
-        <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel [expanded]="true" hideToggle>
           <mat-expansion-panel-header (click)="handleCollapse('contactInformation')">
             <app-page-header>
               <ng-container subHeader>

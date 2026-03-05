@@ -1,9 +1,9 @@
 <div class="upload">
-  <mat-expansion-panel [expanded]="true">
+  <mat-expansion-panel [expanded]="true" hideToggle>
     <mat-expansion-panel-header (click)="handleCollapse('upload')">
       <app-page-header class="upload-header">
         <ng-container subHeader>
-          <span>Upload</span>
+          <span>Upload </span>
           @if (collapseObj?.upload) {
             <mat-icon class="expand-collapse-icon">do_not_disturb_on</mat-icon>
           }
