@@ -10,156 +10,156 @@
             <mat-label><span class="BC-Gov-15px-blue-text"><b>From:</b></span></mat-label>
             <input matInput [(ngModel)]="dataFilters.dateSubmittedFrom" type="text" placeholder="DD-MMM-YYYY"
               bsDatepicker (ngModelChange)="onApplyFilter('dateSubmittedFrom', $event)" autocomplete="off"
-          [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true,
-          showWeekNumbers: false, adaptivePosition: true }" />
-            </mat-form-field>
-          }
-          @if (tableFilterConfigs.dateSubmittedTo) {
-            <mat-form-field floatLabel="always" class="dateField">
-              <mat-label><span class="BC-Gov-15px-blue-text"><b>To:</b></span></mat-label>
-              <input matInput [(ngModel)]="dataFilters.dateSubmittedTo" type="text" placeholder="DD-MMM-YYYY"
-                bsDatepicker (ngModelChange)="onApplyFilter('dateSubmittedTo', $event)" autocomplete="off"
-          [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true,
-          showWeekNumbers: false, adaptivePosition: true }" />
-              </mat-form-field>
-            }
-          </div>
+              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true,
+              showWeekNumbers: false, adaptivePosition: true }" />
+          </mat-form-field>
+        }
+        @if (tableFilterConfigs.dateSubmittedTo) {
+          <mat-form-field floatLabel="always" class="dateField">
+            <mat-label><span class="BC-Gov-15px-blue-text"><b>To:</b></span></mat-label>
+            <input matInput [(ngModel)]="dataFilters.dateSubmittedTo" type="text" placeholder="DD-MMM-YYYY"
+              bsDatepicker (ngModelChange)="onApplyFilter('dateSubmittedTo', $event)" autocomplete="off"
+              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true,
+              showWeekNumbers: false, adaptivePosition: true }" />
+          </mat-form-field>
+        }
+      </div>
+    </div>
+  }
+  @if (tableFilterConfigs.decisionDateFrom || tableFilterConfigs.decisionDateTo) {
+    <div fxFlex fxFlex.gt-md="30">
+      <div fxFlex="30">
+        <mat-label class="vcenter"><span class="BC-Gov-15px-blue-text"><b>Decision Date:</b></span></mat-label>
+      </div>
+      <div fxFlex>
+        @if (tableFilterConfigs.decisionDateFrom) {
+          <mat-form-field floatLabel="always" class="dateField">
+            <mat-label><span class="BC-Gov-15px-blue-text"><b>From:</b></span></mat-label>
+            <input matInput [(ngModel)]="dataFilters.decisionDateFrom" type="text" placeholder="DD-MMM-YYYY"
+              bsDatepicker (ngModelChange)="onApplyFilter('decisionDateFrom', $event)" autocomplete="off"
+              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true,
+              showWeekNumbers: false, adaptivePosition: true }" />
+          </mat-form-field>
+        }
+        @if (tableFilterConfigs.decisionDateTo) {
+          <mat-form-field floatLabel="always" class="dateField">
+            <mat-label><span class="BC-Gov-15px-blue-text"><b>To:</b></span></mat-label>
+            <input matInput [(ngModel)]="dataFilters.decisionDateTo" type="text" placeholder="DD-MMM-YYYY"
+              bsDatepicker (ngModelChange)="onApplyFilter('decisionDateTo', $event)" autocomplete="off"
+              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true,
+              showWeekNumbers: false, adaptivePosition: true }" />
+          </mat-form-field>
+        }
+      </div>
+    </div>
+  }
+  @if (tableFilterConfigs.ticketNumber) {
+    <div fxFlex fxFlex.gt-md="30">
+      <div fxFlex="30">
+        <label class="vcenter" for="ticketNumber"><span class="BC-Gov-15px-blue-text"><b>Ticket Number:</b></span></label>
+      </div>
+      <div fxFlex>
+        <mat-form-field appearance="outline">
+          <input id="ticketNumber" name="ticketNumber" matInput [(ngModel)]="dataFilters.ticketNumber" type="search"
+            (keyup)="onApplyFilter('ticketNumber', $event.target.value)" autocomplete="off" class="input" />
+        </mat-form-field>
+      </div>
+    </div>
+  }
+  <div style="margin-right: 1rem; margin-left: 1rem;">
+    <div class="vcenter">
+      <button mat-button (click)="resetSearchFilters()" class="reset-filters">Reset Filters</button>
+    </div>
+  </div>
+  <ng-content select="[pagination]"></ng-content>
+  @if (tableFilterConfigs.disputantSurname) {
+    <div fxFlex fxFlex.gt-md="30">
+      <div fxFlex="30">
+        <label class="vcenter" for="surname"><span class="BC-Gov-15px-blue-text"><b>Surname:</b></span></label>
+      </div>
+      <div fxFlex>
+        <mat-form-field appearance="outline">
+          <input id="surname" name="surname" matInput [(ngModel)]="dataFilters.disputantSurname" type="search"
+            (keyup)="onApplyFilter('disputantSurname', $event.target.value)" autocomplete="off" class="input" />
+        </mat-form-field>
+      </div>
+    </div>
+  }
+  @if (tableFilterConfigs.surname) {
+    <div fxFlex fxFlex.gt-md="30">
+      <div fxFlex="30">
+        <label class="vcenter" for="surname"><span class="BC-Gov-15px-blue-text"><b>Surname:</b></span></label>
+      </div>
+      <div fxFlex>
+        <mat-form-field appearance="outline">
+          <input id="surname" name="surname" matInput [(ngModel)]="dataFilters.surname" type="search"
+            (keyup)="onApplyFilter('surname', $event.target.value)" autocomplete="off" class="input" />
+        </mat-form-field>
+      </div>
+    </div>
+  }
+  @if (tableFilterConfigs.status) {
+    <div fxFlex fxFlex.gt-md="30">
+      <div fxFlex="30">
+        <label class="vcenter" for="status" (click)="statusCtl.open()"><span
+          class="BC-Gov-15px-blue-text"><b>Status:</b></span></label>
+      </div>
+      <div fxFlex>
+        <div>
+          <mat-form-field appearance="outline">
+            <mat-select #statusCtl matNativeControl name="status" [ngModel]="dataFilters.status"
+              (selectionChange)="onApplyFilter('status', $event.value)">
+              @for (item of statusFilterOptions; track item.label) {
+                <mat-option [value]="item">{{item.label}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
         </div>
-      }
-      @if (tableFilterConfigs.decisionDateFrom || tableFilterConfigs.decisionDateTo) {
-        <div fxFlex fxFlex.gt-md="30">
-          <div fxFlex="30">
-            <mat-label class="vcenter"><span class="BC-Gov-15px-blue-text"><b>Decision Date:</b></span></mat-label>
-          </div>
-          <div fxFlex>
-            @if (tableFilterConfigs.decisionDateFrom) {
-              <mat-form-field floatLabel="always" class="dateField">
-                <mat-label><span class="BC-Gov-15px-blue-text"><b>From:</b></span></mat-label>
-                <input matInput [(ngModel)]="dataFilters.decisionDateFrom" type="text" placeholder="DD-MMM-YYYY"
-                  bsDatepicker (ngModelChange)="onApplyFilter('decisionDateFrom', $event)" autocomplete="off"
-          [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true,
-          showWeekNumbers: false, adaptivePosition: true }" />
-                </mat-form-field>
+      </div>
+    </div>
+  }
+  @if (tableFilterConfigs.team) {
+    <div fxFlex fxFlex.gt-md="30">
+      <div fxFlex="30">
+        <label class="vcenter" for="team" (click)="teamCtl.open()"><span
+          class="BC-Gov-15px-blue-text"><b>Team:</b></span></label>
+      </div>
+      <div fxFlex>
+        <div>
+          <mat-form-field appearance="outline">
+            <mat-select #teamCtl matNativeControl name="team" [ngModel]="dataFilters.team"
+              (selectionChange)="onApplyFilter('team', $event.value)">
+              <mat-option value="">-- select --</mat-option>
+              @for (team of courthouseTeamNames; track team) {
+                <mat-option [value]="team">Team {{team}}</mat-option>
               }
-              @if (tableFilterConfigs.decisionDateTo) {
-                <mat-form-field floatLabel="always" class="dateField">
-                  <mat-label><span class="BC-Gov-15px-blue-text"><b>To:</b></span></mat-label>
-                  <input matInput [(ngModel)]="dataFilters.decisionDateTo" type="text" placeholder="DD-MMM-YYYY"
-                    bsDatepicker (ngModelChange)="onApplyFilter('decisionDateTo', $event)" autocomplete="off"
-          [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true,
-          showWeekNumbers: false, adaptivePosition: true }" />
-                  </mat-form-field>
-                }
-              </div>
-            </div>
-          }
-          @if (tableFilterConfigs.ticketNumber) {
-            <div fxFlex fxFlex.gt-md="30">
-              <div fxFlex="30">
-                <label class="vcenter" for="ticketNumber"><span class="BC-Gov-15px-blue-text"><b>Ticket Number:</b></span></label>
-              </div>
-              <div fxFlex>
-                <mat-form-field appearance="outline">
-                  <input id="ticketNumber" name="ticketNumber" matInput [(ngModel)]="dataFilters.ticketNumber" type="search"
-                    (keyup)="onApplyFilter('ticketNumber', $event.target.value)" autocomplete="off" class="input" />
-                  </mat-form-field>
-                </div>
-              </div>
-            }
-            <div style="margin-right: 1rem; margin-left: 1rem;">
-              <div class="vcenter">
-                <button mat-button (click)="resetSearchFilters()" class="reset-filters">Reset Filters</button>
-              </div>
-            </div>
-            <ng-content select="[pagination]"></ng-content>
-            @if (tableFilterConfigs.disputantSurname) {
-              <div fxFlex fxFlex.gt-md="30">
-                <div fxFlex="30">
-                  <label class="vcenter" for="surname"><span class="BC-Gov-15px-blue-text"><b>Surname:</b></span></label>
-                </div>
-                <div fxFlex>
-                  <mat-form-field appearance="outline">
-                    <input id="surname" name="surname" matInput [(ngModel)]="dataFilters.disputantSurname" type="search"
-                      (keyup)="onApplyFilter('disputantSurname', $event.target.value)" autocomplete="off" class="input" />
-                    </mat-form-field>
-                  </div>
-                </div>
-              }
-              @if (tableFilterConfigs.surname) {
-                <div fxFlex fxFlex.gt-md="30">
-                  <div fxFlex="30">
-                    <label class="vcenter" for="surname"><span class="BC-Gov-15px-blue-text"><b>Surname:</b></span></label>
-                  </div>
-                  <div fxFlex>
-                    <mat-form-field appearance="outline">
-                      <input id="surname" name="surname" matInput [(ngModel)]="dataFilters.surname" type="search"
-                        (keyup)="onApplyFilter('surname', $event.target.value)" autocomplete="off" class="input" />
-                      </mat-form-field>
-                    </div>
-                  </div>
-                }
-                @if (tableFilterConfigs.status) {
-                  <div fxFlex fxFlex.gt-md="30">
-                    <div fxFlex="30">
-                      <label class="vcenter" for="status" (click)="statusCtl.open()"><span
-                        class="BC-Gov-15px-blue-text"><b>Status:</b></span></label>
-                      </div>
-                      <div fxFlex>
-                        <div>
-                          <mat-form-field appearance="outline">
-                            <mat-select #statusCtl matNativeControl name="status" [ngModel]="dataFilters.status"
-                              (selectionChange)="onApplyFilter('status', $event.value)">
-                              @for (item of statusFilterOptions; track item.label) {
-                                <mat-option [value]="item">{{item.label}}</mat-option>
-                              }
-                            </mat-select>
-                          </mat-form-field>
-                        </div>
-                      </div>
-                    </div>
-                  }
-                  @if (tableFilterConfigs.team) {
-                    <div fxFlex fxFlex.gt-md="30">
-                      <div fxFlex="30">
-                        <label class="vcenter" for="team" (click)="teamCtl.open()"><span
-                          class="BC-Gov-15px-blue-text"><b>Team:</b></span></label>
-                        </div>
-                        <div fxFlex>
-                          <div>
-                            <mat-form-field appearance="outline">
-                              <mat-select #teamCtl matNativeControl name="team" [ngModel]="dataFilters.team"
-                                (selectionChange)="onApplyFilter('team', $event.value)">
-                                <mat-option value="">-- select --</mat-option>
-                                @for (team of courthouseTeamNames; track team) {
-                                  <mat-option [value]="team">Team {{team}}</mat-option>
-                                }
-                              </mat-select>
-                            </mat-form-field>
-                          </div>
-                        </div>
-                      </div>
-                    }
-                    <div class="record-count-container"><ng-content select="[recordCount]"></ng-content></div>
-                    @if (tableFilterConfigs.courthouseLocation) {
-                      <div fxFlex fxFlex.gt-md="30">
-                        <div fxFlex="30">
-                          <label class="vcenter" for="courthouseLocation"><span class="BC-Gov-15px-blue-text"><b>Courthouse
-                          Location:</b></span></label>
-                        </div>
-                        <div fxFlex>
-                          <ng-multiselect-dropdown
-                            name="courthouseLocation"
-                            [settings]="courtHouseSettings"
-                            [data]="lookupsService.courthouseAgencies"
-                            [(ngModel)]="dataFilters.courthouseLocation"
-                            (onSelect)="onApplyFilter('courthouseLocation', $event)"
-                            (onSelectAll)="onSelectOrDeselectAllCourthouseLocations($event)"
-                            (onDeSelect)="onApplyFilter('courthouseLocation', $event)"
-                            (onDeSelectAll)="onSelectOrDeselectAllCourthouseLocations($event)"
-                            >
-                          </ng-multiselect-dropdown>
-                        </div>
-                      </div>
-                    }
-                    <ng-content select="[submitNewDispute]"></ng-content>
-                  </div>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  }
+  <div class="record-count-container"><ng-content select="[recordCount]"></ng-content></div>
+  @if (tableFilterConfigs.courthouseLocation) {
+    <div fxFlex fxFlex.gt-md="30">
+      <div fxFlex="30">
+        <label class="vcenter" for="courthouseLocation"><span class="BC-Gov-15px-blue-text"><b>Courthouse
+        Location:</b></span></label>
+      </div>
+      <div fxFlex>
+        <ng-multiselect-dropdown
+          name="courthouseLocation"
+          [settings]="courtHouseSettings"
+          [data]="lookupsService.courthouseAgencies"
+          [(ngModel)]="dataFilters.courthouseLocation"
+          (onSelect)="onApplyFilter('courthouseLocation', $event)"
+          (onSelectAll)="onSelectOrDeselectAllCourthouseLocations($event)"
+          (onDeSelect)="onApplyFilter('courthouseLocation', $event)"
+          (onDeSelectAll)="onSelectOrDeselectAllCourthouseLocations($event)"
+          >
+        </ng-multiselect-dropdown>
+      </div>
+    </div>
+  }
+  <ng-content select="[submitNewDispute]"></ng-content>
+</div>
