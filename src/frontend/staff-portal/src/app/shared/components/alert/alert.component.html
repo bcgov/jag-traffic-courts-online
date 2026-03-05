@@ -1,26 +1,21 @@
 <div role="alert" class="alert" [ngClass]="getType()">
   <div class="d-flex">
     @if (hasIcon()) {
-      <mat-icon
-        class="me-3"
-        [ngClass]="{ large: hasTitle() }"
-        [inline]="hasTitle()"
-        >{{ icon }}</mat-icon
-        >
+      <mat-icon class="me-3" [ngClass]="{ large: hasTitle() }" [inline]="hasTitle()">{{ icon }}</mat-icon>
+    }
+
+    <div class="flex-grow-1">
+      @if (hasTitle()) {
+        <h2 class="m-0 mt-2 mb-1">
+          <ng-content select=".alert-title"></ng-content>
+        </h2>
       }
 
-      <div class="flex-grow-1">
-        @if (hasTitle()) {
-          <h2 class="m-0 mt-2 mb-1">
-            <ng-content select=".alert-title"></ng-content>
-          </h2>
-        }
-
-        @if (alertContentChildren.length) {
-          <p class="content">
-            <ng-content #alertContent select=".alert-content"></ng-content>
-          </p>
-        }
-      </div>
+      @if (alertContentChildren.length) {
+        <p class="content">
+          <ng-content #alertContent select=".alert-content"></ng-content>
+        </p>
+      }
     </div>
   </div>
+</div>

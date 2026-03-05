@@ -219,7 +219,7 @@
                 @if ((isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)) {
                   <mat-form-field appearance="outline"
                     >
-                    <input matInput formControlName="contactSurname">
+                    <input matInput formControlName="contactSurname" />
                     @if (contactInformationForm.controls.contactSurname.hasError('maxlength')) {
                       <mat-error>{{
                       "error.max_length" | translate }}30</mat-error>
@@ -254,7 +254,7 @@
                 @if ((isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)) {
                   <mat-form-field appearance="outline"
                     >
-                    <input matInput formControlName="contactGivenName1">
+                    <input matInput formControlName="contactGivenName1" />
                     @if (contactInformationForm.controls.contactGivenName1.hasError('maxlength')) {
                       <mat-error>{{
                       "error.max_length" | translate }}30</mat-error>
@@ -269,7 +269,7 @@
                 @if ((isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)) {
                   <mat-form-field appearance="outline"
                     >
-                    <input matInput formControlName="contactGivenName2">
+                    <input matInput formControlName="contactGivenName2" />
                     @if (contactInformationForm.controls.contactGivenName2.hasError('maxlength')) {
                       <mat-error>{{
                       "error.max_length" | translate }}30</mat-error>
@@ -284,7 +284,7 @@
                 @if ((isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)) {
                   <mat-form-field appearance="outline"
                     >
-                    <input matInput formControlName="contactGivenName3">
+                    <input matInput formControlName="contactGivenName3" />
                     @if (contactInformationForm.controls.contactGivenName3.hasError('maxlength')) {
                       <mat-error>{{
                       "error.max_length" | translate }}30</mat-error>
@@ -338,7 +338,7 @@
                   }
                   @if (isSSEditMode) {
                     <mat-form-field appearance="outline">
-                      <input matInput formControlName="lawyerGivenName1">
+                      <input matInput formControlName="lawyerGivenName1" />
                       @if (courtOptionsForm.controls.lawyerGivenName1.hasError('maxlength')) {
                         <mat-error>{{
                         "error.max_length" | translate }}30</mat-error>
@@ -351,7 +351,7 @@
                   }
                   @if (isSSEditMode) {
                     <mat-form-field appearance="outline">
-                      <input matInput formControlName="lawyerGivenName2">
+                      <input matInput formControlName="lawyerGivenName2" />
                       @if (courtOptionsForm.controls.lawyerGivenName2.hasError('maxlength')) {
                         <mat-error>{{
                         "error.max_length" | translate }}30</mat-error>
@@ -364,7 +364,7 @@
                   }
                   @if (isSSEditMode) {
                     <mat-form-field appearance="outline">
-                      <input matInput formControlName="lawyerGivenName3">
+                      <input matInput formControlName="lawyerGivenName3" />
                       @if (courtOptionsForm.controls.lawyerGivenName3.hasError('maxlength')) {
                         <mat-error>{{
                         "error.max_length" | translate }}30</mat-error>
@@ -376,7 +376,7 @@
                   }
                   @if (isSSEditMode) {
                     <mat-form-field appearance="outline">
-                      <input matInput formControlName="lawyerSurname">
+                      <input matInput formControlName="lawyerSurname" />
                       @if (courtOptionsForm.controls.lawyerSurname.hasError('maxlength')) {
                         <mat-error>{{ "error.max_length" |
                         translate }}30</mat-error>
@@ -391,7 +391,7 @@
                   }
                   @if (isSSEditMode) {
                     <mat-form-field appearance="outline">
-                      <input matInput formControlName="lawFirmName">
+                      <input matInput formControlName="lawFirmName" />
                       @if (courtOptionsForm.controls.lawFirmName.hasError('maxlength')) {
                         <mat-error>{{ "error.max_length" |
                         translate }}200</mat-error>
@@ -406,7 +406,7 @@
                   }
                   @if (isSSEditMode) {
                     <mat-form-field appearance="outline">
-                      <input matInput formControlName="witnessNo" maxlength="10" type="number">
+                      <input matInput formControlName="witnessNo" maxlength="10" type="number" />
                       @if (courtOptionsForm.controls.witnessNo.hasError('min')) {
                         <mat-error>{{ "error.min_value" | translate
                         }}0</mat-error>
@@ -464,239 +464,240 @@
                   <p class="section-grid-header">Reason</p>
                   <p class="section-grid-text">
                     <span>{{ courtAppearanceForm?.value.reason }} </span>
-                  </span>
-                  <span class="section-grid-cell">
-                    <p class="section-grid-header">APP (P/N/A)<span style="color: red;">*</span></p>
-                    <p class="section-grid-text">
-                      @if (isViewOnly && !isSSEditMode) {
-                        <span>{{ courtAppearanceForm?.value.appCd }}</span>
-                      }
-                      @if (!isViewOnly || isSSEditMode) {
-                        <mat-form-field appearance="outline"
-                          [ngClass]="{'mat-form-field-invalid': courtAppearanceForm.get('appCd')?.invalid && courtAppearanceForm.get('appCd')?.touched}">
-                          <mat-select formControlName="appCd" (selectionChange)="onUpdateAPPCd()" required>
-                            <mat-option [value]="RoPApp.P">{{ RoPApp.P }}</mat-option>
-                            <mat-option [value]="RoPApp.N">{{ RoPApp.N }}</mat-option>
-                            <mat-option [value]="RoPApp.A">{{ RoPApp.A }}</mat-option>
-                          </mat-select>
-                          @if (courtAppearanceForm.get('appCd')?.hasError('required')) {
-                            <mat-error>
-                              APP field is required
-                            </mat-error>
-                          }
-                        </mat-form-field>
-                      }
-                    </p>
-                  </span>
-                  <span class="section-grid-cell">
-                    <p class="section-grid-header">No APP</p>
-                    <p class="section-grid-text">
-                      @if (((isViewOnly && !isSSEditMode) || !isNoAppEnabled) && courtAppearanceForm.value.noAppTs) {
-                        <span>
-                          {{ courtAppearanceForm?.value.noAppTs | date: "dd-MMM-yyyy HH:mm" }}
-                        </span>
-                      }
-                      @if ((!isViewOnly || isSSEditMode) && isNoAppEnabled) {
-                        <span>
-                          <input type="text" formControlName="noAppTs" class="p-2 section-grid-text latest-plea-text"
-                    bsDatepicker placeholder="DD-MMM-YYYY HH:mm" [bsConfig]="{ withTimepicker: true, keepDatepickerOpened: true,
-                    dateInputFormat: 'DD-MMM-YYYY HH:mm', containerClass: 'theme-dark-blue', isAnimated: true,
-                    showWeekNumbers: false, adaptivePosition: true }">
-                            <button mat-raised-button class="form-button-secondary" (click)="updateNoAppTsToNow()">Now</button>
-                          </span>
-                        }
-                      </p>
-                    </span>
-                    <span class="section-grid-cell">
-                      <p class="section-grid-header">CLERK REC.</p>
-                      <p class="section-grid-text">
-                        @if ((isViewOnly && !isSSEditMode)) {
-                          <span>{{ courtAppearanceForm?.value.clerkRecord }}</span>
-                        }
-                        @if ((!isViewOnly || isSSEditMode)) {
-                          <mat-form-field appearance="outline">
-                            <input matInput formControlName="clerkRecord" maxlength="30">
-                            @if (courtAppearanceForm.controls.clerkRecord.hasError('maxlength')) {
-                              <mat-error>{{
-                              "error.max_length" | translate }}100</mat-error>
-                            }
-                          </mat-form-field>
-                        }
-                      </p>
-                    </span>
-                    <span class="section-grid-cell">
-                      <p class="section-grid-header">DEF. COUNSEL</p>
-                      <p class="section-grid-text">
-                        @if ((isViewOnly && !isSSEditMode)) {
-                          <span>{{ courtAppearanceForm?.value.defenceCounsel }}</span>
-                        }
-                        @if ((!isViewOnly || isSSEditMode)) {
-                          <mat-form-field appearance="outline">
-                            <input matInput formControlName="defenceCounsel" maxlength="30">
-                            @if (courtAppearanceForm.controls.defenceCounsel.hasError('maxlength')) {
-                              <mat-error>{{
-                              "error.max_length" | translate }}100</mat-error>
-                            }
-                          </mat-form-field>
-                        }
-                      </p>
-                    </span>
-                    <span class="section-grid-cell">
-                      <p class="section-grid-header">Def Att</p>
-                      <p class="section-grid-text">
-                        @if (isViewOnly) {
-                          <span>{{ courtAppearanceForm?.value.dattCd }}</span>
-                        }
-                        @if (!isViewOnly) {
-                          <mat-form-field appearance="outline">
-                            <mat-select formControlName="dattCd">
-                              <mat-option [value]="RoPDatt.A">{{ RoPDatt.A }}</mat-option>
-                              <mat-option [value]="RoPDatt.C">{{ RoPDatt.C }}</mat-option>
-                              <mat-option [value]="RoPDatt.N">{{ RoPDatt.N }}</mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                        }
-                      </p>
-                    </span>
-                    <span class="section-grid-cell">
-                      <p class="section-grid-header">Crown</p>
-                      <p class="section-grid-text">
-                        @if (isViewOnly && !isSSEditMode) {
-                          <span>{{ courtAppearanceForm?.value.crown }}</span>
-                        }
-                        @if (!isViewOnly || isSSEditMode) {
-                          <mat-form-field appearance="outline">
-                            <mat-select formControlName="crown">
-                              <mat-option [value]="RoPCrown.P">{{ RoPCrown.P }}</mat-option>
-                              <mat-option [value]="RoPCrown.N">{{ RoPCrown.N }}</mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                        }
-                      </p>
-                    </span>
-                    <span class="section-grid-cell">
-                      <p class="section-grid-header">Seized</p>
-                      <p class="section-grid-text">
-                        @if (!isViewOnly) {
-                          <mat-form-field appearance="outline">
-                            <mat-select formControlName="jjSeized">
-                              <mat-option [value]="RoPSeized.Y">{{ RoPSeized.Y }}</mat-option>
-                              <mat-option [value]="RoPSeized.N">{{ RoPSeized.N }}</mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                        }
-                        @if (isViewOnly) {
-                          <span>{{ courtAppearanceForm?.value.jjSeized }}</span>
-                        }
-                      </p>
-                    </span>
-                    <span class="section-grid-cell">
-                      <p class="section-grid-header">Judicial Justice</p>
-                      <p class="section-grid-text">
-                        @if (type !== tabTypes.HEARING_INBOX) {
-                          <span>{{ courtAppearanceForm?.value.adjudicator }}</span>
-                        }
-                      </p>
-                    </span>
-                    <span class="section-grid-cell" style="grid-column: span 11">
-                      <p class="section-grid-header">JJ Endorsements:</p>
-                      <p class="section-grid-text">
-                        @if (!isViewOnly) {
-                          <textarea formControlName="comments" style="width:100%; background:#fffee6"
-                          rows="8"> </textarea>
-                        }
-                        @if (isViewOnly) {
-                          <span class="formatComments">{{ courtAppearanceForm.get('comments').value }}</span>
-                        }
-                      </p>
-                    </span>
-                  </div>
-                </form>
-              </section>
-            }
-            @if (tcoDisputeInfo.hearingType === HearingTypeCodes.CourtAppearance) {
-              <section class="section-sticky">
-                <ng-container subHeader>
-                  <span>
-                    <h3>Court Appearances History</h3>
-                  </span>
-                </ng-container>
-                <app-jj-dispute-court-appearances [data]="lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs">
-                </app-jj-dispute-court-appearances>
-              </section>
-            }
-            @if (tcoDisputeInfo.hearingType === HearingTypeCodes.WrittenReasons || tcoDisputeInfo.hearingType === HearingTypeCodes.CourtAppearance) {
-              <section class="section-sticky">
-                <ng-container subHeader>
-                  <span>
-                    <h3>Disputant Statement</h3>
-                  </span>
-                </ng-container>
-                <!-- Signature Panel -->
-                <h4>{{ "label.signature" | translate }} -
-                  {{ "label.signature_subheading" | translate }}
-                </h4>
-                <div class="container signature-box">
-                  <div class="row justify-content-start custom-row">
-                    <div class="col-2 custom-column">
-                      <strong>{{ "label.signatory_option_1" | translate }}</strong>
-                    </div>
-                    <div class="col-4 custom-column">
-                      @if (lastUpdatedJJDispute.signatoryType === SignatoryType.D) {
-                        <span style="font-size: small">
-                        {{ lastUpdatedJJDispute.signatoryName }}</span>
-                      }
-                    </div>
-                    <div class="col-4 custom-column">
-                      @if (lastUpdatedJJDispute.signatoryType === SignatoryType.D) {
-                        <span style="font-size: small">
-                        {{ lastUpdatedJJDispute.submittedTs | date: "dd-MMM-yyyy HH:mm" }}</span>
-                      }
-                    </div>
-                  </div>
-                  <div class="row justify-content-start">
-                    <div class="col-2 custom-column">
-                      <strong>{{ "label.signatory_option_2" | translate }}</strong>
-                    </div>
-                    <div class="col-4 custom-column">
-                      @if (lastUpdatedJJDispute.signatoryType === SignatoryType.A) {
-                        <span style="font-size: small">
-                        {{ lastUpdatedJJDispute.signatoryName }}</span>
-                      }
-                    </div>
-                    <div class="col-4 custom-column">
-                      @if (lastUpdatedJJDispute.signatoryType === SignatoryType.A) {
-                        <span style="font-size: small">
-                        {{ lastUpdatedJJDispute.submittedTs | date: "dd-MMM-yyyy HH:mm" }}</span>
-                      }
-                    </div>
-                  </div>
-                </div>
-                <!-- Signature Panel End -->
-              </section>
-            }
-            <section class="section-sticky">
-              <ng-container subHeader>
-                <span>
-                  <h3>Written Reasons</h3>
+                  </p>
                 </span>
-              </ng-container>
-              <div>
-                <h4><b>Fine Reduction</b>
-                @if (fineReductionCountsHeading.length>0) {
-                  <span>&nbsp;-&nbsp;{{ fineReductionCountsHeading }}</span>
-                }
-              </h4>
-              <span style="font-size: small">{{ lastUpdatedJJDispute.fineReductionReason }}</span>
-              <br /><br />
-            </div>
-            <div>
-              <h4><b>Time to Pay</b>
-              @if (timeToPayCountsHeading.length>0) {
-                <span>&nbsp;-&nbsp;{{ timeToPayCountsHeading}}</span>
-              }
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">APP (P/N/A)<span style="color: red;">*</span></p>
+                  <p class="section-grid-text">
+                    @if (isViewOnly && !isSSEditMode) {
+                      <span>{{ courtAppearanceForm?.value.appCd }}</span>
+                    }
+                    @if (!isViewOnly || isSSEditMode) {
+                      <mat-form-field appearance="outline"
+                        [ngClass]="{'mat-form-field-invalid': courtAppearanceForm.get('appCd')?.invalid && courtAppearanceForm.get('appCd')?.touched}">
+                        <mat-select formControlName="appCd" (selectionChange)="onUpdateAPPCd()" required>
+                          <mat-option [value]="RoPApp.P">{{ RoPApp.P }}</mat-option>
+                          <mat-option [value]="RoPApp.N">{{ RoPApp.N }}</mat-option>
+                          <mat-option [value]="RoPApp.A">{{ RoPApp.A }}</mat-option>
+                        </mat-select>
+                        @if (courtAppearanceForm.get('appCd')?.hasError('required')) {
+                          <mat-error>
+                            APP field is required
+                          </mat-error>
+                        }
+                      </mat-form-field>
+                    }
+                  </p>
+                </span>
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">No APP</p>
+                  <p class="section-grid-text">
+                    @if (((isViewOnly && !isSSEditMode) || !isNoAppEnabled) && courtAppearanceForm.value.noAppTs) {
+                      <span>
+                        {{ courtAppearanceForm?.value.noAppTs | date: "dd-MMM-yyyy HH:mm" }}
+                      </span>
+                    }
+                    @if ((!isViewOnly || isSSEditMode) && isNoAppEnabled) {
+                      <span>
+                        <input type="text" formControlName="noAppTs" class="p-2 section-grid-text latest-plea-text"
+                  bsDatepicker placeholder="DD-MMM-YYYY HH:mm" [bsConfig]="{ withTimepicker: true, keepDatepickerOpened: true,
+                  dateInputFormat: 'DD-MMM-YYYY HH:mm', containerClass: 'theme-dark-blue', isAnimated: true,
+                  showWeekNumbers: false, adaptivePosition: true }" />
+                        <button mat-raised-button class="form-button-secondary" (click)="updateNoAppTsToNow()">Now</button>
+                      </span>
+                    }
+                  </p>
+                </span>
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">CLERK REC.</p>
+                  <p class="section-grid-text">
+                    @if ((isViewOnly && !isSSEditMode)) {
+                      <span>{{ courtAppearanceForm?.value.clerkRecord }}</span>
+                    }
+                    @if ((!isViewOnly || isSSEditMode)) {
+                      <mat-form-field appearance="outline">
+                        <input matInput formControlName="clerkRecord" maxlength="30" />
+                        @if (courtAppearanceForm.controls.clerkRecord.hasError('maxlength')) {
+                          <mat-error>{{
+                          "error.max_length" | translate }}100</mat-error>
+                        }
+                      </mat-form-field>
+                    }
+                  </p>
+                </span>
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">DEF. COUNSEL</p>
+                  <p class="section-grid-text">
+                    @if ((isViewOnly && !isSSEditMode)) {
+                      <span>{{ courtAppearanceForm?.value.defenceCounsel }}</span>
+                    }
+                    @if ((!isViewOnly || isSSEditMode)) {
+                      <mat-form-field appearance="outline">
+                        <input matInput formControlName="defenceCounsel" maxlength="30" />
+                        @if (courtAppearanceForm.controls.defenceCounsel.hasError('maxlength')) {
+                          <mat-error>{{
+                          "error.max_length" | translate }}100</mat-error>
+                        }
+                      </mat-form-field>
+                    }
+                  </p>
+                </span>
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">Def Att</p>
+                  <p class="section-grid-text">
+                    @if (isViewOnly) {
+                      <span>{{ courtAppearanceForm?.value.dattCd }}</span>
+                    }
+                    @if (!isViewOnly) {
+                      <mat-form-field appearance="outline">
+                        <mat-select formControlName="dattCd">
+                          <mat-option [value]="RoPDatt.A">{{ RoPDatt.A }}</mat-option>
+                          <mat-option [value]="RoPDatt.C">{{ RoPDatt.C }}</mat-option>
+                          <mat-option [value]="RoPDatt.N">{{ RoPDatt.N }}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    }
+                  </p>
+                </span>
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">Crown</p>
+                  <p class="section-grid-text">
+                    @if (isViewOnly && !isSSEditMode) {
+                      <span>{{ courtAppearanceForm?.value.crown }}</span>
+                    }
+                    @if (!isViewOnly || isSSEditMode) {
+                      <mat-form-field appearance="outline">
+                        <mat-select formControlName="crown">
+                          <mat-option [value]="RoPCrown.P">{{ RoPCrown.P }}</mat-option>
+                          <mat-option [value]="RoPCrown.N">{{ RoPCrown.N }}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    }
+                  </p>
+                </span>
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">Seized</p>
+                  <p class="section-grid-text">
+                    @if (!isViewOnly) {
+                      <mat-form-field appearance="outline">
+                        <mat-select formControlName="jjSeized">
+                          <mat-option [value]="RoPSeized.Y">{{ RoPSeized.Y }}</mat-option>
+                          <mat-option [value]="RoPSeized.N">{{ RoPSeized.N }}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    }
+                    @if (isViewOnly) {
+                      <span>{{ courtAppearanceForm?.value.jjSeized }}</span>
+                    }
+                  </p>
+                </span>
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">Judicial Justice</p>
+                  <p class="section-grid-text">
+                    @if (type !== tabTypes.HEARING_INBOX) {
+                      <span>{{ courtAppearanceForm?.value.adjudicator }}</span>
+                    }
+                  </p>
+                </span>
+                <span class="section-grid-cell" style="grid-column: span 11">
+                  <p class="section-grid-header">JJ Endorsements:</p>
+                  <p class="section-grid-text">
+                    @if (!isViewOnly) {
+                      <textarea formControlName="comments" style="width:100%; background:#fffee6"
+                      rows="8"> </textarea>
+                    }
+                    @if (isViewOnly) {
+                      <span class="formatComments">{{ courtAppearanceForm.get('comments').value }}</span>
+                    }
+                  </p>
+                </span>
+              </div>
+            </form>
+          </section>
+        }
+        @if (tcoDisputeInfo.hearingType === HearingTypeCodes.CourtAppearance) {
+          <section class="section-sticky">
+            <ng-container subHeader>
+              <span>
+                <h3>Court Appearances History</h3>
+              </span>
+            </ng-container>
+            <app-jj-dispute-court-appearances [data]="lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs">
+            </app-jj-dispute-court-appearances>
+          </section>
+        }
+        @if (tcoDisputeInfo.hearingType === HearingTypeCodes.WrittenReasons || tcoDisputeInfo.hearingType === HearingTypeCodes.CourtAppearance) {
+          <section class="section-sticky">
+            <ng-container subHeader>
+              <span>
+                <h3>Disputant Statement</h3>
+              </span>
+            </ng-container>
+            <!-- Signature Panel -->
+            <h4>{{ "label.signature" | translate }} -
+              {{ "label.signature_subheading" | translate }}
             </h4>
-            <span style="font-size: small">{{ lastUpdatedJJDispute.timeToPayReason }}</span>
+            <div class="container signature-box">
+              <div class="row justify-content-start custom-row">
+                <div class="col-2 custom-column">
+                  <strong>{{ "label.signatory_option_1" | translate }}</strong>
+                </div>
+                <div class="col-4 custom-column">
+                  @if (lastUpdatedJJDispute.signatoryType === SignatoryType.D) {
+                    <span style="font-size: small">
+                    {{ lastUpdatedJJDispute.signatoryName }}</span>
+                  }
+                </div>
+                <div class="col-4 custom-column">
+                  @if (lastUpdatedJJDispute.signatoryType === SignatoryType.D) {
+                    <span style="font-size: small">
+                    {{ lastUpdatedJJDispute.submittedTs | date: "dd-MMM-yyyy HH:mm" }}</span>
+                  }
+                </div>
+              </div>
+              <div class="row justify-content-start">
+                <div class="col-2 custom-column">
+                  <strong>{{ "label.signatory_option_2" | translate }}</strong>
+                </div>
+                <div class="col-4 custom-column">
+                  @if (lastUpdatedJJDispute.signatoryType === SignatoryType.A) {
+                    <span style="font-size: small">
+                    {{ lastUpdatedJJDispute.signatoryName }}</span>
+                  }
+                </div>
+                <div class="col-4 custom-column">
+                  @if (lastUpdatedJJDispute.signatoryType === SignatoryType.A) {
+                    <span style="font-size: small">
+                    {{ lastUpdatedJJDispute.submittedTs | date: "dd-MMM-yyyy HH:mm" }}</span>
+                  }
+                </div>
+              </div>
+            </div>
+            <!-- Signature Panel End -->
+          </section>
+        }
+        <section class="section-sticky">
+          <ng-container subHeader>
+            <span>
+              <h3>Written Reasons</h3>
+            </span>
+          </ng-container>
+          <div>
+            <h4><b>Fine Reduction</b>
+            @if (fineReductionCountsHeading.length>0) {
+              <span>&nbsp;-&nbsp;{{ fineReductionCountsHeading }}</span>
+            }
+            </h4>
+            <span style="font-size: small">{{ lastUpdatedJJDispute.fineReductionReason }}</span>
+            <br /><br />
+          </div>
+          <div>
+            <h4><b>Time to Pay</b>
+            @if (timeToPayCountsHeading.length>0) {
+              <span>&nbsp;-&nbsp;{{ timeToPayCountsHeading}}</span>
+            }
+          </h4>
+          <span style="font-size: small">{{ lastUpdatedJJDispute.timeToPayReason }}</span>
           </div>
         </section>
         <section class="section-sticky">
@@ -745,177 +746,178 @@
               <button type="button" class="linkbutton" (click)="onGetJustinDocument(DocumentType.TicketImage)"
                 >Electronic Ticket
               Image</button>
-              }<br />
-              @if (lastUpdatedJJDispute.noticeOfHearingYn === NoticeOfHearing.N) {
-                <span>Notice Of Hearing (not
-                available)</span>
-              }
-              @if (lastUpdatedJJDispute.noticeOfHearingYn === NoticeOfHearing.Y) {
-                <button type="linkbutton" class="linkbutton" (click)="onGetJustinDocument(DocumentType.NoticeOfDispute)"
-                >Notice Of Hearing</button>
-                }<br /><br />
-                <span><b>Uploaded Documents ({{lastUpdatedJJDispute.fileData?.length }})</b></span><br />
-                @for (doc of lastUpdatedJJDispute.fileData; track doc.fileId) {
-                  <div style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-                    <span class="document-type-label" style="background-color: #e3f2fd; color: #1976d2; padding: 1px 3px; border-radius: 3px; font-size: 9px; font-weight: 200; border: 1px solid #bbdefb; white-space: nowrap;">{{ doc.documentType }}</span>
-                    @if (doc.virusScanStatus === 'clean') {
-                      <button type="button" class="linkbutton" (click)="onGetFile(doc.fileId)"
-                      >{{ doc.fileName }}</button>
-                    }
-                    @if (doc.virusScanStatus !== 'clean') {
-                      <span>{{ doc.fileName }} {{ doc.virusScanStatus }}</span>
-                    }
-                    @if (!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))) {
-                      <button type="button" style="width:50px !important; border:none; background-color:white;"
-                        (click)="onRemoveFile(doc.fileId, doc.fileName)"><mat-icon class="align-text-bottom" style="color:red">delete</mat-icon></button>
-                      }
-                    </div>
-                  }
-                  @if (!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))) {
-                    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1rem">
-                      <label fxFlex="13">File type for upload:</label>
-                      <mat-form-field fxFlex="15" appearance="outline" style="display: inline-flex;">
-                        <mat-select [(ngModel)]="fileTypeToUpload">
-                          <mat-option value="Certified Extract">Certified Extract</mat-option>
-                          <mat-option value="Adjournment">Adjournment</mat-option>
-                          <mat-option value="Other">Other</mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                      <button fxFlex="15" class="mt-0" mat-flat-button type="button" color="primary"
-                        onclick="document.getElementById('getFile').click()">
-                        <mat-icon class="align-text-bottom">upload</mat-icon>&nbsp;Upload File
-                      </button>
-                    </div>
-                    <input type="file" id="getFile" style="display:none" accept="image/*,.pdf"
-                      (change)="onUpload($event.target.files)">
-                  }
-                </mat-expansion-panel>
-                <span #fileHistory></span>
-                <mat-expansion-panel>
-                  <mat-expansion-panel-header>
-                    <mat-panel-title>
-                      <span style="color: black;"><b>Administrative Activity </b></span>
-                    </mat-panel-title>
-                  </mat-expansion-panel-header>
-                  <div>
-                    <app-jj-file-history [ticketNumber]="lastUpdatedJJDispute.ticketNumber"></app-jj-file-history>
-                  </div>
-                </mat-expansion-panel>
-                <span #disputantUpdates></span>
-                <mat-expansion-panel [expanded]="false">
-                  <mat-expansion-panel-header>
-                    <mat-panel-title>
-                      <span style="color: black;"><b>{{ "label.disputant_updates" | translate }}</b></span>
-                    </mat-panel-title>
-                  </mat-expansion-panel-header>
-                  <div>
-                    <app-jj-dispute-updates [disputeId]="lastUpdatedJJDispute.occamDisputeId"></app-jj-dispute-updates>
-                  </div>
-                </mat-expansion-panel>
-                <span #fileRemarks></span>
-                <mat-expansion-panel [expanded]="false" id="file-remarks">
-                  <mat-expansion-panel-header>
-                    <mat-panel-title>
-                      <span style="color: black;"><b>File Remarks </b></span>
-                    </mat-panel-title>
-                  </mat-expansion-panel-header>
-                  <div>
-                    <span class="small-note">
-                      <i><span style="color:red;">*</span> Remarks are for internal use only and will be visible to everyone who
-                    views this file</i>
-                  </span>
-                </div>
-                <div>
-                  <app-jj-dispute-remarks [data]="lastUpdatedJJDispute.remarks"></app-jj-dispute-remarks>
-                </div>
-              </mat-expansion-panel>
-            </mat-accordion>
-            @if (!isViewOnly) {
-              <section class="section-sticky">
-                <ng-container subHeader>
-                  <span>
-                    <h3>Add Remarks<br />
-                      @if (type !== tabTypes.DECISION_VALIDATION && type !== tabTypes.DCF) {
-                        <span class="small-note">
-                          <i><span style="color:red;">*</span> This is for internal use only</i>
-                        </span>
-                      }
-                    </h3>
-                  </span>
-                </ng-container>
-                <textarea matInput [(ngModel)]="remarks" maxlength="4000" rows="6"
-                style="background: #fffee6; width: 100%"></textarea>
-              </section>
+            }<br />
+            @if (lastUpdatedJJDispute.noticeOfHearingYn === NoticeOfHearing.N) {
+              <span>Notice Of Hearing (not
+              available)</span>
             }
-            <div fxLayout="row">
-              @if (type === tabTypes.DECISION_VALIDATION && isViewOnly && lastUpdatedJJDispute.status === DisputeStatus.Confirmed) {
-                <div
-                  fxLayoutAlign="start center" fxFlex="40" fxLayout="row">
-                  <mat-form-field appearance="outline" class="h-auto return-jj-align">
-                    <mat-select [(ngModel)]="selectedJJ" placeholder="choose a JJ" class="return-jj-select">
-                      <mat-option [value]=""></mat-option>
-                      @for (jj of jjList; track jj.idir) {
-                        <mat-option [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i>
-                      </mat-option>
-                    }
-                  </mat-select>
-                </mat-form-field>
-                <button class="large h-auto" mat-flat-button type="button" color="primary" (click)="returnToJJ()"
-                  [disabled]="!selectedJJ">
-                  Return to JJ
-                </button>
+            @if (lastUpdatedJJDispute.noticeOfHearingYn === NoticeOfHearing.Y) {
+              <button type="linkbutton" class="linkbutton" (click)="onGetJustinDocument(DocumentType.NoticeOfDispute)"
+              >Notice Of Hearing</button>
+            }
+            <br /><br />
+            <span><b>Uploaded Documents ({{lastUpdatedJJDispute.fileData?.length }})</b></span><br />
+            @for (doc of lastUpdatedJJDispute.fileData; track doc.fileId) {
+              <div style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                <span class="document-type-label" style="background-color: #e3f2fd; color: #1976d2; padding: 1px 3px; border-radius: 3px; font-size: 9px; font-weight: 200; border: 1px solid #bbdefb; white-space: nowrap;">{{ doc.documentType }}</span>
+                @if (doc.virusScanStatus === 'clean') {
+                  <button type="button" class="linkbutton" (click)="onGetFile(doc.fileId)"
+                  >{{ doc.fileName }}</button>
+                }
+                @if (doc.virusScanStatus !== 'clean') {
+                  <span>{{ doc.fileName }} {{ doc.virusScanStatus }}</span>
+                }
+                @if (!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))) {
+                  <button type="button" style="width:50px !important; border:none; background-color:white;"
+                    (click)="onRemoveFile(doc.fileId, doc.fileName)"><mat-icon class="align-text-bottom" style="color:red">delete</mat-icon></button>
+                }
               </div>
             }
-            <div fxFlex></div>
-            @if (type !== tabTypes.DCF) {
-              @if (type !== tabTypes.DECISION_VALIDATION && lastUpdatedJJDispute.status !== DisputeStatus.RequireCourtHearing && lastUpdatedJJDispute.status !== DisputeStatus.Accepted && lastUpdatedJJDispute.status !== DisputeStatus.Cancelled && lastUpdatedJJDispute.status !== DisputeStatus.Concluded && concludeStatusOnly === false && cancelStatusOnly === false) {
-                <button fxFlex="30" class="large" mat-flat-button type="button" color="primary" style="margin-right: 20px;"
-                  (click)="onRequireCourtHearing()"
-                  >
-                  {{ lastUpdatedJJDispute.hearingType === HearingType.WrittenReasons ? 'Adjourn/Require Hearing' :
-                  'Adjourn/Continue' }}
+            @if (!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))) {
+              <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1rem">
+                <label fxFlex="13">File type for upload:</label>
+                <mat-form-field fxFlex="15" appearance="outline" style="display: inline-flex;">
+                  <mat-select [(ngModel)]="fileTypeToUpload">
+                    <mat-option value="Certified Extract">Certified Extract</mat-option>
+                    <mat-option value="Adjournment">Adjournment</mat-option>
+                    <mat-option value="Other">Other</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <button fxFlex="15" class="mt-0" mat-flat-button type="button" color="primary"
+                  onclick="document.getElementById('getFile').click()">
+                  <mat-icon class="align-text-bottom">upload</mat-icon>&nbsp;Upload File
                 </button>
-              }
-              @if (type !== tabTypes.DECISION_VALIDATION && [DisputeStatus.New, DisputeStatus.InProgress, DisputeStatus.HearingScheduled, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) >= 0 && cancelStatusOnly === false && concludeStatusOnly === false) {
-                <button fxFlex="30" class="large" mat-flat-button type="button" color="primary" style="margin-right: 20px;"
-                  (click)="onSave()"
-                  >
-                  Save & Finish Later
-                </button>
-              }
-              @if ([DisputeStatus.New, DisputeStatus.HearingScheduled, DisputeStatus.InProgress, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) >= 0 && concludeStatusOnly === false && cancelStatusOnly === false && isJJ) {
-                <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConfirm()"
-                  >
-                  Confirm
-                </button>
-              }
-              @if (concludeStatusOnly === true && cancelStatusOnly === false) {
-                <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConcluded()"
-                  >
-                  Conclude
-                </button>
-              }
-              @if (cancelStatusOnly === true && concludeStatusOnly === false) {
-                <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onCancelled()"
-                  >
-                  Cancel
-                </button>
-              }
-              @if (lastUpdatedJJDispute.status === DisputeStatus.Confirmed && cancelStatusOnly === false && concludeStatusOnly === false) {
-                <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onAccept()"
-                  >
-                  Accept
-                </button>
-              }
-              @if (lastUpdatedJJDispute.status === DisputeStatus.RequireCourtHearing || lastUpdatedJJDispute.status === DisputeStatus.Cancelled || lastUpdatedJJDispute.status === DisputeStatus.Concluded) {
-                <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onBackClicked()"
-                  >
-                  Back
-                </button>
-              }
+              </div>
+              <input type="file" id="getFile" style="display:none" accept="image/*,.pdf"
+                (change)="onUpload($event.target.files)" />
             }
+          </mat-expansion-panel>
+          <span #fileHistory></span>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <span style="color: black;"><b>Administrative Activity </b></span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div>
+              <app-jj-file-history [ticketNumber]="lastUpdatedJJDispute.ticketNumber"></app-jj-file-history>
+            </div>
+          </mat-expansion-panel>
+          <span #disputantUpdates></span>
+          <mat-expansion-panel [expanded]="false">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <span style="color: black;"><b>{{ "label.disputant_updates" | translate }}</b></span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div>
+              <app-jj-dispute-updates [disputeId]="lastUpdatedJJDispute.occamDisputeId"></app-jj-dispute-updates>
+            </div>
+          </mat-expansion-panel>
+          <span #fileRemarks></span>
+          <mat-expansion-panel [expanded]="false" id="file-remarks">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <span style="color: black;"><b>File Remarks </b></span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div>
+              <span class="small-note">
+                <i><span style="color:red;">*</span> Remarks are for internal use only and will be visible to everyone who
+              views this file</i>
+            </span>
           </div>
+          <div>
+            <app-jj-dispute-remarks [data]="lastUpdatedJJDispute.remarks"></app-jj-dispute-remarks>
+          </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+        @if (!isViewOnly) {
+          <section class="section-sticky">
+            <ng-container subHeader>
+              <span>
+                <h3>Add Remarks<br />
+                  @if (type !== tabTypes.DECISION_VALIDATION && type !== tabTypes.DCF) {
+                    <span class="small-note">
+                      <i><span style="color:red;">*</span> This is for internal use only</i>
+                    </span>
+                  }
+                </h3>
+              </span>
+            </ng-container>
+            <textarea matInput [(ngModel)]="remarks" maxlength="4000" rows="6"
+            style="background: #fffee6; width: 100%"></textarea>
+          </section>
+        }
+        <div fxLayout="row">
+          @if (type === tabTypes.DECISION_VALIDATION && isViewOnly && lastUpdatedJJDispute.status === DisputeStatus.Confirmed) {
+            <div
+              fxLayoutAlign="start center" fxFlex="40" fxLayout="row">
+              <mat-form-field appearance="outline" class="h-auto return-jj-align">
+                <mat-select [(ngModel)]="selectedJJ" placeholder="choose a JJ" class="return-jj-select">
+                  <mat-option [value]=""></mat-option>
+                  @for (jj of jjList; track jj.idir) {
+                    <mat-option [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i>
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+              <button class="large h-auto" mat-flat-button type="button" color="primary" (click)="returnToJJ()"
+                [disabled]="!selectedJJ">
+                Return to JJ
+              </button>
+            </div>
+          }
+          <div fxFlex></div>
+          @if (type !== tabTypes.DCF) {
+            @if (type !== tabTypes.DECISION_VALIDATION && lastUpdatedJJDispute.status !== DisputeStatus.RequireCourtHearing && lastUpdatedJJDispute.status !== DisputeStatus.Accepted && lastUpdatedJJDispute.status !== DisputeStatus.Cancelled && lastUpdatedJJDispute.status !== DisputeStatus.Concluded && concludeStatusOnly === false && cancelStatusOnly === false) {
+              <button fxFlex="30" class="large" mat-flat-button type="button" color="primary" style="margin-right: 20px;"
+                (click)="onRequireCourtHearing()"
+                >
+                {{ lastUpdatedJJDispute.hearingType === HearingType.WrittenReasons ? 'Adjourn/Require Hearing' :
+                'Adjourn/Continue' }}
+              </button>
+            }
+            @if (type !== tabTypes.DECISION_VALIDATION && [DisputeStatus.New, DisputeStatus.InProgress, DisputeStatus.HearingScheduled, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) >= 0 && cancelStatusOnly === false && concludeStatusOnly === false) {
+              <button fxFlex="30" class="large" mat-flat-button type="button" color="primary" style="margin-right: 20px;"
+                (click)="onSave()"
+                >
+                Save & Finish Later
+              </button>
+            }
+            @if ([DisputeStatus.New, DisputeStatus.HearingScheduled, DisputeStatus.InProgress, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) >= 0 && concludeStatusOnly === false && cancelStatusOnly === false && isJJ) {
+              <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConfirm()"
+                >
+                Confirm
+              </button>
+            }
+            @if (concludeStatusOnly === true && cancelStatusOnly === false) {
+              <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConcluded()"
+                >
+                Conclude
+              </button>
+            }
+            @if (cancelStatusOnly === true && concludeStatusOnly === false) {
+              <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onCancelled()"
+                >
+                Cancel
+              </button>
+            }
+            @if (lastUpdatedJJDispute.status === DisputeStatus.Confirmed && cancelStatusOnly === false && concludeStatusOnly === false) {
+              <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onAccept()"
+                >
+                Accept
+              </button>
+            }
+            @if (lastUpdatedJJDispute.status === DisputeStatus.RequireCourtHearing || lastUpdatedJJDispute.status === DisputeStatus.Cancelled || lastUpdatedJJDispute.status === DisputeStatus.Concluded) {
+              <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onBackClicked()"
+                >
+                Back
+              </button>
+            }
+          }
         </div>
-      }
-    </div>
-  </app-page>
+      </div>
+    }
+  </div>
+</app-page>

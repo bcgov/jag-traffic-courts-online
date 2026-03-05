@@ -321,8 +321,7 @@
                           Province/State</mat-label>
                         }
                         @if (form.get('addressCountryId').value !== usa.ctryId && form.get('addressCountryId').value !== canada.ctryId) {
-                          <input matInput formControlName="addressProvince"
-                            />
+                          <input matInput formControlName="addressProvince" />
                         }
                         @if (form.controls.addressProvinceProvId.hasError('required')) {
                           <mat-error
@@ -346,16 +345,14 @@
                       }
                       @if (form.get('addressCountryId').value===canada.ctryId) {
                         <input matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()" minlength="6"
-                          formControlName="postalCode" [showMaskTyped]="true"
-                          />
+                          formControlName="postalCode" [showMaskTyped]="true" />
                       }
                       @if (form.get('addressCountryId').value===usa.ctryId) {
                         <mat-label>Zip Code</mat-label>
                       }
                       @if (form.get('addressCountryId').value===usa.ctryId) {
                         <input matInput mask="00000" oninput="this.value = this.value.toUpperCase()"
-                          formControlName="postalCode" [showMaskTyped]="true"
-                          />
+                          formControlName="postalCode" [showMaskTyped]="true" />
                       }
                       @if (form.get('addressCountryId').value!==usa.ctryId && form.get('addressCountryId').value!==canada.ctryId) {
                         <mat-label
@@ -364,8 +361,7 @@
                       }
                       @if (form.get('addressCountryId').value!==usa.ctryId && form.get('addressCountryId').value !== canada.ctryId) {
                         <input matInput maxLength="6" oninput="this.value = this.value.toUpperCase()"
-                          formControlName="postalCode"
-                          />
+                          formControlName="postalCode" />
                       }
                       @if (form.get('postalCode').hasError('required')) {
                         <mat-error>{{ "error.required" | translate
@@ -390,8 +386,7 @@
                           [showMaskTyped]="true" />
                       }
                       @if (form.get('addressCountryId').value !== canada.ctryId && form.get('addressCountryId').value !== usa.ctryId) {
-                        <input matInput formControlName="homePhoneNumber" mask="99999999999999999999"
-                          />
+                        <input matInput formControlName="homePhoneNumber" mask="99999999999999999999" />
                       }
                       @if (form.get('homePhoneNumber')?.hasError('phone')) {
                         <mat-error>Must be a valid phone number
@@ -451,12 +446,10 @@
                       <mat-label>DL number</mat-label>
                       @if (form.get('driversLicenceProvinceProvId').value === bc.provId) {
                         <input matInput formControlName="driversLicenceNumber"
-                          (keypress)="($event.charCode >= 48 && $event.charCode < 58)" minlength="7" maxlength="9"
-                          />
+                          (keypress)="($event.charCode >= 48 && $event.charCode < 58)" minlength="7" maxlength="9" />
                       }
                       @if (form.get('driversLicenceProvinceProvId').value !== bc.provId) {
-                        <input matInput formControlName="driversLicenceNumber" maxlength="20"
-                          />
+                        <input matInput formControlName="driversLicenceNumber" maxlength="20" />
                       }
                       @if (
                         form.get('driversLicenceNumber')?.errors?.minlength ||

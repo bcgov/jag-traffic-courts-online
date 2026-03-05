@@ -785,8 +785,7 @@
                         {{ "label.province_state" | translate }}</mat-label>
                       }
                       @if (form.get('addressCountryId').value !== usa.ctryId && form.get('addressCountryId').value !== canada.ctryId) {
-                        <input matInput formControlName="addressProvince" (change)="onFieldChange()"
-                          />
+                        <input matInput formControlName="addressProvince" (change)="onFieldChange()" />
                       }
                       @if (form.controls.addressProvinceProvId.hasError('required')) {
                         <mat-error>{{
@@ -810,16 +809,14 @@
                     }
                     @if (form.get('addressCountryId').value===canada.ctryId) {
                       <input matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()" minlength="6"
-                        (change)="onFieldChange()" formControlName="postalCode" [showMaskTyped]="true"
-                        />
+                        (change)="onFieldChange()" formControlName="postalCode" [showMaskTyped]="true" />
                     }
                     @if (form.get('addressCountryId').value===usa.ctryId) {
                       <mat-label>Zip Code</mat-label>
                     }
                     @if (form.get('addressCountryId').value===usa.ctryId) {
                       <input matInput mask="00000" oninput="this.value = this.value.toUpperCase()"
-                        (change)="onFieldChange()" formControlName="postalCode" [showMaskTyped]="true"
-                        />
+                        (change)="onFieldChange()" formControlName="postalCode" [showMaskTyped]="true" />
                     }
                     @if (form.get('addressCountryId').value!==usa.ctryId && form.get('addressCountryId').value!==canada.ctryId) {
                       <mat-label
@@ -828,8 +825,7 @@
                     }
                     @if (form.get('addressCountryId').value!==usa.ctryId && form.get('addressCountryId').value !== canada.ctryId) {
                       <input matInput maxLength="6" oninput="this.value = this.value.toUpperCase()"
-                        (change)="onFieldChange()" formControlName="postalCode"
-                        />
+                        (change)="onFieldChange()" formControlName="postalCode" />
                     }
                     @if (form.get('postalCode').hasError('required')) {
                       <mat-error>{{ "error.required" | translate
@@ -855,8 +851,7 @@
                     }
                     @if (form.get('addressCountryId').value !== canada.ctryId && form.get('addressCountryId').value !== usa.ctryId) {
                       <input matInput formControlName="homePhoneNumber" mask="99999999999999999999"
-                        (change)="onFieldChange()"
-                        />
+                        (change)="onFieldChange()" />
                     }
                     @if (form.get('homePhoneNumber')?.hasError('phone')) {
                       <mat-error>{{ "error.phone_number" |
@@ -915,12 +910,10 @@
                     @if (form.get('driversLicenceProvinceProvId').value === bc.provId) {
                       <input matInput formControlName="driversLicenceNumber"
                         (keypress)="($event.charCode >= 48 && $event.charCode < 58)" (change)="onFieldChange()"
-                        minlength="7" maxlength="9"
-                        />
+                        minlength="7" maxlength="9" />
                     }
                     @if (form.get('driversLicenceProvinceProvId').value !== bc.provId) {
-                      <input matInput formControlName="driversLicenceNumber" maxlength="20"
-                        />
+                      <input matInput formControlName="driversLicenceNumber" maxlength="20" />
                     }
                     @if (form.get('driversLicenceNumber').hasError('required')) {
                       <mat-error>{{ "error.required" |

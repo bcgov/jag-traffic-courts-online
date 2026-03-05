@@ -27,25 +27,25 @@
           }
           <button type="button" class="upload-delete"
             (click)="onRemoveFile(doc.fileId, doc.fileName)"><mat-icon>delete</mat-icon></button>
-          </div>
-        }
+        </div>
+      }
 
-        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1rem">
-          <label fxFlex="13">File type for upload:</label>
-          <mat-form-field fxFlex="15" appearance="outline" class="upload-type">
-            <mat-select [(ngModel)]="fileTypeToUpload">
-              <mat-option value="Certified Extract">Certified Extract</mat-option>
-              <mat-option value="Adjournment">Adjournment</mat-option>
-              <mat-option value="Other">Other</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <button fxFlex="15" class="large" mat-flat-button type="button" color="primary"
-            onclick="document.getElementById('getFile').click()">
-            <mat-icon class="align-text-bottom">upload</mat-icon>&nbsp;Upload File
-          </button>
-        </div>
-        <input type="file" id="getFile" style="display:none" accept="image/*,.pdf"
-          (change)="onUpload($event.target.files)">
-        </div>
-      </mat-expansion-panel>
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1rem">
+        <label fxFlex="13">File type for upload:</label>
+        <mat-form-field fxFlex="15" appearance="outline" class="upload-type">
+          <mat-select [(ngModel)]="fileTypeToUpload">
+            <mat-option value="Certified Extract">Certified Extract</mat-option>
+            <mat-option value="Adjournment">Adjournment</mat-option>
+            <mat-option value="Other">Other</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button fxFlex="15" class="large" mat-flat-button type="button" color="primary"
+          onclick="document.getElementById('getFile').click()">
+          <mat-icon class="align-text-bottom">upload</mat-icon>&nbsp;Upload File
+        </button>
+      </div>
+      <input type="file" id="getFile" style="display:none" accept="image/*,.pdf"
+        (change)="onUpload($event.target.files)" />
     </div>
+  </mat-expansion-panel>
+</div>
