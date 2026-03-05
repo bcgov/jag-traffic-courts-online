@@ -3,7 +3,7 @@
     <div class="app-width" style="padding-top: 1.5vh; padding-bottom: 1.5vh;" fxLayout="row">
       <div fxFlex>
         <button mat-button (click)="onBackClicked()" color="primary">
-          <mat-icon inline="true">arrow_back</mat-icon> Back
+          <mat-icon class="align-text-bottom">arrow_back</mat-icon> Back
         </button>
       </div>
       <ng-template #remarksDialog let-dialogRef="dialogRef">
@@ -767,7 +767,7 @@
                     }
                     @if (!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))) {
                       <button type="button" style="width:50px !important; border:none; background-color:white;"
-                        (click)="onRemoveFile(doc.fileId, doc.fileName)"><mat-icon style="color:red">delete</mat-icon></button>
+                        (click)="onRemoveFile(doc.fileId, doc.fileName)"><mat-icon class="align-text-bottom" style="color:red">delete</mat-icon></button>
                       }
                     </div>
                   }
@@ -786,7 +786,7 @@
                   @if (!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))) {
                     <button class="large" mat-flat-button type="button" color="primary"
                       onclick="document.getElementById('getFile').click()">
-                      <mat-icon>upload</mat-icon>&nbsp;Upload File
+                      <mat-icon class="align-text-bottom">upload</mat-icon>&nbsp;Upload File
                     </button>
                   }
                   @if (!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))) {

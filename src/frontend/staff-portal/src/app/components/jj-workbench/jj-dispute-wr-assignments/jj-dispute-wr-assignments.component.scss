@@ -1,6 +1,11 @@
 td, th {
   vertical-align: middle !important;
   padding-left: 10px !important;
+
+  &.mat-column-assignedIcon {
+    padding-left: 13px !important;
+    padding-right: 13px !important;
+  }
 }
 
 h3, h2 {

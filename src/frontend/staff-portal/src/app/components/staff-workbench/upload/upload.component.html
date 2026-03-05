@@ -5,10 +5,10 @@
         <ng-container subHeader>
           <span>Upload</span>
           @if (collapseObj?.upload) {
-            <i class="fa fa-minus-circle"></i>
+            <mat-icon class="align-text-bottom">do_not_disturb_on</mat-icon>
           }
-          @if (!collapseObj?.upload) {
-            <i class="fa fa-plus-circle"></i>
+          @else {
+            <mat-icon class="align-text-bottom">add_circle</mat-icon>
           }
         </ng-container>
       </app-page-header>
@@ -42,7 +42,7 @@
         </div>
         <button class="large" mat-flat-button type="button" color="primary"
           onclick="document.getElementById('getFile').click()">
-          <mat-icon>upload</mat-icon>&nbsp;Upload File
+          <mat-icon class="align-text-bottom">upload</mat-icon>&nbsp;Upload File
         </button>
         <input type="file" id="getFile" style="display:none" accept="image/*,.pdf"
           (change)="onUpload($event.target.files)">

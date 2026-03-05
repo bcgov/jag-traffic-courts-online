@@ -3,7 +3,7 @@
     <div class="app-width" style="padding-top: 1.5vh; padding-bottom: 1.5vh;" fxLayout="row">
       <div fxFlex>
         <a (click)="onBack()" style="color: #48afe5">
-          <mat-icon inline="true">arrow_back</mat-icon> Back
+          <mat-icon class="align-text-bottom">arrow_back</mat-icon> Back
         </a>
       </div>
       <div>
@@ -39,20 +39,18 @@
     @if (initialDisputeValues && conflict === false) {
       <div class="contact-info">
         @if (lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)) {
-          <mat-expansion-panel [expanded]="true"
-            >
+          <mat-expansion-panel [expanded]="true" hideToggle>
             <mat-expansion-panel-header (click)="handleCollapse('contactInformation')">
               <app-page-header>
                 <ng-container subHeader>
-                  <span>Ticket Information </span>
-                  @if (collapseObj?.ticketInformation) {
-                    <i class="fa fa-minus-circle"
-                    style="font-size:18px; color:#009cde"></i>
-                  }
-                  @if (!collapseObj?.ticketInformation) {
-                    <i class="fa fa-plus-circle"
-                    style="font-size:18px; color:#009cde"></i>
-                  }
+                  <span>Ticket Information  
+                    @if (collapseObj?.ticketInformation) {
+                      <mat-icon class="align-text-bottom">do_not_disturb_on</mat-icon>
+                    }
+                    @else {
+                      <mat-icon class="align-text-bottom">add_circle</mat-icon>
+                    }
+                  </span>
                 </ng-container>
               </app-page-header>
             </mat-expansion-panel-header>
@@ -128,12 +126,10 @@
               Information -- Email Address Not Verified </span>
             }
             @if (collapseObj?.contactInformation) {
-              <i class="fa fa-minus-circle"
-              style="font-size:18px; color:#009cde"></i>
+              <mat-icon class="align-text-bottom">do_not_disturb_on</mat-icon>
             }
-            @if (!collapseObj?.contactInformation) {
-              <i class="fa fa-plus-circle"
-              style="font-size:18px; color:#009cde"></i>
+            @else {
+              <mat-icon class="align-text-bottom">add_circle</mat-icon>
             }
           </ng-container>
         </app-page-header>

@@ -3,7 +3,7 @@
     <div class="app-width" style="padding-top: 1.5vh; padding-bottom: 1.5vh;" fxLayout="row">
       <div fxFlex>
         <button mat-button (click)="onBack()" color="primary">
-          <mat-icon inline="true">arrow_back</mat-icon> Back
+          <mat-icon class="align-text-bottom">arrow_back</mat-icon> Back
         </button>
       </div>
       <div>
@@ -39,18 +39,18 @@
     @if (initialDisputeValues && conflict === false) {
       <div class="ticket-info-section">
         @if (lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)) {
-          <mat-expansion-panel [expanded]="true"
-            >
+          <mat-expansion-panel [expanded]="true" hideToggle>
             <mat-expansion-panel-header (click)="handleCollapse('ticketInformation')">
               <app-page-header>
                 <ng-container subHeader>
-                  <span>Ticket Information </span>
-                  @if (collapseObj?.ticketInformation) {
-                    <i class="fa fa-minus-circle"></i>
-                  }
-                  @if (!collapseObj?.ticketInformation) {
-                    <i class="fa fa-plus-circle"></i>
-                  }
+                  <span>Ticket Information 
+                    @if (collapseObj?.ticketInformation) {
+                      <mat-icon class="align-text-bottom">do_not_disturb_on</mat-icon>
+                    }
+                    @else {
+                      <mat-icon class="align-text-bottom">add_circle</mat-icon>
+                    }
+                  </span>
                 </ng-container>
               </app-page-header>
             </mat-expansion-panel-header>
@@ -569,7 +569,7 @@
       </mat-expansion-panel>
     }
     <div class="contact-info">
-      <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel [expanded]="true" hideToggle>
         <mat-expansion-panel-header (click)="handleCollapse('contactInformation')">
           <app-page-header>
             <ng-container subHeader>
@@ -584,10 +584,10 @@
                 Information -- Email Address Not Verified </span>
               }
               @if (collapseObj?.contactInformation) {
-                <i class="fa fa-minus-circle"></i>
+                <mat-icon class="align-text-bottom">do_not_disturb_on</mat-icon>
               }
-              @if (!collapseObj?.contactInformation) {
-                <i class="fa fa-plus-circle"></i>
+              @else {
+                <mat-icon class="align-text-bottom">add_circle</mat-icon>
               }
             </ng-container>
           </app-page-header>

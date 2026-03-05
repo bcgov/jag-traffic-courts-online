@@ -1,7 +1,7 @@
 <app-page>
   <div>
     <button mat-button (click)="onBack()" color="primary">
-      <mat-icon inline="true">arrow_back</mat-icon> Back
+      <mat-icon class="align-text-bottom">arrow_back</mat-icon> Back
     </button>
     @if (initialDisputeValues) {
       <app-ticket-status [dispute]="initialDisputeValues"></app-ticket-status>

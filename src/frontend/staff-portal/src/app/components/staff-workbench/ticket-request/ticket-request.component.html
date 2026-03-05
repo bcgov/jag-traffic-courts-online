@@ -6,12 +6,10 @@
         <ng-container subHeader>
           <span>Ticket Request Information </span>
           @if (collapseObj?.contactInformation) {
-            <i class="fa fa-minus-circle"
-            style="font-size:18px; color:#009cde"></i>
+            <mat-icon class="align-text-bottom">do_not_disturb_on</mat-icon>
           }
-          @if (!collapseObj?.contactInformation) {
-            <i class="fa fa-plus-circle"
-            style="font-size:18px; color:#009cde"></i>
+          @else {
+            <mat-icon class="align-text-bottom">add_circle</mat-icon>
           }
         </ng-container>
       </app-page-header>
