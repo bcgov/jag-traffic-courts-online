@@ -24,11 +24,6 @@
   section {
     margin-top: 1.25rem;
   }
-
-  .fa-minus-circle, .fa-plus-circle{
-    font-size: 1.125rem;
-    color: #009cde;
-  }
 }
 
 .additional-info {
@@ -114,12 +109,16 @@ hr {
 mat-expansion-panel {
   box-shadow: none !important;
   padding-bottom: 1rem;
-  border-bottom: 1px solid theme-palette(grey, light);
 }
 
 mat-expansion-panel-header {
   padding-left: 0;
   padding-right: 0.5rem;
+}
+
+.expand-collapse-icon {
+  color: #009cde;
+  vertical-align: text-bottom;
 }
 
 ::ng-deep {

@@ -261,7 +261,6 @@ div.container {
   mat-expansion-panel {
     box-shadow: none !important;
     padding-bottom: 1em;
-    border-bottom: 1px solid theme-palette(grey, light);
   }
 
   mat-expansion-panel-header {
@@ -316,10 +315,5 @@ div.container {
       border: 2px #df3e13 solid;
       border-radius: 0;
     }
-  }
-
-  .fa-minus-circle, .fa-plus-circle {
-    font-size: 1.125rem;
-    color: #009cde;
   }
 }
