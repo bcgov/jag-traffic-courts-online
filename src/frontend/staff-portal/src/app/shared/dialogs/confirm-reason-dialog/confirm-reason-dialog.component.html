@@ -1,95 +1,94 @@
 <h3 mat-dialog-title class="d-flex align-items-stretch">
   @if (options.icon && !options.imageSrc) {
-    <mat-icon [color]="options.actionType">{{ options.icon }}</mat-icon>
-    }&nbsp;
-    @if (options.imageSrc) {
-      <img [attr.src]="options.imageSrc" alt="" />
-    }
-    @if (options.titleKey) {
-      <strong style="color: red;">{{ options.titleKey | translate }}</strong>
-    }
-  </h3>
-  <mat-dialog-content>
-    @if (options.messageKey) {
-      <p>{{ options.messageKey | translate }}</p>
-    }
-    <ng-template appDialogContent></ng-template>
-    @if (options.data) {
-      <section>
-        <div class="row">
-          <div class="col-md-3">
-            <span class="section-grid-header">Signed By:</span>
-          </div>
-          <div class="col-md-9">
-            <span class="section-grid-text">{{ jjIDIR }}</span>
-          </div>
+    <mat-icon [color]="options.actionType">{{ options.icon }}</mat-icon>&nbsp;
+  }
+  @if (options.imageSrc) {
+    <img [attr.src]="options.imageSrc" alt="" />
+  }
+  @if (options.titleKey) {
+    <strong style="color: red;">{{ options.titleKey | translate }}</strong>
+  }
+</h3>
+<mat-dialog-content>
+  @if (options.messageKey) {
+    <p>{{ options.messageKey | translate }}</p>
+  }
+  <ng-template appDialogContent></ng-template>
+  @if (options.data) {
+    <section>
+      <div class="row">
+        <div class="col-md-3">
+          <span class="section-grid-header">Signed By:</span>
         </div>
-        <div class="row">
-          <div class="col-md-3">
-            <span class="section-grid-header">Date Signed:</span>
-          </div>
-          <div class="col-md-9">
-            <span class="section-grid-text">{{ currentDate | date: "dd-MMM-yyyy" }}</span>
-          </div>
+        <div class="col-md-9">
+          <span class="section-grid-text">{{ jjIDIR }}</span>
         </div>
-        <ng-container subHeader>
-          <h3>{{ "label.final_disposition" | translate }}</h3>
-        </ng-container>
-        <div style="display: grid;"
-          [ngStyle]="{ 'grid-template-columns' : options.data.length == 3 ? '33% 33% 33%' : (options.data.length == 2 ? '50% 50%' : '100%')}">
-          @for (count of options.data; track count.count) {
-            @if (count) {
-              <div style="display: grid; grid-template-columns: 100%">
-                <span class="section-jj-grid-cell">
-                  <h3>Count {{count.count}}</h3>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <span class="section-grid-header">Date Signed:</span>
+        </div>
+        <div class="col-md-9">
+          <span class="section-grid-text">{{ currentDate | date: "dd-MMM-yyyy" }}</span>
+        </div>
+      </div>
+      <ng-container subHeader>
+        <h3>{{ "label.final_disposition" | translate }}</h3>
+      </ng-container>
+      <div style="display: grid;"
+        [ngStyle]="{ 'grid-template-columns' : options.data.length == 3 ? '33% 33% 33%' : (options.data.length == 2 ? '50% 50%' : '100%')}">
+        @for (count of options.data; track count.count) {
+          @if (count) {
+            <div style="display: grid; grid-template-columns: 100%">
+              <span class="section-jj-grid-cell">
+                <h3>Count {{count.count}}</h3>
+              </span>
+              <span class="section-jj-grid-cell">
+                <span class="section-grid-header">Total Amount: </span>
+                <span class="section-grid-text">{{ (count.totalFineAmount ?
+                (count.totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0') : '') }}</span>
+              </span>
+              <span class="section-jj-grid-cell">
+                <span class="section-grid-header">Due Date: </span>
+                <span class="section-grid-text">
+                  {{
+                  count.jjDisputedCountRoP?.finding === 'NOT_GUILTY' ? '' :
+                  (count.revisedDueDate ? (count.revisedDueDate | date: "dd-MMM-yyyy" : "UTC") : '')
+                  }}
                 </span>
-                <span class="section-jj-grid-cell">
-                  <span class="section-grid-header">Total Amount: </span>
-                  <span class="section-grid-text">{{ (count.totalFineAmount ?
-                  (count.totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0') : '') }}</span>
-                </span>
-                <span class="section-jj-grid-cell">
-                  <span class="section-grid-header">Due Date: </span>
-                  <span class="section-grid-text">
-                    {{
-                    count.jjDisputedCountRoP?.finding === 'NOT_GUILTY' ? '' :
-                    (count.revisedDueDate ? (count.revisedDueDate | date: "dd-MMM-yyyy" : "UTC") : '')
-                    }}
-                  </span>
-                </span>
-              </div>
-            }
+              </span>
+            </div>
           }
-        </div>
-      </section>
+        }
+      </div>
+    </section>
+  }
+  <mat-form-field class="custom-form-field">
+    <textarea matInput maxlength="4000" style="min-height: 20vh;" [formControl]="reasonForm.get('reason')"></textarea>
+    @if (reasonForm.get('reason').hasError('required')) {
+      <mat-error>{{ "error.required" | translate }}</mat-error>
     }
-    <mat-form-field class="custom-form-field">
-      <textarea matInput maxlength="4000" style="min-height: 20vh;" [formControl]="reasonForm.get('reason')"></textarea>
-      @if (reasonForm.get('reason').hasError('required')) {
-        <mat-error>{{ "error.required" | translate
-        }}</mat-error>
-      }
-    </mat-form-field>
-  </mat-dialog-content>
-  <mat-dialog-actions>
-    @if (!options.cancelHide) {
-      <button mat-stroked-button color="primary" [mat-dialog-close]="false" cdkFocusInitial
-        class="my-2 me-2">
-        {{ options.cancelTextKey }}
-      </button>
-    }
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  @if (!options.cancelHide) {
+    <button mat-stroked-button color="primary" [mat-dialog-close]="false" cdkFocusInitial
+      class="my-2 me-2">
+      {{ options.cancelTextKey }}
+    </button>
+  }
 
-    <span class="flex-grow-1"></span>
+  <span class="flex-grow-1"></span>
 
-    @if (!options.actionHide) {
-      <button mat-flat-button color="primary" (click)="onConfirm()"
-        class="my-2 me-1" [disabled]="reasonForm.valid === false">
-        {{ options.actionTextKey }}
-      </button>
-    }
-    @if (options.actionLink) {
-      <a [attr.href]="options.actionLink.href" [attr.target]="options.actionLink.target">
-        {{ options.actionLink.text }}
-      </a>
-    }
-  </mat-dialog-actions>
+  @if (!options.actionHide) {
+    <button mat-flat-button color="primary" (click)="onConfirm()"
+      class="my-2 me-1" [disabled]="reasonForm.valid === false">
+      {{ options.actionTextKey }}
+    </button>
+  }
+  @if (options.actionLink) {
+    <a [attr.href]="options.actionLink.href" [attr.target]="options.actionLink.target">
+      {{ options.actionLink.text }}
+    </a>
+  }
+</mat-dialog-actions>

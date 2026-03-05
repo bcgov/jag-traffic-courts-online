@@ -218,83 +218,18 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version.*/
-  mat-radio-button {
-    margin-bottom: 0.5rem;
-  }
 }
 
 .contact-type-group {
   display: flex;
   gap: 2rem;
   margin-top: 0.5rem;
-  /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version.*/
-  mat-radio-button {
-    margin-right: 1.5rem;
-  }
 }
 
 // Material form field styling
 :host ::ng-deep {
   .mat-mdc-form-field {
     display: block;
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-    .mat-form-field-wrapper {
-      padding-bottom: 0;
-      margin-bottom: 1rem;
-    }
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-    .mat-form-field-flex {
-      border: 1px solid theme-palette(grey, light);
-      border-radius: 4px;
-      padding: 0.5rem 0.75rem;
-      background-color: #fff;
-      align-items: center;
-      min-height: 60px;
-    }
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-    .mat-form-field-infix {
-      padding: 0.75rem 0 0.25rem 0;
-      width: 100%;
-      border-top: 0;
-    }
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-    .mat-form-field-label-wrapper {
-      top: 0;
-      padding-top: 0.5rem;
-      overflow: visible;
-    }
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-    .mat-form-field-label {
-      top: 0.5rem;
-      font-size: 18px;
-    }
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-    &.mat-form-field-should-float {
-      /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-      .mat-form-field-label {
-        top: 0.5rem;
-        font-size: 14px;
-      }
-    }
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-    .mat-form-field-underline {
-      display: none !important;
-    }
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-    .mat-form-field-ripple {
-      display: none !important;
-    }
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-    .mat-form-field-subscript-wrapper {
-      position: static;
-      margin-top: 0.25rem;
-      padding: 0;
-    }
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-    .mat-form-field-hint-wrapper {
-      padding: 0;
-    }
 
     .mat-mdc-form-field-hint {
       font-size: 12px;
@@ -306,18 +241,6 @@
       color: theme-palette(red, base);
       display: block;
       margin-top: 0.25rem;
-    }
-
-    &.mat-form-field-invalid {
-      /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-      .mat-form-field-flex {
-        border-color: theme-palette(red, base);
-        border-width: 2px;
-      }
-      /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-      .mat-form-field-label {
-        color: theme-palette(red, base);
-      }
     }
 
     &.mat-focused {
@@ -376,30 +299,17 @@
     }
   }
 
-  ngx-timepicker-field {
-    .ngx-timepicker-control {
-      display: flex;
-      align-items: center;
-      border: none !important;
-      
-      .ngx-timepicker-control__input {
-        flex: 1;
-        border: none !important;
-        outline: none;
-        padding: 0;
-        font-size: 15px;
-        box-shadow: none !important;
-      }
-
-      .ngx-timepicker-control__arrow {
-        display: none;
-      }
+  ngx-mat-timepicker-field {
+    .ngx-mat-timepicker {
+      height: 40px;
     }
 
-    .ngx-timepicker-control__clock {
-      position: absolute;
-      right: 0.75rem;
-      cursor: pointer;
+    .ngx-mat-timepicker-control {
+      width: 80px;
+    }
+
+    .ngx-mat-timepicker__toggle {
+      margin-bottom: 0;
     }
 
     input {
@@ -940,7 +850,7 @@
   background-color: #fff;
   padding: 1rem 0.5rem;
   min-width: 60px;
-  
+
   .count-label {
     writing-mode: vertical-rl;
     text-orientation: mixed;
@@ -959,7 +869,7 @@
   padding: 1rem 1.5rem;
   min-width: 120px;
   background-color: #fff;
-  
+
   .count-amount {
     font-size: 28px;
     font-weight: 700;
@@ -972,7 +882,7 @@
   align-items: center;
   flex: 1;
   padding: 1rem 1.5rem;
-  
+
   .count-description {
     font-size: 16px;
     font-weight: 500;

@@ -7358,6 +7358,14 @@ ngx-mask@^21.0.1:
   dependencies:
     tslib "^2.3.0"
 
+ngx-mat-timepicker@^21.0.0:
+  version "21.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-mat-timepicker/-/ngx-mat-timepicker-21.0.0.tgz#9ddfa4f2b48c91658817519c35ce18323201c4f0"
+  integrity sha512-XWaZX+rpAWfanxP8m0HsGvK7vszLNpwkGkg8T06GvCGfx68pszzzGifzgqvZWFls6yYdngpLfwnT7lnwuCYt0A==
+  dependencies:
+    ts-luxon "^6.1.0"
+    tslib "^2.8.1"
+
 ngx-progressbar@^14.0.0:
   version "14.0.0"
   resolved "https://registry.yarnpkg.com/ngx-progressbar/-/ngx-progressbar-14.0.0.tgz#941dd19a20bf1846f94685cda5f8aa030711934f"
@@ -9171,6 +9179,11 @@ ts-api-utils@^2.1.0, ts-api-utils@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/ts-api-utils/-/ts-api-utils-2.4.0.tgz#2690579f96d2790253bdcf1ca35d569ad78f9ad8"
   integrity sha512-3TaVTaAv2gTiMB35i3FiGJaRfwb3Pyn/j3m/bfAvGe8FB7CF6u+LMYqYlDh7reQf7UNvoTvdfAqHGmPGOSsPmA==
+
+ts-luxon@^6.1.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/ts-luxon/-/ts-luxon-6.2.0.tgz#989fcfd57f152a86c598a7f139b864654ff0e79e"
+  integrity sha512-4I1tkW6gtydyLnUUIvfezBl5B3smurkgKmHdMOYI2g9Fn3Zg1lGJdhsCXu2VNl95CYbW2+SoNtStcf1CKOcQjw==
 
 ts-node@^10.9.1:
   version "10.9.2"

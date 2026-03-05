@@ -90,7 +90,6 @@ export class TicketInfoComponent implements OnInit {
   public collapseObj: any = {
     ticketInformation: true,
     contactInformation: true,
-    imageInformation: true,
   };
   constructor(
     protected route: ActivatedRoute,

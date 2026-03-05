@@ -38,23 +38,16 @@
   }
 }
 
-/*TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
-.mat-checkbox-inner-container {
-  margin-top: 5px !important;
-}
-
-/*TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
 .mat-button-toggle-group {
-  border: 1px solid theme-palette(blue);
+  --mat-button-toggle-divider-color: var(--color-primary);
+  border: 1px solid var(--color-primary);
 }
 
-/*TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
 .mat-button-toggle {
-  color: theme-palette(blue);
+  color: var(--color-primary);
 }
 
-/*TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
 .mat-button-toggle-checked {
-  background-color: theme-palette(blue, light);
-  color: white !important;
+  --mat-button-toggle-selected-state-text-color: white;
+  --mat-button-toggle-selected-state-background-color: var(--color-primary);
 }

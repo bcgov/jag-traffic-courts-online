@@ -4,14 +4,7 @@
 // MATERIAL FORMS
 //
 
-/*TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
 .mat-mdc-input-element,
-.mat-select-value {
-  color: theme-palette(blue, light) !important;
-}
-
-
-/*TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version.*/
-.mat-slide-toggle-content {
-  color: theme-palette(blue, dark);
+.mat-mdc-select-value {
+  color: var(--color-primary);
 }

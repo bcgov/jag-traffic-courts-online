@@ -77,10 +77,12 @@ export class TicketImageContainerComponent implements OnInit, AfterViewInit, OnD
 
     resetSizeAndPosition(): void {
         const element = document.getElementById('draggable-overlay');
-        element.style.top = '30vh';
-        element.style.left = '5vw';
-        element.style.width = '20vw';
-        element.style.height = '60%';
+        if (element) {
+          element.style.top = '30vh';
+          element.style.left = '5vw';
+          element.style.width = '20vw';
+          element.style.height = '60%';
+        }
     }
 
     handleKeyboardEvent(event: KeyboardEvent) {

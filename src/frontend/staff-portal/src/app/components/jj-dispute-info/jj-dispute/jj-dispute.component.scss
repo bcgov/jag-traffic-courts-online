@@ -1,5 +1,11 @@
 @import "palette.scss";
 
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .linkbutton {
   background: none !important;
   border: none;
@@ -17,7 +23,6 @@
   background-color: #38598a;
   border-color: #38598a;
   font-size: 14px;
-  margin: 10px 10px 0px 0px;
 
   &:hover {
     background-color: #2d476f;
@@ -133,10 +138,10 @@ label {
 }
 
 .mat-mdc-unelevated-button {
-  min-width: 30% !important;
   margin-top: 1em;
 
   &.large {
+    min-width: 30% !important;
     height: 46px;
     font-size: 1.125em;
     font-weight: bold;
@@ -217,37 +222,6 @@ label {
     }
   }
 
-  .mat-mdc-form-field {
-    width: 100%;
-    margin-bottom: 0px !important;
-    /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-    .mat-form-field-wrapper {
-      padding-bottom: 0 !important;
-      margin: 0px;
-      /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-      .mat-form-field-flex {
-        margin-top: 0 !important;
-        padding-right: 5px;
-        border: none !important;
-        /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-        .mat-form-field-infix {
-          padding: 0px 0px 7px 0px !important;
-          line-height: 1;
-
-          input {
-            line-height: 18px !important;
-          }
-        }
-      }
-      /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-      .mat-form-field-subscript-wrapper {
-        position: relative;
-        overflow: unset;
-        margin-top: 0px;
-      }
-    }
-  }
-
   .mat-expansion-toggle-indicator-before {
     flex-direction: row !important;
 
@@ -257,36 +231,7 @@ label {
   }
 }
 
-// FIXME: ng-deep applies global styles, not component-specific styles. But these styles should be global anyway. Move to main scss.
-::ng-deep {
-  .mat-form-field-type-mat-select {
-    margin: 0px !important;
-    padding: 0px !important;
-    border: none !important;
-    /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-    .mat-form-field-wrapper {
-      /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-      .mat-form-field-flex {
-        padding: 0px 5px 0px 10px !important;
-        /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-        .mat-form-field-outline {
-          background-color: #ffffff;
-        }
-        /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-        .mat-form-field-infix {
-          /*TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
-          .mat-select-value {
-            line-height: normal;
-          }
-          /*TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
-          .mat-select-arrow-wrapper {
-            transform: none;
-          }
-        }
-      }
-    }
-  }
-}
+
 
 .section-sticky{
   box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
@@ -313,18 +258,17 @@ label {
   padding: 0.188rem;
 }
 
-// Mandatory field styling for APP dropdown
-.mat-form-field-invalid {
-  /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-  .mat-form-field-outline {
-    color: #f44336 !important;
+// Mandatory field styling for APP dropdown - MDC version
+.mat-mdc-form-field.mat-form-field-invalid {
+  // MDC uses notched outline instead of legacy outline classes
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: #f44336 !important;
   }
-  /*TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
-  .mat-select-arrow {
-    color: #f44336 !important;
-  }
-  /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-  .mat-form-field-outline-thick {
+
+  // MDC select arrow styling
+  .mat-mdc-select-arrow {
     color: #f44336 !important;
   }
 }

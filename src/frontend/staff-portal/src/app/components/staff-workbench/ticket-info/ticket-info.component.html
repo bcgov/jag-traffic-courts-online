@@ -1,9 +1,9 @@
 <app-page>
   <ng-container stickyToolBar>
-    <div class="app-width" style="padding-top: 1.5vh; padding-bottom: 1.5vh;" fxLayout="row">
+    <div style="padding-top: 1.5vh; padding-bottom: 1.5vh;" fxLayout="row">
       <div fxFlex>
         <button mat-button (click)="onBack()" color="primary">
-          <mat-icon inline="true">arrow_back</mat-icon> Back
+          <mat-icon class="align-text-bottom">arrow_back</mat-icon> Back
         </button>
       </div>
       <div>
@@ -39,18 +39,18 @@
     @if (initialDisputeValues && conflict === false) {
       <div class="ticket-info-section">
         @if (lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)) {
-          <mat-expansion-panel [expanded]="true"
-            >
+          <mat-expansion-panel [expanded]="true" hideToggle>
             <mat-expansion-panel-header (click)="handleCollapse('ticketInformation')">
               <app-page-header>
                 <ng-container subHeader>
-                  <span>Ticket Information </span>
-                  @if (collapseObj?.ticketInformation) {
-                    <i class="fa fa-minus-circle"></i>
-                  }
-                  @if (!collapseObj?.ticketInformation) {
-                    <i class="fa fa-plus-circle"></i>
-                  }
+                  <span>Ticket Information 
+                    @if (collapseObj?.ticketInformation) {
+                      <mat-icon class="expand-collapse-icon">do_not_disturb_on</mat-icon>
+                    }
+                    @else {
+                      <mat-icon class="expand-collapse-icon">add_circle</mat-icon>
+                    }
+                  </span>
                 </ng-container>
               </app-page-header>
             </mat-expansion-panel-header>
@@ -569,7 +569,7 @@
       </mat-expansion-panel>
     }
     <div class="contact-info">
-      <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel [expanded]="true" hideToggle>
         <mat-expansion-panel-header (click)="handleCollapse('contactInformation')">
           <app-page-header>
             <ng-container subHeader>
@@ -584,10 +584,10 @@
                 Information -- Email Address Not Verified </span>
               }
               @if (collapseObj?.contactInformation) {
-                <i class="fa fa-minus-circle"></i>
+                <mat-icon class="expand-collapse-icon">do_not_disturb_on</mat-icon>
               }
-              @if (!collapseObj?.contactInformation) {
-                <i class="fa fa-plus-circle"></i>
+              @else {
+                <mat-icon class="expand-collapse-icon">add_circle</mat-icon>
               }
             </ng-container>
           </app-page-header>
@@ -785,8 +785,7 @@
                         {{ "label.province_state" | translate }}</mat-label>
                       }
                       @if (form.get('addressCountryId').value !== usa.ctryId && form.get('addressCountryId').value !== canada.ctryId) {
-                        <input matInput formControlName="addressProvince" (change)="onFieldChange()"
-                          />
+                        <input matInput formControlName="addressProvince" (change)="onFieldChange()" />
                       }
                       @if (form.controls.addressProvinceProvId.hasError('required')) {
                         <mat-error>{{
@@ -810,16 +809,14 @@
                     }
                     @if (form.get('addressCountryId').value===canada.ctryId) {
                       <input matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()" minlength="6"
-                        (change)="onFieldChange()" formControlName="postalCode" [showMaskTyped]="true"
-                        />
+                        (change)="onFieldChange()" formControlName="postalCode" [showMaskTyped]="true" />
                     }
                     @if (form.get('addressCountryId').value===usa.ctryId) {
                       <mat-label>Zip Code</mat-label>
                     }
                     @if (form.get('addressCountryId').value===usa.ctryId) {
                       <input matInput mask="00000" oninput="this.value = this.value.toUpperCase()"
-                        (change)="onFieldChange()" formControlName="postalCode" [showMaskTyped]="true"
-                        />
+                        (change)="onFieldChange()" formControlName="postalCode" [showMaskTyped]="true" />
                     }
                     @if (form.get('addressCountryId').value!==usa.ctryId && form.get('addressCountryId').value!==canada.ctryId) {
                       <mat-label
@@ -828,8 +825,7 @@
                     }
                     @if (form.get('addressCountryId').value!==usa.ctryId && form.get('addressCountryId').value !== canada.ctryId) {
                       <input matInput maxLength="6" oninput="this.value = this.value.toUpperCase()"
-                        (change)="onFieldChange()" formControlName="postalCode"
-                        />
+                        (change)="onFieldChange()" formControlName="postalCode" />
                     }
                     @if (form.get('postalCode').hasError('required')) {
                       <mat-error>{{ "error.required" | translate
@@ -855,8 +851,7 @@
                     }
                     @if (form.get('addressCountryId').value !== canada.ctryId && form.get('addressCountryId').value !== usa.ctryId) {
                       <input matInput formControlName="homePhoneNumber" mask="99999999999999999999"
-                        (change)="onFieldChange()"
-                        />
+                        (change)="onFieldChange()" />
                     }
                     @if (form.get('homePhoneNumber')?.hasError('phone')) {
                       <mat-error>{{ "error.phone_number" |
@@ -915,12 +910,10 @@
                     @if (form.get('driversLicenceProvinceProvId').value === bc.provId) {
                       <input matInput formControlName="driversLicenceNumber"
                         (keypress)="($event.charCode >= 48 && $event.charCode < 58)" (change)="onFieldChange()"
-                        minlength="7" maxlength="9"
-                        />
+                        minlength="7" maxlength="9" />
                     }
                     @if (form.get('driversLicenceProvinceProvId').value !== bc.provId) {
-                      <input matInput formControlName="driversLicenceNumber" maxlength="20"
-                        />
+                      <input matInput formControlName="driversLicenceNumber" maxlength="20" />
                     }
                     @if (form.get('driversLicenceNumber').hasError('required')) {
                       <mat-error>{{ "error.required" |

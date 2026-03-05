@@ -2,7 +2,7 @@
   [defaultStatusFilter]="defaultStatusFilter" (onFilterChanged)="onApplyFilter($event)">
   @if (newCountShow) {
     <ng-container recordCount>
-      <div>
+      <div class="record-count-container">
         <div class="vcenter">
           <span class="BC-Gov-15px-black-text" style="color:green;"><b>{{ newCount }} NEW ticket
           records</b></span>
@@ -21,7 +21,7 @@
     </div>
   </ng-container>
   <ng-container pagination>
-    <div fxFlex fxFlex.gt-md="20">
+    <div>
       <div class="vcenter">
         <app-paging [currentPage]="currentPage" [totalPages]="totalPages" (pageChanged)="onPageChange($event)">
         </app-paging>

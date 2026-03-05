@@ -1,13 +1,15 @@
-<div class="overflow-auto">
-  <div class="row w-100">
-    <div class="col-md-10 w-80">
+<div class="overflow-hidden mb-3">
+  <div class="row">
+    <div class="col">
       <h3><b>Violation Ticket Inbox</b> ({{tcoDisputesCollection.totalRows}} results)</h3>
     </div>
-    <div class="col-md-2 w-20">
+    <div class="col-auto">
       <app-paging [currentPage]="currentPage" [totalPages]="totalPages" (pageChanged)="onPageChange($event)">
       </app-paging>
     </div>
   </div>
+</div>
+<div class="overflow-auto">
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort (matSortChange)="sortData($event)">
     <ng-container matColumnDef="ticketNumber">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>

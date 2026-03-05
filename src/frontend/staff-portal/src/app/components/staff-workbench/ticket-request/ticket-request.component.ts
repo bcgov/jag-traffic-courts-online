@@ -15,7 +15,7 @@ export class TicketRequestComponent implements OnInit, OnChanges {
   @Input() disputeInfo: Dispute;
   public countsActions: any;
   public collapseObj: any = {
-    contactInformation: true
+    ticketRequestInformation: true
   }
   public form: FormGroup;
   public countFormFields = {

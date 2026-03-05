@@ -1,7 +1,7 @@
-<div class="overflow-auto">
+<div class="overflow-hidden mb-3">
   <!-- filter by teams -->
-  <div class="row" style="width:97%">
-    <mat-button-toggle-group style="border: 0px" (change)="filterByTeam($event.value)" [value]="currentTeam">
+  <div class="row mb-2">
+    <mat-button-toggle-group [hideSingleSelectionIndicator]="true" style="border: 0px" (change)="filterByTeam($event.value)" [value]="currentTeam">
       @for (courthouseTeamCount of courthouseTeamCounts; track courthouseTeamCount.team) {
         <mat-button-toggle [value]="courthouseTeamCount.team"
           class="teamFilterButton">
@@ -15,7 +15,7 @@
 
   <!-- bulk assignments -->
   &nbsp;<mat-label><b>Bulk Assignments:</b></mat-label>
-  <div style="display: flex; flex-direction: row; justify-content: space-between; vertical-align: top; width:97%">
+  <div style="display: flex; flex-direction: row; justify-content: space-between; vertical-align: top;">
     <div style="display: flex; flex-direction: row; flex-direction: flex-start;">
       <mat-select [(ngModel)]="bulkjjAssignedTo" style="width:250px; background-color: #f2f2f2;">
         <mat-option [value]="valueOfUnassigned"><i>choose a jj</i></mat-option>
@@ -28,16 +28,17 @@
     </div>
     <div>
       <button mat-button style="background-color: #fcba19" readonly="true">
-        <mat-icon>check_circle_outline</mat-icon>&nbsp;
+        <mat-icon class="align-text-bottom">check_circle_outline</mat-icon>
         <i>Assigned: <b>{{ getAssignedCount() }}</b></i>
       </button>&nbsp;
       <button mat-button style="background-color: #c5c5c5" readonly="true">
-        <mat-icon>query_builder</mat-icon>&nbsp;
+        <mat-icon class="align-text-bottom">query_builder</mat-icon>
         <i>Unassigned: <b>{{ getUnassignedCount() }}</b></i>
       </button>
     </div>
-  </div><br />
-
+  </div>
+</div>
+<div class="overflow-auto">
   <!--- table of results -->
   <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
     <ng-container matColumnDef="assignedIcon">
@@ -45,7 +46,7 @@
       </th>
       <td mat-cell *matCellDef="let element" style="width: 50px !important; background-color: #c5c5c5;">
         <span class="material-symbols-outlined" style="color: #494949">
-          <mat-icon style="margin-left:10px;">query_builder</mat-icon>
+          <mat-icon class="align-text-bottom">query_builder</mat-icon>
         </span>
       </td>
     </ng-container>

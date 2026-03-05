@@ -12,32 +12,32 @@
         @for (doc of updateRequested.UploadedDocuments; track doc.DocumentId) {
           <div>
             @if (disputantUpdateRequest.status !== UpdateRequestStatus.Rejected) {
-              <button type="button" class="linkbutton" (click)="onGetFile(doc.DocumentId)">{{ doc.DocumentType }}</button>
-              }&nbsp;
-              @if (disputantUpdateRequest.status === UpdateRequestStatus.Rejected) {
-                <span>{{ doc.DocumentType }}&nbsp;</span>
-              }
-            </div>
-          }
-          <br />
-        </div>
-      }
-      <div>
-        @if (disputantUpdateRequest.status === 'PENDING') {
-          <span style="float:right">
-            <mat-button-toggle-group [(ngModel)]="disputantUpdateRequest.newStatus" aria-label="Decision" (change)="statusChange($event)">
-              @if (requestReadable === true) {
-                <mat-button-toggle value="ACCEPTED">Accept</mat-button-toggle>
-              }
-              <mat-button-toggle value="REJECTED">Reject</mat-button-toggle>
-              <mat-button-toggle value="PENDING">Pending</mat-button-toggle>
-            </mat-button-toggle-group>
-          </span>
+              <button type="button" class="linkbutton" (click)="onGetFile(doc.DocumentId)">{{ doc.DocumentType }}</button>&nbsp;
+            }
+            @if (disputantUpdateRequest.status === UpdateRequestStatus.Rejected) {
+              <span>{{ doc.DocumentType }}&nbsp;</span>
+            }
+          </div>
         }
+        <br />
       </div>
-      @if (requestReadable === false) {
-        <div>Update Request Unreadable {{ disputantUpdateRequest.updateJson }}</div>
+    }
+    <div>
+      @if (disputantUpdateRequest.status === 'PENDING') {
+        <span style="float:right">
+          <mat-button-toggle-group [hideSingleSelectionIndicator]="true" [(ngModel)]="disputantUpdateRequest.newStatus" aria-label="Decision" (change)="statusChange($event)">
+            @if (requestReadable === true) {
+              <mat-button-toggle value="ACCEPTED">Accept</mat-button-toggle>
+            }
+            <mat-button-toggle value="REJECTED">Reject</mat-button-toggle>
+            <mat-button-toggle value="PENDING">Pending</mat-button-toggle>
+          </mat-button-toggle-group>
+        </span>
       }
-      <br /><br />
-    </mat-card>
-  }
+    </div>
+    @if (requestReadable === false) {
+      <div>Update Request Unreadable {{ disputantUpdateRequest.updateJson }}</div>
+    }
+    <br /><br />
+  </mat-card>
+}

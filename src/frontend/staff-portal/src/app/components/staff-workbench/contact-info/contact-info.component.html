@@ -1,9 +1,9 @@
 <app-page>
   <ng-container stickyToolBar>
-    <div class="app-width" style="padding-top: 1.5vh; padding-bottom: 1.5vh;" fxLayout="row">
+    <div style="padding-top: 1.5vh; padding-bottom: 1.5vh;" fxLayout="row">
       <div fxFlex>
         <a (click)="onBack()" style="color: #48afe5">
-          <mat-icon inline="true">arrow_back</mat-icon> Back
+          <mat-icon class="align-text-bottom">arrow_back</mat-icon> Back
         </a>
       </div>
       <div>
@@ -39,20 +39,18 @@
     @if (initialDisputeValues && conflict === false) {
       <div class="contact-info">
         @if (lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)) {
-          <mat-expansion-panel [expanded]="true"
-            >
-            <mat-expansion-panel-header (click)="handleCollapse('contactInformation')">
+          <mat-expansion-panel [expanded]="true" hideToggle>
+            <mat-expansion-panel-header (click)="handleCollapse('ticketInformation')">
               <app-page-header>
                 <ng-container subHeader>
-                  <span>Ticket Information </span>
-                  @if (collapseObj?.ticketInformation) {
-                    <i class="fa fa-minus-circle"
-                    style="font-size:18px; color:#009cde"></i>
-                  }
-                  @if (!collapseObj?.ticketInformation) {
-                    <i class="fa fa-plus-circle"
-                    style="font-size:18px; color:#009cde"></i>
-                  }
+                  <span>Ticket Information  
+                    @if (collapseObj?.ticketInformation) {
+                      <mat-icon class="expand-collapse-icon">do_not_disturb_on</mat-icon>
+                    }
+                    @else {
+                      <mat-icon class="expand-collapse-icon">add_circle</mat-icon>
+                    }
+                  </span>
                 </ng-container>
               </app-page-header>
             </mat-expansion-panel-header>
@@ -62,459 +60,450 @@
               <div class="col-md-3">
                 <span class="BC-Gov-15px-black-text">Ticket #:</span>&nbsp;<span class="text">{{
               lastUpdatedDispute.ticketNumber }}</span>
-            </div>
-            <div class="col-md-3">
-              <span class="BC-Gov-15px-black-text">Ticket Type:</span>&nbsp;<span class="text">{{
-            lastUpdatedDispute.ticketNumber.substring(0,1) === 'E' ? "Electronic Ticket" : "Intersection safety camera ticket" }}</span>
-          </div>
-          <div class="col-md-3">
-            <span class="BC-Gov-15px-black-text">Violation Date:</span>&nbsp;<span class="text">{{ lastUpdatedDispute.violationTicket.issuedTs| date: "dd-MMM-yyyy" }}</span>
-          </div>
-          <div class="col-md-3">
-            <span class="BC-Gov-15px-black-text">Violation Time:</span>&nbsp;<span class="text">{{ lastUpdatedDispute.violationTicket.issuedTs | date: "HH:mm" }}</span>
-          </div>
-          <div class="col-md-3">
-            <span class="BC-Gov-15px-black-text">Surname:</span>&nbsp;
-            @if (lastUpdatedDispute.icbcName && lastUpdatedDispute.icbcName.surname) {
-              <span class="text">{{ lastUpdatedDispute.icbcName.surname }}</span>
-            }
-          </div>
-          <div class="col-md-3">
-            <span class="BC-Gov-15px-black-text">Given Name(s):</span>&nbsp;
-            @if (lastUpdatedDispute.icbcName && lastUpdatedDispute.icbcName.firstGivenName) {
-              <span class="text">{{ lastUpdatedDispute.icbcName.firstGivenName }} </span>
-            }
-            @if (lastUpdatedDispute.icbcName && lastUpdatedDispute.icbcName.secondGivenName) {
-              <span class="text">{{ lastUpdatedDispute.icbcName.secondGivenName }}</span>
-            }
-          </div>
-        </div>
-        <!-- Counts -->
-        @for (violationCount of lastUpdatedDispute.violationTicket.violationTicketCounts; track violationCount) {
-          <div class="contact-body">
-            <div class="row mt-2 count-list">
-              <div class="col-lg-2 pe-0">
-                <div style="display: flex">
-                  <span class="h2">
-                    <strong>Count {{ violationCount.countNo }}</strong>
-                  </span>
-                </div>
               </div>
-              <div class="col-lg-6">
-                <small class="d-block"> Description of offence </small>
-                <div class="text">{{ violationCount.description }}</div>
+              <div class="col-md-3">
+                <span class="BC-Gov-15px-black-text">Ticket Type:</span>&nbsp;<span class="text">{{
+              lastUpdatedDispute.ticketNumber.substring(0,1) === 'E' ? "Electronic Ticket" : "Intersection safety camera ticket" }}</span>
               </div>
-              <div class="col-lg-2">
-                <small class="d-block">Offence amount</small>
-                <div class="text">{{ violationCount.ticketedAmount | currency }}</div>
+              <div class="col-md-3">
+                <span class="BC-Gov-15px-black-text">Violation Date:</span>&nbsp;<span class="text">{{ lastUpdatedDispute.violationTicket.issuedTs| date: "dd-MMM-yyyy" }}</span>
               </div>
-            </div>
-            <hr />
-          </div>
-        }
-      </mat-expansion-panel>
-    }
-    <mat-expansion-panel [expanded]="true">
-      <mat-expansion-panel-header (click)="handleCollapse('contactInformation')">
-        <app-page-header>
-          <ng-container subHeader>
-            @if (lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)) {
-              <span
-                >Contact
-              Information </span>
-            }
-            @if (lastUpdatedDispute.emailAddressVerified === false && lastUpdatedDispute.emailAddress) {
-              <span>Contact
-              Information -- Email Address Not Verified </span>
-            }
-            @if (collapseObj?.contactInformation) {
-              <i class="fa fa-minus-circle"
-              style="font-size:18px; color:#009cde"></i>
-            }
-            @if (!collapseObj?.contactInformation) {
-              <i class="fa fa-plus-circle"
-              style="font-size:18px; color:#009cde"></i>
-            }
-          </ng-container>
-        </app-page-header>
-      </mat-expansion-panel-header>
-      <div class="contact-body">
-        <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
-          <section class="mb-2" style="width: 66%;">
-            <div class="row">
-              <h4>Name on Ticket</h4>
-              <!-- Notice of Dispute surname -->
-              <div class="col-md-6">
-                <mat-form-field class="w-100">
-                  <mat-label>Disputant surname</mat-label>
-                  <input matInput formControlName="disputantSurname" />
-                  @if (form.controls.disputantSurname.hasError('required')) {
-                    <mat-error>{{ "error.required" |
-                    translate }}</mat-error>
-                  }
-                  @if (form.controls.disputantSurname.hasError('maxlength')) {
-                    <mat-error>{{ "error.max_length" |
-                    translate }}30</mat-error>
-                  }
-                </mat-form-field>
+              <div class="col-md-3">
+                <span class="BC-Gov-15px-black-text">Violation Time:</span>&nbsp;<span class="text">{{ lastUpdatedDispute.violationTicket.issuedTs | date: "HH:mm" }}</span>
               </div>
-              <!-- Notice of dispute given names -->
-              <div class="col-md-6">
-                <mat-form-field class="w-100">
-                  <mat-label>Disputant given name(s)</mat-label>
-                  <input matInput formControlName="disputantGivenNames" />
-                  @if (form.controls.disputantGivenNames.hasError('required')) {
-                    <mat-error>{{ "error.required" |
-                    translate }}</mat-error>
-                  }
-                  @if (form.controls.disputantGivenNames.hasError('maxlength')) {
-                    <mat-error>{{ "error.max_length" |
-                    translate }}30 per name</mat-error>
-                  }
-                </mat-form-field>
-              </div>
-            </div>
-            <section>
-              <div class="row">
-                <h4>Who are we contacting?</h4>
-                <div class="col-md-6">
-                  <mat-form-field class="w-100">
-                    <mat-label>Contact Type</mat-label>
-                    <mat-select formControlName="contactTypeCd" (selectionChange)="onSelectContactType($event.value)">
-                      <mat-option [value]="ContactType.Individual">Individual on the ticket</mat-option>
-                      <mat-option [value]="ContactType.Lawyer">Lawyer</mat-option>
-                      <mat-option [value]="ContactType.Other">Other</mat-option>
-                    </mat-select>
-                    <mat-error>{{ "error.required" | translate }}</mat-error>
-                  </mat-form-field>
-                </div>
-                @if (form.get('contactTypeCd').value === ContactType.Lawyer) {
-                  <div class="col-md-6">
-                    <mat-form-field class="w-100">
-                      <mat-label>Name of law firm</mat-label>
-                      <input matInput formControlName="contactLawFirmNm" />
-                      @if (form.controls.contactLawFirmNm.hasError('required')) {
-                        <mat-error>{{ "error.required" |
-                        translate }}</mat-error>
-                      }
-                      @if (form.controls.contactLawFirmNm.hasError('maxlength')) {
-                        <mat-error>{{ "error.max_length" |
-                        translate }}200</mat-error>
-                      }
-                    </mat-form-field>
-                  </div>
+              <div class="col-md-3">
+                <span class="BC-Gov-15px-black-text">Surname:</span>&nbsp;
+                @if (lastUpdatedDispute.icbcName && lastUpdatedDispute.icbcName.surname) {
+                  <span class="text">{{ lastUpdatedDispute.icbcName.surname }}</span>
                 }
               </div>
-              @if (form.get('contactTypeCd').value !== ContactType.Individual) {
+              <div class="col-md-3">
+                <span class="BC-Gov-15px-black-text">Given Name(s):</span>&nbsp;
+                @if (lastUpdatedDispute.icbcName && lastUpdatedDispute.icbcName.firstGivenName) {
+                  <span class="text">{{ lastUpdatedDispute.icbcName.firstGivenName }} </span>
+                }
+                @if (lastUpdatedDispute.icbcName && lastUpdatedDispute.icbcName.secondGivenName) {
+                  <span class="text">{{ lastUpdatedDispute.icbcName.secondGivenName }}</span>
+                }
+              </div>
+            </div>
+            <!-- Counts -->
+            @for (violationCount of lastUpdatedDispute.violationTicket.violationTicketCounts; track violationCount) {
+              <div class="contact-body">
+                <div class="row mt-2 count-list">
+                  <div class="col-lg-2 pe-0">
+                    <div style="display: flex">
+                      <span class="h2">
+                        <strong>Count {{ violationCount.countNo }}</strong>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <small class="d-block"> Description of offence </small>
+                    <div class="text">{{ violationCount.description }}</div>
+                  </div>
+                  <div class="col-lg-2">
+                    <small class="d-block">Offence amount</small>
+                    <div class="text">{{ violationCount.ticketedAmount | currency }}</div>
+                  </div>
+                </div>
+                <hr />
+              </div>
+            }
+          </mat-expansion-panel>
+        }
+        <mat-expansion-panel [expanded]="true" hideToggle>
+          <mat-expansion-panel-header (click)="handleCollapse('contactInformation')">
+            <app-page-header>
+              <ng-container subHeader>
+                @if (lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)) {
+                  <span
+                    >Contact
+                  Information </span>
+                }
+                @if (lastUpdatedDispute.emailAddressVerified === false && lastUpdatedDispute.emailAddress) {
+                  <span>Contact
+                  Information -- Email Address Not Verified </span>
+                }
+                @if (collapseObj?.contactInformation) {
+                  <mat-icon class="expand-collapse-icon">do_not_disturb_on</mat-icon>
+                }
+                @else {
+                  <mat-icon class="expand-collapse-icon">add_circle</mat-icon>
+                }
+              </ng-container>
+            </app-page-header>
+          </mat-expansion-panel-header>
+          <div class="contact-body">
+            <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
+              <section class="mb-2" style="width: 66%;">
                 <div class="row">
-                  <!--Contact surname -->
+                  <h4>Name on Ticket</h4>
+                  <!-- Notice of Dispute surname -->
                   <div class="col-md-6">
                     <mat-form-field class="w-100">
-                      <mat-label>Contact Surname</mat-label>
-                      <input matInput formControlName="contactSurnameNm" />
-                      @if (form.controls.contactSurnameNm.hasError('required')) {
+                      <mat-label>Disputant surname</mat-label>
+                      <input matInput formControlName="disputantSurname" />
+                      @if (form.controls.disputantSurname.hasError('required')) {
                         <mat-error>{{ "error.required" |
                         translate }}</mat-error>
                       }
-                      @if (form.controls.contactSurnameNm.hasError('maxlength')) {
+                      @if (form.controls.disputantSurname.hasError('maxlength')) {
                         <mat-error>{{ "error.max_length" |
                         translate }}30</mat-error>
                       }
                     </mat-form-field>
                   </div>
-                  <!-- Contact given names -->
+                  <!-- Notice of dispute given names -->
                   <div class="col-md-6">
                     <mat-form-field class="w-100">
-                      <mat-label>Contact Given name(s)</mat-label>
-                      <input matInput formControlName="contactGivenNames" />
-                      @if (form.controls.contactGivenNames.hasError('required')) {
+                      <mat-label>Disputant given name(s)</mat-label>
+                      <input matInput formControlName="disputantGivenNames" />
+                      @if (form.controls.disputantGivenNames.hasError('required')) {
                         <mat-error>{{ "error.required" |
                         translate }}</mat-error>
                       }
-                      @if (form.controls.contactGivenNames.hasError('maxlength')) {
+                      @if (form.controls.disputantGivenNames.hasError('maxlength')) {
                         <mat-error>{{ "error.max_length" |
                         translate }}30 per name</mat-error>
                       }
                     </mat-form-field>
                   </div>
                 </div>
-              }
-              <div class="row">
-                <!-- Notice of dispute mailing address -->
-                <div class="col-md-6">
-                  <mat-form-field class="w-100">
-                    <mat-label>Mailing address</mat-label>
-                    <input matInput formControlName="address" />
-                    @if (form.controls.address.hasError('required')) {
-                      <mat-error>{{ "error.required" | translate
-                      }}</mat-error>
+                <section>
+                  <div class="row">
+                    <h4>Who are we contacting?</h4>
+                    <div class="col-md-6">
+                      <mat-form-field class="w-100">
+                        <mat-label>Contact Type</mat-label>
+                        <mat-select formControlName="contactTypeCd" (selectionChange)="onSelectContactType($event.value)">
+                          <mat-option [value]="ContactType.Individual">Individual on the ticket</mat-option>
+                          <mat-option [value]="ContactType.Lawyer">Lawyer</mat-option>
+                          <mat-option [value]="ContactType.Other">Other</mat-option>
+                        </mat-select>
+                        <mat-error>{{ "error.required" | translate }}</mat-error>
+                      </mat-form-field>
+                    </div>
+                    @if (form.get('contactTypeCd').value === ContactType.Lawyer) {
+                      <div class="col-md-6">
+                        <mat-form-field class="w-100">
+                          <mat-label>Name of law firm</mat-label>
+                          <input matInput formControlName="contactLawFirmNm" />
+                          @if (form.controls.contactLawFirmNm.hasError('required')) {
+                            <mat-error>{{ "error.required" |
+                            translate }}</mat-error>
+                          }
+                          @if (form.controls.contactLawFirmNm.hasError('maxlength')) {
+                            <mat-error>{{ "error.max_length" |
+                            translate }}200</mat-error>
+                          }
+                        </mat-form-field>
+                      </div>
                     }
-                    @if (form.controls.address.hasError('maxlength')) {
-                      <mat-error>{{ "error.max_length" | translate
-                      }}100 per line</mat-error>
-                    }
-                  </mat-form-field>
-                </div>
-                <!-- Notice of dispute Country -->
-                <div class="col-md-6">
-                  <mat-form-field class="w-100">
-                    <mat-label>Country</mat-label>
-                    <mat-select formControlName="addressCountryId" (selectionChange)="onCountryChange($event.value)">
-                      <mat-option [value]="canada.ctryId">{{ canada.ctryLongNm }}</mat-option>
-                      <mat-option [value]="usa.ctryId">{{ usa.ctryLongNm }}</mat-option>
-                      @for (country of config.countries; track country.ctryId) {
-                        <mat-option [value]="country.ctryId">{{
-                        country.ctryLongNm }}</mat-option>
-                      }
-                    </mat-select>
-                    <mat-error>{{ "error.required" | translate }}</mat-error>
-                  </mat-form-field>
-                </div>
-              </div>
-              <div class="row">
-                <!-- Notice of dispute City -->
-                <div class="col-md-6">
-                  <mat-form-field class="w-100">
-                    <mat-label>City</mat-label>
-                    <input matInput formControlName="addressCity" />
-                    @if (form.controls.addressCity.hasError('required')) {
-                      <mat-error>{{ "error.required" | translate
-                      }}</mat-error>
-                    }
-                    @if (form.controls.addressCity.hasError('maxlength')) {
-                      <mat-error>{{ "error.max_length" |
-                      translate }}30</mat-error>
-                    }
-                  </mat-form-field>
-                </div>
-                <!-- Notice of dispute province/state -->
-                <div class="col-md-6">
-                  <mat-form-field class="w-100">
-                    @if (form.get('addressCountryId').value===canada.ctryId) {
-                      <mat-label>Province</mat-label>
-                    }
-                    @if (form.get('addressCountryId').value===usa.ctryId) {
-                      <mat-label>State</mat-label>
-                    }
-                    @if (form.get('addressCountryId').value === canada.ctryId || form.get('addressCountryId').value === usa.ctryId) {
-                      <mat-select formControlName="addressProvinceProvId"
-                        (selectionChange)="onAddressProvinceChange($event.value)"
-                        >
-                        @if (form.get('addressCountryId').value === canada.ctryId) {
-                          <div>
-                            <mat-option [value]="bc.provId">{{ bc.provNm }}</mat-option>
-                            @for (province of provinces; track province.provId) {
-                              <mat-option [value]="province.provId">{{ province.provNm }}
-                              </mat-option>
-                            }
-                          </div>
+                  </div>
+                  @if (form.get('contactTypeCd').value !== ContactType.Individual) {
+                    <div class="row">
+                      <!--Contact surname -->
+                      <div class="col-md-6">
+                        <mat-form-field class="w-100">
+                          <mat-label>Contact Surname</mat-label>
+                          <input matInput formControlName="contactSurnameNm" />
+                          @if (form.controls.contactSurnameNm.hasError('required')) {
+                            <mat-error>{{ "error.required" |
+                            translate }}</mat-error>
+                          }
+                          @if (form.controls.contactSurnameNm.hasError('maxlength')) {
+                            <mat-error>{{ "error.max_length" |
+                            translate }}30</mat-error>
+                          }
+                        </mat-form-field>
+                      </div>
+                      <!-- Contact given names -->
+                      <div class="col-md-6">
+                        <mat-form-field class="w-100">
+                          <mat-label>Contact Given name(s)</mat-label>
+                          <input matInput formControlName="contactGivenNames" />
+                          @if (form.controls.contactGivenNames.hasError('required')) {
+                            <mat-error>{{ "error.required" |
+                            translate }}</mat-error>
+                          }
+                          @if (form.controls.contactGivenNames.hasError('maxlength')) {
+                            <mat-error>{{ "error.max_length" |
+                            translate }}30 per name</mat-error>
+                          }
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  }
+                  <div class="row">
+                    <!-- Notice of dispute mailing address -->
+                    <div class="col-md-6">
+                      <mat-form-field class="w-100">
+                        <mat-label>Mailing address</mat-label>
+                        <input matInput formControlName="address" />
+                        @if (form.controls.address.hasError('required')) {
+                          <mat-error>{{ "error.required" | translate
+                          }}</mat-error>
                         }
-                        @if (form.get('addressCountryId').value === usa.ctryId) {
-                          <div>
-                            @for (state of states; track state.provId) {
-                              <mat-option [value]="state.provId">{{ state.provNm }}
-                              </mat-option>
+                        @if (form.controls.address.hasError('maxlength')) {
+                          <mat-error>{{ "error.max_length" | translate
+                          }}100 per line</mat-error>
+                        }
+                      </mat-form-field>
+                    </div>
+                    <!-- Notice of dispute Country -->
+                    <div class="col-md-6">
+                      <mat-form-field class="w-100">
+                        <mat-label>Country</mat-label>
+                        <mat-select formControlName="addressCountryId" (selectionChange)="onCountryChange($event.value)">
+                          <mat-option [value]="canada.ctryId">{{ canada.ctryLongNm }}</mat-option>
+                          <mat-option [value]="usa.ctryId">{{ usa.ctryLongNm }}</mat-option>
+                          @for (country of config.countries; track country.ctryId) {
+                            <mat-option [value]="country.ctryId">{{
+                            country.ctryLongNm }}</mat-option>
+                          }
+                        </mat-select>
+                        <mat-error>{{ "error.required" | translate }}</mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <!-- Notice of dispute City -->
+                    <div class="col-md-6">
+                      <mat-form-field class="w-100">
+                        <mat-label>City</mat-label>
+                        <input matInput formControlName="addressCity" />
+                        @if (form.controls.addressCity.hasError('required')) {
+                          <mat-error>{{ "error.required" | translate
+                          }}</mat-error>
+                        }
+                        @if (form.controls.addressCity.hasError('maxlength')) {
+                          <mat-error>{{ "error.max_length" |
+                          translate }}30</mat-error>
+                        }
+                      </mat-form-field>
+                    </div>
+                    <!-- Notice of dispute province/state -->
+                    <div class="col-md-6">
+                      <mat-form-field class="w-100">
+                        @if (form.get('addressCountryId').value===canada.ctryId) {
+                          <mat-label>Province</mat-label>
+                        }
+                        @if (form.get('addressCountryId').value===usa.ctryId) {
+                          <mat-label>State</mat-label>
+                        }
+                        @if (form.get('addressCountryId').value === canada.ctryId || form.get('addressCountryId').value === usa.ctryId) {
+                          <mat-select formControlName="addressProvinceProvId"
+                            (selectionChange)="onAddressProvinceChange($event.value)"
+                            >
+                            @if (form.get('addressCountryId').value === canada.ctryId) {
+                              <div>
+                                <mat-option [value]="bc.provId">{{ bc.provNm }}</mat-option>
+                                @for (province of provinces; track province.provId) {
+                                  <mat-option [value]="province.provId">{{ province.provNm }}
+                                  </mat-option>
+                                }
+                              </div>
                             }
-                          </div>
+                            @if (form.get('addressCountryId').value === usa.ctryId) {
+                              <div>
+                                @for (state of states; track state.provId) {
+                                  <mat-option [value]="state.provId">{{ state.provNm }}
+                                  </mat-option>
+                                }
+                              </div>
+                            }
+                          </mat-select>
+                        }
+                        @if (form.get('addressCountryId').value!==usa.ctryId && form.get('addressCountryId').value !== canada.ctryId) {
+                          <mat-label
+                            >
+                          Province/State</mat-label>
+                        }
+                        @if (form.get('addressCountryId').value !== usa.ctryId && form.get('addressCountryId').value !== canada.ctryId) {
+                          <input matInput formControlName="addressProvince" />
+                        }
+                        @if (form.controls.addressProvinceProvId.hasError('required')) {
+                          <mat-error
+                            >{{
+                          "error.required" | translate }}</mat-error>
+                        }
+                        @if (form.controls.addressProvince.hasError('maxlength')) {
+                          <mat-error>{{ "error.max_length" |
+                          translate }}30</mat-error>
+                        }
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </section>
+                <div class="row">
+                  <!-- Notice of dispute postal code -->
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      @if (form.get('addressCountryId').value ===canada.ctryId) {
+                        <mat-label>Postal code</mat-label>
+                      }
+                      @if (form.get('addressCountryId').value===canada.ctryId) {
+                        <input matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()" minlength="6"
+                          formControlName="postalCode" [showMaskTyped]="true" />
+                      }
+                      @if (form.get('addressCountryId').value===usa.ctryId) {
+                        <mat-label>Zip Code</mat-label>
+                      }
+                      @if (form.get('addressCountryId').value===usa.ctryId) {
+                        <input matInput mask="00000" oninput="this.value = this.value.toUpperCase()"
+                          formControlName="postalCode" [showMaskTyped]="true" />
+                      }
+                      @if (form.get('addressCountryId').value!==usa.ctryId && form.get('addressCountryId').value!==canada.ctryId) {
+                        <mat-label
+                          >
+                        Postal/Zip Code</mat-label>
+                      }
+                      @if (form.get('addressCountryId').value!==usa.ctryId && form.get('addressCountryId').value !== canada.ctryId) {
+                        <input matInput maxLength="6" oninput="this.value = this.value.toUpperCase()"
+                          formControlName="postalCode" />
+                      }
+                      @if (form.get('postalCode').hasError('required')) {
+                        <mat-error>{{ "error.required" | translate
+                        }}</mat-error>
+                      }
+                      @if (form.get('postalCode').hasError('pattern') || form.get('postalCode').hasError('minlength') || form.get('postalCode').hasError('maxlength')) {
+                        <mat-error
+                          >Must
+                          be a valid postal/zip code
+                        </mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <!--- Notice of dispute phone number -->
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Phone number</mat-label>
+                      @if (form.get('addressCountryId').value === canada.ctryId || form.get('addressCountryId').value === usa.ctryId) {
+                        <input matInput formControlName="homePhoneNumber" mask="(000) 000-0000"
+                          [showMaskTyped]="true" />
+                      }
+                      @if (form.get('addressCountryId').value !== canada.ctryId && form.get('addressCountryId').value !== usa.ctryId) {
+                        <input matInput formControlName="homePhoneNumber" mask="99999999999999999999" />
+                      }
+                      @if (form.get('homePhoneNumber')?.hasError('phone')) {
+                        <mat-error>Must be a valid phone number
+                        </mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                  <!-- Notice of dispute email address -->
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Email address</mat-label>
+                      <input matInput formControlName="emailAddress" autocomplete="off" />
+                      @if (lastUpdatedDispute.emailAddressVerified === false && lastUpdatedDispute.emailAddress) {
+                        <mat-hint
+                          style="color:red">
+                          The contact email address has not been verified by the disputant. To opt them out of email
+                          communications, set the email address to blank and Save. Alternatively you can resend the email
+                          verification to the disputant.
+                        </mat-hint>
+                      }
+                      @if (form.get('emailAddress').hasError('email')) {
+                        <mat-error>{{
+                          "error.email_address" | translate
+                        }}</mat-error>
+                      }
+                      @if (form.get('emailAddress').hasError('maxlength')) {
+                        <mat-error>{{
+                          "error.max_length" | translate
+                        }}100</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                </div>
+                <br /><br />
+                <div class="row">
+                  <!-- Notice of dispute drivers licence province -->
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Prov/State of DL</mat-label>
+                      <mat-select formControlName="driversLicenceProvinceProvId"
+                        (selectionChange)="onDLProvinceChange($event.value)">
+                        <mat-option [value]="null"></mat-option>
+                        <mat-option [value]="bc.provId">{{bc.provNm}}</mat-option>
+                        @for (province of provinces; track province.provId) {
+                          <mat-option [value]="province.provId">{{ province.provNm }}
+                          </mat-option>
+                        }
+                        @for (state of states; track state.provId) {
+                          <mat-option [value]="state.provId">{{ state.provNm }}</mat-option>
                         }
                       </mat-select>
-                    }
-                    @if (form.get('addressCountryId').value!==usa.ctryId && form.get('addressCountryId').value !== canada.ctryId) {
-                      <mat-label
-                        >
-                      Province/State</mat-label>
-                    }
-                    @if (form.get('addressCountryId').value !== usa.ctryId && form.get('addressCountryId').value !== canada.ctryId) {
-                      <input matInput formControlName="addressProvince"
-                        />
-                    }
-                    @if (form.controls.addressProvinceProvId.hasError('required')) {
-                      <mat-error
-                        >{{
-                      "error.required" | translate }}</mat-error>
-                    }
-                    @if (form.controls.addressProvince.hasError('maxlength')) {
-                      <mat-error>{{ "error.max_length" |
-                      translate }}30</mat-error>
-                    }
-                  </mat-form-field>
+                    </mat-form-field>
+                  </div>
+                  <!-- Notice of dispute drivers licence number -->
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>DL number</mat-label>
+                      @if (form.get('driversLicenceProvinceProvId').value === bc.provId) {
+                        <input matInput formControlName="driversLicenceNumber"
+                          (keypress)="($event.charCode >= 48 && $event.charCode < 58)" minlength="7" maxlength="9" />
+                      }
+                      @if (form.get('driversLicenceProvinceProvId').value !== bc.provId) {
+                        <input matInput formControlName="driversLicenceNumber" maxlength="20" />
+                      }
+                      @if (
+                        form.get('driversLicenceNumber')?.errors?.minlength ||
+                        form.get('driversLicenceNumber').hasError('maxlength')) {
+                        <mat-error>
+                          Must be a valid BC driver's licence number of seven to nine digits
+                        </mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
                 </div>
-              </div>
-            </section>
-            <div class="row">
-              <!-- Notice of dispute postal code -->
-              <div class="col-md-6">
-                <mat-form-field class="w-100">
-                  @if (form.get('addressCountryId').value ===canada.ctryId) {
-                    <mat-label>Postal code</mat-label>
-                  }
-                  @if (form.get('addressCountryId').value===canada.ctryId) {
-                    <input matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()" minlength="6"
-                      formControlName="postalCode" [showMaskTyped]="true"
-                      />
-                  }
-                  @if (form.get('addressCountryId').value===usa.ctryId) {
-                    <mat-label>Zip Code</mat-label>
-                  }
-                  @if (form.get('addressCountryId').value===usa.ctryId) {
-                    <input matInput mask="00000" oninput="this.value = this.value.toUpperCase()"
-                      formControlName="postalCode" [showMaskTyped]="true"
-                      />
-                  }
-                  @if (form.get('addressCountryId').value!==usa.ctryId && form.get('addressCountryId').value!==canada.ctryId) {
-                    <mat-label
-                      >
-                    Postal/Zip Code</mat-label>
-                  }
-                  @if (form.get('addressCountryId').value!==usa.ctryId && form.get('addressCountryId').value !== canada.ctryId) {
-                    <input matInput maxLength="6" oninput="this.value = this.value.toUpperCase()"
-                      formControlName="postalCode"
-                      />
-                  }
-                  @if (form.get('postalCode').hasError('required')) {
-                    <mat-error>{{ "error.required" | translate
-                    }}</mat-error>
-                  }
-                  @if (form.get('postalCode').hasError('pattern') || form.get('postalCode').hasError('minlength') || form.get('postalCode').hasError('maxlength')) {
-                    <mat-error
-                      >Must
-                      be a valid postal/zip code
-                    </mat-error>
-                  }
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="row">
-              <!--- Notice of dispute phone number -->
-              <div class="col-md-6">
-                <mat-form-field class="w-100">
-                  <mat-label>Phone number</mat-label>
-                  @if (form.get('addressCountryId').value === canada.ctryId || form.get('addressCountryId').value === usa.ctryId) {
-                    <input matInput formControlName="homePhoneNumber" mask="(000) 000-0000"
-                      [showMaskTyped]="true" />
-                  }
-                  @if (form.get('addressCountryId').value !== canada.ctryId && form.get('addressCountryId').value !== usa.ctryId) {
-                    <input matInput formControlName="homePhoneNumber" mask="99999999999999999999"
-                      />
-                  }
-                  @if (form.get('homePhoneNumber')?.hasError('phone')) {
-                    <mat-error>Must be a valid phone number
-                    </mat-error>
-                  }
-                </mat-form-field>
-              </div>
-              <!-- Notice of dispute email address -->
-              <div class="col-md-6">
-                <mat-form-field class="w-100">
-                  <mat-label>Email address</mat-label>
-                  <input matInput formControlName="emailAddress" autocomplete="off" />
+                <div style="float: right; width: 100%;">
                   @if (lastUpdatedDispute.emailAddressVerified === false && lastUpdatedDispute.emailAddress) {
-                    <mat-hint
-                      style="color:red">
-                      The contact email address has not been verified by the disputant. To opt them out of email
-                      communications, set the email address to blank and Save. Alternatively you can resend the email
-                      verification to the disputant.
-                    </mat-hint>
+                    <button class="large" mat-flat-button type="button" color="primary" (click)="resendEmailVerification()"
+                      >
+                      Resend Email Verify
+                    </button>
                   }
-                  @if (form.get('emailAddress').hasError('email')) {
-                    <mat-error>{{
-                      "error.email_address" | translate
-                    }}</mat-error>
-                  }
-                  @if (form.get('emailAddress').hasError('maxlength')) {
-                    <mat-error>{{
-                      "error.max_length" | translate
-                    }}100</mat-error>
-                  }
-                </mat-form-field>
-              </div>
-            </div>
-            <br /><br />
-            <div class="row">
-              <!-- Notice of dispute drivers licence province -->
-              <div class="col-md-6">
-                <mat-form-field class="w-100">
-                  <mat-label>Prov/State of DL</mat-label>
-                  <mat-select formControlName="driversLicenceProvinceProvId"
-                    (selectionChange)="onDLProvinceChange($event.value)">
-                    <mat-option [value]="null"></mat-option>
-                    <mat-option [value]="bc.provId">{{bc.provNm}}</mat-option>
-                    @for (province of provinces; track province.provId) {
-                      <mat-option [value]="province.provId">{{ province.provNm }}
-                      </mat-option>
-                    }
-                    @for (state of states; track state.provId) {
-                      <mat-option [value]="state.provId">{{ state.provNm }}</mat-option>
-                    }
-                  </mat-select>
-                </mat-form-field>
-              </div>
-              <!-- Notice of dispute drivers licence number -->
-              <div class="col-md-6">
-                <mat-form-field class="w-100">
-                  <mat-label>DL number</mat-label>
-                  @if (form.get('driversLicenceProvinceProvId').value === bc.provId) {
-                    <input matInput formControlName="driversLicenceNumber"
-                      (keypress)="($event.charCode >= 48 && $event.charCode < 58)" minlength="7" maxlength="9"
-                      />
-                  }
-                  @if (form.get('driversLicenceProvinceProvId').value !== bc.provId) {
-                    <input matInput formControlName="driversLicenceNumber" maxlength="20"
-                      />
-                  }
-                  @if (
-                    form.get('driversLicenceNumber')?.errors?.minlength ||
-                    form.get('driversLicenceNumber').hasError('maxlength')) {
-                    <mat-error>
-                      Must be a valid BC driver's licence number of seven to nine digits
-                    </mat-error>
-                  }
-                </mat-form-field>
-              </div>
-            </div>
-            <div style="float: right; width: 100%;">
-              @if (lastUpdatedDispute.emailAddressVerified === false && lastUpdatedDispute.emailAddress) {
-                <button class="large" mat-flat-button type="button" color="primary" (click)="resendEmailVerification()"
-                  >
-                  Resend Email Verify
-                </button>
-              }
-              <button class="large" mat-flat-button type="submit" color="primary"
-                [disabled]="!form.touched || form.invalid">
-                Save
-              </button>
-            </div>
-          </section>
-        </form>
-      </div>
-    </mat-expansion-panel>
-    @if (lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)) {
-      <app-ticket-request [disputeInfo]="lastUpdatedDispute"></app-ticket-request>
-      <app-upload [disputeInfo]="lastUpdatedDispute"></app-upload>
-      <div class="action-button-row">
-        <button class="large" mat-flat-button type="button" color="primary" style="background-color: red;"
-          [disabled]="lastUpdatedDispute.status === DispStatus.Rejected || lastUpdatedDispute.status === DispStatus.Cancelled"
-          (click)="reject()">
-          Reject
-        </button>
-        <button class="large" mat-flat-button type="button" color="primary"
-          [disabled]="lastUpdatedDispute.status !== DispStatus.New || this.form.invalid || this.form.touched"
-          (click)="approve()" style="background-color:  #2ba242;">
-          Approve and submit to ARC
-        </button>
-        <button style="display: none;" class="large" mat-flat-button type="button" color="primary"
-            [disabled]="lastUpdatedDispute.status === DispStatus.New || lastUpdatedDispute.status === DispStatus.Validated ||
-            lastUpdatedDispute.status === DispStatus.Cancelled"
-          (click)="cancel()">
-          Cancel
-        </button>
+                  <button class="large" mat-flat-button type="submit" color="primary"
+                    [disabled]="!form.touched || form.invalid">
+                    Save
+                  </button>
+                </div>
+              </section>
+            </form>
+          </div>
+        </mat-expansion-panel>
+        @if (lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)) {
+          <app-ticket-request [disputeInfo]="lastUpdatedDispute"></app-ticket-request>
+          <app-upload [disputeInfo]="lastUpdatedDispute"></app-upload>
+          <div class="action-button-row">
+            <button class="large" mat-flat-button type="button" color="primary" style="background-color: red;"
+              [disabled]="lastUpdatedDispute.status === DispStatus.Rejected || lastUpdatedDispute.status === DispStatus.Cancelled"
+              (click)="reject()">
+              Reject
+            </button>
+            <button class="large" mat-flat-button type="button" color="primary"
+              [disabled]="lastUpdatedDispute.status !== DispStatus.New || this.form.invalid || this.form.touched"
+              (click)="approve()" style="background-color:  #2ba242;">
+              Approve and submit to ARC
+            </button>
+            <button style="display: none;" class="large" mat-flat-button type="button" color="primary"
+                [disabled]="lastUpdatedDispute.status === DispStatus.New || lastUpdatedDispute.status === DispStatus.Validated ||
+                lastUpdatedDispute.status === DispStatus.Cancelled"
+              (click)="cancel()">
+              Cancel
+            </button>
+          </div>
+        }
       </div>
     }
-  </div>
-}
 
-<ng-template #noTicket>
-  <h2>No current ticket</h2>
-</ng-template>
-</div>
+    <ng-template #noTicket>
+      <h2>No current ticket</h2>
+    </ng-template>
+  </div>
 </app-page>

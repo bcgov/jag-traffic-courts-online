@@ -18,7 +18,7 @@ th {
 .reset-filters {
   color: #fff;
   background-color: #38598a;
-  border-color: #38598a;  
+  border-color: #38598a;
   font-size: 14px;
 
   &:hover {
@@ -28,45 +28,9 @@ th {
 }
 
 :host ::ng-deep {
-  /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
-  .mat-select-value {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
 
   .mat-mdc-form-field.dateField{
     width: 145px;
   }
 
-  .mat-mdc-form-field {
-    width: 100%;
-    margin-bottom: 0px !important;
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-    .mat-form-field-wrapper {
-      padding-bottom: 0 !important;
-      /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-      .mat-form-field-flex {
-        margin-top: 0 !important;
-        padding-right: 5px;
-        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-        .mat-form-field-infix {
-          padding: 0px 0px 7px 0px !important;
-          line-height: 0px;
-
-          input {
-            line-height: 18px !important;
-          }
-          /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
-          .mat-select-arrow-wrapper {
-            transform: translate(5px, 0px);
-          }
-          /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
-          .mat-select-value {
-            padding-left: 0px;
-            overflow: visible;
-          }
-        }
-      }
-    }
-  }
 }

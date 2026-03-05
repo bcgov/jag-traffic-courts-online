@@ -1,7 +1,7 @@
 <app-table-filters [tabIndex]="tabIndex" [tableFilterKeys]="tableFilterKeys" [courthouseTeamNames]="courthouseTeamNames"
   (onFilterChanged)="onApplyFilter($event)">
   <ng-container pagination>
-    <div fxFlex fxFlex.gt-md="20">
+    <div>
       <div class="vcenter">
         <app-paging [currentPage]="currentPage" [totalPages]="totalPages" (pageChanged)="onPageChange($event)">
         </app-paging>

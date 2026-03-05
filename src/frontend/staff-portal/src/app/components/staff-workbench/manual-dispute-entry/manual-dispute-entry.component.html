@@ -1,9 +1,9 @@
 <app-page>
   <ng-container stickyToolBar>
-    <div class="app-width" style="padding-top: 1.5vh; padding-bottom: 1.5vh;" fxLayout="row">
+    <div style="padding-top: 1.5vh; padding-bottom: 1.5vh;" fxLayout="row">
       <div fxFlex>
         <button mat-button (click)="onBackWithConfirmation()" color="primary">
-          <mat-icon inline="true">arrow_back</mat-icon> Back
+          <mat-icon class="align-text-bottom">arrow_back</mat-icon> Back
         </button>
       </div>
     </div>
@@ -96,7 +96,7 @@
                         <mat-form-field class="w-100">
                           <mat-label>Violation Time (24-hour format)</mat-label>
                           <input matInput hidden aria-label="violation time" formControlName="violationTime" />
-                          <ngx-timepicker-field formControlName="violationTime" [format]="24" [value]="ticketDetailsForm.get('violationTime')?.value"></ngx-timepicker-field>
+                          <ngx-mat-timepicker-field #picker formControlName="violationTime" [format]="24" [value]="ticketDetailsForm.get('violationTime')?.value"></ngx-mat-timepicker-field>
                           @if (ticketDetailsForm.controls.violationTime.hasError('required')) {
                             <mat-error>Violation time is required</mat-error>
                           }
@@ -1116,7 +1116,7 @@
         <div class="wizard-navigation">
           @if (currentStep !== 0) {
             <button mat-raised-button (click)="previousStep()" class="nav-button">
-              <mat-icon>arrow_back</mat-icon>
+              <mat-icon class="align-text-bottom">arrow_back</mat-icon>
               Previous
             </button>
           }
@@ -1124,7 +1124,7 @@
           @if (currentStep < steps.length - 1) {
             <button mat-raised-button color="primary" (click)="nextStep()" class="nav-button">
               Next
-              <mat-icon>arrow_forward</mat-icon>
+              <mat-icon class="align-text-bottom">arrow_forward</mat-icon>
             </button>
           }
 
@@ -1133,7 +1133,7 @@
                     (click)="onSubmit()"
                     [disabled]="!ticketDetailsForm.valid || !contactInfoForm.valid || !disputeInfoForm.valid"
                     class="nav-button submit-final">
-              <mat-icon>save</mat-icon>
+              <mat-icon class="align-text-bottom">save</mat-icon>
               Submit Dispute
             </button>
           }

@@ -20,12 +20,12 @@ h3 {
   color: #fff;
 }
 
-.count-list{
+.count-list {
   border-left: 15px solid #3b6288;
   padding: 15px;
   color: #07396a;
   background-color: #f3f3f3;
-  }
+}
 
 .mat-mdc-unelevated-button {
   width: 30% !important;
@@ -73,14 +73,19 @@ h3 {
   mat-expansion-panel {
     box-shadow: none !important;
     padding-bottom: 1em;
-    border-bottom: 1px solid theme-palette(grey, light);
   }
 
   mat-expansion-panel-header {
     padding-left: 0;
     padding-right: 0.5em;
   }
+
+  .expand-collapse-icon {
+    color: #009cde;
+    vertical-align: text-bottom;
+  }
 }
+
 ::ng-deep {
   .mat-expansion-indicator {
     display: none !important;

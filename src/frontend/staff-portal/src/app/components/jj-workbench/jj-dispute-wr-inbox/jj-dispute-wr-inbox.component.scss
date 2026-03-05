@@ -3,9 +3,9 @@ td, th {
   padding-left: 10px !important;
 }
 
-th {
-color: white;
-background-color: #65799e;
+.mat-mdc-table .mat-mdc-header-cell {
+  color: white;
+  background-color: #65799e;
 }
 
 .mat-mdc-row:nth-child(2n+1){

@@ -40,7 +40,8 @@ export class ContactInfoComponent implements OnInit {
   public ContactType = DisputeContactTypeCd;
   public DispStatus = DisputeStatus;
   public collapseObj: any = {
-    contactInformation: true
+    ticketInformation: true,
+    contactInformation: true,
   }
 
   constructor(
