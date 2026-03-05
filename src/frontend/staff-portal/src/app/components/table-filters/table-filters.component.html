@@ -1,4 +1,4 @@
-<div fxFlex fxLayout="row wrap">
+<div fxFlex fxLayout="row wrap" fxLayoutGap="0.5rem">
   @if (tableFilterConfigs.dateSubmittedFrom || tableFilterConfigs.dateSubmittedTo) {
     <div fxFlex fxFlex.gt-md="30">
       <div fxFlex="30">
@@ -54,23 +54,26 @@
     </div>
   }
   @if (tableFilterConfigs.ticketNumber) {
-    <div fxFlex fxFlex.gt-md="30">
+    <div fxFlex fxFlex.gt-md="33">
       <div fxFlex="30">
         <label class="vcenter" for="ticketNumber"><span class="BC-Gov-15px-blue-text"><b>Ticket Number:</b></span></label>
       </div>
       <div fxFlex>
-        <mat-form-field appearance="outline">
-          <input id="ticketNumber" name="ticketNumber" matInput [(ngModel)]="dataFilters.ticketNumber" type="search"
-            (keyup)="onApplyFilter('ticketNumber', $event.target.value)" autocomplete="off" class="input" />
-        </mat-form-field>
+        <div class="vcenter">
+          <mat-form-field appearance="outline">
+            <input id="ticketNumber" name="ticketNumber" matInput [(ngModel)]="dataFilters.ticketNumber" type="search"
+              (keyup)="onApplyFilter('ticketNumber', $event.target.value)" autocomplete="off" class="input" />
+          </mat-form-field>
+        </div>
       </div>
     </div>
   }
-  <div style="margin-right: 1rem; margin-left: 1rem;">
+  <div>
     <div class="vcenter">
       <button mat-button (click)="resetSearchFilters()" class="reset-filters">Reset Filters</button>
     </div>
   </div>
+  <div fxFlex fxFlex.gt-md="1 1 auto"></div>
   <ng-content select="[pagination]"></ng-content>
   @if (tableFilterConfigs.disputantSurname) {
     <div fxFlex fxFlex.gt-md="30">
@@ -99,7 +102,7 @@
     </div>
   }
   @if (tableFilterConfigs.status) {
-    <div fxFlex fxFlex.gt-md="30">
+    <div fxFlex fxFlex.gt-md="33">
       <div fxFlex="30">
         <label class="vcenter" for="status" (click)="statusCtl.open()"><span
           class="BC-Gov-15px-blue-text"><b>Status:</b></span></label>
@@ -119,7 +122,7 @@
     </div>
   }
   @if (tableFilterConfigs.team) {
-    <div fxFlex fxFlex.gt-md="30">
+    <div fxFlex fxFlex.gt-md="33">
       <div fxFlex="30">
         <label class="vcenter" for="team" (click)="teamCtl.open()"><span
           class="BC-Gov-15px-blue-text"><b>Team:</b></span></label>
@@ -139,14 +142,13 @@
       </div>
     </div>
   }
-  <div class="record-count-container"><ng-content select="[recordCount]"></ng-content></div>
   @if (tableFilterConfigs.courthouseLocation) {
-    <div fxFlex fxFlex.gt-md="30">
+    <div fxFlex fxFlex.gt-md="33">
       <div fxFlex="30">
         <label class="vcenter" for="courthouseLocation"><span class="BC-Gov-15px-blue-text"><b>Courthouse
         Location:</b></span></label>
       </div>
-      <div fxFlex>
+      <div fxFlex class="py-2 pe-2">
         <ng-multiselect-dropdown
           name="courthouseLocation"
           [settings]="courtHouseSettings"
@@ -161,5 +163,7 @@
       </div>
     </div>
   }
+  <div fxFlex fxFlex.gt-md="1 1 auto"></div>
+  <ng-content select="[recordCount]"></ng-content>
   <ng-content select="[submitNewDispute]"></ng-content>
 </div>

@@ -1,6 +1,6 @@
-<div class="overflow-auto">
+<div class="overflow-hidden mb-3">
   <!-- filter by teams -->
-  <div class="row" style="width:97%">
+  <div class="row mb-2">
     <mat-button-toggle-group [hideSingleSelectionIndicator]="true" style="border: 0px" (change)="filterByTeam($event.value)" [value]="currentTeam">
       @for (courthouseTeamCount of courthouseTeamCounts; track courthouseTeamCount.team) {
         <mat-button-toggle [value]="courthouseTeamCount.team"
@@ -15,7 +15,7 @@
 
   <!-- bulk assignments -->
   &nbsp;<mat-label><b>Bulk Assignments:</b></mat-label>
-  <div style="display: flex; flex-direction: row; justify-content: space-between; vertical-align: top; width:97%">
+  <div style="display: flex; flex-direction: row; justify-content: space-between; vertical-align: top;">
     <div style="display: flex; flex-direction: row; flex-direction: flex-start;">
       <mat-select [(ngModel)]="bulkjjAssignedTo" style="width:250px; background-color: #f2f2f2;">
         <mat-option [value]="valueOfUnassigned"><i>choose a jj</i></mat-option>
@@ -36,8 +36,9 @@
         <i>Unassigned: <b>{{ getUnassignedCount() }}</b></i>
       </button>
     </div>
-  </div><br />
-
+  </div>
+</div>
+<div class="overflow-auto">
   <!--- table of results -->
   <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
     <ng-container matColumnDef="assignedIcon">
