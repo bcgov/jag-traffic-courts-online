@@ -30,20 +30,20 @@
           </div>
         }
 
-        <div>
-          <label>File type for upload:</label><br>
-          <mat-form-field appearance="outline" class="upload-type">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1rem">
+          <label fxFlex="13">File type for upload:</label>
+          <mat-form-field fxFlex="15" appearance="outline" class="upload-type">
             <mat-select [(ngModel)]="fileTypeToUpload">
               <mat-option value="Certified Extract">Certified Extract</mat-option>
               <mat-option value="Adjournment">Adjournment</mat-option>
               <mat-option value="Other">Other</mat-option>
             </mat-select>
           </mat-form-field>
+          <button fxFlex="15" class="large" mat-flat-button type="button" color="primary"
+            onclick="document.getElementById('getFile').click()">
+            <mat-icon class="align-text-bottom">upload</mat-icon>&nbsp;Upload File
+          </button>
         </div>
-        <button class="large" mat-flat-button type="button" color="primary"
-          onclick="document.getElementById('getFile').click()">
-          <mat-icon class="align-text-bottom">upload</mat-icon>&nbsp;Upload File
-        </button>
         <input type="file" id="getFile" style="display:none" accept="image/*,.pdf"
           (change)="onUpload($event.target.files)">
         </div>

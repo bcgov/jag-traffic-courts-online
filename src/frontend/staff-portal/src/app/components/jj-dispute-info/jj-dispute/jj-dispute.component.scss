@@ -138,10 +138,10 @@ label {
 }
 
 .mat-mdc-unelevated-button {
-  min-width: 30% !important;
   margin-top: 1em;
 
   &.large {
+    min-width: 30% !important;
     height: 46px;
     font-size: 1.125em;
     font-weight: bold;
