@@ -1,41 +1,37 @@
 @if (!showTicket && !showManualEntry) {
   <app-page>
     <ng-container stickyToolBar>
-      <div class="app-width">
-        <div class="content">
-          <mat-tab-group class="dashTabs" mat-align-tabs="start" mat-stretch-tabs="false" [selectedIndex]="tabSelected.value"
-            (selectedIndexChange)="tabSelected.setValue($event)">
-            @if (hasTicketValidationPermission) {
-              <mat-tab>
-                <ng-template mat-tab-label>
-                  <h2>Ticket Validation</h2>
-                </ng-template>
-              </mat-tab>
-            }
-            @if (hasDecisionValidationPermission) {
-              <mat-tab>
-                <ng-template mat-tab-label>
-                  <h2>Decision Validation</h2>
-                </ng-template>
-              </mat-tab>
-            }
-            @if (hasUpdateRequestsPermission) {
-              <mat-tab>
-                <ng-template mat-tab-label>
-                  <h2>Update Requests</h2>
-                </ng-template>
-              </mat-tab>
-            }
-            @if (hasDCFPermission) {
-              <mat-tab #DCF>
-                <ng-template mat-tab-label>
-                  <h2>DCF</h2>
-                </ng-template>
-              </mat-tab>
-            }
-          </mat-tab-group>
-        </div>
-      </div>
+      <mat-tab-group class="dashTabs" style="margin-bottom: 1rem;" mat-align-tabs="start" mat-stretch-tabs="false" [selectedIndex]="tabSelected.value"
+        (selectedIndexChange)="tabSelected.setValue($event)">
+        @if (hasTicketValidationPermission) {
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <h2>Ticket Validation</h2>
+            </ng-template>
+          </mat-tab>
+        }
+        @if (hasDecisionValidationPermission) {
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <h2>Decision Validation</h2>
+            </ng-template>
+          </mat-tab>
+        }
+        @if (hasUpdateRequestsPermission) {
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <h2>Update Requests</h2>
+            </ng-template>
+          </mat-tab>
+        }
+        @if (hasDCFPermission) {
+          <mat-tab #DCF>
+            <ng-template mat-tab-label>
+              <h2>DCF</h2>
+            </ng-template>
+          </mat-tab>
+        }
+      </mat-tab-group>
     </ng-container>
     @if (tabSelected?.value === 0) {
       <app-ticket-inbox [tabIndex]="0" (disputeInfo)="changeDispute($event, tabTypes.TICKET_VALIDATION)"></app-ticket-inbox>
