@@ -1,0 +1,21 @@
+meta {
+  name: TCO ORDS catalog
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://wsgw.dev.jag.gov.bc.ca/tco/ords/devj/tcoords/open-api-catalog/
+  body: none
+  auth: basic
+}
+
+auth:basic {
+  username: {{tco.username}}
+  password: {{tco.password}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

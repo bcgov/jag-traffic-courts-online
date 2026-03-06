@@ -1,0 +1,36 @@
+meta {
+  name: Create a new record on occam/v1 (POST)
+  type: http
+  seq: 13
+}
+
+post {
+  url: {{v1_baseUrl}}/disputeUpdateRequestStatus
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 201 Response
+  description: The successfully created record.
+  
+  request: {
+    url: {{v1_baseUrl}}/disputeUpdateRequestStatus
+    method: POST
+    mode: none
+  }
+  
+  response: {
+    status: {
+      code: 201
+      text: Created
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

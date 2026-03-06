@@ -1,0 +1,36 @@
+meta {
+  name: Retrieve a record from occam/v1 (7)
+  type: http
+  seq: 14
+}
+
+get {
+  url: {{v1_baseUrl}}/languages
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/languages
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

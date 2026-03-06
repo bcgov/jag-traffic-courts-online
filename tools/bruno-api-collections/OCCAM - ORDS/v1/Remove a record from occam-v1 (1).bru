@@ -1,0 +1,36 @@
+meta {
+  name: Remove a record from occam/v1 (1)
+  type: http
+  seq: 9
+}
+
+delete {
+  url: {{v1_baseUrl}}/deleteViolationTicketCount
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 204 Response
+  description: Deleted result.
+  
+  request: {
+    url: {{v1_baseUrl}}/deleteViolationTicketCount
+    method: DELETE
+    mode: none
+  }
+  
+  response: {
+    status: {
+      code: 204
+      text: No Content
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

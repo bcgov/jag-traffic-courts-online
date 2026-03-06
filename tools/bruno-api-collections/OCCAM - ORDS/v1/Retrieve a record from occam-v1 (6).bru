@@ -1,0 +1,49 @@
+meta {
+  name: Retrieve a record from occam/v1 (6)
+  type: http
+  seq: 12
+}
+
+get {
+  url: {{v1_baseUrl}}/disputeUpdateRequestList
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~disputeId: 
+  ~disputeUpdateReqTypeCd: 
+  ~disputeUpdateStatTypeCd: 
+  ~noticeOfDisputeGuid: 
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/disputeUpdateRequestList
+    method: GET
+    mode: none
+    params:query: {
+      ~disputeId: 
+      ~disputeUpdateReqTypeCd: 
+      ~disputeUpdateStatTypeCd: 
+      ~noticeOfDisputeGuid: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

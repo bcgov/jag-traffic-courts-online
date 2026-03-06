@@ -1,17 +1,13 @@
 meta {
-  name: Get Dispute
+  name: Get Violation Ticket List
   type: http
-  seq: 2
+  seq: 4
 }
 
 get {
-  url: {{occam.base_url}}/occam/v1/dispute/:id
+  url: {{occam.base_url}}/occam/v1/violationTicketList
   body: none
   auth: inherit
-}
-
-params:path {
-  id: 4816
 }
 
 headers {

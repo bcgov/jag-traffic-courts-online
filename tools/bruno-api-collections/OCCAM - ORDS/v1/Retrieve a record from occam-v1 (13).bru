@@ -1,0 +1,51 @@
+meta {
+  name: Retrieve a record from occam/v1 (13)
+  type: http
+  seq: 28
+}
+
+get {
+  url: {{v1_baseUrl}}/violationTicketList
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~excludeStatus: 
+  ~fromDate: 
+  ~issueTime: 
+  ~noticeOfDisputeGuid: 
+  ~ticketNumber: 
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/violationTicketList
+    method: GET
+    mode: none
+    params:query: {
+      ~excludeStatus: 
+      ~fromDate: 
+      ~issueTime: 
+      ~noticeOfDisputeGuid: 
+      ~ticketNumber: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

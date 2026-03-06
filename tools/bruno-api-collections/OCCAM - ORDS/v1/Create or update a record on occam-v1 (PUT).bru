@@ -1,0 +1,61 @@
+meta {
+  name: Create or update a record on occam/v1 (PUT)
+  type: http
+  seq: 26
+}
+
+put {
+  url: {{v1_baseUrl}}/updateDisputeUpdateRequest
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  description: The successfully updated record.
+  
+  request: {
+    url: {{v1_baseUrl}}/updateDisputeUpdateRequest
+    method: PUT
+    mode: none
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}
+
+example {
+  name: 201 Response
+  description: The successfully created record.
+  
+  request: {
+    url: {{v1_baseUrl}}/updateDisputeUpdateRequest
+    method: PUT
+    mode: none
+  }
+  
+  response: {
+    status: {
+      code: 201
+      text: Created
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

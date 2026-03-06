@@ -1,0 +1,45 @@
+meta {
+  name: Retrieve a record from occam/v1 (2)
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{v1_baseUrl}}/cities
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~countryId: 
+  ~provSeqNo: 
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/cities
+    method: GET
+    mode: none
+    params:query: {
+      ~countryId: 
+      ~provSeqNo: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}
