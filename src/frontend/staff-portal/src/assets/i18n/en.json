@@ -205,7 +205,9 @@
     "phone_number": "Phone Number",
     "plea": "Plea",
     "plea_guilty": "I agree I committed the offence",
+    "plea_guilty_third_person": "The disputant agrees they committed the offence",
     "plea_not_guilty": "I do not agree I committed the offence",
+    "plea_not_guilty_third_person": "The disputant does not agree they committed the offence",
     "postal_code": "Postal Code",
     "postal_zip": "Postal/Zip Code",
     "probation_duration": "Probation Duration",
@@ -288,7 +290,9 @@
   },
   "appearInCourtType": {
     "yes": "I want to appear in court",
-    "no": "I do not want to appear in court"
+    "yes_third_person": "The disputant wants to appear in court",
+    "no": "I do not want to appear in court",
+    "no_third_person": "The disputant does not want to appear in court"
   },
   "findingType": {
     "guilty": "Guilty as charged",

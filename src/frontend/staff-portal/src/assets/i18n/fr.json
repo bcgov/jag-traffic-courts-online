@@ -204,7 +204,9 @@
     "phone_number": "N° de Telephone",
     "plea": "Plaidoyer",
     "plea_guilty": "Je suis d'accord, j'ai commis l'infraction",
+    "plea_guilty_third_person": "Le contestant est d'accord, le contestant a commis l'infraction",
     "plea_not_guilty": "Je ne suis pas d'accord, j'ai commis l'infraction",
+    "plea_not_guilty_third_person": "Le contestant n'est pas d'accord, le contestant a commis l'infraction",
     "postal_code": "Code Postal",
     "postal_zip": "Code Postal",
     "probation_duration": "Durée de la probation",
@@ -280,7 +282,9 @@
   },
   "appearInCourtType": {
     "yes": "Je veux comparaître au tribunal",
-    "no": "Je ne veux pas comparaître devant le tribunal"
+    "yes_third_person": "Le contestant souhaite comparaître au tribunal",
+    "no": "Je ne veux pas comparaître devant le tribunal",
+    "no_third_person": "Le contestant ne souhaite pas comparaître au tribunal"
   },
   "findingType": {
     "guilty": "Coupable comme accusé",
