@@ -10,8 +10,7 @@
             <mat-label><span class="BC-Gov-15px-blue-text"><b>From:</b></span></mat-label>
             <input matInput [(ngModel)]="dataFilters.dateSubmittedFrom" type="text" placeholder="DD-MMM-YYYY"
               bsDatepicker (ngModelChange)="onApplyFilter('dateSubmittedFrom', $event)" autocomplete="off"
-              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true,
-              showWeekNumbers: false, adaptivePosition: true }" />
+              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true, showWeekNumbers: false, adaptivePosition: true }" />
           </mat-form-field>
         }
         @if (tableFilterConfigs.dateSubmittedTo) {
@@ -19,8 +18,7 @@
             <mat-label><span class="BC-Gov-15px-blue-text"><b>To:</b></span></mat-label>
             <input matInput [(ngModel)]="dataFilters.dateSubmittedTo" type="text" placeholder="DD-MMM-YYYY"
               bsDatepicker (ngModelChange)="onApplyFilter('dateSubmittedTo', $event)" autocomplete="off"
-              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true,
-              showWeekNumbers: false, adaptivePosition: true }" />
+              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true, showWeekNumbers: false, adaptivePosition: true }" />
           </mat-form-field>
         }
       </div>
@@ -37,8 +35,7 @@
             <mat-label><span class="BC-Gov-15px-blue-text"><b>From:</b></span></mat-label>
             <input matInput [(ngModel)]="dataFilters.decisionDateFrom" type="text" placeholder="DD-MMM-YYYY"
               bsDatepicker (ngModelChange)="onApplyFilter('decisionDateFrom', $event)" autocomplete="off"
-              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true,
-              showWeekNumbers: false, adaptivePosition: true }" />
+              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true, showWeekNumbers: false, adaptivePosition: true }" />
           </mat-form-field>
         }
         @if (tableFilterConfigs.decisionDateTo) {
@@ -46,8 +43,7 @@
             <mat-label><span class="BC-Gov-15px-blue-text"><b>To:</b></span></mat-label>
             <input matInput [(ngModel)]="dataFilters.decisionDateTo" type="text" placeholder="DD-MMM-YYYY"
               bsDatepicker (ngModelChange)="onApplyFilter('decisionDateTo', $event)" autocomplete="off"
-              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true,
-              showWeekNumbers: false, adaptivePosition: true }" />
+              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true, showWeekNumbers: false, adaptivePosition: true }" />
           </mat-form-field>
         }
       </div>
@@ -104,8 +100,9 @@
   @if (tableFilterConfigs.status) {
     <div fxFlex fxFlex.gt-md="33">
       <div fxFlex="30">
-        <label class="vcenter" for="status" (click)="statusCtl.open()"><span
-          class="BC-Gov-15px-blue-text"><b>Status:</b></span></label>
+        <label class="vcenter" for="status" (click)="statusCtl.open()">
+          <span class="BC-Gov-15px-blue-text"><b>Status:</b></span>
+        </label>
       </div>
       <div fxFlex>
         <div>
@@ -124,8 +121,9 @@
   @if (tableFilterConfigs.team) {
     <div fxFlex fxFlex.gt-md="33">
       <div fxFlex="30">
-        <label class="vcenter" for="team" (click)="teamCtl.open()"><span
-          class="BC-Gov-15px-blue-text"><b>Team:</b></span></label>
+        <label class="vcenter" for="team" (click)="teamCtl.open()">
+          <span class="BC-Gov-15px-blue-text"><b>Team:</b></span>
+        </label>
       </div>
       <div fxFlex>
         <div>
@@ -145,8 +143,9 @@
   @if (tableFilterConfigs.courthouseLocation) {
     <div fxFlex fxFlex.gt-md="33">
       <div fxFlex="30">
-        <label class="vcenter" for="courthouseLocation"><span class="BC-Gov-15px-blue-text"><b>Courthouse
-        Location:</b></span></label>
+        <label class="vcenter" for="courthouseLocation">
+          <span class="BC-Gov-15px-blue-text"><b>Courthouse Location:</b></span>
+        </label>
       </div>
       <div fxFlex class="py-2 pe-2">
         <ng-multiselect-dropdown

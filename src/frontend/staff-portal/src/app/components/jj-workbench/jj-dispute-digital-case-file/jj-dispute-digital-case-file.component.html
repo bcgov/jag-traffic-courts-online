@@ -44,11 +44,15 @@
       </th>
       <td mat-cell *matCellDef="let element" style="min-width:150px !important">
         @if (element.disputantSurname) {
-          <span>{{ element.disputantSurname + (element.disputantGivenName1 ||
-            element.disputantGivenName2 || element.disputantGivenName3 ? "," : "") +
-            (element.disputantGivenName1 ? " " + element.disputantGivenName1 : "") +
-            (element.disputantGivenName2 ? " " + element.disputantGivenName2 : "") +
-          (element.disputantGivenName3 ? " " + element.disputantGivenName3 : "") }}</span>
+          <span>
+            {{
+              element.disputantSurname +
+              (element.disputantGivenName1 || element.disputantGivenName2 || element.disputantGivenName3 ? "," : "") +
+              (element.disputantGivenName1 ? " " + element.disputantGivenName1 : "") +
+              (element.disputantGivenName2 ? " " + element.disputantGivenName2 : "") +
+              (element.disputantGivenName3 ? " " + element.disputantGivenName3 : "")
+            }}
+          </span>
         }
         @if (!element.disputantSurname) {
           <span>{{ element.disputantOrganizationName }}</span>
@@ -71,32 +75,25 @@
       </th>
       <td mat-cell *matCellDef="let element" class="status">
         @if (element.disputeStatus.code === disputeStatus.HearingScheduled) {
-          <span><button mat-rounded-button
-          class="bg-color-scheduled" disabled="true">Scheduled</button></span>
+          <span><button mat-rounded-button class="bg-color-scheduled" disabled="true">Scheduled</button></span>
         }
         @if (element.disputeStatus.code === disputeStatus.New) {
-          <span><button mat-rounded-button
-          class="bg-color-new" disabled="true">New</button></span>
+          <span><button mat-rounded-button class="bg-color-new" disabled="true">New</button></span>
         }
         @if (element.disputeStatus.code === disputeStatus.InProgress) {
-          <span><button mat-rounded-button
-          class="bg-color-in-progress" disabled="true">In Progress</button></span>
+          <span><button mat-rounded-button class="bg-color-in-progress" disabled="true">In Progress</button></span>
         }
         @if (element.disputeStatus.code === disputeStatus.Review) {
-          <span><button mat-rounded-button
-          class="bg-color-review" disabled="true">Review</button></span>
+          <span><button mat-rounded-button class="bg-color-review" disabled="true">Review</button></span>
         }
         @if (element.disputeStatus.code === disputeStatus.RequireCourtHearing) {
-          <span><button mat-rounded-button
-          class="bg-color-require-court-hearing" disabled="true">Adjourn/Require Hearing</button></span>
+          <span><button mat-rounded-button class="bg-color-require-court-hearing" disabled="true">Adjourn/Require Hearing</button></span>
         }
         @if (element.disputeStatus.code === disputeStatus.Confirmed) {
-          <span><button mat-rounded-button
-          class="bg-color-confirmed" disabled="true">Confirmed</button></span>
+          <span><button mat-rounded-button class="bg-color-confirmed" disabled="true">Confirmed</button></span>
         }
         @if (isConcludedStatus(element.disputeStatus.code)) {
-          <span><button mat-rounded-button
-          class="bg-color-concluded" disabled="true">Concluded</button></span>
+          <span><button mat-rounded-button class="bg-color-concluded" disabled="true">Concluded</button></span>
         }
       </td>
     </ng-container>

@@ -5,7 +5,9 @@
       <span style="float:right">
         {{ disputantUpdateRequest.createdTs | date: "dd-MMM-yyyy" }}
       </span>
-    </span><br /><br />
+    </span>
+    <br />
+    <br />
     @for (disputeCount of updateRequested.DisputeCounts; track disputeCount.CountNo) {
       <div>
         @if (requestReadable === true && disputantUpdateRequest.status === 'PENDING') {
@@ -121,6 +123,7 @@
     @if (requestReadable === false) {
       <div>Update Request Unreadable {{ disputantUpdateRequest.updateJson }}</div>
     }
-    <br /><br />
+    <br />
+    <br />
   </mat-card>
 }

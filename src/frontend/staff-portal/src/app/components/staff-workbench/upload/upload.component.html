@@ -15,18 +15,21 @@
     </mat-expansion-panel-header>
 
     <div class="upload-body">
-      <span><b>Uploaded Documents ({{disputeInfo.fileData?.length }})</b></span><br />
+      <span><b>Uploaded Documents ({{disputeInfo.fileData?.length }})</b></span>
+      <br />
       @for (doc of disputeInfo.fileData; track doc.fileId) {
         <div>
           @if (doc.virusScanStatus === 'clean') {
-            <button type="button" class="linkbutton" (click)="onGetFile(doc.fileId)"
-            >{{ doc.fileName }}</button>
+            <button type="button" class="linkbutton" (click)="onGetFile(doc.fileId)">
+              {{ doc.fileName }}
+            </button>
           }
           @if (doc.virusScanStatus !== 'clean') {
             <span>{{ doc.fileName }} {{ doc.virusScanStatus }}</span>
           }
-          <button type="button" class="upload-delete"
-            (click)="onRemoveFile(doc.fileId, doc.fileName)"><mat-icon>delete</mat-icon></button>
+          <button type="button" class="upload-delete" (click)="onRemoveFile(doc.fileId, doc.fileName)">
+            <mat-icon>delete</mat-icon>
+          </button>
         </div>
       }
 
@@ -39,13 +42,11 @@
             <mat-option value="Other">Other</mat-option>
           </mat-select>
         </mat-form-field>
-        <button fxFlex="15" class="large" mat-flat-button type="button" color="primary"
-          onclick="document.getElementById('getFile').click()">
+        <button fxFlex="15" class="large" mat-flat-button type="button" color="primary" onclick="document.getElementById('getFile').click()">
           <mat-icon class="align-text-bottom">upload</mat-icon>&nbsp;Upload File
         </button>
       </div>
-      <input type="file" id="getFile" style="display:none" accept="image/*,.pdf"
-        (change)="onUpload($event.target.files)" />
+      <input type="file" id="getFile" style="display:none" accept="image/*,.pdf" (change)="onUpload($event.target.files)" />
     </div>
   </mat-expansion-panel>
 </div>

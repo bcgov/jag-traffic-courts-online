@@ -42,24 +42,36 @@
           @if (!jjDisputedCount) {
             <p class="section-grid-text">&nbsp;</p>
           }
-          @if (jjDisputedCount && jjDisputedCount.plea === Plea.G) {
-            <p class="section-grid-text">{{ 'label.plea_guilty'
-            | translate }}</p>
+          <!-- First person wording when created by citizen (OCCAMORDS) -->
+          @if (jjDisputedCount && jjDisputedCount.plea === Plea.G && jjDisputeInfo.occamDisputeCreatedBy === 'OCCAMORDS') {
+            <p class="section-grid-text">{{ 'label.plea_guilty' | translate }}</p>
           }
-          @if (jjDisputedCount && jjDisputedCount.plea !== Plea.G) {
-            <p class="section-grid-text">{{
-            'label.plea_not_guilty' | translate }}</p>
+          @if (jjDisputedCount && jjDisputedCount.plea !== Plea.G && jjDisputeInfo.occamDisputeCreatedBy === 'OCCAMORDS') {
+            <p class="section-grid-text">{{ 'label.plea_not_guilty' | translate }}</p>
+          }
+          <!-- Third person wording when created by staff (not OCCAMORDS) -->
+          @if (jjDisputedCount && jjDisputedCount.plea === Plea.G && jjDisputeInfo.occamDisputeCreatedBy !== 'OCCAMORDS') {
+            <p class="section-grid-text">{{ 'label.plea_guilty_third_person' | translate }}</p>
+          }
+          @if (jjDisputedCount && jjDisputedCount.plea !== Plea.G && jjDisputeInfo.occamDisputeCreatedBy !== 'OCCAMORDS') {
+            <p class="section-grid-text">{{ 'label.plea_not_guilty_third_person' | translate }}</p>
           }
         </span>
         <span class="section-grid-cell" style="grid-column: span 2">
           <p class="section-grid-header">{{ "label.appearInCourt" | translate }}</p>
-          @if (!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.Y) {
-            <p class="section-grid-text">
-            I want to appear in court</p>
+          <!-- First person wording when created by citizen (OCCAMORDS) -->
+          @if (!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.Y && jjDisputeInfo.occamDisputeCreatedBy === 'OCCAMORDS') {
+            <p class="section-grid-text">{{ 'appearInCourtType.yes' | translate }}</p>
           }
-          @if (!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.N) {
-            <p class="section-grid-text">
-            I do not want to appear in court</p>
+          @if (!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.N && jjDisputeInfo.occamDisputeCreatedBy === 'OCCAMORDS') {
+            <p class="section-grid-text">{{ 'appearInCourtType.no' | translate }}</p>
+          }
+          <!-- Third person wording when created by staff (not OCCAMORDS) -->
+          @if (!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.Y && jjDisputeInfo.occamDisputeCreatedBy !== 'OCCAMORDS') {
+            <p class="section-grid-text">{{ 'appearInCourtType.yes_third_person' | translate }}</p>
+          }
+          @if (!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.N && jjDisputeInfo.occamDisputeCreatedBy !== 'OCCAMORDS') {
+            <p class="section-grid-text">{{ 'appearInCourtType.no_third_person' | translate }}</p>
           }
           @if (!isSSEditMode && !jjDisputedCount) {
             <p class="section-grid-text">&nbsp;</p>
@@ -79,14 +91,10 @@
             <p class="section-grid-text">&nbsp;</p>
           }
           @if (!isSSEditMode && jjDisputedCount?.requestReduction === RequestReduction.Y) {
-            <p class="section-grid-text"
-              >
-            yes</p>
+            <p class="section-grid-text">yes</p>
           }
           @if (!isSSEditMode && jjDisputedCount && jjDisputedCount?.requestReduction !== RequestReduction.Y) {
-            <p class="section-grid-text"
-              >
-            no</p>
+            <p class="section-grid-text">no</p>
           }
           @if (jjDisputedCount && isSSEditMode) {
             <mat-form-field appearance="outline">
@@ -103,14 +111,10 @@
             <p class="section-grid-text">&nbsp;</p>
           }
           @if (!isSSEditMode && jjDisputedCount?.requestTimeToPay === RequestTimeToPay.Y) {
-            <p class="section-grid-text"
-              >
-            yes</p>
+            <p class="section-grid-text">yes</p>
           }
           @if (!isSSEditMode && jjDisputedCount && jjDisputedCount?.requestTimeToPay !== RequestTimeToPay.Y) {
-            <p class="section-grid-text"
-              >
-            no</p>
+            <p class="section-grid-text">no</p>
           }
           @if (jjDisputedCount && isSSEditMode) {
             <mat-form-field appearance="outline">
@@ -165,9 +169,8 @@
             @if (type !== tabTypes.DECISION_VALIDATION && type !== tabTypes.DCF && !isViewOnly) {
               <div>
                 <input type="text" formControlName="latestPleaUpdateTs" class="section-grid-text latest-plea-text"
-            bsDatepicker placeholder="DD-MMM-YYYY" [bsConfig]="{ withTimepicker: false, keepDatepickerOpened: true,
-            dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true, showWeekNumbers: false,
-            adaptivePosition: true }" />
+                  bsDatepicker placeholder="DD-MMM-YYYY"
+                  [bsConfig]="{ withTimepicker: false, keepDatepickerOpened: true, dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true, showWeekNumbers: false, adaptivePosition: true }" />
               </div>
             } @else {
               <span class="section-grid-text">{{ jjDisputedCount?.latestPleaUpdateTs | date: "dd-MMM-yyyy" }}</span>
@@ -229,25 +232,19 @@
         @if (isViewOnly && jjDisputedCount) {
           <div style="margin-left:20px;">
             @if (form?.get('jjDisputedCountRoP').get('finding').value === Finding.Guilty) {
-              <span
-              class="section-grid-text">Guilty as charged</span>
+              <span class="section-grid-text">Guilty as charged</span>
             }
             @if (form?.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty) {
-              <span
-              class="section-grid-text">Not guilty</span>
+              <span class="section-grid-text">Not guilty</span>
             }
             @if (form?.get('jjDisputedCountRoP').get('finding').value === Finding.Cancelled) {
-              <span
-              class="section-grid-text">Cancelled</span>
+              <span class="section-grid-text">Cancelled</span>
             }
             @if (form?.get('jjDisputedCountRoP').get('finding').value === Finding.PaidPriorToAppearance) {
-              <span
-              class="section-grid-text">Paid Prior to Appearance</span>
+              <span class="section-grid-text">Paid Prior to Appearance</span>
             }
             @if (form?.get('jjDisputedCountRoP').get('finding').value === Finding.GuiltyLesser) {
-              <span
-                class="section-grid-text">Not guilty as charged but guilty of lesser / included
-              other offence</span>
+              <span class="section-grid-text">Not guilty as charged but guilty of lesser / included other offence</span>
             }
             @if (!form?.get('jjDisputedCountRoP').get('finding').value) {
               <span>&nbsp;</span>
@@ -256,18 +253,21 @@
         }
         @if (!isViewOnly && jjDisputedCount && form?.get('jjDisputedCountRoP').get('finding').value === Finding.GuiltyLesser) {
           <div >
-            <mat-label class="section-grid-header">MVA Section</mat-label><br />
+            <mat-label class="section-grid-header">MVA Section</mat-label>
+            <br />
             <input  matInput (placeholder)="isViewOnly ? '' : 'start typing section, then select'"
-              formControlName="lesserDescription" [matAutocomplete]="auto" style="margin-left:20px !important; width:85%; background:#fffee6"
+              formControlName="lesserDescription"
+              [matAutocomplete]="auto" style="margin-left:20px !important; width:85%; background:#fffee6"
               (keyup)="onLesserDescriptionKeyup()"
               [matTooltip]="form.get('jjDisputedCountRoP').get('lesserDescription').value" />
             <mat-autocomplete #auto="matAutocomplete">
               @for (statute of lesserDescriptionFilteredStatutes; track statute.__statuteString) {
-                <mat-option
-                  [matTooltip]="statute.__statuteString" [value]="statute.__statuteString">
-                {{ statute.__statuteString }}</mat-option>
+                <mat-option [matTooltip]="statute.__statuteString" [value]="statute.__statuteString">
+                  {{ statute.__statuteString }}
+                </mat-option>
               }
-            </mat-autocomplete><br />
+            </mat-autocomplete>
+            <br />
             <mat-tooltip style="font-size:x-small">Hover over section to see full description
             </mat-tooltip>
           </div>
@@ -291,25 +291,19 @@
         <div style="margin-left:20px;">
           <span class="section-grid-header">Finding:<br /></span>
           @if (form?.get('jjDisputedCountRoP').get('finding').value === Finding.Guilty) {
-            <span
-            class="section-grid-text">Guilty as charged</span>
+            <span class="section-grid-text">Guilty as charged</span>
           }
           @if (form?.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty) {
-            <span
-            class="section-grid-text">Not guilty</span>
+            <span class="section-grid-text">Not guilty</span>
           }
           @if (form?.get('jjDisputedCountRoP').get('finding').value === Finding.Cancelled) {
-            <span
-            class="section-grid-text">Cancelled</span>
+            <span class="section-grid-text">Cancelled</span>
           }
           @if (form?.get('jjDisputedCountRoP').get('finding').value === Finding.PaidPriorToAppearance) {
-            <span
-            class="section-grid-text">Paid Prior to Appearance</span>
+            <span class="section-grid-text">Paid Prior to Appearance</span>
           }
           @if (form?.get('jjDisputedCountRoP').get('finding').value === Finding.GuiltyLesser) {
-            <span
-              class="section-grid-text">Not guilty as charged but guilty of lesser / included
-            other offence</span>
+            <span class="section-grid-text">Not guilty as charged but guilty of lesser / includedother offence</span>
           }
           @if (!form?.get('jjDisputedCountRoP').get('finding').value) {
             <span>&nbsp;</span>
@@ -356,8 +350,7 @@
     </ng-container>
     <!-- Final disposition input for court appeaances, form for Non Staff Support Edit mode -->
     @if ((jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !(jjDisputedCount && isSSEditMode)) {
-      <form [formGroup]="form" novalidate
-        >
+      <form [formGroup]="form" novalidate>
         <!-- Fine amount -->
         @if (!isViewOnly) {
           <div class="row">
@@ -366,8 +359,8 @@
             </div>
             <div class="col-md-7">
               <mat-radio-group [(ngModel)]="fineReduction" [ngModelOptions]="{standalone: true}"
-            (change)="updateFineAmount($event)" [disabled]="(!jjDisputedCount ||
-            this.form.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty)">
+                (change)="updateFineAmount($event)"
+                [disabled]="(!jjDisputedCount || this.form.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty)">
                 <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
                 <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
               </mat-radio-group>
@@ -378,9 +371,9 @@
               <span class="section-grid-header">Fine Amount</span>
             </div>
             <div class="col-md-7">
-              <span class="section-grid-text"
-                [hidden]="(fineReduction==='' || !jjDisputedCount.totalFineAmount)">
-              {{ jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
+              <span class="section-grid-text" [hidden]="(fineReduction==='' || !jjDisputedCount.totalFineAmount)">
+                {{ jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}
+              </span>
             </div>
           </div>
           @if (fineReduction==='yes') {
@@ -390,21 +383,19 @@
               </div>
               <div class="col-md-7">
                 <input type="number" formControlName="lesserOrGreaterAmount" max="9999" min="0"
-                  (change)="onChangelesserOrGreaterAmount()" class="section-grid-text final-disposition-text"/><br>
-                  @if (!(form.get('lesserOrGreaterAmount').hasError('min') ||
-                    form.get('lesserOrGreaterAmount').hasError('max'))) {
-                    <span class="section-grid-text text-body"><i>
+                  (change)="onChangelesserOrGreaterAmount()" class="section-grid-text final-disposition-text"/>
+                <br />
+                @if (!(form.get('lesserOrGreaterAmount').hasError('min') || form.get('lesserOrGreaterAmount').hasError('max'))) {
+                  <span class="section-grid-text text-body">
+                    <i>
                       {{ lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0'}} +
                       {{ surcharge | currency:'CAD':'symbol-narrow':'1.0-0' }} (surcharge) =
-                    {{ (lesserOrGreaterAmount + surcharge) | currency:'CAD':'symbol-narrow':'1.0-0' }}</i>
+                      {{ (lesserOrGreaterAmount + surcharge) | currency:'CAD':'symbol-narrow':'1.0-0' }}
+                    </i>
                   </span>
                 }
-                @if (form.get('lesserOrGreaterAmount').hasError('min') ||
-                  form.get('lesserOrGreaterAmount').hasError('max')) {
-                  <span
-                    class="section-grid-header" style="color: red;">
-                    0 < Fine < 10 000
-                  </span>
+                @if (form.get('lesserOrGreaterAmount').hasError('min') || form.get('lesserOrGreaterAmount').hasError('max')) {
+                  <span class="section-grid-header" style="color: red;">0 &lt; Fine &lt; 10 000</span>
                 }
               </div>
             </div>
@@ -416,8 +407,8 @@
               </div>
               <div class="col-md-7">
                 <mat-radio-group [(ngModel)]="inclSurcharge" [ngModelOptions]="{standalone: true}"
-            (change)="updateInclSurcharge($event.value)" [disabled]="(!jjDisputedCount ||
-              this.form.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty)">
+                  (change)="updateInclSurcharge($event.value)"
+                  [disabled]="(!jjDisputedCount || this.form.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty)">
                   <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
                   <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
                 </mat-radio-group>
@@ -431,8 +422,8 @@
             </div>
             <div class="col-md-7">
               <mat-radio-group [(ngModel)]="timeToPay" [ngModelOptions]="{standalone: true}" layout="row"
-            (change)="updateRevisedDueDate($event)" [disabled]="(!jjDisputedCount ||
-            this.form.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty)">
+                (change)="updateRevisedDueDate($event)"
+                [disabled]="(!jjDisputedCount || this.form.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty)">
                 <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
                 <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
               </mat-radio-group>
@@ -446,8 +437,7 @@
               <div class="col-md-7">
                 <input formControlName="revisedDueDate" type="text" placeholder="DD-MMM-YYYY"
                   bsDatepicker class="section-grid-text final-disposition-text"
-            [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true,
-            showWeekNumbers: false, adaptivePosition: true }" />
+                  [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true, showWeekNumbers: false, adaptivePosition: true }" />
               </div>
             </div>
           }
@@ -458,19 +448,20 @@
               <span class="section-grid-header">Fine Amount</span>
             </div>
             <div class="col-md-7">
-              <span class="section-grid-text">{{ jjDisputedCount?.totalFineAmount ? (jjDisputedCount?.ticketedFineAmount |
-              currency:'CAD':'symbol-narrow':'1.0-0') : '' }}</span>
+              <span class="section-grid-text">
+                {{ jjDisputedCount?.totalFineAmount ? (jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0') : '' }}
+              </span>
             </div>
           </div>
-          @if (jjDisputedCount?.lesserOrGreaterAmount &&
-            lesserOrGreaterAmount !== jjDisputedCount?.ticketedFineAmount) {
+          @if (jjDisputedCount?.lesserOrGreaterAmount && lesserOrGreaterAmount !== jjDisputedCount?.ticketedFineAmount) {
             <div class="row">
               <div class="col-md-5">
                 <span class="section-grid-header">Lesser/Greater Amount</span>
               </div>
               <div class="col-md-7">
-                <span class="section-grid-text">{{ jjDisputedCount?.lesserOrGreaterAmount |
-                currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
+                <span class="section-grid-text">
+                  {{ jjDisputedCount?.lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}
+                </span>
               </div>
             </div>
           }
@@ -480,23 +471,23 @@
                 &nbsp;
               </div>
               <div class="col-md-7">
-                <span class="section-grid-text text-body"><i>
-                  {{ lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0'}} +
-                  {{ surcharge | currency:'CAD':'symbol-narrow':'1.0-0' }} (surcharge) =
-                {{ (lesserOrGreaterAmount + surcharge) | currency:'CAD':'symbol-narrow':'1.0-0' }}</i>
+                <span class="section-grid-text text-body">
+                  <i>
+                    {{ lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0'}} +
+                    {{ surcharge | currency:'CAD':'symbol-narrow':'1.0-0' }} (surcharge) =
+                    {{ (lesserOrGreaterAmount + surcharge) | currency:'CAD':'symbol-narrow':'1.0-0' }}
+                  </i>
                 </span>
               </div>
             </div>
           }
-          @if (jjDisputedCount?.lesserOrGreaterAmount &&
-            lesserOrGreaterAmount !== jjDisputedCount?.ticketedFineAmount) {
+          @if (jjDisputedCount?.lesserOrGreaterAmount && lesserOrGreaterAmount !== jjDisputedCount?.ticketedFineAmount) {
             <div class="row">
               <div class="col-md-5">
                 <span class="section-grid-header">Includes Surcharge</span>
               </div>
               <div class="col-md-7">
-                <span class="section-grid-text">{{ jjDisputedCount?.includesSurcharge === IncludesSurcharge.Y ?
-                "Yes" : "No" }}</span>
+                <span class="section-grid-text">{{ jjDisputedCount?.includesSurcharge === IncludesSurcharge.Y ? "Yes" : "No" }}</span>
               </div>
             </div>
           }
@@ -506,12 +497,10 @@
             </div>
             @if (timeToPay) {
               <div class="col-md-7">
-                <span class="section-grid-text">{{ timeToPay === 'no' ? 'No' : 'Yes' }}</span><br>
+                <span class="section-grid-text">{{ timeToPay === 'no' ? 'No' : 'Yes' }}</span>
+                <br />
                 @if ((jjDisputedCount?.revisedDueDate && timeToPay === 'yes')) {
-                  <span class="section-grid-header text-body"
-                    >{{
-                    jjDisputedCount?.revisedDueDate |
-                  date: "dd-MMM-yyyy" : "UTC" }}</span>
+                  <span class="section-grid-header text-body">{{ jjDisputedCount?.revisedDueDate | date: "dd-MMM-yyyy" : "UTC" }}</span>
                 }
               </div>
             }
@@ -530,11 +519,13 @@
               @if (form?.controls.jjDisputedCountRoP?.controls.ssProbationCheckbox.value) {
                 <br />
                 <div style="padding-left: 0.75rem;">
-                  <mat-label class="section-grid-header">Probation</mat-label><br />
-                  <input matInput (placeholder)="isViewOnly ? '' : 'duration'"
-                    formControlName="ssProbationDuration" /><br />
-                    <mat-label class="section-grid-header">Conditions</mat-label><br />
-                    <textarea matInput formControlName="ssProbationConditions" maxlength="500" rows="5"></textarea>
+                  <mat-label class="section-grid-header">Probation</mat-label>
+                  <br />
+                  <input matInput (placeholder)="isViewOnly ? '' : 'duration'" formControlName="ssProbationDuration" />
+                  <br />
+                  <mat-label class="section-grid-header">Conditions</mat-label>
+                  <br />
+                  <textarea matInput formControlName="ssProbationConditions" maxlength="500" rows="5"></textarea>
                 </div>
               }
             </span>
@@ -549,13 +540,16 @@
               @if (form?.controls.jjDisputedCountRoP?.controls.jailCheckbox.value) {
                 <br />
                 <div style="padding-left: 0.75rem;">
-                  <mat-label class="section-grid-header">Duration</mat-label><br />
-                  <input matInput formControlName="jailDuration" /><br />
+                  <mat-label class="section-grid-header">Duration</mat-label>
+                  <br />
+                  <input matInput formControlName="jailDuration" />
+                  <br />
                   <mat-checkbox
                     [checked]="form.get('jjDisputedCountRoP').get('jailIntermittent').value === JailIntermittent.Y"
                     color="primary" (change)="onJailIntermittentChange($event.checked)"
-                    [disabled]="isViewOnly || form.get('jjDisputedCountRoP').get('jailCheckbox').value !== true || !jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"><span
-                  class="section-grid-header">Intermittent</span></mat-checkbox>
+                    [disabled]="isViewOnly || form.get('jjDisputedCountRoP').get('jailCheckbox').value !== true || !jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons">
+                    <span class="section-grid-header">Intermittent</span>
+                  </mat-checkbox>
                 </div>
               }
             </span>
@@ -570,10 +564,12 @@
               @if (form?.controls.jjDisputedCountRoP?.controls.probationCheckbox.value) {
                 <br />
                 <div style="padding-left: 0.75rem;">
-                  <mat-label class="section-grid-header">Duration</mat-label><br />
-                  <input matInput (placeholder)="isViewOnly ? '' : 'duration'"
-                    formControlName="probationDuration" /><br />
-                  <mat-label class="section-grid-header">Conditions</mat-label><br />
+                  <mat-label class="section-grid-header">Duration</mat-label>
+                  <br />
+                  <input matInput (placeholder)="isViewOnly ? '' : 'duration'" formControlName="probationDuration" />
+                  <br />
+                  <mat-label class="section-grid-header">Conditions</mat-label>
+                  <br />
                   <textarea matInput formControlName="probationConditions" maxlength="500" rows="5"></textarea>
                 </div>
               }
@@ -589,43 +585,52 @@
               <br />
               @if (form?.controls.jjDisputedCountRoP?.controls.drivingProhibitionCheckbox.value) {
                 <div style="padding-left: 0.75rem;">
-                  <mat-label class="section-grid-header">Duration</mat-label><br />
-                  <input matInput (placeholder)="isViewOnly ? '' : 'duration'" formControlName="drivingProhibition" /><br />
-                  <mat-label class="section-grid-header">MVA Section</mat-label><br />
+                  <mat-label class="section-grid-header">Duration</mat-label>
+                  <br />
+                  <input matInput (placeholder)="isViewOnly ? '' : 'duration'" formControlName="drivingProhibition" />
+                  <br />
+                  <mat-label class="section-grid-header">MVA Section</mat-label>
+                  <br />
                   <input matInput (placeholder)="isViewOnly ? '' : 'start typing section, then select'"
                     formControlName="drivingProhibitionMVASection" [matAutocomplete]="auto"
                     (keyup)="onDrivingProhibitionMVASectionKeyup()"
                     [matTooltip]="form.get('jjDisputedCountRoP').get('drivingProhibitionMVASection').value" />
                   <mat-autocomplete #auto="matAutocomplete">
                     @for (statute of drivingProhibitionFilteredStatutes; track statute.__statuteString) {
-                      <mat-option
-                        [matTooltip]="statute.__statuteString" [value]="statute.__statuteString">
-                      {{ statute.__statuteString }}</mat-option>
+                      <mat-option [matTooltip]="statute.__statuteString" [value]="statute.__statuteString">
+                        {{ statute.__statuteString }}
+                      </mat-option>
                     }
-                  </mat-autocomplete><br />
-                  <mat-tooltip style="font-size:x-small">Hover over section to see full description
-                  </mat-tooltip>
+                  </mat-autocomplete>
+                  <br />
+                  <mat-tooltip style="font-size:x-small">Hover over section to see full description</mat-tooltip>
                 </div>
               }
             </span>
             <span class="section-grid-cell checkboxes" style="grid-column: span 3;">
               <mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('dismissed').value === Dismissed.Y"
                 color="primary" (change)="onDismissedChange($event.checked)"
-                [disabled]="isViewOnly || !jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"><span class="section-grid-header">Dismissed</span>
+                [disabled]="isViewOnly || !jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons">
+                <span class="section-grid-header">Dismissed</span>
               </mat-checkbox>
               <mat-checkbox
                 [checked]="form.get('jjDisputedCountRoP').get('forWantOfProsecution').value === ForWantOfProsecution.Y"
                 color="primary" (change)="onForWantOfProsecutionChange($event.checked)"
-                [disabled]="isViewOnly || !jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"><span class="section-grid-header">For Want of
-              Prosecution</span></mat-checkbox><br />
+                [disabled]="isViewOnly || !jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons">
+                <span class="section-grid-header">For Want of Prosecution</span></mat-checkbox>
+                <br />
               <mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('withdrawn').value === Withdrawn.Y"
                 color="primary" (change)="onWithdrawnChange($event.checked)"
-                [disabled]="isViewOnly || !jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"><span class="section-grid-header">Withdrawn</span>
+                [disabled]="isViewOnly || !jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons">
+                <span class="section-grid-header">Withdrawn</span>
               </mat-checkbox>
               <mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('abatement').value === Abatement.Y"
                 color="primary" (change)="onAbatementChange($event.checked)"
-                [disabled]="isViewOnly || !jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"><span class="section-grid-header">Abatement</span>
-              </mat-checkbox><br /><br />
+                [disabled]="isViewOnly || !jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons">
+                <span class="section-grid-header">Abatement</span>
+              </mat-checkbox>
+              <br />
+              <br />
               @if (isViewOnly === false) {
                 <mat-checkbox [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"
                   formControlName="stayOfProceedingsByCheckbox" (change)="onStayOfProceedingsByCheck($event.checked)">
@@ -634,7 +639,8 @@
               }
               <br />
               @if (form?.controls.jjDisputedCountRoP?.controls.stayOfProceedingsByCheckbox.value) {
-                <input matInput (placeholder)="isViewOnly ? '' : 'JJ'" formControlName="stayOfProceedingsBy" /><br />
+                <input matInput (placeholder)="isViewOnly ? '' : 'JJ'" formControlName="stayOfProceedingsBy" />
+                <br />
               }
               @if (isViewOnly === false) {
                 <mat-checkbox [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"
@@ -644,13 +650,15 @@
               }
               @if (form?.controls.jjDisputedCountRoP?.controls.otherCheckbox.value) {
                 <br />
-                <input matInput formControlName="other" /><br />
+                <input matInput formControlName="other" />
+                <br />
               }
             </span>
           </ng-container>
           <!-- Remarks -->
           <span class="section-grid-cell" style="grid-column: span 3">
-            <mat-label class="section-grid-header">Remarks</mat-label><br />
+            <mat-label class="section-grid-header">Remarks</mat-label>
+            <br />
             <mat-label class="small-note">
               <i><span style="color:red;">*</span> These comments will be shared to all parties</i>
             </mat-label>
@@ -692,8 +700,7 @@
             <div class="col-8">
               <input formControlName="revisedDueDate" type="text"
                 bsDatepicker class="revised-due-date" placeholder="DD-MMM-YYYY"
-    [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true,
-    showWeekNumbers: false, adaptivePosition: true }" />
+                [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true, showWeekNumbers: false, adaptivePosition: true }" />
             </div>
           </div>
         </form>
@@ -706,8 +713,7 @@
                 <textarea matInput formControlName="ssProbationDuration" maxlength="500" rows="3"></textarea>
                 <mat-hint>500 characters</mat-hint>
                 @if (countRoPForm.controls.ssProbationDuration.hasError('maxlength')) {
-                  <mat-error>{{ "error.max_length" |
-                  translate }}500</mat-error>
+                  <mat-error>{{ "error.max_length" | translate }}500</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -720,8 +726,7 @@
                 <textarea matInput formControlName="ssProbationConditions" maxlength="500" rows="3"></textarea>
                 <mat-hint>500 characters</mat-hint>
                 @if (countRoPForm.controls.ssProbationConditions.hasError('maxlength')) {
-                  <mat-error>{{ "error.max_length"
-                  | translate }}500</mat-error>
+                  <mat-error>{{ "error.max_length" | translate }}500</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -734,8 +739,7 @@
                 <textarea matInput formControlName="jailDuration" maxlength="500" rows="3"></textarea>
                 <mat-hint>500 characters</mat-hint>
                 @if (countRoPForm.controls.jailDuration.hasError('maxlength')) {
-                  <mat-error>{{ "error.max_length" |
-                  translate }}500</mat-error>
+                  <mat-error>{{ "error.max_length" | translate }}500</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -755,8 +759,7 @@
                 <textarea matInput formControlName="probationDuration" maxlength="500" rows="3"></textarea>
                 <mat-hint>500 characters</mat-hint>
                 @if (countRoPForm.controls.probationDuration.hasError('maxlength')) {
-                  <mat-error>{{ "error.max_length" |
-                  translate }}500</mat-error>
+                  <mat-error>{{ "error.max_length" | translate }}500</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -769,8 +772,7 @@
                 <textarea matInput formControlName="probationConditions" maxlength="1000" rows="5"></textarea>
                 <mat-hint>1000 characters</mat-hint>
                 @if (countRoPForm.controls.probationConditions.hasError('maxlength')) {
-                  <mat-error>{{ "error.max_length" |
-                  translate }}1000</mat-error>
+                  <mat-error>{{ "error.max_length" | translate }}1000</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -783,8 +785,7 @@
                 <textarea matInput formControlName="drivingProhibition" maxlength="500" rows="3"></textarea>
                 <mat-hint>500 characters</mat-hint>
                 @if (countRoPForm.controls.drivingProhibition.hasError('maxlength')) {
-                  <mat-error>{{ "error.max_length" |
-                  translate }}500</mat-error>
+                  <mat-error>{{ "error.max_length" | translate }}500</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -797,8 +798,7 @@
                 <textarea matInput formControlName="drivingProhibitionMVASection" maxlength="240" rows="3"></textarea>
                 <mat-hint>240 characters</mat-hint>
                 @if (countRoPForm.controls.drivingProhibitionMVASection.hasError('maxlength')) {
-                  <mat-error>{{
-                  "error.max_length" | translate }}240</mat-error>
+                  <mat-error>{{ "error.max_length" | translate }}240</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -839,8 +839,7 @@
                 <textarea matInput formControlName="stayOfProceedingsBy" maxlength="500" rows="3"></textarea>
                 <mat-hint>500 characters</mat-hint>
                 @if (countRoPForm.controls.stayOfProceedingsBy.hasError('maxlength')) {
-                  <mat-error>{{ "error.max_length" |
-                  translate }}500</mat-error>
+                  <mat-error>{{ "error.max_length" | translate }}500</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -853,8 +852,7 @@
                 <textarea matInput formControlName="other" maxlength="500" rows="3"></textarea>
                 <mat-hint>500 characters</mat-hint>
                 @if (countRoPForm.controls.other.hasError('maxlength')) {
-                  <mat-error>{{ "error.max_length" | translate
-                  }}500</mat-error>
+                  <mat-error>{{ "error.max_length" | translate }}500</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -869,8 +867,7 @@
                 <textarea matInput formControlName="comments" maxlength="4000" rows="8"></textarea>
                 <mat-hint>4000 characters</mat-hint>
                 @if (countForm.controls.comments.hasError('maxlength')) {
-                  <mat-error>{{ "error.max_length" | translate
-                  }}4000</mat-error>
+                  <mat-error>{{ "error.max_length" | translate }}4000</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -882,24 +879,25 @@
     <div style="display: grid; grid-template-columns: 49% 49%">
       <span class="section-jj-grid-cell text-center">
         <p>
-          <span class="section-grid-header">Due date</span><br />
+          <span class="section-grid-header">Due date</span>
+          <br />
           @if (jjDisputeInfo.status == DisputeStatus.Confirmed || jjDisputeInfo.status == DisputeStatus.Review ||
             jjDisputeInfo.status == DisputeStatus.RequireCourtHearing || jjDisputeInfo.status == DisputeStatus.Concluded) {
-            <span class="section-grid-text"
-              >
-            {{ jjDisputedCount?.revisedDueDate | date: "dd-MMM-yyyy" : "UTC" }}</span>
+            <span class="section-grid-text">
+              {{ jjDisputedCount?.revisedDueDate | date: "dd-MMM-yyyy" : "UTC" }}
+            </span>
           }
         </p>
       </span>
       <span class="section-grid-cell text-center">
         <p>
-          <span class="section-grid-header">Total Amount</span><br />
+          <span class="section-grid-header">Total Amount</span>
+          <br />
           @if (jjDisputeInfo.status == DisputeStatus.Confirmed || jjDisputeInfo.status == DisputeStatus.Review ||
             jjDisputeInfo.status == DisputeStatus.RequireCourtHearing || jjDisputeInfo.status == DisputeStatus.Concluded) {
-            <span class="section-grid-text"
-              >
-              {{ jjDisputedCount ? ( jjDisputedCount.totalFineAmount ?
-            (jjDisputedCount.totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0') : '&nbsp;') : '&nbsp;' }}</span>
+            <span class="section-grid-text">
+              {{ jjDisputedCount ? ( jjDisputedCount.totalFineAmount ? (jjDisputedCount.totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0') : '&nbsp;') : '&nbsp;' }}
+            </span>
           }
         </p>
       </span>

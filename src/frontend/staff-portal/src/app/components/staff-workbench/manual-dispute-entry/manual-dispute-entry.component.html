@@ -67,553 +67,574 @@
                         placeholder="XX00000000"
                         oninput="this.value = this.value.toUpperCase()"
                         maxlength="10" />
-                        @if (ticketDetailsForm.controls.ticketNumber.hasError('required')) {
-                          <mat-error>Ticket number is required</mat-error>
+                      @if (ticketDetailsForm.controls.ticketNumber.hasError('required')) {
+                        <mat-error>Ticket number is required</mat-error>
+                      }
+                      @if (ticketDetailsForm.controls.ticketNumber.hasError('pattern')) {
+                        <mat-error>Must be 2 letters followed by 8 digits (e.g., EA12345678)</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <!-- Violation Date -->
+                  <div class="col-md-3">
+                    <mat-form-field class="w-100">
+                      <mat-label>Violation Date</mat-label>
+                      <input matInput formControlName="violationDate" type="text"
+                              placeholder="DD-MMM-YYYY"
+                              bsDatepicker
+                              [maxDate]="todayDate"
+                              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true, showWeekNumbers: false, adaptivePosition: true }" />
+                      @if (ticketDetailsForm.controls.violationDate.hasError('required')) {
+                        <mat-error>Violation date is required</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                  <!-- Violation Time -->
+                  <div class="col-md-3">
+                    <mat-form-field class="w-100">
+                      <mat-label>Violation Time (24-hour format)</mat-label>
+                      <input matInput hidden aria-label="violation time" formControlName="violationTime" />
+                      <ngx-mat-timepicker-field #picker formControlName="violationTime" [format]="24" [value]="ticketDetailsForm.get('violationTime')?.value"></ngx-mat-timepicker-field>
+                      @if (ticketDetailsForm.controls.violationTime.hasError('required')) {
+                        <mat-error>Violation time is required</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <button mat-raised-button color="primary" (click)="onFindTicket()" class="find-ticket-btn" type="button">
+                      <mat-icon>search</mat-icon>
+                      Find Ticket
+                    </button>
+                  </div>
+                </div>
+                <div class="row">
+                  <!-- Court Location -->
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Courthouse Location</mat-label>
+                      <input matInput
+                              formControlName="courtLocation"
+                              [matAutocomplete]="courthouseAuto"
+                              (keyup)="onCourthouseKeyup($event.target.value)" />
+                      <mat-autocomplete #courthouseAuto="matAutocomplete">
+                        @for (courthouse of filteredCourthouses; track courthouse.name) {
+                          <mat-option [value]="courthouse.name">
+                            {{ courthouse.name }}
+                          </mat-option>
                         }
-                        @if (ticketDetailsForm.controls.ticketNumber.hasError('pattern')) {
-                          <mat-error>Must be 2 letters followed by 8 digits (e.g., EA12345678)</mat-error>
+                      </mat-autocomplete>
+                      @if (ticketDetailsForm.controls.courtLocation.hasError('required')) {
+                        <mat-error>Courthouse location is required</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                </div>
+                <h4 class="subsection-title">Name on Ticket</h4>
+                <div class="row">
+                  <!-- Surname -->
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Surname</mat-label>
+                      <input matInput formControlName="disputantSurname" maxlength="30" />
+                      @if (ticketDetailsForm.controls.disputantSurname.hasError('required')) {
+                        <mat-error>Surname is required</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                  <!-- Given Names -->
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Given Name(s)</mat-label>
+                      <input matInput formControlName="disputantGivenNames" maxlength="92" />
+                      @if (ticketDetailsForm.controls.disputantGivenNames.hasError('required')) {
+                        <mat-error>Given name(s) is required</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                </div>
+                <h4 class="subsection-title">Driver's Licence</h4>
+                <div class="row">
+                  <!-- DL Province/State -->
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>DL Province/State</mat-label>
+                      <mat-select formControlName="driversLicenceProvince">
+                        <mat-option [value]="null">-- Select Province/State --</mat-option>
+                        <mat-option [value]="bc.provId">BC</mat-option>
+                        <mat-optgroup label="Other Canadian Provinces">
+                          @for (prov of provinces; track prov.provId) {
+                            <mat-option [value]="prov.provId">
+                              {{ prov.provNm }}
+                            </mat-option>
+                          }
+                        </mat-optgroup>
+                        <mat-optgroup label="US States">
+                          @for (state of states; track state.provId) {
+                            <mat-option [value]="state.provId">
+                              {{ state.provNm }}
+                            </mat-option>
+                          }
+                        </mat-optgroup>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <!-- DL Number -->
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>DL Number</mat-label>
+                      <input matInput formControlName="driversLicenceNumber"
+                              minlength="7"
+                              [maxlength]="ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value === bc.provSeqNo ? 9 : 30"
+                              (keypress)="onKeyPressNumbers($event, ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value === bc.provSeqNo)" />
+                      @if (ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value === bc.provSeqNo) {
+                        <mat-hint>BC: 7-9 digits (required)</mat-hint>
+                      }
+                      @if (ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value && ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value !== bc.provSeqNo) {
+                        <mat-hint>7-30 characters (required)</mat-hint>
+                      }
+                      @if (ticketDetailsForm.controls.driversLicenceNumber.hasError('required')) {
+                        <mat-error>DL number is required when province is selected</mat-error>
+                      }
+                      @if (ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value === bc.provSeqNo && (ticketDetailsForm.controls.driversLicenceNumber.hasError('minlength') || ticketDetailsForm.controls.driversLicenceNumber.hasError('maxlength'))) {
+                        <mat-error>Must be between 7 and 9 digits</mat-error>
+                      }
+                      @if (ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value !== bc.provSeqNo && (ticketDetailsForm.controls.driversLicenceNumber.hasError('minlength') || ticketDetailsForm.controls.driversLicenceNumber.hasError('maxlength'))) {
+                        <mat-error>Must be between 7 and 30 characters</mat-error>
+                      }
+                      @if (ticketDetailsForm.controls.driversLicenceNumber.hasError('pattern')) {
+                        <mat-error>BC DL must be numeric</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        }
+
+        <!-- Step 1: Ticket Counts -->
+        @if (currentStep === 1) {
+          <div class="step-container">
+            <div class="form-section">
+              <div class="section-header">
+                <h3>Ticket Counts</h3>
+              </div>
+              <div class="form-content">
+                @for (count of ticketCounts; track count; let i = $index) {
+                  <div class="count-section">
+                    <div class="count-header">
+                      <h5>Count {{ count.countNo }}</h5>
+                      @if (ticketCounts.length > 1) {
+                        <button mat-icon-button (click)="removeTicketCount(count.countNo)"
+                          type="button"
+                          class="delete-count-btn">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      }
+                    </div>
+                    <div [formGroup]="disputeInfoForm.get('count' + count.countNo)">
+                      <div class="row">
+                        <!-- Act/Regulation -->
+                        <div class="col-md-2">
+                          <div class="act-regulation-display">
+                            <label class="act-label">Act/Regulation</label>
+                            <div class="act-value">{{ disputeInfoForm.get('count' + count.countNo)?.get('actOrRegulationNameCode')?.value || '-' }}</div>
+                          </div>
+                        </div>
+                        <!-- Description (with autocomplete) -->
+                        <div class="col-md-6">
+                          <mat-form-field class="w-100">
+                            <mat-label>Description</mat-label>
+                            <input matInput
+                                  formControlName="description"
+                                  [matAutocomplete]="count.countNo === 1 ? auto1 : count.countNo === 2 ? auto2 : auto3"
+                                  (keyup)="onDescriptionKeyup(count.countNo)"
+                                  (change)="onDescriptionChange(count.countNo, $event.target.value)" />
+                            <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="onDescriptionChange(1, $event.option.value)">
+                              @for (statute of filteredCount1Statutes; track statute.__statuteString) {
+                                <mat-option
+                                  [value]="statute.__statuteString">
+                                  {{ statute.__statuteString }}
+                                </mat-option>
+                              }
+                            </mat-autocomplete>
+                            <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="onDescriptionChange(2, $event.option.value)">
+                              @for (statute of filteredCount2Statutes; track statute.__statuteString) {
+                                <mat-option
+                                  [value]="statute.__statuteString">
+                                  {{ statute.__statuteString }}
+                                </mat-option>
+                              }
+                            </mat-autocomplete>
+                            <mat-autocomplete #auto3="matAutocomplete" (optionSelected)="onDescriptionChange(3, $event.option.value)">
+                              @for (statute of filteredCount3Statutes; track statute.__statuteString) {
+                                <mat-option
+                                  [value]="statute.__statuteString">
+                                  {{ statute.__statuteString }}
+                                </mat-option>
+                              }
+                            </mat-autocomplete>
+                            <mat-error>Description is required</mat-error>
+                          </mat-form-field>
+                        </div>
+                        <!-- Fine Amount -->
+                        <div class="col-md-4">
+                          <mat-form-field class="w-100">
+                            <mat-label>Fine Amount</mat-label>
+                            <input matInput formControlName="ticketedAmount" type="number" min="0" step="0.01" />
+                            <span matPrefix>$&nbsp;</span>
+                            <mat-error>Fine amount is required</mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                }
+                <div class="row">
+                  <div class="col-12">
+                    <button mat-raised-button (click)="addTicketCount()"
+                            type="button"
+                            [disabled]="ticketCounts.length >= 3"
+                            class="add-count-btn">
+                      <mat-icon>add</mat-icon>
+                      Add Count
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Step 2: Contact Information -->
+        @if (currentStep === 2) {
+          <div class="step-container">
+            <div class="form-section">
+              <div class="section-header">
+                <h3>Contact Information</h3>
+              </div>
+              <form [formGroup]="contactInfoForm" class="form-content">
+                <h4 class="subsection-title">Contact Type</h4>
+                <div class="row">
+                  <div class="col-md-12">
+                    <mat-radio-group formControlName="contactTypeCd" class="contact-type-group">
+                      <mat-radio-button [value]="ContactType.Individual">Individual</mat-radio-button>
+                      <mat-radio-button [value]="ContactType.Lawyer">Lawyer</mat-radio-button>
+                      <mat-radio-button [value]="ContactType.Other">Agent or Other</mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                </div>
+                <!-- Lawyer Firm Name (only for lawyers) -->
+                @if (contactInfoForm.get('contactTypeCd').value === ContactType.Lawyer) {
+                  <div class="row">
+                    <div class="col-md-6">
+                      <mat-form-field class="w-100">
+                        <mat-label>Law Firm Name</mat-label>
+                        <input matInput formControlName="contactLawFirmNm" maxlength="200" />
+                        <mat-error>Law firm name is required</mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                }
+                <!-- Contact Name (for Lawyer and Agent, but not Individual) -->
+                @if (contactInfoForm.get('contactTypeCd').value !== ContactType.Individual && contactInfoForm.get('contactTypeCd').value) {
+                  <div class="row">
+                    <div class="col-md-6">
+                      <mat-form-field class="w-100">
+                        @if (contactInfoForm.get('contactTypeCd').value === ContactType.Lawyer) {
+                          <mat-label>Lawyer surname</mat-label>
+                        }
+                        @if (contactInfoForm.get('contactTypeCd').value === ContactType.Other) {
+                          <mat-label>Agent surname</mat-label>
+                        }
+                        <input matInput formControlName="contactSurnameNm" maxlength="30" />
+                        @if (contactInfoForm.get('contactSurnameNm').hasError('required')) {
+                          <mat-error>Required</mat-error>
+                        }
+                        @if (contactInfoForm.get('contactSurnameNm').hasError('maxlength')) {
+                          <mat-error>Maximum 30 characters</mat-error>
+                        }
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                      <mat-form-field class="w-100">
+                        @if (contactInfoForm.get('contactTypeCd').value === ContactType.Lawyer) {
+                          <mat-label>Lawyer given name(s)</mat-label>
+                        }
+                        @if (contactInfoForm.get('contactTypeCd').value === ContactType.Other) {
+                          <mat-label>Agent given name(s)</mat-label>
+                        }
+                        <input matInput formControlName="contactGivenNames" maxlength="92" />
+                        @if (contactInfoForm.get('contactGivenNames').hasError('required')) {
+                          <mat-error>Required</mat-error>
+                        }
+                        @if (contactInfoForm.get('contactGivenNames').hasError('maxlength')) {
+                          <mat-error>Maximum 92 characters</mat-error>
                         }
                       </mat-form-field>
                     </div>
                   </div>
+                }
+                <h4 class="subsection-title">Address</h4>
+                @if (contactInfoForm.get('contactTypeCd').value) {
                   <div class="row">
-                    <!-- Violation Date -->
-                    <div class="col-md-3">
+                    <!-- Address -->
+                    <div class="col-md-12">
                       <mat-form-field class="w-100">
-                        <mat-label>Violation Date</mat-label>
-                        <input matInput formControlName="violationDate" type="text"
-                               placeholder="DD-MMM-YYYY"
-                               bsDatepicker
-                               [maxDate]="todayDate"
-                               [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true, showWeekNumbers: false, adaptivePosition: true }" />
-                          @if (ticketDetailsForm.controls.violationDate.hasError('required')) {
-                            <mat-error>Violation date is required</mat-error>
-                          }
-                        </mat-form-field>
-                      </div>
-                      <!-- Violation Time -->
-                      <div class="col-md-3">
-                        <mat-form-field class="w-100">
-                          <mat-label>Violation Time (24-hour format)</mat-label>
-                          <input matInput hidden aria-label="violation time" formControlName="violationTime" />
-                          <ngx-mat-timepicker-field #picker formControlName="violationTime" [format]="24" [value]="ticketDetailsForm.get('violationTime')?.value"></ngx-mat-timepicker-field>
-                          @if (ticketDetailsForm.controls.violationTime.hasError('required')) {
-                            <mat-error>Violation time is required</mat-error>
-                          }
-                        </mat-form-field>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-3">
-                        <button mat-raised-button color="primary" (click)="onFindTicket()" class="find-ticket-btn" type="button">
-                          <mat-icon>search</mat-icon>
-                          Find Ticket
-                        </button>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <!-- Court Location -->
-                      <div class="col-md-6">
-                        <mat-form-field class="w-100">
-                          <mat-label>Courthouse Location</mat-label>
-                          <input matInput
-                                 formControlName="courtLocation"
-                                 [matAutocomplete]="courthouseAuto"
-                                 (keyup)="onCourthouseKeyup($event.target.value)" />
-                            <mat-autocomplete #courthouseAuto="matAutocomplete">
-                              @for (courthouse of filteredCourthouses; track courthouse.name) {
-                                <mat-option [value]="courthouse.name">
-                                  {{ courthouse.name }}
-                                </mat-option>
-                              }
-                            </mat-autocomplete>
-                            @if (ticketDetailsForm.controls.courtLocation.hasError('required')) {
-                              <mat-error>Courthouse location is required</mat-error>
-                            }
-                          </mat-form-field>
-                        </div>
-                      </div>
-                      <h4 class="subsection-title">Name on Ticket</h4>
-                      <div class="row">
-                        <!-- Surname -->
-                        <div class="col-md-6">
-                          <mat-form-field class="w-100">
-                            <mat-label>Surname</mat-label>
-                            <input matInput formControlName="disputantSurname" maxlength="30" />
-                            @if (ticketDetailsForm.controls.disputantSurname.hasError('required')) {
-                              <mat-error>Surname is required</mat-error>
-                            }
-                          </mat-form-field>
-                        </div>
-                        <!-- Given Names -->
-                        <div class="col-md-6">
-                          <mat-form-field class="w-100">
-                            <mat-label>Given Name(s)</mat-label>
-                            <input matInput formControlName="disputantGivenNames" maxlength="92" />
-                            @if (ticketDetailsForm.controls.disputantGivenNames.hasError('required')) {
-                              <mat-error>Given name(s) is required</mat-error>
-                            }
-                          </mat-form-field>
-                        </div>
-                      </div>
-                      <h4 class="subsection-title">Driver's Licence</h4>
-                      <div class="row">
-                        <!-- DL Province/State -->
-                        <div class="col-md-6">
-                          <mat-form-field class="w-100">
-                            <mat-label>DL Province/State</mat-label>
-                            <mat-select formControlName="driversLicenceProvince">
-                              <mat-option [value]="null">-- Select Province/State --</mat-option>
-                              <mat-option [value]="bc.provId">BC</mat-option>
-                              <mat-optgroup label="Other Canadian Provinces">
-                                @for (prov of provinces; track prov.provId) {
-                                  <mat-option [value]="prov.provId">
-                                    {{ prov.provNm }}
-                                  </mat-option>
-                                }
-                              </mat-optgroup>
-                              <mat-optgroup label="US States">
-                                @for (state of states; track state.provId) {
-                                  <mat-option [value]="state.provId">
-                                    {{ state.provNm }}
-                                  </mat-option>
-                                }
-                              </mat-optgroup>
-                            </mat-select>
-                          </mat-form-field>
-                        </div>
-                        <!-- DL Number -->
-                        <div class="col-md-6">
-                          <mat-form-field class="w-100">
-                            <mat-label>DL Number</mat-label>
-                            <input matInput formControlName="driversLicenceNumber"
-                                   minlength="7"
-                                   [maxlength]="ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value === bc.provSeqNo ? 9 : 30"
-                                   (keypress)="onKeyPressNumbers($event, ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value === bc.provSeqNo)" />
-                              @if (ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value === bc.provSeqNo) {
-                                <mat-hint>BC: 7-9 digits (required)</mat-hint>
-                              }
-                              @if (ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value && ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value !== bc.provSeqNo) {
-                                <mat-hint>7-30 characters (required)</mat-hint>
-                              }
-                              @if (ticketDetailsForm.controls.driversLicenceNumber.hasError('required')) {
-                                <mat-error>DL number is required when province is selected</mat-error>
-                              }
-                              @if (ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value === bc.provSeqNo && (ticketDetailsForm.controls.driversLicenceNumber.hasError('minlength') || ticketDetailsForm.controls.driversLicenceNumber.hasError('maxlength'))) {
-                                <mat-error>Must be between 7 and 9 digits</mat-error>
-                              }
-                              @if (ticketDetailsForm.get('driversLicenceProvinceSeqNo')?.value !== bc.provSeqNo && (ticketDetailsForm.controls.driversLicenceNumber.hasError('minlength') || ticketDetailsForm.controls.driversLicenceNumber.hasError('maxlength'))) {
-                                <mat-error>Must be between 7 and 30 characters</mat-error>
-                              }
-                              @if (ticketDetailsForm.controls.driversLicenceNumber.hasError('pattern')) {
-                                <mat-error>BC DL must be numeric</mat-error>
-                              }
-                            </mat-form-field>
-                          </div>
-                        </div>
-                      </form>
+                        @if (contactInfoForm.get('contactTypeCd').value === ContactType.Individual) {
+                          <mat-label>Mailing address</mat-label>
+                        }
+                        @if (contactInfoForm.get('contactTypeCd').value === ContactType.Lawyer) {
+                          <mat-label>Lawyer mailing address</mat-label>
+                        }
+                        @if (contactInfoForm.get('contactTypeCd').value === ContactType.Other) {
+                          <mat-label>Agent address</mat-label>
+                        }
+                        <input matInput formControlName="address" maxlength="100" />
+                        <mat-error>Address is required</mat-error>
+                      </mat-form-field>
                     </div>
                   </div>
-    }
-
-    <!-- Step 1: Ticket Counts -->
-    @if (currentStep === 1) {
-      <div class="step-container">
-        <div class="form-section">
-          <div class="section-header">
-            <h3>Ticket Counts</h3>
-          </div>
-          <div class="form-content">
-            @for (count of ticketCounts; track count; let i = $index) {
-              <div class="count-section">
-                <div class="count-header">
-                  <h5>Count {{ count.countNo }}</h5>
-                  @if (ticketCounts.length > 1) {
-                    <button mat-icon-button (click)="removeTicketCount(count.countNo)"
-                      type="button"
-                      class="delete-count-btn">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  }
-                </div>
-                <div [formGroup]="disputeInfoForm.get('count' + count.countNo)">
-                  <div class="row">
-                    <!-- Act/Regulation -->
-                    <div class="col-md-2">
-                      <div class="act-regulation-display">
-                        <label class="act-label">Act/Regulation</label>
-                        <div class="act-value">{{ disputeInfoForm.get('count' + count.countNo)?.get('actOrRegulationNameCode')?.value || '-' }}</div>
-                      </div>
-                    </div>
-                    <!-- Description (with autocomplete) -->
-                    <div class="col-md-6">
-                      <mat-form-field class="w-100">
-                        <mat-label>Description</mat-label>
-                        <input matInput
-                               formControlName="description"
-                               [matAutocomplete]="count.countNo === 1 ? auto1 : count.countNo === 2 ? auto2 : auto3"
-                               (keyup)="onDescriptionKeyup(count.countNo)"
-                               (change)="onDescriptionChange(count.countNo, $event.target.value)" />
-                          <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="onDescriptionChange(1, $event.option.value)">
-                            @for (statute of filteredCount1Statutes; track statute.__statuteString) {
-                              <mat-option
-                                [value]="statute.__statuteString">
-                                {{ statute.__statuteString }}
-                              </mat-option>
-                            }
-                          </mat-autocomplete>
-                          <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="onDescriptionChange(2, $event.option.value)">
-                            @for (statute of filteredCount2Statutes; track statute.__statuteString) {
-                              <mat-option
-                                [value]="statute.__statuteString">
-                                {{ statute.__statuteString }}
-                              </mat-option>
-                            }
-                          </mat-autocomplete>
-                          <mat-autocomplete #auto3="matAutocomplete" (optionSelected)="onDescriptionChange(3, $event.option.value)">
-                            @for (statute of filteredCount3Statutes; track statute.__statuteString) {
-                              <mat-option
-                                [value]="statute.__statuteString">
-                                {{ statute.__statuteString }}
-                              </mat-option>
-                            }
-                          </mat-autocomplete>
-                          <mat-error>Description is required</mat-error>
-                        </mat-form-field>
-                      </div>
-                      <!-- Fine Amount -->
-                      <div class="col-md-4">
-                        <mat-form-field class="w-100">
-                          <mat-label>Fine Amount</mat-label>
-                          <input matInput formControlName="ticketedAmount" type="number" min="0" step="0.01" />
-                          <span matPrefix>$&nbsp;</span>
-                          <mat-error>Fine amount is required</mat-error>
-                        </mat-form-field>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              }
-              <div class="row">
-                <div class="col-12">
-                  <button mat-raised-button (click)="addTicketCount()"
-                          type="button"
-                          [disabled]="ticketCounts.length >= 3"
-                          class="add-count-btn">
-                    <mat-icon>add</mat-icon>
-                    Add Count
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      }
-
-      <!-- Step 2: Contact Information -->
-      @if (currentStep === 2) {
-        <div class="step-container">
-          <div class="form-section">
-            <div class="section-header">
-              <h3>Contact Information</h3>
-            </div>
-            <form [formGroup]="contactInfoForm" class="form-content">
-              <h4 class="subsection-title">Contact Type</h4>
-              <div class="row">
-                <div class="col-md-12">
-                  <mat-radio-group formControlName="contactTypeCd" class="contact-type-group">
-                    <mat-radio-button [value]="ContactType.Individual">Individual</mat-radio-button>
-                    <mat-radio-button [value]="ContactType.Lawyer">Lawyer</mat-radio-button>
-                    <mat-radio-button [value]="ContactType.Other">Agent or Other</mat-radio-button>
-                  </mat-radio-group>
-                </div>
-              </div>
-              <!-- Lawyer Firm Name (only for lawyers) -->
-              @if (contactInfoForm.get('contactTypeCd').value === ContactType.Lawyer) {
+                }
                 <div class="row">
+                  <!-- City -->
                   <div class="col-md-6">
                     <mat-form-field class="w-100">
-                      <mat-label>Law Firm Name</mat-label>
-                      <input matInput formControlName="contactLawFirmNm" maxlength="200" />
-                      <mat-error>Law firm name is required</mat-error>
+                      <mat-label>City</mat-label>
+                      <input matInput formControlName="addressCity" maxlength="30" />
+                      <mat-error>City is required</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <!-- Country -->
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Country</mat-label>
+                      <mat-select formControlName="addressCountryId">
+                        <mat-option [value]="canada.ctryId">{{ canada.ctryLongNm }}</mat-option>
+                        <mat-option [value]="usa.ctryId">{{ usa.ctryLongNm }}</mat-option>
+                        @for (country of countries; track country.ctryId) {
+                          <mat-option [value]="country.ctryId">{{ country.ctryLongNm }}</mat-option>
+                        }
+                      </mat-select>
+                      <mat-error>Country is required</mat-error>
                     </mat-form-field>
                   </div>
                 </div>
-              }
-              <!-- Contact Name (for Lawyer and Agent, but not Individual) -->
-              @if (contactInfoForm.get('contactTypeCd').value !== ContactType.Individual && contactInfoForm.get('contactTypeCd').value) {
                 <div class="row">
+                  <!-- Province/State -->
                   <div class="col-md-6">
                     <mat-form-field class="w-100">
-                      @if (contactInfoForm.get('contactTypeCd').value === ContactType.Lawyer) {
-                        <mat-label>Lawyer surname</mat-label>
+                      @if (contactInfoForm.get('addressCountryId').value === canada.ctryId) {
+                        <mat-label>Province</mat-label>
                       }
-                      @if (contactInfoForm.get('contactTypeCd').value === ContactType.Other) {
-                        <mat-label>Agent surname</mat-label>
+                      @if (contactInfoForm.get('addressCountryId').value === usa.ctryId) {
+                        <mat-label>State</mat-label>
                       }
-                      <input matInput formControlName="contactSurnameNm" maxlength="30" />
-                      @if (contactInfoForm.get('contactSurnameNm').hasError('required')) {
-                        <mat-error>Required</mat-error>
+                      @if (contactInfoForm.get('addressCountryId').value === canada.ctryId || contactInfoForm.get('addressCountryId').value === usa.ctryId) {
+                        <mat-select formControlName="addressProvince" (selectionChange)="onAddressProvinceChange($event.value)">
+                          @if (contactInfoForm.get('addressCountryId').value === canada.ctryId) {
+                            <div>
+                              <mat-option [value]="bc.provId">{{ bc.provNm }}</mat-option>
+                              @for (prov of provinces; track prov.provId) {
+                                <mat-option [value]="prov.provId">
+                                  {{ prov.provNm }}
+                                </mat-option>
+                              }
+                            </div>
+                          }
+                          @if (contactInfoForm.get('addressCountryId').value === usa.ctryId) {
+                            <div>
+                              @for (state of states; track state.provId) {
+                                <mat-option [value]="state.provId">
+                                  {{ state.provNm }}
+                                </mat-option>
+                              }
+                            </div>
+                          }
+                        </mat-select>
                       }
-                      @if (contactInfoForm.get('contactSurnameNm').hasError('maxlength')) {
+                      @if (contactInfoForm.get('addressCountryId').value !== usa.ctryId && contactInfoForm.get('addressCountryId').value !== canada.ctryId) {
+                        <mat-label>Province/State</mat-label>
+                      }
+                      @if (contactInfoForm.get('addressCountryId').value !== usa.ctryId && contactInfoForm.get('addressCountryId').value !== canada.ctryId) {
+                        <input matInput formControlName="addressProvince" maxlength="30" />
+                      }
+                      @if (contactInfoForm.controls.addressProvince.hasError('maxlength')) {
                         <mat-error>Maximum 30 characters</mat-error>
                       }
                     </mat-form-field>
                   </div>
+                  <!-- Postal Code -->
                   <div class="col-md-6">
                     <mat-form-field class="w-100">
-                      @if (contactInfoForm.get('contactTypeCd').value === ContactType.Lawyer) {
-                        <mat-label>Lawyer given name(s)</mat-label>
+                      @if (contactInfoForm.get('addressCountryId').value === canada.ctryId) {
+                        <mat-label>Postal code</mat-label>
                       }
-                      @if (contactInfoForm.get('contactTypeCd').value === ContactType.Other) {
-                        <mat-label>Agent given name(s)</mat-label>
-                      }
-                      <input matInput formControlName="contactGivenNames" maxlength="92" />
-                      @if (contactInfoForm.get('contactGivenNames').hasError('required')) {
-                        <mat-error>Required</mat-error>
-                      }
-                      @if (contactInfoForm.get('contactGivenNames').hasError('maxlength')) {
-                        <mat-error>Maximum 92 characters</mat-error>
-                      }
-                    </mat-form-field>
-                  </div>
-                </div>
-              }
-              <h4 class="subsection-title">Address</h4>
-              @if (contactInfoForm.get('contactTypeCd').value) {
-                <div class="row">
-                  <!-- Address -->
-                  <div class="col-md-12">
-                    <mat-form-field class="w-100">
-                      @if (contactInfoForm.get('contactTypeCd').value === ContactType.Individual) {
-                        <mat-label>Mailing address</mat-label>
-                      }
-                      @if (contactInfoForm.get('contactTypeCd').value === ContactType.Lawyer) {
-                        <mat-label>Lawyer mailing address</mat-label>
-                      }
-                      @if (contactInfoForm.get('contactTypeCd').value === ContactType.Other) {
-                        <mat-label>Agent address</mat-label>
-                      }
-                      <input matInput formControlName="address" maxlength="100" />
-                      <mat-error>Address is required</mat-error>
-                    </mat-form-field>
-                  </div>
-                </div>
-              }
-              <div class="row">
-                <!-- City -->
-                <div class="col-md-6">
-                  <mat-form-field class="w-100">
-                    <mat-label>City</mat-label>
-                    <input matInput formControlName="addressCity" maxlength="30" />
-                    <mat-error>City is required</mat-error>
-                  </mat-form-field>
-                </div>
-                <!-- Country -->
-                <div class="col-md-6">
-                  <mat-form-field class="w-100">
-                    <mat-label>Country</mat-label>
-                    <mat-select formControlName="addressCountryId">
-                      <mat-option [value]="canada.ctryId">{{ canada.ctryLongNm }}</mat-option>
-                      <mat-option [value]="usa.ctryId">{{ usa.ctryLongNm }}</mat-option>
-                      @for (country of countries; track country.ctryId) {
-                        <mat-option [value]="country.ctryId">{{ country.ctryLongNm }}</mat-option>
-                      }
-                    </mat-select>
-                    <mat-error>Country is required</mat-error>
-                  </mat-form-field>
-                </div>
-              </div>
-              <div class="row">
-                <!-- Province/State -->
-                <div class="col-md-6">
-                  <mat-form-field class="w-100">
-                    @if (contactInfoForm.get('addressCountryId').value === canada.ctryId) {
-                      <mat-label>Province</mat-label>
-                    }
-                    @if (contactInfoForm.get('addressCountryId').value === usa.ctryId) {
-                      <mat-label>State</mat-label>
-                    }
-                    @if (contactInfoForm.get('addressCountryId').value === canada.ctryId || contactInfoForm.get('addressCountryId').value === usa.ctryId) {
-                      <mat-select formControlName="addressProvince" (selectionChange)="onAddressProvinceChange($event.value)">
-                        @if (contactInfoForm.get('addressCountryId').value === canada.ctryId) {
-                          <div>
-                            <mat-option [value]="bc.provId">{{ bc.provNm }}</mat-option>
-                            @for (prov of provinces; track prov.provId) {
-                              <mat-option [value]="prov.provId">
-                                {{ prov.provNm }}
-                              </mat-option>
-                            }
-                          </div>
-                        }
-                        @if (contactInfoForm.get('addressCountryId').value === usa.ctryId) {
-                          <div>
-                            @for (state of states; track state.provId) {
-                              <mat-option [value]="state.provId">
-                                {{ state.provNm }}
-                              </mat-option>
-                            }
-                          </div>
-                        }
-                      </mat-select>
-                    }
-                    @if (contactInfoForm.get('addressCountryId').value !== usa.ctryId && contactInfoForm.get('addressCountryId').value !== canada.ctryId) {
-                      <mat-label>Province/State</mat-label>
-                    }
-                    @if (contactInfoForm.get('addressCountryId').value !== usa.ctryId && contactInfoForm.get('addressCountryId').value !== canada.ctryId) {
-                      <input matInput formControlName="addressProvince" maxlength="30" />
-                    }
-                    @if (contactInfoForm.controls.addressProvince.hasError('maxlength')) {
-                      <mat-error>Maximum 30 characters</mat-error>
-                    }
-                  </mat-form-field>
-                </div>
-                <!-- Postal Code -->
-                <div class="col-md-6">
-                  <mat-form-field class="w-100">
-                    @if (contactInfoForm.get('addressCountryId').value === canada.ctryId) {
-                      <mat-label>Postal code</mat-label>
-                    }
-                    @if (contactInfoForm.get('addressCountryId').value === usa.ctryId) {
-                      <mat-label>Zip Code</mat-label>
-                    }
-                    @if (contactInfoForm.get('addressCountryId').value !== canada.ctryId && contactInfoForm.get('addressCountryId').value !== usa.ctryId) {
-                      <mat-label>Postal/Zip Code</mat-label>
-                    }
-                    @if (contactInfoForm.get('addressCountryId').value === canada.ctryId) {
-                      <input matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()" minlength="6" formControlName="postalCode" [showMaskTyped]="true" />
-                    }
-                    @if (contactInfoForm.get('addressCountryId').value === usa.ctryId) {
-                      <input matInput mask="00000" oninput="this.value = this.value.toUpperCase()" formControlName="postalCode" [showMaskTyped]="true" />
-                    }
-                    @if (contactInfoForm.get('addressCountryId').value !== usa.ctryId && contactInfoForm.get('addressCountryId').value !== canada.ctryId) {
-                      <input matInput maxlength="6" oninput="this.value = this.value.toUpperCase()" formControlName="postalCode" />
-                    }
-                    @if (contactInfoForm.get('addressCountryId').value === canada.ctryId) {
-                      <mat-hint>Canada: A1A1A1 format</mat-hint>
-                    }
-                    @if (contactInfoForm.get('addressCountryId').value === usa.ctryId) {
-                      <mat-hint>USA: 12345 or 12345-6789 format</mat-hint>
-                    }
-                    @if (contactInfoForm.controls.postalCode.hasError('required')) {
-                      <mat-error>
-                        @if (contactInfoForm.get('addressCountryId').value === canada.ctryId) {
-                          <span>Required (A1A1A1 format)</span>
-                        }
-                        @if (contactInfoForm.get('addressCountryId').value === usa.ctryId) {
-                          <span>Required (12345 format)</span>
-                        }
-                        @if (contactInfoForm.get('addressCountryId').value !== canada.ctryId && contactInfoForm.get('addressCountryId').value !== usa.ctryId) {
-                          <span>Postal/ZIP code may be required depending on country</span>
-                        }
-                      </mat-error>
-                    }
-                    @if (contactInfoForm.controls.postalCode.hasError('pattern') || contactInfoForm.controls.postalCode.hasError('minlength')) {
-                      <mat-error>
-                        @if (contactInfoForm.get('addressCountryId').value === canada.ctryId) {
-                          <span>Invalid format (must be A1A1A1)</span>
-                        }
-                        @if (contactInfoForm.get('addressCountryId').value === usa.ctryId) {
-                          <span>Invalid format (must be 12345)</span>
-                        }
-                        @if (contactInfoForm.get('addressCountryId').value !== canada.ctryId && contactInfoForm.get('addressCountryId').value !== usa.ctryId) {
-                          <span>Invalid format</span>
-                        }
-                      </mat-error>
-                    }
-                  </mat-form-field>
-                </div>
-              </div>
-              <h4 class="subsection-title">Contact Details</h4>
-              @if (contactInfoForm.get('contactTypeCd').value) {
-                <div class="row">
-                  <!-- Email -->
-                  <div class="col-md-6">
-                    <mat-form-field class="w-100">
-                      @if (contactInfoForm.get('contactTypeCd').value === ContactType.Individual) {
-                        <mat-label>Email address</mat-label>
-                      }
-                      @if (contactInfoForm.get('contactTypeCd').value === ContactType.Lawyer) {
-                        <mat-label>Lawyer email address</mat-label>
-                      }
-                      @if (contactInfoForm.get('contactTypeCd').value === ContactType.Other) {
-                        <mat-label>Agent email address</mat-label>
-                      }
-                      <input matInput formControlName="emailAddress" type="email" maxlength="100" />
-                      @if (contactInfoForm.controls.emailAddress.hasError('required')) {
-                        <mat-error>Email address is required</mat-error>
-                      }
-                      @if (contactInfoForm.controls.emailAddress.hasError('email')) {
-                        <mat-error>Invalid email format</mat-error>
-                      }
-                    </mat-form-field>
-                  </div>
-                  <!-- Phone -->
-                  <div class="col-md-6">
-                    <mat-form-field class="w-100">
-                      @if (contactInfoForm.get('contactTypeCd').value === ContactType.Individual) {
-                        <mat-label>Phone number</mat-label>
-                      }
-                      @if (contactInfoForm.get('contactTypeCd').value === ContactType.Lawyer) {
-                        <mat-label>Lawyer phone number</mat-label>
-                      }
-                      @if (contactInfoForm.get('contactTypeCd').value === ContactType.Other) {
-                        <mat-label>Agent phone number</mat-label>
-                      }
-                      @if (contactInfoForm.get('addressCountryId').value === canada.ctryId || contactInfoForm.get('addressCountryId').value === usa.ctryId) {
-                        <input matInput formControlName="homePhoneNumber" mask="(000) 000-0000" [showMaskTyped]="true" />
+                      @if (contactInfoForm.get('addressCountryId').value === usa.ctryId) {
+                        <mat-label>Zip Code</mat-label>
                       }
                       @if (contactInfoForm.get('addressCountryId').value !== canada.ctryId && contactInfoForm.get('addressCountryId').value !== usa.ctryId) {
-                        <input matInput formControlName="homePhoneNumber" mask="99999999999999999999" />
+                        <mat-label>Postal/Zip Code</mat-label>
                       }
-                      @if (contactInfoForm.get('homePhoneNumber')?.hasError('phone')) {
-                        <mat-error>Must be a valid phone number</mat-error>
+                      @if (contactInfoForm.get('addressCountryId').value === canada.ctryId) {
+                        <input matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()" minlength="6" formControlName="postalCode" [showMaskTyped]="true" />
+                      }
+                      @if (contactInfoForm.get('addressCountryId').value === usa.ctryId) {
+                        <input matInput mask="00000" oninput="this.value = this.value.toUpperCase()" formControlName="postalCode" [showMaskTyped]="true" />
+                      }
+                      @if (contactInfoForm.get('addressCountryId').value !== usa.ctryId && contactInfoForm.get('addressCountryId').value !== canada.ctryId) {
+                        <input matInput maxlength="6" oninput="this.value = this.value.toUpperCase()" formControlName="postalCode" />
+                      }
+                      @if (contactInfoForm.get('addressCountryId').value === canada.ctryId) {
+                        <mat-hint>Canada: A1A1A1 format</mat-hint>
+                      }
+                      @if (contactInfoForm.get('addressCountryId').value === usa.ctryId) {
+                        <mat-hint>USA: 12345 or 12345-6789 format</mat-hint>
+                      }
+                      @if (contactInfoForm.controls.postalCode.hasError('required')) {
+                        <mat-error>
+                          @if (contactInfoForm.get('addressCountryId').value === canada.ctryId) {
+                            <span>Required (A1A1A1 format)</span>
+                          }
+                          @if (contactInfoForm.get('addressCountryId').value === usa.ctryId) {
+                            <span>Required (12345 format)</span>
+                          }
+                          @if (contactInfoForm.get('addressCountryId').value !== canada.ctryId && contactInfoForm.get('addressCountryId').value !== usa.ctryId) {
+                            <span>Postal/ZIP code may be required depending on country</span>
+                          }
+                        </mat-error>
+                      }
+                      @if (contactInfoForm.controls.postalCode.hasError('pattern') || contactInfoForm.controls.postalCode.hasError('minlength')) {
+                        <mat-error>
+                          @if (contactInfoForm.get('addressCountryId').value === canada.ctryId) {
+                            <span>Invalid format (must be A1A1A1)</span>
+                          }
+                          @if (contactInfoForm.get('addressCountryId').value === usa.ctryId) {
+                            <span>Invalid format (must be 12345)</span>
+                          }
+                          @if (contactInfoForm.get('addressCountryId').value !== canada.ctryId && contactInfoForm.get('addressCountryId').value !== usa.ctryId) {
+                            <span>Invalid format</span>
+                          }
+                        </mat-error>
                       }
                     </mat-form-field>
                   </div>
                 </div>
-              }
-              <!-- Email Opt-Out Checkbox -->
-              <div class="row mt-3">
-                <div class="col-md-12">
-                  <mat-checkbox color="primary" [(ngModel)]="optOut" [ngModelOptions]="{standalone: true}" (change)="onOptOut()">
-                    The Disputant prefers to be contacted by regular mail.
-                  </mat-checkbox>
-                  @if (optOut) {
-                    <div class="mt-2" style="color: #d32f2f; font-size: 0.85em;">
-                      <mat-icon style="vertical-align: middle; font-size: 18px;">warning</mat-icon>
-                      The Disputant has chosen to not be contacted by email about this dispute. It is recommended to use
-                      email for online ticket disputes so that the Disputant can receive more information about their dispute.
+                <h4 class="subsection-title">Contact Details</h4>
+                @if (contactInfoForm.get('contactTypeCd').value) {
+                  <div class="row">
+                    <!-- Email -->
+                    <div class="col-md-6">
+                      <mat-form-field class="w-100">
+                        @if (contactInfoForm.get('contactTypeCd').value === ContactType.Individual) {
+                          <mat-label>Email address</mat-label>
+                        }
+                        @if (contactInfoForm.get('contactTypeCd').value === ContactType.Lawyer) {
+                          <mat-label>Lawyer email address</mat-label>
+                        }
+                        @if (contactInfoForm.get('contactTypeCd').value === ContactType.Other) {
+                          <mat-label>Agent email address</mat-label>
+                        }
+                        <input matInput formControlName="emailAddress" type="email" maxlength="100" />
+                        @if (contactInfoForm.controls.emailAddress.hasError('required')) {
+                          <mat-error>Email address is required</mat-error>
+                        }
+                        @if (contactInfoForm.controls.emailAddress.hasError('email')) {
+                          <mat-error>Invalid email format</mat-error>
+                        }
+                      </mat-form-field>
                     </div>
-                  }
+                    <!-- Phone -->
+                    <div class="col-md-6">
+                      <mat-form-field class="w-100">
+                        @if (contactInfoForm.get('contactTypeCd').value === ContactType.Individual) {
+                          <mat-label>Phone number</mat-label>
+                        }
+                        @if (contactInfoForm.get('contactTypeCd').value === ContactType.Lawyer) {
+                          <mat-label>Lawyer phone number</mat-label>
+                        }
+                        @if (contactInfoForm.get('contactTypeCd').value === ContactType.Other) {
+                          <mat-label>Agent phone number</mat-label>
+                        }
+                        @if (contactInfoForm.get('addressCountryId').value === canada.ctryId || contactInfoForm.get('addressCountryId').value === usa.ctryId) {
+                          <input matInput formControlName="homePhoneNumber" mask="(000) 000-0000" [showMaskTyped]="true" />
+                        }
+                        @if (contactInfoForm.get('addressCountryId').value !== canada.ctryId && contactInfoForm.get('addressCountryId').value !== usa.ctryId) {
+                          <input matInput formControlName="homePhoneNumber" mask="99999999999999999999" />
+                        }
+                        @if (contactInfoForm.get('homePhoneNumber')?.hasError('phone')) {
+                          <mat-error>Must be a valid phone number</mat-error>
+                        }
+                      </mat-form-field>
+                    </div>
+                  </div>
+                }
+                <!-- Email Opt-Out Checkbox -->
+                <div class="row mt-3">
+                  <div class="col-md-12">
+                    <mat-checkbox color="primary" [(ngModel)]="optOut" [ngModelOptions]="{standalone: true}" (change)="onOptOut()">
+                      The Disputant prefers to be contacted by regular mail.
+                    </mat-checkbox>
+                    @if (optOut) {
+                      <div class="mt-2" style="color: #d32f2f; font-size: 0.85em;">
+                        <mat-icon style="vertical-align: middle; font-size: 18px;">warning</mat-icon>
+                        The Disputant has chosen to not be contacted by email about this dispute. It is recommended to use
+                        email for online ticket disputes so that the Disputant can receive more information about their dispute.
+                      </div>
+                    }
+                  </div>
                 </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      }
-      <!-- Step 3: Dispute Information -->
-      @if (currentStep === 3) {
-        <div class="step-container">
-          <div class="form-section">
-            <div class="section-header">
-              <h3>Dispute Information</h3>
+              </form>
             </div>
-            <form [formGroup]="disputeInfoForm" class="form-content">
-              <div class="row">
-                <!-- Date Submitted -->
-                <div class="col-md-6">
-                  <mat-form-field class="w-100">
-                    <mat-label>Date Submitted</mat-label>
-                    <input matInput formControlName="dateSubmitted" type="text"
-                           placeholder="DD-MMM-YYYY"
-                           bsDatepicker
-                           [maxDate]="maxDateSubmitted"
-                           [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true, showWeekNumbers: false, adaptivePosition: true }" />
+          </div>
+        }
+
+        <!-- Step 3: Dispute Information -->
+        @if (currentStep === 3) {
+          <div class="step-container">
+            <div class="form-section">
+              <div class="section-header">
+                <h3>Dispute Information</h3>
+              </div>
+
+              <form [formGroup]="disputeInfoForm" class="form-content">
+                <!-- Warning when all counts are skipped -->
+                @if (isAllCountsSkipped && visitedSteps.has(3)) {
+                  <div class="row mb-3">
+                    <div class="col-md-12">
+                      <div style="padding: 16px; background-color: #fff3e0; border-left: 4px solid #ff9800; border-radius: 4px;">
+                        <div style="display: flex; align-items: center; color: #e65100;">
+                          <mat-icon style="margin-right: 8px;">warning</mat-icon>
+                          <strong>All counts are skipped</strong>
+                        </div>
+                        <p style="margin-top: 8px; margin-bottom: 0; color: #424242;">
+                          You have selected "Skip this count, no action required" for all counts. 
+                          You must select at least one action on one count to submit a dispute.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                }
+
+                <div class="row">
+                  <!-- Date Submitted -->
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Date Submitted</mat-label>
+                      <input matInput formControlName="dateSubmitted" type="text" 
+                            placeholder="DD-MMM-YYYY"
+                            bsDatepicker
+                            [maxDate]="maxDateSubmitted"
+                            [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', isAnimated: true, showWeekNumbers: false, adaptivePosition: true }" />                
                       <mat-error>Date submitted is required</mat-error>
                     </mat-form-field>
                   </div>
                 </div>
+
                 <h4 class="subsection-title">Court Appearance?</h4>
                 <div class="row">
                   <div class="col-md-12">
@@ -623,28 +644,40 @@
                           <strong>The Disputant <u>does not</u> want to attend a court hearing</strong>
                           <mat-icon matTooltip="Plead guilty and ask for a fine reduction or time to pay for each count." class="info-icon">info</mat-icon>
                         </div>
-                        <mat-radio-button [value]="RequestCourtAppearance.N">
-                          The Disputant agrees that they committed the offence(s) and would like to request a fine reduction and/or time to pay by supplying written reasons to the court for review.
+                        <mat-radio-button [value]="RequestCourtAppearance.N" class="radio-label-wrap">
+                          <span style="white-space: normal; display: inline-block; line-height: 1.5;">
+                            The Disputant agrees they committed the offence(s) and would like to request a fine reduction and/or time to pay by supplying written reasons to the court for review.
+                          </span>
                         </mat-radio-button>
                         <div class="mt-2 ms-4" style="color: red; font-weight: bold; font-style: italic;">
                           See Uploaded Document
                         </div>
                       </div>
+
                       <div class="mb-3">
                         <div class="mb-2">
                           <strong>The Disputant <u>wants</u> their dispute heard at an in-person court hearing</strong>
                           <mat-icon matTooltip="Dispute any count or plead guilty and ask for a fine reduction or more time to pay for any count." class="info-icon">info</mat-icon>
                         </div>
-                        <mat-radio-button [value]="RequestCourtAppearance.Y">
-                          The Disputant wants their dispute heard at an in-person court hearing.
+                        <mat-radio-button [value]="RequestCourtAppearance.Y" class="radio-label-wrap">
+                          <span style="white-space: normal; display: inline-block; line-height: 1.5;">
+                            The Disputant wants their dispute heard at an in-person court hearing.
+                          </span>
                         </mat-radio-button>
+                        <div class="mt-2 ms-4" style="color: red; font-weight: bold; font-style: italic;">
+                          See Uploaded Document
+                        </div>
                       </div>
+
                       @if (disputeInfoForm.get('requestCourtAppearance').touched && disputeInfoForm.get('requestCourtAppearance').hasError('required')) {
-                        <mat-error>You must select an option</mat-error>
+                        <mat-error>
+                          You must select an option
+                        </mat-error>
                       }
                     </mat-radio-group>
                   </div>
                 </div>
+
                 <h4 class="subsection-title">Select Counts in Dispute</h4>
                 @for (count of ticketCounts; track count) {
                   <div class="count-card">
@@ -659,52 +692,60 @@
                         <span class="count-description">{{ disputeInfoForm.get('count' + count.countNo)?.get('description')?.value || 'No description' }}</span>
                       </div>
                     </div>
+                    
                     <div [formGroup]="disputeInfoForm.get('count' + count.countNo)" class="count-actions-content">
+                      
                       <!-- For Written Reasons (No Court Hearing) -->
                       @if (disputeInfoForm.get('requestCourtAppearance').value === RequestCourtAppearance.N && !disputeInfoForm.get('count' + count.countNo).get('__skip').value) {
                         <div>
                           <p class="mb-3"><strong>Please provide additional selections below:</strong></p>
+                          
                           <div class="row">
                             <div class="col-md-12 mb-2">
                               <mat-checkbox [checked]="disputeInfoForm.get('count' + count.countNo).get('requestReduction').value === RequestReduction.Y"
-                                (change)="disputeInfoForm.get('count' + count.countNo).patchValue({requestReduction: $event.checked ? RequestReduction.Y : RequestReduction.N})">
+                                            (change)="disputeInfoForm.get('count' + count.countNo).patchValue({requestReduction: $event.checked ? RequestReduction.Y : RequestReduction.N, __skip: false})">
                                 The Disputant would like to request a fine reduction on this count.
                               </mat-checkbox>
                             </div>
                           </div>
+
                           <div class="row" style="padding-left: 15px; color: #666;">
                             <div class="col-md-12 mb-2">
                               and/or
                             </div>
                           </div>
+
                           <div class="row">
                             <div class="col-md-12 mb-3">
                               <mat-checkbox [checked]="disputeInfoForm.get('count' + count.countNo).get('requestTimeToPay').value === RequestTimeToPay.Y"
-                                (change)="disputeInfoForm.get('count' + count.countNo).patchValue({requestTimeToPay: $event.checked ? RequestTimeToPay.Y : RequestTimeToPay.N})">
+                                            (change)="disputeInfoForm.get('count' + count.countNo).patchValue({requestTimeToPay: $event.checked ? RequestTimeToPay.Y : RequestTimeToPay.N})">
                                 The Disputant would like to request time to pay on this count.
                               </mat-checkbox>
                             </div>
                           </div>
                         </div>
                       }
+
                       <!-- For Court Hearing -->
                       @if (disputeInfoForm.get('requestCourtAppearance').value === RequestCourtAppearance.Y && !disputeInfoForm.get('count' + count.countNo).get('__skip').value) {
                         <div>
                           <p class="mb-3"><strong>Please provide additional selections below:</strong></p>
+                          
                           <div class="row">
                             <div class="col-md-12">
                               <mat-radio-group formControlName="pleaCode" class="plea-radio-group">
-                                <mat-radio-button value="G" class="mb-3">
+                                <mat-radio-button value="G" class="mb-3"
+                                                  (change)="disputeInfoForm.get('count' + count.countNo).patchValue({__skip: false})">
                                   The Disputant agrees they committed this offence and would like to request a fine reduction and/or time to pay on this count.
                                 </mat-radio-button>
                                 <div class="or-divider mb-2">or</div>
-                                <mat-radio-button value="N" class="mb-3">
-                                  The Disputant does not agree they committed this offence, but if found guilty, I may request a fine reduction and/or time to pay on this count.
+                                <mat-radio-button value="N" class="mb-3"
+                                                  (change)="disputeInfoForm.get('count' + count.countNo).patchValue({__skip: false})">
+                                  The Disputant does not agree they committed this offence, but if found guilty, may request a fine reduction and/or time to pay on this count.
                                 </mat-radio-button>
                               </mat-radio-group>
                               @if (disputeInfoForm.get('count' + count.countNo).get('pleaCode').touched && disputeInfoForm.get('count' + count.countNo).get('pleaCode').hasError('required')) {
-                                <mat-error
-                                  style="display: block; margin-top: 8px;">
+                                <mat-error style="display: block; margin-top: 8px;">
                                   You must select one of the options above
                                 </mat-error>
                               }
@@ -712,20 +753,36 @@
                           </div>
                         </div>
                       }
+
                       <!-- Skip Count Option (always shown at bottom) -->
                       <div class="row mt-3">
                         <div class="col-md-12">
-                          <mat-checkbox formControlName="__skip">
+                          <mat-checkbox formControlName="__skip"
+                                        (change)="onSkipChecked(count.countNo, $event.checked)">
                             Skip this count, no action required.
                           </mat-checkbox>
                         </div>
                       </div>
+
+                      <!-- Validation Error Message -->
+                      @if (visitedSteps.has(3) && isCountInvalid(count.countNo)) {
+                        <div class="row mt-2">
+                          <div class="col-md-12">
+                            <mat-error style="display: block;">
+                              <mat-icon style="vertical-align: middle; font-size: 18px; margin-right: 4px;">error</mat-icon>
+                              You must either skip this count or select at least one option above
+                            </mat-error>
+                          </div>
+                        </div>
+                      }
                     </div>
                   </div>
                 }
+
                 <!-- Additional Information section -->
                 <div>
                   <h4 class="subsection-title">Additional Information</h4>
+                  
                   <!-- Consolidated Reason Fields for Written Reasons -->
                   @if (disputeInfoForm.get('requestCourtAppearance').value === RequestCourtAppearance.N) {
                     <div>
@@ -739,6 +796,7 @@
                           </div>
                         </div>
                       }
+
                       @if (getCountsRequestingTimeToPay().length > 0) {
                         <div class="row mt-3">
                           <div class="col-md-12">
@@ -751,6 +809,7 @@
                       }
                     </div>
                   }
+
                   <!-- Court Hearing Additional Info -->
                   @if (disputeInfoForm.get('requestCourtAppearance').value === RequestCourtAppearance.Y) {
                     <div>
@@ -758,14 +817,16 @@
                         <mat-icon style="vertical-align: middle; color: #2196F3;">info</mat-icon>
                         <span style="margin-left: 8px;">The following information is used to schedule enough time for the court hearing. Changes to this information may cause delays.</span>
                       </div>
+
                       <div class="row">
                         <div class="col-md-12">
                           <mat-checkbox [checked]="disputeInfoForm.get('representedByLawyer').value === RepresentedByLawyer.Y"
-                            (change)="onChangeRepresentedByLawyer($event.checked)">
+                                        (change)="onChangeRepresentedByLawyer($event.checked)">
                             The Disputant intends to be represented by a lawyer or agent in court. Enter contact details below.
                           </mat-checkbox>
                         </div>
                       </div>
+
                       <!-- Legal Representation Fields -->
                       @if (disputeInfoForm.get('representedByLawyer').value === RepresentedByLawyer.Y) {
                         <div [formGroup]="legalRepresentationForm">
@@ -813,12 +874,15 @@
                             <div class="col-md-6">
                               <mat-form-field class="w-100">
                                 <mat-label>Lawyer or agent phone number</mat-label>
+                                
                                 @if (contactInfoForm.get('addressCountryId').value === canada.ctryId || contactInfoForm.get('addressCountryId').value === usa.ctryId) {
                                   <input matInput formControlName="lawyerPhoneNumber" mask="(000) 000-0000" [showMaskTyped]="true" />
                                 }
+                                
                                 @if (contactInfoForm.get('addressCountryId').value !== canada.ctryId && contactInfoForm.get('addressCountryId').value !== usa.ctryId) {
                                   <input matInput formControlName="lawyerPhoneNumber" mask="99999999999999999999" />
                                 }
+                                
                                 @if (legalRepresentationForm.get('lawyerPhoneNumber').hasError('required')) {
                                   <mat-error>This field is required</mat-error>
                                 }
@@ -848,6 +912,7 @@
                           </div>
                         </div>
                       }
+
                       <div class="row mt-3">
                         <div class="col-md-12">
                           <mat-checkbox [checked]="disputeInfoForm.get('interpreterRequired').value === InterpreterRequired.Y"
@@ -856,17 +921,24 @@
                           </mat-checkbox>
                         </div>
                       </div>
+
                       @if (disputeInfoForm.get('interpreterRequired').value === InterpreterRequired.Y) {
                         <div>
                           <div class="row mt-3">
                             <div class="col-md-6">
                               <mat-form-field class="w-100">
                                 <mat-label>Interpreter Language</mat-label>
-                                <mat-select formControlName="interpreterLanguageCd">
-                                  @for (language of languages; track language.code) {
-                                    <mat-option [value]="language.code">{{ language.description }}</mat-option>
+                                <input matInput 
+                                      formControlName="interpreterLanguageCd"
+                                      [matAutocomplete]="languageAuto"
+                                      (keyup)="onLanguageKeyup($event.target.value)" />
+                                <mat-autocomplete #languageAuto="matAutocomplete">
+                                  @for (language of filteredLanguages; track language.description) {
+                                    <mat-option [value]="language.description">
+                                      {{ language.description }}
+                                    </mat-option>
                                   }
-                                </mat-select>
+                                </mat-autocomplete>
                                 <mat-error>Language is required</mat-error>
                               </mat-form-field>
                             </div>
@@ -878,6 +950,7 @@
                           </div>
                         </div>
                       }
+
                       <div class="row mt-3">
                         <div class="col-md-12">
                           <mat-checkbox [checked]="disputeInfoForm.get('witnessNo').value > 0"
@@ -886,6 +959,7 @@
                           </mat-checkbox>
                         </div>
                       </div>
+
                       @if (disputeInfoForm.get('witnessNo').value > 0) {
                         <div class="row mt-3">
                           <div class="col-md-6">
@@ -1110,8 +1184,6 @@
           </div>
         }
 
-
-
         <!-- Wizard Navigation Buttons -->
         <div class="wizard-navigation">
           @if (currentStep !== 0) {
@@ -1131,7 +1203,7 @@
           @if (currentStep === steps.length - 1) {
             <button mat-raised-button color="primary"
                     (click)="onSubmit()"
-                    [disabled]="!ticketDetailsForm.valid || !contactInfoForm.valid || !disputeInfoForm.valid"
+                    [disabled]="!isStepValid(4)"
                     class="nav-button submit-final">
               <mat-icon class="align-text-bottom">save</mat-icon>
               Submit Dispute

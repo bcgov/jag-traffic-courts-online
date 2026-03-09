@@ -908,6 +908,20 @@
   }
 }
 
+// Radio button label wrapping for long text content
+:host ::ng-deep .radio-label-wrap {
+  .mat-radio-label {
+    white-space: normal !important;
+    
+    .mat-radio-label-content {
+      white-space: normal !important;
+      display: inline-block;
+      line-height: 1.5;
+      margin-left: 0.5rem;
+    }
+  }
+}
+
 .or-divider {
   padding-left: 30px;
   color: #666;

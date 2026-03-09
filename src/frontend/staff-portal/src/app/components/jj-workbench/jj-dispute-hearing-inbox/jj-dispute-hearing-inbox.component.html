@@ -12,8 +12,6 @@
       <mat-datepicker #fauxPicker></mat-datepicker>
     </mat-form-field>
     <!-- Temp fix for DatetimePicker styles -->
-
-
   </div>
 
   <div class="row">
@@ -21,23 +19,21 @@
       <div style="display:flex; flex-direction: row; justify-content: left;">
         <input matInput [matDatepicker]="picker" [formControl]="appearanceDateFilter" (click)='picker.open()'
           placeholder="Hearing date" style="background-color: #f2f2f2; width:250px; border: 0;" />
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-          <mat-select [formControl]="jjAssignedToFilter" placeholder="choose a jj"
-            style="width:250px; background-color: #f2f2f2;">
-            <mat-option value="unassigned"><i>choose a jj</i></mat-option>
-            <mat-option value=""><i>all JJs</i></mat-option>
-            @for (jj of jjList; track jj.idir) {
-              <mat-option [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i></mat-option>
-            }
-          </mat-select>
-        </div>
-      </div>
-      <div class="col-auto">
-        <app-paging [currentPage]="currentPage" [totalPages]="totalPages" (pageChanged)="onPageChange($event)">
-        </app-paging>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-select [formControl]="jjAssignedToFilter" placeholder="choose a jj" style="width:250px; background-color: #f2f2f2;">
+          <mat-option value="unassigned"><i>choose a jj</i></mat-option>
+          <mat-option value=""><i>all JJs</i></mat-option>
+          @for (jj of jjList; track jj.idir) {
+            <mat-option [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i></mat-option>
+          }
+        </mat-select>
       </div>
     </div>
+    <div class="col-auto">
+      <app-paging [currentPage]="currentPage" [totalPages]="totalPages" (pageChanged)="onPageChange($event)"></app-paging>
+    </div>
+  </div>
 </div>
 <div class="overflow-auto">
   <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
@@ -47,10 +43,9 @@
       </th>
       <td mat-cell *matCellDef="let element">
         {{
-        (element.disputeStatus.code === disputeStatus.InProgress ||
-        element.disputeStatus.code === disputeStatus.Review)
-        ? (element.jjAssignedTo ? getName(element.jjAssignedTo) : 'Unassigned')
-        : ''
+          (element.disputeStatus.code === disputeStatus.InProgress || element.disputeStatus.code === disputeStatus.Review)
+            ? (element.jjAssignedTo ? getName(element.jjAssignedTo) : 'Unassigned')
+            : ''
         }}
       </td>
     </ng-container>
@@ -61,8 +56,7 @@
       </th>
       <td mat-cell *matCellDef="let element">
         @if (isEditable(element)) {
-          <span><a (click)="backWorkbench(element)" href="javascript:void(0)">{{
-          element.ticketNumber }}</a></span>
+          <span><a (click)="backWorkbench(element)" href="javascript:void(0)">{{ element.ticketNumber }}</a></span>
         }
         @if (!isEditable(element)) {
           <span>{{ element.ticketNumber }}</span>
@@ -96,9 +90,7 @@
         <span>{{ element?.appearanceTs | date: "dd-MMM-yyyy hh:mm a" }}</span>
       </td>
     </ng-container>
-
-
-
+    
     <ng-container matColumnDef="appearanceRoomCode">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         <span class="text-start">COURT ROOM</span>
@@ -122,8 +114,7 @@
         <span class="text-start">ACCIDENT</span>
       </th>
       <td mat-cell *matCellDef="let element">
-        <mat-checkbox [checked]="element.accidentYn === yesNo.Yes"
-        [disabled]="true"></mat-checkbox>
+        <mat-checkbox [checked]="element.accidentYn === yesNo.Yes" [disabled]="true"></mat-checkbox>
       </td>
     </ng-container>
 
@@ -132,8 +123,7 @@
         <span class="text-start">MULTIPLE OFFICERS</span>
       </th>
       <td mat-cell *matCellDef="let element">
-        <mat-checkbox [checked]="element.multipleOfficersYn === yesNo.Yes"
-        [disabled]="true"></mat-checkbox>
+        <mat-checkbox [checked]="element.multipleOfficersYn === yesNo.Yes" [disabled]="true"></mat-checkbox>
       </td>
     </ng-container>
 
@@ -143,16 +133,13 @@
       </th>
       <td mat-cell *matCellDef="let element" class="status">
         @if (element.disputeStatus.code === disputeStatus.InProgress) {
-          <span><button mat-rounded-button
-          class="bg-color-in-progress" disabled="true">In Progress</button></span>
+          <span><button mat-rounded-button class="bg-color-in-progress" disabled="true">In Progress</button></span>
         }
         @if (element.disputeStatus.code === disputeStatus.Review) {
-          <span><button mat-rounded-button
-          class="bg-color-review" disabled="true">Review</button></span>
+          <span><button mat-rounded-button class="bg-color-review" disabled="true">Review</button></span>
         }
         @if (element.disputeStatus.code === disputeStatus.HearingScheduled) {
-          <span><button mat-rounded-button
-          class="bg-color-scheduled" disabled="true">Scheduled</button></span>
+          <span><button mat-rounded-button class="bg-color-scheduled" disabled="true">Scheduled</button></span>
         }
       </td>
     </ng-container>
@@ -166,4 +153,3 @@
     </tr>
   </table>
 </div>
-

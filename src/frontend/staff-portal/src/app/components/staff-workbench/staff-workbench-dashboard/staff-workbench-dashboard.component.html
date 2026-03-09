@@ -52,19 +52,15 @@
 }
 @if (showTicket) {
   @if (decidePopup === 'A' && tabSelected.value === 0) {
-    <app-contact-info (backInbox)="backInbox()"
-    [disputeInfo]="disputeInfo"></app-contact-info>
+    <app-contact-info (backInbox)="backInbox()" [disputeInfo]="disputeInfo"></app-contact-info>
   }
   @if (decidePopup === 'E' && tabSelected.value === 0) {
-    <app-ticket-info (backInbox)="backInbox()"
-    [disputeInfo]="disputeInfo"></app-ticket-info>
+    <app-ticket-info (backInbox)="backInbox()" [disputeInfo]="disputeInfo"></app-ticket-info>
   }
   @if (tabSelected.value === 2) {
-    <app-update-request-info (backInbox)="backInbox()"
-    [disputeInfo]="disputeInfo"></app-update-request-info>
+    <app-update-request-info (backInbox)="backInbox()" [disputeInfo]="disputeInfo"></app-update-request-info>
   }
   @if (tabSelected.value === 1 || tabSelected.value === 3) {
-    <app-jj-dispute (backInbox)="backInbox()"
-    [tcoDisputeInfo]="tcoDisputeInfo" [type]="tabTypeSelected" [isViewOnly]="true" [enableStaffSupport]="true"></app-jj-dispute>
+    <app-jj-dispute (backInbox)="backInbox()" [tcoDisputeInfo]="tcoDisputeInfo" [type]="tabTypeSelected" [isViewOnly]="true" [enableStaffSupport]="true"></app-jj-dispute>
   }
 }

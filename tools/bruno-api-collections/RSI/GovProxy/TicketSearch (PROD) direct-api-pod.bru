@@ -1,11 +1,11 @@
 meta {
-  name: TicketSearch (PROD)
+  name: TicketSearch (PROD) direct-api-pod
   type: http
-  seq: 1
+  seq: 5
 }
 
 get {
-  url: http://tickets.gov.bc.ca/api/tickets/search?ticketNumber=EA00836032&time=06:55
+  url: http://dev-route-for-citizen-api-0198bb-prod.apps.silver.devops.gov.bc.ca/api/tickets/search?ticketNumber=EA00836032&time=06:55
   body: none
   auth: none
 }

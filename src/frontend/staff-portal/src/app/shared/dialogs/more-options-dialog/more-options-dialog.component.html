@@ -4,7 +4,7 @@
   }
   @if (options.titleKey) {
     <strong class="flex-grow-1">
-      <span >{{ options.titleKey | translate }}</span>
+      <span>{{ options.titleKey | translate }}</span>
     </strong>
   }
 </h3>
@@ -15,30 +15,23 @@
   <ng-template appDialogContent></ng-template>
 </mat-dialog-content>
 <mat-dialog-actions style="width:100%">
-
   <div style="width:100%; float: right;">
-
     @if (!options.actionHide) {
-      <button type="button" color="primary" class="large" mat-flat-button (click)="onChangeOfPlea()"
-        class="large">
+      <button type="button" color="primary" class="large" mat-flat-button (click)="onChangeOfPlea()" class="large">
         Change Plea
       </button>
     }
 
     @if (!options.actionHide) {
-      <button type="button" color="primary" mat-flat-button (click)="onRequireCourtHearing()"
-        class="large">
+      <button type="button" color="primary" mat-flat-button (click)="onRequireCourtHearing()" class="large">
         Adjourn/Require Hearing
       </button>
     }
 
     @if (!options.cancelHide) {
-      <button type="button" mat-flat-button color="primary" [mat-dialog-close]="false" cdkFocusInitial
-        class="large">
+      <button type="button" mat-flat-button color="primary" [mat-dialog-close]="false" cdkFocusInitial class="large">
         {{ options.cancelTextKey }}
       </button>
     }
-
   </div>
-
 </mat-dialog-actions>

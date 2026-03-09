@@ -5,7 +5,9 @@
       <span style="float:right">
         {{ disputantUpdateRequest.createdTs | date: "dd-MMM-yyyy" }}
       </span>
-    </span><br /><br />
+    </span>
+    <br />
+    <br />
     @if (requestReadable === true) {
       <div style="display: grid; grid-template-columns: auto auto auto">
         <span class="section-grid-cell">
@@ -55,6 +57,7 @@
     @if (requestReadable === false) {
       <div>Update Request Unreadable {{ disputantUpdateRequest.updateJson }}</div>
     }
-    <br /><br />
+    <br />
+    <br />
   </mat-card>
 }

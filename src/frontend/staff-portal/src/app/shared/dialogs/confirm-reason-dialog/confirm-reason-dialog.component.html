@@ -45,15 +45,17 @@
               </span>
               <span class="section-jj-grid-cell">
                 <span class="section-grid-header">Total Amount: </span>
-                <span class="section-grid-text">{{ (count.totalFineAmount ?
-                (count.totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0') : '') }}</span>
+                <span class="section-grid-text">
+                  {{ (count.totalFineAmount ? (count.totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0') : '') }}
+                </span>
               </span>
               <span class="section-jj-grid-cell">
                 <span class="section-grid-header">Due Date: </span>
                 <span class="section-grid-text">
                   {{
-                  count.jjDisputedCountRoP?.finding === 'NOT_GUILTY' ? '' :
-                  (count.revisedDueDate ? (count.revisedDueDate | date: "dd-MMM-yyyy" : "UTC") : '')
+                    count.jjDisputedCountRoP?.finding === 'NOT_GUILTY'
+                      ? ''
+                      : (count.revisedDueDate ? (count.revisedDueDate | date: "dd-MMM-yyyy" : "UTC") : '')
                   }}
                 </span>
               </span>
@@ -72,8 +74,7 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   @if (!options.cancelHide) {
-    <button mat-stroked-button color="primary" [mat-dialog-close]="false" cdkFocusInitial
-      class="my-2 me-2">
+    <button mat-stroked-button color="primary" [mat-dialog-close]="false" cdkFocusInitial class="my-2 me-2">
       {{ options.cancelTextKey }}
     </button>
   }
@@ -81,8 +82,7 @@
   <span class="flex-grow-1"></span>
 
   @if (!options.actionHide) {
-    <button mat-flat-button color="primary" (click)="onConfirm()"
-      class="my-2 me-1" [disabled]="reasonForm.valid === false">
+    <button mat-flat-button color="primary" (click)="onConfirm()" class="my-2 me-1" [disabled]="reasonForm.valid === false">
       {{ options.actionTextKey }}
     </button>
   }
