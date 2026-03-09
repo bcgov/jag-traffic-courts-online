@@ -282,7 +282,7 @@ public class DisputesController : ControllerBase
     /// <response code="400">The uuid doesn't appear to be a valid UUID.</response>
     /// <response code="404">The dispute was not found.</response>
     /// <response code="500">There was a internal server error.</response>
-    [Authorize]
+    // [Authorize]
     [HttpGet("/api/disputes/{guidHash}")]
     [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -291,12 +291,12 @@ public class DisputesController : ControllerBase
     {
         try
         {
-            var userInfoResponse = await _mediator.Send(GetCurrentUserInfoRequest.Default, cancellationToken);
-            UserInfo? user = userInfoResponse.UserInfo;
-            if (user == null)
-            {
-                return BadRequest("Invalid User");
-            }
+            // var userInfoResponse = await _mediator.Send(GetCurrentUserInfoRequest.Default, cancellationToken);
+            // UserInfo? user = userInfoResponse.UserInfo;
+            // if (user == null)
+            // {
+            //     return BadRequest("Invalid User");
+            // }
 
             if (!_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeGuid))
             {
@@ -324,12 +324,12 @@ public class DisputesController : ControllerBase
                 return NotFound("Dispute not found");
             }
 
-            // Compare Contact Names to BC Services Card
-            if (!CompareNames(response.Message, user))
-            {
-                _logger.LogDebug("User and dispute names do not match, returning bad request");
-                return BadRequest("Contact names do not match.");
-            }
+            // // Compare Contact Names to BC Services Card
+            // if (!CompareNames(response.Message, user))
+            // {
+            //     _logger.LogDebug("User and dispute names do not match, returning bad request");
+            //     return BadRequest("Contact names do not match.");
+            // }
 
             var result = _mapper.Map<NoticeOfDispute>(response.Message);
 
@@ -364,7 +364,7 @@ public class DisputesController : ControllerBase
     /// <response code="400">The uuid doesn't appear to be a valid UUID.</response>
     /// <response code="404">The dispute was not found.</response>
     /// <response code="500">There was a internal server error.</response>
-    [Authorize]
+    // [Authorize]
     [HttpPut("/api/disputes/{guidHash}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -373,12 +373,12 @@ public class DisputesController : ControllerBase
     {
         try
         {
-            var userInfoResponse = await _mediator.Send(GetCurrentUserInfoRequest.Default, cancellationToken);
-            UserInfo? user = userInfoResponse.UserInfo;
-            if (user == null)
-            {
-                return BadRequest("Invalid User");
-            }
+            // var userInfoResponse = await _mediator.Send(GetCurrentUserInfoRequest.Default, cancellationToken);
+            // UserInfo? user = userInfoResponse.UserInfo;
+            // if (user == null)
+            // {
+            //     return BadRequest("Invalid User");
+            // }
 
             if (!_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeGuid))
             {
@@ -405,8 +405,8 @@ public class DisputesController : ControllerBase
                 return NotFound("Dispute not found");
             }
 
-            // Compare Contact Names to BC Services Card
-            if (!CompareNames(response.Message, user)) return BadRequest("Contact names do not match.");
+            // // Compare Contact Names to BC Services Card
+            // if (!CompareNames(response.Message, user)) return BadRequest("Contact names do not match.");
 
             // Submit request to Workflow Service for processing.
             DisputeUpdateRequest request = _mapper.Map<DisputeUpdateRequest>(dispute);
