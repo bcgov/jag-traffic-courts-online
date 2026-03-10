@@ -22,6 +22,7 @@ import {
   DisputeCountRequestCourtAppearance,
   DisputeCountRequestReduction,
   DisputeCountRequestTimeToPay,
+  DisputeCountPleaCode,
   RoadSafetyTicketSearchService,
   Ticket,
   Count
@@ -55,12 +56,14 @@ export class ManualDisputeEntryComponent implements OnInit {
   public filteredCount2Statutes: Statute[];
   public filteredCount3Statutes: Statute[];
   public filteredCourthouses: any[] = [];
+  public filteredLanguages: any[] = [];
   
   public ContactType = DisputeContactTypeCd;
   public RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
   public RepresentedByLawyer = DisputeRepresentedByLawyer;
   public InterpreterRequired = DisputeInterpreterRequired;
   public SignatoryType = DisputeSignatoryType;
+  public Plea = DisputeCountPleaCode;
   public RequestReduction = DisputeCountRequestReduction;
   public RequestTimeToPay = DisputeCountRequestTimeToPay;
   
@@ -109,6 +112,7 @@ export class ManualDisputeEntryComponent implements OnInit {
     // Subscribe to languages
     this.lookupsService.languages$.subscribe(languages => {
       this.languages = languages || [];
+      this.filteredLanguages = languages || [];
     });
 
     if (this.config.provincesAndStates) {
@@ -131,6 +135,7 @@ export class ManualDisputeEntryComponent implements OnInit {
     this.initializeLegalRepresentationForm();
     this.addTicketCount(); // Start with one count
     this.filteredCourthouses = this.lookupsService.courthouseAgencies;
+    this.filteredLanguages = this.languages;
     
     // Initialize filtered statutes arrays
     this.filteredCount1Statutes = this.lookupsService.statutes;
@@ -628,7 +633,7 @@ export class ManualDisputeEntryComponent implements OnInit {
     }
 
     // Update the count object
-    count.actOrRegulationNameCode = statute.actCode;
+    count.actOrRegulationNameCode = statute.actCode?.toUpperCase() || statute.actCode;
     count.section = statute.sectionText;
     count.subsection = statute.subsectionText;
     count.paragraph = statute.paragraphText;
@@ -637,7 +642,7 @@ export class ManualDisputeEntryComponent implements OnInit {
 
     // Update the form control values
     countFormGroup.patchValue({
-      actOrRegulationNameCode: statute.actCode,
+      actOrRegulationNameCode: statute.actCode?.toUpperCase() || statute.actCode,
       section: statute.sectionText,
       subsection: statute.subsectionText,
       paragraph: statute.paragraphText,
@@ -776,16 +781,12 @@ export class ManualDisputeEntryComponent implements OnInit {
     switch (stepIndex) {
       case 0: // Ticket Details (basic info only, no counts)
         return this.isTicketBasicInfoValid();
-      case 1: // Ticket Counts
-        return this.isTicketCountsValid();
+      case 1: // Ticket Counts (just the count details: description, act code, amount)
+        return this.isTicketCountsBasicInfoValid();
       case 2: // Contact Information
         return this.contactInfoForm.valid;
-      case 3: // Dispute Information
-        // Check disputeInfoForm and conditionally check legalRepresentationForm
-        const disputeFormValid = this.disputeInfoForm.valid;
-        const lawyerSelected = this.disputeInfoForm.get('representedByLawyer')?.value === DisputeRepresentedByLawyer.Y;
-        const legalFormValid = lawyerSelected ? this.legalRepresentationForm.valid : true;
-        return disputeFormValid && legalFormValid;
+      case 3: // Dispute Information (includes dispute actions: skip, reduction, timeToPay, pleaCode)
+        return this.isDisputeInfoValid();
       case 4: // Review & Submit
         return this.validateAllForms();
       default:
@@ -807,11 +808,10 @@ export class ManualDisputeEntryComponent implements OnInit {
            (!hasProvince || form.get('driversLicenceNumber')?.valid);
   }
 
-  private isTicketCountsValid(): boolean {
+  private isTicketCountsBasicInfoValid(): boolean {
     if (this.ticketCounts.length === 0) return false;
     
-    const requestCourtAppearance = this.disputeInfoForm.get('requestCourtAppearance')?.value;
-    
+    // For Step 1: Only validate basic count info (description, act code, amount)
     for (const count of this.ticketCounts) {
       const countFormGroup = this.disputeInfoForm.get(`count${count.countNo}`);
       if (!countFormGroup) return false;
@@ -819,14 +819,47 @@ export class ManualDisputeEntryComponent implements OnInit {
       const description = countFormGroup.get('description')?.value;
       const actCode = countFormGroup.get('actOrRegulationNameCode')?.value;
       const amount = countFormGroup.get('ticketedAmount')?.value;
-      const isSkipped = countFormGroup.get('__skip')?.value;
       
       // Basic fields must always be filled
       if (!description || !actCode || !amount) {
         return false;
       }
+    }
+    
+    return true;
+  }
+
+  private isDisputeInfoValid(): boolean {
+    // First check if basic dispute form fields are valid
+    const basicDisputeFormValid = this.disputeInfoForm.get('requestCourtAppearance')?.valid &&
+                                   this.disputeInfoForm.get('dateSubmitted')?.valid;
+    
+    if (!basicDisputeFormValid) return false;
+
+    // Check dispute actions for each count
+    const disputeActionsValid = this.isDisputeActionsValid();
+    if (!disputeActionsValid) return false;
+
+    // Check legal representation if lawyer is selected
+    const lawyerSelected = this.disputeInfoForm.get('representedByLawyer')?.value === DisputeRepresentedByLawyer.Y;
+    const legalFormValid = lawyerSelected ? this.legalRepresentationForm.valid : true;
+    
+    return legalFormValid;
+  }
+
+  private isDisputeActionsValid(): boolean {
+    if (this.ticketCounts.length === 0) return false;
+    
+    const requestCourtAppearance = this.disputeInfoForm.get('requestCourtAppearance')?.value;
+    
+    // Check each count's dispute actions
+    for (const count of this.ticketCounts) {
+      const countFormGroup = this.disputeInfoForm.get(`count${count.countNo}`);
+      if (!countFormGroup) return false;
       
-      // If count is not skipped, validate dispute actions based on court appearance choice
+      const isSkipped = countFormGroup.get('__skip')?.value;
+      
+      // Each count must be either skipped OR have an action selected
       if (!isSkipped) {
         if (requestCourtAppearance === this.RequestCourtAppearance.Y) {
           // For court hearing: pleaCode is required
@@ -834,9 +867,22 @@ export class ManualDisputeEntryComponent implements OnInit {
           if (!pleaCode) {
             return false;
           }
+        } else if (requestCourtAppearance === this.RequestCourtAppearance.N) {
+          // For written reasons: either requestReduction OR requestTimeToPay must be 'Y'
+          const requestReduction = countFormGroup.get('requestReduction')?.value;
+          const requestTimeToPay = countFormGroup.get('requestTimeToPay')?.value;
+          if (requestReduction !== this.RequestReduction.Y && requestTimeToPay !== this.RequestTimeToPay.Y) {
+            return false;
+          }
         }
       }
     }
+    
+    // Prevent submission if all counts are skipped
+    if (this.isAllCountsSkipped) {
+      return false;
+    }
+    
     return true;
   }
 
@@ -969,7 +1015,7 @@ export class ManualDisputeEntryComponent implements OnInit {
         
         if (countFormGroup) {
           // Determine act or regulation code
-          const actOrRegCode = count.act || '';
+          const actOrRegCode = count.act?.toUpperCase() || count.act || '';
           
           // Build description string
           const description = count.description || '';
@@ -1047,10 +1093,91 @@ export class ManualDisputeEntryComponent implements OnInit {
 
     const legalFormValid = lawyerSelected ? this.legalRepresentationForm.valid : true;
 
-    return this.ticketDetailsForm.valid && 
-           this.contactInfoForm.valid && 
+    // Validate all steps
+    const ticketBasicInfoValid = this.isTicketBasicInfoValid();
+    const ticketCountsBasicInfoValid = this.isTicketCountsBasicInfoValid();
+    const contactInfoValid = this.contactInfoForm.valid;
+    const disputeActionsValid = this.isDisputeActionsValid();
+
+    return ticketBasicInfoValid && 
+           ticketCountsBasicInfoValid &&
+           contactInfoValid && 
            this.disputeInfoForm.valid &&
+           disputeActionsValid &&
            legalFormValid;
+  }
+
+  /**
+   * Check if all counts are skipped
+   */
+  public get isAllCountsSkipped(): boolean {
+    if (this.ticketCounts.length === 0) return false;
+    return this.ticketCounts.filter(count => {
+      const countFormGroup = this.disputeInfoForm.get(`count${count.countNo}`);
+      return countFormGroup?.get('__skip')?.value === true;
+    }).length === this.ticketCounts.length;
+  }
+
+  /**
+   * Handle skip checkbox change
+   */
+  public onSkipChecked(countNo: number, value: boolean) {
+    const countFormGroup = this.disputeInfoForm.get(`count${countNo}`);
+    if (!countFormGroup) return;
+
+    if (value) {
+      // When skipping, set plea code to G and clear other selections
+      countFormGroup.patchValue({
+        pleaCode: this.Plea.G,
+        requestReduction: this.RequestReduction.N,
+        requestTimeToPay: this.RequestTimeToPay.N
+      });
+    } else {
+      // When unskipping, clear plea code
+      countFormGroup.patchValue({
+        pleaCode: null
+      });
+    }
+
+    // Show warning dialog if all counts are now skipped
+    if (this.isAllCountsSkipped) {
+      const data: DialogOptions = {
+        titleKey: 'Warning',
+        actionType: 'warn',
+        messageKey: `You have selected "Skip this count, no action required" for all counts on this ticket. No dispute request will be created. If the disputant does not pay or dispute their ticket within 30 days, they will be deemed to have plead guilty and will be required to pay the full offence amount. Please review your selection(s) if you intend to file a dispute.`,
+        actionTextKey: 'Close',
+        cancelHide: true
+      };
+      this.dialog.open(ConfirmDialogComponent, { data });
+    }
+  }
+
+  /**
+   * Check if a count is invalid (neither skipped nor has an action selected)
+   */
+  public isCountInvalid(countNo: number): boolean {
+    const countFormGroup = this.disputeInfoForm.get(`count${countNo}`);
+    if (!countFormGroup) return false;
+
+    const isSkipped = countFormGroup.get('__skip')?.value;
+    const requestCourtAppearance = this.disputeInfoForm.get('requestCourtAppearance')?.value;
+    
+    // If count is skipped, it's valid
+    if (isSkipped) return false;
+
+    // If not skipped, check if an action is selected
+    if (requestCourtAppearance === this.RequestCourtAppearance.Y) {
+      // For court hearing: pleaCode must be selected
+      const pleaCode = countFormGroup.get('pleaCode')?.value;
+      return !pleaCode;
+    } else if (requestCourtAppearance === this.RequestCourtAppearance.N) {
+      // For written reasons: either requestReduction OR requestTimeToPay must be 'Y'
+      const requestReduction = countFormGroup.get('requestReduction')?.value;
+      const requestTimeToPay = countFormGroup.get('requestTimeToPay')?.value;
+      return requestReduction !== this.RequestReduction.Y && requestTimeToPay !== this.RequestTimeToPay.Y;
+    }
+
+    return false;
   }
 
   private submitDispute() {
@@ -1222,17 +1349,21 @@ export class ManualDisputeEntryComponent implements OnInit {
     return this.disputeCounts.map((count, index) => {
       const countFormData = this.disputeInfoForm.get(`count${count.countNo}`).value;
       
-      // Determine pleaCode based on requestReduction value:
-      // 'Y' = "I agree I committed this offence..." → Guilty plea
-      // 'N' = "I do not agree I committed this offence..." → Not Guilty plea
-      // 'UNKNOWN' or null = Skip count → Unknown plea
+      // Determine pleaCode based on skip status and request flags
+      // This logic matches the citizen portal dispute-stepper.component.ts
       let pleaCode: any;
-      if (countFormData.requestReduction === DisputeCountRequestReduction.Y) {
-        pleaCode = 'G'; // Guilty
-      } else if (countFormData.requestReduction === DisputeCountRequestReduction.N) {
-        pleaCode = 'N'; // Not Guilty
+      const isSkipped = countFormData.__skip;
+      
+      if (isSkipped) {
+        // Skipped counts are treated as guilty plea with no action
+        pleaCode = this.Plea.G;
+      } else if (countFormData.requestTimeToPay === this.RequestTimeToPay.Y || 
+                 countFormData.requestReduction === this.RequestReduction.Y) {
+        // Guilty plea with time to pay or reduction request
+        pleaCode = this.Plea.G;
       } else {
-        pleaCode = 'UNKNOWN'; // Skip or unknown
+        // Not guilty - disputing the charge
+        pleaCode = this.Plea.N;
       }
       
       return {
@@ -1568,5 +1699,25 @@ export class ManualDisputeEntryComponent implements OnInit {
    */
   public onCourthouseKeyup(searchText: string) {
     this.filteredCourthouses = this.filterCourthouses(searchText);
+  }
+
+  /**
+   * Filters languages based on the search text
+   */
+  public filterLanguages(searchText: string): any[] {
+    if (!searchText || searchText.trim() === '') {
+      return this.languages;
+    }
+    const filterValue = searchText.toLowerCase();
+    return this.languages.filter(language => 
+      language.description?.toLowerCase().includes(filterValue)
+    );
+  }
+
+  /**
+   * Handles language keyup event for autocomplete filtering
+   */
+  public onLanguageKeyup(searchText: string) {
+    this.filteredLanguages = this.filterLanguages(searchText);
   }
 }
