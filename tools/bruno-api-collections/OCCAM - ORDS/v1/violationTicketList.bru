@@ -1,18 +1,21 @@
 meta {
-  name: Retrieve a record from occam/v1 (2)
+  name: violationTicketList
   type: http
-  seq: 5
+  seq: 28
 }
 
 get {
-  url: {{v1_baseUrl}}/cities
+  url: {{v1_baseUrl}}/violationTicketList
   body: none
   auth: inherit
 }
 
 params:query {
-  ~countryId: 
-  ~provSeqNo: 
+  ~excludeStatus: 
+  ~fromDate: 
+  ~issueTime: 
+  ~noticeOfDisputeGuid: 
+  ~ticketNumber: 
 }
 
 example {
@@ -20,12 +23,15 @@ example {
   description: The queried record.
   
   request: {
-    url: {{v1_baseUrl}}/cities
+    url: {{v1_baseUrl}}/violationTicketList
     method: GET
     mode: none
     params:query: {
-      ~countryId: 
-      ~provSeqNo: 
+      ~excludeStatus: 
+      ~fromDate: 
+      ~issueTime: 
+      ~noticeOfDisputeGuid: 
+      ~ticketNumber: 
     }
   }
   

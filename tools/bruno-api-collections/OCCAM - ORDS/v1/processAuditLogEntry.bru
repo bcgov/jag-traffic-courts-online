@@ -1,11 +1,11 @@
 meta {
-  name: Create a new record on occam/v1 (6)
+  name: processAuditLogEntry
   type: http
-  seq: 24
+  seq: 17
 }
 
 post {
-  url: {{v1_baseUrl}}/unassignViolationTicket
+  url: {{v1_baseUrl}}/processAuditLogEntry
   body: none
   auth: inherit
 }
@@ -15,7 +15,7 @@ example {
   description: The successfully created record.
   
   request: {
-    url: {{v1_baseUrl}}/unassignViolationTicket
+    url: {{v1_baseUrl}}/processAuditLogEntry
     method: POST
     mode: none
   }

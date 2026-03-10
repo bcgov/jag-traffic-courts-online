@@ -1,13 +1,17 @@
 meta {
-  name: Retrieve a record from occam/v1 (9)
+  name: auditLogEntryList
   type: http
-  seq: 16
+  seq: 4
 }
 
 get {
-  url: {{v1_baseUrl}}/ping
+  url: {{v1_baseUrl}}/auditLogEntryList
   body: none
   auth: inherit
+}
+
+params:query {
+  ~ticketNumber: 
 }
 
 example {
@@ -15,9 +19,12 @@ example {
   description: The queried record.
   
   request: {
-    url: {{v1_baseUrl}}/ping
+    url: {{v1_baseUrl}}/auditLogEntryList
     method: GET
     mode: none
+    params:query: {
+      ~ticketNumber: 
+    }
   }
   
   response: {

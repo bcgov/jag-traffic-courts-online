@@ -1,17 +1,13 @@
 meta {
-  name: Retrieve a record from occam/v1 (8)
+  name: countries
   type: http
-  seq: 15
+  seq: 6
 }
 
 get {
-  url: {{v1_baseUrl}}/outgoingEmailList
+  url: {{v1_baseUrl}}/countries
   body: none
   auth: inherit
-}
-
-params:query {
-  ~ticketNumber: 
 }
 
 example {
@@ -19,12 +15,9 @@ example {
   description: The queried record.
   
   request: {
-    url: {{v1_baseUrl}}/outgoingEmailList
+    url: {{v1_baseUrl}}/countries
     method: GET
     mode: none
-    params:query: {
-      ~ticketNumber: 
-    }
   }
   
   response: {

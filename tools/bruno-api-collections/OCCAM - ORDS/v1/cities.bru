@@ -1,13 +1,18 @@
 meta {
-  name: Retrieve a record from occam/v1 (3)
+  name: cities
   type: http
-  seq: 6
+  seq: 5
 }
 
 get {
-  url: {{v1_baseUrl}}/countries
+  url: {{v1_baseUrl}}/cities
   body: none
   auth: inherit
+}
+
+params:query {
+  ~countryId: 
+  ~provSeqNo: 
 }
 
 example {
@@ -15,9 +20,13 @@ example {
   description: The queried record.
   
   request: {
-    url: {{v1_baseUrl}}/countries
+    url: {{v1_baseUrl}}/cities
     method: GET
     mode: none
+    params:query: {
+      ~countryId: 
+      ~provSeqNo: 
+    }
   }
   
   response: {

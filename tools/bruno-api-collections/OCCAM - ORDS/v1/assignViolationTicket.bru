@@ -1,11 +1,11 @@
 meta {
-  name: Create a new record on occam/v1 (7)
+  name: assignViolationTicket
   type: http
-  seq: 29
+  seq: 3
 }
 
 post {
-  url: {{v1_baseUrl}}/violationTicketStatus
+  url: {{v1_baseUrl}}/assignViolationTicket
   body: none
   auth: inherit
 }
@@ -15,7 +15,7 @@ example {
   description: The successfully created record.
   
   request: {
-    url: {{v1_baseUrl}}/violationTicketStatus
+    url: {{v1_baseUrl}}/assignViolationTicket
     method: POST
     mode: none
   }

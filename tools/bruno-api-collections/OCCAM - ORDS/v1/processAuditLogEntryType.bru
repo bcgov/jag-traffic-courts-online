@@ -1,11 +1,11 @@
 meta {
-  name: Create a new record on occam/v1 (POST)
+  name: processAuditLogEntryType
   type: http
-  seq: 13
+  seq: 18
 }
 
 post {
-  url: {{v1_baseUrl}}/disputeUpdateRequestStatus
+  url: {{v1_baseUrl}}/processAuditLogEntryType
   body: none
   auth: inherit
 }
@@ -15,7 +15,7 @@ example {
   description: The successfully created record.
   
   request: {
-    url: {{v1_baseUrl}}/disputeUpdateRequestStatus
+    url: {{v1_baseUrl}}/processAuditLogEntryType
     method: POST
     mode: none
   }

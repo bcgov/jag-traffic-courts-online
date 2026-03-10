@@ -1,11 +1,11 @@
 meta {
-  name: Create a new record on occam/v1 (3)
+  name: processOutgoingEmail
   type: http
-  seq: 19
+  seq: 20
 }
 
 post {
-  url: {{v1_baseUrl}}/processDisputeUpdateRequest
+  url: {{v1_baseUrl}}/processOutgoingEmail
   body: none
   auth: inherit
 }
@@ -15,7 +15,7 @@ example {
   description: The successfully created record.
   
   request: {
-    url: {{v1_baseUrl}}/processDisputeUpdateRequest
+    url: {{v1_baseUrl}}/processOutgoingEmail
     method: POST
     mode: none
   }

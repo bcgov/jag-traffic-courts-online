@@ -1,17 +1,13 @@
 meta {
-  name: Retrieve a record from occam/v1 (GET)
+  name: languages
   type: http
-  seq: 4
+  seq: 14
 }
 
 get {
-  url: {{v1_baseUrl}}/auditLogEntryList
+  url: {{v1_baseUrl}}/languages
   body: none
   auth: inherit
-}
-
-params:query {
-  ~ticketNumber: 
 }
 
 example {
@@ -19,12 +15,9 @@ example {
   description: The queried record.
   
   request: {
-    url: {{v1_baseUrl}}/auditLogEntryList
+    url: {{v1_baseUrl}}/languages
     method: GET
     mode: none
-    params:query: {
-      ~ticketNumber: 
-    }
   }
   
   response: {

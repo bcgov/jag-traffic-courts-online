@@ -1,17 +1,13 @@
 meta {
-  name: Retrieve a record from occam/v1 (5)
+  name: auditLogEntryTypes
   type: http
-  seq: 11
+  seq: 2
 }
 
 get {
-  url: {{v1_baseUrl}}/disputeUpdateRequest
+  url: {{v1_baseUrl}}/auditLogEntryTypes
   body: none
   auth: inherit
-}
-
-params:query {
-  ~disputeUpdateRequestId: 
 }
 
 example {
@@ -19,12 +15,9 @@ example {
   description: The queried record.
   
   request: {
-    url: {{v1_baseUrl}}/disputeUpdateRequest
+    url: {{v1_baseUrl}}/auditLogEntryTypes
     method: GET
     mode: none
-    params:query: {
-      ~disputeUpdateRequestId: 
-    }
   }
   
   response: {

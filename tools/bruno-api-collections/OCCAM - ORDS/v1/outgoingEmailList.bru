@@ -1,20 +1,16 @@
 meta {
-  name: Retrieve a record from occam/v1 (4)
+  name: outgoingEmailList
   type: http
-  seq: 10
+  seq: 15
 }
 
 get {
-  url: {{v1_baseUrl}}/disputeList
+  url: {{v1_baseUrl}}/outgoingEmailList
   body: none
   auth: inherit
 }
 
 params:query {
-  ~excludeStatus: 
-  ~fromDate: 
-  ~issueTime: 
-  ~noticeOfDisputeGuid: 
   ~ticketNumber: 
 }
 
@@ -23,14 +19,10 @@ example {
   description: The queried record.
   
   request: {
-    url: {{v1_baseUrl}}/disputeList
+    url: {{v1_baseUrl}}/outgoingEmailList
     method: GET
     mode: none
     params:query: {
-      ~excludeStatus: 
-      ~fromDate: 
-      ~issueTime: 
-      ~noticeOfDisputeGuid: 
       ~ticketNumber: 
     }
   }

@@ -1,11 +1,11 @@
 meta {
-  name: Retrieve a record from occam/v1 (13)
+  name: disputeList
   type: http
-  seq: 28
+  seq: 10
 }
 
 get {
-  url: {{v1_baseUrl}}/violationTicketList
+  url: {{v1_baseUrl}}/disputeList
   body: none
   auth: inherit
 }
@@ -23,7 +23,7 @@ example {
   description: The queried record.
   
   request: {
-    url: {{v1_baseUrl}}/violationTicketList
+    url: {{v1_baseUrl}}/disputeList
     method: GET
     mode: none
     params:query: {

@@ -1,11 +1,11 @@
 meta {
-  name: Remove a record from occam/v1 (DELETE)
+  name: deleteDisputeUpdateRequest
   type: http
-  seq: 8
+  seq: 7
 }
 
 delete {
-  url: {{v1_baseUrl}}/deleteViolationTicket
+  url: {{v1_baseUrl}}/deleteDisputeUpdateRequest
   body: none
   auth: inherit
 }
@@ -15,7 +15,7 @@ example {
   description: Deleted result.
   
   request: {
-    url: {{v1_baseUrl}}/deleteViolationTicket
+    url: {{v1_baseUrl}}/deleteDisputeUpdateRequest
     method: DELETE
     mode: none
   }

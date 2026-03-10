@@ -1,11 +1,11 @@
 meta {
-  name: Create or update a record on occam/v1 (PUT)
+  name: updateAuditLogEntryType
   type: http
-  seq: 26
+  seq: 25
 }
 
 put {
-  url: {{v1_baseUrl}}/updateDisputeUpdateRequest
+  url: {{v1_baseUrl}}/updateAuditLogEntryType
   body: none
   auth: inherit
 }
@@ -15,7 +15,7 @@ example {
   description: The successfully updated record.
   
   request: {
-    url: {{v1_baseUrl}}/updateDisputeUpdateRequest
+    url: {{v1_baseUrl}}/updateAuditLogEntryType
     method: PUT
     mode: none
   }
@@ -40,7 +40,7 @@ example {
   description: The successfully created record.
   
   request: {
-    url: {{v1_baseUrl}}/updateDisputeUpdateRequest
+    url: {{v1_baseUrl}}/updateAuditLogEntryType
     method: PUT
     mode: none
   }

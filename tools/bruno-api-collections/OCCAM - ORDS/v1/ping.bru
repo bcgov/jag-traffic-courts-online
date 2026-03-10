@@ -1,11 +1,11 @@
 meta {
-  name: Retrieve a record from occam/v1 (11)
+  name: ping
   type: http
-  seq: 23
+  seq: 16
 }
 
 get {
-  url: {{v1_baseUrl}}/statutes
+  url: {{v1_baseUrl}}/ping
   body: none
   auth: inherit
 }
@@ -15,7 +15,7 @@ example {
   description: The queried record.
   
   request: {
-    url: {{v1_baseUrl}}/statutes
+    url: {{v1_baseUrl}}/ping
     method: GET
     mode: none
   }
