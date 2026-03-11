@@ -129,6 +129,7 @@
             <mat-label *ngIf="!isUSA && !isCA">Province/State</mat-label>
 
             <mat-select *ngIf="isCA || isUSA" [formControl]="provinceFormControl">
+              <mat-option *ngIf="mode === DisputeFormMode.UPDATE" [value]="null"></mat-option>
               <div *ngIf="isCA">
                 <mat-option [value]="bc">{{ bc.provNm }}</mat-option>
                 <mat-option *ngFor="let province of provinces" [value]="province">{{ province.provNm }}
@@ -153,6 +154,7 @@
           <mat-form-field class="w-100">
             <mat-label>Country</mat-label>
             <mat-select [formControl]="countryFormControl">
+              <mat-option *ngIf="mode === DisputeFormMode.UPDATE" [value]="null"></mat-option>
               <mat-option [value]="canada">{{ canada.ctryLongNm }}</mat-option>
               <mat-option [value]="usa">{{ usa.ctryLongNm }}</mat-option>
               <mat-option *ngFor="let country of countries" [value]="country">{{ country.ctryLongNm

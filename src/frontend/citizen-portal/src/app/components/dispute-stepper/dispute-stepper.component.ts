@@ -164,6 +164,12 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       };
     });
     this.legalRepresentationForm = this.noticeOfDisputeService.getLegalRepresentationForm(this.ticket);
+
+    if (this.mode === DisputeFormMode.UPDATE) {
+      this.clearFormValidators(this.form);
+      this.clearFormValidators(this.legalRepresentationForm);
+      this.clearFormValidators(this.signatureBoxForm);
+    }
   }
 
   ngAfterViewInit(): void {
@@ -189,6 +195,19 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     }
   }
 
+  get isContactFormValid(): boolean {
+    return this.mode === DisputeFormMode.UPDATE || this.form?.valid;
+  }
+
+  private clearFormValidators(form: FormGroup): void {
+    Object.keys(form.controls).forEach(key => {
+      form.controls[key].clearValidators();
+      form.controls[key].updateValueAndValidity();
+    });
+    form.clearValidators();
+    form.updateValueAndValidity();
+  }
+
   private getCountFormInitValue(count): DisputeCount {
     return { ...this.countFormDefaultValue, ...count };
   }
@@ -207,7 +226,9 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   }
 
   async onStepSave() {
-    let isValid = this.formUtilsService.checkValidity(this.form);
+    let isValid = this.mode === DisputeFormMode.UPDATE
+      ? true
+      : this.formUtilsService.checkValidity(this.form);
 
     if (this.stepper.selectedIndex === this.countStepIndex) {
       this.counts.forEach(count => {
@@ -256,8 +277,9 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     this.countsActions = this.noticeOfDisputeService.getCountsActions(this.counts.map(i => i.form.value));
     this.additionalForm = this.noticeOfDisputeService.getAdditionalForm(this.ticket);
     if (this.mode === DisputeFormMode.UPDATE) {
-      this.additionalForm = this.noticeOfDisputeService.getAdditionalForm(this.noticeOfDispute);
-      if (this.additionalForm.controls.witness_no?.value > 0) this.additionalForm.controls.__witness_present.setValue(true);
+      this.additionalForm = this.noticeOfDisputeService.getAdditionalForm({});
+      this.clearFormValidators(this.additionalForm);
+      return;
     }
 
     if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.N && this.countsActions.request_reduction.length > 0) {

@@ -166,7 +166,9 @@ export class DisputeService {
   }
 
   goToUpdateDispute(params: QueryParamsForSearch): void {
-    this.store.dispatch(AuthStore.Actions.Authorize({ redirectUrl: this.getUpdateDisputeUrl(params) }));
+    this.router.navigate([AppRoutes.disputePath(AppRoutes.UPDATE_DISPUTE)], {
+      queryParams: { ...params },
+    })
   }
 
   private getUpdateDisputeUrl(params: QueryParamsForSearch): string {

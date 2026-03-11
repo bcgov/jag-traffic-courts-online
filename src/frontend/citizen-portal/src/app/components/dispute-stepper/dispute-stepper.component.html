@@ -3,12 +3,12 @@
     <mat-icon>done</mat-icon>
   </ng-template>
   <!-- disputant -->
-  <mat-step [completed]="form.valid">
+  <mat-step [completed]="isContactFormValid">
     <ng-template matStepLabel>Contact information</ng-template>
     <app-page>
       <app-disputant-form [form]="form" [mode]="mode"></app-disputant-form>
 
-      <app-stepper-footer [disableSave]="!form.valid" (save)="disputeStepper.next()" (back)="onStepCancel()"
+      <app-stepper-footer [disableSave]="!isContactFormValid" (save)="disputeStepper.next()" (back)="onStepCancel()"
         [secondaryActionButtonIcon]="previousButtonIcon" [secondaryActionButtonKey]="previousButtonKey"
         [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true"></app-stepper-footer>
     </app-page>
