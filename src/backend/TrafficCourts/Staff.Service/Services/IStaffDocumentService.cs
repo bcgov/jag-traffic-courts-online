@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using TrafficCourts.Coms.Client;
+using TrafficCourts.Domain.Models;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -27,11 +28,29 @@ public interface IStaffDocumentService
     /// <summary>
     /// Retrieves a file with data and details through COMS service for the given unique file ID
     /// </summary>
-    /// <param name="fileId"></param>
+    /// <param name="fileId">The document identifier.</param>
+    /// <param name="checkVirusScan">Whether to validate the file has passed the virus scan.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>COMS File Object</returns>
     /// <exception cref="ObjectManagementServiceException">Unable to return file through COMS</exception>
-    Task<Coms.Client.File> GetFileAsync(Guid fileId, CancellationToken cancellationToken);
+    Task<Coms.Client.File> GetFileAsync(Guid fileId, bool checkVirusScan, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Updates a given document with the specified properties.
+    /// </summary>
+    /// <param name="fileId">The document identifier.</param>
+    /// <param name="updatedProperties">The new document properties.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException">The fileId or the file data is missing.</exception>
+    /// <exception cref="MetadataInvalidKeyException">A key contains an invalid character</exception>
+    /// <exception cref="MetadataTooLongException">The total length of the metadata is too long</exception>
+    /// <exception cref="TagKeyEmptyException"></exception>
+    /// <exception cref="TagKeyTooLongException"></exception>
+    /// <exception cref="TagValueTooLongException"></exception>
+    /// <exception cref="TooManyTagsException"></exception>
+    /// <exception cref="ObjectManagementServiceException">Error executing the service call.</exception>
+    Task UpdateFileAsync(Guid fileId, DocumentProperties updatedProperties, CancellationToken cancellationToken);
 
     /// <summary>
     /// Deletes the specified file through COMS service for the given unique file ID

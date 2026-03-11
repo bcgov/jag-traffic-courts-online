@@ -212,7 +212,7 @@ public class DocumentControllerTest
         //file.Metadata.Add("virus-scan-status", "clean");
         var filename = file.FileName;
         comsService
-            .Setup(_ => _.GetFileAsync(guid, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetFileAsync(guid, true, It.IsAny<CancellationToken>()))
             .ReturnsAsync(file);
         var mockLogger = new Mock<ILogger<DocumentController>>();
         DocumentController sut = new(comsService.Object, mockLogger.Object);
@@ -236,7 +236,7 @@ public class DocumentControllerTest
         //file.Metadata.Add("ticket-number", "AO38375804");
         var filename = file.FileName;
         comsService
-            .Setup(_ => _.GetFileAsync(guid, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetFileAsync(guid, true, It.IsAny<CancellationToken>()))
             .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
         var mockLogger = new Mock<ILogger<DocumentController>>();
         DocumentController sut = new(comsService.Object, mockLogger.Object);
@@ -263,7 +263,7 @@ public class DocumentControllerTest
         //mockFile.Metadata.Add("virus-scan-status", "unscanned");
         var filename = file.FileName;
         comsService
-            .Setup(_ => _.GetFileAsync(guid, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetFileAsync(guid, true, It.IsAny<CancellationToken>()))
             .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
         var mockLogger = new Mock<ILogger<DocumentController>>();
         DocumentController sut = new(comsService.Object, mockLogger.Object);

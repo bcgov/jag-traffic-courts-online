@@ -206,7 +206,7 @@ public class DocumentController : StaffControllerBase
 
         try
         {
-            Coms.Client.File file = await _documentService.GetFileAsync(fileId, cancellationToken);
+            Coms.Client.File file = await _documentService.GetFileAsync(fileId, true, cancellationToken);
 
             var stream = file.Data;
             // Reset position to the beginning of the stream
@@ -241,6 +241,220 @@ public class DocumentController : StaffControllerBase
         {
             _logger.LogError(e, "Error retrieving the document");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+    
+    /// <summary>
+    /// Updates document metadata.
+    /// </summary>
+    /// <param name="fileId">Unique identifier for a specific document.</param>
+    /// <param name="documentType">The type of document.</param>
+    /// <param name="documentStatus">The status of the document.</param>
+    /// <param name="cancellationToken"></param>
+    /// <response code="200">The metadata has been updated.</response>
+    /// <response code="400">The request was not well formed.</response>
+    /// <response code="401">Unauthenticated.</response>
+    /// <response code="403">Forbidden, requires jjdispute:update permission.</response>
+    /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
+    /// <returns></returns>
+    [HttpPut]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
+    public async Task<IActionResult> UpdateAsync(
+        [Required]
+        Guid fileId,
+        [FromHeader]
+        [Required]
+        string documentType,
+        [FromHeader]
+        [Required]
+        DocumentStatus documentStatus,
+        CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Updating document metadata");
+
+        try
+        {
+            ValidateParameters();
+            
+            DocumentProperties properties = new()
+            {
+                DocumentType = documentType,
+                DocumentStatus = documentStatus,
+            };
+            
+            await _documentService.UpdateFileAsync(fileId, properties, cancellationToken);
+            return Ok();
+        }
+        catch (FileNotFoundException)
+        {
+            return NotFound();
+        }
+        catch (ArgumentException e)
+        {
+            string parameter = e.ParamName ?? "";
+            _logger.LogError(e, "Could not update document because parameter {Parameter} was invalid", parameter);
+            ProblemDetails problemDetails = new()
+            {
+                Status = (int)HttpStatusCode.BadRequest,
+                Title = e.Source + ": Exception Invoking COMS - Invalid Parameter",
+                Detail = "Invalid Parameter: " + parameter,
+                Instance = HttpContext.Request.Path,
+                Extensions =
+                {
+                    ["errors"] = new[] { e.Message },
+                },
+            };
+
+            return new ObjectResult(problemDetails);
+        }
+        catch (Coms.Client.MetadataInvalidKeyException e)
+        {
+            string key = e.Key ?? "is null";
+            _logger.LogError(e, "Could not update document because a metadata {Key} was invalid", key);
+            ProblemDetails problemDetails = new()
+            {
+                Status = (int)HttpStatusCode.BadRequest,
+                Title = e.Source + ": Exception Invoking COMS - Invalid Metadata Key",
+                Detail = "Invalid Key: " + key,
+                Instance = HttpContext.Request.Path,
+                Extensions =
+                {
+                    ["errors"] = new[] { e.Message },
+                },
+            };
+
+            return new ObjectResult(problemDetails);
+        }
+        catch (Coms.Client.MetadataTooLongException e)
+        {
+            _logger.LogError(e, "Could not update document because metadata was too long");
+            ProblemDetails problemDetails = new()
+            {
+                Status = (int)HttpStatusCode.BadRequest,
+                Title = e.Source + ": Exception Invoking COMS - Metadata Too Long",
+                Instance = HttpContext.Request.Path,
+                Extensions =
+                {
+                    ["errors"] = new[] { e.Message },
+                },
+            };
+
+            return new ObjectResult(problemDetails);
+        }
+        catch (Coms.Client.TagKeyEmptyException e)
+        {
+            _logger.LogError(e, "Could not update document because tag key was empty");
+            ProblemDetails problemDetails = new()
+            {
+                Status = (int)HttpStatusCode.BadRequest,
+                Title = e.Source + ": Exception Invoking COMS - Tag Key Empty",
+                Instance = HttpContext.Request.Path,
+                Extensions =
+                {
+                    ["errors"] = new[] { e.Message },
+                },
+            };
+
+            return new ObjectResult(problemDetails);
+        }
+        catch (Coms.Client.TagKeyTooLongException e)
+        {
+            _logger.LogError(e, "Could not update document because a tag {Key} was too long", e.Key);
+            ProblemDetails problemDetails = new()
+            {
+                Status = (int)HttpStatusCode.BadRequest,
+                Title = e.Source + ": Exception Invoking COMS - Tag Key Too Long",
+                Detail = "Invalid Key: " + e.Key,
+                Instance = HttpContext.Request.Path,
+                Extensions =
+                {
+                    ["errors"] = new[] { e.Message },
+                },
+            };
+
+            return new ObjectResult(problemDetails);
+        }
+        catch (Coms.Client.TagValueTooLongException e)
+        {
+            _logger.LogError(e, "Could not update document because tag {Value} was too long", e.Value);
+            ProblemDetails problemDetails = new()
+            {
+                Status = (int)HttpStatusCode.BadRequest,
+                Title = e.Source + ": Exception Invoking COMS - Tag Value Too Long",
+                Detail = "Tag value: " + e.Value + " is too long for Key: " + e.Key,
+                Instance = HttpContext.Request.Path,
+                Extensions =
+                {
+                    ["errors"] = new[] { e.Message },
+                },
+            };
+
+            return new ObjectResult(problemDetails);
+        }
+        catch (Coms.Client.TooManyTagsException e)
+        {
+            _logger.LogError(e, "Could not update document because there were too many tags. TagCount: {Count}", e.TagCount);
+            ProblemDetails problemDetails = new()
+            {
+                Status = (int)HttpStatusCode.BadRequest,
+                Title = e.Source + ": Exception Invoking COMS - Too Many Tags",
+                Detail = "Tag count: " + e.TagCount,
+                Instance = HttpContext.Request.Path,
+                Extensions =
+                {
+                    ["errors"] = new[] { e.Message },
+                },
+            };
+
+            return new ObjectResult(problemDetails);
+        }
+        catch (Coms.Client.ObjectManagementServiceException e)
+        {
+            _logger.LogError(e, "Could not update document because of ObjectManagementServiceException");
+            ProblemDetails problemDetails = new()
+            {
+                Status = (int)HttpStatusCode.InternalServerError,
+                Title = e.Source + ": Error Invoking COMS",
+                Instance = HttpContext.Request.Path,
+                Extensions =
+                {
+                    ["errors"] = e.InnerException?.Message is { } innerExceptionMessage
+                        ? new[] { e.Message, innerExceptionMessage }
+                        : new[] { e.Message },
+                },
+            };
+
+            return new ObjectResult(problemDetails);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error updating the document");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+
+        void ValidateParameters()
+        {
+            if (documentType is not ("Adjournment" or "Certified Extract" or "Other"))
+            {
+                throw new ArgumentException("Unknown document type", nameof(documentType));
+            }
+
+            bool documentStatusIsValid = (documentType, documentStatus) switch
+            {
+                ("Adjournment", DocumentStatus.Pending or DocumentStatus.Resolved) => true,
+                (_, DocumentStatus.Filed) => true,
+                _ => false,
+            };
+            if (!documentStatusIsValid)
+            {
+                throw new ArgumentException("Invalid document status", nameof(documentStatus));
+            }
         }
     }
 
