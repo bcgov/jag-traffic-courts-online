@@ -1,5 +1,6 @@
 .gitignore
 README.md
+api.base.service.ts
 api.module.ts
 api/api.ts
 api/dispute.service.ts
@@ -127,4 +128,6 @@ model/violationTicketIsYoungPerson.model.ts
 model/violationTicketVersion.model.ts
 model/yesNo.model.ts
 param.ts
+provide-api.ts
+query.params.ts
 variables.ts

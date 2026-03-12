@@ -1868,28 +1868,8 @@
               }
             }
           },
-          "404": {
-            "description": "The Dispute to update was not found.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
           "409": {
-            "description": "The Dispute has already been assigned to a user. Dispute cannot be modified until assigned time expires.",
+            "description": "Dispute has already been created for ticket.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -7838,6 +7818,10 @@
             "format": "int64"
           },
           "occamViolationTicketUpldId": {
+            "type": "string",
+            "nullable": true
+          },
+          "occamDisputeCreatedBy": {
             "type": "string",
             "nullable": true
           },
