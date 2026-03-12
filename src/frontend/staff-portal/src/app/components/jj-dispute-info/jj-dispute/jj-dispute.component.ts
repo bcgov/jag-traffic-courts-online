@@ -578,6 +578,10 @@ export class JJDisputeComponent implements OnInit {
     else if (cancelledCount + paidPriorToAppearancCount >= countCount && countCount > 0) this.concludeStatusOnly = true;
   }
 
+  isOneOf(status: JJDisputeStatus, statuses: JJDisputeStatus[]): boolean {
+    return statuses.includes(status);
+  }
+
   onCancelled() {
     const data: DialogOptions = {
       titleKey: "Cancel Dispute",
@@ -692,7 +696,7 @@ export class JJDisputeComponent implements OnInit {
 
 
   onPrint(isCompleteVersion: boolean) {
-    var type = DcfTemplateType.DcfTemplate;
+    let type: DcfTemplateType = DcfTemplateType.DcfTemplate;
     if (!isCompleteVersion) {
       switch (this.lastUpdatedJJDispute.hearingType) {
         case this.HearingType.WrittenReasons:

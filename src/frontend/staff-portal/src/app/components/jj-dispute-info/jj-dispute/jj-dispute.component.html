@@ -846,17 +846,17 @@
           }
           <div fxFlex></div>
           @if (type !== tabTypes.DCF) {
-            @if (type !== tabTypes.DECISION_VALIDATION && lastUpdatedJJDispute.status !== DisputeStatus.RequireCourtHearing && lastUpdatedJJDispute.status !== DisputeStatus.Accepted && lastUpdatedJJDispute.status !== DisputeStatus.Cancelled && lastUpdatedJJDispute.status !== DisputeStatus.Concluded && concludeStatusOnly === false && cancelStatusOnly === false) {
+            @if (type !== tabTypes.DECISION_VALIDATION && !isOneOf(lastUpdatedJJDispute.status, [DisputeStatus.RequireCourtHearing, DisputeStatus.Accepted, DisputeStatus.Cancelled, DisputeStatus.Concluded]) && concludeStatusOnly === false && cancelStatusOnly === false) {
               <button fxFlex="30" class="large" mat-flat-button type="button" color="primary" style="margin-right: 20px;" (click)="onRequireCourtHearing()">
                 {{ lastUpdatedJJDispute.hearingType === HearingType.WrittenReasons ? 'Adjourn/Require Hearing' : 'Adjourn/Continue' }}
               </button>
             }
-            @if (type !== tabTypes.DECISION_VALIDATION && [DisputeStatus.New, DisputeStatus.InProgress, DisputeStatus.HearingScheduled, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) >= 0 && cancelStatusOnly === false && concludeStatusOnly === false) {
+            @if (type !== tabTypes.DECISION_VALIDATION && isOneOf(lastUpdatedJJDispute.status, [DisputeStatus.New, DisputeStatus.InProgress, DisputeStatus.HearingScheduled, DisputeStatus.Review]) && cancelStatusOnly === false && concludeStatusOnly === false) {
               <button fxFlex="30" class="large" mat-flat-button type="button" color="primary" style="margin-right: 20px;" (click)="onSave()">
                 Save & Finish Later
               </button>
             }
-            @if ([DisputeStatus.New, DisputeStatus.HearingScheduled, DisputeStatus.InProgress, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) >= 0 && concludeStatusOnly === false && cancelStatusOnly === false && isJJ) {
+            @if (isOneOf(lastUpdatedJJDispute.status, [DisputeStatus.New, DisputeStatus.HearingScheduled, DisputeStatus.InProgress, DisputeStatus.Review]) && concludeStatusOnly === false && cancelStatusOnly === false && isJJ) {
               <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConfirm()">
                 Confirm
               </button>

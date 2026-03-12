@@ -14,12 +14,7 @@
         <br/>
         @for (doc of updateRequested.UploadedDocuments; track doc.DocumentId) {
           <div>
-            @if (disputantUpdateRequest.status !== UpdateRequestStatus.Rejected) {
-              <button type="button" class="linkbutton" (click)="onGetFile(doc.DocumentId)">{{ doc.DocumentType }}</button>&nbsp;
-            }
-            @if (disputantUpdateRequest.status === UpdateRequestStatus.Rejected) {
-              <span>{{ doc.DocumentType }}&nbsp;</span>
-            }
+            <button type="button" class="linkbutton" (click)="onGetFile(doc.DocumentId)">{{ doc.DocumentType }}</button>&nbsp;
           </div>
         }
         <br />
