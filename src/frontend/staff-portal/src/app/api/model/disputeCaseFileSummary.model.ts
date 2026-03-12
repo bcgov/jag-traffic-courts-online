@@ -34,6 +34,7 @@ export interface DisputeCaseFileSummary {
     multipleOfficersYn?: YesNo;
     noticeOfHearingYn?: YesNo;
     electronicTicketYn?: YesNo;
+    pendingAdjournmentRequestsYn?: YesNo;
     jjAssignedTo?: string | null;
     vtcAssignedTo?: string | null;
     vtcAssignedTs?: string | null;
