@@ -564,8 +564,8 @@ export class DisputeService implements IDisputeService {
     let dispute = Dispute;
 
     dispute.contactGivenNames = Dispute.contactGiven1Nm;
-    if (Dispute.contactGiven2Nm) dispute.contactGivenNames = Dispute.contactGivenNames + " " + Dispute.contactGiven1Nm;
-    if (Dispute.contactGiven2Nm) dispute.contactGivenNames = Dispute.contactGivenNames + " " + Dispute.contactGiven3Nm;
+    if (Dispute.contactGiven2Nm) dispute.contactGivenNames = dispute.contactGivenNames + " " + Dispute.contactGiven2Nm;
+    if (Dispute.contactGiven3Nm) dispute.contactGivenNames = dispute.contactGivenNames + " " + Dispute.contactGiven3Nm;
 
     return dispute;
   }
