@@ -41,7 +41,7 @@ public class DocumentController : StaffControllerBase
     /// <response code="500">There was a server error that prevented the file upload from completing successfully.</response>
     /// <returns>The ID of the uploaded file</returns>
     [HttpPost]
-    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(FileMetadata), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -77,8 +77,8 @@ public class DocumentController : StaffControllerBase
                     _ => DocumentStatus.Filed,
                 },
             };
-            Guid id = await _documentService.SaveFileAsync(file, properties, User, cancellationToken);
-            return Ok(id);
+            FileMetadata metadata = await _documentService.SaveFileAsync(file, properties, User, cancellationToken);
+            return Ok(metadata);
         }
         catch (Coms.Client.MetadataInvalidKeyException e)
         {

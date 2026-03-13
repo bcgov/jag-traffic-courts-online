@@ -123,7 +123,7 @@ public partial class StaffDocumentService : IStaffDocumentService
         return fileData;
     }
 
-    public async Task<Guid> SaveFileAsync(IFormFile file, DocumentProperties properties, ClaimsPrincipal user, CancellationToken cancellationToken)
+    public async Task<FileMetadata> SaveFileAsync(IFormFile file, DocumentProperties properties, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Saving file through COMS");
 
@@ -155,7 +155,18 @@ public partial class StaffDocumentService : IStaffDocumentService
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
         }
 
-        return id;
+        return new FileMetadata
+        {
+            FileId = id,
+            FileName = file.FileName,
+            DocumentType = properties.DocumentType,
+            DocumentStatus = properties.DocumentStatus,
+            DocumentSource = properties.DocumentSource,
+            StaffReviewStatus = properties.StaffReviewStatus,
+            NoticeOfDisputeGuid = properties.NoticeOfDisputeId?.ToString("d"),
+            VirusScanStatus = properties.VirusScanStatus,
+            DisputeId = properties.TcoDisputeId,
+        };
     }
 
     public async Task UpdateFileAsync(Guid fileId, DocumentProperties updatedProperties, CancellationToken cancellationToken)

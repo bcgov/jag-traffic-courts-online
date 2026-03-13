@@ -13,7 +13,7 @@ public interface IStaffDocumentService
     /// <param name="properties">The properties to add to the document</param>
     /// <param name="user">The user creating the file.</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>Id of newly inserted file to the object storage</returns>
+    /// <returns>Metadata of the newly inserted file.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="file"/> is null.</exception>
     /// <exception cref="ArgumentException"><paramref name="file"/> has a null data property.</exception>
     /// <exception cref="MetadataInvalidKeyException">A key contains an invalid character</exception>
@@ -23,7 +23,7 @@ public interface IStaffDocumentService
     /// <exception cref="TagValueTooLongException"></exception>
     /// <exception cref="TooManyTagsException"></exception>
     /// <exception cref="ObjectManagementServiceException">Other error.</exception>
-    Task<Guid> SaveFileAsync(IFormFile file, Domain.Models.DocumentProperties properties, ClaimsPrincipal user, CancellationToken cancellationToken);
+    Task<FileMetadata> SaveFileAsync(IFormFile file, Domain.Models.DocumentProperties properties, ClaimsPrincipal user, CancellationToken cancellationToken);
 
     /// <summary>
     /// Retrieves a file with data and details through COMS service for the given unique file ID

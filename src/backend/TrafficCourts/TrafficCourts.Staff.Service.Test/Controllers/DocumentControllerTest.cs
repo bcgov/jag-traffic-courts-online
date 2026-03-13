@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Coms.Client;
+using TrafficCourts.Domain.Models;
 using TrafficCourts.Staff.Service.Controllers;
 using TrafficCourts.Staff.Service.Services;
 using Xunit;
@@ -23,19 +24,20 @@ public class DocumentControllerTest
         // Arrange
         var mockFile = new Mock<IFormFile>();
         var comsService = new Mock<IStaffDocumentService>();
-        Guid guid = Guid.NewGuid();
+        FileMetadata metadata = new() { NoticeOfDisputeGuid = Guid.NewGuid().ToString("d"), FileId = Guid.NewGuid() };
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Domain.Models.DocumentProperties>(), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(guid);
+            .ReturnsAsync(metadata);
         var mockLogger = new Mock<ILogger<DocumentController>>();
         DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await sut.CreateAsync(mockFile.Object, 1, guid.ToString("d"), "Adjournment", CancellationToken.None);
+        IActionResult result = await sut.CreateAsync(mockFile.Object, 1, metadata.NoticeOfDisputeGuid, "Adjournment", CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        Assert.Equal(guid, okResult.Value);
+        var metadataResult = Assert.IsType<FileMetadata>(okResult.Value);
+        Assert.Equal(metadata.FileId, metadataResult.FileId);
     }
 
     [Fact]
