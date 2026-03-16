@@ -2,8 +2,9 @@ import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { FileMetadata } from 'app/api';
 import { DocumentService } from 'app/api/api/document.service';
-import { FileMetadata } from 'app/api/model/fileMetadata.model';
+import { DocumentStatus } from 'app/api/model/documentStatus.model';
 import { Dispute } from 'app/services/dispute.service';
 import { JJDisputeService } from 'app/services/jj-dispute.service';
 import { ChangeDetectorRef } from '@angular/core';
@@ -15,6 +16,7 @@ import { ChangeDetectorRef } from '@angular/core';
   standalone: false,
 })
 export class UploadComponent {
+  DocumentStatus = DocumentStatus;
 
   @Input() disputeInfo: Dispute;
   public countsActions: any;
@@ -23,6 +25,7 @@ export class UploadComponent {
   }
   fileTypeToUpload: string = "Certified Extract";
   filesToUpload: any[] = [];
+  fileUploadError: string;
   
   // File size validation constants
   private readonly MAX_FILE_SIZE_MB = 10;
@@ -69,10 +72,22 @@ export class UploadComponent {
   }
 
   onUpload(files: FileList) {
-    if (files.length <= 0) return;
+    // Clear error message
+    this.fileUploadError = undefined;
+    
+    if (files.length <= 0) {
+      return;
+    }
   
-    // Validate file size before uploading
     const file = files[0];
+    
+    // Reset file input
+    const fileInput = document.getElementById('getFile') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+
+    // Validate file size before uploading
     if (file.size > this.MAX_FILE_SIZE_BYTES) {
       const data: DialogOptions = {
         titleKey: "File is Too Large",
@@ -84,44 +99,35 @@ export class UploadComponent {
       };
       this.dialog.open(ConfirmDialogComponent, { data, width: "30%" });
       
-      // Reset the file input
-      const fileInput = document.getElementById('getFile') as HTMLInputElement;
-      if (fileInput) {
-        fileInput.value = '';
-      }
       return;
     }
   
-    // Initially, set the status to "waiting for virus scan..."
-    let item: FileMetadata = { 
-      fileId: '', 
-      fileName: file.name, 
-      virusScanStatus: "waiting for virus scan..." 
-    };
-  
-    // Add the item to the fileData array
-    this.disputeInfo.fileData.push(item);
-  
-    // Manually trigger change detection to ensure the UI is refreshed
-    this.cdr.detectChanges();
-  
     // Now upload the file
-    this.documentService.apiDocumentPost(this.disputeInfo.noticeOfDisputeGuid, this.fileTypeToUpload, file, null)
-      .subscribe(fileId => {
-        // Once the file is uploaded, update the status and fileId
-        item.fileId = fileId;
-        item.virusScanStatus = "";  // or any other status
-  
-        // Manually trigger change detection again to update the view
-        this.cdr.detectChanges();
-      }, error => {
+    this.documentService.apiDocumentPost(this.disputeInfo.noticeOfDisputeGuid, this.fileTypeToUpload, file, null).subscribe({
+      next: (fileMetadata: FileMetadata) => {
+        // Add the new file to the array
+        this.disputeInfo.fileData.push(fileMetadata);
+      },
+      error: (error) => {
         // If the upload fails, set an error message
         if (error.status === 413) {
-          item.virusScanStatus = "upload failed - file size too large";
+          this.fileUploadError = "upload failed - file size too large";
         } else {
-          item.virusScanStatus = "upload failed";
+          this.fileUploadError = "upload failed";
         }
-        this.cdr.detectChanges();  // Ensure the component updates in case of error
-      });
+      },
+      complete: () => {
+        // Manually trigger change detection to ensure the UI is refreshed
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  onChangeDocumentStatus(file: FileMetadata, status: DocumentStatus) {
+    this.documentService.apiDocumentPut(file.fileId, file.documentType, status).subscribe({
+      next: () => {
+        file.documentStatus = status;
+      },
+    });
   }
 }
