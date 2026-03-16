@@ -72,31 +72,16 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    if (this.mode === DisputeFormMode.UPDATE) {
-      this.countryFormControl.clearValidators();
-      this.countryFormControl.updateValueAndValidity();
-      this.provinceFormControl.clearValidators();
-      this.provinceFormControl.updateValueAndValidity();
-    }
-
     let country = this.countries.filter(i => i.ctryId === this.form.value.address_country_id).shift();
     if (!this.form.value.address_country_id && !country) {
-      if (this.mode === DisputeFormMode.UPDATE) {
-        this.countryFormControl.setValue(null, { emitEvent: false });
-      } else {
-        this.countryFormControl.setValue(this.canada);
-      }
+      this.countryFormControl.setValue(this.canada);
     } else {
       this.countryFormControl.setValue(country);
     }
   
     let province = this.provincesAndStates.filter(i => i.provAbbreviationCd === this.form.value.address_province).shift();
     if (!this.form.value.address_province) {
-      if (this.mode === DisputeFormMode.UPDATE) {
-        this.provinceFormControl.setValue(null, { emitEvent: false });
-      } else {
-        this.provinceFormControl.setValue(this.bc);
-      }
+      this.provinceFormControl.setValue(this.bc);
     } else {
       this.provinceFormControl.setValue(province);
     }
@@ -116,16 +101,14 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
     }
   
     // Check for the driver's licence number validity on load
-    if (this.mode !== DisputeFormMode.UPDATE) {
-      const driversLicenceNumber = form.controls.drivers_licence_number.value;
-      const isBC = this.driversLicenceProvinceFormControl.value?.provId === this.bc.provId;
-      const isInvalid = isBC ? !(driversLicenceNumber && driversLicenceNumber.length >= 7 && driversLicenceNumber.length <= 9 && /^[0-9]+$/.test(driversLicenceNumber)) :
-                              !(driversLicenceNumber && driversLicenceNumber.length <= 20);
-    
-      if (isInvalid) {
-        form.controls.drivers_licence_number.markAsTouched();
-        form.controls.drivers_licence_number.markAsDirty();
-      }
+    const driversLicenceNumber = form.controls.drivers_licence_number.value;
+    const isBC = this.driversLicenceProvinceFormControl.value?.provId === this.bc.provId;
+    const isInvalid = isBC ? !(driversLicenceNumber && driversLicenceNumber.length >= 7 && driversLicenceNumber.length <= 9 && /^[0-9]+$/.test(driversLicenceNumber)) :
+                            !(driversLicenceNumber && driversLicenceNumber.length <= 20);
+  
+    if (isInvalid) {
+      form.controls.drivers_licence_number.markAsTouched();
+      form.controls.drivers_licence_number.markAsDirty();
     }
   
     if (this.preferEmail !== undefined && this.preferEmail !== true) {
@@ -141,12 +124,6 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   }
 
   onCountryChange(country: CountryCodeValue, isInit?: boolean) {
-    if (!country) {
-      if (this.mode === DisputeFormMode.UPDATE) {
-        this.form.controls.address_country_id.setValue(null);
-      }
-      return;
-    }
     setTimeout(() => {
       this.form.controls.address_country_id.setValue(country.ctryId);
 
@@ -162,17 +139,13 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
       this.form.controls.home_phone_number.setValidators([Validators.maxLength(20)]);
 
       if (this.isCA || this.isUSA) { // canada or usa validators
-        if (this.mode !== DisputeFormMode.UPDATE) {
-          this.form.controls.address_province_seq_no.addValidators([Validators.required]);
-          this.form.controls.postal_code.addValidators([Validators.required]);
-        }
+        this.form.controls.address_province_seq_no.addValidators([Validators.required]);
+        this.form.controls.postal_code.addValidators([Validators.required]);
         this.form.controls.home_phone_number.addValidators([FormControlValidators.phone]);
 
         if (this.isCA) { // pick BC by default if Canada selected
           this.form.controls.address_province_country_id.setValue(country.ctryId);
-          if (this.mode !== DisputeFormMode.UPDATE) {
-            this.form.controls.address_province_seq_no.setValue(this.bc.provSeqNo);
-          }
+          this.form.controls.address_province_seq_no.setValue(this.bc.provSeqNo);
           this.form.controls.postal_code.addValidators([Validators.minLength(6), Validators.maxLength(6)]);
         } else {
           this.form.controls.postal_code.addValidators([Validators.minLength(5), Validators.maxLength(5)]);
@@ -195,14 +168,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   }
 
   onProvinceChange(province: ProvinceCodeValue) {
-    setTimeout(() => {
-      if (!province) {
-        if (this.mode === DisputeFormMode.UPDATE) {
-          this.form.controls.address_province_country_id.setValue(null);
-          this.form.controls.address_province_seq_no.setValue(null);
-        }
-        return;
-      }
+    setTimeout(() => {      
       this.form.controls.address_province_country_id.setValue(province.ctryId);
       this.form.controls.address_province_seq_no.setValue(province.provSeqNo);
     }, 0)

@@ -38,8 +38,8 @@ export class UpdateDisputeComponent implements OnInit {
         } as NoticeOfDispute;
         this.ticketType = this.violationTicketService.getTicketType(this.noticeOfDispute);
         this.isLoaded$.next(true);
+        this.fileData$ = of([]);
       });
-      this.fileData$ = of([]);
     });
   }
 

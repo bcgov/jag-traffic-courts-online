@@ -26,7 +26,7 @@
       <p class="section-grid-text">{{ updateRequested.RepresentedByLawyer === true ? RepresentedByLawyer.Y : RepresentedByLawyer.N }}</p>
     </span>
     </ng-container>
-    <ng-container *ngIf="updateRequested.LawFirmName && updateRequested.LawFirmName !== disputeInfo.lawFirmName">
+    <ng-container *ngIf="updateRequested.LawFirmName !== disputeInfo.lawFirmName">
     <span class="section-grid-cell">
       <p class="section-grid-header">Law Firm Name</p>
     </span>
@@ -37,7 +37,7 @@
       <p class="section-grid-text">{{ updateRequested.LawFirmName }}</p>
     </span>
     </ng-container>
-    <ng-container *ngIf="updateRequested.LawyerSurname && updateRequested.LawyerSurname !== disputeInfo.lawyerSurname">
+    <ng-container *ngIf="updateRequested.LawyerSurname !== disputeInfo.lawyerSurname">
     <span class="section-grid-cell">
       <p class="section-grid-header">Lawyer Surname</p>
     </span>
@@ -48,7 +48,7 @@
       <p class="section-grid-text">{{ updateRequested.LawyerSurname }}</p>
     </span>
     </ng-container>
-    <ng-container *ngIf="updateRequested.LawyerGivenName1 && updateRequested.LawyerGivenName1 !== disputeInfo.lawyerGivenName1">
+    <ng-container *ngIf="updateRequested.LawyerGivenName1 !== disputeInfo.lawyerGivenName1">
     <span class="section-grid-cell">
       <p class="section-grid-header">Lawyer Given Name One</p>
     </span>
@@ -59,7 +59,7 @@
       <p class="section-grid-text">{{ updateRequested.LawyerGivenName1 }}</p>
     </span>
     </ng-container>
-    <ng-container *ngIf="updateRequested.LawyerGivenName2 && updateRequested.LawyerGivenName2 !== disputeInfo.lawyerGivenName2">
+    <ng-container *ngIf="updateRequested.LawyerGivenName2 !== disputeInfo.lawyerGivenName2">
     <span class="section-grid-cell">
       <p class="section-grid-header">Lawyer Given Name Two</p>
     </span>
@@ -70,7 +70,7 @@
       <p class="section-grid-text">{{ updateRequested.LawyerGivenName2 }}</p>
     </span>
     </ng-container>
-    <ng-container *ngIf="updateRequested.LawyerGivenName3 && updateRequested.LawyerGivenName3 !== disputeInfo.lawyerGivenName3">
+    <ng-container *ngIf="updateRequested.LawyerGivenName3 !== disputeInfo.lawyerGivenName3">
     <span class="section-grid-cell">
       <p class="section-grid-header">Lawyer Given Name Three</p>
     </span>
@@ -81,7 +81,7 @@
       <p class="section-grid-text">{{ updateRequested.LawyerGivenName3 }}</p>
     </span>
     </ng-container>
-    <ng-container *ngIf="updateRequested.LawyerAddress && updateRequested.LawyerAddress !== disputeInfo.lawyerAddress">
+    <ng-container *ngIf="updateRequested.LawyerAddress !== disputeInfo.lawyerAddress">
     <span class="section-grid-cell">
       <p class="section-grid-header">Lawyer Address</p>
     </span>
@@ -92,7 +92,7 @@
       <p class="section-grid-text">{{ updateRequested.LawyerAddress }}</p>
     </span>
     </ng-container>
-    <ng-container *ngIf="updateRequested.LawyerPhoneNumber && updateRequested.LawyerPhoneNumber !== disputeInfo.lawyerPhoneNumber">
+    <ng-container *ngIf="updateRequested.LawyerPhoneNumber !== disputeInfo.lawyerPhoneNumber">
     <span class="section-grid-cell">
       <p class="section-grid-header">Lawyer Phone Number</p>
     </span>
@@ -103,7 +103,7 @@
       <p class="section-grid-text">{{ updateRequested.LawyerPhoneNumber | phone }}</p>
     </span>
     </ng-container>
-    <ng-container *ngIf="updateRequested.LawyerEmail && updateRequested.LawyerEmail !== disputeInfo.lawyerEmail">
+    <ng-container *ngIf="updateRequested.LawyerEmail !== disputeInfo.lawyerEmail">
     <span class="section-grid-cell">
       <p class="section-grid-header">Lawyer Email</p>
     </span>
@@ -114,7 +114,7 @@
       <p class="section-grid-text">{{ updateRequested.LawyerEmail }}</p>
     </span>
     </ng-container>
-    <ng-container *ngIf="updateRequested.RequestCourtAppearance && updateRequested.RequestCourtAppearance !== disputeInfo.requestCourtAppearanceYn">
+    <ng-container *ngIf="updateRequested.RequestCourtAppearance !== disputeInfo.requestCourtAppearanceYn">
     <span class="section-grid-cell">
       <p class="section-grid-header">Request Court Appearance</p>
     </span>
@@ -147,7 +147,7 @@
       <p class="section-grid-text">{{ newLanguageName }}</p>
     </span>
     </ng-container>
-    <ng-container *ngIf="updateRequested.WitnessNo && updateRequested.WitnessNo !== disputeInfo.witnessNo">
+    <ng-container *ngIf="updateRequested.WitnessNo !== disputeInfo.witnessNo">
     <span class="section-grid-cell">
       <p class="section-grid-header">Number of Witnesses </p>
     </span>
@@ -158,7 +158,7 @@
       <p class="section-grid-text">{{ updateRequested.WitnessNo }}</p>
     </span>
     </ng-container>
-    <ng-container *ngIf="updateRequested.FineReductionReason && updateRequested.FineReductionReason !== disputeInfo.fineReductionReason">
+    <ng-container *ngIf="updateRequested.FineReductionReason !== disputeInfo.fineReductionReason">
     <span class="section-grid-cell">
       <p class="section-grid-header">Fine Reduction Reason </p>
     </span>
@@ -169,7 +169,7 @@
       <p class="section-grid-text">{{ updateRequested.FineReductionReason }}</p>
     </span>
     </ng-container>
-    <ng-container *ngIf="updateRequested.TimeToPayReason && updateRequested.TimeToPayReason !== disputeInfo.timeToPayReason">
+    <ng-container *ngIf="updateRequested.TimeToPayReason !== disputeInfo.timeToPayReason">
     <span class="section-grid-cell">
       <p class="section-grid-header">Time to Pay Reason </p>
     </span>
