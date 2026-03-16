@@ -112,6 +112,7 @@ public partial class JJController : StaffControllerBase
     /// <param name="page_number">The page number to fetch. Starts at 1.</param>
     /// <param name="page_size">The page size to use. If not specified, defaults to 25</param>
     /// <param name="sort_by">The list of columns to sort the result by. To sort descending, add a '-' before the column name. Note: 'surnameOrOrgName' is a pseudo field for sorting by surname or organization name.</param>
+    /// <param name="fetch_pending_adjournments">Whether disputes' pending adjournment request info should be retrieved, which requires querying COMS documents.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
 #if DEBUG
@@ -146,6 +147,7 @@ public partial class JJController : StaffControllerBase
         string? sort_by,
         int? page_number,
         int? page_size,
+        bool? fetch_pending_adjournments,
         CancellationToken cancellationToken)
     {
         if (!ValidateTimeZone(time_zone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
@@ -176,7 +178,8 @@ public partial class JJController : StaffControllerBase
             sort_by = sort_by,
             page_number = page_number,
             page_size = page_size,
-            time_zone = timeZoneInfo
+            time_zone = timeZoneInfo,
+            fetch_pending_adjournments = fetch_pending_adjournments == true,
         };
 
         try
