@@ -1,3 +1,5 @@
+@use '@angular/material' as mat;
+
 td, th {
   vertical-align: middle !important;
   padding-left: 10px !important;
@@ -58,4 +60,10 @@ th.header-hearing-inbox{
 
 .w-20{
   width: 20% !important;
+}
+
+.red-checkbox {
+  @include mat.checkbox-overrides((
+    disabled-selected-icon-color: red,
+  ));
 }

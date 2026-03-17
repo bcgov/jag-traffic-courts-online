@@ -93,7 +93,8 @@ export class JJDisputeWRAssignmentsComponent implements OnInit {
         this.courthouseTeamIds[this.currentTeam].join(",") : "",
       sortBy: this.sortDirection === SortDirection.Asc ? this.sortBy : "-" + this.sortBy,
       pageNumber: 1,
-      pageSize: -1
+      pageSize: -1,
+      fetchPendingAdjournments: false,
     };
     this.jjDisputeService.getTCODisputes(params).subscribe((response) => {
       this.tcoDisputes = [];

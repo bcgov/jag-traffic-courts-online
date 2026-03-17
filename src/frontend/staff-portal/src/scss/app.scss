@@ -103,6 +103,10 @@ table th {
   color: #003366;
   font-weight: 600;
   padding: 10px;
+
+  &.mat-mdc-header-cell {
+    font-size: 12px;
+  }
 }
 
 table td {
