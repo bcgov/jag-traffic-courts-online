@@ -1,13 +1,15 @@
 <h3 mat-dialog-title class="d-flex align-items-stretch">
-  @if (options.icon && !options.imageSrc) {
-    <mat-icon [color]="options.actionType">{{ options.icon }}</mat-icon>&nbsp;
-  }
-  @if (options.imageSrc) {
-    <img [attr.src]="options.imageSrc" alt="" />
-  }
-  @if (options.titleKey) {
-    <strong style="color: red;">{{ options.titleKey | translate }}</strong>
-  }
+  <strong>
+    @if (options.icon && !options.imageSrc) {
+      <mat-icon [color]="options.actionType" class="align-text-bottom">{{ options.icon }}</mat-icon>&nbsp;
+    }
+    @if (options.imageSrc) {
+      <img [attr.src]="options.imageSrc" alt="" />
+    }
+    @if (options.titleKey) {
+      <span style="color: red;">{{ options.titleKey | translate }}</span>
+    }
+  </strong>
 </h3>
 <mat-dialog-content>
   @if (options.messageKey) {

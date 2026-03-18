@@ -1,19 +1,19 @@
 <h3 mat-dialog-title class="d-flex align-items-stretch">
-  @if (options.icon && !options.imageSrc) {
-    <mat-icon [color]="options.actionType" [ngStyle]="{'color': options.actionType === 'green' ? '#2ba242 !important' : ''}">
-      {{ options.icon }}
-    </mat-icon>
-  }
-  @if (options.imageSrc) {
-    <img [attr.src]="options.imageSrc" alt="" />
-  }
-  @if (options.titleKey) {
-    <strong class="flex-grow-1">
-      <span [ngStyle]="{'color': options.actionType === 'green' ? '#2ba242' : ''}">
-        {{ options.titleKey | translate }}
-      </span>
-    </strong>
-  }
+  <strong class="flex-grow-1">
+    @if (options.icon && !options.imageSrc) {
+      <mat-icon [color]="options.actionType" class="align-text-bottom" [ngStyle]="{'color': options.actionType === 'green' ? '#2ba242 !important' : ''}">
+        {{ options.icon }}
+      </mat-icon>
+    }
+    @if (options.imageSrc) {
+      <img [attr.src]="options.imageSrc" alt="" />
+    }
+    @if (options.titleKey) {
+        <span [ngStyle]="{'color': options.actionType === 'green' ? '#2ba242' : ''}">
+          {{ options.titleKey | translate }}
+        </span>
+    }
+  </strong>
 </h3>
 <mat-dialog-content>
   @if (options.messageKey) {

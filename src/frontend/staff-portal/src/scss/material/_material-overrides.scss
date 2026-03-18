@@ -169,3 +169,11 @@ mat-error {
     padding: 24px 0;
   }
 }
+
+.mat-mdc-dialog-title {
+  --mat-dialog-headline-padding: 24px 24px 13px;
+}
+
+.mat-mdc-dialog-actions {
+  --mat-dialog-actions-padding: 16px 24px;
+}
