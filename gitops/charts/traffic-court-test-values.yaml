@@ -251,8 +251,6 @@ staff-web:
         "url": "https://oidc-0198bb-test.apps.silver.devops.gov.bc.ca/",
         "realm": "traffic-court",
         "clientId": "staff-portal"
-      },
-      "initOptions": {
       }
     }
   appConfig: |

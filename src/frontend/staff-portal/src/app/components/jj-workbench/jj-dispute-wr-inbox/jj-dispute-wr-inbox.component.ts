@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
 import { JJDisputeService } from 'app/services/jj-dispute.service';
 import { LoggerService } from '@core/services/logger.service';
@@ -12,6 +12,7 @@ import { HearingType } from '@shared/consts/HearingType.model';
   selector: 'app-jj-dispute-wr-inbox',
   templateUrl: './jj-dispute-wr-inbox.component.html',
   styleUrls: ['./jj-dispute-wr-inbox.component.scss'],
+  standalone: false,
 })
 export class JJDisputeWRInboxComponent implements OnInit {
   @Output() tcoDisputeInfo: EventEmitter<DisputeCaseFileSummary> = new EventEmitter();

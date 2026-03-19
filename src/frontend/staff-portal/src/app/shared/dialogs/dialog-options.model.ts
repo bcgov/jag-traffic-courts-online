@@ -20,5 +20,5 @@ export interface DialogOptions {
   // cancelText?: string;
   cancelHide?: boolean;
   component?: any;
-  data?: { [key: string]: any };
+  data?: any[];
 }

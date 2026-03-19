@@ -8,7 +8,6 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { JJService, JJDispute as JJDisputeBase, JJDisputeStatus, JJDisputeRemark, DocumentType, JJDisputeCourtAppearanceRoP, DcfTemplateType, PagedDisputeCaseFileSummaryCollection } from 'app/api';
 import { AuthService } from './auth.service';
-import { cloneDeep } from "lodash";
 import { Store } from '@ngrx/store';
 import * as JJDisputeStore from 'app/store/jj-dispute';
 import { LookupsService } from './lookups.service';
@@ -100,7 +99,7 @@ export class JJDisputeService {
      * @param ticketNumber, jjDispute
      */
   public putJJDispute(ticketNumber: string, disputeId: number, jjDispute: JJDispute, checkVTC: boolean, remarks?: string): Observable<JJDispute> {
-    let input = cloneDeep(jjDispute);
+    let input = structuredClone(jjDispute);
     if (remarks) {
       this.addRemarks(input, remarks);
     }

@@ -2,17 +2,18 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
 
 import { MoreOptionsDialogComponent } from './more-options-dialog.component';
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
-import { TranslateModule } from '@ngx-translate/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
-describe('ConfirmDialogComponent', () => {
+describe('MoreOptionsDialogComponent', () => {
   let component: MoreOptionsDialogComponent;
   let fixture: ComponentFixture<MoreOptionsDialogComponent>;
 
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [NgxMaterialModule, TranslateModule.forRoot()],
+        imports: [NgxMaterialModule],
         declarations: [MoreOptionsDialogComponent],
         providers: [
           {
@@ -25,6 +26,10 @@ describe('ConfirmDialogComponent', () => {
             provide: MAT_DIALOG_DATA,
             useValue: {},
           },
+          provideTranslateService({
+            loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json'}),
+            extend: true,
+          })
         ],
       }).compileComponents();
     })

@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AppRoutes } from './app.routes';
 import { LandingComponent } from './components/landing/landing.component';
 import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
-import { AuthorizationGuard } from '@core/guards/auth-guard';
+import { authorizationGuard } from '@core/guards/auth-guard';
 import { JjWorkbenchDashboardComponent } from '@components/jj-workbench/jj-workbench-dashboard/jj-workbench-dashboard.component';
 import { StaffWorkbenchDashboardComponent } from '@components/staff-workbench/staff-workbench-dashboard/staff-workbench-dashboard.component';
 import { UserGroup } from '@shared/enums/user-group.enum';
@@ -15,7 +15,7 @@ let routes: Routes = [
   },
   {
     path: AppRoutes.STAFF,
-    canActivate: [AuthorizationGuard],
+    canActivate: [authorizationGuard],
     data: { roles: [UserGroup.VTC_STAFF, UserGroup.SUPPORT_STAFF] },
     children: [
       {
@@ -27,7 +27,7 @@ let routes: Routes = [
   },
   {
     path: AppRoutes.JJ,
-    canActivate: [AuthorizationGuard],
+    canActivate: [authorizationGuard],
     data: { roles: [UserGroup.JUDICIAL_JUSTICE, UserGroup.ADMIN_JUDICIAL_JUSTICE, UserGroup.SUPPORT_STAFF] },
     children: [
       {

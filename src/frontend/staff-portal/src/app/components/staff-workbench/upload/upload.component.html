@@ -1,41 +1,52 @@
 <div class="upload">
-    <mat-expansion-panel [expanded]="true">
-      <mat-expansion-panel-header (click)="handleCollapse('upload')">
-        <app-page-header class="upload-header">
-          <ng-container subHeader>
-            <span>Upload</span>
-            <i *ngIf="collapseObj?.upload" class="fa fa-minus-circle"></i>
-            <i *ngIf="!collapseObj?.upload" class="fa fa-plus-circle"></i>
-          </ng-container>
-        </app-page-header>        
-      </mat-expansion-panel-header>
-      
-      <div class="upload-body">
-        <span><b>Uploaded Documents ({{disputeInfo.fileData?.length }})</b></span><br />
-        <div *ngFor="let doc of disputeInfo.fileData">
-          <button type="button" class="linkbutton" (click)="onGetFile(doc.fileId)"
-            *ngIf="doc.virusScanStatus === 'clean'">{{ doc.fileName }}</button>
-          <span *ngIf="doc.virusScanStatus !== 'clean'">{{ doc.fileName }} {{ doc.virusScanStatus }}</span>
-          <button type="button" class="upload-delete"
-            (click)="onRemoveFile(doc.fileId, doc.fileName)"><mat-icon>delete</mat-icon></button>
-        </div>
-        
+  <mat-expansion-panel [expanded]="true" hideToggle>
+    <mat-expansion-panel-header (click)="handleCollapse('upload')">
+      <app-page-header class="upload-header">
+        <ng-container subHeader>
+          <span>Upload </span>
+          @if (collapseObj?.upload) {
+            <mat-icon class="expand-collapse-icon">do_not_disturb_on</mat-icon>
+          }
+          @else {
+            <mat-icon class="expand-collapse-icon">add_circle</mat-icon>
+          }
+        </ng-container>
+      </app-page-header>
+    </mat-expansion-panel-header>
+
+    <div class="upload-body">
+      <span><b>Uploaded Documents ({{disputeInfo.fileData?.length }})</b></span>
+      <br />
+      @for (doc of disputeInfo.fileData; track doc.fileId) {
         <div>
-          <label>File type for upload:</label><br>
-          <mat-form-field appearance="outline" class="upload-type">
-            <mat-select [(ngModel)]="fileTypeToUpload">
-              <mat-option value="Certified Extract">Certified Extract</mat-option>
-              <mat-option value="Adjournment">Adjournment</mat-option>
-              <mat-option value="Other">Other</mat-option>
-            </mat-select>
-          </mat-form-field>
+          @if (doc.virusScanStatus === 'clean') {
+            <button type="button" class="linkbutton" (click)="onGetFile(doc.fileId)">
+              {{ doc.fileName }}
+            </button>
+          }
+          @if (doc.virusScanStatus !== 'clean') {
+            <span>{{ doc.fileName }} {{ doc.virusScanStatus }}</span>
+          }
+          <button type="button" class="upload-delete" (click)="onRemoveFile(doc.fileId, doc.fileName)">
+            <mat-icon>delete</mat-icon>
+          </button>
         </div>
-        <button class="large" mat-flat-button type="button" color="primary"
-          onclick="document.getElementById('getFile').click()">
-          <mat-icon>upload</mat-icon>&nbsp;Upload File
+      }
+
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1rem">
+        <label fxFlex="13">File type for upload:</label>
+        <mat-form-field fxFlex="15" appearance="outline" class="upload-type">
+          <mat-select [(ngModel)]="fileTypeToUpload">
+            <mat-option value="Certified Extract">Certified Extract</mat-option>
+            <mat-option value="Adjournment">Adjournment</mat-option>
+            <mat-option value="Other">Other</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button fxFlex="15" class="large" mat-flat-button type="button" color="primary" onclick="document.getElementById('getFile').click()">
+          <mat-icon class="align-text-bottom">upload</mat-icon>&nbsp;Upload File
         </button>
-        <input type="file" id="getFile" style="display:none" accept="image/*,.pdf"
-          (change)="onUpload($event.target.files)">
-      </div>            
-    </mat-expansion-panel>          
-  </div>
+      </div>
+      <input type="file" id="getFile" style="display:none" accept="image/*,.pdf" (change)="onUpload($event.target.files)" />
+    </div>
+  </mat-expansion-panel>
+</div>
