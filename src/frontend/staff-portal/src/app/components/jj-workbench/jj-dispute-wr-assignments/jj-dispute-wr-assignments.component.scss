@@ -54,22 +54,6 @@ h3, h2 {
   background-color:#ffffff;
 }
 
-.inputContainer {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-.input[name="searchInput"] {
-  width: 100%;
-  padding-right: 40px;
-}
-
-.inputIcon {
-  position: absolute;
-  right: 10px;
-}
-
 ::ng-deep .mat-sort-header-arrow {
   color: #fff;
 }
