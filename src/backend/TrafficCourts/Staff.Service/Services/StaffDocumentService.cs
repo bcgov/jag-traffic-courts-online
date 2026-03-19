@@ -3,7 +3,6 @@ using System.Security.Claims;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
-using TrafficCourts.Staff.Service;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -29,7 +28,7 @@ public partial class StaffDocumentService : IStaffDocumentService
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<Coms.Client.File> GetFileAsync(Guid fileId, CancellationToken cancellationToken)
+    public async Task<Coms.Client.File> GetFileAsync(Guid fileId, bool checkVirusScan, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Getting the file through COMS");
 
@@ -37,7 +36,7 @@ public partial class StaffDocumentService : IStaffDocumentService
 
         var properties = new DocumentProperties(file.Metadata, file.Tags);
 
-        if (!properties.VirusScanIsClean)
+        if (checkVirusScan && !properties.VirusScanIsClean)
         {
             string scanStatus = properties.VirusScanStatus;
             _logger.LogInformation("Cannot download file that has not been successfully scanned for viruses, status is {VirusScanStatus}, expected clean.", scanStatus);
@@ -110,8 +109,9 @@ public partial class StaffDocumentService : IStaffDocumentService
                 FileId = result.Id,
                 FileName = properties.DocumentName, // or result.FileName which should be the same
                 DocumentType = properties.DocumentType,
+                DocumentStatus = properties.DocumentStatus,
                 DocumentSource = properties.DocumentSource,
-                DocumentStatus = properties.StaffReviewStatus,
+                StaffReviewStatus = properties.StaffReviewStatus,
                 NoticeOfDisputeGuid = properties.NoticeOfDisputeId?.ToString("d"),
                 VirusScanStatus = properties.VirusScanStatus,
                 DisputeId = properties.TcoDisputeId
@@ -123,7 +123,7 @@ public partial class StaffDocumentService : IStaffDocumentService
         return fileData;
     }
 
-    public async Task<Guid> SaveFileAsync(IFormFile file, DocumentProperties properties, ClaimsPrincipal user, CancellationToken cancellationToken)
+    public async Task<FileMetadata> SaveFileAsync(IFormFile file, DocumentProperties properties, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Saving file through COMS");
 
@@ -155,7 +155,39 @@ public partial class StaffDocumentService : IStaffDocumentService
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
         }
 
-        return id;
+        return new FileMetadata
+        {
+            FileId = id,
+            FileName = file.FileName,
+            DocumentType = properties.DocumentType,
+            DocumentStatus = properties.DocumentStatus,
+            DocumentSource = properties.DocumentSource,
+            StaffReviewStatus = properties.StaffReviewStatus,
+            NoticeOfDisputeGuid = properties.NoticeOfDisputeId?.ToString("d"),
+            VirusScanStatus = properties.VirusScanStatus,
+            DisputeId = properties.TcoDisputeId,
+        };
+    }
+
+    public async Task UpdateFileAsync(Guid fileId, DocumentProperties updatedProperties, CancellationToken cancellationToken)
+    {
+        Coms.Client.File currentFile = await GetFileAsync(fileId, false, cancellationToken);
+        
+        DocumentProperties mergedProperties = new(currentFile.Metadata, currentFile.Tags)
+        {
+            DocumentType = updatedProperties.DocumentType,
+            DocumentStatus = updatedProperties.DocumentStatus,
+        };
+        
+        Coms.Client.File newFile = new(
+            currentFile.Id,
+            currentFile.Data,
+            currentFile.FileName,
+            currentFile.ContentType,
+            mergedProperties.ToMetadata(),
+            mergedProperties.ToTags());
+        
+        await _objectManagementService.UpdateFileAsync(fileId, newFile, cancellationToken);
     }
 
     private MemoryStream GetStreamForFile(IFormFile formFile)

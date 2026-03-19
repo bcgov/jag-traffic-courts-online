@@ -52,6 +52,7 @@ model/disputeUpdateRequestStatus2.model.ts
 model/disputeUpdateRequestUpdateType.model.ts
 model/disputeWithUpdates.model.ts
 model/documentSource.model.ts
+model/documentStatus.model.ts
 model/documentType.model.ts
 model/emailHistory.model.ts
 model/emailHistorySuccessfullySent.model.ts

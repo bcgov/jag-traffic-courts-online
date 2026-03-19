@@ -8,6 +8,7 @@ namespace TrafficCourts.OrdsDataService.Tco;
 public class OrdsDisputeCaseFileSummary
 {
     public long dispute_id { get; set; }
+    public string notice_of_dispute_guid { get; set; }
     public DateTime? submitted_dt { get; set; }
     public DateTime? jj_decision_dt { get; set; }
     public string signed_by { get; set; }

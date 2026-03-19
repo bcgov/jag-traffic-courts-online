@@ -17,6 +17,10 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
+import { DocumentStatus } from '../model/documentStatus.model';
+// @ts-ignore
+import { FileMetadata } from '../model/fileMetadata.model';
+// @ts-ignore
 import { ProblemDetails } from '../model/problemDetails.model';
 
 // @ts-ignore
@@ -246,9 +250,9 @@ export class DocumentService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDocumentPost(noticeOfDisputeId: string, documentType: string, file: Blob, disputeId?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<string>;
-    public apiDocumentPost(noticeOfDisputeId: string, documentType: string, file: Blob, disputeId?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<string>>;
-    public apiDocumentPost(noticeOfDisputeId: string, documentType: string, file: Blob, disputeId?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<string>>;
+    public apiDocumentPost(noticeOfDisputeId: string, documentType: string, file: Blob, disputeId?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<FileMetadata>;
+    public apiDocumentPost(noticeOfDisputeId: string, documentType: string, file: Blob, disputeId?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<FileMetadata>>;
+    public apiDocumentPost(noticeOfDisputeId: string, documentType: string, file: Blob, disputeId?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<FileMetadata>>;
     public apiDocumentPost(noticeOfDisputeId: string, documentType: string, file: Blob, disputeId?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (noticeOfDisputeId === null || noticeOfDisputeId === undefined) {
             throw new Error('Required parameter noticeOfDisputeId was null or undefined when calling apiDocumentPost.');
@@ -331,10 +335,98 @@ export class DocumentService {
             }
         }
 
-        return this.httpClient.post<string>(`${this.configuration.basePath}/api/document`,
+        return this.httpClient.post<FileMetadata>(`${this.configuration.basePath}/api/document`,
             localVarConvertFormParamsToString ? localVarFormParams.toString() : localVarFormParams,
             {
                 context: localVarHttpContext,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Updates document metadata.
+     * @param fileId Unique identifier for a specific document.
+     * @param documentType The type of document.
+     * @param documentStatus The status of the document.
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public apiDocumentPut(fileId: string, documentType: string, documentStatus: DocumentStatus, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiDocumentPut(fileId: string, documentType: string, documentStatus: DocumentStatus, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiDocumentPut(fileId: string, documentType: string, documentStatus: DocumentStatus, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiDocumentPut(fileId: string, documentType: string, documentStatus: DocumentStatus, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+        if (fileId === null || fileId === undefined) {
+            throw new Error('Required parameter fileId was null or undefined when calling apiDocumentPut.');
+        }
+        if (documentType === null || documentType === undefined) {
+            throw new Error('Required parameter documentType was null or undefined when calling apiDocumentPut.');
+        }
+        if (documentStatus === null || documentStatus === undefined) {
+            throw new Error('Required parameter documentStatus was null or undefined when calling apiDocumentPut.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (fileId !== undefined && fileId !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>fileId, 'fileId');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+        if (documentType !== undefined && documentType !== null) {
+            localVarHeaders = localVarHeaders.set('documentType', String(documentType));
+        }
+        if (documentStatus !== undefined && documentStatus !== null) {
+            localVarHeaders = localVarHeaders.set('documentStatus', String(documentStatus));
+        }
+
+        let localVarCredential: string | undefined;
+        // authentication (Bearer) required
+        localVarCredential = this.configuration.lookupCredential('Bearer');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'text/plain',
+                'application/json',
+                'text/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        return this.httpClient.put<any>(`${this.configuration.basePath}/api/document`,
+            null,
+            {
+                context: localVarHttpContext,
+                params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

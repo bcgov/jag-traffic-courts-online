@@ -7,6 +7,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { DocumentStatus } from './documentStatus.model';
 import { DocumentSource } from './documentSource.model';
 
 
@@ -16,8 +17,9 @@ export interface FileMetadata {
     noticeOfDisputeGuid?: string | null;
     documentSource?: DocumentSource;
     documentType?: string | null;
+    documentStatus?: DocumentStatus;
     virusScanStatus?: string | null;
-    documentStatus?: string | null;
+    staffReviewStatus?: string | null;
     ticketNumber?: string | null;
     disputeId?: number | null;
     pendingFileStream?: string | null;

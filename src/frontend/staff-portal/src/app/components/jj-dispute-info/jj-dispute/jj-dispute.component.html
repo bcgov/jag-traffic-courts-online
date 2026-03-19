@@ -735,37 +735,52 @@
             }
             <br />
             <br />
-            <span><b>Uploaded Documents ({{lastUpdatedJJDispute.fileData?.length }})</b></span>
-            <br />
-            @for (doc of lastUpdatedJJDispute.fileData; track doc.fileId) {
-              <div style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-                <span class="document-type-label" style="background-color: #e3f2fd; color: #1976d2; padding: 1px 3px; border-radius: 3px; font-size: 9px; font-weight: 200; border: 1px solid #bbdefb; white-space: nowrap;">{{ doc.documentType }}</span>
-                @if (doc.virusScanStatus === 'clean') {
-                  <button type="button" class="linkbutton" (click)="onGetFile(doc.fileId)">{{ doc.fileName }}</button>
-                }
-                @if (doc.virusScanStatus !== 'clean') {
-                  <span>{{ doc.fileName }} {{ doc.virusScanStatus }}</span>
-                }
-                @if (!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))) {
-                  <button type="button"
-                    style="width:50px !important; border:none; background-color:white;"
-                    (click)="onRemoveFile(doc.fileId, doc.fileName)">
-                    <mat-icon class="align-text-bottom" style="color:red">delete</mat-icon>
-                  </button>
-                }
-              </div>
-            }
-            @if (!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))) {
+            <div class="mb-3">
+              <div class="mb-1"><b>Uploaded Documents ({{lastUpdatedJJDispute.fileData?.length }})</b></div>
+              @for (doc of lastUpdatedJJDispute.fileData; track doc.fileId) {
+                <div class="border-bottom py-1">
+                  <div fxFlex="50" fxFlex.gt-md="35">
+                    @if (documentManagementAllowed) {
+                      <button fxFlex="none" type="button" class="upload-delete" (click)="onRemoveFile(doc.fileId, doc.fileName)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    }
+                    @if (doc.virusScanStatus === 'clean') {
+                      <button type="button" class="linkbutton" (click)="onGetFile(doc.fileId)">{{ doc.fileName }}</button>
+                    }
+                    @if (doc.virusScanStatus !== 'clean') {
+                      <span>{{ doc.fileName }} {{ doc.virusScanStatus }}</span>
+                    }
+                  </div>
+                  <div fxFlex="50" fxFlex.gt-md="25" fxLayoutAlign="start center" fxLayoutGap="1rem">
+                    <div fxFlex="calc(50% - 0.5rem)" class="mat-caption">{{ doc.documentType }}</div>
+                    @if (doc.documentType === "Adjournment") {
+                      <mat-form-field fxFlex="calc(50% - 0.5rem)" class="py-0"
+                        [appearance]="doc.documentStatus === DocumentStatus.Pending ? 'outline' : 'fill'">
+                        <mat-select [value]="doc.documentStatus" (selectionChange)="onChangeDocumentStatus(doc, $event.value)">
+                          <mat-option [value]="DocumentStatus.Pending">Pending</mat-option>
+                          <mat-option [value]="DocumentStatus.Resolved">Resolved</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    }
+                  </div>
+                </div>
+              }
+              @if (fileUploadError) {
+                <div>{{ fileUploadError }}</div>
+              }
+            </div>
+            @if (documentManagementAllowed) {
               <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1rem">
-                <label fxFlex="13">File type for upload:</label>
-                <mat-form-field fxFlex="15" appearance="outline" style="display: inline-flex;">
+                <label fxFlex="32" fxFlex.gt-md="16">File type for upload:</label>
+                <mat-form-field fxFlex="34" fxFlex.gt-md="17" appearance="outline" style="display: inline-flex;">
                   <mat-select [(ngModel)]="fileTypeToUpload">
                     <mat-option value="Certified Extract">Certified Extract</mat-option>
                     <mat-option value="Adjournment">Adjournment</mat-option>
                     <mat-option value="Other">Other</mat-option>
                   </mat-select>
                 </mat-form-field>
-                <button fxFlex="15" class="mt-0" mat-flat-button type="button" color="primary" onclick="document.getElementById('getFile').click()">
+                <button fxFlex="34" fxFlex.gt-md="17" class="mt-0" mat-flat-button type="button" color="primary" onclick="document.getElementById('getFile').click()">
                   <mat-icon class="align-text-bottom">upload</mat-icon>&nbsp;Upload File
                 </button>
               </div>

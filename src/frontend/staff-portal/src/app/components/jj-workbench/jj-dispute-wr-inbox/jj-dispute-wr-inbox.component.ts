@@ -64,7 +64,8 @@ export class JJDisputeWRInboxComponent implements OnInit {
       hearingTypeCd: HearingType.WrittenReasons,
       sortBy: this.sortDirection === SortDirection.Asc ? this.sortBy : "-" + this.sortBy,
       pageNumber: this.currentPage,
-      pageSize: 25
+      pageSize: 25,
+      fetchPendingAdjournments: false,
     };
     this.jjDisputeService.getTCODisputes(params).subscribe((response) => {
       this.tcoDisputes = [];

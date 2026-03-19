@@ -42,6 +42,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     "appearanceDuration",
     "accidentYn",
     "multipleOfficersYn",
+    "pendingAdjournmentRequestsYn",
     "status",
   ];
   currentPage: number = 1;
@@ -95,7 +96,8 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
       appearanceDtThru: this.appearanceDateFilter.value,
       sortBy: this.sortDirection === SortDirection.Asc ? this.sortBy : "-" + this.sortBy,
       pageNumber: this.currentPage,
-      pageSize: 25
+      pageSize: 25,
+      fetchPendingAdjournments: true,
     };
     this.jjDisputeService.getTCODisputes(params).subscribe((response) => {
       this.tcoDisputes = [];
@@ -103,7 +105,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
       this.tcoDisputesCollection = response;
       this.currentPage = response.pageNumber;
       this.totalPages = response.totalPages;
-      if(!this.totalPages){
+      if (!this.totalPages) {
         this.currentPage = 0;
       }
       this.tcoDisputes = response.items;
