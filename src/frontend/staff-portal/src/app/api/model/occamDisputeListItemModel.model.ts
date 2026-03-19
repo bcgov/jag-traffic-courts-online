@@ -39,5 +39,6 @@ export interface OccamDisputeListItemModel {
     jjDecisionDate?: string | null;
     courtAgenId?: string | null;
     courtAgenName?: string | null;
+    createdBy?: string | null;
 }
 
