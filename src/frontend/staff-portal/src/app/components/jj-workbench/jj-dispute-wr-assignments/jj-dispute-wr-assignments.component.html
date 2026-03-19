@@ -13,26 +13,26 @@
   </div>
 
   <!-- bulk assignments -->
-  &nbsp;
   <mat-label><b>Bulk Assignments:</b></mat-label>
   <div style="display: flex; flex-direction: row; justify-content: space-between; vertical-align: top;">
-    <div style="display: flex; flex-direction: row; flex-direction: flex-start;">
-      <mat-select [(ngModel)]="bulkjjAssignedTo" style="width:250px; background-color: #f2f2f2;">
-        <mat-option [value]="valueOfUnassigned"><i>choose a jj</i></mat-option>
-        @for (jj of jjList; track jj.idir) {
-          <mat-option [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i></mat-option>
-        }
-      </mat-select>
-      &nbsp;
-      <button mat-raised-button [disabled]="getBulkButtonDisabled()" (click)="onBulkAssign()" style="width: 100px"><b>Submit</b></button>
-    </div>
-    <div>
-      <button mat-button style="background-color: #fcba19" readonly="true">
+    <div fxFlex="auto" fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="0.5rem">
+      <mat-form-field fxFlex="400px" appearance="outline" class="me-0">
+        <mat-select [(ngModel)]="bulkjjAssignedTo">
+          <mat-option [value]="valueOfUnassigned"><i>choose a jj</i></mat-option>
+          @for (jj of jjList; track jj.idir) {
+            <mat-option [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i></mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <button fxFlex="100px" mat-raised-button [disabled]="getBulkButtonDisabled()" (click)="onBulkAssign()">
+        <b>Submit</b>
+      </button>
+      <div fxFlex="auto"></div>
+      <button fxFlex="130px" mat-button style="background-color: #fcba19" class="pe-none">
         <mat-icon class="align-text-bottom">check_circle_outline</mat-icon>
         <i>Assigned: <b>{{ getAssignedCount() }}</b></i>
       </button>
-      &nbsp;
-      <button mat-button style="background-color: #c5c5c5" readonly="true">
+      <button fxFlex="150px" mat-button style="background-color: #c5c5c5" class="pe-none">
         <mat-icon class="align-text-bottom">query_builder</mat-icon>
         <i>Unassigned: <b>{{ getUnassignedCount() }}</b></i>
       </button>

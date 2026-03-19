@@ -17,17 +17,20 @@
   <div class="row">
     <div class="col">
       <div style="display:flex; flex-direction: row; justify-content: left;">
-        <input matInput [matDatepicker]="picker" [formControl]="appearanceDateFilter" (click)='picker.open()'
-          placeholder="Hearing date" style="background-color: #f2f2f2; width:250px; border: 0;" />
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-form-field fxFlex="200px" appearance="outline" class="me-0">
+          <input matInput [matDatepicker]="picker" [formControl]="appearanceDateFilter" (click)="picker.open()" placeholder="Hearing date" />
+        </mat-form-field>
+        <mat-datepicker-toggle matSuffix [for]="picker" class="me-2"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
-        <mat-select [formControl]="jjAssignedToFilter" placeholder="choose a jj" style="width:250px; background-color: #f2f2f2;">
-          <mat-option value="unassigned"><i>choose a jj</i></mat-option>
-          <mat-option value=""><i>all JJs</i></mat-option>
-          @for (jj of jjList; track jj.idir) {
-            <mat-option [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i></mat-option>
-          }
-        </mat-select>
+        <mat-form-field fxFlex="400px" appearance="outline" class="me-0">
+          <mat-select [formControl]="jjAssignedToFilter" placeholder="choose a jj">
+            <mat-option value="unassigned"><i>choose a jj</i></mat-option>
+            <mat-option value=""><i>all JJs</i></mat-option>
+            @for (jj of jjList; track jj.idir) {
+              <mat-option [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i></mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
       </div>
     </div>
     <div class="col-auto">
