@@ -49,7 +49,7 @@
             <span class="BC-Gov-15px-black-text">Ticket #:</span>&nbsp;<span class="text">{{
               lastUpdatedDispute.ticketNumber }}</span>
           </div>
-          <div class="col-md-3">
+          <div *ngIf="lastUpdatedDispute.createdBy === 'OCCAMORDS'" class="col-md-3">
             <span class="BC-Gov-15px-black-text">Ticket Type:</span>&nbsp;<span class="text">{{
               lastUpdatedDispute.ticketNumber.substring(0,1) === 'E' ? "Electronic Ticket" : "Intersection safety camera ticket" }}</span>
           </div>

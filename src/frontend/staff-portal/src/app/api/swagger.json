@@ -8701,6 +8701,10 @@
           "courtAgenName": {
             "type": "string",
             "nullable": true
+          },
+          "createdBy": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

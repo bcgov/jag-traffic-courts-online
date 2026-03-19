@@ -1346,29 +1346,38 @@ export class ManualDisputeEntryComponent implements OnInit {
   }
 
   private buildDisputeCounts(): DisputeCount[] {
+    const disputeData = this.disputeInfoForm.value;
+    
     return this.disputeCounts.map((count, index) => {
       const countFormData = this.disputeInfoForm.get(`count${count.countNo}`).value;
-      
-      // Determine pleaCode based on skip status and request flags
-      // This logic matches the citizen portal dispute-stepper.component.ts
-      let pleaCode: any;
       const isSkipped = countFormData.__skip;
+      
+      // Determine pleaCode based on context and user selection
+      let pleaCode: any;
       
       if (isSkipped) {
         // Skipped counts are treated as guilty plea with no action
         pleaCode = this.Plea.G;
-      } else if (countFormData.requestTimeToPay === this.RequestTimeToPay.Y || 
-                 countFormData.requestReduction === this.RequestReduction.Y) {
-        // Guilty plea with time to pay or reduction request
-        pleaCode = this.Plea.G;
+      } else if (disputeData.requestCourtAppearance === this.RequestCourtAppearance.Y) {
+        // For court hearing: use the pleaCode directly selected by user via radio buttons
+        // User explicitly selects G (guilty) or N (not guilty) in the form
+        pleaCode = countFormData.pleaCode;
       } else {
-        // Not guilty - disputing the charge
-        pleaCode = this.Plea.N;
+        // For written reasons (no court hearing): always guilty plea
+        // They're pleading guilty and requesting reduction/time-to-pay via written reasons
+        pleaCode = this.Plea.G;
       }
+      
+      // Use dispute-level requestCourtAppearance value, not count-level
+      // This matches citizen portal logic: request_court_appearance is copied from dispute level to each count
+      // Exception: skipped counts should have requestCourtAppearance = N
+      const requestCourtAppearance = isSkipped 
+        ? this.RequestCourtAppearance.N 
+        : disputeData.requestCourtAppearance;
       
       return {
         countNo: count.countNo,
-        requestCourtAppearance: countFormData.requestCourtAppearance,
+        requestCourtAppearance: requestCourtAppearance,
         requestReduction: countFormData.requestReduction,
         requestTimeToPay: countFormData.requestTimeToPay,
         pleaCode: pleaCode

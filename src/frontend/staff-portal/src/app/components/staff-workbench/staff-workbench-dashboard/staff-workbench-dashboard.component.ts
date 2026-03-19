@@ -64,10 +64,14 @@ export class StaffWorkbenchDashboardComponent implements OnInit {
     }
 
     this.disputeInfo = dispute;
-    if (dispute.ticketNumber[0] == 'A') {
-      this.decidePopup = 'E'
+    if (dispute.createdBy !== 'OCCAMORDS') {
+      this.decidePopup = 'A';
     } else {
-      this.decidePopup = "A"
+      if (dispute.ticketNumber[0] === 'A') {
+        this.decidePopup = 'E';
+      } else {
+        this.decidePopup = 'A';
+      }
     }
     this.tabTypeSelected = type;
     this.showTicket = true;
