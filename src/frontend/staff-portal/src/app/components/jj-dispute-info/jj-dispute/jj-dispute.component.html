@@ -152,13 +152,17 @@
               <p class="section-grid-header">Organization/Detachment/Location</p>
               <p class="section-grid-text">{{ lastUpdatedJJDispute.policeDetachment }}</p>
             </span>
+            <span class="section-grid-cell">
+              <p class="section-grid-header">Online Submission Filed by</p>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.occamDisputeCreatedBy === "OCCAMORDS" ? "Citizen" : lastUpdatedJJDispute.occamDisputeCreatedBy }}</p>
+            </span>
           </div>
         </form>
       </section>
       <section class="section-sticky">
         <ng-container subHeader>
           <span>
-            <h3>Disputant Entered Information <span class="medium-note"><i>(source Online Portal)</i></span></h3>
+            <h3>Disputant Provided Information <span class="medium-note"><i>(source Online Portal)</i></span></h3>
           </span>
           <span class="section-grid-header">Contact Type: </span>
           <span class="section-grid-text" *ngIf="lastUpdatedJJDispute.contactType === ContactType.Individual">Disputant</span>

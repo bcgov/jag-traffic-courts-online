@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TrafficCourts.Cdogs.Client;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
+using TrafficCourts.Common.Features.DisputeCreation;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.Exceptions;
 using TrafficCourts.Staff.Service.Authentication;
@@ -16,6 +16,9 @@ using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
+#if DEBUG
+    [AllowAnonymous]
+#endif
 public class DisputeController : StaffControllerBase
 {
     private readonly IDisputeService _disputeService;
@@ -576,6 +579,7 @@ public class DisputeController : StaffControllerBase
     /// <param name="updateStatusId">Unique identifier for a specific DisputeUpdateRequest record to reject.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
+
     [HttpPut("updateRequest/{updateStatusId}/reject")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -596,9 +600,7 @@ public class DisputeController : StaffControllerBase
     /// <response code="403">Forbidden, requires dispute:read permission.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A collection of Dispute records</returns>
-#if DEBUG
-    [AllowAnonymous]
-#endif
+
     [HttpGet("disputesWithUpdateRequests")]
     [ProducesResponseType(typeof(IList<DisputeWithUpdates>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -637,6 +639,7 @@ public class DisputeController : StaffControllerBase
     /// <response code="403">Forbidden, requires dispute:read permission.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A collection of Dispute update request records</returns>
+
     [HttpGet("{disputeId}/disputeUpdateRequests")]
     [ProducesResponseType(typeof(IList<DisputeUpdateRequest>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -673,6 +676,7 @@ public class DisputeController : StaffControllerBase
     /// <response code="403">Forbidden.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A generated document</returns>
+
     [HttpGet("{disputeId}/print")]
     [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK, "application/octet-stream")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -706,6 +710,7 @@ public class DisputeController : StaffControllerBase
     /// <param name="violationTicketCountId">The ID of the violation ticket count to delete.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>An <see cref="IActionResult"/> representing the result of the asynchronous operation.</returns>
+
     [HttpDelete("violationTicketCount/{violationTicketCountId}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -724,6 +729,64 @@ public class DisputeController : StaffControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Error when deleting violation ticket count with ID {violationTicketCountId}.", violationTicketCountId);
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Creates a Dispute record, similar to a Citizen Dispute Submit, but from Staff instead
+    /// </summary>
+    /// <param name="dispute"></param>
+    /// <param name="timeZone"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The Dispute was created.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
+    /// <response code="403">Forbidden, requires dispute:update permission.</response>
+    /// <response code="409">Dispute has already been created for ticket.</response>
+    /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
+
+    [HttpPost("")]
+    [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.Dispute, Scopes.Update)]
+    public async Task<IActionResult> CreateDisputeAsync(Dispute dispute,
+        [FromHeader(Name = "X-Timezone")] string timeZone,
+        CancellationToken cancellationToken)
+    {
+        if (!ValidateTimeZone(timeZone, out TimeZoneInfo? timeZoneInfo, out IActionResult? validationResult))
+        {
+            return validationResult; // Return BadRequest if validation fails
+        }
+
+        _logger.LogDebug("Creating the Dispute in oracle-data-api");
+
+        try
+        {
+            Dispute updatedDispute = await _disputeService.CreateDisputeAsync(User, dispute, timeZoneInfo, cancellationToken);
+            return Ok(updatedDispute);
+        }
+        catch (DisputeAlreadyExistsException e)
+        {
+            return new HttpError(StatusCodes.Status409Conflict, e.Message);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e)
+        {
+            _logger.LogError(e, "Error retrieving Dispute from oracle-data-api");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error updating Dispute in oracle-data-api");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }

@@ -1,0 +1,27 @@
+meta {
+  name: TicketSearch (PROD)
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://tickets.gov.bc.ca/api/tickets/search?ticketNumber=EA00836032&time=06:55
+  body: none
+  auth: none
+}
+
+params:query {
+  ticketNumber: EA00836032
+  time: 06:55
+  ~ticketNumber: EA00819082
+  ~time: 16:56
+}
+
+headers {
+  User-Agent: insomnia/11.6.1
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

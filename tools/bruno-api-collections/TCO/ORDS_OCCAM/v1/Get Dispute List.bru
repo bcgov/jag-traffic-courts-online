@@ -1,0 +1,20 @@
+meta {
+  name: Get Dispute List
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{occam.base_url}}/occam/v1/disputeList
+  body: none
+  auth: inherit
+}
+
+headers {
+  User-Agent: bruno/2.15.1
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

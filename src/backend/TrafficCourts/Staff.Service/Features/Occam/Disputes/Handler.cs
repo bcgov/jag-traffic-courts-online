@@ -332,7 +332,8 @@ public class Handler : IRequestHandler<Request, Response>
             decisionMadeBy = dispute.most_recent_decision_made_by,
             jjDecisionDate = dispute.jj_decision_dt,
             courtAgenId = dispute.court_agen_id?.ToString() ?? string.Empty,
-            courtAgenName = dispute.court_agen_nm
+            courtAgenName = dispute.court_agen_nm,
+            createdBy = dispute.ent_user_id,
         };
 
         listItem.UtcToLocalTime(timeZone);

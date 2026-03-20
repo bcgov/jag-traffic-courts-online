@@ -27,6 +27,7 @@ import { TicketInboxComponent } from '@components/staff-workbench/ticket-inbox/t
 import { UpdateRequestInboxComponent } from '@components/staff-workbench/update-request-inbox/update-request-inbox.component';
 import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
 import { TicketInfoComponent } from '@components/staff-workbench/ticket-info/ticket-info.component';
+import { ManualDisputeEntryComponent } from '@components/staff-workbench/manual-dispute-entry/manual-dispute-entry.component';
 import { UpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/update-request-info.component';
 import { PhoneUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/phone-update-request-info/phone-update-request-info.component';
 import { NameUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/name-update-request-info/name-update-request-info.component';
@@ -87,6 +88,7 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     UpdateRequestInboxComponent,
     UnauthorizedComponent,
     TicketInfoComponent,
+    ManualDisputeEntryComponent,
     UpdateRequestInfoComponent,
     PhoneUpdateRequestInfoComponent,
     DocumentUpdateRequestInfoComponent,

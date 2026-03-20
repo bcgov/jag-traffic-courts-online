@@ -7,15 +7,15 @@ using TrafficCourts.Messaging.MessageContracts;
 namespace TrafficCourts.Workflow.Service.Consumers
 {
     /// <summary>
-    /// Creates the dispute in the database.
+    /// Adds citizen-submitted disputes to the database.
     /// </summary>
-    public class CreateDisputeInDatabaseConsumer : IConsumer<SubmitNoticeOfDispute>
+    public class SubmitNoticeOfDisputeConsumer : IConsumer<SubmitNoticeOfDispute>
     {
-        private readonly ILogger<CreateDisputeInDatabaseConsumer> _logger;
+        private readonly ILogger<SubmitNoticeOfDisputeConsumer> _logger;
         private readonly IOracleDataApiService _oracleDataApiService;
         private readonly IMapper _mapper;
 
-        public CreateDisputeInDatabaseConsumer(ILogger<CreateDisputeInDatabaseConsumer> logger, IOracleDataApiService oracleDataApiService, IMapper mapper)
+        public SubmitNoticeOfDisputeConsumer(ILogger<SubmitNoticeOfDisputeConsumer> logger, IOracleDataApiService oracleDataApiService, IMapper mapper)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
@@ -29,30 +29,31 @@ namespace TrafficCourts.Workflow.Service.Consumers
             try
             {
                 _logger.LogDebug("Consuming message");
-                var cancellationToken = context.CancellationToken;
 
                 Dispute dispute = _mapper.Map<Dispute>(context.Message);
 
                 _logger.LogTrace("TRY CREATING DISPUTE: {@Dispute}", dispute);
 
-                var disputeId = await _oracleDataApiService.SaveDisputeAsync(dispute, cancellationToken);
-
+                var disputeId = await _oracleDataApiService.SaveDisputeAsync(dispute, context.CancellationToken);
                 if (disputeId > 0)
                 {
                     _logger.LogDebug("Dispute has been saved with {DisputeId}: ", disputeId);
 
-                    // File History 
-                    SaveFileHistoryRecord fileHistoryRecord = new SaveFileHistoryRecord();
-                    fileHistoryRecord.DisputeId = disputeId;
-                    fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.SUB; // Dispute submitted for staff review
-                    fileHistoryRecord.ActionByApplicationUser = "Disputant";
+                    // save file history
+                    await context.PublishWithLog(_logger, new SaveFileHistoryRecord
+                    {
+                        DisputeId = disputeId,
+                        AuditLogEntryType = FileHistoryAuditLogEntryType.SUB, // Dispute submitted for staff review
+                        ActionByApplicationUser = "Disputant"
+                    }, context.CancellationToken);
                     
-                    await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
-
-                    await context.PublishWithLog(_logger, new NoticeOfDisputeSubmitted
+                    // send notification that a dispute has been created (which will kick off email validation)
+                    await context.PublishWithLog(_logger, new DisputeCreated
                     {
                         NoticeOfDisputeGuid = context.Message.NoticeOfDisputeGuid,
-                    }, cancellationToken);
+                        TicketNumber = context.Message.TicketNumber,
+                        EmailAddress = context.Message.EmailAddress
+                    }, context.CancellationToken);
                 }
                 else
                 {
@@ -63,7 +64,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     await context.Publish<DisputeRejected>(new
                     {
                         Reason = "Bad request"
-                    }, cancellationToken);
+                    }, context.CancellationToken);
                 }
             }
             catch (Exception ex)

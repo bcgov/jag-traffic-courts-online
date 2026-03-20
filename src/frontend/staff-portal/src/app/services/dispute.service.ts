@@ -247,6 +247,37 @@ export class DisputeService implements IDisputeService {
   }
 
   /**
+   * Creates a new dispute by calling POST /api/dispute/ endpoint
+   * @param dispute The dispute object to create
+   * @returns Observable of the created Dispute
+   */
+  public createDispute(dispute: Dispute): Observable<Dispute> {
+    dispute.disputantBirthdate = "2001-01-01"; // TODO: remove this after disputant birthdate gone from schema
+    dispute = this.splitDisputantGivenNames(dispute);
+    dispute = this.splitContactGivenNames(dispute);
+    dispute = this.splitLawyerNames(dispute);
+    dispute = this.splitAddressLines(dispute);
+    
+    return this.disputeApiService.apiDisputePost(null, dispute)
+      .pipe(
+        map((response: Dispute) => {
+          this.logger.info('DisputeService::createDispute', response);
+          this.refreshDisputes.next(response);
+          return response;
+        }),
+        catchError((error: any) => {
+          let errorMsg = error?.error?.detail ?? this.configService.dispute_create_error;
+          if (error?.status === 409) {
+            errorMsg = this.configService.dispute_create_duplicate_error;
+          }
+          this.toastService.openErrorToast(errorMsg);
+          this.logger.error('DisputeService::createDispute error has occurred: ', error);
+          throw error;
+        })
+      );
+  }
+
+  /**
      * Put the dispute to RSI by Id.
      *
      * @param disputeId
@@ -533,8 +564,8 @@ export class DisputeService implements IDisputeService {
     let dispute = Dispute;
 
     dispute.contactGivenNames = Dispute.contactGiven1Nm;
-    if (Dispute.contactGiven2Nm) dispute.contactGivenNames = Dispute.contactGivenNames + " " + Dispute.contactGiven1Nm;
-    if (Dispute.contactGiven2Nm) dispute.contactGivenNames = Dispute.contactGivenNames + " " + Dispute.contactGiven3Nm;
+    if (Dispute.contactGiven2Nm) dispute.contactGivenNames = dispute.contactGivenNames + " " + Dispute.contactGiven2Nm;
+    if (Dispute.contactGiven3Nm) dispute.contactGivenNames = dispute.contactGivenNames + " " + Dispute.contactGiven3Nm;
 
     return dispute;
   }

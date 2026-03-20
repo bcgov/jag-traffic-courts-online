@@ -23,6 +23,7 @@ export class StaffWorkbenchDashboardComponent implements OnInit {
   busy: Subscription;
   tabSelected = new FormControl(0);
   showTicket: boolean = false;
+  showManualEntry: boolean = false;
   decidePopup = '';
   disputeInfo: Dispute;
   tcoDisputeInfo: DisputeCaseFileSummary;
@@ -56,11 +57,21 @@ export class StaffWorkbenchDashboardComponent implements OnInit {
   }
 
   changeDispute(dispute: Dispute, type: TabType) {
+    if ((dispute as any)?.action === 'createNew') {
+      this.showManualEntry = true;
+      this.showTicket = false;
+      return;
+    }
+
     this.disputeInfo = dispute;
-    if (dispute.ticketNumber[0] == 'A') {
-      this.decidePopup = 'E'
+    if (dispute.createdBy !== 'OCCAMORDS') {
+      this.decidePopup = 'A';
     } else {
-      this.decidePopup = "A"
+      if (dispute.ticketNumber[0] === 'A') {
+        this.decidePopup = 'E';
+      } else {
+        this.decidePopup = 'A';
+      }
     }
     this.tabTypeSelected = type;
     this.showTicket = true;
@@ -74,6 +85,7 @@ export class StaffWorkbenchDashboardComponent implements OnInit {
 
   backInbox() {
     this.showTicket = false;
+    this.showManualEntry = false;
     this.disputeService.refreshDisputes.emit();
   }
 }

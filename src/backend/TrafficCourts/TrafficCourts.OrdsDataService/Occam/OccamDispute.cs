@@ -29,6 +29,7 @@ public class OccamDispute
     public string jj_assigned_to { get; set; }
     public string most_recent_decision_made_by { get; set; }
     public DateTime? jj_decision_dt { get; set; }
+    public string ent_user_id { get; set; }
 }
 
 

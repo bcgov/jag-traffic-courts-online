@@ -1,8 +1,15 @@
 # Oracle Data API
 
-## IDE Setup
-Lombok is required to be enabled in Eclipse for this project to build correctly
-(https://www.baeldung.com/lombok-ide#eclipse)
+## Eclipse IDE Setup
+
+- Lombok is required to be enabled in Eclipse for this project to build correctly
+  - Follow the instructions to install [Lombok in Eclipse](https://www.baeldung.com/lombok-ide#eclipse), using a recent version like [lombok-1.18.38.jar](https://repo1.maven.org/maven2/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar) instead of 1.18.4 from the example
+
+- Enable Annotation Processing for the project in Eclipse
+  - Right-click the project, select Properties, then navigate to Java Compiler → Annotation Properties, check Enable project specific settings, and Apply
+
+- Update Maven dependencies
+  - Right-click the project, select Maven → Update Project, check Force Update of Snapshots/Releases, and hit OK
 
 ## Online Court Case Management ORDS Service OpenAPI Specification
 

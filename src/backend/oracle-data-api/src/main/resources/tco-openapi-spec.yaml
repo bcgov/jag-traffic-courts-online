@@ -585,6 +585,8 @@ components:
           type: string
         occamViolationTicketUpldId:
           type: string
+        occamDisputeCreatedBy:
+          type: string
         offenceLocationTxt:
           type: string
           format: nullable

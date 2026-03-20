@@ -1,0 +1,21 @@
+meta {
+  name: OCCAM ORDS v2
+  type: http
+  seq: 7
+}
+
+get {
+  url: https://wsgw.dev.jag.gov.bc.ca/occam/ords/devj/occamords/open-api-catalog/v2/
+  body: none
+  auth: basic
+}
+
+auth:basic {
+  username: {{occam.username}}
+  password: {{occam.password}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

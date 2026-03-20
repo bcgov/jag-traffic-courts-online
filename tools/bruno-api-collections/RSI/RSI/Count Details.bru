@@ -1,0 +1,28 @@
+meta {
+  name: Count Details
+  type: http
+  seq: 3
+}
+
+get {
+  url: https://{{RSI_auth_host}}/ride/paybc/paymentsvc/api/v1/ticket/:ticket_count_id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  ticket_count_id: EA852614621
+}
+
+headers {
+  User-Agent: insomnia/11.3.0
+}
+
+auth:bearer {
+  token: {{bearer_token}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,43 @@
+meta {
+  name: auditLogEntryList
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{v1_baseUrl}}/auditLogEntryList
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~ticketNumber: 
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/auditLogEntryList
+    method: GET
+    mode: none
+    params:query: {
+      ~ticketNumber: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

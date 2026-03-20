@@ -1,0 +1,47 @@
+meta {
+  name: violationTicket
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{v1_baseUrl}}/violationTicket?disputeId=2020
+  body: none
+  auth: inherit
+}
+
+params:query {
+  disputeId: 2020
+  ~noticeOfDisputeGuid: 
+  ~violationTicketId: 
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/violationTicket
+    method: GET
+    mode: none
+    params:query: {
+      ~disputeId: 
+      ~noticeOfDisputeGuid: 
+      ~violationTicketId: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

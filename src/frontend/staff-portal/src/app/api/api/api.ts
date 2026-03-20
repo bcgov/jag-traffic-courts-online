@@ -16,4 +16,6 @@ export * from './lookup.service';
 import { LookupService } from './lookup.service';
 export * from './permissions.service';
 import { PermissionsService } from './permissions.service';
-export const APIS = [DisputeService, DisputeLockService, DocumentService, EmailHistoryService, FileHistoryService, JJService, KeycloakService, LookupService, PermissionsService];
+export * from './roadSafetyTicketSearch.service';
+import { RoadSafetyTicketSearchService } from './roadSafetyTicketSearch.service';
+export const APIS = [DisputeService, DisputeLockService, DocumentService, EmailHistoryService, FileHistoryService, JJService, KeycloakService, LookupService, PermissionsService, RoadSafetyTicketSearchService];

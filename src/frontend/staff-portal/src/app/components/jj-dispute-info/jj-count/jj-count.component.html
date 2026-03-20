@@ -40,17 +40,29 @@
         <span class="section-grid-cell" style="grid-column: span 2">
           <p class="section-grid-header">{{ "label.disputant_statement" | translate }}</p>
           <p class="section-grid-text" *ngIf="!jjDisputedCount">&nbsp;</p>
-          <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.plea === Plea.G">{{ 'label.plea_guilty'
+          <!-- First person wording when created by citizen (OCCAMORDS) -->
+          <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.plea === Plea.G && jjDisputeInfo.occamDisputeCreatedBy === 'OCCAMORDS'">{{ 'label.plea_guilty'
             | translate }}</p>
-          <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.plea !== Plea.G">{{
+          <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.plea !== Plea.G && jjDisputeInfo.occamDisputeCreatedBy === 'OCCAMORDS'">{{
             'label.plea_not_guilty' | translate }}</p>
+          <!-- Third person wording when created by staff (not OCCAMORDS) -->
+          <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.plea === Plea.G && jjDisputeInfo.occamDisputeCreatedBy !== 'OCCAMORDS'">
+            {{ 'label.plea_guilty_third_person' | translate }}</p>
+          <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.plea !== Plea.G && jjDisputeInfo.occamDisputeCreatedBy !== 'OCCAMORDS'">
+            {{ 'label.plea_not_guilty_third_person' | translate }}</p>
         </span>
         <span class="section-grid-cell" style="grid-column: span 2">
           <p class="section-grid-header">{{ "label.appearInCourt" | translate }}</p>
-          <p class="section-grid-text" *ngIf="!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.Y">
-            I want to appear in court</p>
-          <p class="section-grid-text" *ngIf="!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.N">
-            I do not want to appear in court</p>
+          <!-- First person wording when created by citizen (OCCAMORDS) -->
+          <p class="section-grid-text" *ngIf="!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.Y && jjDisputeInfo.occamDisputeCreatedBy === 'OCCAMORDS'">
+            {{ 'appearInCourtType.yes' | translate }}</p>
+          <p class="section-grid-text" *ngIf="!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.N && jjDisputeInfo.occamDisputeCreatedBy === 'OCCAMORDS'">
+            {{ 'appearInCourtType.no' | translate }}</p>
+          <!-- Third person wording when created by staff (not OCCAMORDS) -->
+          <p class="section-grid-text" *ngIf="!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.Y && jjDisputeInfo.occamDisputeCreatedBy !== 'OCCAMORDS'">
+            {{ 'appearInCourtType.yes_third_person' | translate }}</p>
+          <p class="section-grid-text" *ngIf="!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.N && jjDisputeInfo.occamDisputeCreatedBy !== 'OCCAMORDS'">
+            {{ 'appearInCourtType.no_third_person' | translate }}</p>
           <p class="section-grid-text" *ngIf="!isSSEditMode && !jjDisputedCount">&nbsp;</p>
           <mat-form-field appearance="outline" *ngIf="jjDisputedCount && isSSEditMode">
             <mat-select formControlName="appearInCourt">

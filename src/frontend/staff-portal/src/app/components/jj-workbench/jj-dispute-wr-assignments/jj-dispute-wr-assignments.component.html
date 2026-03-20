@@ -124,6 +124,15 @@
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="appearanceRoomCode">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <span class="text-start">COURT ROOM</span>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{ element.appearanceRoomCode }}</span>
+      </td>
+    </ng-container>
+
     <ng-container matColumnDef="policeDetachment">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         <span class="text-start">ENFORCEMENT AGENCY</span>
