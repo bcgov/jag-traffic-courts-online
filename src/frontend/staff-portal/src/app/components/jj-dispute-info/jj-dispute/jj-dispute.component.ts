@@ -304,35 +304,9 @@ export class JJDisputeComponent implements OnInit {
         ...this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs
       ];
       
-      // DEMO: Populate mock amendment data for demonstration purposes
-      // Remove this block for production - amendments should come from API
-      if (this.type === TabType.DECISION_VALIDATION) {
-        this.amendmentData = {
-          isAmended: true,
-          lastName: 'Doe',
-          givenName: 'John',
-          violationDate: '15-Jan-2026',
-          other: 'Changed per court hearing',
-          amendments: [
-            {
-              count: 1,
-              isAmended: true,
-              amendedStatute: 'Motor Vehicle Act 144(1)(b) - Drive without reasonable consideration',
-              other: ''
-            },
-            {
-              count: 2,
-              isAmended: true,
-              amendedStatute: 'Motor Vehicle Act 144(1)(a) - Drive without due care and attention',
-              other: ''
-            }
-          ]
-        };
-        
-        this.amendmentProcessingStatuses = [
-          { countNumber: 1, isCompleted: false },
-          { countNumber: 2, isCompleted: false }
-        ];
+      // Initialize amendment state. Real amendment data should come from API integration.
+      if (this.type === TabType.DECISION_VALIDATION && !this.amendmentData) {
+        this.amendmentData = { isAmended: false, amendments: [] };
       }
     });
   }
@@ -865,7 +839,7 @@ export class JJDisputeComponent implements OnInit {
   onBackClicked() {
     // Check if on Decision Validation page with unacknowledged amendments
     if (this.type === TabType.DECISION_VALIDATION && 
-        this.amendmentData?.isAmended && 
+        this.hasAmendmentData() && 
         !this.amendmentValidationResult?.allAmendmentsProcessed) {
       
       const dialogOptions: DialogOptions = {
@@ -947,13 +921,22 @@ export class JJDisputeComponent implements OnInit {
     if (!this.amendmentData || !this.amendmentData.isAmended) {
       return false;
     }
+
+    const hasTopLevelData =
+      !!this.amendmentData.lastName?.trim() ||
+      !!this.amendmentData.givenName?.trim() ||
+      !!this.amendmentData.violationDate?.trim() ||
+      !!this.amendmentData.other?.trim();
     
     // Check if any amendment has data entered
-    return this.amendmentData.amendments.some(amendment => 
+    const hasCountLevelData = this.amendmentData.amendments.some(amendment => 
       amendment.isAmended && (
-        (amendment.amendedStatute && amendment.amendedStatute.trim())
+        !!amendment.amendedStatute?.trim() ||
+        !!amendment.other?.trim()
       )
     );
+
+    return hasTopLevelData || hasCountLevelData;
   }
 
   /**

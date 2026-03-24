@@ -33,17 +33,10 @@ export class StaffAmendmentValidationComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeAmendmentStatuses();
-    this.addMockDataIfEmpty();
   }
 
-  addMockDataIfEmpty(): void {
-    // Add mock data if the fields are empty (for testing/demo purposes)
-    if (this.amendmentData && !this.amendmentData.lastName && !this.amendmentData.givenName) {
-      this.amendmentData.lastName = 'Smith';
-      this.amendmentData.givenName = 'John Robert';
-      this.amendmentData.violationDate = '15-Jan-2026';
-      this.amendmentData.other = 'Corrected driver information per court hearing';
-    }
+  hasValue(value: string | null | undefined): boolean {
+    return !!value && value.trim().length > 0;
   }
 
   onAcknowledgedChange(isChecked: boolean): void {

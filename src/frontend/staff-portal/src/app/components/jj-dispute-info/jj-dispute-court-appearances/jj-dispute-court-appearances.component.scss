@@ -20,3 +20,74 @@ th {
 .hidden {
   display: none;
 }
+
+.record-details-cell {
+  padding: 0 !important;
+  border-top: none;
+  background-color: #f8fafc;
+}
+
+.record-details-panel {
+  margin: 8px 12px 12px;
+  padding: 12px 14px;
+  border: 1px solid #d7deea;
+  border-radius: 4px;
+  background-color: #ffffff;
+}
+
+.record-section {
+  padding: 10px 0;
+}
+
+.record-section + .record-section {
+  border-top: 1px solid #e5eaf2;
+}
+
+.record-section-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1f2d44;
+  margin-bottom: 8px;
+}
+
+.amendment-section .record-section-label {
+  font-size: 12px;
+  color: #b3261e;
+}
+
+.amendment-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+
+.count-amendment-list {
+  display: grid;
+  gap: 8px;
+}
+
+.count-amendment-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 8px 10px;
+  background-color: #fff8f6;
+  border: 1px solid #f1d5d0;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.count-label {
+  font-weight: 700;
+  color: #5a2f2a;
+  min-width: 58px;
+}
+
+.endorsement-text {
+  font-size: 14px;
+  color: #24354d;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}

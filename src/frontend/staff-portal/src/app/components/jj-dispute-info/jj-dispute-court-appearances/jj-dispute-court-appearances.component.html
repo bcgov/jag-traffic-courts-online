@@ -99,31 +99,37 @@
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="comments">
-    <td mat-cell *matCellDef="let element" [attr.colspan]="11">
-      <span><b>JJ Endorsements:&nbsp;</b>{{ element.comments }}</span>
-    </td>
-  </ng-container>
+  <ng-container matColumnDef="recordDetails">
+    <td mat-cell *matCellDef="let element; let i = dataIndex" [attr.colspan]="11" class="record-details-cell">
+      <div class="record-details-panel" *ngIf="hasAmendments(i) || element.comments">
+        <div class="record-section amendment-section" *ngIf="hasAmendments(i)">
+          <div class="record-section-label">Amendments</div>
 
-  <ng-container matColumnDef="amendments">
-    <td mat-cell *matCellDef="let element; let i = dataIndex" [attr.colspan]="11" style="padding: 8px 16px; background-color: #fffbf0; font-size: 0.9em;">
-      <div *ngIf="hasAmendments(i)">
-        <span style="font-weight: bold; color: #d32f2f;">Amendments:</span>
-        <span *ngIf="getAmendments(i).lastName">Last Name: <strong>{{ getAmendments(i).lastName }}</strong></span>
-        <span *ngIf="getAmendments(i).givenName" style="margin-left: 15px;">Given Name(s): <strong>{{ getAmendments(i).givenName }}</strong></span>
-        <span *ngIf="getAmendments(i).violationDate" style="margin-left: 15px;">Violation Date: <strong>{{ getAmendments(i).violationDate }}</strong></span>
-        <span *ngIf="getAmendments(i).other" style="margin-left: 15px;">Other: <strong>{{ getAmendments(i).other }}</strong></span>
-        <span *ngFor="let count of getAmendments(i).counts" style="margin-left: 15px;">
-          Count {{ count.number }}:
-          <span *ngIf="count.amendedStatute"> Amended MVA Section: <strong>{{ count.amendedStatute }}</strong></span>
-          <span *ngIf="count.other"> ({{ count.other }})</span>
-        </span>
+          <div class="amendment-meta">
+            <span *ngIf="getAmendments(i).lastName">Last Name: <strong>{{ getAmendments(i).lastName }}</strong></span>
+            <span *ngIf="getAmendments(i).givenName">Given Name(s): <strong>{{ getAmendments(i).givenName }}</strong></span>
+            <span *ngIf="getAmendments(i).violationDate">Violation Date: <strong>{{ getAmendments(i).violationDate }}</strong></span>
+            <span *ngIf="getAmendments(i).other">Other: <strong>{{ getAmendments(i).other }}</strong></span>
+          </div>
+
+          <div class="count-amendment-list">
+            <div class="count-amendment-item" *ngFor="let count of getAmendments(i).counts">
+              <span class="count-label">Count {{ count.number }}</span>
+              <span *ngIf="count.amendedStatute">MVA Section: <strong>{{ count.amendedStatute }}</strong></span>
+              <span *ngIf="count.other">Other: <strong>{{ count.other }}</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="record-section endorsement-section" *ngIf="element.comments">
+          <div class="record-section-label">JJ Endorsements</div>
+          <div class="endorsement-text">{{ element.comments }}</div>
+        </div>
       </div>
     </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  <tr mat-row *matRowDef="let row; let i = dataIndex; columns: ['amendments'];" [class.hidden]="!hasAmendments(i)"></tr>
-  <tr mat-row *matRowDef="let row; columns: ['comments'];"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['recordDetails'];"></tr>
 </table>

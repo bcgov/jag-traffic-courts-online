@@ -492,7 +492,7 @@
             </span>
             
             <!-- STAFF AMENDMENT VALIDATION - Inline in Decision Validation -->
-            <span #amendmentValidation class="section-grid-cell" style="grid-column: span 11;"
+            <span #amendmentValidation class="section-grid-cell amendment-validation-cell" style="grid-column: span 11;"
               *ngIf="type === tabTypes.DECISION_VALIDATION && amendmentData?.isAmended">
               <app-staff-amendment-validation
                 [amendmentData]="amendmentData"

@@ -3,11 +3,19 @@
     Amendment:
   </p>
   <div class="block">
-    <div style="margin-bottom: 15px;">
-      <span style="font-weight: bold;">Last Name:</span> {{ amendmentData?.lastName || '' }}
-      <span style="margin-left: 20px; font-weight: bold;">Given Name(s):</span> {{ amendmentData?.givenName || '' }}
-      <span style="margin-left: 20px; font-weight: bold;">Violation Date:</span> {{ amendmentData?.violationDate || '' }}
-      <span style="margin-left: 20px; font-weight: bold;">Other:</span> {{ amendmentData?.other || '' }}
+    <div style="margin-bottom: 15px;" *ngIf="hasValue(amendmentData?.lastName) || hasValue(amendmentData?.givenName) || hasValue(amendmentData?.violationDate) || hasValue(amendmentData?.other)">
+      <span *ngIf="hasValue(amendmentData?.lastName)">
+        <span style="font-weight: bold;">Last Name:</span> {{ amendmentData?.lastName }}
+      </span>
+      <span *ngIf="hasValue(amendmentData?.givenName)" style="margin-left: 20px;">
+        <span style="font-weight: bold;">Given Name(s):</span> {{ amendmentData?.givenName }}
+      </span>
+      <span *ngIf="hasValue(amendmentData?.violationDate)" style="margin-left: 20px;">
+        <span style="font-weight: bold;">Violation Date:</span> {{ amendmentData?.violationDate }}
+      </span>
+      <span *ngIf="hasValue(amendmentData?.other)" style="margin-left: 20px;">
+        <span style="font-weight: bold;">Other:</span> {{ amendmentData?.other }}
+      </span>
     </div>
 
     <!-- Amendment Counts -->
@@ -16,12 +24,13 @@
       <p style="font-weight: 600; margin-bottom: 15px; font-size: 16px;">Count {{ countNumber }}</p>
       
       <ng-container *ngIf="getAmendmentForCount(countNumber) as amendment">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-        <div>
-          <span style="font-weight: bold;">Amended MVA Section:</span> {{ amendment.amendedStatute || '' }}
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;"
+          *ngIf="hasValue(amendment.amendedStatute) || hasValue(amendment.other)">
+        <div *ngIf="hasValue(amendment.amendedStatute)">
+          <span style="font-weight: bold;">Amended MVA Section:</span> {{ amendment.amendedStatute }}
         </div>
-        <div>
-          <span style="font-weight: bold;">Other:</span> {{ amendment.other || '' }}
+        <div *ngIf="hasValue(amendment.other)">
+          <span style="font-weight: bold;">Other:</span> {{ amendment.other }}
         </div>
         </div>
       </ng-container>
