@@ -22,12 +22,12 @@ public class JJDisputeCourtAppearanceAmendments
     /// </summary>
     public string DisputantGivenNamesNm { get; set; }
     
-    public DateTime? ViolationDate { get; set; }
+    public DateTime? ViolationDateDtm { get; set; }
     
     /// <summary>
     /// Max 500 characters.
     /// </summary>
-    public string OtherNotes { get; set; }
+    public string OtherNotesTxt { get; set; }
     
     /// <summary>
     /// Max 500 characters.

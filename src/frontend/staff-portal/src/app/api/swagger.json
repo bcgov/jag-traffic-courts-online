@@ -8188,12 +8188,12 @@
             "type": "string",
             "nullable": true
           },
-          "violationDate": {
+          "violationDateDtm": {
             "type": "string",
             "format": "date-time",
             "nullable": true
           },
-          "otherNotes": {
+          "otherNotesTxt": {
             "type": "string",
             "nullable": true
           },

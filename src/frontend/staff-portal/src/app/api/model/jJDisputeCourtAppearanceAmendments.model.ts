@@ -13,8 +13,8 @@ export interface JJDisputeCourtAppearanceAmendments {
     appearanceAmendmentId?: number | null;
     disputantSurnameNm?: string | null;
     disputantGivenNamesNm?: string | null;
-    violationDate?: string | null;
-    otherNotes?: string | null;
+    violationDateDtm?: string | null;
+    otherNotesTxt?: string | null;
     count1ActSectDescTxt?: string | null;
     count1OtherTxt?: string | null;
     count2ActSectDescTxt?: string | null;
