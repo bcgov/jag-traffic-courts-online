@@ -38,7 +38,7 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
       violationDate: '',
       other: '',
       counts: [
-        { number: 2, section: '144(1)(a)', offence: '', mvaSection: '', other: '' }
+        { number: 2, amendedStatute: 'Motor Vehicle Act 144(1)(a) - Drive without due care and attention', other: '' }
       ]
     },
     1: {
@@ -47,7 +47,7 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
       violationDate: '15-Feb-2024',
       other: 'Date corrected as per disputant testimony',
       counts: [
-        { number: 1, section: '', offence: 'MVR 6.07 Emergency brake inadequate', mvaSection: '', other: '' }
+        { number: 1, amendedStatute: 'MVR 6.07 - Emergency brake inadequate', other: '' }
       ]
     },
     2: {
@@ -56,8 +56,8 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
       violationDate: '10-Jan-2024',
       other: '',
       counts: [
-        { number: 1, section: '146(1)', offence: 'Fail to obey traffic control device', mvaSection: 'Motor Vehicle Act', other: 'Amended per evidence review' },
-        { number: 2, section: '144(1)(b)', offence: 'Drive without reasonable consideration', mvaSection: 'Motor Vehicle Act', other: '' }
+        { number: 1, amendedStatute: 'Motor Vehicle Act 146(1) - Fail to obey traffic control device', other: 'Amended per evidence review' },
+        { number: 2, amendedStatute: 'Motor Vehicle Act 144(1)(b) - Drive without reasonable consideration', other: '' }
       ]
     }
   };

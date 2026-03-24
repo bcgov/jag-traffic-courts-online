@@ -24,17 +24,18 @@
   <div class="amendment-section" *ngIf="showAmendmentSection || !showCheckbox" [@slideDown]>
       
       <!-- Common Amendment Fields (Above Counts) -->
+      <form [formGroup]="commonFieldsForm">
       <div class="row">
         <div class="col-md-6">
           <div class="section-grid-header">Last Name</div>
           <mat-form-field appearance="outline">
-            <input matInput placeholder="Enter last name">
+            <input matInput placeholder="Enter last name" formControlName="lastName" maxlength="30">
           </mat-form-field>
         </div>
         <div class="col-md-6">
-          <div class="section-grid-header">Given Name</div>
+          <div class="section-grid-header">Given Name(s)</div>
           <mat-form-field appearance="outline">
-            <input matInput placeholder="Enter given name">
+            <input matInput placeholder="Enter given name(s)" formControlName="givenName" maxlength="92">
           </mat-form-field>
         </div>
       </div>
@@ -44,6 +45,7 @@
           <div class="section-grid-header">Violation Date</div>
           <mat-form-field appearance="outline">
             <input matInput type="text" class="latest-plea-text"
+              formControlName="violationDate"
               bsDatepicker placeholder="DD-MMM-YYYY" 
               [bsConfig]="{ withTimepicker: false, keepDatepickerOpened: true,
               dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', 
@@ -53,10 +55,11 @@
         <div class="col-md-6">
           <div class="section-grid-header">Other</div>
           <mat-form-field appearance="outline">
-            <input matInput placeholder="Other amendments">
+            <input matInput placeholder="Other amendments" formControlName="other" maxlength="512">
           </mat-form-field>
         </div>
       </div>
+      </form>
 
       <mat-divider style="margin: 20px 0;"></mat-divider>
 
@@ -84,12 +87,8 @@
           <div class="original-info" *ngIf="isCountDisputed(count)">
             <div class="info-grid">
               <div class="info-item">
-                <label class="info-label">Current MVA/Section:</label>
-                <span class="info-value">{{ count?.section || 'N/A' }}</span>
-              </div>
-              <div class="info-item">
-                <label class="info-label">Current Description:</label>
-                <span class="info-value">{{ count?.description || 'N/A' }}</span>
+                <label class="info-label">Current MVA Section:</label>
+                <span class="info-value">{{ count?.section ? (count.section + (count?.description ? ' - ' + count.description : '')) : 'N/A' }}</span>
               </div>
             </div>
           </div>
@@ -98,48 +97,29 @@
           <div class="amendment-inputs" *ngIf="isCountDisputed(count) && amendmentForms[i].get('isAmended')?.value">
             <div class="row">
               <div class="col-md-6">
-                <div class="section-grid-header">Amended MVA/Act</div>
+                <div class="section-grid-header">Amended MVA Section</div>
                 <mat-form-field appearance="outline">
                   <input 
                     matInput 
-                    formControlName="mvaSection" 
-                    placeholder="e.g., MVA"
-                    maxlength="50">
-                  <mat-error *ngIf="amendmentForms[i].get('mvaSection')?.hasError('maxlength')">
-                    Maximum 50 characters
+                    formControlName="amendedStatute"
+                    placeholder="Start typing section, then select"
+                    [matAutocomplete]="auto"
+                    (keyup)="onAmendedStatuteKeyup(i)"
+                    [matTooltip]="amendmentForms[i].get('amendedStatute')?.value"
+                    maxlength="240">
+                  <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option 
+                      *ngFor="let statute of filteredStatutes[i]"
+                      [matTooltip]="statute.__statuteString" 
+                      [value]="statute.__statuteString">
+                      {{ statute.__statuteString }}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <mat-error *ngIf="amendmentForms[i].get('amendedStatute')?.hasError('maxlength')">
+                    Maximum 240 characters
                   </mat-error>
                 </mat-form-field>
-              </div>
-
-              <div class="col-md-6">
-                <div class="section-grid-header">Amended Section</div>
-                <mat-form-field appearance="outline">
-                  <input 
-                    matInput 
-                    formControlName="section" 
-                    placeholder="e.g., 144(1)(a)"
-                    maxlength="50">
-                  <mat-error *ngIf="amendmentForms[i].get('section')?.hasError('maxlength')">
-                    Maximum 50 characters
-                  </mat-error>
-                </mat-form-field>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6">
-                <div class="section-grid-header">Amended Offence Description</div>
-                <mat-form-field appearance="outline">
-                  <textarea 
-                    matInput 
-                    formControlName="offence" 
-                    placeholder="Enter the amended offence description"
-                    rows="3"
-                    maxlength="500"></textarea>
-                  <mat-error *ngIf="amendmentForms[i].get('offence')?.hasError('maxlength')">
-                    Maximum 500 characters
-                  </mat-error>
-                </mat-form-field>
+                <mat-hint style="font-size: x-small;">Hover over section to see full description</mat-hint>
               </div>
 
               <div class="col-md-6">
@@ -150,9 +130,9 @@
                     formControlName="other"
                     placeholder="Other amendments"
                     rows="3"
-                    maxlength="500"></textarea>
+                    maxlength="512"></textarea>
                   <mat-error *ngIf="amendmentForms[i].get('other')?.hasError('maxlength')">
-                    Maximum 500 characters
+                    Maximum 512 characters
                   </mat-error>
                 </mat-form-field>
               </div>
@@ -179,19 +159,14 @@
         <h4>Count {{ amendment.count }} - Amended</h4>
         
         <div class="amendment-details">
-          <div class="detail-row" *ngIf="amendment.mvaSection">
-            <label class="detail-label">Amended MVA/Act:</label>
-            <span class="detail-value">{{ amendment.mvaSection }}</span>
+          <div class="detail-row" *ngIf="amendment.amendedStatute">
+            <label class="detail-label">Amended MVA Section:</label>
+            <span class="detail-value">{{ amendment.amendedStatute }}</span>
           </div>
           
-          <div class="detail-row" *ngIf="amendment.section">
-            <label class="detail-label">Amended Section:</label>
-            <span class="detail-value">{{ amendment.section }}</span>
-          </div>
-          
-          <div class="detail-row" *ngIf="amendment.offence">
-            <label class="detail-label">Amended Offence:</label>
-            <span class="detail-value">{{ amendment.offence }}</span>
+          <div class="detail-row" *ngIf="amendment.other">
+            <label class="detail-label">Other:</label>
+            <span class="detail-value">{{ amendment.other }}</span>
           </div>
         </div>
       </div>

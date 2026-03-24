@@ -110,14 +110,12 @@
       <div *ngIf="hasAmendments(i)">
         <span style="font-weight: bold; color: #d32f2f;">Amendments:</span>
         <span *ngIf="getAmendments(i).lastName">Last Name: <strong>{{ getAmendments(i).lastName }}</strong></span>
-        <span *ngIf="getAmendments(i).givenName" style="margin-left: 15px;">Given Name: <strong>{{ getAmendments(i).givenName }}</strong></span>
+        <span *ngIf="getAmendments(i).givenName" style="margin-left: 15px;">Given Name(s): <strong>{{ getAmendments(i).givenName }}</strong></span>
         <span *ngIf="getAmendments(i).violationDate" style="margin-left: 15px;">Violation Date: <strong>{{ getAmendments(i).violationDate }}</strong></span>
         <span *ngIf="getAmendments(i).other" style="margin-left: 15px;">Other: <strong>{{ getAmendments(i).other }}</strong></span>
         <span *ngFor="let count of getAmendments(i).counts" style="margin-left: 15px;">
           Count {{ count.number }}:
-          <span *ngIf="count.mvaSection"> MVA/Act: <strong>{{ count.mvaSection }}</strong></span>
-          <span *ngIf="count.section"> Section: <strong>{{ count.section }}</strong></span>
-          <span *ngIf="count.offence"> Offence: <strong>{{ count.offence }}</strong></span>
+          <span *ngIf="count.amendedStatute"> Amended MVA Section: <strong>{{ count.amendedStatute }}</strong></span>
           <span *ngIf="count.other"> ({{ count.other }})</span>
         </span>
       </div>

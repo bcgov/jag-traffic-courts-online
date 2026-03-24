@@ -5,7 +5,7 @@
   <div class="block">
     <div style="margin-bottom: 15px;">
       <span style="font-weight: bold;">Last Name:</span> {{ amendmentData?.lastName || '' }}
-      <span style="margin-left: 20px; font-weight: bold;">Given Name:</span> {{ amendmentData?.givenName || '' }}
+      <span style="margin-left: 20px; font-weight: bold;">Given Name(s):</span> {{ amendmentData?.givenName || '' }}
       <span style="margin-left: 20px; font-weight: bold;">Violation Date:</span> {{ amendmentData?.violationDate || '' }}
       <span style="margin-left: 20px; font-weight: bold;">Other:</span> {{ amendmentData?.other || '' }}
     </div>
@@ -18,13 +18,7 @@
       <ng-container *ngIf="getAmendmentForCount(countNumber) as amendment">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
         <div>
-          <span style="font-weight: bold;">Amended MVA/Act:</span> {{ amendment.mvaSection || '' }}
-        </div>
-        <div>
-          <span style="font-weight: bold;">Amended Section:</span> {{ amendment.section || '' }}
-        </div>
-        <div>
-          <span style="font-weight: bold;">Amended Offence Description:</span> {{ amendment.offence || '' }}
+          <span style="font-weight: bold;">Amended MVA Section:</span> {{ amendment.amendedStatute || '' }}
         </div>
         <div>
           <span style="font-weight: bold;">Other:</span> {{ amendment.other || '' }}

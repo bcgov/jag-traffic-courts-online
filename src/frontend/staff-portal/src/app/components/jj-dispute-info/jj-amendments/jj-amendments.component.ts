@@ -4,13 +4,12 @@ import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { JJDispute, JJDisputedCount } from 'app/api';
+import { LookupsService, Statute } from 'app/services/lookups.service';
 
 export interface Amendment {
   count: number;
   isAmended: boolean;
-  mvaSection?: string;
-  section?: string;
-  offence?: string;
+  amendedStatute?: string;
   other?: string;
 }
 
@@ -37,15 +36,31 @@ export class JJAmendmentsComponent implements OnInit {
 
   amendmentCheckbox: boolean = false;
   showAmendmentSection: boolean = false;
+  commonFieldsForm: FormGroup;
   amendmentForms: FormGroup[] = [];
   counts: JJDisputedCount[] = [];
+  filteredStatutes: Statute[][] = []; // Array of filtered statutes for each count
 
   constructor(
     private formBuilder: FormBuilder,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private lookupsService: LookupsService
   ) {}
 
   ngOnInit(): void {
+    // Initialize common fields form
+    this.commonFieldsForm = this.formBuilder.group({
+      lastName: ['', Validators.maxLength(30)],
+      givenName: ['', Validators.maxLength(92)],
+      violationDate: [''],
+      other: ['', Validators.maxLength(512)]
+    });
+
+    // Subscribe to common fields changes
+    this.commonFieldsForm.valueChanges.subscribe(() => {
+      this.emitAmendmentData();
+    });
+
     if (this.jjDisputeInfo && this.jjDisputeInfo.jjDisputedCounts) {
       this.counts = this.jjDisputeInfo.jjDisputedCounts;
       
@@ -53,13 +68,12 @@ export class JJAmendmentsComponent implements OnInit {
       this.counts.forEach((count, index) => {
         const form = this.formBuilder.group({
           isAmended: [false],
-          mvaSection: ['', Validators.maxLength(50)],
-          section: ['', Validators.maxLength(50)],
-          offence: ['', Validators.maxLength(500)],
-          other: ['', Validators.maxLength(500)]
+          amendedStatute: ['', Validators.maxLength(240)],
+          other: ['', Validators.maxLength(512)]
         });
         
         this.amendmentForms.push(form);
+        this.filteredStatutes.push([...this.lookupsService.statutes]); // Initialize with all statutes
         
         // Subscribe to form changes
         form.valueChanges.subscribe(() => {
@@ -72,13 +86,19 @@ export class JJAmendmentsComponent implements OnInit {
         this.amendmentCheckbox = this.existingAmendmentData.isAmended;
         this.showAmendmentSection = this.existingAmendmentData.isAmended;
         
+        // Load common fields
+        this.commonFieldsForm.patchValue({
+          lastName: this.existingAmendmentData.lastName || '',
+          givenName: this.existingAmendmentData.givenName || '',
+          violationDate: this.existingAmendmentData.violationDate || '',
+          other: this.existingAmendmentData.other || ''
+        });
+        
         this.existingAmendmentData.amendments.forEach((amendment, index) => {
           if (index < this.amendmentForms.length) {
             this.amendmentForms[index].patchValue({
               isAmended: amendment.isAmended,
-              mvaSection: amendment.mvaSection,
-              section: amendment.section,
-              offence: amendment.offence,
+              amendedStatute: amendment.amendedStatute,
               other: amendment.other
             });
           }
@@ -92,9 +112,7 @@ export class JJAmendmentsComponent implements OnInit {
       // User is unchecking - check if there's any data entered
       const hasData = this.amendmentForms.some(form => 
         form.get('isAmended')?.value || 
-        form.get('mvaSection')?.value || 
-        form.get('section')?.value || 
-        form.get('offence')?.value ||
+        form.get('amendedStatute')?.value ||
         form.get('other')?.value
       );
 
@@ -139,9 +157,7 @@ export class JJAmendmentsComponent implements OnInit {
     this.amendmentForms.forEach(form => {
       form.reset({
         isAmended: false,
-        mvaSection: '',
-        section: '',
-        offence: '',
+        amendedStatute: '',
         other: ''
       });
     });
@@ -151,14 +167,16 @@ export class JJAmendmentsComponent implements OnInit {
     const amendments: Amendment[] = this.amendmentForms.map((form, index) => ({
       count: index + 1,
       isAmended: form.get('isAmended')?.value || false,
-      mvaSection: form.get('mvaSection')?.value || '',
-      section: form.get('section')?.value || '',
-      offence: form.get('offence')?.value || '',
+      amendedStatute: form.get('amendedStatute')?.value || '',
       other: form.get('other')?.value || ''
     }));
 
     const amendmentData: AmendmentData = {
       isAmended: this.amendmentCheckbox,
+      lastName: this.commonFieldsForm?.get('lastName')?.value || '',
+      givenName: this.commonFieldsForm?.get('givenName')?.value || '',
+      violationDate: this.commonFieldsForm?.get('violationDate')?.value || '',
+      other: this.commonFieldsForm?.get('other')?.value || '',
       amendments: amendments
     };
 
@@ -196,9 +214,7 @@ export class JJAmendmentsComponent implements OnInit {
             // User confirmed - clear the amendment data for this count
             form.patchValue({
               isAmended: false,
-              mvaSection: '',
-              section: '',
-              offence: '',
+              amendedStatute: '',
               other: ''
             });
           }
@@ -206,5 +222,22 @@ export class JJAmendmentsComponent implements OnInit {
           // We need to manually trigger change detection
         });
     }
+  }
+
+  onAmendedStatuteKeyup(countIndex: number): void {
+    const value = this.amendmentForms[countIndex].get('amendedStatute')?.value || '';
+    this.filteredStatutes[countIndex] = this.filterStatutes(value);
+  }
+
+  filterStatutes(val: string): Statute[] {
+    if (!this.lookupsService.statutes || this.lookupsService.statutes.length === 0) {
+      return [];
+    }
+    if (!val || val.trim() === '') {
+      return this.lookupsService.statutes;
+    }
+    return this.lookupsService.statutes.filter(option => 
+      option.__statuteString.toLowerCase().indexOf(val.toLowerCase()) >= 0
+    );
   }
 }

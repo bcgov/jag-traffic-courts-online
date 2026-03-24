@@ -317,17 +317,13 @@ export class JJDisputeComponent implements OnInit {
             {
               count: 1,
               isAmended: true,
-              mvaSection: '',
-              section: '',
-              offence: 'MVR 6.07 Emergency brake inadequate',
+              amendedStatute: 'Motor Vehicle Act 144(1)(b) - Drive without reasonable consideration',
               other: ''
             },
             {
               count: 2,
               isAmended: true,
-              mvaSection: '',
-              section: '144(1)(a)',
-              offence: '',
+              amendedStatute: 'Motor Vehicle Act 144(1)(a) - Drive without due care and attention',
               other: ''
             }
           ]
@@ -955,9 +951,7 @@ export class JJDisputeComponent implements OnInit {
     // Check if any amendment has data entered
     return this.amendmentData.amendments.some(amendment => 
       amendment.isAmended && (
-        (amendment.mvaSection && amendment.mvaSection.trim()) ||
-        (amendment.section && amendment.section.trim()) ||
-        (amendment.offence && amendment.offence.trim())
+        (amendment.amendedStatute && amendment.amendedStatute.trim())
       )
     );
   }
