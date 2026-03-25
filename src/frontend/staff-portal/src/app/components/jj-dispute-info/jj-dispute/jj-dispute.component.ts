@@ -20,6 +20,8 @@ import { UserGroup } from '@shared/enums/user-group.enum';
 import { TabType } from '@shared/enums/tab-type.enum';
 import { DisputeStatus } from '@shared/consts/DisputeStatus.model';
 import { HearingType } from '@shared/consts/HearingType.model';
+import { featureType } from 'app/shared/directives/feature-flag.directive';
+import { AppConfigService } from 'app/services/app-config.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { ToastService } from '@core/services/toast.service';
 import { Router } from '@angular/router';
@@ -32,6 +34,7 @@ import { Router } from '@angular/router';
 })
 export class JJDisputeComponent implements OnInit {
   DocumentStatus = DocumentStatus;
+  featureType = featureType;
 
   @ViewChild("disputeDetails") disputeDetailsAnchor: ElementRef;
   @ViewChild("uploadedDocuments") uploadedDocumentsAnchor: ElementRef;
@@ -163,6 +166,7 @@ export class JJDisputeComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private toastService: ToastService,
     private router: Router,
+    private appConfigService: AppConfigService,
   ) {
     this.authService.jjList$.subscribe(result => {
       this.jjList = result;
@@ -942,6 +946,7 @@ export class JJDisputeComponent implements OnInit {
   onBackClicked() {
     // Check if on Decision Validation page with unacknowledged amendments
     if (this.type === TabType.DECISION_VALIDATION && 
+        this.appConfigService.isFeatureFlagEnabled(featureType.amendments) &&
         this.hasAmendmentData() && 
         !this.amendmentValidationResult?.allAmendmentsProcessed) {
       

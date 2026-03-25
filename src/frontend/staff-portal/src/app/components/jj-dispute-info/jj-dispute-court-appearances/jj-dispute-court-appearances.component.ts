@@ -3,6 +3,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { JJDisputeCourtAppearanceAmendments, JJDisputeCourtAppearanceRoP } from 'app/api';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
+import { AppConfigService } from 'app/services/app-config.service';
+import { featureType } from 'app/shared/directives/feature-flag.directive';
 
 @Component({
   selector: 'app-jj-dispute-court-appearances',
@@ -16,6 +18,7 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
 
   dataSource = new MatTableDataSource<JJDisputeCourtAppearanceRoP>();
   tempData: JJDisputeCourtAppearanceRoP[] = [];
+  amendmentsEnabled: boolean;
   displayedColumns: string[] = [
     "appearanceTs",
     "room",
@@ -33,10 +36,12 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
+    private appConfigService: AppConfigService,
   ) {
     this.authService.jjList$.subscribe(result => {
       this.jjList = result;
     });
+    this.amendmentsEnabled = this.appConfigService.isFeatureFlagEnabled(featureType.amendments);
   }
 
   getJJName(jjIDIR: string) {
