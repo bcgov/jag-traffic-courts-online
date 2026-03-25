@@ -49,6 +49,7 @@ export * from './jJDispute.model';
 export * from './jJDisputeAccidentYn.model';
 export * from './jJDisputeAppearInCourt.model';
 export * from './jJDisputeContactType.model';
+export * from './jJDisputeCourtAppearanceAmendments.model';
 export * from './jJDisputeCourtAppearanceRoP.model';
 export * from './jJDisputeCourtAppearanceRoPAppCd.model';
 export * from './jJDisputeCourtAppearanceRoPCrown.model';
