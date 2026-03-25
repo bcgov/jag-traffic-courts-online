@@ -1,26 +1,11 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { JJDispute, JJDisputedCount } from 'app/api';
+import { JJDispute, JJDisputedCount, JJDisputeCourtAppearanceAmendments } from 'app/api';
 import { LookupsService, Statute } from 'app/services/lookups.service';
-
-export interface Amendment {
-  count: number;
-  isAmended: boolean;
-  amendedStatute?: string;
-  other?: string;
-}
-
-export interface AmendmentData {
-  isAmended: boolean;
-  lastName?: string;
-  givenName?: string;
-  violationDate?: string;
-  other?: string;
-  amendments: Amendment[];
-}
 
 @Component({
   standalone: false,
@@ -31,9 +16,11 @@ export interface AmendmentData {
 export class JJAmendmentsComponent implements OnInit {
   @Input() jjDisputeInfo: JJDispute;
   @Input() isViewOnly: boolean = false;
-  @Input() existingAmendmentData: AmendmentData;
+  @Input() existingAmendmentData: JJDisputeCourtAppearanceAmendments;
   @Input() showCheckbox: boolean = true; // Control whether to show the checkbox header
-  @Output() amendmentDataChange: EventEmitter<AmendmentData> = new EventEmitter<AmendmentData>();
+  @Output() amendmentDataChange: EventEmitter<JJDisputeCourtAppearanceAmendments> = new EventEmitter<JJDisputeCourtAppearanceAmendments>();
+
+  @ViewChild('violationDatepicker') violationDatepicker: BsDatepickerDirective;
 
   amendmentCheckbox: boolean = false;
   showAmendmentSection: boolean = false;
@@ -51,10 +38,10 @@ export class JJAmendmentsComponent implements OnInit {
   ngOnInit(): void {
     // Initialize common fields form
     this.commonFieldsForm = this.formBuilder.group({
-      lastName: ['', Validators.maxLength(30)],
-      givenName: ['', Validators.maxLength(92)],
-      violationDate: [''],
-      other: ['', Validators.maxLength(512)]
+      disputantSurnameNm: ['', Validators.maxLength(30)],
+      disputantGivenNamesNm: ['', Validators.maxLength(100)],
+      violationDateDtm: [''],
+      otherNotesTxt: ['', Validators.maxLength(500)]
     });
 
     // Subscribe to common fields changes
@@ -69,8 +56,8 @@ export class JJAmendmentsComponent implements OnInit {
       this.counts.forEach((count, index) => {
         const form = this.formBuilder.group({
           isAmended: [false],
-          amendedStatute: ['', Validators.maxLength(240)],
-          other: ['', Validators.maxLength(512)]
+          actSectDescTxt: ['', Validators.maxLength(500)],
+          otherTxt: ['', Validators.maxLength(500)]
         });
         
         this.amendmentForms.push(form);
@@ -84,23 +71,30 @@ export class JJAmendmentsComponent implements OnInit {
 
       // Load existing amendment data if provided
       if (this.existingAmendmentData) {
-        this.amendmentCheckbox = this.existingAmendmentData.isAmended;
-        this.showAmendmentSection = this.existingAmendmentData.isAmended;
-        
+        this.amendmentCheckbox = true;
+        this.showAmendmentSection = true;
+
         // Load common fields
         this.commonFieldsForm.patchValue({
-          lastName: this.existingAmendmentData.lastName || '',
-          givenName: this.existingAmendmentData.givenName || '',
-          violationDate: this.existingAmendmentData.violationDate || '',
-          other: this.existingAmendmentData.other || ''
+          disputantSurnameNm: this.existingAmendmentData.disputantSurnameNm || '',
+          disputantGivenNamesNm: this.existingAmendmentData.disputantGivenNamesNm || '',
+          violationDateDtm: this.existingAmendmentData.violationDateDtm || '',
+          otherNotesTxt: this.existingAmendmentData.otherNotesTxt || ''
         });
-        
-        this.existingAmendmentData.amendments.forEach((amendment, index) => {
-          if (index < this.amendmentForms.length) {
-            this.amendmentForms[index].patchValue({
-              isAmended: amendment.isAmended,
-              amendedStatute: amendment.amendedStatute,
-              other: amendment.other
+
+        // Map flat count fields to individual forms
+        const countFields = [
+          { actSectDescTxt: this.existingAmendmentData.count1ActSectDescTxt, otherTxt: this.existingAmendmentData.count1OtherTxt },
+          { actSectDescTxt: this.existingAmendmentData.count2ActSectDescTxt, otherTxt: this.existingAmendmentData.count2OtherTxt },
+          { actSectDescTxt: this.existingAmendmentData.count3ActSectDescTxt, otherTxt: this.existingAmendmentData.count3OtherTxt },
+        ];
+        this.amendmentForms.forEach((form, index) => {
+          if (index < countFields.length) {
+            const fields = countFields[index];
+            form.patchValue({
+              isAmended: !!(fields.actSectDescTxt || fields.otherTxt),
+              actSectDescTxt: fields.actSectDescTxt || '',
+              otherTxt: fields.otherTxt || ''
             });
           }
         });
@@ -111,13 +105,16 @@ export class JJAmendmentsComponent implements OnInit {
   onAmendmentCheckboxChange(): void {
     if (!this.amendmentCheckbox) {
       // User is unchecking - check if there's any data entered
-      const hasData = this.amendmentForms.some(form => 
-        form.get('isAmended')?.value || 
-        form.get('amendedStatute')?.value ||
-        form.get('other')?.value
+      const hasData = this.amendmentForms.some(form =>
+        form.get('isAmended')?.value ||
+        form.get('actSectDescTxt')?.value ||
+        form.get('otherTxt')?.value
       );
 
       if (hasData) {
+        // Close datepicker before opening dialog to prevent overlay conflict
+        this.violationDatepicker?.hide();
+
         // Show confirmation dialog
         const data: DialogOptions = {
           titleKey: 'Clear Amendments?',
@@ -158,30 +155,34 @@ export class JJAmendmentsComponent implements OnInit {
     this.amendmentForms.forEach(form => {
       form.reset({
         isAmended: false,
-        amendedStatute: '',
-        other: ''
+        actSectDescTxt: '',
+        otherTxt: ''
       });
     });
   }
 
   emitAmendmentData(): void {
-    const amendments: Amendment[] = this.amendmentForms.map((form, index) => ({
-      count: index + 1,
-      isAmended: form.get('isAmended')?.value || false,
-      amendedStatute: form.get('amendedStatute')?.value || '',
-      other: form.get('other')?.value || ''
-    }));
-
-    const amendmentData: AmendmentData = {
-      isAmended: this.amendmentCheckbox,
-      lastName: this.commonFieldsForm?.get('lastName')?.value || '',
-      givenName: this.commonFieldsForm?.get('givenName')?.value || '',
-      violationDate: this.commonFieldsForm?.get('violationDate')?.value || '',
-      other: this.commonFieldsForm?.get('other')?.value || '',
-      amendments: amendments
+    const getCountValue = (index: number, field: 'actSectDescTxt' | 'otherTxt'): string | null => {
+      if (index >= this.amendmentForms.length) return null;
+      const form = this.amendmentForms[index];
+      if (!form.get('isAmended')?.value) return null;
+      return form.get(field)?.value || null;
     };
 
-    this.amendmentDataChange.emit(amendmentData);
+    const data: JJDisputeCourtAppearanceAmendments = {
+      disputantSurnameNm: this.commonFieldsForm?.get('disputantSurnameNm')?.value || null,
+      disputantGivenNamesNm: this.commonFieldsForm?.get('disputantGivenNamesNm')?.value || null,
+      violationDateDtm: (() => { const v = this.commonFieldsForm?.get('violationDateDtm')?.value; return v instanceof Date ? v.toISOString() : (v || null); })(),
+      otherNotesTxt: this.commonFieldsForm?.get('otherNotesTxt')?.value || null,
+      count1ActSectDescTxt: getCountValue(0, 'actSectDescTxt'),
+      count1OtherTxt: getCountValue(0, 'otherTxt'),
+      count2ActSectDescTxt: getCountValue(1, 'actSectDescTxt'),
+      count2OtherTxt: getCountValue(1, 'otherTxt'),
+      count3ActSectDescTxt: getCountValue(2, 'actSectDescTxt'),
+      count3OtherTxt: getCountValue(2, 'otherTxt'),
+    };
+
+    this.amendmentDataChange.emit(data);
   }
 
   isCountDisputed(count: JJDisputedCount): boolean {
@@ -209,7 +210,7 @@ export class JJAmendmentsComponent implements OnInit {
         icon: "warning"
       };
       
-      this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
+      this.dialog.open(ConfirmDialogComponent, { data, width: "400px" }).afterClosed()
         .subscribe((confirmed: any) => {
           if (confirmed) {
             // User confirmed - clear the amendment data for this count
@@ -230,7 +231,7 @@ export class JJAmendmentsComponent implements OnInit {
   }
 
   onAmendedStatuteKeyup(countIndex: number): void {
-    const value = this.amendmentForms[countIndex].get('amendedStatute')?.value || '';
+    const value = this.amendmentForms[countIndex].get('actSectDescTxt')?.value || '';
     this.filteredStatutes[countIndex] = this.filterStatutes(value);
   }
 

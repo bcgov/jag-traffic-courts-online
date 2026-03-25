@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { AmendmentData } from '../jj-amendments/jj-amendments.component';
+import { JJDisputeCourtAppearanceAmendments } from 'app/api';
 
 export interface AmendmentProcessingStatus {
   countNumber: number;
@@ -20,7 +20,7 @@ export interface AmendmentValidationResult {
   styleUrls: ['./staff-amendment-validation.component.scss']
 })
 export class StaffAmendmentValidationComponent implements OnInit {
-  @Input() amendmentData: AmendmentData;
+  @Input() amendmentData: JJDisputeCourtAppearanceAmendments;
   @Input() isViewOnly: boolean = false;
   @Output() amendmentStatusChange: EventEmitter<AmendmentProcessingStatus[]> = new EventEmitter<AmendmentProcessingStatus[]>();
   @Output() validationStatusChange: EventEmitter<AmendmentValidationResult> = new EventEmitter<AmendmentValidationResult>();
@@ -33,20 +33,6 @@ export class StaffAmendmentValidationComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    // TODO: Remove mock data
-    if (!this.amendmentData?.isAmended) {
-      this.amendmentData = {
-        isAmended: true,
-        lastName: 'Smith',
-        givenName: 'John',
-        violationDate: '2024-01-15',
-        other: 'Speed limit sign was not visible',
-        amendments: [
-          { count: 1, isAmended: true, amendedStatute: '148(1) MVA', other: null },
-          { count: 2, isAmended: true, amendedStatute: null, other: 'Count 2 corrected description' }
-        ]
-      };
-    }
     this.initializeAmendmentStatuses();
   }
 
@@ -75,13 +61,14 @@ export class StaffAmendmentValidationComponent implements OnInit {
   }
 
   initializeAmendmentStatuses(): void {
-    if (this.amendmentData && this.amendmentData.isAmended) {
+    if (this.amendmentData) {
       this.hasAmendments = true;
-      
-      // Get all counts that have amendments
-      this.amendedCounts = this.amendmentData.amendments
-        .filter(amendment => amendment.isAmended)
-        .map(amendment => amendment.count);
+
+      // Build amended counts from flat fields
+      this.amendedCounts = [];
+      if (this.amendmentData.count1ActSectDescTxt || this.amendmentData.count1OtherTxt) this.amendedCounts.push(1);
+      if (this.amendmentData.count2ActSectDescTxt || this.amendmentData.count2OtherTxt) this.amendedCounts.push(2);
+      if (this.amendmentData.count3ActSectDescTxt || this.amendmentData.count3OtherTxt) this.amendedCounts.push(3);
 
       // Initialize processing statuses
       this.amendmentProcessingStatuses = this.amendedCounts.map(countNumber => ({
@@ -110,8 +97,11 @@ export class StaffAmendmentValidationComponent implements OnInit {
     this.validationStatusChange.emit(validationResult);
   }
 
-  getAmendmentForCount(countNumber: number) {
-    return this.amendmentData?.amendments?.find(a => a.count === countNumber);
+  getAmendmentForCount(countNumber: number): { actSectDescTxt: string | null, otherTxt: string | null } | null {
+    if (countNumber === 1) return { actSectDescTxt: this.amendmentData?.count1ActSectDescTxt, otherTxt: this.amendmentData?.count1OtherTxt };
+    if (countNumber === 2) return { actSectDescTxt: this.amendmentData?.count2ActSectDescTxt, otherTxt: this.amendmentData?.count2OtherTxt };
+    if (countNumber === 3) return { actSectDescTxt: this.amendmentData?.count3ActSectDescTxt, otherTxt: this.amendmentData?.count3OtherTxt };
+    return null;
   }
 
 }

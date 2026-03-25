@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { JJDisputeCourtAppearanceRoP } from 'app/api';
+import { JJDisputeCourtAppearanceAmendments, JJDisputeCourtAppearanceRoP } from 'app/api';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
 
 @Component({
@@ -31,38 +31,6 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
   ];
   jjList: UserRepresentation[];
 
-  // Mock amendment data for demonstration - maps row index to amendment details
-  mockAmendments: { [key: number]: any } = {
-    0: {
-      lastName: 'Smith',
-      givenName: 'Robert',
-      violationDate: '',
-      other: '',
-      counts: [
-        { number: 2, amendedStatute: 'Motor Vehicle Act 144(1)(a) - Drive without due care and attention', other: '' }
-      ]
-    },
-    1: {
-      lastName: '',
-      givenName: '',
-      violationDate: '15-Feb-2024',
-      other: 'Date corrected as per disputant testimony',
-      counts: [
-        { number: 1, amendedStatute: 'MVR 6.07 - Emergency brake inadequate', other: '' }
-      ]
-    },
-    2: {
-      lastName: 'Doe',
-      givenName: 'Jane',
-      violationDate: '10-Jan-2024',
-      other: '',
-      counts: [
-        { number: 1, amendedStatute: 'Motor Vehicle Act 146(1) - Fail to obey traffic control device', other: 'Amended per evidence review' },
-        { number: 2, amendedStatute: 'Motor Vehicle Act 144(1)(b) - Drive without reasonable consideration', other: '' }
-      ]
-    }
-  };
-
   constructor(
     private authService: AuthService,
   ) {
@@ -86,11 +54,19 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
     this.dataSource = new MatTableDataSource<JJDisputeCourtAppearanceRoP>(this.tempData);
   }
 
-  hasAmendments(index: number): boolean {
-    return this.mockAmendments[index] !== undefined;
+  hasAmendments(element: number): boolean {
+    return false; // kept for compatibility; use hasAmendmentData instead
   }
 
-  getAmendments(index: number): any {
-    return this.mockAmendments[index];
+  getAmendments(element: number): any {
+    return null; // kept for compatibility; template now uses element.amendments directly
+  }
+
+  hasAmendmentData(element: JJDisputeCourtAppearanceRoP): boolean {
+    const a = element?.amendments as JJDisputeCourtAppearanceAmendments;
+    if (!a) return false;
+    return !!(a.disputantSurnameNm || a.disputantGivenNamesNm || a.violationDateDtm ||
+              a.otherNotesTxt || a.count1ActSectDescTxt || a.count1OtherTxt ||
+              a.count2ActSectDescTxt || a.count2OtherTxt || a.count3ActSectDescTxt || a.count3OtherTxt);
   }
 }

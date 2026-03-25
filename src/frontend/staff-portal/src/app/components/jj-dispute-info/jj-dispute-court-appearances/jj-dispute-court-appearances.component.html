@@ -101,31 +101,73 @@
 
   <ng-container matColumnDef="recordDetails">
     <td mat-cell *matCellDef="let element; let i = dataIndex" [attr.colspan]="11" class="record-details-cell">
-      <div class="record-details-panel" *ngIf="hasAmendments(i) || element.comments">
-        <div class="record-section amendment-section" *ngIf="hasAmendments(i)">
-          <div class="record-section-label">Amendments</div>
+      @if (hasAmendmentData(element) || element.comments) {
+        <div class="record-details-panel">
+          @if (hasAmendmentData(element)) {
+            <div class="record-section amendment-section">
+              <div class="record-section-label">Amendments</div>
 
-          <div class="amendment-meta">
-            <span *ngIf="getAmendments(i).lastName">Last Name: <strong>{{ getAmendments(i).lastName }}</strong></span>
-            <span *ngIf="getAmendments(i).givenName">Given Name(s): <strong>{{ getAmendments(i).givenName }}</strong></span>
-            <span *ngIf="getAmendments(i).violationDate">Violation Date: <strong>{{ getAmendments(i).violationDate }}</strong></span>
-            <span *ngIf="getAmendments(i).other">Other: <strong>{{ getAmendments(i).other }}</strong></span>
-          </div>
+              <div class="amendment-meta">
+                @if (element.amendments.disputantSurnameNm) {
+                  <span>Last Name: <strong>{{ element.amendments.disputantSurnameNm }}</strong></span>
+                }
+                @if (element.amendments.disputantGivenNamesNm) {
+                  <span>Given Name(s): <strong>{{ element.amendments.disputantGivenNamesNm }}</strong></span>
+                }
+                @if (element.amendments.violationDateDtm) {
+                  <span>Violation Date: <strong>{{ element.amendments.violationDateDtm }}</strong></span>
+                }
+                @if (element.amendments.otherNotesTxt) {
+                  <span>Other: <strong>{{ element.amendments.otherNotesTxt }}</strong></span>
+                }
+              </div>
 
-          <div class="count-amendment-list">
-            <div class="count-amendment-item" *ngFor="let count of getAmendments(i).counts">
-              <span class="count-label">Count {{ count.number }}</span>
-              <span *ngIf="count.amendedStatute">MVA Section: <strong>{{ count.amendedStatute }}</strong></span>
-              <span *ngIf="count.other">Other: <strong>{{ count.other }}</strong></span>
+              <div class="count-amendment-list">
+                @if (element.amendments.count1ActSectDescTxt || element.amendments.count1OtherTxt) {
+                  <div class="count-amendment-item">
+                    <span class="count-label">Count 1</span>
+                    @if (element.amendments.count1ActSectDescTxt) {
+                      <span>MVA Section: <strong>{{ element.amendments.count1ActSectDescTxt }}</strong></span>
+                    }
+                    @if (element.amendments.count1OtherTxt) {
+                      <span>Other: <strong>{{ element.amendments.count1OtherTxt }}</strong></span>
+                    }
+                  </div>
+                }
+                @if (element.amendments.count2ActSectDescTxt || element.amendments.count2OtherTxt) {
+                  <div class="count-amendment-item">
+                    <span class="count-label">Count 2</span>
+                    @if (element.amendments.count2ActSectDescTxt) {
+                      <span>MVA Section: <strong>{{ element.amendments.count2ActSectDescTxt }}</strong></span>
+                    }
+                    @if (element.amendments.count2OtherTxt) {
+                      <span>Other: <strong>{{ element.amendments.count2OtherTxt }}</strong></span>
+                    }
+                  </div>
+                }
+                @if (element.amendments.count3ActSectDescTxt || element.amendments.count3OtherTxt) {
+                  <div class="count-amendment-item">
+                    <span class="count-label">Count 3</span>
+                    @if (element.amendments.count3ActSectDescTxt) {
+                      <span>MVA Section: <strong>{{ element.amendments.count3ActSectDescTxt }}</strong></span>
+                    }
+                    @if (element.amendments.count3OtherTxt) {
+                      <span>Other: <strong>{{ element.amendments.count3OtherTxt }}</strong></span>
+                    }
+                  </div>
+                }
+              </div>
             </div>
-          </div>
-        </div>
+          }
 
-        <div class="record-section endorsement-section" *ngIf="element.comments">
-          <div class="record-section-label">JJ Endorsements</div>
-          <div class="endorsement-text">{{ element.comments }}</div>
+          @if (element.comments) {
+            <div class="record-section endorsement-section">
+              <div class="record-section-label">JJ Endorsements</div>
+              <div class="endorsement-text">{{ element.comments }}</div>
+            </div>
+          }
         </div>
-      </div>
+      }
     </td>
   </ng-container>
 

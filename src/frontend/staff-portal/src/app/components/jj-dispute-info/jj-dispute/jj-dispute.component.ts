@@ -1,10 +1,9 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, TemplateRef } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
 import { JJDisputeService, JJDispute } from '../../../services/jj-dispute.service';
-import { AmendmentData } from '../jj-amendments/jj-amendments.component';
 import { AmendmentProcessingStatus, AmendmentValidationResult } from '../staff-amendment-validation/staff-amendment-validation.component';
 import { Observable, map } from 'rxjs';
-import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPAppCd, JJDisputeCourtAppearanceRoPCrown, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized, FileMetadata, JJDisputeElectronicTicketYn, JJDisputeNoticeOfHearingYn, TicketImageDataJustinDocumentReportType, DocumentType, JJDisputeContactType, JJDisputedCountRoPFinding, Province, Language, JJDisputeDisputantAttendanceType, JJDisputeAccidentYn, JJDisputeMultipleOfficersYn, JJDisputeSignatoryType, DcfTemplateType, DisputeCaseFileSummary, YesNo } from 'app/api/model/models';
+import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPAppCd, JJDisputeCourtAppearanceRoPCrown, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized, FileMetadata, JJDisputeElectronicTicketYn, JJDisputeNoticeOfHearingYn, TicketImageDataJustinDocumentReportType, DocumentType, JJDisputeContactType, JJDisputedCountRoPFinding, Province, Language, JJDisputeDisputantAttendanceType, JJDisputeAccidentYn, JJDisputeMultipleOfficersYn, JJDisputeSignatoryType, DcfTemplateType, DisputeCaseFileSummary, YesNo, JJDisputeCourtAppearanceAmendments } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
@@ -142,7 +141,7 @@ export class JJDisputeComponent implements OnInit {
   isNoAppEnabled: boolean = true;
 
   // TCVP-3387: Amendment tracking properties
-  amendmentData: AmendmentData = { isAmended: false, amendments: [] };
+  amendmentData: JJDisputeCourtAppearanceAmendments | null = null;
   amendmentProcessingStatuses: AmendmentProcessingStatus[] = [];
   amendmentValidationResult: AmendmentValidationResult = {
     allAmendmentsProcessed: false,
@@ -255,78 +254,118 @@ export class JJDisputeComponent implements OnInit {
 
       this.isNoAppEnabled = this.RoPApp.N === this.lastUpdatedJJDispute.mostRecentCourtAppearance.appCd;
       
-      // DEMO: Add mock court appearance history records for testing
-      // Remove this block for production
-      if (!this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs) {
-        this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs = [];
-      }
+      // #region DEMO: Mock court appearance history — comment out this entire #region block to disable
+      // if (!this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs) {
+      //   this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs = [];
+      // }
       
-      // Add historical appearances with different amendment scenarios
-      const mockHistoricalAppearances = [
-        {
-          id: 103,
-          appearanceTs: '2024-06-15T10:00:00',
-          room: '002',
-          reason: 'HR',
-          appCd: JJDisputeCourtAppearanceRoPAppCd.P,
-          clerkRecord: null,
-          defenceCounsel: null,
-          dattCd: null,
-          crown: null,
-          jjSeized: JJDisputeCourtAppearanceRoPJjSeized.N,
-          adjudicator: 'J. Anderson',
-          comments: 'Appeared, reviewed evidence'
-        },
-        {
-          id: 102,
-          appearanceTs: '2024-05-20T14:30:00',
-          room: '001',
-          reason: 'HR',
-          appCd: JJDisputeCourtAppearanceRoPAppCd.P,
-          clerkRecord: null,
-          defenceCounsel: null,
-          dattCd: null,
-          crown: null,
-          jjSeized: JJDisputeCourtAppearanceRoPJjSeized.N,
-          adjudicator: 'J. Smith',
-          comments: 'Adjourned for further documents'
-        },
-        {
-          id: 101,
-          appearanceTs: '2024-04-10T09:00:00',
-          room: '003',
-          reason: 'HR',
-          appCd: JJDisputeCourtAppearanceRoPAppCd.P,
-          clerkRecord: null,
-          defenceCounsel: null,
-          dattCd: null,
-          crown: null,
-          jjSeized: JJDisputeCourtAppearanceRoPJjSeized.N,
-          adjudicator: 'J. Williams',
-          comments: 'Initial appearance'
-        }
-      ];
+      // // Add historical appearances with different amendment scenarios
+      // const mockHistoricalAppearances = [
+      //   {
+      //     id: 103,
+      //     appearanceTs: '2024-06-15T10:00:00',
+      //     room: '002',
+      //     reason: 'HR',
+      //     appCd: JJDisputeCourtAppearanceRoPAppCd.P,
+      //     clerkRecord: null,
+      //     defenceCounsel: null,
+      //     dattCd: null,
+      //     crown: null,
+      //     jjSeized: JJDisputeCourtAppearanceRoPJjSeized.N,
+      //     adjudicator: 'J. Anderson',
+      //     comments: 'Appeared, reviewed evidence',
+      //     amendments: {
+      //       disputantSurnameNm: 'Smith',
+      //       disputantGivenNamesNm: 'Robert',
+      //       violationDateDtm: null,
+      //       otherNotesTxt: null,
+      //       count1ActSectDescTxt: null,
+      //       count1OtherTxt: null,
+      //       count2ActSectDescTxt: 'Motor Vehicle Act 144(1)(a) - Drive without due care and attention',
+      //       count2OtherTxt: null,
+      //       count3ActSectDescTxt: null,
+      //       count3OtherTxt: null,
+      //     }
+      //   },
+      //   {
+      //     id: 102,
+      //     appearanceTs: '2024-05-20T14:30:00',
+      //     room: '001',
+      //     reason: 'HR',
+      //     appCd: JJDisputeCourtAppearanceRoPAppCd.P,
+      //     clerkRecord: null,
+      //     defenceCounsel: null,
+      //     dattCd: null,
+      //     crown: null,
+      //     jjSeized: JJDisputeCourtAppearanceRoPJjSeized.N,
+      //     adjudicator: 'J. Smith',
+      //     comments: 'Adjourned for further documents',
+      //     amendments: {
+      //       disputantSurnameNm: null,
+      //       disputantGivenNamesNm: null,
+      //       violationDateDtm: '2024-02-15',
+      //       otherNotesTxt: 'Date corrected as per disputant testimony',
+      //       count1ActSectDescTxt: 'MVR 6.07 - Emergency brake inadequate',
+      //       count1OtherTxt: null,
+      //       count2ActSectDescTxt: null,
+      //       count2OtherTxt: null,
+      //       count3ActSectDescTxt: null,
+      //       count3OtherTxt: null,
+      //     }
+      //   },
+      //   {
+      //     id: 101,
+      //     appearanceTs: '2024-04-10T09:00:00',
+      //     room: '003',
+      //     reason: 'HR',
+      //     appCd: JJDisputeCourtAppearanceRoPAppCd.P,
+      //     clerkRecord: null,
+      //     defenceCounsel: null,
+      //     dattCd: null,
+      //     crown: null,
+      //     jjSeized: JJDisputeCourtAppearanceRoPJjSeized.N,
+      //     adjudicator: 'J. Williams',
+      //     comments: 'Initial appearance',
+      //     amendments: {
+      //       disputantSurnameNm: 'Doe',
+      //       disputantGivenNamesNm: 'Jane',
+      //       violationDateDtm: '2024-01-10',
+      //       otherNotesTxt: null,
+      //       count1ActSectDescTxt: 'Motor Vehicle Act 146(1) - Fail to obey traffic control device',
+      //       count1OtherTxt: 'Amended per evidence review',
+      //       count2ActSectDescTxt: 'Motor Vehicle Act 144(1)(b) - Drive without reasonable consideration',
+      //       count2OtherTxt: null,
+      //       count3ActSectDescTxt: null,
+      //       count3OtherTxt: null,
+      //     }
+      //   }
+      // ];
       
-      // Add mock records to the beginning (they'll be sorted by date)
-      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs = [
-        ...mockHistoricalAppearances,
-        ...this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs
-      ];
-      
-      // TODO: Remove mock data - real amendment data should come from API integration.
-      if (this.type === TabType.DECISION_VALIDATION) {
-        this.amendmentData = {
-          isAmended: true,
-          lastName: 'Smith',
-          givenName: 'John',
-          violationDate: '2024-01-15',
-          other: 'Speed limit sign was not visible',
-          amendments: [
-            { count: 1, isAmended: true, amendedStatute: '148(1) MVA', other: null },
-            { count: 2, isAmended: true, amendedStatute: null, other: 'Count 2 corrected description' }
-          ]
-        };
-      }
+      // // Add mock records to the beginning (they'll be sorted by date)
+      // this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs = [
+      //   ...mockHistoricalAppearances,
+      //   ...this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs
+      // ];
+      // #endregion DEMO: Mock court appearance history
+
+      // Bind amendment data from the most recent court appearance (real API data)
+      this.amendmentData = this.lastUpdatedJJDispute.mostRecentCourtAppearance?.amendments ?? null;
+      // #region DEMO: Mock amendment data — comment out this entire #region block to disable
+      // if (!this.amendmentData) {
+      //   this.amendmentData = {
+      //     disputantSurnameNm: 'Smith',
+      //     disputantGivenNamesNm: 'John',
+      //     violationDateDtm: '2024-01-15',
+      //     otherNotesTxt: 'Speed limit sign was not visible',
+      //     count1ActSectDescTxt: '148(1) MVA',
+      //     count1OtherTxt: null,
+      //     count2ActSectDescTxt: null,
+      //     count2OtherTxt: 'Count 2 corrected description',
+      //     count3ActSectDescTxt: null,
+      //     count3OtherTxt: null,
+      //   };
+      // }
+      // #endregion DEMO: Mock amendment data
     });
   }
 
@@ -588,7 +627,7 @@ export class JJDisputeComponent implements OnInit {
     }
     
     // Check if there are unprocessed amendments
-    if (this.amendmentData?.isAmended && 
+    if (this.hasAmendmentData() && 
         this.amendmentValidationResult && 
         !this.amendmentValidationResult.allAmendmentsProcessed) {
       const data: DialogOptions = {
@@ -650,7 +689,11 @@ export class JJDisputeComponent implements OnInit {
   private putJJDispute(): Observable<any> {
     // update court appearance data
     if (this.lastUpdatedJJDispute.hearingType === this.HearingType.CourtAppearance) {
-      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0] = { ...this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0], ...this.courtAppearanceForm.value };
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0] = {
+        ...this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0],
+        ...this.courtAppearanceForm.value,
+        amendments: this.amendmentData ?? undefined
+      };
     }
     return this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id,
       this.lastUpdatedJJDispute, this.type === TabType.DECISION_VALIDATION, this.remarks).pipe(
@@ -963,7 +1006,7 @@ export class JJDisputeComponent implements OnInit {
         .subscribe((confirmed: any) => {
           if (confirmed) {
             this.showAmendmentSection = false;
-            this.amendmentData = { isAmended: false, amendments: [] };
+            this.amendmentData = null;
             this.logger.log('Amendment data cleared');
           } else {
             // User cancelled - recheck the box
@@ -978,25 +1021,21 @@ export class JJDisputeComponent implements OnInit {
    * Returns true if there are amendments with actual data (not just empty forms)
    */
   hasAmendmentData(): boolean {
-    if (!this.amendmentData || !this.amendmentData.isAmended) {
+    if (!this.amendmentData) {
       return false;
     }
-
-    const hasTopLevelData =
-      !!this.amendmentData.lastName?.trim() ||
-      !!this.amendmentData.givenName?.trim() ||
-      !!this.amendmentData.violationDate?.trim() ||
-      !!this.amendmentData.other?.trim();
-    
-    // Check if any amendment has data entered
-    const hasCountLevelData = this.amendmentData.amendments.some(amendment => 
-      amendment.isAmended && (
-        !!amendment.amendedStatute?.trim() ||
-        !!amendment.other?.trim()
-      )
+    return !!(
+      this.amendmentData.disputantSurnameNm?.trim() ||
+      this.amendmentData.disputantGivenNamesNm?.trim() ||
+      this.amendmentData.violationDateDtm?.trim() ||
+      this.amendmentData.otherNotesTxt?.trim() ||
+      this.amendmentData.count1ActSectDescTxt?.trim() ||
+      this.amendmentData.count1OtherTxt?.trim() ||
+      this.amendmentData.count2ActSectDescTxt?.trim() ||
+      this.amendmentData.count2OtherTxt?.trim() ||
+      this.amendmentData.count3ActSectDescTxt?.trim() ||
+      this.amendmentData.count3OtherTxt?.trim()
     );
-
-    return hasTopLevelData || hasCountLevelData;
   }
 
   onAmendmentsRequiredChange(isChecked: boolean): void {
@@ -1015,7 +1054,7 @@ export class JJDisputeComponent implements OnInit {
         .subscribe((confirmed: any) => {
           if (confirmed) {
             this.showAmendmentSection = false;
-            this.amendmentData = { isAmended: false, amendments: [] };
+            this.amendmentData = null;
           } else {
             // Revert: briefly toggle to force Angular to re-render the checkbox as checked
             this.showAmendmentSection = false;
@@ -1029,7 +1068,7 @@ export class JJDisputeComponent implements OnInit {
    * Handle amendment data changes from JJ Amendments component
    * Called when JJ checks/unchecks amendment box or modifies amendment details
    */
-  onAmendmentDataChange(data: AmendmentData): void {
+  onAmendmentDataChange(data: JJDisputeCourtAppearanceAmendments): void {
     this.logger.log('JJDisputeComponent::onAmendmentDataChange', data);
     this.amendmentData = data;
     

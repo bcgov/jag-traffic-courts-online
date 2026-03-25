@@ -68,7 +68,9 @@
         <mat-menu #gotoMenu="matMenu" yPosition="below">
           <button mat-menu-item (click)="goTo('disputeDetails')">Dispute Details</button>
           <button mat-menu-item (click)="goTo('uploadedDocuments')">Uploaded Documents</button>
-          <button mat-menu-item (click)="goTo('amendments')" *ngIf="amendmentData?.isAmended || type === tabTypes.HEARING_INBOX">Amendments</button>
+          @if (hasAmendmentData() || type === tabTypes.HEARING_INBOX) {
+            <button mat-menu-item (click)="goTo('amendments')">Amendments</button>
+          }
           <button mat-menu-item (click)="goTo('fileHistory')">Administrative Activity</button>
           <button mat-menu-item (click)="goTo('fileRemarks')">File Remarks</button>
         </mat-menu>
@@ -592,7 +594,8 @@
                   </p>
                 </span>
                 <!-- AMENDMENT CHECKBOX - Under Judicial Justice, for editable views -->
-                <span class="section-grid-cell amendment-embed-cell" style="grid-column: span 11" *ngIf="!isViewOnly" #amendments>
+                @if (!isViewOnly) {
+                <span class="section-grid-cell amendment-embed-cell" style="grid-column: span 11" #amendments>
                   <p class="section-grid-text">
                     <mat-checkbox [checked]="showAmendmentSection" (change)="onAmendmentsRequiredChange($event.checked)">
                       Amendments Required
@@ -600,7 +603,8 @@
                   </p>
 
                   <!-- Expandable Amendment Fields -->
-                  <div *ngIf="showAmendmentSection" class="amendment-embed-content">
+                  @if (showAmendmentSection) {
+                  <div class="amendment-embed-content">
                     <app-jj-amendments
                       [jjDisputeInfo]="lastUpdatedJJDispute"
                       [isViewOnly]="false"
@@ -609,10 +613,13 @@
                       (amendmentDataChange)="onAmendmentDataChange($event)">
                     </app-jj-amendments>
                   </div>
+                  }
                 </span>
+                }
 
                 <!-- AMENDMENT LABEL - For View Only (non-Decision-Validation) -->
-                <span class="section-grid-cell" style="grid-column: span 11" *ngIf="isViewOnly && hasAmendmentData() && type !== tabTypes.DECISION_VALIDATION">
+                @if (isViewOnly && hasAmendmentData() && type !== tabTypes.DECISION_VALIDATION) {
+                <span class="section-grid-cell" style="grid-column: span 11">
                   <p class="section-grid-header" style="color: #d32f2f;">
                     Amendments:
                   </p>
@@ -620,16 +627,18 @@
                     This dispute has amendments on file
                   </p>
                 </span>
+                }
 
                 <!-- STAFF AMENDMENT VALIDATION - Inline in Decision Validation -->
-                <span #amendmentValidation class="section-grid-cell amendment-validation-cell" style="grid-column: span 11;"
-                  *ngIf="type === tabTypes.DECISION_VALIDATION">
+                @if (type === tabTypes.DECISION_VALIDATION && hasAmendmentData()) {
+                <span #amendmentValidation class="section-grid-cell amendment-validation-cell" style="grid-column: span 11;">
                   <app-staff-amendment-validation
                     [amendmentData]="amendmentData"
                     [isViewOnly]="isViewOnly"
                     (validationStatusChange)="onAmendmentValidationChange($event)">
                   </app-staff-amendment-validation>
                 </span>
+                }
 
                 <!-- JJ Endorsements - Keep in same card -->
                 <span class="section-grid-cell" style="grid-column: span 11">
@@ -878,7 +887,7 @@
         <!-- STAFF AMENDMENT VALIDATION - Now inline in Court Appearance section above -->
 
         <!-- VIEW AMENDMENTS (Read-Only) in DCF -->
-        @if (type === tabTypes.DCF && amendmentData?.isAmended) {
+        @if (type === tabTypes.DCF && hasAmendmentData()) {
           <section class="section-sticky" id="amendments-readonly">
             <app-jj-amendments
               [jjDisputeInfo]="lastUpdatedJJDispute"
@@ -950,8 +959,8 @@
             }
             @if (lastUpdatedJJDispute.status === DisputeStatus.Confirmed && cancelStatusOnly === false && concludeStatusOnly === false) {
               <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onAccept()"
-                [disabled]="amendmentData?.isAmended && !amendmentValidationResult?.allAmendmentsProcessed"
-                [matTooltip]="(amendmentData?.isAmended && !amendmentValidationResult?.allAmendmentsProcessed) ? 'All amendments must be completed in JUSTIN before accepting' : ''"
+                [disabled]="hasAmendmentData() && !amendmentValidationResult?.allAmendmentsProcessed"
+                [matTooltip]="(hasAmendmentData() && !amendmentValidationResult?.allAmendmentsProcessed) ? 'All amendments must be completed in JUSTIN before accepting' : ''"
                 matTooltipPosition="above">
                 Accept
               </button>

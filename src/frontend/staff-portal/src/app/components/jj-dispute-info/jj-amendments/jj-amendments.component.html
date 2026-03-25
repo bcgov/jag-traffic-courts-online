@@ -29,13 +29,13 @@
         <div class="col-md-6">
           <div class="section-grid-header">Last Name</div>
           <mat-form-field appearance="outline">
-            <input matInput placeholder="Enter last name" formControlName="lastName" maxlength="30">
+            <input matInput placeholder="Enter last name" formControlName="disputantSurnameNm" maxlength="30">
           </mat-form-field>
         </div>
         <div class="col-md-6">
           <div class="section-grid-header">Given Name(s)</div>
           <mat-form-field appearance="outline">
-            <input matInput placeholder="Enter given name(s)" formControlName="givenName" maxlength="92">
+            <input matInput placeholder="Enter given name(s)" formControlName="disputantGivenNamesNm" maxlength="100">
           </mat-form-field>
         </div>
       </div>
@@ -45,17 +45,19 @@
           <div class="section-grid-header">Violation Date</div>
           <mat-form-field appearance="outline">
             <input matInput type="text" class="latest-plea-text"
-              formControlName="violationDate"
-              bsDatepicker placeholder="DD-MMM-YYYY" 
-              [bsConfig]="{ withTimepicker: false, keepDatepickerOpened: true,
-              dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue', 
+              formControlName="violationDateDtm"
+              bsDatepicker placeholder="DD-MMM-YYYY"
+              #violationDatepicker="bsDatepicker"
+              [bsConfig]="{ withTimepicker: false,
+              dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue',
               isAnimated: true, showWeekNumbers: false, adaptivePosition: true }">
+            <mat-icon matSuffix (click)="violationDatepicker.toggle()" style="cursor: pointer;">calendar_today</mat-icon>
           </mat-form-field>
         </div>
         <div class="col-md-6">
           <div class="section-grid-header">Other</div>
           <mat-form-field appearance="outline">
-            <input matInput placeholder="Other amendments" formControlName="other" maxlength="512">
+            <input matInput placeholder="Other amendments" formControlName="otherNotesTxt" maxlength="500">
           </mat-form-field>
         </div>
       </div>
@@ -101,12 +103,12 @@
                 <mat-form-field appearance="outline">
                   <input 
                     matInput 
-                    formControlName="amendedStatute"
+                    formControlName="actSectDescTxt"
                     placeholder="Start typing section, then select"
                     [matAutocomplete]="auto"
                     (keyup)="onAmendedStatuteKeyup(i)"
-                    [matTooltip]="amendmentForms[i].get('amendedStatute')?.value"
-                    maxlength="240">
+                    [matTooltip]="amendmentForms[i].get('actSectDescTxt')?.value"
+                    maxlength="500">
                   <mat-autocomplete #auto="matAutocomplete">
                     <mat-option 
                       *ngFor="let statute of filteredStatutes[i]"
@@ -115,8 +117,8 @@
                       {{ statute.__statuteString }}
                     </mat-option>
                   </mat-autocomplete>
-                  <mat-error *ngIf="amendmentForms[i].get('amendedStatute')?.hasError('maxlength')">
-                    Maximum 240 characters
+                  <mat-error *ngIf="amendmentForms[i].get('actSectDescTxt')?.hasError('maxlength')">
+                    Maximum 500 characters
                   </mat-error>
                 </mat-form-field>
                 <mat-hint style="font-size: x-small;">Hover over section to see full description</mat-hint>
@@ -127,12 +129,12 @@
                 <mat-form-field appearance="outline">
                   <textarea 
                     matInput 
-                    formControlName="other"
+                    formControlName="otherTxt"
                     placeholder="Other amendments"
                     rows="3"
-                    maxlength="512"></textarea>
-                  <mat-error *ngIf="amendmentForms[i].get('other')?.hasError('maxlength')">
-                    Maximum 512 characters
+                    maxlength="500"></textarea>
+                  <mat-error *ngIf="amendmentForms[i].get('otherTxt')?.hasError('maxlength')">
+                    Maximum 500 characters
                   </mat-error>
                 </mat-form-field>
               </div>
@@ -146,7 +148,7 @@
 </div>
 
 <!-- View-Only Mode (for Decision Validation) -->
-<div class="amendments-view-only" *ngIf="isViewOnly && existingAmendmentData?.isAmended">
+<div class="amendments-view-only" *ngIf="isViewOnly && existingAmendmentData">
   <section class="section-sticky">
     <ng-container subHeader>
       <span>
@@ -154,22 +156,56 @@
       </span>
     </ng-container>
     
-    <div *ngFor="let amendment of existingAmendmentData?.amendments" class="count-amendment-view">
-      <div *ngIf="amendment.isAmended" class="amendment-display">
-        <h4>Count {{ amendment.count }} - Amended</h4>
-        
-        <div class="amendment-details">
-          <div class="detail-row" *ngIf="amendment.amendedStatute">
-            <label class="detail-label">Amended MVA Section:</label>
-            <span class="detail-value">{{ amendment.amendedStatute }}</span>
-          </div>
-          
-          <div class="detail-row" *ngIf="amendment.other">
-            <label class="detail-label">Other:</label>
-            <span class="detail-value">{{ amendment.other }}</span>
+    @if (existingAmendmentData?.count1ActSectDescTxt || existingAmendmentData?.count1OtherTxt) {
+      <div class="count-amendment-view">
+        <div class="amendment-display">
+          <h4>Count 1 - Amended</h4>
+          <div class="amendment-details">
+            <div class="detail-row" *ngIf="existingAmendmentData?.count1ActSectDescTxt">
+              <label class="detail-label">Amended MVA Section:</label>
+              <span class="detail-value">{{ existingAmendmentData?.count1ActSectDescTxt }}</span>
+            </div>
+            <div class="detail-row" *ngIf="existingAmendmentData?.count1OtherTxt">
+              <label class="detail-label">Other:</label>
+              <span class="detail-value">{{ existingAmendmentData?.count1OtherTxt }}</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    }
+    @if (existingAmendmentData?.count2ActSectDescTxt || existingAmendmentData?.count2OtherTxt) {
+      <div class="count-amendment-view">
+        <div class="amendment-display">
+          <h4>Count 2 - Amended</h4>
+          <div class="amendment-details">
+            <div class="detail-row" *ngIf="existingAmendmentData?.count2ActSectDescTxt">
+              <label class="detail-label">Amended MVA Section:</label>
+              <span class="detail-value">{{ existingAmendmentData?.count2ActSectDescTxt }}</span>
+            </div>
+            <div class="detail-row" *ngIf="existingAmendmentData?.count2OtherTxt">
+              <label class="detail-label">Other:</label>
+              <span class="detail-value">{{ existingAmendmentData?.count2OtherTxt }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+    @if (existingAmendmentData?.count3ActSectDescTxt || existingAmendmentData?.count3OtherTxt) {
+      <div class="count-amendment-view">
+        <div class="amendment-display">
+          <h4>Count 3 - Amended</h4>
+          <div class="amendment-details">
+            <div class="detail-row" *ngIf="existingAmendmentData?.count3ActSectDescTxt">
+              <label class="detail-label">Amended MVA Section:</label>
+              <span class="detail-value">{{ existingAmendmentData?.count3ActSectDescTxt }}</span>
+            </div>
+            <div class="detail-row" *ngIf="existingAmendmentData?.count3OtherTxt">
+              <label class="detail-label">Other:</label>
+              <span class="detail-value">{{ existingAmendmentData?.count3OtherTxt }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
   </section>
 </div>

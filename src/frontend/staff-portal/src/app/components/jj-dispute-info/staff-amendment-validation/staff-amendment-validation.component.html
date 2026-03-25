@@ -4,26 +4,26 @@
       Amendment:
     </p>
     <div class="block">
-      @if (hasValue(amendmentData?.lastName) || hasValue(amendmentData?.givenName) || hasValue(amendmentData?.violationDate) || hasValue(amendmentData?.other)) {
+      @if (hasValue(amendmentData?.disputantSurnameNm) || hasValue(amendmentData?.disputantGivenNamesNm) || hasValue(amendmentData?.violationDateDtm) || hasValue(amendmentData?.otherNotesTxt)) {
         <div style="margin-bottom: 15px;">
-          @if (hasValue(amendmentData?.lastName)) {
+          @if (hasValue(amendmentData?.disputantSurnameNm)) {
             <span>
-              <span style="font-weight: bold;">Last Name:</span> {{ amendmentData?.lastName }}
+              <span style="font-weight: bold;">Last Name:</span> {{ amendmentData?.disputantSurnameNm }}
             </span>
           }
-          @if (hasValue(amendmentData?.givenName)) {
+          @if (hasValue(amendmentData?.disputantGivenNamesNm)) {
             <span style="margin-left: 20px;">
-              <span style="font-weight: bold;">Given Name(s):</span> {{ amendmentData?.givenName }}
+              <span style="font-weight: bold;">Given Name(s):</span> {{ amendmentData?.disputantGivenNamesNm }}
             </span>
           }
-          @if (hasValue(amendmentData?.violationDate)) {
+          @if (hasValue(amendmentData?.violationDateDtm)) {
             <span style="margin-left: 20px;">
-              <span style="font-weight: bold;">Violation Date:</span> {{ amendmentData?.violationDate }}
+              <span style="font-weight: bold;">Violation Date:</span> {{ amendmentData?.violationDateDtm }}
             </span>
           }
-          @if (hasValue(amendmentData?.other)) {
+          @if (hasValue(amendmentData?.otherNotesTxt)) {
             <span style="margin-left: 20px;">
-              <span style="font-weight: bold;">Other:</span> {{ amendmentData?.other }}
+              <span style="font-weight: bold;">Other:</span> {{ amendmentData?.otherNotesTxt }}
             </span>
           }
         </div>
@@ -35,16 +35,16 @@
           <div style="border: 1px solid #ddd; border-radius: 4px; padding: 15px; background-color: #fafafa;">
             <p style="font-weight: 600; margin-bottom: 15px; font-size: 16px;">Count {{ countNumber }}</p>
             @if (getAmendmentForCount(countNumber); as amendment) {
-              @if (hasValue(amendment.amendedStatute) || hasValue(amendment.other)) {
+              @if (hasValue(amendment.actSectDescTxt) || hasValue(amendment.otherTxt)) {
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                  @if (hasValue(amendment.amendedStatute)) {
+                  @if (hasValue(amendment.actSectDescTxt)) {
                     <div>
-                      <span style="font-weight: bold;">Amended MVA Section:</span> {{ amendment.amendedStatute }}
+                      <span style="font-weight: bold;">Amended MVA Section:</span> {{ amendment.actSectDescTxt }}
                     </div>
                   }
-                  @if (hasValue(amendment.other)) {
+                  @if (hasValue(amendment.otherTxt)) {
                     <div>
-                      <span style="font-weight: bold;">Other:</span> {{ amendment.other }}
+                      <span style="font-weight: bold;">Other:</span> {{ amendment.otherTxt }}
                     </div>
                   }
                 </div>
