@@ -33,6 +33,7 @@ export * from './disputeUpdateRequestStatus2.model';
 export * from './disputeUpdateRequestUpdateType.model';
 export * from './disputeWithUpdates.model';
 export * from './documentSource.model';
+export * from './documentStatus.model';
 export * from './documentType.model';
 export * from './emailHistory.model';
 export * from './emailHistorySuccessfullySent.model';

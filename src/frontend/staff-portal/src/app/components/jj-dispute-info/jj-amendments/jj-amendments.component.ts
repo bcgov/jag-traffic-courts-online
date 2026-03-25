@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { JJDispute, JJDisputedCount } from 'app/api';
@@ -23,6 +23,7 @@ export interface AmendmentData {
 }
 
 @Component({
+  standalone: false,
   selector: 'app-jj-amendments',
   templateUrl: './jj-amendments.component.html',
   styleUrls: ['./jj-amendments.component.scss']
@@ -217,9 +218,13 @@ export class JJAmendmentsComponent implements OnInit {
               amendedStatute: '',
               other: ''
             });
+          } else {
+            // User cancelled - revert the checkbox visual state back to checked.
+            // The form value is still true, but the checkbox DOM is visually unchecked.
+            // Sync form to false first, then restore to true to force Angular to re-render.
+            form.patchValue({ isAmended: false });
+            setTimeout(() => form.patchValue({ isAmended: true }), 0);
           }
-          // If not confirmed, the checkbox model binding will keep it checked
-          // We need to manually trigger change detection
         });
     }
   }

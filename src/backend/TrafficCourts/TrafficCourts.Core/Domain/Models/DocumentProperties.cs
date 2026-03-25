@@ -1,6 +1,4 @@
-﻿using TrafficCourts.Domain.Models;
-
-namespace TrafficCourts.Domain.Models;
+﻿namespace TrafficCourts.Domain.Models;
 
 
 /// <summary>
@@ -13,6 +11,7 @@ public class DocumentProperties : FileProperties
         public static class Tags
         {
             public const string DocumentType = "document-type";
+            public const string DocumentStatus = "document-status";
             public const string OccamDisputeId = "occam-dispute-id";
             public const string StaffReviewStatus = "staff-review-status";
             public const string VirusName = "virus-name";
@@ -63,6 +62,11 @@ public class DocumentProperties : FileProperties
     public string? DocumentType { get; set; }
 
     /// <summary>
+    /// The status of the document.
+    /// </summary>
+    public DocumentStatus? DocumentStatus { get; set; }
+
+    /// <summary>
     /// The source of this document, staff or citizen.
     /// </summary>
     public DocumentSource? DocumentSource { get; set; }
@@ -87,6 +91,8 @@ public class DocumentProperties : FileProperties
         DocumentName = GetStringProperty(PropertyName.Metadata.DocumentName, metadata);
         DocumentSource = GetEnumProperty<DocumentSource>(PropertyName.Metadata.DocumentSource, metadata);
         DocumentType = GetStringProperty(PropertyName.Tags.DocumentType, tags);
+        DocumentStatus = GetEnumProperty<DocumentStatus>(PropertyName.Tags.DocumentStatus, tags)
+                         ?? InferDocumentStatus(DocumentType);
 
         // virus scan properties
         _virusScanStatus = GetStringProperty(PropertyName.Tags.VirusScanStatus, tags);
@@ -101,10 +107,18 @@ public class DocumentProperties : FileProperties
         NoticeOfDisputeId = GetGuidProperty(PropertyName.Metadata.NoticeOfDisputeId, metadata);
     }
 
+    private static DocumentStatus InferDocumentStatus(string? documentType) =>
+        documentType switch
+        {
+            "Adjournment" => Models.DocumentStatus.Resolved,
+            _ => Models.DocumentStatus.Filed,
+        };
+
     protected override void SetTags(Dictionary<string, string> properties)
     {
         // Common properties
         if (!string.IsNullOrEmpty(DocumentType)) properties.Add(PropertyName.Tags.DocumentType, DocumentType);
+        if (DocumentStatus is not null) properties.Add(PropertyName.Tags.DocumentStatus, DocumentStatus.Value.ToString());
 
         // add virus scan properties
         if (!string.IsNullOrEmpty(_virusScanStatus)) properties.Add(PropertyName.Tags.VirusScanStatus, _virusScanStatus);

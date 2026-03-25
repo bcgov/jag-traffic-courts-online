@@ -1,0 +1,102 @@
+{
+	"folders": [
+        {
+            "name": "citizen-portal",
+            "path": "src/frontend/citizen-portal"
+        },
+        {
+            "name": "staff-portal",
+            "path": "src/frontend/staff-portal"
+        },
+        {
+            "name": "TrafficCourts.Citizen.Service",
+            "path": "src/backend/TrafficCourts/Citizen.Service"
+        },
+        {
+            "name": "TrafficCourts.Staff.Service",
+            "path": "src/backend/TrafficCourts/Staff.Service"
+        },
+        {
+            "name": "TrafficCourts.Arc.Dispute.Client",
+            "path": "src/backend/TrafficCourts/TrafficCourts.Arc.Dispute.Client"
+        },
+        {
+            "name": "TrafficCourts.Arc.Dispute.Service",
+            "path": "src/backend/TrafficCourts/TrafficCourts.Arc.Dispute.Service"
+        },
+        {
+            "name": "TrafficCourts.Cdogs.Client",
+            "path": "src/backend/TrafficCourts/TrafficCourts.Cdogs.Client"
+        },
+        {
+            "name": "TrafficCourts.Common",
+            "path": "src/backend/TrafficCourts/Common"
+        },
+        {
+            "name": "TrafficCourts.Coms.Client",
+            "path": "src/backend/TrafficCourts/TrafficCourts.Coms.Client"
+        },
+        {
+            "name": "TrafficCourts.Core",
+            "path": "src/backend/TrafficCourts/TrafficCourts.Core"
+        },
+        {
+            "name": "TrafficCourts.Hotfix.DataMigration",
+            "path": "src/backend/TrafficCourts/TrafficCourts.Hotfix.DataMigration"
+        },
+        {
+            "name": "TrafficCourts.Messaging",
+            "path": "src/backend/TrafficCourts/Messaging"
+        },
+        {
+            "name": "TrafficCourts.OracleDataApi",
+            "path": "src/backend/TrafficCourts/TrafficCourts.OracleDataApi"
+        },
+        {
+            "name": "TrafficCourts.OrdsDataService",
+            "path": "src/backend/TrafficCourts/TrafficCourts.OrdsDataService"
+        },
+        {
+            "name": "TrafficCourts.TicketSearch",
+            "path": "src/backend/TrafficCourts/TrafficCourts.TicketSearch"
+        },
+        {
+            "name": "TrafficCourts.Workflow.Service",
+            "path": "src/backend/TrafficCourts/Workflow.Service"
+        },
+        {
+            "name": "oracle-data-api",
+            "path": "src/backend/oracle-data-api"
+        },
+        {
+            "path": "."
+        },
+        {
+            "path": "../TCO-API-OCCAM"
+        },
+        {
+            "path": "../TCO-API-OCCAMORDS"
+        },
+        {
+            "path": "../TCO-API-TCO"
+        },
+        {
+            "path": "../TCO-API-TCOORDS"
+        }
+    ],
+    "extensions": {
+        "recommendations": [
+            "Angular.ng-template",
+            "dbaeumer.vscode-eslint"
+        ]
+    },
+    "settings": {
+        "search.exclude": {
+            "**/bin": true,
+            "**/obj": true,
+            "**/dist": true,
+            "**/node_modules": true,
+            "**/.angular": true
+        },
+    }
+}

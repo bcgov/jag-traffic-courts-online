@@ -1,0 +1,36 @@
+meta {
+  name: deleteDisputeUpdateRequest
+  type: http
+  seq: 7
+}
+
+delete {
+  url: {{v1_baseUrl}}/deleteDisputeUpdateRequest
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 204 Response
+  description: Deleted result.
+  
+  request: {
+    url: {{v1_baseUrl}}/deleteDisputeUpdateRequest
+    method: DELETE
+    mode: none
+  }
+  
+  response: {
+    status: {
+      code: 204
+      text: No Content
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

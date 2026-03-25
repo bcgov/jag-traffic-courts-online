@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PageComponent } from './page.component';
+import { Store } from '@ngrx/store';
+import { of } from 'rxjs';
 
 describe('PageComponent', () => {
   let component: PageComponent;
@@ -8,9 +10,16 @@ describe('PageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PageComponent ]
-    })
-    .compileComponents();
+      declarations: [PageComponent],
+      providers: [
+        {
+          provide: Store,
+          useValue: {
+            select: (state: object) => of(true),
+          },
+        },
+      ],
+    }).compileComponents();
   });
 
   beforeEach(() => {

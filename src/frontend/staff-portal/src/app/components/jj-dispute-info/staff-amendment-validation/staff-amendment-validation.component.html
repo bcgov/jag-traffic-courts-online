@@ -1,59 +1,70 @@
-<div class="block" style="border: 1px solid #ddd;" *ngIf="hasAmendments">
-  <p class="section-grid-header" style="color: #d32f2f; font-weight: bold;">
-    Amendment:
-  </p>
-  <div class="block">
-    <div style="margin-bottom: 15px;" *ngIf="hasValue(amendmentData?.lastName) || hasValue(amendmentData?.givenName) || hasValue(amendmentData?.violationDate) || hasValue(amendmentData?.other)">
-      <span *ngIf="hasValue(amendmentData?.lastName)">
-        <span style="font-weight: bold;">Last Name:</span> {{ amendmentData?.lastName }}
-      </span>
-      <span *ngIf="hasValue(amendmentData?.givenName)" style="margin-left: 20px;">
-        <span style="font-weight: bold;">Given Name(s):</span> {{ amendmentData?.givenName }}
-      </span>
-      <span *ngIf="hasValue(amendmentData?.violationDate)" style="margin-left: 20px;">
-        <span style="font-weight: bold;">Violation Date:</span> {{ amendmentData?.violationDate }}
-      </span>
-      <span *ngIf="hasValue(amendmentData?.other)" style="margin-left: 20px;">
-        <span style="font-weight: bold;">Other:</span> {{ amendmentData?.other }}
-      </span>
-    </div>
+@if (hasAmendments) {
+  <div class="block" style="border: 1px solid #ddd;">
+    <p class="section-grid-header" style="color: #d32f2f; font-weight: bold;">
+      Amendment:
+    </p>
+    <div class="block">
+      @if (hasValue(amendmentData?.lastName) || hasValue(amendmentData?.givenName) || hasValue(amendmentData?.violationDate) || hasValue(amendmentData?.other)) {
+        <div style="margin-bottom: 15px;">
+          @if (hasValue(amendmentData?.lastName)) {
+            <span>
+              <span style="font-weight: bold;">Last Name:</span> {{ amendmentData?.lastName }}
+            </span>
+          }
+          @if (hasValue(amendmentData?.givenName)) {
+            <span style="margin-left: 20px;">
+              <span style="font-weight: bold;">Given Name(s):</span> {{ amendmentData?.givenName }}
+            </span>
+          }
+          @if (hasValue(amendmentData?.violationDate)) {
+            <span style="margin-left: 20px;">
+              <span style="font-weight: bold;">Violation Date:</span> {{ amendmentData?.violationDate }}
+            </span>
+          }
+          @if (hasValue(amendmentData?.other)) {
+            <span style="margin-left: 20px;">
+              <span style="font-weight: bold;">Other:</span> {{ amendmentData?.other }}
+            </span>
+          }
+        </div>
+      }
 
-    <!-- Amendment Counts -->
-    <div *ngFor="let countNumber of amendedCounts" style="margin-top: 15px;">
-      <div style="border: 1px solid #ddd; border-radius: 4px; padding: 15px; background-color: #fafafa;">
-      <p style="font-weight: 600; margin-bottom: 15px; font-size: 16px;">Count {{ countNumber }}</p>
-      
-      <ng-container *ngIf="getAmendmentForCount(countNumber) as amendment">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;"
-          *ngIf="hasValue(amendment.amendedStatute) || hasValue(amendment.other)">
-        <div *ngIf="hasValue(amendment.amendedStatute)">
-          <span style="font-weight: bold;">Amended MVA Section:</span> {{ amendment.amendedStatute }}
+      <!-- Amendment Counts -->
+      @for (countNumber of amendedCounts; track countNumber) {
+        <div style="margin-top: 15px;">
+          <div style="border: 1px solid #ddd; border-radius: 4px; padding: 15px; background-color: #fafafa;">
+            <p style="font-weight: 600; margin-bottom: 15px; font-size: 16px;">Count {{ countNumber }}</p>
+            @if (getAmendmentForCount(countNumber); as amendment) {
+              @if (hasValue(amendment.amendedStatute) || hasValue(amendment.other)) {
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  @if (hasValue(amendment.amendedStatute)) {
+                    <div>
+                      <span style="font-weight: bold;">Amended MVA Section:</span> {{ amendment.amendedStatute }}
+                    </div>
+                  }
+                  @if (hasValue(amendment.other)) {
+                    <div>
+                      <span style="font-weight: bold;">Other:</span> {{ amendment.other }}
+                    </div>
+                  }
+                </div>
+              }
+            }
+          </div>
         </div>
-        <div *ngIf="hasValue(amendment.other)">
-          <span style="font-weight: bold;">Other:</span> {{ amendment.other }}
-        </div>
-        </div>
-      </ng-container>
+      }
+
+      <!-- Acknowledge Checkbox -->
+      <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
+        <mat-checkbox
+          [checked]="isAcknowledged"
+          (change)="onAcknowledgedChange($event.checked)"
+          [disabled]="!hasAmendments"
+          color="primary">
+          Acknowledge
+        </mat-checkbox>
       </div>
     </div>
-
-    <!-- Single Acknowledged Checkbox -->
-    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;" *ngIf="!isViewOnly">
-      <mat-checkbox 
-        [checked]="isAcknowledged"
-        (change)="onAcknowledgedChange($event.checked)"
-        color="primary">
-        Acknowledged
-      </mat-checkbox>
-    </div>
-
-    <div *ngIf="isViewOnly && isAcknowledged" style="margin-top: 20px;">
-      <strong>Acknowledged</strong>
-    </div>
   </div>
-</div>
+}
 
-<!-- No Amendments Message -->
-<div *ngIf="!hasAmendments">
-  <p class="section-grid-text">No amendments were made to this ticket during the hearing.</p>
-</div>

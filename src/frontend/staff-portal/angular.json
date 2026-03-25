@@ -3,7 +3,7 @@
   "cli": {
     "analytics": false,
     "schematicCollections": [
-      "@angular-eslint/schematics"
+      "angular-eslint"
     ]
   },
   "version": 1,
@@ -21,12 +21,16 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/staff-portal",
+            "outputPath": {
+              "base": "dist/staff-portal"
+            },
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "browser": "src/main.ts",
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "sourceMap": {
               "scripts": false,
               "styles": false,
@@ -46,21 +50,20 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "src/scss"
-              ]
+                "src/scss",
+                "."
+              ],
+              "sass": {
+                "silenceDeprecations": ["color-functions", "global-builtin", "if-function", "import"]
+              }
             },
             "allowedCommonJsDependencies": [
               "keycloak-js",
               "base64-js",
-              "js-sha256",
-              "luxon",
-              "lodash",
-              "faker"
+              "js-sha256"
             ],
             "scripts": [],
-            "vendorChunk": true,
             "extractLicenses": false,
-            "buildOptimizer": false,
             "optimization": false,
             "namedChunks": true
           },
@@ -77,8 +80,6 @@
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -88,7 +89,7 @@
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "10kb",
-                  "maximumError": "15kb"
+                  "maximumError": "20kb"
                 }
               ]
             },
@@ -108,8 +109,6 @@
               },
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": false,
               "budgets": [
                 {
                   "type": "initial",
@@ -119,7 +118,7 @@
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "10kb",
-                  "maximumError": "15kb"
+                  "maximumError": "20kb"
                 }
               ]
             }
@@ -129,22 +128,22 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "staff-portal:build",
-            "proxyConfig": "proxy.conf.json"
+            "proxyConfig": "proxy.conf.json",
+            "buildTarget": "staff-portal:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "staff-portal:build:production"
+              "buildTarget": "staff-portal:build:production"
             },
             "debug": {
-              "browserTarget": "staff-portal:build:debug"
+              "buildTarget": "staff-portal:build:debug"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "staff-portal:build"
+            "buildTarget": "staff-portal:build"
           }
         },
         "test": {
@@ -179,28 +178,34 @@
               "src/**/*.html"
             ]
           }
-        },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "staff-portal:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "staff-portal:serve:production"
-            }
-          }
         }
       }
     }
   },
   "schematics": {
-    "@angular-eslint/schematics:application": {
-      "setParserOptionsProject": true
+    "@schematics/angular:component": {
+      "type": "component"
     },
-    "@angular-eslint/schematics:library": {
-      "setParserOptionsProject": true
+    "@schematics/angular:directive": {
+      "type": "directive"
+    },
+    "@schematics/angular:service": {
+      "type": "service"
+    },
+    "@schematics/angular:guard": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:interceptor": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:module": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:pipe": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:resolver": {
+      "typeSeparator": "."
     }
   }
 }

@@ -14,6 +14,7 @@ export interface AmendmentValidationResult {
 }
 
 @Component({
+  standalone: false,
   selector: 'app-staff-amendment-validation',
   templateUrl: './staff-amendment-validation.component.html',
   styleUrls: ['./staff-amendment-validation.component.scss']
@@ -32,6 +33,20 @@ export class StaffAmendmentValidationComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
+    // TODO: Remove mock data
+    if (!this.amendmentData?.isAmended) {
+      this.amendmentData = {
+        isAmended: true,
+        lastName: 'Smith',
+        givenName: 'John',
+        violationDate: '2024-01-15',
+        other: 'Speed limit sign was not visible',
+        amendments: [
+          { count: 1, isAmended: true, amendedStatute: '148(1) MVA', other: null },
+          { count: 2, isAmended: true, amendedStatute: null, other: 'Count 2 corrected description' }
+        ]
+      };
+    }
     this.initializeAmendmentStatuses();
   }
 

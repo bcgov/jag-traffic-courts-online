@@ -161,6 +161,9 @@ namespace TrafficCourts.Domain.Models
         [Newtonsoft.Json.JsonProperty("occamViolationTicketUpldId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string OccamViolationTicketUpldId { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("occamDisputeCreatedBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OccamDisputeCreatedBy { get; set; }
+
         [Newtonsoft.Json.JsonProperty("submittedTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? SubmittedTs { get; set; }
 

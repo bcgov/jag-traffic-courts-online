@@ -24,11 +24,6 @@
   section {
     margin-top: 1.25rem;
   }
-
-  .fa-minus-circle, .fa-plus-circle{
-    font-size: 1.125rem;
-    color: #009cde;
-  }
 }
 
 .additional-info {
@@ -69,13 +64,13 @@ mat-icon {
   vertical-align: middle;
 }
 
-button.mat-flat-button .mat-icon {
+button.mat-mdc-unelevated-button .mat-icon {
   vertical-align: top;
   font-size: 1.25rem;
 }
 
-.mat-flat-button,
-.mat-stroked-button {
+.mat-mdc-unelevated-button,
+.mat-mdc-outlined-button {
   width: 100%;
   margin-bottom: 1rem;
 
@@ -114,12 +109,16 @@ hr {
 mat-expansion-panel {
   box-shadow: none !important;
   padding-bottom: 1rem;
-  border-bottom: 1px solid theme-palette(grey, light);
 }
 
 mat-expansion-panel-header {
   padding-left: 0;
   padding-right: 0.5rem;
+}
+
+.expand-collapse-icon {
+  color: #009cde;
+  vertical-align: text-bottom;
 }
 
 ::ng-deep {

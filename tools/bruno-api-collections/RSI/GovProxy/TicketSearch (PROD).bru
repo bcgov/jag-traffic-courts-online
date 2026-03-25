@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: http://tickets.gov.bc.ca/api/tickets/search
+  url: http://tickets.gov.bc.ca/api/tickets/search?ticketNumber=EA00836032&time=06:55
   body: none
   auth: none
 }
@@ -23,4 +23,5 @@ headers {
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

@@ -1,0 +1,49 @@
+meta {
+  name: justin_countries
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{v2_baseUrl}}/justin_countries
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/justin_countries
+    method: GET
+    mode: none
+    params:path: {
+      ctry_id_eq: 
+      ctry_id_ge: 
+      ctry_id_gt: 
+      ctry_id_in: 
+      ctry_id_is_not_null: 
+      ctry_id_is_null: 
+      ctry_id_le: 
+      ctry_id_lt: 
+      ctry_id_ne: 
+      ctry_id_not_in: 
+      order: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

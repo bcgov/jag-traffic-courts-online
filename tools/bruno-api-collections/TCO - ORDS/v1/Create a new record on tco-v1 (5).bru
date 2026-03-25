@@ -1,0 +1,36 @@
+meta {
+  name: Create a new record on tco/v1 (5)
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{v1_baseUrl}}/processDisputeRemark
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 201 Response
+  description: The successfully created record.
+  
+  request: {
+    url: {{v1_baseUrl}}/processDisputeRemark
+    method: POST
+    mode: none
+  }
+  
+  response: {
+    status: {
+      code: 201
+      text: Created
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

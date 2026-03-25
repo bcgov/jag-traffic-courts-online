@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AlertComponent } from './alert.component';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';

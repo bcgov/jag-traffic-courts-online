@@ -1,5 +1,5 @@
 import { Component, ViewChild, Input, OnDestroy, SimpleChanges } from '@angular/core';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { FileHistory, JJDisputeRemark } from 'app/api';
 import { HistoryRecordService } from 'app/services/history-records.service';
@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
   selector: 'app-jj-dispute-remarks',
   templateUrl: './jj-dispute-remarks.component.html',
   styleUrls: ['./jj-dispute-remarks.component.scss'],
+  standalone: false,
 })
 export class JJDisputeRemarksComponent implements OnDestroy {
   @Input() data: JJDisputeRemark[];

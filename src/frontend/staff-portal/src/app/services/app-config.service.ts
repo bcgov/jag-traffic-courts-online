@@ -21,7 +21,7 @@ export class AppConfig implements IAppConfig {
   useMockServices: boolean;
   apiBaseUrl: string;
   features: {
-    dispute: boolean;
+    staffDisputeIntake: boolean;
   };
 }
 
@@ -59,11 +59,6 @@ export class AppConfigService {
 
   get apiBaseUrl(): string {
     return this.appConfig?.apiBaseUrl;
-  }
-
-  get featureFlagDispute(): boolean {
-    const flag = this.appConfig?.features?.dispute;
-    return flag ? flag : false;
   }
 
   public isFeatureFlagEnabled(featureName: string): boolean {

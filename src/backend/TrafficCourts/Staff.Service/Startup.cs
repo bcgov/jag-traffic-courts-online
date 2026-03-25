@@ -9,6 +9,7 @@ using TrafficCourts.Caching;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Authentication;
 using TrafficCourts.Common.Configuration;
+using TrafficCourts.Common.Features.DisputeCreation;
 using TrafficCourts.Messaging;
 using TrafficCourts.OrdsDataService;
 using TrafficCourts.Staff.Service.Authentication;
@@ -107,6 +108,7 @@ public static class Startup
 
         // Add DisputeService
         builder.Services.AddTransient<IDisputeService, DisputeService>();
+        builder.Services.AddTransient<IDisputeCreationService, DisputeCreationService>();
         builder.Services.AddTransient<IFileHistoryService, FileHistoryService>();
         builder.Services.AddTransient<IEmailHistoryService, EmailHistoryService>();
         builder.Services.AddTransient<IJJDisputeService, JJDisputeService>();

@@ -1,0 +1,51 @@
+meta {
+  name: disputeList
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{v1_baseUrl}}/disputeList
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~excludeStatus: 
+  ~fromDate: 
+  ~issueTime: 
+  ~noticeOfDisputeGuid: 
+  ~ticketNumber: 
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/disputeList
+    method: GET
+    mode: none
+    params:query: {
+      ~excludeStatus: 
+      ~fromDate: 
+      ~issueTime: 
+      ~noticeOfDisputeGuid: 
+      ~ticketNumber: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}
