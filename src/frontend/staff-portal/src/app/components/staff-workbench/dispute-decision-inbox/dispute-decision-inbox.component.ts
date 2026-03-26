@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Output, EventEmitter, Input } from '@angular/core';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
 import { JJDisputeService } from 'app/services/jj-dispute.service';
 import { LoggerService } from '@core/services/logger.service';
@@ -14,6 +14,7 @@ import { DisputeStatus } from '@shared/consts/DisputeStatus.model';
   selector: 'app-dispute-decision-inbox',
   templateUrl: './dispute-decision-inbox.component.html',
   styleUrls: ['./dispute-decision-inbox.component.scss'],
+  standalone: false,
 })
 export class DisputeDecisionInboxComponent implements OnInit {
   @Input() tabIndex: number;
@@ -100,7 +101,8 @@ export class DisputeDecisionInboxComponent implements OnInit {
         (this.filters.team ? this.courthouseTeams[this.filters.team].join(",") : ""),
       sortBy: this.sortDirection === SortDirection.Asc ? this.sortBy : "-" + this.sortBy,
       pageNumber: this.currentPage,
-      pageSize: 25
+      pageSize: 25,
+      fetchPendingAdjournments: false,
     };
     this.jjDisputeService.getTCODisputes(params).subscribe((response) => {
       this.tcoDisputes = [];

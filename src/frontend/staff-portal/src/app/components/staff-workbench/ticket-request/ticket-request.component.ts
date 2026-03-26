@@ -8,13 +8,14 @@ import { ViolationTicketService } from 'app/services/violation-ticket.service';
 @Component({
   selector: 'app-ticket-request',
   templateUrl: './ticket-request.component.html',
-  styleUrls: ['./ticket-request.component.scss']
+  styleUrls: ['./ticket-request.component.scss'],
+  standalone: false,
 })
 export class TicketRequestComponent implements OnInit, OnChanges {
   @Input() disputeInfo: Dispute;
   public countsActions: any;
   public collapseObj: any = {
-    contactInformation: true
+    ticketRequestInformation: true
   }
   public form: FormGroup;
   public countFormFields = {

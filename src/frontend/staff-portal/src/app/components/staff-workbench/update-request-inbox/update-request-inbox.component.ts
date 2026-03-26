@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { DisputeService, DisputeWithUpdates, Dispute } from 'app/services/dispute.service';
 import { DisputeStatus, PagedDisputeListItemCollection, SortDirection } from 'app/api';
@@ -14,6 +14,7 @@ import { Sort } from '@angular/material/sort';
   selector: 'app-update-request-inbox',
   templateUrl: './update-request-inbox.component.html',
   styleUrls: ['./update-request-inbox.component.scss'],
+  standalone: false,
 })
 export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
   @Input() tabIndex: number;

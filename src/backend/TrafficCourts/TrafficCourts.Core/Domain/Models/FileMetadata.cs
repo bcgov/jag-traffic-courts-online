@@ -34,14 +34,19 @@ public class FileMetadata
     public string? DocumentType { get; set; }
 
     /// <summary>
+    /// The document status document-status
+    /// </summary>
+    public DocumentStatus? DocumentStatus { get; set; }
+
+    /// <summary>
     /// The virus scan status virus-scan-status
     /// </summary>
     public string? VirusScanStatus { get; set; }
 
     /// <summary>
-    /// Document status (can be pending for disputant uploaded) document-status
+    /// Staff review status (can be pending for disputant uploaded) staff-review-status
     /// </summary>
-    public string? DocumentStatus { get; set; }
+    public string? StaffReviewStatus { get; set; }
 
     /// <summary>
     /// The ticket number ticket-number

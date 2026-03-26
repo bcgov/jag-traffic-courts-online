@@ -1,0 +1,36 @@
+meta {
+  name: assignViolationTicket
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{v1_baseUrl}}/assignViolationTicket
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 201 Response
+  description: The successfully created record.
+  
+  request: {
+    url: {{v1_baseUrl}}/assignViolationTicket
+    method: POST
+    mode: none
+  }
+  
+  response: {
+    status: {
+      code: 201
+      text: Created
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

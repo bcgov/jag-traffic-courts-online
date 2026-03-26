@@ -4,12 +4,7 @@
 // MATERIAL FORMS
 //
 
-.mat-input-element,
-.mat-select-value {
-  color: theme-palette(blue, light) !important;
-}
-
-
-.mat-slide-toggle-content {
-  color: theme-palette(blue, dark);
+.mat-mdc-input-element,
+.mat-mdc-select-value {
+  color: var(--color-primary);
 }

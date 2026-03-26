@@ -1,0 +1,36 @@
+meta {
+  name: countries
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{v1_baseUrl}}/countries
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/countries
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

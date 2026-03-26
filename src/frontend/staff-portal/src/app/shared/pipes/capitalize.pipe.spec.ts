@@ -3,7 +3,11 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CapitalizePipe } from './capitalize.pipe';
 
-@Component({ selector: 'app-test-blank', template: `` })
+@Component({
+  selector: 'app-test-blank',
+  template: ``,
+  standalone: false,
+})
 class BlankComponent {}
 
 describe('CapitalizePipe', () => {

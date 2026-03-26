@@ -30,6 +30,7 @@ public class DisputeCaseFileSummary
     public YesNo? MultipleOfficersYn { get; set; }
     public YesNo? NoticeOfHearingYn { get; set; }
     public YesNo? ElectronicTicketYn { get; set; }
+    public YesNo? PendingAdjournmentRequestsYn { get; set; }
 
     public string JjAssignedTo { get; set; }
     public string VtcAssignedTo { get; set; }

@@ -1,15 +1,9 @@
 @import "palette.scss";
 
 .upload {
-    .fa-minus-circle, .fa-plus-circle {
-        font-size: 1.125rem;
-        color: #009cde;
-    }
-
     mat-expansion-panel {
         box-shadow: none !important;
         padding-bottom: 1em;
-        border-bottom: 1px solid theme-palette(grey, light);
 
         .upload-header {
             width: 25%;
@@ -19,6 +13,11 @@
     mat-expansion-panel-header {
         padding-left: 0;
         padding-right: 0.5em;
+    }
+
+    .expand-collapse-icon {
+      color: #009cde;
+      vertical-align: text-bottom;
     }
 
     .upload-type {

@@ -1,0 +1,43 @@
+meta {
+  name: appearanceChargeCountList
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{v1_baseUrl}}/appearanceChargeCountList
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~disputeId: 
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/appearanceChargeCountList
+    method: GET
+    mode: none
+    params:query: {
+      ~disputeId: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

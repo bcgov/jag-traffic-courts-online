@@ -1,0 +1,107 @@
+meta {
+  name: justin_agencies
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{v1_baseUrl}}/justin_agencies
+  body: none
+  auth: inherit
+}
+
+params:path {
+  agen_active_yn_eq: 
+  agen_active_yn_ge: 
+  agen_active_yn_gt: 
+  agen_active_yn_in: 
+  agen_active_yn_is_not_null: 
+  agen_active_yn_is_null: 
+  agen_active_yn_le: 
+  agen_active_yn_lt: 
+  agen_active_yn_ne: 
+  agen_active_yn_not_in: 
+  agen_id_eq: 
+  agen_id_ge: 
+  agen_id_gt: 
+  agen_id_in: 
+  agen_id_is_not_null: 
+  agen_id_is_null: 
+  agen_id_le: 
+  agen_id_lt: 
+  agen_id_ne: 
+  agen_id_not_in: 
+  cdat_agency_type_cd_eq: 
+  cdat_agency_type_cd_ge: 
+  cdat_agency_type_cd_gt: 
+  cdat_agency_type_cd_in: 
+  cdat_agency_type_cd_is_not_null: 
+  cdat_agency_type_cd_is_null: 
+  cdat_agency_type_cd_le: 
+  cdat_agency_type_cd_like: 
+  cdat_agency_type_cd_lt: 
+  cdat_agency_type_cd_ne: 
+  cdat_agency_type_cd_not_in: 
+  cdat_agency_type_cd_regexp_like: 
+  order: 
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/justin_agencies
+    method: GET
+    mode: none
+    params:path: {
+      agen_active_yn_eq: 
+      agen_active_yn_ge: 
+      agen_active_yn_gt: 
+      agen_active_yn_in: 
+      agen_active_yn_is_not_null: 
+      agen_active_yn_is_null: 
+      agen_active_yn_le: 
+      agen_active_yn_lt: 
+      agen_active_yn_ne: 
+      agen_active_yn_not_in: 
+      agen_id_eq: 
+      agen_id_ge: 
+      agen_id_gt: 
+      agen_id_in: 
+      agen_id_is_not_null: 
+      agen_id_is_null: 
+      agen_id_le: 
+      agen_id_lt: 
+      agen_id_ne: 
+      agen_id_not_in: 
+      cdat_agency_type_cd_eq: 
+      cdat_agency_type_cd_ge: 
+      cdat_agency_type_cd_gt: 
+      cdat_agency_type_cd_in: 
+      cdat_agency_type_cd_is_not_null: 
+      cdat_agency_type_cd_is_null: 
+      cdat_agency_type_cd_le: 
+      cdat_agency_type_cd_like: 
+      cdat_agency_type_cd_lt: 
+      cdat_agency_type_cd_ne: 
+      cdat_agency_type_cd_not_in: 
+      cdat_agency_type_cd_regexp_like: 
+      order: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

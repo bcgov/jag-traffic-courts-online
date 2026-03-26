@@ -1,0 +1,43 @@
+meta {
+  name: jjDispute
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{v1_baseUrl}}/jjDispute?ticketNumber=AC39985013
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ticketNumber: AC39985013
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/jjDispute
+    method: GET
+    mode: none
+    params:query: {
+      ~ticketNumber: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

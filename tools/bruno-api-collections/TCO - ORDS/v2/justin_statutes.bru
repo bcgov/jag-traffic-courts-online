@@ -1,0 +1,127 @@
+meta {
+  name: justin_statutes
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{v2_baseUrl}}/justin_statutes
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/justin_statutes
+    method: GET
+    mode: none
+    params:path: {
+      act_cd_eq: 
+      act_cd_ge: 
+      act_cd_gt: 
+      act_cd_in: 
+      act_cd_is_not_null: 
+      act_cd_is_null: 
+      act_cd_le: 
+      act_cd_lt: 
+      act_cd_ne: 
+      act_cd_not_in: 
+      order: 
+      stat_effective_dt_eq: 
+      stat_effective_dt_ge: 
+      stat_effective_dt_gt: 
+      stat_effective_dt_in: 
+      stat_effective_dt_is_not_null: 
+      stat_effective_dt_is_null: 
+      stat_effective_dt_le: 
+      stat_effective_dt_lt: 
+      stat_effective_dt_ne: 
+      stat_effective_dt_not_in: 
+      stat_id_eq: 
+      stat_id_ge: 
+      stat_id_gt: 
+      stat_id_in: 
+      stat_id_is_not_null: 
+      stat_id_is_null: 
+      stat_id_le: 
+      stat_id_lt: 
+      stat_id_ne: 
+      stat_id_not_in: 
+      stat_paragraph_txt_eq: 
+      stat_paragraph_txt_ge: 
+      stat_paragraph_txt_gt: 
+      stat_paragraph_txt_in: 
+      stat_paragraph_txt_is_not_null: 
+      stat_paragraph_txt_is_null: 
+      stat_paragraph_txt_le: 
+      stat_paragraph_txt_like: 
+      stat_paragraph_txt_lt: 
+      stat_paragraph_txt_ne: 
+      stat_paragraph_txt_not_in: 
+      stat_paragraph_txt_regexp_like: 
+      stat_section_txt_eq: 
+      stat_section_txt_ge: 
+      stat_section_txt_gt: 
+      stat_section_txt_in: 
+      stat_section_txt_is_not_null: 
+      stat_section_txt_is_null: 
+      stat_section_txt_le: 
+      stat_section_txt_like: 
+      stat_section_txt_lt: 
+      stat_section_txt_ne: 
+      stat_section_txt_not_in: 
+      stat_section_txt_regexp_like: 
+      stat_sub_paragraph_txt_eq: 
+      stat_sub_paragraph_txt_ge: 
+      stat_sub_paragraph_txt_gt: 
+      stat_sub_paragraph_txt_in: 
+      stat_sub_paragraph_txt_is_not_null: 
+      stat_sub_paragraph_txt_is_null: 
+      stat_sub_paragraph_txt_le: 
+      stat_sub_paragraph_txt_like: 
+      stat_sub_paragraph_txt_lt: 
+      stat_sub_paragraph_txt_ne: 
+      stat_sub_paragraph_txt_not_in: 
+      stat_sub_paragraph_txt_regexp_like: 
+      stat_sub_section_txt_eq: 
+      stat_sub_section_txt_ge: 
+      stat_sub_section_txt_gt: 
+      stat_sub_section_txt_in: 
+      stat_sub_section_txt_is_not_null: 
+      stat_sub_section_txt_is_null: 
+      stat_sub_section_txt_le: 
+      stat_sub_section_txt_like: 
+      stat_sub_section_txt_lt: 
+      stat_sub_section_txt_ne: 
+      stat_sub_section_txt_not_in: 
+      stat_sub_section_txt_regexp_like: 
+      stat_termination_dt_eq: 
+      stat_termination_dt_ge: 
+      stat_termination_dt_gt: 
+      stat_termination_dt_in: 
+      stat_termination_dt_is_not_null: 
+      stat_termination_dt_is_null: 
+      stat_termination_dt_le: 
+      stat_termination_dt_lt: 
+      stat_termination_dt_ne: 
+      stat_termination_dt_not_in: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

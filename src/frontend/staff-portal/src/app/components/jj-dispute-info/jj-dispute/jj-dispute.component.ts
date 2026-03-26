@@ -4,7 +4,7 @@ import { JJDisputeService, JJDispute } from '../../../services/jj-dispute.servic
 import { Observable, map } from 'rxjs';
 import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPAppCd, JJDisputeCourtAppearanceRoPCrown, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized, FileMetadata, JJDisputeElectronicTicketYn, JJDisputeNoticeOfHearingYn, TicketImageDataJustinDocumentReportType, DocumentType, JJDisputeContactType, JJDisputedCountRoPFinding, Province, Language, JJDisputeDisputantAttendanceType, JJDisputeAccidentYn, JJDisputeMultipleOfficersYn, JJDisputeSignatoryType, DcfTemplateType, DisputeCaseFileSummary, YesNo } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LookupsService } from 'app/services/lookups.service';
@@ -12,11 +12,11 @@ import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dia
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { ConfigService } from '@config/config.service';
 import { DocumentService } from 'app/api/api/document.service';
+import { DocumentStatus } from 'app/api/model/documentStatus.model';
 import { HistoryRecordService } from 'app/services/history-records.service';
 import { PrintOptions } from '@shared/models/print-options.model';
 import { UserGroup } from '@shared/enums/user-group.enum';
 import { TabType } from '@shared/enums/tab-type.enum';
-import { Dispute } from 'app/services/dispute.service';
 import { DisputeStatus } from '@shared/consts/DisputeStatus.model';
 import { HearingType } from '@shared/consts/HearingType.model';
 import { ChangeDetectorRef } from '@angular/core';
@@ -26,9 +26,12 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-jj-dispute',
   templateUrl: './jj-dispute.component.html',
-  styleUrls: ['./jj-dispute.component.scss']
+  styleUrls: ['./jj-dispute.component.scss'],
+  standalone: false,
 })
 export class JJDisputeComponent implements OnInit {
+  DocumentStatus = DocumentStatus;
+
   @ViewChild("disputeDetails") disputeDetailsAnchor: ElementRef;
   @ViewChild("uploadedDocuments") uploadedDocumentsAnchor: ElementRef;
   @ViewChild("fileHistory") fileHistoryAnchor: ElementRef;
@@ -122,6 +125,12 @@ export class JJDisputeComponent implements OnInit {
   selectedJJ: string;
   fileTypeToUpload: string = "Certified Extract";
   filesToUpload: any[] = [];
+  fileUploadError: string;
+  
+  // File size validation constants
+  readonly MAX_FILE_SIZE_MB = 10;
+  readonly MAX_FILE_SIZE_BYTES = this.MAX_FILE_SIZE_MB * 1024 * 1024;
+
   requireCourtHearingReason: string = "";
   concludeStatusOnly: boolean = false;
   cancelStatusOnly: boolean = false;
@@ -232,8 +241,17 @@ export class JJDisputeComponent implements OnInit {
       this.isNoAppEnabled = this.RoPApp.N === this.lastUpdatedJJDispute.mostRecentCourtAppearance.appCd;
     });
   }
+
   isJjBaseAddress(): boolean {
     return this.router.url.includes('/jj');
+  }
+
+  get documentManagementAllowed(): boolean {
+    const onJJPage = this.isJjBaseAddress() &&
+      (this.type === this.tabTypes.DCF || this.type === this.tabTypes.WR_ASSIGNMENTS
+        || this.type === this.tabTypes.WR_INBOX || this.type === this.tabTypes.HEARING_INBOX);
+
+    return !(this.isJJ && onJJPage);
   }
 
   goTo(id: string) {
@@ -577,6 +595,10 @@ export class JJDisputeComponent implements OnInit {
     else if (cancelledCount + paidPriorToAppearancCount >= countCount && countCount > 0) this.concludeStatusOnly = true;
   }
 
+  isOneOf(status: JJDisputeStatus, statuses: JJDisputeStatus[]): boolean {
+    return statuses.includes(status);
+  }
+
   onCancelled() {
     const data: DialogOptions = {
       titleKey: "Cancel Dispute",
@@ -627,9 +649,10 @@ export class JJDisputeComponent implements OnInit {
     this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action: any) => {
         if (action) {
-          this.lastUpdatedJJDispute.fileData = this.lastUpdatedJJDispute.fileData.filter(x => x.fileId !== fileId);
-          this.documentService.apiDocumentDelete(fileId).subscribe(any => {
-            // dont need to update the JJ Dispute after the document is removed, line 88 is just to update UX
+          this.documentService.apiDocumentDelete(fileId).subscribe(() => {
+            this.lastUpdatedJJDispute.fileData = this.lastUpdatedJJDispute.fileData.filter(x => x.fileId !== fileId);
+
+            // update UX
             this.refreshFileHistory();
           });
         }
@@ -655,43 +678,70 @@ export class JJDisputeComponent implements OnInit {
   }
 
   onUpload(files: FileList) {
-    if (files.length <= 0) return;
+    // Clear error message
+    this.fileUploadError = undefined;
 
-    // Initially, set the status to "waiting for virus scan..."
-    let item: FileMetadata = {
-      fileId: '',
-      fileName: files[0].name,
-      virusScanStatus: "waiting for virus scan..."
-    };
+    if (files.length <= 0) {
+      return;
+    }
 
-    // Add the item to the fileData array
-    this.lastUpdatedJJDispute.fileData.push(item);
+    const file = files[0];
 
-    // Manually trigger change detection to ensure the UI is refreshed
-    this.cdr.detectChanges();
+    // Reset file input
+    const fileInput = document.getElementById('getFile') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+
+    // Validate file size before uploading
+    if (file.size > this.MAX_FILE_SIZE_BYTES) {
+      const data: DialogOptions = {
+        titleKey: "File is Too Large",
+        messageKey: `File size exceeds the ${this.MAX_FILE_SIZE_MB} MB limit. Please select a smaller file.`,
+        actionTextKey: "OK",
+        actionType: "accent",
+        cancelHide: true,
+        icon: "error"
+      };
+      this.dialog.open(ConfirmDialogComponent, { data, width: "30%" });
+      
+      return;
+    }
 
     // Upload the file
-    this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.noticeOfDisputeGuid, this.fileTypeToUpload, files[0], this.lastUpdatedJJDispute.id)
-      .subscribe(fileId => {
-        // Once the file is uploaded, update the fileId and status
-        item.fileId = fileId;
-        item.virusScanStatus = "";  // or any other status
-
-        // Manually trigger change detection again to update the view
+    this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.noticeOfDisputeGuid, this.fileTypeToUpload, file, this.lastUpdatedJJDispute.id).subscribe({
+      next: (fileMetadata: FileMetadata) => {
+        // Add the item to the fileData array
+        this.lastUpdatedJJDispute.fileData.push(fileMetadata);
+      },
+      error: (error) => {
+        // If the upload fails, set an error message
+        if (error.status === 413) {
+          this.fileUploadError = "upload failed - file size too large";
+        } else {
+          this.fileUploadError = "upload failed";
+        }
+      },
+      complete: () => {
+        // Manually trigger change detection to ensure the UI is refreshed
         this.cdr.detectChanges();
 
         // Call refreshFileHistory() to update the history if needed
         this.refreshFileHistory();
-      }, error => {
-        // If the upload fails, set an error message
-        item.virusScanStatus = "upload failed";
-        this.cdr.detectChanges();  // Ensure the component updates in case of error
-      });
+      }
+    });
   }
 
+  onChangeDocumentStatus(file: FileMetadata, status: DocumentStatus) {
+    this.documentService.apiDocumentPut(file.fileId, file.documentType, status).subscribe({
+      next: () => {
+        file.documentStatus = status;
+      },
+    });
+  }
 
   onPrint(isCompleteVersion: boolean) {
-    var type = DcfTemplateType.DcfTemplate;
+    let type: DcfTemplateType = DcfTemplateType.DcfTemplate;
     if (!isCompleteVersion) {
       switch (this.lastUpdatedJJDispute.hearingType) {
         case this.HearingType.WrittenReasons:
