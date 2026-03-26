@@ -177,6 +177,8 @@ public class Handler : IRequestHandler<Request, Response>
         if (request.to_be_heard_at_courthouse_ids is not null) parameters.Add("to_be_heard_at_agen_id_in", request.to_be_heard_at_courthouse_ids);
         if (request.hearing_type_cd is not null) parameters.Add("hearing_type_cd_eq", request.hearing_type_cd);
 
+        if (request.appearance_courtroom_code is not null) parameters.Add("appr_ctrm_room_cd_eq", request.appearance_courtroom_code);
+
         if (request.appearance_courthouse_ids is not null && request.appearances is true)
         {
             parameters.Add("appr_ctrm_agen_id_in", request.appearance_courthouse_ids);
