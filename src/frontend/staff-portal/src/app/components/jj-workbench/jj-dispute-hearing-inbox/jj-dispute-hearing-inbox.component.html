@@ -16,24 +16,29 @@
 
   <div class="row">
     <div class="col">
-      <div style="display:flex; flex-direction: row; justify-content: left;">
+      <div style="display:flex; flex-direction: row; justify-content: left; gap: 12px; margin-bottom: 16px;">
         <mat-form-field fxFlex="200px" appearance="outline" class="me-0">
           <input matInput [matDatepicker]="picker" [formControl]="appearanceDateFilter" (click)="picker.open()" placeholder="Hearing date" />
         </mat-form-field>
         <mat-datepicker-toggle matSuffix [for]="picker" class="me-2"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
         <mat-form-field fxFlex="400px" appearance="outline" class="me-0">
-          <mat-select [formControl]="jjAssignedToFilter" placeholder="choose a jj">
-            <mat-option value="unassigned"><i>choose a jj</i></mat-option>
-            <mat-option value=""><i>all JJs</i></mat-option>
-            @for (jj of jjList; track jj.idir) {
-              <mat-option [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i></mat-option>
+          <mat-select [formControl]="courthouseLocationFilter" placeholder="Courthouse location">
+            @for (location of lookupsService.courthouseAgencies; track location.id) {
+              <mat-option [value]="location.id">{{ location.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field fxFlex="400px" appearance="outline" class="me-0">
+          <mat-select [formControl]="appearanceRoomCodeFilter" placeholder="Court Room">
+            @for (room of appearanceRoomCodes; track room) {
+              <mat-option [value]="room">{{ room }}</mat-option>
             }
           </mat-select>
         </mat-form-field>
       </div>
     </div>
-    <div class="col-auto">
+    <div class="col-auto" [hidden]="!appearanceRoomCodeFilter.value">
       <app-paging [currentPage]="currentPage" [totalPages]="totalPages" (pageChanged)="onPageChange($event)"></app-paging>
     </div>
   </div>
@@ -73,6 +78,23 @@
       </th>
       <td mat-cell *matCellDef="let element">
         <span>{{ element.violationDate | date: "dd-MMM-yyyy" }}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="surnameOrOrgName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        SURNAME, GIVEN NAME(S)
+      </th>
+      <td mat-cell *matCellDef="let element">
+        @if (element.disputantSurname) {
+          <span>{{ element.disputantSurname + (element.disputantGivenName1 || 
+            element.disputantGivenName2 || element.disputantGivenName3 ? "," : "") + 
+            (element.disputantGivenName1 ? " " + element.disputantGivenName1 : "") + 
+            (element.disputantGivenName2 ? " " + element.disputantGivenName2 : "") + 
+            (element.disputantGivenName3 ? " " + element.disputantGivenName3 : "") }}</span>
+        } @else {
+          <span>{{ element.disputantOrganizationName }}</span>
+        }
       </td>
     </ng-container>
 

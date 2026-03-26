@@ -7,8 +7,10 @@ import { AuthService, UserRepresentation } from 'app/services/auth.service';
 import { FormControl } from '@angular/forms';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { DisputeStatus } from '@shared/consts/DisputeStatus.model';
+import { LookupsService } from 'app/services/lookups.service';
 import { HearingType } from '@shared/consts/HearingType.model';
 import { LoggerService } from '@core/services/logger.service';
+import { HearingInboxFilterService } from 'app/services/hearing-inbox-filter.service';
 
 @Component({
   selector: 'app-jj-dispute-hearing-inbox',
@@ -28,14 +30,18 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   }
   appearanceDateFilter = new FormControl(null);
   jjAssignedToFilter = new FormControl('');
+  courthouseLocationFilter = new FormControl({ value: '', disabled: true });
+  appearanceRoomCodeFilter = new FormControl('');
   jjList: UserRepresentation[];
   tcoDisputes: DisputeCaseFileSummary[] = [];
+  appearanceRoomCodes: string[] = [];
   tcoDisputesCollection: PagedDisputeCaseFileSummaryCollection = {};
   dataSource = new MatTableDataSource(this.tcoDisputes);
   displayedColumns: string[] = [
     "jjAssignedTo",
     "ticketNumber",
     "violationDate",
+    "surnameOrOrgName",
     "toBeHeardAtCourthouseName",
     "appearanceTs",  
     "appearanceRoomCode",
@@ -58,33 +64,77 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     private authService: AuthService,
     private logger: LoggerService,
     private readonly changeDetectorRef: ChangeDetectorRef, // Temp fix for DatetimePicker styles
+    public lookupsService: LookupsService,
+    private hearingInboxFilterService: HearingInboxFilterService
   ) {
     this.authService.jjList$.subscribe(result => {
       this.jjList = result;
     });
 
-    // listen for changes in jj Assigned
-    this.jjAssignedToFilter.valueChanges
-      .subscribe(
-        value => {
-          this.getTCODisputes();
-        }
-      )
 
     // listen for changes in appearance Date
     this.appearanceDateFilter.valueChanges
       .subscribe(
         value => {
-          this.getTCODisputes();
+          if (value) {
+            this.courthouseLocationFilter.enable({ emitEvent: false });
+            this.appearanceRoomCodeFilter.setValue('', { emitEvent: false });
+            this.dataSource.data = [];
+            if (this.courthouseLocationFilter.value) {
+              this.getTCODisputes(false); // re-fetch room codes for selected courthouse
+            }
+          } else {
+            this.courthouseLocationFilter.setValue('', { emitEvent: false });
+            this.courthouseLocationFilter.disable({ emitEvent: false });
+            this.appearanceRoomCodeFilter.setValue('', { emitEvent: false });
+            this.dataSource.data = [];
+          }
         }
       )
+
+    //listen for changes in courthouse location
+    this.courthouseLocationFilter.valueChanges
+      .subscribe(
+        value => {
+          // Reset room code when courthouse changes since rooms differ per courthouse
+          this.appearanceRoomCodeFilter.setValue('', { emitEvent: false });
+          this.dataSource.data = [];
+          this.getTCODisputes(false); // fetch to repopulate room codes
+        }
+      )
+
+    // listen for changes in court room
+    this.appearanceRoomCodeFilter.valueChanges
+      .subscribe(
+        value => {
+          this.getTCODisputes(true);
+        }
+      )
+
+      
   }
 
   ngOnInit(): void {
-    this.getTCODisputes();
+    const savedFilters = this.hearingInboxFilterService.filters;
+
+    if (savedFilters.appearanceDate) {
+      this.appearanceDateFilter.setValue(savedFilters.appearanceDate, { emitEvent: false });
+      this.courthouseLocationFilter.enable({ emitEvent: false });
+    }
+
+    if (savedFilters.courthouseLocation) {
+      this.courthouseLocationFilter.setValue(savedFilters.courthouseLocation, { emitEvent: false });
+      this.appearanceRoomCodeFilter.enable({ emitEvent: false });
+    }
+
+    if (savedFilters.appearanceRoomCode) {
+      this.appearanceRoomCodeFilter.setValue(savedFilters.appearanceRoomCode, { emitEvent: false });
+      this.getTCODisputes(true);
+    }
+
   }
 
-  getTCODisputes() {
+  getTCODisputes(bind: boolean) {
     this.logger.log('JJDisputeHearingInboxComponent::getTCODisputes');
     const params = {
       appearances: true,
@@ -92,8 +142,10 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
       jjAssignedTo: this.jjAssignedToFilter.value,
       disputeStatusCodes: [DisputeStatus.HearingScheduled, DisputeStatus.InProgress, DisputeStatus.Review].join(","),
       hearingTypeCd: HearingType.CourtAppearance,
+      appearanceCourthouseIds: this.courthouseLocationFilter.value,
       appearanceDtFrom: this.appearanceDateFilter.value,
       appearanceDtThru: this.appearanceDateFilter.value,
+      appearanceRoomCode: this.appearanceRoomCodeFilter.value,
       sortBy: this.sortDirection === SortDirection.Asc ? this.sortBy : "-" + this.sortBy,
       pageNumber: this.currentPage,
       pageSize: 25,
@@ -109,7 +161,15 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
         this.currentPage = 0;
       }
       this.tcoDisputes = response.items;
-      this.dataSource.data = this.tcoDisputes;
+      if(bind)
+      {
+        this.dataSource.data = this.tcoDisputes;
+      }
+      this.appearanceRoomCodes = [...new Set(
+        this.tcoDisputes
+          .map(item => item.appearanceRoomCode)
+          .filter(code => !!code)
+      )];
     });
   }
 
@@ -123,19 +183,27 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   }
 
   backWorkbench(element: DisputeCaseFileSummary) {
+    this.saveFilterValues();
     this.tcoDisputeInfo.emit(element);
+  }
+
+  saveFilterValues()
+  {
+    this.hearingInboxFilterService.filters.appearanceDate = this.appearanceDateFilter.value;
+    this.hearingInboxFilterService.filters.courthouseLocation = this.courthouseLocationFilter.value ?? '';
+    this.hearingInboxFilterService.filters.appearanceRoomCode = this.appearanceRoomCodeFilter.value ?? '';
   }
 
   sortData(sort: Sort){
     this.sortBy = sort.active;
     this.sortDirection = sort.direction ? sort.direction as SortDirection : SortDirection.Desc;
     this.currentPage = 1;
-    this.getTCODisputes();
+    this.getTCODisputes(true);
   }
 
   onPageChange(event: number) {
     this.currentPage = event;
-    this.getTCODisputes();
+    this.getTCODisputes(true);
   }
 
   getName(jjAssignedTo: string) {

@@ -42,7 +42,6 @@ public class DocumentController : ControllerBase
     /// <response code="500">There was a server error that prevented the file to be downloaded successfully.</response>
     /// <returns>The document</returns>
     [HttpGet]
-    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
