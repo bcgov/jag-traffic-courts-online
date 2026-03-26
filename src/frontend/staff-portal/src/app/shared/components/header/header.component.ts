@@ -12,6 +12,7 @@ import { filter } from 'rxjs';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default,
+  standalone: false,
 })
 export class HeaderComponent implements OnInit {
   fullName: string;
@@ -37,7 +38,7 @@ export class HeaderComponent implements OnInit {
     private title: Title,
     private authService: AuthService,
   ) {
-    this.languageCode = this.translateService.getDefaultLang();
+    this.languageCode = this.translateService.getFallbackLang();
     this.onLanguage();
 
     this.environment = this.appConfigService.environment;
@@ -51,15 +52,15 @@ export class HeaderComponent implements OnInit {
         this.headingText = this.title.getTitle();
       });
 
-    this.authService.checkAuth().subscribe(() => {
+    this.authService.checkAuth().then(() => {
       this.authService.isLoggedIn$.subscribe(isLoggedIn => {
         this.isLoggedIn = isLoggedIn;
         this.fullName = this.authService.userProfile?.fullName;
         if(this.router.url.indexOf(AppRoutes.UNAUTHORIZED) === -1){
           this.authService.loadLookupData();
         }
-      })
-    })
+      });
+    });
   }
 
   private toggleLanguage(lang: string): {
@@ -74,7 +75,7 @@ export class HeaderComponent implements OnInit {
   }
 
   onLanguage(): void {
-    this.translateService.setDefaultLang(this.languageCode);
+    this.translateService.setFallbackLang(this.languageCode);
     const { languageCode, languageDesc } = this.toggleLanguage(
       this.languageCode
     );
@@ -82,11 +83,11 @@ export class HeaderComponent implements OnInit {
     this.languageDesc = languageDesc;
   }
 
-  login() {
+  async login() {
     this.authService.login();
   }
 
-  logout() {
+  async logout() {
     this.authService.logout();
   }
 }

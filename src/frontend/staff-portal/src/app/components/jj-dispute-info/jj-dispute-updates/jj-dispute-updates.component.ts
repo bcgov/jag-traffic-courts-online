@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { DisputantUpdateRequestExpanded } from '@shared/models/disputant-update-request-expanded';
 import { DisputeUpdateRequestUpdateType, Province } from 'app/api';
 import { DisputantUpdateRequest, DisputeService } from 'app/services/dispute.service';
@@ -8,7 +8,8 @@ import { LookupsService } from 'app/services/lookups.service';
 @Component({
   selector: 'app-jj-dispute-updates',
   templateUrl: './jj-dispute-updates.component.html',
-  styleUrls: ['./jj-dispute-updates.component.scss']
+  styleUrls: ['./jj-dispute-updates.component.scss'],
+  standalone: false,
 })
 export class JjDisputeUpdatesComponent {
   @Input() disputeId: number;

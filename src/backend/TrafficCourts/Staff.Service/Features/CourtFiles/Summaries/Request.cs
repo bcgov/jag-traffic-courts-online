@@ -38,4 +38,6 @@ public class Request : IRequest<Response>
     public string? sort_by { get; set; }
 
     public string? appearance_courtroom_code { get; set; }
+
+    public bool fetch_pending_adjournments { get; set; }
 }

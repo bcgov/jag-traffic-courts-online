@@ -9,12 +9,18 @@ namespace TrafficCourts.Workflow.Service;
 /// </summary>
 internal static partial class TagProvider
 {
+    /// <summary>
+    /// Records the notice of dispute GUID and ticket number.
+    /// </summary>
     public static void RecordTags(ITagCollector collector, SendEmailVerificationEmail message)
     {
         RecordNoticeOfDisputeIdTag(collector, message.NoticeOfDisputeGuid);
         collector.Add("TicketNumber", message.TicketNumber);
     }
 
+    /// <summary>
+    /// Records the common consume context properties and the notice of dispute GUID.
+    /// </summary>
     public static void RecordTags(ITagCollector collector, ConsumeContext<EmailVerificationSuccessful> context)
     {
         RecordTags<EmailVerificationSuccessful>(collector, context);
@@ -22,7 +28,7 @@ internal static partial class TagProvider
     }
 
     /// <summary>
-    /// Records the common consume context properties and the Notice Of DisputeGuid.
+    /// Records the common consume context properties and the notice of dispute GUID.
     /// </summary>
     public static void RecordTags(ITagCollector collector, ConsumeContext<CheckEmailVerificationTokenRequest> context)
     {
@@ -40,12 +46,12 @@ internal static partial class TagProvider
     }
 
     /// <summary>
-    /// Records the common consume context properties and the ticket number.
+    /// Records the common consume context properties and the notice of dispute GUID.
     /// </summary>
-    public static void RecordTags(ITagCollector collector, ConsumeContext<SubmitNoticeOfDispute> context)
+    public static void RecordTags(ITagCollector collector, ConsumeContext<DisputeCreated> context)
     {
-        RecordTags<SubmitNoticeOfDispute>(collector, context);
-        Logging.TagProvider.RecordTicketNumber(collector, context.Message.TicketNumber);
+        RecordTags<DisputeCreated>(collector, context);
+        RecordNoticeOfDisputeIdTag(collector, context.Message.NoticeOfDisputeGuid);
     }
 
     public static void RecordTags(ITagCollector collector, Exception exception)

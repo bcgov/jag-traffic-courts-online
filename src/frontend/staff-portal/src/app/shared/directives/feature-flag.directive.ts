@@ -8,6 +8,7 @@ export const featureType = {
 
 @Directive({
   selector: '[appFeatureFlag]',
+  standalone: false,
 })
 export class FeatureFlagDirective {
   @Input() set appFeatureFlag(featureName: string) {

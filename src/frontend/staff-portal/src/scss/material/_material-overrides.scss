@@ -24,21 +24,47 @@ mat-error {
 // Forms
 //
 
-.mat-checkbox-layout,
-.mat-slide-toggle-content {
-  // Force checkbox and slide labels to line wrap if required
-  // instead of overflowing their container
-  white-space: normal !important;
-}
 
-.mat-form-field {
+.mat-mdc-form-field {
   // Provide a bit more spacing under form fields so error
   // messages are not resting on underlying field labels
   margin-bottom: 0.3rem;
 }
 
-.mat-checkbox-checked label,
-.mat-radio-checked label {
+.mat-mdc-form-field {
+  --mat-form-field-container-height: auto;
+  --mat-form-field-container-vertical-padding: 8px;
+  --mat-form-field-outlined-label-text-populated-size: 12px;
+  --mat-form-field-container-text-line-height: 18px;
+
+  width: 100%;
+  margin-bottom: 0px;
+  padding: 0.5rem 0.5rem 0.5rem 0;
+
+  & .mat-mdc-text-field-wrapper {
+    --mat-form-field-filled-container-color: white;
+
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  & [matformfieldlineripple] {
+    display:none;
+  }
+}
+
+.mat-mdc-form-field.mat-form-field-invalid {
+  & .mat-mdc-text-field-wrapper {
+    border-color: red;
+  }
+}
+
+.mat-mdc-form-field-type-mat-select {
+  --mat-form-field-container-vertical-padding: 4px;
+}
+
+.mat-mdc-checkbox-checked label,
+.mat-mdc-radio-checked label {
   font-weight: 700;
 }
 
@@ -83,30 +109,26 @@ mat-error {
   font-size: 24px;
 }
 
-.mat-form-field .mat-form-field-label-wrapper label {
-  line-height: 21px;
-}
-
-.mat-form-field .mat-form-field-infix input {
-  line-height: 21px;
-}
-
 .mat-vertical-content {
   padding: 0 24px 0px 24px !important;
 }
 
+/*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
 .mat-form-field-appearance-fill .mat-form-field-underline::before {
   background-color: theme-palette(blue);
 }
 
+/*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
 .mat-form-field-ripple {
-  background-color:  theme-palette(blue);
+  background-color: theme-palette(blue);
 }
 
+/*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
 .mat-form-field-wrapper .mat-form-field-flex {
   border: 2px transparent solid;
 }
 
+/*TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
 .mat-checkbox-label.mat-checkbox-label,
 .wrap-mat-radio-label.wrap-mat-radio-label {
   color: #333333;
@@ -117,23 +139,20 @@ mat-error {
     color: theme-palette(red);
   }
 
+  /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
   & .mat-form-field-wrapper .mat-form-field-flex {
     border: 2px theme-palette(red) solid;
     border-radius: 0;
   }
 }
 
-.mat-tooltip {
+.mat-mdc-tooltip {
   font-size: 1em;
 }
 
 // Prevents scrolling on smaller option dropdowns
-.mat-select-panel.mat-select-panel {
+.mat-mdc-select-panel.mat-select-panel {
   max-height: 290px;
-}
-
-.mat-radio-container {
-  margin: 4px 0 auto !important;
 }
 
 @media (max-width: 767px) {
@@ -149,24 +168,12 @@ mat-error {
   .mat-vertical-stepper-header {
     padding: 24px 0;
   }
-
-  mat-radio-button .mat-radio-label-content {
-    white-space: normal;
-    line-height: 1.3em;
-  }
-
-  mat-radio-button .mat-radio-label {
-    align-items: normal;
-  }
-
-  .mat-radio-container {
-    top: -5px;
-  }
-}
-.mat-form-field .mat-form-field-label-wrapper label {
-  line-height: 27px;
 }
 
-.mat-form-field .mat-form-field-infix input {
-  line-height: 27px;
+.mat-mdc-dialog-title {
+  --mat-dialog-headline-padding: 24px 24px 13px;
+}
+
+.mat-mdc-dialog-actions {
+  --mat-dialog-actions-padding: 16px 24px;
 }

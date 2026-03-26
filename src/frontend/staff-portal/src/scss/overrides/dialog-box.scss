@@ -14,7 +14,7 @@ p {
   font: 400 16px / 22px BCSans, Noto Sans, Verdana, Arial, sans-serif;
 }
 
-.mat-dialog-title.mat-dialog-title  {
+.mat-mdc-dialog-title.mat-dialog-title  {
   margin: 0;
 }
 
@@ -26,7 +26,6 @@ p {
 mat-expansion-panel {
   box-shadow: none !important;
   padding-bottom: 1em;
-  border-bottom: 1px solid theme-palette(grey, light);
 }
 
 mat-expansion-panel-header {

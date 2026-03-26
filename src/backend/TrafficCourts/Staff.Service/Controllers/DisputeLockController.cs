@@ -68,7 +68,7 @@ public class DisputeLockController : StaffControllerBase
     {
         try
         {
-            var result = _disputeLockService.RefreshLock(lockId, GetUserName(User));
+            var result = _disputeLockService.RefreshLock(lockId, User.GetUsername());
             if (result is null) return Task.FromResult<ActionResult<DateTimeOffset>>(NotFound());
             return Task.FromResult<ActionResult<DateTimeOffset>>(Ok(result));
         }
@@ -123,10 +123,5 @@ public class DisputeLockController : StaffControllerBase
             var result = new HttpError(StatusCodes.Status500InternalServerError, ex.Message);
             return Task.FromResult<ActionResult>(result);
         }
-    }
-
-    private static string GetUserName(ClaimsPrincipal user)
-    {
-        return user?.Identity?.Name ?? string.Empty;
     }
 }

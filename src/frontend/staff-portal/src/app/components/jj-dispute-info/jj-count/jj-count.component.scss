@@ -23,35 +23,33 @@ label {
   margin-right: 10px;
 }
 
-.mat-form-field.datetime-picker{
+.mat-mdc-form-field.datetime-picker{
   width: 140px !important;
 }
 
-::ng-deep .mat-radio-label-content {
+// Updated for MDC migration - using MDC-based class names
+::ng-deep .mdc-label,
+::ng-deep .mat-mdc-radio-button .mdc-form-field {
   font-size: small !important;
 
   .select-box-only {
     margin-top: 1em;
     margin-bottom: 0 !important;
-
-    .mat-form-field-wrapper {
+    // MDC form fields use different structure - target the container
+    .mat-mdc-text-field-wrapper {
       padding-bottom: 0 !important;
-
-      .mat-form-field-flex {
-        padding-top: 0 !important;
-      }
-
-      .mat-select-trigger .mat-select-arrow-wrapper {
-        transform: none !important;
-      }
     }
-
-    .mat-form-field-underline {
+    // MDC uses mdc-line-ripple instead of underline
+    .mdc-line-ripple {
       bottom: 0;
     }
-
-    .mat-form-field-subscript-wrapper {
+    // MDC form fields use different subscript structure
+    .mat-mdc-form-field-subscript-wrapper {
       display: none;
+    }
+    // MDC select uses different arrow structure
+    .mat-mdc-select-arrow-wrapper {
+      transform: none !important;
     }
   }
 }
@@ -140,7 +138,7 @@ p {
   background-color: #f3f3f3;
 }
 
-.mat-flat-button {
+.mat-mdc-unelevated-button {
   float: right;
   margin-top: 1em;
   margin-right: 10px;
@@ -157,7 +155,7 @@ p {
   }
 }
 
-.mat-flat-button[disabled] {
+.mat-mdc-unelevated-button[disabled] {
   background-color: rgba(0, 0, 0, 0.04) !important;
 }
 
@@ -187,7 +185,6 @@ p {
   mat-expansion-panel {
     box-shadow: none !important;
     padding-bottom: 1em;
-    border-bottom: 1px solid theme-palette(grey, light);
   }
 
   mat-expansion-panel-header {
@@ -195,39 +192,39 @@ p {
     padding-right: 0.5em;
   }
 
-  input.mat-input-element {
+  input.mat-mdc-input-element {
     font-size: smaller;
     align-self: center;
   }
 
-  input.mat-input-element:disabled {
+  input.mat-mdc-input-element:disabled {
     background-color: #f1f1f1 !important;
   }
 
-  input.mat-input-element:enabled {
+  input.mat-mdc-input-element:enabled {
     background-color: #fffee6 !important;
   }
 
-  textarea.mat-input-element {
+  textarea.mat-mdc-input-element {
     font-size: small;
     resize: none;
   }
 
-  textarea.mat-input-element:disabled {
+  textarea.mat-mdc-input-element:disabled {
     background-color: #f1f1f1 !important;
   }
 
-  textarea.mat-input-element:enabled{
+  textarea.mat-mdc-input-element:enabled{
     background-color: #fffee6 !important;    
   }
 
-  .mat-input-element:disabled {
+  .mat-mdc-input-element:disabled {
     background-color: transparent;
     background: transparent;
   }
 
   .checkboxes {
-    .mat-checkbox {
+    .mat-mdc-checkbox {
       padding-left: 0.75rem;
     }
   }
@@ -235,14 +232,14 @@ p {
   // Need to remove the following css once the design standards are in place.
   mat-form-field[appearance="outline"]{
 
-    textarea.mat-input-element:enabled{
+    textarea.mat-mdc-input-element:enabled{
       background-color: #ffffff !important;
       line-height: normal;
       margin: 0px;
       padding: 0px;
     }
 
-    input.mat-input-element:enabled{
+    input.mat-mdc-input-element:enabled{
       background-color: #ffffff !important;
     }
 
@@ -250,7 +247,7 @@ p {
 }
 
 // FIXME: ng-deep applies global styles, not component-specific styles. But these styles should be global anyway. Move to main scss.
-::ng-deep .mat-tooltip {
+::ng-deep .mat-mdc-tooltip {
   /* your own custom styles here */ 
   /* e.g. */
   color: black !important;

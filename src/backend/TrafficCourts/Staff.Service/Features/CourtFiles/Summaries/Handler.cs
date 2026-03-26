@@ -1,20 +1,23 @@
 ﻿using MediatR;
 using System.Globalization;
 using System.Text;
+using TrafficCourts.Coms.Client;
 using TrafficCourts.Domain.Models;
+using TrafficCourts.OrdsDataService;
 using TrafficCourts.OrdsDataService.Tco;
 
 namespace TrafficCourts.Staff.Service.Features.CourtFiles.Summaries;
-
 
 public class Handler : IRequestHandler<Request, Response>
 {
     private readonly IDisputeCaseFileSummaryRepository _repository;
     private readonly Serilog.ILogger _logger;
+    private readonly IObjectManagementService _objectManagementService;
 
-    public Handler(IDisputeCaseFileSummaryRepository repository, Serilog.ILogger logger)
+    public Handler(IDisputeCaseFileSummaryRepository repository, IObjectManagementService objectManagementService, Serilog.ILogger logger)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        _objectManagementService = objectManagementService ?? throw new ArgumentNullException(nameof(objectManagementService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -26,8 +29,14 @@ public class Handler : IRequestHandler<Request, Response>
             var parameters = GetParameters(request);
 
             var pagedCollection = await _repository.GetListAsync(parameters, cancellationToken);
+            
+            List<IList<DocumentProperties>>? associatedDocumentProperties = null;
+            if (request.fetch_pending_adjournments)
+            {
+                associatedDocumentProperties = await RetrieveAssociatedDocumentPropertiesAsync(pagedCollection.Rows ?? [], cancellationToken);
+            }
 
-            var response = CreateResponse(pagedCollection, request.time_zone);
+            var response = CreateResponse(pagedCollection, associatedDocumentProperties, request.time_zone);
 
             return response;
         }
@@ -44,18 +53,34 @@ public class Handler : IRequestHandler<Request, Response>
         }
     }
 
-    private Response CreateResponse(OrdsDataService.OrdsDataServicePagedCollectionResponse<OrdsDisputeCaseFileSummary> pagedCollection, TimeZoneInfo timeZone)
+    private async Task<List<IList<DocumentProperties>>> RetrieveAssociatedDocumentPropertiesAsync(
+        IList<OrdsDisputeCaseFileSummary> summaries, CancellationToken cancellationToken)
+    {
+        List<IList<DocumentProperties>> properties = new(summaries.Count);
+        for (int i = 0; i < summaries.Count; i++)
+        {
+            DocumentProperties searchProperties = new() { NoticeOfDisputeId = new Guid(summaries[i].notice_of_dispute_guid) };
+            FileSearchParameters searchParameters = new(null, searchProperties.ToMetadata(), searchProperties.ToTags());
+            
+            var searchResults = await _objectManagementService.FileSearchAsync(searchParameters, cancellationToken);
+            
+            properties.Add(searchResults.Select(r => new DocumentProperties(r.Metadata, r.Tags)).ToList());
+        }
+
+        return properties;
+    }
+
+    private Response CreateResponse(OrdsDataServicePagedCollectionResponse<OrdsDisputeCaseFileSummary> pagedCollection,
+        List<IList<DocumentProperties>>? associatedDocumentProperties, TimeZoneInfo timeZone)
     {
         if (pagedCollection.Rows is not null)
         {
-            var items = pagedCollection.Rows.Select(_ => Map(_, timeZone));
+            var items = pagedCollection.Rows.Select((row, i) => Map(row, associatedDocumentProperties?[i], timeZone)).ToList();
 
             var offset = pagedCollection.Offset;
             var pageSize = pagedCollection.Fetch;
-            var totalRows = pagedCollection.TotalRows;
 
             int pageNumber = (offset / pageSize) + 1;
-            int totalPages = (int)Math.Ceiling((double)totalRows / pageSize);
 
             var pagedList = new PagedDisputeCaseFileSummaryCollection(items, pageNumber, pageSize, pagedCollection.TotalRows);
             return new Response(pagedList);
@@ -373,8 +398,7 @@ public class Handler : IRequestHandler<Request, Response>
         }
     }
 
-
-    private DisputeCaseFileSummary Map(OrdsDisputeCaseFileSummary dispute, TimeZoneInfo timeZone)
+    private DisputeCaseFileSummary Map(OrdsDisputeCaseFileSummary dispute, IList<DocumentProperties>? documentProperties, TimeZoneInfo timeZone)
     {
         var summary = new DisputeCaseFileSummary
         {
@@ -406,6 +430,9 @@ public class Handler : IRequestHandler<Request, Response>
             NoticeOfHearingYn = ToYesNo(dispute.notice_of_hearing_yn),
             MultipleOfficersYn = ToYesNo(dispute.multiple_officers_yn),
             ElectronicTicketYn = ToYesNo(dispute.electronic_ticket_yn),
+            PendingAdjournmentRequestsYn = ToYesNo(
+                documentProperties?.Any(f => f is { DocumentType: "Adjournment", DocumentStatus: DocumentStatus.Pending })
+            ),
             JjAssignedTo = dispute.jj_assigned_to,
             VtcAssignedTo = dispute.vtc_assigned_to,
             VtcAssignedTs = dispute.vtc_assigned_dtm,
@@ -429,6 +456,16 @@ public class Handler : IRequestHandler<Request, Response>
             "N" => YesNo.No,
             null => null,
             _ => YesNo.Unknown
+        };
+    }
+
+    private static YesNo? ToYesNo(bool? value)
+    {
+        return value switch
+        {
+            true => YesNo.Yes,
+            false => YesNo.No,
+            null => null,
         };
     }
 }

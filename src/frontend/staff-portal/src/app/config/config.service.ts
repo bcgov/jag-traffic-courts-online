@@ -27,6 +27,8 @@ export class ConfigService {
   private historyError: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private disputeCreateError: BehaviorSubject<string> =
     new BehaviorSubject<string>('');
+  private disputeCreateDuplicateError: BehaviorSubject<string> =
+    new BehaviorSubject<string>('');
   private statuteError: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private languageError: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private provinceError: BehaviorSubject<string> = new BehaviorSubject<string>('');
@@ -158,6 +160,14 @@ export class ConfigService {
 
   public get dispute_create_error(): string {
     return this.disputeCreateError.value;
+  }
+
+  public get dispute_create_duplicate_error$(): BehaviorSubject<string> {
+    return this.disputeCreateDuplicateError;
+  }
+
+  public get dispute_create_duplicate_error(): string {
+    return this.disputeCreateDuplicateError.value;
   }
 
   public get provincesAndStates(): ProvinceCodeValue[] {

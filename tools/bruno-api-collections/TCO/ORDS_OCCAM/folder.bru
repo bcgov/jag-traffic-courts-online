@@ -4,5 +4,10 @@ meta {
 }
 
 auth {
-  mode: inherit
+  mode: basic
+}
+
+auth:basic {
+  username: {{occam.username}}
+  password: {{occam.password}}
 }

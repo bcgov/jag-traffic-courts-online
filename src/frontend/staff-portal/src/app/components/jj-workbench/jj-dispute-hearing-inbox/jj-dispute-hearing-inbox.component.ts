@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
 import { JJDisputeService } from 'app/services/jj-dispute.service';
 import { SortDirection, YesNo, DisputeCaseFileSummary, PagedDisputeCaseFileSummaryCollection } from 'app/api';
@@ -16,6 +16,7 @@ import { HearingInboxFilterService } from 'app/services/hearing-inbox-filter.ser
   selector: 'app-jj-dispute-hearing-inbox',
   templateUrl: './jj-dispute-hearing-inbox.component.html',
   styleUrls: ['./jj-dispute-hearing-inbox.component.scss'],
+  standalone: false,
 })
 export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   @Output() tcoDisputeInfo: EventEmitter<DisputeCaseFileSummary> = new EventEmitter();
@@ -47,6 +48,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     "appearanceDuration",
     "accidentYn",
     "multipleOfficersYn",
+    "pendingAdjournmentRequestsYn",
     "status",
   ];
   currentPage: number = 1;
@@ -136,7 +138,8 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
       appearanceRoomCode: this.appearanceRoomCodeFilter.value,
       sortBy: this.sortDirection === SortDirection.Asc ? this.sortBy : "-" + this.sortBy,
       pageNumber: this.currentPage,
-      pageSize: 25
+      pageSize: 25,
+      fetchPendingAdjournments: true,
     };
     this.jjDisputeService.getTCODisputes(params).subscribe((response) => {
       this.tcoDisputes = [];
@@ -144,7 +147,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
       this.tcoDisputesCollection = response;
       this.currentPage = response.pageNumber;
       this.totalPages = response.totalPages;
-      if(!this.totalPages){
+      if (!this.totalPages) {
         this.currentPage = 0;
       }
       this.tcoDisputes = response.items;

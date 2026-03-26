@@ -1,47 +1,52 @@
-<div class="overflow-auto">
+<div class="overflow-hidden mb-3">
   <!-- filter by teams -->
-  <div class="row" style="width:97%">
-    <mat-button-toggle-group style="border: 0px" (change)="filterByTeam($event.value)" [value]="currentTeam">
-      <mat-button-toggle *ngFor="let courthouseTeamCount of courthouseTeamCounts" [value]="courthouseTeamCount.team" 
-        class="teamFilterButton">
-        <span style="float: left; margin-right: 20px !important; vertical-align: middle; color: #003366">
-          <h2>TEAM {{ courthouseTeamCount.team }}</h2>
-        </span>
-      </mat-button-toggle>
+  <div class="row mb-2">
+    <mat-button-toggle-group [hideSingleSelectionIndicator]="true" style="border: 0px" (change)="filterByTeam($event.value)" [value]="currentTeam">
+      @for (courthouseTeamCount of courthouseTeamCounts; track courthouseTeamCount.team) {
+        <mat-button-toggle [value]="courthouseTeamCount.team" class="teamFilterButton">
+          <span style="float: left; margin-right: 20px !important; vertical-align: middle; color: #003366">
+            <h2>TEAM {{ courthouseTeamCount.team }}</h2>
+          </span>
+        </mat-button-toggle>
+      }
     </mat-button-toggle-group>
   </div>
 
   <!-- bulk assignments -->
-  &nbsp;<mat-label><b>Bulk Assignments:</b></mat-label>
-  <div style="display: flex; flex-direction: row; justify-content: space-between; vertical-align: top; width:97%">
-    <div style="display: flex; flex-direction: row; flex-direction: flex-start;">
-      <mat-select [(ngModel)]="bulkjjAssignedTo" style="width:250px; background-color: #f2f2f2;">
-        <mat-option [value]="valueOfUnassigned"><i>choose a jj</i></mat-option>
-        <mat-option *ngFor="let jj of jjList" [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i></mat-option>
-      </mat-select>
-      &nbsp;<button mat-raised-button [disabled]="getBulkButtonDisabled()" (click)="onBulkAssign()" 
-        style="width: 100px"><b>Submit</b></button>
-    </div>
-    <div>
-      <button mat-button style="background-color: #fcba19" readonly="true">
-        <mat-icon>check_circle_outline</mat-icon>&nbsp;
+  <mat-label><b>Bulk Assignments:</b></mat-label>
+  <div style="display: flex; flex-direction: row; justify-content: space-between; vertical-align: top;">
+    <div fxFlex="auto" fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="0.5rem">
+      <mat-form-field fxFlex="400px" appearance="outline" class="me-0">
+        <mat-select [(ngModel)]="bulkjjAssignedTo">
+          <mat-option [value]="valueOfUnassigned"><i>choose a jj</i></mat-option>
+          @for (jj of jjList; track jj.idir) {
+            <mat-option [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i></mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <button fxFlex="100px" mat-raised-button [disabled]="getBulkButtonDisabled()" (click)="onBulkAssign()">
+        <b>Submit</b>
+      </button>
+      <div fxFlex="auto"></div>
+      <button fxFlex="130px" mat-button style="background-color: #fcba19" class="pe-none">
+        <mat-icon class="align-text-bottom">check_circle_outline</mat-icon>
         <i>Assigned: <b>{{ getAssignedCount() }}</b></i>
-      </button>&nbsp;
-      <button mat-button style="background-color: #c5c5c5" readonly="true">
-        <mat-icon>query_builder</mat-icon>&nbsp;
+      </button>
+      <button fxFlex="150px" mat-button style="background-color: #c5c5c5" class="pe-none">
+        <mat-icon class="align-text-bottom">query_builder</mat-icon>
         <i>Unassigned: <b>{{ getUnassignedCount() }}</b></i>
       </button>
     </div>
-  </div><br />
-
+  </div>
+</div>
+<div class="overflow-auto">
   <!--- table of results -->
   <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
     <ng-container matColumnDef="assignedIcon">
-      <th mat-header-cell *matHeaderCellDef style="width: 50px !important;">
-      </th>
+      <th mat-header-cell *matHeaderCellDef style="width: 50px !important;"></th>
       <td mat-cell *matCellDef="let element" style="width: 50px !important; background-color: #c5c5c5;">
         <span class="material-symbols-outlined" style="color: #494949">
-          <mat-icon style="margin-left:10px;">query_builder</mat-icon>
+          <mat-icon class="align-text-bottom">query_builder</mat-icon>
         </span>
       </td>
     </ng-container>
@@ -51,35 +56,40 @@
         <span class="text-start">ASSIGNED TO</span>
       </th>
       <td mat-cell *matCellDef="let element">
-        <mat-select [(ngModel)]="element.jjAssignedTo" (selectionChange)="onAssign(element)" 
-          *ngIf="bulkjjAssignedTo === valueOfUnassigned">
-          <mat-option [value]="valueOfUnassigned">unassigned</mat-option>
-          <mat-option *ngFor="let jj of jjList" [value]="jj.idir">{{ jj.jjDisplayName }}</mat-option>
-        </mat-select>
-        <div *ngIf="bulkjjAssignedTo !== valueOfUnassigned">
-          {{ element.jjAssignedTo ? getName(element.jjAssignedTo) : 'Unassigned' }}
-        </div>
+        @if (bulkjjAssignedTo === valueOfUnassigned) {
+          <mat-select [(ngModel)]="element.jjAssignedTo" (selectionChange)="onAssign(element)">
+            <mat-option [value]="valueOfUnassigned">unassigned</mat-option>
+            @for (jj of jjList; track jj.idir) {
+              <mat-option [value]="jj.idir">{{ jj.jjDisplayName }}</mat-option>
+            }
+          </mat-select>
+        }
+        @if (bulkjjAssignedTo !== valueOfUnassigned) {
+          <div>{{ element.jjAssignedTo ? getName(element.jjAssignedTo) : 'Unassigned' }}</div>
+        }
       </td>
     </ng-container>
 
     <ng-container matColumnDef="bulkAssign">
       <th mat-header-cell *matHeaderCellDef>
-        <div *ngIf="bulkjjAssignedTo === valueOfUnassigned">
-          &nbsp;
-        </div>
-        <div style="display: flex !important; flex-direction: row !important; justify-content: space-between !important" 
-          *ngIf="bulkjjAssignedTo !== valueOfUnassigned">
-          <mat-checkbox (change)="onSelectAll($event)"></mat-checkbox>
-        </div>
+        @if (bulkjjAssignedTo === valueOfUnassigned) {
+          <div>&nbsp;</div>
+        }
+        @if (bulkjjAssignedTo !== valueOfUnassigned) {
+          <div style="display: flex !important; flex-direction: row !important; justify-content: space-between !important">
+            <mat-checkbox (change)="onSelectAll($event)"></mat-checkbox>
+          </div>
+        }
       </th>
       <td mat-cell *matCellDef="let element">
-        <div *ngIf="bulkjjAssignedTo === valueOfUnassigned">
-          &nbsp;
-        </div>
-        <div style="display: flex; flex-direction: row; justify-content: space-between" 
-          *ngIf="bulkjjAssignedTo !== valueOfUnassigned">
-          <mat-checkbox [(ngModel)]="element.bulkAssign"></mat-checkbox>
-        </div>
+        @if (bulkjjAssignedTo === valueOfUnassigned) {
+          <div>&nbsp;</div>
+        }
+        @if (bulkjjAssignedTo !== valueOfUnassigned) {
+          <div style="display: flex; flex-direction: row; justify-content: space-between">
+            <mat-checkbox [(ngModel)]="element.bulkAssign"></mat-checkbox>
+          </div>
+        }
       </td>
     </ng-container>
 
@@ -106,12 +116,20 @@
         <span class="text-start">SURNAME, GIVEN NAME(S)</span>
       </th>
       <td mat-cell *matCellDef="let element">
-        <span *ngIf="element.disputantSurname">{{ element.disputantSurname + (element.disputantGivenName1 || 
-          element.disputantGivenName2 || element.disputantGivenName3 ? "," : "") + 
-          (element.disputantGivenName1 ? " " + element.disputantGivenName1 : "") + 
-          (element.disputantGivenName2 ? " " + element.disputantGivenName2 : "") + 
-          (element.disputantGivenName3 ? " " + element.disputantGivenName3 : "") }}</span>
-        <span *ngIf="!element.disputantSurname">{{ element.disputantOrganizationName }}</span>
+        @if (element.disputantSurname) {
+          <span>
+            {{
+              element.disputantSurname +
+                (element.disputantGivenName1 || element.disputantGivenName2 || element.disputantGivenName3 ? "," : "") +
+                (element.disputantGivenName1 ? " " + element.disputantGivenName1 : "") +
+                (element.disputantGivenName2 ? " " + element.disputantGivenName2 : "") +
+                (element.disputantGivenName3 ? " " + element.disputantGivenName3 : "")
+            }}
+          </span>
+        }
+        @if (!element.disputantSurname) {
+          <span>{{ element.disputantOrganizationName }}</span>
+        }
       </td>
     </ng-container>
 
@@ -156,8 +174,7 @@
         <span class="text-start">Accident</span>
       </th>
       <td mat-cell *matCellDef="let element">
-        <mat-checkbox [checked]="element.accidentYn === yesNo.Yes"
-          [disabled]="true"></mat-checkbox>
+        <mat-checkbox [checked]="element.accidentYn === yesNo.Yes" [disabled]="true"></mat-checkbox>
       </td>
     </ng-container>
 

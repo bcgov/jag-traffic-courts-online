@@ -85,6 +85,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		String occamDisputantSurnameNm = "lname";
 		String occamDisputeId = "444";
 		String occamViolationTicketUpldId = "5555";
+		String occamDisputeCreatedBy = "OCCAMORDS";
 		String offenceLocationTxt = "5555";
 		Date submittedDt =  RandomUtil.randomDate();
 		String ticketNumber = "EA90100004";
@@ -149,6 +150,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		source.setOccamDisputantGiven2Nm(occamDisputantGiven2Nm);
 		source.setOccamDisputantGiven3Nm(occamDisputantGiven3Nm);
 		source.setOccamDisputantSurnameNm(occamDisputantSurnameNm);
+		source.setOccamDisputeCreatedBy(occamDisputeCreatedBy);
 		source.setOccamDisputeId(occamDisputeId);
 		source.setOccamViolationTicketUpldId(occamViolationTicketUpldId);
 		source.setOffenceLocationTxt(offenceLocationTxt);
@@ -212,6 +214,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(occamDisputantSurnameNm, target.getOccamDisputantSurnameNm());
 		assertEquals(Long.valueOf(occamDisputeId), target.getOccamDisputeId());
 		assertEquals(occamViolationTicketUpldId, target.getOccamViolationTicketUpldId());
+		assertEquals(occamDisputeCreatedBy, target.getOccamDisputeCreatedBy());
 		assertEquals(offenceLocationTxt, target.getOffenceLocation());
 		assertEquals(requestCourtAppearanceYn, target.getAppearInCourt());
 		assertEquals(submittedDt, target.getSubmittedTs());

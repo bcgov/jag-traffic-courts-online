@@ -1,0 +1,40 @@
+meta {
+  name: tco_dispute
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{v2_baseUrl}}/tco_dispute
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/tco_dispute
+    method: GET
+    mode: none
+    params:path: {
+      include_columns: 
+      ticket_number_txt: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

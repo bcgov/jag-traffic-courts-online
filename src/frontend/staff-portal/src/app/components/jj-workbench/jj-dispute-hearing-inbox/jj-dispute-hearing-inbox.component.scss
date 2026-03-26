@@ -1,41 +1,27 @@
+@use '@angular/material' as mat;
+
 td, th {
   vertical-align: middle !important;
   padding-left: 10px !important;
 }
 
-th {
+.mat-mdc-table .mat-mdc-header-cell {
   color: white;
   background-color: #65799e;
 }
 
-.mat-row:nth-child(2n+1){
+.mat-mdc-row:nth-child(2n+1){
   background-color: #f2f2f2;
 }
-.mat-row:nth-child(2n){
+.mat-mdc-row:nth-child(2n){
   background-color:#ffffff;
 }
 
-.mat-button,
-.mat-flat-button,
-.mat-icon-button,
-.mat-stroked-button {
+.mat-mdc-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-icon-button,
+.mat-mdc-outlined-button {
   border-radius: 50px;
-}
-
-.inputContainer {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-.input[name="searchInput"] {
-  width: 100%;
-  padding-right: 40px;
-}
-
-.inputIcon {
-  position: absolute;
-  right: 10px;
 }
 
 ::ng-deep .mat-sort-header-arrow {
@@ -74,4 +60,10 @@ th.header-hearing-inbox{
 
 .w-20{
   width: 20% !important;
+}
+
+.red-checkbox {
+  @include mat.checkbox-overrides((
+    disabled-selected-icon-color: red,
+  ));
 }

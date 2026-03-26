@@ -286,7 +286,7 @@ public partial class JJDisputeService : IJJDisputeService
 
         // TCVP-2792 Filter files and exclude citizen-uploaded documents whose status is not ACCEPTED if assignVTC=false (requests coming from the jj workbench have this set to false, staff workbench has it set to true)
         if (!assignVTC && dispute.FileData is not null) {
-            dispute.FileData = dispute.FileData.Where(x => x.DocumentSource != TrafficCourts.Domain.Models.DocumentSource.Citizen || x.DocumentStatus == DisputeUpdateRequestStatus.ACCEPTED.ToString()).ToList();
+            dispute.FileData = dispute.FileData.Where(x => x.DocumentSource != TrafficCourts.Domain.Models.DocumentSource.Citizen || x.StaffReviewStatus == DisputeUpdateRequestStatus.ACCEPTED.ToString()).ToList();
         }
 
         // TCVP-2878 Filter files that are corrupt in COMS (missing attributes)
@@ -330,7 +330,7 @@ public partial class JJDisputeService : IJJDisputeService
         SaveFileHistoryRecord fileHistoryRecord = new();
         fileHistoryRecord.TicketNumber = jjDispute.TicketNumber;
         fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.SADM; // Dispute updated by Support Admin Staff 
-        fileHistoryRecord.ActionByApplicationUser = GetUserName(user);
+        fileHistoryRecord.ActionByApplicationUser = user.GetUsername();
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return dispute;
@@ -356,7 +356,7 @@ public partial class JJDisputeService : IJJDisputeService
             SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
                 jjDispute.TicketNumber,
                 FileHistoryAuditLogEntryType.JPRG, // Dispute decision details saved for later
-                GetUserName(user));
+                user.GetUsername());
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
         }
         else if (dispute.Status == JJDisputeStatus.CONFIRMED)
@@ -364,7 +364,7 @@ public partial class JJDisputeService : IJJDisputeService
             SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
                 jjDispute.TicketNumber,
                 FileHistoryAuditLogEntryType.JCNF, // Dispute decision confirmed/submitted by JJ
-                GetUserName(user));
+                user.GetUsername());
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
         }
 
@@ -393,7 +393,7 @@ public partial class JJDisputeService : IJJDisputeService
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
             dispute.TicketNumber,
             fileHistoryType,
-            GetUserName(user));
+            user.GetUsername());
 
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
@@ -412,7 +412,7 @@ public partial class JJDisputeService : IJJDisputeService
             SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
                 dispute.TicketNumber,
                 FileHistoryAuditLogEntryType.JDIV, 
-                GetUserName(user)); // Dispute change of plea required / Divert to court appearance
+                user.GetUsername()); // Dispute change of plea required / Divert to court appearance
 
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
@@ -439,7 +439,7 @@ public partial class JJDisputeService : IJJDisputeService
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
             dispute.TicketNumber, 
             FileHistoryAuditLogEntryType.VSUB, 
-            GetUserName(user)); // Dispute approved for resulting by staff
+            user.GetUsername()); // Dispute approved for resulting by staff
 
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
@@ -476,7 +476,7 @@ public partial class JJDisputeService : IJJDisputeService
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
             dispute.TicketNumber,
             FileHistoryAuditLogEntryType.JCNF, 
-            GetUserName(user)); // Dispute decision confirmed/submitted by JJ
+            user.GetUsername()); // Dispute decision confirmed/submitted by JJ
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return dispute;
@@ -580,11 +580,6 @@ public partial class JJDisputeService : IJJDisputeService
         }
 
         return displayName;
-    }
-
-    private static string GetUserName(ClaimsPrincipal user)
-    {
-        return user?.Identity?.Name ?? string.Empty;
     }
 
     private void AddUnique(List<TrafficCourts.Domain.Models.FileMetadata> target, List<TrafficCourts.Domain.Models.FileMetadata> files)
