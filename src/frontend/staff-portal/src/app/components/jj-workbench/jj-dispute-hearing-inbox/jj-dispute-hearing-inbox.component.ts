@@ -78,9 +78,16 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
         value => {
           if (value) {
             this.courthouseLocationFilter.enable({ emitEvent: false });
+            this.appearanceRoomCodeFilter.setValue('', { emitEvent: false });
+            this.dataSource.data = [];
+            if (this.courthouseLocationFilter.value) {
+              this.getTCODisputes(false); // re-fetch room codes for selected courthouse
+            }
           } else {
             this.courthouseLocationFilter.setValue('', { emitEvent: false });
             this.courthouseLocationFilter.disable({ emitEvent: false });
+            this.appearanceRoomCodeFilter.setValue('', { emitEvent: false });
+            this.dataSource.data = [];
           }
         }
       )
@@ -89,7 +96,10 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     this.courthouseLocationFilter.valueChanges
       .subscribe(
         value => {
-          this.getTCODisputes(false);
+          // Reset room code when courthouse changes since rooms differ per courthouse
+          this.appearanceRoomCodeFilter.setValue('', { emitEvent: false });
+          this.dataSource.data = [];
+          this.getTCODisputes(false); // fetch to repopulate room codes
         }
       )
 
