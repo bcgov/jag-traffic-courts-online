@@ -28,17 +28,9 @@ export class ResolutionHeaderComponent implements OnInit {
     this.params = this.route.snapshot.queryParams as QueryParamsForSearch;
     if (this.ticket) {
       this.ticketNumber = this.ticket.ticket_number;
-      if(this.ticket.issued_date)
-      {
-        this.time = this.datePipe.transform(this.ticket.issued_date, "HH:mm");
-        this.date = this.datePipe.transform(this.ticket.issued_date, "yyyy-MM-dd");
-      }
-      else if(this.params)
-      {
-        this.time = this.params?.time;
-      }
-    }
-      else if (this.params) {
+      this.time = this.datePipe.transform(this.ticket.issued_date, "HH:mm");
+      this.date = this.datePipe.transform(this.ticket.issued_date, "yyyy-MM-dd");
+    } else if (this.params) {
       this.ticketNumber = this.params?.ticketNumber;
       this.time = this.params?.time;
     }

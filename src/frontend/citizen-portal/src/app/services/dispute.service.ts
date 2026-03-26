@@ -165,10 +165,14 @@ export class DisputeService {
     });
   }
 
-  goToUpdateDispute(params: QueryParamsForSearch): void {
-    this.router.navigate([AppRoutes.disputePath(AppRoutes.UPDATE_DISPUTE)], {
-      queryParams: { ...params },
+  goToUpdateDisputeContact(params: QueryParamsForSearch, preferEmail: boolean): void {
+    this.router.navigate([AppRoutes.disputePath(AppRoutes.UPDATE_DISPUTE_CONTACT)], {
+      queryParams: { ...params, preferEmail: preferEmail },
     })
+  }
+
+  goToUpdateDispute(params: QueryParamsForSearch): void {
+    this.store.dispatch(AuthStore.Actions.Authorize({ redirectUrl: this.getUpdateDisputeUrl(params) }));
   }
 
   private getUpdateDisputeUrl(params: QueryParamsForSearch): string {

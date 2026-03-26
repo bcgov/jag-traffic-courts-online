@@ -67,4 +67,8 @@ export class UpdateDisputeLandingComponent implements OnInit {
   goToUpdateDispute(): void {
     this.disputeService.goToUpdateDispute(this.state.params);
   }
+
+  goToUpdateDisputeContact(): void {
+    this.disputeService.goToUpdateDisputeContact(this.state.params, this.isEmailVerified !== null);
+  }
 }

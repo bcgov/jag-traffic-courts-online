@@ -16,6 +16,7 @@ export class AppRoutes {
   public static DISPUTE = 'dispute';
   public static FIND_DISPUTE = 'find';
   public static UPDATE_DISPUTE_LANDING = 'manage';
+  public static UPDATE_DISPUTE_CONTACT = 'update/contact';
   public static UPDATE_DISPUTE = 'update';
 
   public static DISPUTE_MODULE_PATH = AppRoutes.DISPUTE;

@@ -152,14 +152,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       this.previousButtonKey = this.previousButtonKeyForUpdate;
       this.store.select(DisputeStore.Selectors.State).subscribe(state => {
         this.state = state;
-      });
-
-      // In UPDATE mode these fields are hidden and not editable; remove the required constraint
-      // so the form can become valid without them being populated.
-      this.form.controls.disputant_surname?.clearValidators();
-      this.form.controls.disputant_surname?.updateValueAndValidity();
-      this.form.controls.disputant_given_names?.clearValidators();
-      this.form.controls.disputant_given_names?.updateValueAndValidity();
+      })
     }
 
     this.counts = this.ticketCounts.map(ticketCount => {

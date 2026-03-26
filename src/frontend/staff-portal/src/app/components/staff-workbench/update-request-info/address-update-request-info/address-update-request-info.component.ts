@@ -66,8 +66,8 @@ export class AddressUpdateRequestInfoComponent implements OnInit {
       } else if (this.disputeInfo.driversLicenceProvince !== null) this.oldDLProvince = this.disputeInfo.driversLicenceProvince;
 
       // Get new province name for DL if needed
-      if (this.updateRequested.DriversLicenceIssuedProvinceSeqNo !== null) {
-        let newDLProv = this.config.provincesAndStates.filter(x => x.ctryId === this.updateRequested.DriversLicenceIssuedCountryId && x.provSeqNo === this.updateRequested.DriversLicenceIssuedProvinceSeqNo);
+      if (this.updateRequested.DriversLicenceIssuedProvSeqNo !== null) {
+        let newDLProv = this.config.provincesAndStates.filter(x => x.ctryId === this.updateRequested.DriversLicenceIssuedCountryId && x.provSeqNo === this.updateRequested.DriversLicenceIssuedProvSeqNo);
         if (newDLProv.length > 0) this.newDLProvince = newDLProv[0].provNm;
       } else if (this.updateRequested.DriversLicenceProvince !== null) this.newDLProvince = this.updateRequested.DriversLicenceProvince;
 
@@ -112,5 +112,5 @@ export interface addressUpdateJSON {
   DriversLicenceNumber?: string;
   DriversLicenceProvince?: string;
   DriversLicenceIssuedCountryId?: number;
-  DriversLicenceIssuedProvinceSeqNo?: number;
+  DriversLicenceIssuedProvSeqNo?: number;
 }

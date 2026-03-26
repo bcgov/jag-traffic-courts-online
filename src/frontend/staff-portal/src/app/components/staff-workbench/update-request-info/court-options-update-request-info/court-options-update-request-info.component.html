@@ -30,7 +30,7 @@
             <p class="section-grid-text">{{ updateRequested.RepresentedByLawyer === true ? RepresentedByLawyer.Y : RepresentedByLawyer.N }}</p>
           </span>
         }
-        @if (updateRequested.LawFirmName !== disputeInfo.lawFirmName) {
+        @if (updateRequested.LawFirmName && updateRequested.LawFirmName !== disputeInfo.lawFirmName) {
           <span class="section-grid-cell">
             <p class="section-grid-header">Law Firm Name</p>
           </span>
@@ -41,7 +41,7 @@
             <p class="section-grid-text">{{ updateRequested.LawFirmName }}</p>
           </span>
         }
-        @if (updateRequested.LawyerSurname !== disputeInfo.lawyerSurname) {
+        @if (updateRequested.LawyerSurname && updateRequested.LawyerSurname !== disputeInfo.lawyerSurname) {
           <span class="section-grid-cell">
             <p class="section-grid-header">Lawyer Surname</p>
           </span>
@@ -52,7 +52,7 @@
             <p class="section-grid-text">{{ updateRequested.LawyerSurname }}</p>
           </span>
         }
-        @if (updateRequested.LawyerGivenName1 !== disputeInfo.lawyerGivenName1) {
+        @if (updateRequested.LawyerGivenName1 && updateRequested.LawyerGivenName1 !== disputeInfo.lawyerGivenName1) {
           <span class="section-grid-cell">
             <p class="section-grid-header">Lawyer Given Name One</p>
           </span>
@@ -63,7 +63,7 @@
             <p class="section-grid-text">{{ updateRequested.LawyerGivenName1 }}</p>
           </span>
         }
-        @if (updateRequested.LawyerGivenName2 !== disputeInfo.lawyerGivenName2) {
+        @if (updateRequested.LawyerGivenName2 && updateRequested.LawyerGivenName2 !== disputeInfo.lawyerGivenName2) {
           <span class="section-grid-cell">
             <p class="section-grid-header">Lawyer Given Name Two</p>
           </span>
@@ -74,7 +74,7 @@
             <p class="section-grid-text">{{ updateRequested.LawyerGivenName2 }}</p>
           </span>
         }
-        @if (updateRequested.LawyerGivenName3 !== disputeInfo.lawyerGivenName3) {
+        @if (updateRequested.LawyerGivenName3 && updateRequested.LawyerGivenName3 !== disputeInfo.lawyerGivenName3) {
           <span class="section-grid-cell">
             <p class="section-grid-header">Lawyer Given Name Three</p>
           </span>
@@ -85,7 +85,7 @@
             <p class="section-grid-text">{{ updateRequested.LawyerGivenName3 }}</p>
           </span>
         }
-        @if (updateRequested.LawyerAddress !== disputeInfo.lawyerAddress) {
+        @if (updateRequested.LawyerAddress && updateRequested.LawyerAddress !== disputeInfo.lawyerAddress) {
           <span class="section-grid-cell">
             <p class="section-grid-header">Lawyer Address</p>
           </span>
@@ -96,7 +96,7 @@
             <p class="section-grid-text">{{ updateRequested.LawyerAddress }}</p>
           </span>
         }
-        @if (updateRequested.LawyerPhoneNumber !== disputeInfo.lawyerPhoneNumber) {
+        @if (updateRequested.LawyerPhoneNumber && updateRequested.LawyerPhoneNumber !== disputeInfo.lawyerPhoneNumber) {
           <span class="section-grid-cell">
             <p class="section-grid-header">Lawyer Phone Number</p>
           </span>
@@ -107,7 +107,7 @@
             <p class="section-grid-text">{{ updateRequested.LawyerPhoneNumber | phone }}</p>
           </span>
         }
-        @if (updateRequested.LawyerEmail !== disputeInfo.lawyerEmail) {
+        @if (updateRequested.LawyerEmail && updateRequested.LawyerEmail !== disputeInfo.lawyerEmail) {
           <span class="section-grid-cell">
             <p class="section-grid-header">Lawyer Email</p>
           </span>
@@ -118,7 +118,7 @@
             <p class="section-grid-text">{{ updateRequested.LawyerEmail }}</p>
           </span>
         }
-        @if (updateRequested.RequestCourtAppearance !== disputeInfo.requestCourtAppearanceYn) {
+        @if (updateRequested.RequestCourtAppearance && updateRequested.RequestCourtAppearance !== disputeInfo.requestCourtAppearanceYn) {
           <span class="section-grid-cell">
             <p class="section-grid-header">Request Court Appearance</p>
           </span>
@@ -151,7 +151,7 @@
             <p class="section-grid-text">{{ newLanguageName }}</p>
           </span>
         }
-        @if (updateRequested.WitnessNo !== disputeInfo.witnessNo) {
+        @if (updateRequested.WitnessNo && updateRequested.WitnessNo !== disputeInfo.witnessNo) {
           <span class="section-grid-cell">
             <p class="section-grid-header">Number of Witnesses </p>
           </span>
@@ -162,7 +162,7 @@
             <p class="section-grid-text">{{ updateRequested.WitnessNo }}</p>
           </span>
         }
-        @if (updateRequested.FineReductionReason !== disputeInfo.fineReductionReason) {
+        @if (updateRequested.FineReductionReason && updateRequested.FineReductionReason !== disputeInfo.fineReductionReason) {
           <span class="section-grid-cell">
             <p class="section-grid-header">Fine Reduction Reason </p>
           </span>
@@ -173,7 +173,7 @@
             <p class="section-grid-text">{{ updateRequested.FineReductionReason }}</p>
           </span>
         }
-        @if (updateRequested.TimeToPayReason !== disputeInfo.timeToPayReason) {
+        @if (updateRequested.TimeToPayReason && updateRequested.TimeToPayReason !== disputeInfo.timeToPayReason) {
           <span class="section-grid-cell">
             <p class="section-grid-header">Time to Pay Reason </p>
           </span>

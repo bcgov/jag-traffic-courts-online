@@ -2,11 +2,15 @@
 using HashidsNet;
 using MassTransit;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Text;
+using TrafficCourts.Citizen.Service.Features.CurrentUserInfo;
 using TrafficCourts.Citizen.Service.Features.Disputes;
 using TrafficCourts.Citizen.Service.Models.Disputes;
+using TrafficCourts.Citizen.Service.Models.OAuth;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Features.EmailVerificationToken;
@@ -269,6 +273,87 @@ public class DisputesController : ControllerBase
     }
 
     /// <summary>
+    /// Get a Dispute with authentication.
+    /// </summary>
+    /// <param name="guidHash">A hash of the noticeOfDisputeGuid.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The Dispute was found.</response>
+    /// <response code="400">The uuid doesn't appear to be a valid UUID.</response>
+    /// <response code="404">The dispute was not found.</response>
+    /// <response code="500">There was a internal server error.</response>
+    [Authorize]
+    [HttpGet("/api/disputes/{guidHash}")]
+    [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetDisputeAsync(string guidHash, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var userInfoResponse = await _mediator.Send(GetCurrentUserInfoRequest.Default, cancellationToken);
+            UserInfo? user = userInfoResponse.UserInfo;
+            if (user == null)
+            {
+                return BadRequest("Invalid User");
+            }
+
+            if (!_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeGuid))
+            {
+                // TODO: add instrumentation to monitor invalid values being posted
+                return BadRequest("Invalid guidHash");
+            }
+
+            // can throw
+            var check = await CheckDisputeStatus(noticeOfDisputeGuid, cancellationToken);
+            if (check is not null)
+            {
+                return check;
+            }
+
+            GetDisputeRequest message = new()
+            {
+                NoticeOfDisputeGuid = noticeOfDisputeGuid
+            };
+
+            // can throw
+            var response = await _bus.Request<GetDisputeRequest, SubmitNoticeOfDispute>(message, cancellationToken);
+            if (string.IsNullOrEmpty(response?.Message?.TicketNumber))
+            {
+                _logger.LogInformation("Cound not get dispute or the ticket number is missing, returning not found");
+                return NotFound("Dispute not found");
+            }
+
+            // Compare Contact Names to BC Services Card
+            if (!CompareNames(response.Message, user))
+            {
+                _logger.LogDebug("User and dispute names do not match, returning bad request");
+                return BadRequest("Contact names do not match.");
+            }
+
+            var result = _mapper.Map<NoticeOfDispute>(response.Message);
+
+            Domain.Models.DocumentProperties properties = new() { NoticeOfDisputeId = noticeOfDisputeGuid };
+
+            // can throw
+            result.FileData = await _documentService.FindFilesAsync(properties, cancellationToken);
+
+            // TCVP-2878 Filter files that are corrupt in COMS (missing attributes)
+            if (result.FileData is not null) {
+                // If there is a missing fileName, remove it from the list as we can't display such an object in the UI.
+                result.FileData = result.FileData.Where(x => x.FileName is not null).ToList();
+            }
+
+            return Ok(result);
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Error getting dispute, returning internal server error");
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+    }
+
+    /// <summary>
     /// Submits an update request for a Dispute with authentication.
     /// </summary>
     /// <param name="guidHash">A hash of the noticeOfDisputeGuid.</param>
@@ -279,6 +364,7 @@ public class DisputesController : ControllerBase
     /// <response code="400">The uuid doesn't appear to be a valid UUID.</response>
     /// <response code="404">The dispute was not found.</response>
     /// <response code="500">There was a internal server error.</response>
+    [Authorize]
     [HttpPut("/api/disputes/{guidHash}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -287,6 +373,13 @@ public class DisputesController : ControllerBase
     {
         try
         {
+            var userInfoResponse = await _mediator.Send(GetCurrentUserInfoRequest.Default, cancellationToken);
+            UserInfo? user = userInfoResponse.UserInfo;
+            if (user == null)
+            {
+                return BadRequest("Invalid User");
+            }
+
             if (!_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeGuid))
             {
                 // TODO: add instrumentation to monitor invalid values being posted
@@ -311,6 +404,9 @@ public class DisputesController : ControllerBase
             {
                 return NotFound("Dispute not found");
             }
+
+            // Compare Contact Names to BC Services Card
+            if (!CompareNames(response.Message, user)) return BadRequest("Contact names do not match.");
 
             // Submit request to Workflow Service for processing.
             DisputeUpdateRequest request = _mapper.Map<DisputeUpdateRequest>(dispute);
@@ -493,5 +589,67 @@ public class DisputesController : ControllerBase
     private static bool IsDisputeStatus(string value, DisputeStatus status)
     {
         return status.ToString() == value;
+    }
+
+    private bool CompareNames(SubmitNoticeOfDispute message, UserInfo? user)
+    {
+#if DEBUG
+#warning Contact Name Comparisons with BC Services Cards have been disabled 
+        return true;
+#endif
+
+        string Combine(string? name1, string? name2, string? name3)
+        {
+            StringBuilder buffer = new StringBuilder();
+            if (!string.IsNullOrEmpty(name1))
+            {
+                buffer.Append(name1.Trim());
+            }
+
+            if (!string.IsNullOrEmpty(name2))
+            {
+                if (buffer.Length > 0)
+                {
+                    buffer.Append(' ');
+                }
+                buffer.Append(name2.Trim());
+            }
+
+            if (!string.IsNullOrEmpty(name3))
+            {
+                if (buffer.Length > 0)
+                {
+                    buffer.Append(' ');
+                }
+                buffer.Append(name3.Trim());
+            }
+            return buffer.ToString();
+        }
+
+        bool DoesContain(string? a, string? b)
+        {
+            if (!string.IsNullOrEmpty(a) && !string.IsNullOrEmpty(b))
+            {
+                return a.Contains(b, StringComparison.OrdinalIgnoreCase);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        // if contact type is individual then match with disputant name otherwise match with contact names
+        if (message.ContactTypeCd == DisputeContactTypeCd.INDIVIDUAL)
+        {
+            var givenNames = Combine(message.DisputantGivenName1, message.DisputantGivenName2, message.DisputantGivenName3);            
+            return DoesContain(user?.GivenNames, givenNames) && DoesContain(user?.Surname, message.DisputantSurname);
+        }
+        else if (message.ContactTypeCd == DisputeContactTypeCd.LAWYER || message.ContactTypeCd == DisputeContactTypeCd.OTHER)
+        {
+            var givenNames = Combine(message.ContactGiven1Nm, message.ContactGiven2Nm, message.ContactGiven3Nm);
+            return DoesContain(user?.GivenNames, givenNames) && DoesContain(user?.Surname, message.ContactSurnameNm);            
+        }
+
+        return false;
     }
 }
