@@ -6,6 +6,6 @@
   "apiBaseUrl": "/api",
   "features": {
     "staffDisputeIntake": true,
-    "amendments": false
+    "amendments": true
   }
 }
