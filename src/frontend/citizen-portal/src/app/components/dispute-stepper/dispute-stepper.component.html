@@ -95,7 +95,7 @@
         <!-- Signature Panel End -->
       </div>
 
-      <ng-container *ngIf="mode === DisputeFormMode.CREATE || isRequestedCourtAppearance">
+      <ng-container *ngIf="mode === DisputeFormMode.CREATE || mode === DisputeFormMode.UPDATE || isRequestedCourtAppearance">
         <div>
           <span style="font-weight: 600;">I <span style="text-decoration: underline;">want</span> my dispute heard at an
             in-person court hearing</span>
