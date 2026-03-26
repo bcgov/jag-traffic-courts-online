@@ -107,6 +107,7 @@ public partial class JJController : StaffControllerBase
     /// <param name="appearance_courthouse_ids">The comma separate list of agency ids</param>
     /// <param name="appearance_dt_from">The appearance date from. Format must be YYYY-MM-DD.</param>
     /// <param name="appearance_dt_thru">The appearance date thru. Format must be YYYY-MM-DD.</param>
+    /// <param name="appearance_courtroom_code">The appearance court room code</param>
     /// <param name="to_be_heard_at_courthouse_ids">The comma separate list of agency ids</param>
     /// <param name="hearing_type_cd">The hearing type code to search.</param>
     /// <param name="page_number">The page number to fetch. Starts at 1.</param>
@@ -141,6 +142,7 @@ public partial class JJController : StaffControllerBase
         string? appearance_courthouse_ids,
         string? appearance_dt_from,
         string? appearance_dt_thru,
+        string? appearance_courtroom_code,
         string? to_be_heard_at_courthouse_ids,
         string? hearing_type_cd,
         string? sort_by,
@@ -176,7 +178,9 @@ public partial class JJController : StaffControllerBase
             sort_by = sort_by,
             page_number = page_number,
             page_size = page_size,
-            time_zone = timeZoneInfo
+            time_zone = timeZoneInfo,
+            appearance_courtroom_code = appearance_courtroom_code
+
         };
 
         try

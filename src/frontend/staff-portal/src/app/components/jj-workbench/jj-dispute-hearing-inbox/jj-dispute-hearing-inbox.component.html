@@ -19,20 +19,25 @@
   <div class="overflow-auto">
     <div class="row w-100">    
       <div class="w-80 col-md-10">
-        <div style="display:flex; flex-direction: row; justify-content: left;">
+        <div style="display:flex; flex-direction: row; justify-content: left; gap: 12px; margin-bottom: 16px;">
           <input matInput [matDatepicker]="picker" [formControl]="appearanceDateFilter" (click)='picker.open()'
             placeholder="Hearing date" style="background-color: #f2f2f2; width:250px;" />
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
-          <mat-select [formControl]="jjAssignedToFilter" placeholder="choose a jj"
+
+          <mat-select [formControl]="courthouseLocationFilter" placeholder="Courthouse location"
             style="width:250px; background-color: #f2f2f2;">
-            <mat-option value="unassigned"><i>choose a jj</i></mat-option>
-            <mat-option value=""><i>all JJs</i></mat-option>
-            <mat-option *ngFor="let jj of jjList" [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i></mat-option>
+            <mat-option *ngFor="let location of lookupsService.courthouseAgencies" [value]="location.id">{{ location.name }}</mat-option>
           </mat-select>
+
+          <mat-select [formControl]="appearanceRoomCodeFilter" placeholder="Court Room"
+            style="width:250px; background-color: #f2f2f2;">
+            <mat-option *ngFor="let room of appearanceRoomCodes" [value]="room">{{ room }}</mat-option>
+          </mat-select>
+          
         </div>
       </div>
-      <div class="w-20 col-md-2">
+      <div class="w-20 col-md-2" [hidden]="!appearanceRoomCodeFilter.value">
         <app-paging [currentPage]="currentPage" [totalPages]="totalPages" (pageChanged)="onPageChange($event)">
         </app-paging>
       </div>
@@ -71,6 +76,20 @@
           <span>{{ element.violationDate | date: "dd-MMM-yyyy" }}</span>
         </td>
       </ng-container>
+
+      <ng-container matColumnDef="surnameOrOrgName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Surname, Given Name(s)
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <span *ngIf="element.disputantSurname">{{ element.disputantSurname + (element.disputantGivenName1 || 
+          element.disputantGivenName2 || element.disputantGivenName3 ? "," : "") + 
+          (element.disputantGivenName1 ? " " + element.disputantGivenName1 : "") + 
+          (element.disputantGivenName2 ? " " + element.disputantGivenName2 : "") + 
+          (element.disputantGivenName3 ? " " + element.disputantGivenName3 : "") }}</span>
+        <span *ngIf="!element.disputantSurname">{{ element.disputantOrganizationName }}</span>
+      </td>
+    </ng-container>
 
       <ng-container matColumnDef="toBeHeardAtCourthouseName">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>

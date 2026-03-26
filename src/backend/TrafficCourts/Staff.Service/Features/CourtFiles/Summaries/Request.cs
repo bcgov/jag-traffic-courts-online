@@ -36,4 +36,6 @@ public class Request : IRequest<Response>
     public int? page_size { get; set; }
 
     public string? sort_by { get; set; }
+
+    public string? appearance_courtroom_code { get; set; }
 }
