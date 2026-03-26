@@ -27,9 +27,9 @@
       <form [formGroup]="commonFieldsForm">
       <div class="row">
         <div class="col-md-6">
-          <div class="section-grid-header">Last Name</div>
+          <div class="section-grid-header">Surname</div>
           <mat-form-field appearance="outline">
-            <input matInput placeholder="Enter last name" formControlName="disputantSurnameNm" maxlength="30">
+            <input matInput placeholder="Enter Surname" formControlName="disputantSurnameNm" maxlength="30">
           </mat-form-field>
         </div>
         <div class="col-md-6">
@@ -73,8 +73,6 @@
           <div class="count-header">
             <h4>
               Count {{ getCountNumber(i) }}
-              <span class="count-status" *ngIf="!isCountDisputed(count)">(Not Disputed)</span>
-              <span class="count-status active" *ngIf="isCountDisputed(count)">(Disputed)</span>
             </h4>
             <mat-checkbox 
               [checked]="amendmentForms[i].get('isAmended')?.value"
@@ -99,7 +97,7 @@
           <div class="amendment-inputs" *ngIf="isCountDisputed(count) && amendmentForms[i].get('isAmended')?.value">
             <div class="row">
               <div class="col-md-6">
-                <div class="section-grid-header">Amended MVA Section</div>
+                <div class="section-grid-header">MVA Section</div>
                 <mat-form-field appearance="outline">
                   <input 
                     matInput 
@@ -162,7 +160,7 @@
           <h4>Count 1 - Amended</h4>
           <div class="amendment-details">
             <div class="detail-row" *ngIf="existingAmendmentData?.count1ActSectDescTxt">
-              <label class="detail-label">Amended MVA Section:</label>
+              <label class="detail-label">MVA Section:</label>
               <span class="detail-value">{{ existingAmendmentData?.count1ActSectDescTxt }}</span>
             </div>
             <div class="detail-row" *ngIf="existingAmendmentData?.count1OtherTxt">
@@ -179,7 +177,7 @@
           <h4>Count 2 - Amended</h4>
           <div class="amendment-details">
             <div class="detail-row" *ngIf="existingAmendmentData?.count2ActSectDescTxt">
-              <label class="detail-label">Amended MVA Section:</label>
+              <label class="detail-label">MVA Section:</label>
               <span class="detail-value">{{ existingAmendmentData?.count2ActSectDescTxt }}</span>
             </div>
             <div class="detail-row" *ngIf="existingAmendmentData?.count2OtherTxt">
@@ -196,7 +194,7 @@
           <h4>Count 3 - Amended</h4>
           <div class="amendment-details">
             <div class="detail-row" *ngIf="existingAmendmentData?.count3ActSectDescTxt">
-              <label class="detail-label">Amended MVA Section:</label>
+              <label class="detail-label">MVA Section:</label>
               <span class="detail-value">{{ existingAmendmentData?.count3ActSectDescTxt }}</span>
             </div>
             <div class="detail-row" *ngIf="existingAmendmentData?.count3OtherTxt">

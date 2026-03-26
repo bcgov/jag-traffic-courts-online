@@ -216,8 +216,8 @@ export class JJAmendmentsComponent implements OnInit {
             // User confirmed - clear the amendment data for this count
             form.patchValue({
               isAmended: false,
-              amendedStatute: '',
-              other: ''
+              actSectDescTxt: '',
+              otherTxt: ''
             });
           } else {
             // User cancelled - revert the checkbox visual state back to checked.

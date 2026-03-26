@@ -68,11 +68,9 @@
         <mat-menu #gotoMenu="matMenu" yPosition="below">
           <button mat-menu-item (click)="goTo('disputeDetails')">Dispute Details</button>
           <button mat-menu-item (click)="goTo('uploadedDocuments')">Uploaded Documents</button>
-          <ng-container *appFeatureFlag="featureType.amendments">
-            @if (hasAmendmentData() || type === tabTypes.HEARING_INBOX) {
-              <button mat-menu-item (click)="goTo('amendments')">Amendments</button>
-            }
-          </ng-container>
+          @if (hasAmendmentData() || type === tabTypes.HEARING_INBOX) {
+            <button mat-menu-item *appFeatureFlag="featureType.amendments" (click)="goTo('amendments')">Amendments</button>
+          }
           <button mat-menu-item (click)="goTo('fileHistory')">Administrative Activity</button>
           <button mat-menu-item (click)="goTo('fileRemarks')">File Remarks</button>
         </mat-menu>
@@ -82,14 +80,12 @@
         </mat-menu>
       </div>
     </div>
-    <ng-container *appFeatureFlag="featureType.amendments">
-      @if (type === tabTypes.DECISION_VALIDATION && hasAmendmentData() && !amendmentValidationResult?.allAmendmentsProcessed) {
-        <div class="amendment-warning-banner">
-          <mat-icon class="amendment-warning-icon">warning</mat-icon>
-          <span>This dispute has <strong>amendments on file</strong> that require review and acknowledgment.</span>
-        </div>
-      }
-    </ng-container>
+    @if (type === tabTypes.DECISION_VALIDATION && hasAmendmentData() && !amendmentValidationResult?.allAmendmentsProcessed) {
+      <div class="amendment-warning-banner" *appFeatureFlag="featureType.amendments">
+        <mat-icon class="amendment-warning-icon">warning</mat-icon>
+        <span>This dispute has <strong>amendments on file</strong> that require review and acknowledgment.</span>
+      </div>
+    }
   </ng-container>
   <div [ngClass]="{'contact-info' : (type === tabTypes.DECISION_VALIDATION || type === tabTypes.DCF)}"
     style="padding-bottom: 1.5vh;">
@@ -598,9 +594,8 @@
                   </p>
                 </span>
                 <!-- AMENDMENT CHECKBOX - Under Judicial Justice, for editable views -->
-                <ng-container *appFeatureFlag="featureType.amendments">
                 @if (!isViewOnly) {
-                <span class="section-grid-cell amendment-embed-cell" style="grid-column: span 11" #amendments>
+                <span *appFeatureFlag="featureType.amendments" class="section-grid-cell amendment-embed-cell" style="grid-column: span 11" #amendments>
                   <p class="section-grid-text">
                     <mat-checkbox [checked]="showAmendmentSection" (change)="onAmendmentsRequiredChange($event.checked)">
                       Amendments Required
@@ -621,12 +616,10 @@
                   }
                 </span>
                 }
-                </ng-container>
 
                 <!-- AMENDMENT LABEL - For View Only (non-Decision-Validation) -->
-                <ng-container *appFeatureFlag="featureType.amendments">
                 @if (isViewOnly && hasAmendmentData() && type !== tabTypes.DECISION_VALIDATION) {
-                <span class="section-grid-cell" style="grid-column: span 11">
+                <span *appFeatureFlag="featureType.amendments" class="section-grid-cell" style="grid-column: span 11">
                   <p class="section-grid-header" style="color: #d32f2f;">
                     Amendments:
                   </p>
@@ -635,12 +628,10 @@
                   </p>
                 </span>
                 }
-                </ng-container>
 
                 <!-- STAFF AMENDMENT VALIDATION - Inline in Decision Validation -->
-                <ng-container *appFeatureFlag="featureType.amendments">
                 @if (type === tabTypes.DECISION_VALIDATION && hasAmendmentData()) {
-                <span #amendmentValidation class="section-grid-cell amendment-validation-cell" style="grid-column: span 11;">
+                <span #amendmentValidation *appFeatureFlag="featureType.amendments" class="section-grid-cell amendment-validation-cell" style="grid-column: span 11;">
                   <app-staff-amendment-validation
                     [amendmentData]="amendmentData"
                     [isViewOnly]="isViewOnly"
@@ -648,7 +639,6 @@
                   </app-staff-amendment-validation>
                 </span>
                 }
-                </ng-container>
 
                 <!-- JJ Endorsements - Keep in same card -->
                 <span class="section-grid-cell" style="grid-column: span 11">
@@ -897,17 +887,15 @@
         <!-- STAFF AMENDMENT VALIDATION - Now inline in Court Appearance section above -->
 
         <!-- VIEW AMENDMENTS (Read-Only) in DCF -->
-        <ng-container *appFeatureFlag="featureType.amendments">
-          @if (type === tabTypes.DCF && hasAmendmentData()) {
-            <section class="section-sticky" id="amendments-readonly">
-              <app-jj-amendments
-                [jjDisputeInfo]="lastUpdatedJJDispute"
-                [isViewOnly]="true"
-                [existingAmendmentData]="amendmentData">
-              </app-jj-amendments>
-            </section>
-          }
-        </ng-container>
+        @if (type === tabTypes.DCF && hasAmendmentData()) {
+          <section *appFeatureFlag="featureType.amendments" class="section-sticky" id="amendments-readonly">
+            <app-jj-amendments
+              [jjDisputeInfo]="lastUpdatedJJDispute"
+              [isViewOnly]="true"
+              [existingAmendmentData]="amendmentData">
+            </app-jj-amendments>
+          </section>
+        }
 
         @if (!isViewOnly) {
           <section class="section-sticky">

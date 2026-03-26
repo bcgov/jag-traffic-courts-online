@@ -8,7 +8,7 @@
         <div style="margin-bottom: 15px;">
           @if (hasValue(amendmentData?.disputantSurnameNm)) {
             <span>
-              <span style="font-weight: bold;">Last Name:</span> {{ amendmentData?.disputantSurnameNm }}
+              <span style="font-weight: bold;">Surname:</span> {{ amendmentData?.disputantSurnameNm }}
             </span>
           }
           @if (hasValue(amendmentData?.disputantGivenNamesNm)) {
@@ -39,7 +39,7 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                   @if (hasValue(amendment.actSectDescTxt)) {
                     <div>
-                      <span style="font-weight: bold;">Amended MVA Section:</span> {{ amendment.actSectDescTxt }}
+                      <span style="font-weight: bold;">MVA Section:</span> {{ amendment.actSectDescTxt }}
                     </div>
                   }
                   @if (hasValue(amendment.otherTxt)) {
