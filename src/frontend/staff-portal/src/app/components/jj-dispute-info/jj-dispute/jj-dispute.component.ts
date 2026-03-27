@@ -257,123 +257,13 @@ export class JJDisputeComponent implements OnInit {
       this.courtOptionsForm.patchValue(this.lastUpdatedJJDispute);
 
       this.isNoAppEnabled = this.RoPApp.N === this.lastUpdatedJJDispute.mostRecentCourtAppearance.appCd;
-      
-      // #region DEMO: Mock court appearance history — comment out this entire #region block to disable
-      // if (!this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs) {
-      //   this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs = [];
-      // }
-      
-      // // Add historical appearances with different amendment scenarios
-      // const mockHistoricalAppearances = [
-      //   {
-      //     id: 103,
-      //     appearanceTs: '2024-06-15T10:00:00',
-      //     room: '002',
-      //     reason: 'HR',
-      //     appCd: JJDisputeCourtAppearanceRoPAppCd.P,
-      //     clerkRecord: null,
-      //     defenceCounsel: null,
-      //     dattCd: null,
-      //     crown: null,
-      //     jjSeized: JJDisputeCourtAppearanceRoPJjSeized.N,
-      //     adjudicator: 'J. Anderson',
-      //     comments: 'Appeared, reviewed evidence',
-      //     amendments: {
-      //       disputantSurnameNm: 'Smith',
-      //       disputantGivenNamesNm: 'Robert',
-      //       violationDateDtm: null,
-      //       otherNotesTxt: null,
-      //       count1ActSectDescTxt: null,
-      //       count1OtherTxt: null,
-      //       count2ActSectDescTxt: 'Motor Vehicle Act 144(1)(a) - Drive without due care and attention',
-      //       count2OtherTxt: null,
-      //       count3ActSectDescTxt: null,
-      //       count3OtherTxt: null,
-      //     }
-      //   },
-      //   {
-      //     id: 102,
-      //     appearanceTs: '2024-05-20T14:30:00',
-      //     room: '001',
-      //     reason: 'HR',
-      //     appCd: JJDisputeCourtAppearanceRoPAppCd.P,
-      //     clerkRecord: null,
-      //     defenceCounsel: null,
-      //     dattCd: null,
-      //     crown: null,
-      //     jjSeized: JJDisputeCourtAppearanceRoPJjSeized.N,
-      //     adjudicator: 'J. Smith',
-      //     comments: 'Adjourned for further documents',
-      //     amendments: {
-      //       disputantSurnameNm: null,
-      //       disputantGivenNamesNm: null,
-      //       violationDateDtm: '2024-02-15',
-      //       otherNotesTxt: 'Date corrected as per disputant testimony',
-      //       count1ActSectDescTxt: 'MVR 6.07 - Emergency brake inadequate',
-      //       count1OtherTxt: null,
-      //       count2ActSectDescTxt: null,
-      //       count2OtherTxt: null,
-      //       count3ActSectDescTxt: null,
-      //       count3OtherTxt: null,
-      //     }
-      //   },
-      //   {
-      //     id: 101,
-      //     appearanceTs: '2024-04-10T09:00:00',
-      //     room: '003',
-      //     reason: 'HR',
-      //     appCd: JJDisputeCourtAppearanceRoPAppCd.P,
-      //     clerkRecord: null,
-      //     defenceCounsel: null,
-      //     dattCd: null,
-      //     crown: null,
-      //     jjSeized: JJDisputeCourtAppearanceRoPJjSeized.N,
-      //     adjudicator: 'J. Williams',
-      //     comments: 'Initial appearance',
-      //     amendments: {
-      //       disputantSurnameNm: 'Doe',
-      //       disputantGivenNamesNm: 'Jane',
-      //       violationDateDtm: '2024-01-10',
-      //       otherNotesTxt: null,
-      //       count1ActSectDescTxt: 'Motor Vehicle Act 146(1) - Fail to obey traffic control device',
-      //       count1OtherTxt: 'Amended per evidence review',
-      //       count2ActSectDescTxt: 'Motor Vehicle Act 144(1)(b) - Drive without reasonable consideration',
-      //       count2OtherTxt: null,
-      //       count3ActSectDescTxt: null,
-      //       count3OtherTxt: null,
-      //     }
-      //   }
-      // ];
-      
-      // // Add mock records to the beginning (they'll be sorted by date)
-      // this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs = [
-      //   ...mockHistoricalAppearances,
-      //   ...this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs
-      // ];
-      // #endregion DEMO: Mock court appearance history
 
-      // Bind amendment data from the most recent court appearance (real API data)
+      // Bind amendment data from the most recent court appearance (API data)
       this.amendmentData = this.lastUpdatedJJDispute.mostRecentCourtAppearance?.amendments ?? null;
       if (this.hasAmendmentData()) {
         this.amendmentCheckbox = true;
         this.showAmendmentSection = true;
       }
-      // #region DEMO: Mock amendment data — comment out this entire #region block to disable
-      // if (!this.amendmentData) {
-      //   this.amendmentData = {
-      //     disputantSurnameNm: 'Smith',
-      //     disputantGivenNamesNm: 'John',
-      //     violationDateDtm: '2024-01-15',
-      //     otherNotesTxt: 'Speed limit sign was not visible',
-      //     count1ActSectDescTxt: '148(1) MVA',
-      //     count1OtherTxt: null,
-      //     count2ActSectDescTxt: null,
-      //     count2OtherTxt: 'Count 2 corrected description',
-      //     count3ActSectDescTxt: null,
-      //     count3OtherTxt: null,
-      //   };
-      // }
-      // #endregion DEMO: Mock amendment data
     });
   }
 

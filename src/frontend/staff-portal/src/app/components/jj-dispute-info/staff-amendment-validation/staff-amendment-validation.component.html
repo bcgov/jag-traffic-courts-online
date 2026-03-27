@@ -18,7 +18,7 @@
           }
           @if (hasValue(amendmentData?.violationDateDtm)) {
             <span style="margin-left: 20px;">
-              <span style="font-weight: bold;">Violation Date:</span> {{ amendmentData?.violationDateDtm }}
+              <span style="font-weight: bold;">Violation Date:</span> {{ amendmentData?.violationDateDtm | date: "dd-MMM-yyyy" : "UTC" }}
             </span>
           }
           @if (hasValue(amendmentData?.otherNotesTxt)) {

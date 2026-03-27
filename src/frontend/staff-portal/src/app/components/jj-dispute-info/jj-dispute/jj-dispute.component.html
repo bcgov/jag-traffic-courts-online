@@ -617,8 +617,8 @@
                 </span>
                 }
 
-                <!-- AMENDMENT LABEL - For View Only (non-Decision-Validation) -->
-                @if (isViewOnly && hasAmendmentData() && type !== tabTypes.DECISION_VALIDATION) {
+                <!-- AMENDMENT LABEL - For View Only (non-Decision-Validation, non-DCF) -->
+                @if (isViewOnly && hasAmendmentData() && type !== tabTypes.DECISION_VALIDATION && type !== tabTypes.DCF) {
                 <span *appFeatureFlag="featureType.amendments" class="section-grid-cell" style="grid-column: span 11">
                   <p class="section-grid-header" style="color: #d32f2f;">
                     Amendments:
@@ -883,19 +883,6 @@
             </div>
           </mat-expansion-panel>
         </mat-accordion>
-
-        <!-- STAFF AMENDMENT VALIDATION - Now inline in Court Appearance section above -->
-
-        <!-- VIEW AMENDMENTS (Read-Only) in DCF -->
-        @if (type === tabTypes.DCF && hasAmendmentData()) {
-          <section *appFeatureFlag="featureType.amendments" class="section-sticky" id="amendments-readonly">
-            <app-jj-amendments
-              [jjDisputeInfo]="lastUpdatedJJDispute"
-              [isViewOnly]="true"
-              [existingAmendmentData]="amendmentData">
-            </app-jj-amendments>
-          </section>
-        }
 
         @if (!isViewOnly) {
           <section class="section-sticky">
