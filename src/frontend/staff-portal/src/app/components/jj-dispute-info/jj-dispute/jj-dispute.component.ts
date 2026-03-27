@@ -354,6 +354,10 @@ export class JJDisputeComponent implements OnInit {
 
       // Bind amendment data from the most recent court appearance (real API data)
       this.amendmentData = this.lastUpdatedJJDispute.mostRecentCourtAppearance?.amendments ?? null;
+      if (this.hasAmendmentData()) {
+        this.amendmentCheckbox = true;
+        this.showAmendmentSection = true;
+      }
       // #region DEMO: Mock amendment data — comment out this entire #region block to disable
       // if (!this.amendmentData) {
       //   this.amendmentData = {

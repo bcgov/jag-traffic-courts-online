@@ -78,7 +78,7 @@ export class JJAmendmentsComponent implements OnInit {
         this.commonFieldsForm.patchValue({
           disputantSurnameNm: this.existingAmendmentData.disputantSurnameNm || '',
           disputantGivenNamesNm: this.existingAmendmentData.disputantGivenNamesNm || '',
-          violationDateDtm: this.existingAmendmentData.violationDateDtm || '',
+          violationDateDtm: this.existingAmendmentData.violationDateDtm ? new Date(this.existingAmendmentData.violationDateDtm) : '',
           otherNotesTxt: this.existingAmendmentData.otherNotesTxt || ''
         });
 
@@ -170,9 +170,17 @@ export class JJAmendmentsComponent implements OnInit {
     };
 
     const data: JJDisputeCourtAppearanceAmendments = {
-      disputantSurnameNm: this.commonFieldsForm?.get('disputantSurnameNm')?.value || null,
-      disputantGivenNamesNm: this.commonFieldsForm?.get('disputantGivenNamesNm')?.value || null,
-      violationDateDtm: (() => { const v = this.commonFieldsForm?.get('violationDateDtm')?.value; return v instanceof Date ? v.toISOString() : (v || null); })(),
+      disputantSurnameNm:
+        this.commonFieldsForm?.get('disputantSurnameNm')?.value || null,
+      disputantGivenNamesNm:
+        this.commonFieldsForm?.get('disputantGivenNamesNm')?.value || null,
+      violationDateDtm: (() => {
+        const v = this.commonFieldsForm?.get('violationDateDtm')?.value;
+        if (!v) return null;
+        const pad = (n: number) => n.toString().padStart(2, '0');
+        const date = new Date(v);
+        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+      })(),
       otherNotesTxt: this.commonFieldsForm?.get('otherNotesTxt')?.value || null,
       count1ActSectDescTxt: getCountValue(0, 'actSectDescTxt'),
       count1OtherTxt: getCountValue(0, 'otherTxt'),
