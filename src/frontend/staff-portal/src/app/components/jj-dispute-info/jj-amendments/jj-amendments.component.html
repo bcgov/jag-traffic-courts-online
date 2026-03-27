@@ -88,7 +88,7 @@
             <div class="info-grid">
               <div class="info-item">
                 <label class="info-label">Current MVA Section:</label>
-                <span class="info-value">{{ count?.section ? (count.section + (count?.description ? ' - ' + count.description : '')) : 'N/A' }}</span>
+                <span class="info-value">{{ count?.description || 'N/A' }}</span>
               </div>
             </div>
           </div>
