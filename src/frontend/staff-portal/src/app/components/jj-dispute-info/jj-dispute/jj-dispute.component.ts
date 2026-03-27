@@ -970,19 +970,6 @@ export class JJDisputeComponent implements OnInit {
   onAmendmentDataChange(data: JJDisputeCourtAppearanceAmendments): void {
     this.logger.log('JJDisputeComponent::onAmendmentDataChange', data);
     this.amendmentData = data;
-    
-    // DEMO: Store in component state
-    // PRODUCTION: Call API to save amendments
-    // this.jjDisputeService.saveAmendments(this.tcoDisputeInfo.id, data).subscribe(
-    //   response => {
-    //     this.logger.log('Amendments saved successfully', response);
-    //     this.toastService.openSuccessToast('Amendments saved');
-    //   },
-    //   error => {
-    //     this.logger.error('Error saving amendments', error);
-    //     this.toastService.openErrorToast('Failed to save amendments');
-    //   }
-    // );
   }
 
   /**
@@ -992,9 +979,6 @@ export class JJDisputeComponent implements OnInit {
   onAmendmentStatusChange(statuses: AmendmentProcessingStatus[]): void {
     this.logger.log('JJDisputeComponent::onAmendmentStatusChange', statuses);
     this.amendmentProcessingStatuses = statuses;
-    
-    // DEMO: Store in component state
-    // PRODUCTION: Call API to save amendment processing statuses
   }
 
   /**

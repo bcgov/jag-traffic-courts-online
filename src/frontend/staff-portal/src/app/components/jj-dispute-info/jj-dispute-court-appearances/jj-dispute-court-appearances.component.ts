@@ -59,14 +59,6 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
     this.dataSource = new MatTableDataSource<JJDisputeCourtAppearanceRoP>(this.tempData);
   }
 
-  hasAmendments(element: number): boolean {
-    return false; // kept for compatibility; use hasAmendmentData instead
-  }
-
-  getAmendments(element: number): any {
-    return null; // kept for compatibility; template now uses element.amendments directly
-  }
-
   hasAmendmentData(element: JJDisputeCourtAppearanceRoP): boolean {
     const a = element?.amendments as JJDisputeCourtAppearanceAmendments;
     if (!a) return false;
