@@ -762,17 +762,18 @@ components:
           type: integer
         amendments:
           type: object
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)"
           properties:
             appearanceAmendmentId:
-              type: integer
+              type: string
             disputantSurnameNm:
               type: string
             disputantGivenNamesNm:
               type: string
             violationDateDtm:
               type: string
-              format: date-time
-              x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer.class)"
+              format: date
+              x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlySerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlyDeserializer.class)"
             otherNotesTxt:
               type: string
             count1ActSectDescTxt:

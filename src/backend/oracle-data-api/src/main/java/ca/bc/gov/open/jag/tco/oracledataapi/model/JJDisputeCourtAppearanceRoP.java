@@ -2,17 +2,21 @@ package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -145,6 +149,12 @@ public class JJDisputeCourtAppearanceRoP {
 	@Column(length = 4000)
 	@Schema(nullable = true, maxLength = 4000)
 	private String comments;
+
+	@JsonManagedReference(value = "jj_dispute_court_appearance_amendments_reference")
+	@OneToOne(targetEntity = JJDisputeCourtAppearanceAmendments.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, optional = true)
+	@JoinColumn(name = "jjcourt_appearance_id")
+	@Schema(nullable = true)
+	public JJDisputeCourtAppearanceAmendments amendments;
 
 	@JsonBackReference(value="jj_dispute_court_appearance_rop_reference")
 	@ManyToOne(targetEntity=JJDispute.class, fetch = FetchType.LAZY)
