@@ -8172,9 +8172,81 @@
         ],
         "type": "string"
       },
+      "JJDisputeCourtAppearanceAmendments": {
+        "type": "object",
+        "properties": {
+          "appearanceAmendmentId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "disputantSurnameNm": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputantGivenNamesNm": {
+            "type": "string",
+            "nullable": true
+          },
+          "violationDateDtm": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "otherNotesTxt": {
+            "type": "string",
+            "nullable": true
+          },
+          "count1ActSectDescTxt": {
+            "type": "string",
+            "nullable": true
+          },
+          "count1OtherTxt": {
+            "type": "string",
+            "nullable": true
+          },
+          "count2ActSectDescTxt": {
+            "type": "string",
+            "nullable": true
+          },
+          "count2OtherTxt": {
+            "type": "string",
+            "nullable": true
+          },
+          "count3ActSectDescTxt": {
+            "type": "string",
+            "nullable": true
+          },
+          "count3OtherTxt": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "JJDisputeCourtAppearanceRoP": {
         "type": "object",
         "properties": {
+          "amendments": {
+            "$ref": "#/components/schemas/JJDisputeCourtAppearanceAmendments"
+          },
           "justinAppearanceId": {
             "type": "string",
             "nullable": true

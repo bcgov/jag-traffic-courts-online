@@ -24,7 +24,6 @@ using System.Text.Json.Serialization;
 
 namespace TrafficCourts.OracleDataApi.Client.V1
 {
-    using System.Text;
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -795,7 +794,7 @@ namespace TrafficCourts.OracleDataApi.Client.V1
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
                     var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(body, JsonSerializerSettings);
-                    var content_ = new StringContent(body, Encoding.UTF8, "application/json");
+                    var content_ = new System.Net.Http.StringContent(json_);
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("PUT");
@@ -2508,7 +2507,7 @@ namespace TrafficCourts.OracleDataApi.Client.V1
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("A Dispute status can only be set to REJECTED iff status is NEW, VALIDATED or PROCESSING and the rejected reason must be <= 4000 characters. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("A Dispute status can only be set to REJECTED iff status is NEW, VALIDATED or PROCESSING and the rejected reason must be <= 256 characters. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -5853,6 +5852,68 @@ namespace TrafficCourts.OracleDataApi.Client.V1
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    internal partial class JJDisputeCourtAppearanceAmendments
+    {
+        /// <summary>
+        /// Appearance Amendment ID
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("appearanceAmendmentId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public long? AppearanceAmendmentId { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("disputantSurnameNm", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string DisputantSurnameNm { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("disputantGivenNamesNm", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string DisputantGivenNamesNm { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("violationDateDtm", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime? ViolationDateDtm { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("otherNotesTxt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OtherNotesTxt { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("count1ActSectDescTxt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Count1ActSectDescTxt { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("count1OtherTxt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Count1OtherTxt { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("count2ActSectDescTxt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Count2ActSectDescTxt { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("count2OtherTxt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Count2OtherTxt { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("count3ActSectDescTxt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Count3ActSectDescTxt { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("count3OtherTxt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Count3OtherTxt { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("createdBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string CreatedBy { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("createdTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime? CreatedTs { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("modifiedBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ModifiedBy { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("modifiedTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime? ModifiedTs { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     internal partial class JJDisputeCourtAppearanceRoP
     {
         /// <summary>
@@ -5910,6 +5971,9 @@ namespace TrafficCourts.OracleDataApi.Client.V1
         [Newtonsoft.Json.JsonProperty("comments", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.StringLength(4000)]
         public string Comments { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("amendments", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public JJDisputeCourtAppearanceAmendments Amendments { get; set; }
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
 

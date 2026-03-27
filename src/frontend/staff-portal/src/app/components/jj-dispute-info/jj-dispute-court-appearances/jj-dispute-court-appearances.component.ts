@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { JJDisputeCourtAppearanceRoP } from 'app/api';
+import { JJDisputeCourtAppearanceAmendments, JJDisputeCourtAppearanceRoP } from 'app/api';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
+import { AppConfigService } from 'app/services/app-config.service';
+import { featureType } from 'app/shared/directives/feature-flag.directive';
 
 @Component({
   selector: 'app-jj-dispute-court-appearances',
@@ -16,6 +18,7 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
 
   dataSource = new MatTableDataSource<JJDisputeCourtAppearanceRoP>();
   tempData: JJDisputeCourtAppearanceRoP[] = [];
+  amendmentsEnabled: boolean;
   displayedColumns: string[] = [
     "appearanceTs",
     "room",
@@ -33,10 +36,12 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
+    private appConfigService: AppConfigService,
   ) {
     this.authService.jjList$.subscribe(result => {
       this.jjList = result;
     });
+    this.amendmentsEnabled = this.appConfigService.isFeatureFlagEnabled(featureType.amendments);
   }
 
   getJJName(jjIDIR: string) {
@@ -52,5 +57,13 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
     });
     this.tempData.shift(); // exclude most recent
     this.dataSource = new MatTableDataSource<JJDisputeCourtAppearanceRoP>(this.tempData);
+  }
+
+  hasAmendmentData(element: JJDisputeCourtAppearanceRoP): boolean {
+    const a = element?.amendments as JJDisputeCourtAppearanceAmendments;
+    if (!a) return false;
+    return !!(a.disputantSurnameNm || a.disputantGivenNamesNm || a.violationDateDtm ||
+              a.otherNotesTxt || a.count1ActSectDescTxt || a.count1OtherTxt ||
+              a.count2ActSectDescTxt || a.count2OtherTxt || a.count3ActSectDescTxt || a.count3OtherTxt);
   }
 }

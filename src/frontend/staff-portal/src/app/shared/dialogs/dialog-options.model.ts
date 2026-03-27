@@ -1,5 +1,6 @@
 export interface DialogOptions {
   icon?: string;
+  iconColor?: string; // Custom color for the icon (e.g., '#FFC107' for yellow)
   imageSrc?: string; // Alternative to an icon
 
   titleKey?: string;

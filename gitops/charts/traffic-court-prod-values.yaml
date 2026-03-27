@@ -284,7 +284,8 @@ staff-web:
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "features": {
-          "staffDisputeIntake": false
+          "staffDisputeIntake": false,
+          "amendments": false
         }
       }
   courtHouseDataConfig: |
