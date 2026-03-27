@@ -233,10 +233,47 @@ label {
 
 
 
+@keyframes pulse-scale {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.35); }
+}
+
+.amendment-warning-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #fff3e0;
+  border-left: 4px solid #e65100;
+  color: #bf360c;
+  padding: 10px 16px;
+  font-size: 14px;
+  margin-bottom: 4px;
+
+  .amendment-warning-icon {
+    color: #e65100;
+    flex-shrink: 0;
+    animation: pulse-scale 3.2s ease-in-out infinite;
+  }
+}
+
 .section-sticky{
   box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
   padding: 20px;
   margin: 16px 0;
+}
+
+.section-grid-cell.amendment-embed-cell {
+  overflow: visible;
+  padding: 10px 14px 14px;
+}
+
+.section-grid-cell.amendment-validation-cell {
+  overflow: visible;
+  padding: 10px 14px;
+}
+
+.amendment-embed-content {
+  margin-top: 12px;
 }
 
 .latest-plea-text{
@@ -281,5 +318,33 @@ label {
 
   mat-icon {
     color: red;
+  }
+}
+// Highlight animation for amendment section
+.highlight-pulse {
+  animation: highlightPulse 2s ease-in-out;
+  border-radius: 4px;
+}
+
+@keyframes highlightPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+    background-color: transparent;
+  }
+  25% {
+    box-shadow: 0 0 0 8px rgba(255, 193, 7, 0.6);
+    background-color: rgba(255, 193, 7, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(255, 193, 7, 0.4);
+    background-color: rgba(255, 193, 7, 0.1);
+  }
+  75% {
+    box-shadow: 0 0 0 8px rgba(255, 193, 7, 0.6);
+    background-color: rgba(255, 193, 7, 0.15);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+    background-color: transparent;
   }
 }

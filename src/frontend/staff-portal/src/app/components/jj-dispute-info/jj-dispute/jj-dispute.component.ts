@@ -1,8 +1,9 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, TemplateRef } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
 import { JJDisputeService, JJDispute } from '../../../services/jj-dispute.service';
+import { AmendmentProcessingStatus, AmendmentValidationResult } from '../staff-amendment-validation/staff-amendment-validation.component';
 import { Observable, map } from 'rxjs';
-import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPAppCd, JJDisputeCourtAppearanceRoPCrown, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized, FileMetadata, JJDisputeElectronicTicketYn, JJDisputeNoticeOfHearingYn, TicketImageDataJustinDocumentReportType, DocumentType, JJDisputeContactType, JJDisputedCountRoPFinding, Province, Language, JJDisputeDisputantAttendanceType, JJDisputeAccidentYn, JJDisputeMultipleOfficersYn, JJDisputeSignatoryType, DcfTemplateType, DisputeCaseFileSummary, YesNo } from 'app/api/model/models';
+import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPAppCd, JJDisputeCourtAppearanceRoPCrown, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized, FileMetadata, JJDisputeElectronicTicketYn, JJDisputeNoticeOfHearingYn, TicketImageDataJustinDocumentReportType, DocumentType, JJDisputeContactType, JJDisputedCountRoPFinding, Province, Language, JJDisputeDisputantAttendanceType, JJDisputeAccidentYn, JJDisputeMultipleOfficersYn, JJDisputeSignatoryType, DcfTemplateType, DisputeCaseFileSummary, YesNo, JJDisputeCourtAppearanceAmendments } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
@@ -19,6 +20,8 @@ import { UserGroup } from '@shared/enums/user-group.enum';
 import { TabType } from '@shared/enums/tab-type.enum';
 import { DisputeStatus } from '@shared/consts/DisputeStatus.model';
 import { HearingType } from '@shared/consts/HearingType.model';
+import { featureType } from 'app/shared/directives/feature-flag.directive';
+import { AppConfigService } from 'app/services/app-config.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { ToastService } from '@core/services/toast.service';
 import { Router } from '@angular/router';
@@ -31,11 +34,15 @@ import { Router } from '@angular/router';
 })
 export class JJDisputeComponent implements OnInit {
   DocumentStatus = DocumentStatus;
+  featureType = featureType;
 
   @ViewChild("disputeDetails") disputeDetailsAnchor: ElementRef;
   @ViewChild("uploadedDocuments") uploadedDocumentsAnchor: ElementRef;
   @ViewChild("fileHistory") fileHistoryAnchor: ElementRef;
   @ViewChild("fileRemarks") fileRemarksAnchor: ElementRef;
+  @ViewChild("amendments") amendmentsAnchor: ElementRef;
+  @ViewChild("courtAppearance") courtAppearanceAnchor: ElementRef;
+  @ViewChild("amendmentValidation") amendmentValidationAnchor: ElementRef;
   @ViewChild('remarksDialog') remarksDialog!: TemplateRef<any>;
 
   @Input() tcoDisputeInfo: DisputeCaseFileSummary;
@@ -136,6 +143,16 @@ export class JJDisputeComponent implements OnInit {
   cancelStatusOnly: boolean = false;
   isNoAppEnabled: boolean = true;
 
+  // TCVP-3387: Amendment tracking properties
+  amendmentData: JJDisputeCourtAppearanceAmendments | null = null;
+  amendmentProcessingStatuses: AmendmentProcessingStatus[] = [];
+  amendmentValidationResult: AmendmentValidationResult = {
+    allAmendmentsProcessed: false,
+    pendingAmendments: []
+  };
+  amendmentCheckbox: boolean = false;
+  showAmendmentSection: boolean = false;
+
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -149,6 +166,7 @@ export class JJDisputeComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private toastService: ToastService,
     private router: Router,
+    private appConfigService: AppConfigService,
   ) {
     this.authService.jjList$.subscribe(result => {
       this.jjList = result;
@@ -239,6 +257,13 @@ export class JJDisputeComponent implements OnInit {
       this.courtOptionsForm.patchValue(this.lastUpdatedJJDispute);
 
       this.isNoAppEnabled = this.RoPApp.N === this.lastUpdatedJJDispute.mostRecentCourtAppearance.appCd;
+
+      // Bind amendment data from the most recent court appearance (API data)
+      this.amendmentData = this.lastUpdatedJJDispute.mostRecentCourtAppearance?.amendments ?? null;
+      if (this.hasAmendmentData()) {
+        this.amendmentCheckbox = true;
+        this.showAmendmentSection = true;
+      }
     });
   }
 
@@ -269,8 +294,32 @@ export class JJDisputeComponent implements OnInit {
       case "fileRemarks":
         element = this.fileRemarksAnchor;
         break;
+      case "amendments":
+        element = this.amendmentsAnchor;
+        break;
+      case "courtAppearance":
+        element = this.courtAppearanceAnchor;
+        // Scroll to court appearance and highlight the amendment validation section
+        if (this.amendmentValidationAnchor) {
+          setTimeout(() => {
+            this.highlightElement(this.amendmentValidationAnchor);
+          }, 800); // Wait for scroll to complete
+        }
+        break;
     }
     element?.nativeElement.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  private highlightElement(element: ElementRef): void {
+    if (element?.nativeElement) {
+      // Add highlight class
+      element.nativeElement.classList.add('highlight-pulse');
+      
+      // Remove highlight class after animation completes
+      setTimeout(() => {
+        element.nativeElement.classList.remove('highlight-pulse');
+      }, 2000);
+    }
   }
 
   /**
@@ -475,6 +524,22 @@ export class JJDisputeComponent implements OnInit {
       return;
     }
     
+    // Check if there are unprocessed amendments
+    if (this.hasAmendmentData() && 
+        this.amendmentValidationResult && 
+        !this.amendmentValidationResult.allAmendmentsProcessed) {
+      const data: DialogOptions = {
+        titleKey: "Amendments Not Processed",
+        messageKey: `All amendments must be completed before accepting this dispute. Pending amendments for counts: ${this.amendmentValidationResult.pendingAmendments.join(', ')}`,
+        actionTextKey: "OK",
+        actionType: "warn",
+        cancelHide: true,
+        icon: "warning"
+      };
+      this.dialog.open(ConfirmDialogComponent, { data, width: "40%" });
+      return;
+    }
+    
     const data: DialogOptions = {
       titleKey: "Submit to JUSTIN?",
       messageKey: "Are you sure this dispute is ready to be submitted to JUSTIN?",
@@ -522,7 +587,11 @@ export class JJDisputeComponent implements OnInit {
   private putJJDispute(): Observable<any> {
     // update court appearance data
     if (this.lastUpdatedJJDispute.hearingType === this.HearingType.CourtAppearance) {
-      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0] = { ...this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0], ...this.courtAppearanceForm.value };
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0] = {
+        ...this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0],
+        ...this.courtAppearanceForm.value,
+        amendments: this.amendmentData ?? undefined
+      };
     }
     return this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id,
       this.lastUpdatedJJDispute, this.type === TabType.DECISION_VALIDATION, this.remarks).pipe(
@@ -769,11 +838,162 @@ export class JJDisputeComponent implements OnInit {
   }
 
   onBackClicked() {
+    // Check if on Decision Validation page with unacknowledged amendments
+    if (this.type === TabType.DECISION_VALIDATION && 
+        this.appConfigService.isFeatureFlagEnabled(featureType.amendments) &&
+        this.hasAmendmentData() && 
+        !this.amendmentValidationResult?.allAmendmentsProcessed) {
+      
+      const dialogOptions: DialogOptions = {
+        titleKey: 'Amendments Not Acknowledged',
+        messageKey: 'You haven\'t acknowledged the amendments. Do you want to proceed anyway?',
+        actionTextKey: 'Stay and Acknowledge',
+        cancelTextKey: 'Proceed Anyway',
+        actionType: 'primary',
+        icon: 'info',
+        iconColor: '#FFC107' // Yellow/amber color for icon
+      };
+
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: dialogOptions
+      });
+
+      dialogRef.afterClosed().subscribe((action: any) => {
+        // If user clicks "Stay and Acknowledge" (action button), scroll to Court Appearance
+        if (action) {
+          this.goTo('courtAppearance');
+        } else if (action === false) {
+          // If user clicks "Proceed Anyway" (cancel button), navigate back
+          this.jjDisputeService.refreshDisputes.emit();
+          this.backInbox.emit();
+        }
+        // If dialog is closed without selection, do nothing and stay on page
+      });
+      
+      return; // Wait for user decision
+    }
+
+    // Normal back navigation
     this.jjDisputeService.refreshDisputes.emit();
     this.backInbox.emit();
   }
 
   bindNoAppTs(value){
     this.courtAppearanceForm.controls.noAppTs.setValue(value ? new Date(value) : null);
+  }
+
+  /**
+   * Handle amendment checkbox changes
+   * Shows confirmation dialog when unchecking to prevent accidental data loss
+   */
+  onAmendmentCheckboxChange(): void {
+    if (this.amendmentCheckbox) {
+      // Checkbox is being checked - show the amendment section
+      this.showAmendmentSection = true;
+    } else {
+      // Checkbox is being unchecked - confirm with user
+      const data: DialogOptions = {
+        titleKey: "Clear Amendments?",
+        messageKey: "Are you sure you want to clear all amendment data? This action cannot be undone.",
+        actionTextKey: "Clear All",
+        actionType: "warn",
+        cancelTextKey: "Cancel",
+        icon: "warning"
+      };
+      
+      this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
+        .subscribe((confirmed: any) => {
+          if (confirmed) {
+            this.showAmendmentSection = false;
+            this.amendmentData = null;
+            this.logger.log('Amendment data cleared');
+          } else {
+            // User cancelled - recheck the box
+            this.amendmentCheckbox = true;
+          }
+        });
+    }
+  }
+
+  /**
+   * Check if any amendment data has been entered
+   * Returns true if there are amendments with actual data (not just empty forms)
+   */
+  hasAmendmentData(): boolean {
+    if (!this.amendmentData) {
+      return false;
+    }
+    return !!(
+      this.amendmentData.disputantSurnameNm?.trim() ||
+      this.amendmentData.disputantGivenNamesNm?.trim() ||
+      this.amendmentData.violationDateDtm?.trim() ||
+      this.amendmentData.otherNotesTxt?.trim() ||
+      this.amendmentData.count1ActSectDescTxt?.trim() ||
+      this.amendmentData.count1OtherTxt?.trim() ||
+      this.amendmentData.count2ActSectDescTxt?.trim() ||
+      this.amendmentData.count2OtherTxt?.trim() ||
+      this.amendmentData.count3ActSectDescTxt?.trim() ||
+      this.amendmentData.count3OtherTxt?.trim()
+    );
+  }
+
+  onAmendmentsRequiredChange(isChecked: boolean): void {
+    if (isChecked) {
+      this.showAmendmentSection = true;
+    } else {
+      const data: DialogOptions = {
+        titleKey: "Clear All Amendments?",
+        messageKey: "Are you sure you want to clear all amendment data? This action cannot be undone.",
+        actionTextKey: "Clear All",
+        actionType: "warn",
+        cancelTextKey: "Cancel",
+        icon: "warning"
+      };
+      this.dialog.open(ConfirmDialogComponent, { data, width: "400px" }).afterClosed()
+        .subscribe((confirmed: any) => {
+          if (confirmed) {
+            this.showAmendmentSection = false;
+            this.amendmentData = null;
+          } else {
+            // Revert: briefly toggle to force Angular to re-render the checkbox as checked
+            this.showAmendmentSection = false;
+            setTimeout(() => this.showAmendmentSection = true, 0);
+          }
+        });
+    }
+  }
+
+  /**
+   * Handle amendment data changes from JJ Amendments component
+   * Called when JJ checks/unchecks amendment box or modifies amendment details
+   */
+  onAmendmentDataChange(data: JJDisputeCourtAppearanceAmendments): void {
+    this.logger.log('JJDisputeComponent::onAmendmentDataChange', data);
+    this.amendmentData = data;
+  }
+
+  /**
+   * Handle amendment processing status changes from Staff component
+   * Called when staff checks/unchecks amendment completion checkboxes
+   */
+  onAmendmentStatusChange(statuses: AmendmentProcessingStatus[]): void {
+    this.logger.log('JJDisputeComponent::onAmendmentStatusChange', statuses);
+    this.amendmentProcessingStatuses = statuses;
+  }
+
+  /**
+   * Handle amendment validation result changes
+   * Called whenever amendment completion status changes
+   * Controls whether Accept button should be enabled
+   */
+  onAmendmentValidationChange(result: AmendmentValidationResult): void {
+    this.logger.log('JJDisputeComponent::onAmendmentValidationChange', result);
+    this.amendmentValidationResult = result;
+    
+    if (!result.allAmendmentsProcessed && result.pendingAmendments.length > 0) {
+      this.logger.warn(
+        `Amendments pending for counts: ${result.pendingAmendments.join(', ')}`
+      );
+    }
   }
 }

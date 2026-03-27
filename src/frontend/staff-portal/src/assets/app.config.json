@@ -5,6 +5,7 @@
   "useMockServices": false,
   "apiBaseUrl": "/api",
   "features": {
-    "staffDisputeIntake": true
+    "staffDisputeIntake": true,
+    "amendments": true
   }
 }

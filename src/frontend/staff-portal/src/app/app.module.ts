@@ -48,6 +48,9 @@ import { JJDisputeRemarksComponent } from '@components/jj-dispute-info/jj-disput
 import { JJDisputeCourtAppearancesComponent } from '@components/jj-dispute-info/jj-dispute-court-appearances/jj-dispute-court-appearances.component';
 import { JJFileHistoryComponent } from '@components/jj-dispute-info/jj-file-history/jj-file-history.component';
 import { JJDisputeDigitalCaseFileComponent } from '@components/jj-workbench/jj-dispute-digital-case-file/jj-dispute-digital-case-file.component';
+import { JJAmendmentsComponent } from '@components/jj-dispute-info/jj-amendments/jj-amendments.component';
+import { StaffAmendmentValidationComponent } from '@components/jj-dispute-info/staff-amendment-validation/staff-amendment-validation.component';
+import { AuthService } from './services/auth.service';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { reducers, JJDisputeStore } from './store';
@@ -100,6 +103,8 @@ registerLocaleData(localeFr, 'fr');
     JJDisputeCourtAppearancesComponent,
     JJFileHistoryComponent,
     JJDisputeDigitalCaseFileComponent,
+    JJAmendmentsComponent,
+    StaffAmendmentValidationComponent,
     TableFiltersComponent,
     JjDisputeUpdatesComponent,
     PagingComponent,
