@@ -9,8 +9,7 @@ export interface AmendmentProcessingStatus {
 }
 
 export interface AmendmentValidationResult {
-  allAmendmentsProcessed: boolean;
-  pendingAmendments: number[];
+  amendmentsAcknowledged: boolean;
 }
 
 @Component({
@@ -23,7 +22,7 @@ export class StaffAmendmentValidationComponent implements OnInit {
   @Input() amendmentData: JJDisputeCourtAppearanceAmendments;
   @Input() isViewOnly: boolean = false;
   @Output() amendmentStatusChange: EventEmitter<AmendmentProcessingStatus[]> = new EventEmitter<AmendmentProcessingStatus[]>();
-  @Output() validationStatusChange: EventEmitter<AmendmentValidationResult> = new EventEmitter<AmendmentValidationResult>();
+  @Output() validationStatusChange = new EventEmitter<AmendmentValidationResult>();
 
   amendmentProcessingStatuses: AmendmentProcessingStatus[] = [];
   hasAmendments: boolean = false;
@@ -85,13 +84,8 @@ export class StaffAmendmentValidationComponent implements OnInit {
   }
 
   emitValidationStatus(): void {
-    const pendingAmendments = this.amendmentProcessingStatuses
-      .filter(status => !status.isCompleted)
-      .map(status => status.countNumber);
-
     const validationResult: AmendmentValidationResult = {
-      allAmendmentsProcessed: pendingAmendments.length === 0 && this.amendmentProcessingStatuses.length > 0,
-      pendingAmendments: pendingAmendments
+      amendmentsAcknowledged: this.isAcknowledged,
     };
 
     this.validationStatusChange.emit(validationResult);

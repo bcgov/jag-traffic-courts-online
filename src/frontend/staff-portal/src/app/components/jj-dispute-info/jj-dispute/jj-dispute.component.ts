@@ -147,8 +147,7 @@ export class JJDisputeComponent implements OnInit {
   amendmentData: JJDisputeCourtAppearanceAmendments | null = null;
   amendmentProcessingStatuses: AmendmentProcessingStatus[] = [];
   amendmentValidationResult: AmendmentValidationResult = {
-    allAmendmentsProcessed: false,
-    pendingAmendments: []
+    amendmentsAcknowledged: false,
   };
   amendmentCheckbox: boolean = false;
   showAmendmentSection: boolean = false;
@@ -525,12 +524,10 @@ export class JJDisputeComponent implements OnInit {
     }
     
     // Check if there are unprocessed amendments
-    if (this.hasAmendmentData() && 
-        this.amendmentValidationResult && 
-        !this.amendmentValidationResult.allAmendmentsProcessed) {
+    if (this.hasAmendmentData() && !this.amendmentValidationResult.amendmentsAcknowledged) {
       const data: DialogOptions = {
         titleKey: "Amendments Not Processed",
-        messageKey: `All amendments must be completed before accepting this dispute. Pending amendments for counts: ${this.amendmentValidationResult.pendingAmendments.join(', ')}`,
+        messageKey: "All amendments must be completed before accepting this dispute.",
         actionTextKey: "OK",
         actionType: "warn",
         cancelHide: true,
@@ -842,7 +839,7 @@ export class JJDisputeComponent implements OnInit {
     if (this.type === TabType.DECISION_VALIDATION && 
         this.appConfigService.isFeatureFlagEnabled(featureType.amendments) &&
         this.hasAmendmentData() && 
-        !this.amendmentValidationResult?.allAmendmentsProcessed) {
+        !this.amendmentValidationResult.amendmentsAcknowledged) {
       
       const dialogOptions: DialogOptions = {
         titleKey: 'Amendments Not Acknowledged',
@@ -973,27 +970,12 @@ export class JJDisputeComponent implements OnInit {
   }
 
   /**
-   * Handle amendment processing status changes from Staff component
-   * Called when staff checks/unchecks amendment completion checkboxes
-   */
-  onAmendmentStatusChange(statuses: AmendmentProcessingStatus[]): void {
-    this.logger.log('JJDisputeComponent::onAmendmentStatusChange', statuses);
-    this.amendmentProcessingStatuses = statuses;
-  }
-
-  /**
    * Handle amendment validation result changes
    * Called whenever amendment completion status changes
-   * Controls whether Accept button should be enabled
+   * Controls whether Accept button and amendment confirmation dialogs should be enabled
    */
   onAmendmentValidationChange(result: AmendmentValidationResult): void {
     this.logger.log('JJDisputeComponent::onAmendmentValidationChange', result);
     this.amendmentValidationResult = result;
-    
-    if (!result.allAmendmentsProcessed && result.pendingAmendments.length > 0) {
-      this.logger.warn(
-        `Amendments pending for counts: ${result.pendingAmendments.join(', ')}`
-      );
-    }
   }
 }
