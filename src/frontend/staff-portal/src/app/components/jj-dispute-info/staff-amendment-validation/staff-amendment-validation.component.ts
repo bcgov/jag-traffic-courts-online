@@ -85,13 +85,9 @@ export class StaffAmendmentValidationComponent implements OnInit {
   }
 
   emitValidationStatus(): void {
-    const pendingAmendments = this.amendmentProcessingStatuses
-      .filter(status => !status.isCompleted)
-      .map(status => status.countNumber);
-
     const validationResult: AmendmentValidationResult = {
-      allAmendmentsProcessed: pendingAmendments.length === 0 && this.amendmentProcessingStatuses.length > 0,
-      pendingAmendments: pendingAmendments
+      allAmendmentsProcessed: this.isAcknowledged,
+      pendingAmendments: []
     };
 
     this.validationStatusChange.emit(validationResult);
