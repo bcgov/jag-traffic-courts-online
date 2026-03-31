@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "TCO - ORDS",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

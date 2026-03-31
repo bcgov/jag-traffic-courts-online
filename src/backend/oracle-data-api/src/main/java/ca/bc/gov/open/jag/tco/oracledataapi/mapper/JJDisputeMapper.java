@@ -8,6 +8,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceAmendments;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceRoP;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeRemark;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputedCount;
@@ -73,6 +74,7 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "occamDisputantSurnameNm", target = "occamDisputantSurnameNm")
 	@Mapping(source = "occamDisputeId", target = "occamDisputeId")
 	@Mapping(source = "occamViolationTicketUpldId", target = "occamViolationTicketUpldId")
+	@Mapping(source = "occamDisputeCreatedBy", target = "occamDisputeCreatedBy")
 	@Mapping(source = "offenceLocationTxt", target = "offenceLocation")
 	@Mapping(source = "signatoryNameTxt", target = "signatoryName")
 	@Mapping(source = "signatoryTypeCd", target = "signatoryType")
@@ -141,6 +143,7 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "occamDisputantGiven2Nm", target = "occamDisputantGiven2Nm")
 	@Mapping(source = "occamDisputantGiven3Nm", target = "occamDisputantGiven3Nm")
 	@Mapping(source = "occamDisputantSurnameNm", target = "occamDisputantSurnameNm")
+	@Mapping(source = "occamDisputeCreatedBy", target = "occamDisputeCreatedBy")
 	@Mapping(source = "occamDisputeId", target = "occamDisputeId")
 	@Mapping(source = "occamViolationTicketUpldId", target = "occamViolationTicketUpldId")
 	@Mapping(source = "offenceLocation", target = "offenceLocationTxt")
@@ -288,6 +291,7 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "justinAppearanceId", target = "justinAppearanceId")
 	@Mapping(source = "recordingClerkNameTxt", target = "clerkRecord")
 	@Mapping(source = "seizedYn", target = "jjSeized")
+	@Mapping(source = "amendments", target = "amendments")
 	public abstract JJDisputeCourtAppearanceRoP convert(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJCourtAppearance jjCourtAppearance);
 
 	@Mapping(source = "appearanceTs", target = "appearanceDtm")
@@ -307,7 +311,42 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "justinAppearanceId", target = "justinAppearanceId")
 	@Mapping(source = "clerkRecord", target = "recordingClerkNameTxt")
 	@Mapping(source = "jjSeized", target = "seizedYn")
+	@Mapping(source = "amendments", target = "amendments")
 	public abstract ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJCourtAppearance convert(JJDisputeCourtAppearanceRoP jjCourtAppearance);
+
+	@Mapping(source = "appearanceAmendmentId", target = "appearanceAmendmentId")
+	@Mapping(source = "disputantSurnameNm", target = "disputantSurnameNm")
+	@Mapping(source = "disputantGivenNamesNm", target = "disputantGivenNamesNm")
+	@Mapping(source = "violationDateDtm", target = "violationDateDtm")
+	@Mapping(source = "otherNotesTxt", target = "otherNotesTxt")
+	@Mapping(source = "count1ActSectDescTxt", target = "count1ActSectDescTxt")
+	@Mapping(source = "count1OtherTxt", target = "count1OtherTxt")
+	@Mapping(source = "count2ActSectDescTxt", target = "count2ActSectDescTxt")
+	@Mapping(source = "count2OtherTxt", target = "count2OtherTxt")
+	@Mapping(source = "count3ActSectDescTxt", target = "count3ActSectDescTxt")
+	@Mapping(source = "count3OtherTxt", target = "count3OtherTxt")
+	@Mapping(source = "entDtm", target = "createdTs")
+	@Mapping(source = "entUserId", target = "createdBy")
+	@Mapping(source = "updDtm", target = "modifiedTs")
+	@Mapping(source = "updUserId", target = "modifiedBy")
+	public abstract JJDisputeCourtAppearanceAmendments convert(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJCourtAppearanceAmendments jjCourtAppearanceAmendments);
+
+	@Mapping(source = "appearanceAmendmentId", target = "appearanceAmendmentId")
+	@Mapping(source = "disputantSurnameNm", target = "disputantSurnameNm")
+	@Mapping(source = "disputantGivenNamesNm", target = "disputantGivenNamesNm")
+	@Mapping(source = "violationDateDtm", target = "violationDateDtm")
+	@Mapping(source = "otherNotesTxt", target = "otherNotesTxt")
+	@Mapping(source = "count1ActSectDescTxt", target = "count1ActSectDescTxt")
+	@Mapping(source = "count1OtherTxt", target = "count1OtherTxt")
+	@Mapping(source = "count2ActSectDescTxt", target = "count2ActSectDescTxt")
+	@Mapping(source = "count2OtherTxt", target = "count2OtherTxt")
+	@Mapping(source = "count3ActSectDescTxt", target = "count3ActSectDescTxt")
+	@Mapping(source = "count3OtherTxt", target = "count3OtherTxt")
+	@Mapping(source = "createdTs", target = "entDtm")
+	@Mapping(source = "createdBy", target = "entUserId")
+	@Mapping(source = "modifiedTs", target = "updDtm")
+	@Mapping(source = "modifiedBy", target = "updUserId")
+	public abstract ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJCourtAppearanceAmendments convert(JJDisputeCourtAppearanceAmendments jjCourtAppearanceAmendments);
 
 	@Named("getDurationInMinutes")
 	public short getDurationInMinutes(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJCourtAppearance jjCourtAppearance) {

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormControlValidators } from '@core/validators/form-control.validators';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
@@ -17,7 +17,8 @@ import { DcfTemplateType, DisputeContactTypeCd, DisputeStatus } from 'app/api';
 @Component({
   selector: 'app-contact-info',
   templateUrl: './contact-info.component.html',
-  styleUrls: ['./contact-info.component.scss']
+  styleUrls: ['./contact-info.component.scss'],
+  standalone: false,
 })
 export class ContactInfoComponent implements OnInit {
   @Input() public disputeInfo: Dispute;
@@ -39,7 +40,8 @@ export class ContactInfoComponent implements OnInit {
   public ContactType = DisputeContactTypeCd;
   public DispStatus = DisputeStatus;
   public collapseObj: any = {
-    contactInformation: true
+    ticketInformation: true,
+    contactInformation: true,
   }
 
   constructor(

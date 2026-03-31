@@ -161,6 +161,9 @@ namespace TrafficCourts.Domain.Models
         [Newtonsoft.Json.JsonProperty("occamViolationTicketUpldId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string OccamViolationTicketUpldId { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("occamDisputeCreatedBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OccamDisputeCreatedBy { get; set; }
+
         [Newtonsoft.Json.JsonProperty("submittedTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? SubmittedTs { get; set; }
 
@@ -362,6 +365,71 @@ namespace TrafficCourts.Domain.Models
         [Newtonsoft.Json.JsonProperty("comments", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.StringLength(4000)]
         public string Comments { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("amendments", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public JJDisputeCourtAppearanceAmendments Amendments { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class JJDisputeCourtAppearanceAmendments
+    {
+        /// <summary>
+        /// Appearance Amendment ID
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("appearanceAmendmentId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public long? AppearanceAmendmentId { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("disputantSurnameNm", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string DisputantSurnameNm { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("disputantGivenNamesNm", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string DisputantGivenNamesNm { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("violationDateDtm", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime? ViolationDateDtm { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("otherNotesTxt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OtherNotesTxt { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("count1ActSectDescTxt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Count1ActSectDescTxt { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("count1OtherTxt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Count1OtherTxt { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("count2ActSectDescTxt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Count2ActSectDescTxt { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("count2OtherTxt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Count2OtherTxt { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("count3ActSectDescTxt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Count3ActSectDescTxt { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("count3OtherTxt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Count3OtherTxt { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("createdBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string CreatedBy { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("createdTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime? CreatedTs { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("modifiedBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ModifiedBy { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("modifiedTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime? ModifiedTs { get; set; }
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
 

@@ -1,0 +1,61 @@
+meta {
+  name: justin_languages
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{v2_baseUrl}}/justin_languages
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/justin_languages
+    method: GET
+    mode: none
+    params:path: {
+      cdln_active_yn_eq: 
+      cdln_active_yn_ge: 
+      cdln_active_yn_gt: 
+      cdln_active_yn_in: 
+      cdln_active_yn_is_not_null: 
+      cdln_active_yn_is_null: 
+      cdln_active_yn_le: 
+      cdln_active_yn_lt: 
+      cdln_active_yn_ne: 
+      cdln_active_yn_not_in: 
+      cdln_language_cd_eq: 
+      cdln_language_cd_ge: 
+      cdln_language_cd_gt: 
+      cdln_language_cd_in: 
+      cdln_language_cd_is_not_null: 
+      cdln_language_cd_is_null: 
+      cdln_language_cd_le: 
+      cdln_language_cd_like: 
+      cdln_language_cd_lt: 
+      cdln_language_cd_ne: 
+      cdln_language_cd_not_in: 
+      cdln_language_cd_regexp_like: 
+      order: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

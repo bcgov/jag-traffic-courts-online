@@ -14,7 +14,7 @@ th {
 .reset-filters {
   color: #fff;
   background-color: #38598a;
-  border-color: #38598a;  
+  border-color: #38598a;
   font-size: 14px;
 
   &:hover {
@@ -28,45 +28,8 @@ th {
 }
 
 :host ::ng-deep {
-  .mat-select-value {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-
-  .mat-form-field.dateField{
+  .mat-mdc-form-field.dateField{
     width: 145px;
-  }
-
-  .mat-form-field {
-    width: 100%;
-    margin-bottom: 0px !important;
-
-    .mat-form-field-wrapper {
-      padding-bottom: 0 !important;
-
-      .mat-form-field-flex {
-        margin-top: 0 !important;
-        padding-right: 5px;
-
-        .mat-form-field-infix {
-          padding: 0px 0px 7px 0px !important;
-          line-height: 0px;
-
-          input {
-            line-height: 18px !important;
-          }
-
-          .mat-select-arrow-wrapper {
-            transform: translate(5px, 0px);
-          }
-
-          .mat-select-value {
-            padding-left: 0px;
-            overflow: visible;
-          }
-        }
-      }
-    }
   }
 }
 

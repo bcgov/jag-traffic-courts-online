@@ -2,16 +2,6 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
-import { DisputeService } from './api/dispute.service';
-import { DisputeLockService } from './api/disputeLock.service';
-import { DocumentService } from './api/document.service';
-import { EmailHistoryService } from './api/emailHistory.service';
-import { FileHistoryService } from './api/fileHistory.service';
-import { JJService } from './api/jJ.service';
-import { KeycloakService } from './api/keycloak.service';
-import { LookupService } from './api/lookup.service';
-import { PermissionsService } from './api/permissions.service';
-import { RoadSafetyTicketSearchService } from './api/roadSafetyTicketSearch.service';
 
 @NgModule({
   imports:      [],

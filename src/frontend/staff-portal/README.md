@@ -88,7 +88,6 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 4. `ng g <blueprint>` to create code scaffolding for a directive, pipe, service, class, guard, interface, enum, and module
 5. `ng lint` to lint the application code using TSLint.
 6. `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-7. `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
 ##### Getting Help
 

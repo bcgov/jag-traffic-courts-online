@@ -14,7 +14,7 @@ export class TableFilterUpdateRequestStatus {
     mapping: DisputeUpdateRequestStatus[];
   }
 
-export const TableFilterStatusOptions = [{
+export const TableFilterStatusOptions: TableFilterStatus[] = [{
         label: 'ALL',
         mapping: [DisputeStatus.New, DisputeStatus.Validated, DisputeStatus.Processing, DisputeStatus.Rejected, DisputeStatus.Cancelled, DisputeStatus.Concluded]
     },{

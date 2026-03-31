@@ -229,6 +229,13 @@ public class JJDispute extends Auditable<String> {
 	private String occamViolationTicketUpldId;
 
 	/**
+	 * The user who created the dispute in OCCAM.
+	 */
+	@Column(length = 50)
+	@Schema(nullable = true)
+	private String occamDisputeCreatedBy;
+
+	/**
 	 * The date submitted by disputant in TCO.
 	 */
 	@Column

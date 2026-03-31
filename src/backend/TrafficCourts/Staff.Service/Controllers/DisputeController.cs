@@ -5,6 +5,7 @@ using System.Net;
 using TrafficCourts.Cdogs.Client;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
+using TrafficCourts.Common.Features.DisputeCreation;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.Exceptions;
 using TrafficCourts.Staff.Service.Authentication;
@@ -743,6 +744,7 @@ public class DisputeController : StaffControllerBase
     /// <response code="400">The request was not well formed. Check the parameters.</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires dispute:update permission.</response>
+    /// <response code="409">Dispute has already been created for ticket.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
 
     [HttpPost("")]
@@ -750,6 +752,7 @@ public class DisputeController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.Dispute, Scopes.Update)]
     public async Task<IActionResult> CreateDisputeAsync(Dispute dispute,
@@ -767,6 +770,10 @@ public class DisputeController : StaffControllerBase
         {
             Dispute updatedDispute = await _disputeService.CreateDisputeAsync(User, dispute, timeZoneInfo, cancellationToken);
             return Ok(updatedDispute);
+        }
+        catch (DisputeAlreadyExistsException e)
+        {
+            return new HttpError(StatusCodes.Status409Conflict, e.Message);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
         {

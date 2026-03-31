@@ -38,7 +38,7 @@ h3 {
   color: #fff;
 }
 
-.mat-flat-button {
+.mat-mdc-unelevated-button {
   width: 30% !important;
   float: right;
   margin-top: 1em;
@@ -56,6 +56,6 @@ h3 {
   }
 }
 
-.mat-flat-button[disabled] {
+.mat-mdc-unelevated-button[disabled] {
   background-color: rgba(0, 0, 0, 0.04) !important;
 }

@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "OpenAPI Spec Endpoints",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

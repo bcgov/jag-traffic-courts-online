@@ -1,0 +1,43 @@
+meta {
+  name: provinces
+  type: http
+  seq: 22
+}
+
+get {
+  url: {{v1_baseUrl}}/provinces
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~countryId: 
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/provinces
+    method: GET
+    mode: none
+    params:query: {
+      ~countryId: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

@@ -70,6 +70,18 @@
         },
         {
             "path": "."
+        },
+        {
+            "path": "../TCO-API-OCCAM"
+        },
+        {
+            "path": "../TCO-API-OCCAMORDS"
+        },
+        {
+            "path": "../TCO-API-TCO"
+        },
+        {
+            "path": "../TCO-API-TCOORDS"
         }
     ],
     "extensions": {

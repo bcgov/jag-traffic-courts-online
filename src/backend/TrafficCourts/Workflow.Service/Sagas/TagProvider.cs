@@ -33,15 +33,4 @@ internal static partial class TagProvider
     {
         collector.Add(nameof(context.Message.NoticeOfDisputeGuid), context.Message.NoticeOfDisputeGuid);
     }
-
-    public static void RecordTags(ITagCollector collector, BehaviorContext<VerifyEmailAddressState, NoticeOfDisputeSubmitted> context)
-    {
-        collector.Add(nameof(context.Message.NoticeOfDisputeGuid), context.Message.NoticeOfDisputeGuid);
-    }
-
-    public static void RecordTags(ITagCollector collector, BehaviorContext<VerifyEmailAddressState, SendEmailVerificationFailed> context)
-    {
-        collector.Add(nameof(context.Message.NoticeOfDisputeGuid), context.Message.NoticeOfDisputeGuid);
-        collector.Add(nameof(context.Message.Reason), context.Message.Reason);
-    }
 }

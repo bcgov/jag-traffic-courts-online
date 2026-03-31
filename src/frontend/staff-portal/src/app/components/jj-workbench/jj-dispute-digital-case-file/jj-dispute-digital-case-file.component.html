@@ -1,6 +1,6 @@
 <app-table-filters [tabIndex]="tabIndex" [tableFilterKeys]="tableFilterKeys" (onFilterChanged)="onApplyFilter($event)">
   <ng-container pagination>
-    <div fxFlex fxFlex.gt-md="20">
+    <div>
       <div class="vcenter">
         <app-paging [currentPage]="currentPage" [totalPages]="totalPages" (pageChanged)="onPageChange($event)">
         </app-paging>
@@ -43,12 +43,20 @@
         Surname, Given Name(s)
       </th>
       <td mat-cell *matCellDef="let element" style="min-width:150px !important">
-        <span *ngIf="element.disputantSurname">{{ element.disputantSurname + (element.disputantGivenName1 || 
-          element.disputantGivenName2 || element.disputantGivenName3 ? "," : "") + 
-          (element.disputantGivenName1 ? " " + element.disputantGivenName1 : "") + 
-          (element.disputantGivenName2 ? " " + element.disputantGivenName2 : "") + 
-          (element.disputantGivenName3 ? " " + element.disputantGivenName3 : "") }}</span>
-        <span *ngIf="!element.disputantSurname">{{ element.disputantOrganizationName }}</span>
+        @if (element.disputantSurname) {
+          <span>
+            {{
+              element.disputantSurname +
+              (element.disputantGivenName1 || element.disputantGivenName2 || element.disputantGivenName3 ? "," : "") +
+              (element.disputantGivenName1 ? " " + element.disputantGivenName1 : "") +
+              (element.disputantGivenName2 ? " " + element.disputantGivenName2 : "") +
+              (element.disputantGivenName3 ? " " + element.disputantGivenName3 : "")
+            }}
+          </span>
+        }
+        @if (!element.disputantSurname) {
+          <span>{{ element.disputantOrganizationName }}</span>
+        }
       </td>
     </ng-container>
 
@@ -66,20 +74,27 @@
         Status
       </th>
       <td mat-cell *matCellDef="let element" class="status">
-        <span *ngIf="element.disputeStatus.code === disputeStatus.HearingScheduled"><button mat-rounded-button
-          class="bg-color-scheduled" disabled="true">Scheduled</button></span>
-        <span *ngIf="element.disputeStatus.code === disputeStatus.New"><button mat-rounded-button
-          class="bg-color-new" disabled="true">New</button></span>
-        <span *ngIf="element.disputeStatus.code === disputeStatus.InProgress"><button mat-rounded-button 
-          class="bg-color-in-progress" disabled="true">In Progress</button></span>
-        <span *ngIf="element.disputeStatus.code === disputeStatus.Review"><button mat-rounded-button
-          class="bg-color-review" disabled="true">Review</button></span>
-        <span *ngIf="element.disputeStatus.code === disputeStatus.RequireCourtHearing"><button mat-rounded-button 
-          class="bg-color-require-court-hearing" disabled="true">Adjourn/Require Hearing</button></span>
-        <span *ngIf="element.disputeStatus.code === disputeStatus.Confirmed"><button mat-rounded-button
-          class="bg-color-confirmed" disabled="true">Confirmed</button></span>
-        <span *ngIf="isConcludedStatus(element.disputeStatus.code)"><button mat-rounded-button
-          class="bg-color-concluded" disabled="true">Concluded</button></span>
+        @if (element.disputeStatus.code === disputeStatus.HearingScheduled) {
+          <span><button mat-rounded-button class="bg-color-scheduled" disabled="true">Scheduled</button></span>
+        }
+        @if (element.disputeStatus.code === disputeStatus.New) {
+          <span><button mat-rounded-button class="bg-color-new" disabled="true">New</button></span>
+        }
+        @if (element.disputeStatus.code === disputeStatus.InProgress) {
+          <span><button mat-rounded-button class="bg-color-in-progress" disabled="true">In Progress</button></span>
+        }
+        @if (element.disputeStatus.code === disputeStatus.Review) {
+          <span><button mat-rounded-button class="bg-color-review" disabled="true">Review</button></span>
+        }
+        @if (element.disputeStatus.code === disputeStatus.RequireCourtHearing) {
+          <span><button mat-rounded-button class="bg-color-require-court-hearing" disabled="true">Adjourn/Require Hearing</button></span>
+        }
+        @if (element.disputeStatus.code === disputeStatus.Confirmed) {
+          <span><button mat-rounded-button class="bg-color-confirmed" disabled="true">Confirmed</button></span>
+        }
+        @if (isConcludedStatus(element.disputeStatus.code)) {
+          <span><button mat-rounded-button class="bg-color-concluded" disabled="true">Concluded</button></span>
+        }
       </td>
     </ng-container>
 

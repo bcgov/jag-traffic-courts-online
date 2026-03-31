@@ -1,0 +1,36 @@
+meta {
+  name: deleteViolationTicket
+  type: http
+  seq: 8
+}
+
+delete {
+  url: {{v1_baseUrl}}/deleteViolationTicket
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 204 Response
+  description: Deleted result.
+  
+  request: {
+    url: {{v1_baseUrl}}/deleteViolationTicket
+    method: DELETE
+    mode: none
+  }
+  
+  response: {
+    status: {
+      code: 204
+      text: No Content
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

@@ -1,10 +1,11 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, TemplateRef } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
 import { JJDisputeService, JJDispute } from '../../../services/jj-dispute.service';
+import { AmendmentValidationResult } from '../staff-amendment-validation/staff-amendment-validation.component';
 import { Observable, map } from 'rxjs';
-import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPAppCd, JJDisputeCourtAppearanceRoPCrown, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized, FileMetadata, JJDisputeElectronicTicketYn, JJDisputeNoticeOfHearingYn, TicketImageDataJustinDocumentReportType, DocumentType, JJDisputeContactType, JJDisputedCountRoPFinding, Province, Language, JJDisputeDisputantAttendanceType, JJDisputeAccidentYn, JJDisputeMultipleOfficersYn, JJDisputeSignatoryType, DcfTemplateType, DisputeCaseFileSummary, YesNo } from 'app/api/model/models';
+import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPAppCd, JJDisputeCourtAppearanceRoPCrown, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized, FileMetadata, JJDisputeElectronicTicketYn, JJDisputeNoticeOfHearingYn, TicketImageDataJustinDocumentReportType, DocumentType, JJDisputeContactType, JJDisputedCountRoPFinding, Province, Language, JJDisputeDisputantAttendanceType, JJDisputeAccidentYn, JJDisputeMultipleOfficersYn, JJDisputeSignatoryType, DcfTemplateType, DisputeCaseFileSummary, YesNo, JJDisputeCourtAppearanceAmendments } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LookupsService } from 'app/services/lookups.service';
@@ -12,13 +13,15 @@ import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dia
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { ConfigService } from '@config/config.service';
 import { DocumentService } from 'app/api/api/document.service';
+import { DocumentStatus } from 'app/api/model/documentStatus.model';
 import { HistoryRecordService } from 'app/services/history-records.service';
 import { PrintOptions } from '@shared/models/print-options.model';
 import { UserGroup } from '@shared/enums/user-group.enum';
 import { TabType } from '@shared/enums/tab-type.enum';
-import { Dispute } from 'app/services/dispute.service';
 import { DisputeStatus } from '@shared/consts/DisputeStatus.model';
 import { HearingType } from '@shared/consts/HearingType.model';
+import { featureType } from 'app/shared/directives/feature-flag.directive';
+import { AppConfigService } from 'app/services/app-config.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { ToastService } from '@core/services/toast.service';
 import { Router } from '@angular/router';
@@ -26,13 +29,20 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-jj-dispute',
   templateUrl: './jj-dispute.component.html',
-  styleUrls: ['./jj-dispute.component.scss']
+  styleUrls: ['./jj-dispute.component.scss'],
+  standalone: false,
 })
 export class JJDisputeComponent implements OnInit {
+  DocumentStatus = DocumentStatus;
+  featureType = featureType;
+
   @ViewChild("disputeDetails") disputeDetailsAnchor: ElementRef;
   @ViewChild("uploadedDocuments") uploadedDocumentsAnchor: ElementRef;
   @ViewChild("fileHistory") fileHistoryAnchor: ElementRef;
   @ViewChild("fileRemarks") fileRemarksAnchor: ElementRef;
+  @ViewChild("amendments") amendmentsAnchor: ElementRef;
+  @ViewChild("courtAppearance") courtAppearanceAnchor: ElementRef;
+  @ViewChild("amendmentValidation") amendmentValidationAnchor: ElementRef;
   @ViewChild('remarksDialog') remarksDialog!: TemplateRef<any>;
 
   @Input() tcoDisputeInfo: DisputeCaseFileSummary;
@@ -122,10 +132,24 @@ export class JJDisputeComponent implements OnInit {
   selectedJJ: string;
   fileTypeToUpload: string = "Certified Extract";
   filesToUpload: any[] = [];
+  fileUploadError: string;
+  
+  // File size validation constants
+  readonly MAX_FILE_SIZE_MB = 10;
+  readonly MAX_FILE_SIZE_BYTES = this.MAX_FILE_SIZE_MB * 1024 * 1024;
+
   requireCourtHearingReason: string = "";
   concludeStatusOnly: boolean = false;
   cancelStatusOnly: boolean = false;
   isNoAppEnabled: boolean = true;
+
+  // TCVP-3387: Amendment tracking properties
+  amendmentData: JJDisputeCourtAppearanceAmendments | null = null;
+  amendmentValidationResult: AmendmentValidationResult = {
+    amendmentsAcknowledged: false,
+  };
+  amendmentCheckbox: boolean = false;
+  showAmendmentSection: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -140,6 +164,7 @@ export class JJDisputeComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private toastService: ToastService,
     private router: Router,
+    private appConfigService: AppConfigService,
   ) {
     this.authService.jjList$.subscribe(result => {
       this.jjList = result;
@@ -230,10 +255,34 @@ export class JJDisputeComponent implements OnInit {
       this.courtOptionsForm.patchValue(this.lastUpdatedJJDispute);
 
       this.isNoAppEnabled = this.RoPApp.N === this.lastUpdatedJJDispute.mostRecentCourtAppearance.appCd;
+
+      // Bind amendment data from the most recent court appearance (API data)
+      this.amendmentData = this.lastUpdatedJJDispute.mostRecentCourtAppearance?.amendments ?? null;
+      if (this.hasAmendmentData()) {
+        this.amendmentCheckbox = true;
+        this.showAmendmentSection = true;
+      }
     });
   }
+
   isJjBaseAddress(): boolean {
     return this.router.url.includes('/jj');
+  }
+
+  get documentManagementAllowed(): boolean {
+    const onJJPage = this.isJjBaseAddress() &&
+      (this.type === this.tabTypes.DCF || this.type === this.tabTypes.WR_ASSIGNMENTS
+        || this.type === this.tabTypes.WR_INBOX || this.type === this.tabTypes.HEARING_INBOX);
+
+    return !(this.isJJ && onJJPage);
+  }
+  
+  get unacknowledgedAmendmentsExist(): boolean {
+    return (
+      this.appConfigService.isFeatureFlagEnabled(featureType.amendments) &&
+      this.hasAmendmentData() &&
+      !this.amendmentValidationResult.amendmentsAcknowledged
+    );
   }
 
   goTo(id: string) {
@@ -251,8 +300,32 @@ export class JJDisputeComponent implements OnInit {
       case "fileRemarks":
         element = this.fileRemarksAnchor;
         break;
+      case "amendments":
+        element = this.amendmentsAnchor;
+        break;
+      case "courtAppearance":
+        element = this.courtAppearanceAnchor;
+        // Scroll to court appearance and highlight the amendment validation section
+        if (this.amendmentValidationAnchor) {
+          setTimeout(() => {
+            this.highlightElement(this.amendmentValidationAnchor);
+          }, 800); // Wait for scroll to complete
+        }
+        break;
     }
     element?.nativeElement.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  private highlightElement(element: ElementRef): void {
+    if (element?.nativeElement) {
+      // Add highlight class
+      element.nativeElement.classList.add('highlight-pulse');
+      
+      // Remove highlight class after animation completes
+      setTimeout(() => {
+        element.nativeElement.classList.remove('highlight-pulse');
+      }, 2000);
+    }
   }
 
   /**
@@ -457,6 +530,20 @@ export class JJDisputeComponent implements OnInit {
       return;
     }
     
+    // Check if there are unprocessed amendments
+    if (this.unacknowledgedAmendmentsExist) {
+      const data: DialogOptions = {
+        titleKey: "Amendments Not Processed",
+        messageKey: "All amendments must be completed before accepting this dispute.",
+        actionTextKey: "OK",
+        actionType: "warn",
+        cancelHide: true,
+        icon: "warning"
+      };
+      this.dialog.open(ConfirmDialogComponent, { data, width: "40%" });
+      return;
+    }
+    
     const data: DialogOptions = {
       titleKey: "Submit to JUSTIN?",
       messageKey: "Are you sure this dispute is ready to be submitted to JUSTIN?",
@@ -504,7 +591,11 @@ export class JJDisputeComponent implements OnInit {
   private putJJDispute(): Observable<any> {
     // update court appearance data
     if (this.lastUpdatedJJDispute.hearingType === this.HearingType.CourtAppearance) {
-      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0] = { ...this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0], ...this.courtAppearanceForm.value };
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0] = {
+        ...this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0],
+        ...this.courtAppearanceForm.value,
+        amendments: this.amendmentData ?? undefined
+      };
     }
     return this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id,
       this.lastUpdatedJJDispute, this.type === TabType.DECISION_VALIDATION, this.remarks).pipe(
@@ -577,6 +668,10 @@ export class JJDisputeComponent implements OnInit {
     else if (cancelledCount + paidPriorToAppearancCount >= countCount && countCount > 0) this.concludeStatusOnly = true;
   }
 
+  isOneOf(status: JJDisputeStatus, statuses: JJDisputeStatus[]): boolean {
+    return statuses.includes(status);
+  }
+
   onCancelled() {
     const data: DialogOptions = {
       titleKey: "Cancel Dispute",
@@ -627,9 +722,10 @@ export class JJDisputeComponent implements OnInit {
     this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action: any) => {
         if (action) {
-          this.lastUpdatedJJDispute.fileData = this.lastUpdatedJJDispute.fileData.filter(x => x.fileId !== fileId);
-          this.documentService.apiDocumentDelete(fileId).subscribe(any => {
-            // dont need to update the JJ Dispute after the document is removed, line 88 is just to update UX
+          this.documentService.apiDocumentDelete(fileId).subscribe(() => {
+            this.lastUpdatedJJDispute.fileData = this.lastUpdatedJJDispute.fileData.filter(x => x.fileId !== fileId);
+
+            // update UX
             this.refreshFileHistory();
           });
         }
@@ -655,43 +751,70 @@ export class JJDisputeComponent implements OnInit {
   }
 
   onUpload(files: FileList) {
-    if (files.length <= 0) return;
+    // Clear error message
+    this.fileUploadError = undefined;
 
-    // Initially, set the status to "waiting for virus scan..."
-    let item: FileMetadata = {
-      fileId: '',
-      fileName: files[0].name,
-      virusScanStatus: "waiting for virus scan..."
-    };
+    if (files.length <= 0) {
+      return;
+    }
 
-    // Add the item to the fileData array
-    this.lastUpdatedJJDispute.fileData.push(item);
+    const file = files[0];
 
-    // Manually trigger change detection to ensure the UI is refreshed
-    this.cdr.detectChanges();
+    // Reset file input
+    const fileInput = document.getElementById('getFile') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+
+    // Validate file size before uploading
+    if (file.size > this.MAX_FILE_SIZE_BYTES) {
+      const data: DialogOptions = {
+        titleKey: "File is Too Large",
+        messageKey: `File size exceeds the ${this.MAX_FILE_SIZE_MB} MB limit. Please select a smaller file.`,
+        actionTextKey: "OK",
+        actionType: "accent",
+        cancelHide: true,
+        icon: "error"
+      };
+      this.dialog.open(ConfirmDialogComponent, { data, width: "30%" });
+      
+      return;
+    }
 
     // Upload the file
-    this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.noticeOfDisputeGuid, this.fileTypeToUpload, files[0], this.lastUpdatedJJDispute.id)
-      .subscribe(fileId => {
-        // Once the file is uploaded, update the fileId and status
-        item.fileId = fileId;
-        item.virusScanStatus = "";  // or any other status
-
-        // Manually trigger change detection again to update the view
+    this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.noticeOfDisputeGuid, this.fileTypeToUpload, file, this.lastUpdatedJJDispute.id).subscribe({
+      next: (fileMetadata: FileMetadata) => {
+        // Add the item to the fileData array
+        this.lastUpdatedJJDispute.fileData.push(fileMetadata);
+      },
+      error: (error) => {
+        // If the upload fails, set an error message
+        if (error.status === 413) {
+          this.fileUploadError = "upload failed - file size too large";
+        } else {
+          this.fileUploadError = "upload failed";
+        }
+      },
+      complete: () => {
+        // Manually trigger change detection to ensure the UI is refreshed
         this.cdr.detectChanges();
 
         // Call refreshFileHistory() to update the history if needed
         this.refreshFileHistory();
-      }, error => {
-        // If the upload fails, set an error message
-        item.virusScanStatus = "upload failed";
-        this.cdr.detectChanges();  // Ensure the component updates in case of error
-      });
+      }
+    });
   }
 
+  onChangeDocumentStatus(file: FileMetadata, status: DocumentStatus) {
+    this.documentService.apiDocumentPut(file.fileId, file.documentType, status).subscribe({
+      next: () => {
+        file.documentStatus = status;
+      },
+    });
+  }
 
   onPrint(isCompleteVersion: boolean) {
-    var type = DcfTemplateType.DcfTemplate;
+    let type: DcfTemplateType = DcfTemplateType.DcfTemplate;
     if (!isCompleteVersion) {
       switch (this.lastUpdatedJJDispute.hearingType) {
         case this.HearingType.WrittenReasons:
@@ -719,11 +842,144 @@ export class JJDisputeComponent implements OnInit {
   }
 
   onBackClicked() {
+    // Check if on Decision Validation page with unacknowledged amendments
+    if (this.type === TabType.DECISION_VALIDATION && this.unacknowledgedAmendmentsExist) {
+      
+      const dialogOptions: DialogOptions = {
+        titleKey: 'Amendments Not Acknowledged',
+        messageKey: 'You haven\'t acknowledged the amendments. Do you want to proceed anyway?',
+        actionTextKey: 'Stay and Acknowledge',
+        cancelTextKey: 'Proceed Anyway',
+        actionType: 'primary',
+        icon: 'info',
+        iconColor: '#FFC107' // Yellow/amber color for icon
+      };
+
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: dialogOptions
+      });
+
+      dialogRef.afterClosed().subscribe((action: any) => {
+        // If user clicks "Stay and Acknowledge" (action button), scroll to Court Appearance
+        if (action) {
+          this.goTo('courtAppearance');
+        } else if (action === false) {
+          // If user clicks "Proceed Anyway" (cancel button), navigate back
+          this.jjDisputeService.refreshDisputes.emit();
+          this.backInbox.emit();
+        }
+        // If dialog is closed without selection, do nothing and stay on page
+      });
+      
+      return; // Wait for user decision
+    }
+
+    // Normal back navigation
     this.jjDisputeService.refreshDisputes.emit();
     this.backInbox.emit();
   }
 
   bindNoAppTs(value){
     this.courtAppearanceForm.controls.noAppTs.setValue(value ? new Date(value) : null);
+  }
+
+  /**
+   * Handle amendment checkbox changes
+   * Shows confirmation dialog when unchecking to prevent accidental data loss
+   */
+  onAmendmentCheckboxChange(): void {
+    if (this.amendmentCheckbox) {
+      // Checkbox is being checked - show the amendment section
+      this.showAmendmentSection = true;
+    } else {
+      // Checkbox is being unchecked - confirm with user
+      const data: DialogOptions = {
+        titleKey: "Clear Amendments?",
+        messageKey: "Are you sure you want to clear all amendment data? This action cannot be undone.",
+        actionTextKey: "Clear All",
+        actionType: "warn",
+        cancelTextKey: "Cancel",
+        icon: "warning"
+      };
+      
+      this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
+        .subscribe((confirmed: any) => {
+          if (confirmed) {
+            this.showAmendmentSection = false;
+            this.amendmentData = null;
+            this.logger.log('Amendment data cleared');
+          } else {
+            // User cancelled - recheck the box
+            this.amendmentCheckbox = true;
+          }
+        });
+    }
+  }
+
+  /**
+   * Check if any amendment data has been entered
+   * Returns true if there are amendments with actual data (not just empty forms)
+   */
+  hasAmendmentData(): boolean {
+    if (!this.amendmentData) {
+      return false;
+    }
+    return !!(
+      this.amendmentData.disputantSurnameNm?.trim() ||
+      this.amendmentData.disputantGivenNamesNm?.trim() ||
+      this.amendmentData.violationDateDtm?.trim() ||
+      this.amendmentData.otherNotesTxt?.trim() ||
+      this.amendmentData.count1ActSectDescTxt?.trim() ||
+      this.amendmentData.count1OtherTxt?.trim() ||
+      this.amendmentData.count2ActSectDescTxt?.trim() ||
+      this.amendmentData.count2OtherTxt?.trim() ||
+      this.amendmentData.count3ActSectDescTxt?.trim() ||
+      this.amendmentData.count3OtherTxt?.trim()
+    );
+  }
+
+  onAmendmentsRequiredChange(isChecked: boolean): void {
+    if (isChecked) {
+      this.showAmendmentSection = true;
+    } else {
+      const data: DialogOptions = {
+        titleKey: "Clear All Amendments?",
+        messageKey: "Are you sure you want to clear all amendment data? This action cannot be undone.",
+        actionTextKey: "Clear All",
+        actionType: "warn",
+        cancelTextKey: "Cancel",
+        icon: "warning"
+      };
+      this.dialog.open(ConfirmDialogComponent, { data, width: "400px" }).afterClosed()
+        .subscribe((confirmed: any) => {
+          if (confirmed) {
+            this.showAmendmentSection = false;
+            this.amendmentData = null;
+          } else {
+            // Revert: briefly toggle to force Angular to re-render the checkbox as checked
+            this.showAmendmentSection = false;
+            setTimeout(() => this.showAmendmentSection = true, 0);
+          }
+        });
+    }
+  }
+
+  /**
+   * Handle amendment data changes from JJ Amendments component
+   * Called when JJ checks/unchecks amendment box or modifies amendment details
+   */
+  onAmendmentDataChange(data: JJDisputeCourtAppearanceAmendments): void {
+    this.logger.log('JJDisputeComponent::onAmendmentDataChange', data);
+    this.amendmentData = data;
+  }
+
+  /**
+   * Handle amendment validation result changes
+   * Called whenever amendment completion status changes
+   * Controls whether Accept button and amendment confirmation dialogs should be enabled
+   */
+  onAmendmentValidationChange(result: AmendmentValidationResult): void {
+    this.logger.log('JJDisputeComponent::onAmendmentValidationChange', result);
+    this.amendmentValidationResult = result;
   }
 }
