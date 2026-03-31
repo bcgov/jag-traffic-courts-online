@@ -277,6 +277,14 @@ export class JJDisputeComponent implements OnInit {
 
     return !(this.isJJ && onJJPage);
   }
+  
+  get unacknowledgedAmendmentsExist(): boolean {
+    return (
+      this.appConfigService.isFeatureFlagEnabled(featureType.amendments) &&
+      this.hasAmendmentData() &&
+      !this.amendmentValidationResult.amendmentsAcknowledged
+    );
+  }
 
   goTo(id: string) {
     let element: ElementRef;
@@ -524,7 +532,7 @@ export class JJDisputeComponent implements OnInit {
     }
     
     // Check if there are unprocessed amendments
-    if (this.hasAmendmentData() && !this.amendmentValidationResult.amendmentsAcknowledged) {
+    if (this.unacknowledgedAmendmentsExist) {
       const data: DialogOptions = {
         titleKey: "Amendments Not Processed",
         messageKey: "All amendments must be completed before accepting this dispute.",
@@ -836,10 +844,7 @@ export class JJDisputeComponent implements OnInit {
 
   onBackClicked() {
     // Check if on Decision Validation page with unacknowledged amendments
-    if (this.type === TabType.DECISION_VALIDATION && 
-        this.appConfigService.isFeatureFlagEnabled(featureType.amendments) &&
-        this.hasAmendmentData() && 
-        !this.amendmentValidationResult.amendmentsAcknowledged) {
+    if (this.type === TabType.DECISION_VALIDATION && this.unacknowledgedAmendmentsExist) {
       
       const dialogOptions: DialogOptions = {
         titleKey: 'Amendments Not Acknowledged',

@@ -80,7 +80,7 @@
         </mat-menu>
       </div>
     </div>
-    @if (type === tabTypes.DECISION_VALIDATION && hasAmendmentData() && !amendmentValidationResult.amendmentsAcknowledged) {
+    @if (type === tabTypes.DECISION_VALIDATION && unacknowledgedAmendmentsExist) {
       <div class="amendment-warning-banner" *appFeatureFlag="featureType.amendments">
         <mat-icon class="amendment-warning-icon">warning</mat-icon>
         <span>This dispute has <strong>amendments on file</strong> that require review and acknowledgment.</span>
@@ -946,8 +946,8 @@
             }
             @if (lastUpdatedJJDispute.status === DisputeStatus.Confirmed && cancelStatusOnly === false && concludeStatusOnly === false) {
               <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onAccept()"
-                [disabled]="hasAmendmentData() && !amendmentValidationResult.amendmentsAcknowledged"
-                [matTooltip]="(hasAmendmentData() && !amendmentValidationResult.amendmentsAcknowledged) ? 'All amendments must be completed in JUSTIN before accepting' : ''"
+                [disabled]="unacknowledgedAmendmentsExist"
+                [matTooltip]="unacknowledgedAmendmentsExist ? 'All amendments must be completed in JUSTIN before accepting' : ''"
                 matTooltipPosition="above">
                 Accept
               </button>
