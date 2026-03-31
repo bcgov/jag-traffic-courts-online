@@ -1,13 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { JJDisputeCourtAppearanceAmendments } from 'app/api';
 
-export interface AmendmentProcessingStatus {
-  countNumber: number;
-  isCompleted: boolean;
-  completedBy?: string;
-  completedDate?: Date;
-}
-
 export interface AmendmentValidationResult {
   amendmentsAcknowledged: boolean;
 }
@@ -21,10 +14,8 @@ export interface AmendmentValidationResult {
 export class StaffAmendmentValidationComponent implements OnInit {
   @Input() amendmentData: JJDisputeCourtAppearanceAmendments;
   @Input() isViewOnly: boolean = false;
-  @Output() amendmentStatusChange: EventEmitter<AmendmentProcessingStatus[]> = new EventEmitter<AmendmentProcessingStatus[]>();
   @Output() validationStatusChange = new EventEmitter<AmendmentValidationResult>();
 
-  amendmentProcessingStatuses: AmendmentProcessingStatus[] = [];
   hasAmendments: boolean = false;
   amendedCounts: number[] = [];
   isAcknowledged: boolean = false;
@@ -41,21 +32,7 @@ export class StaffAmendmentValidationComponent implements OnInit {
 
   onAcknowledgedChange(isChecked: boolean): void {
     this.isAcknowledged = isChecked;
-    
-    // Update all amendment statuses based on acknowledged state
-    this.amendmentProcessingStatuses.forEach(status => {
-      status.isCompleted = isChecked;
-      
-      if (isChecked) {
-        status.completedDate = new Date();
-        status.completedBy = 'Current Staff User';
-      } else {
-        status.completedDate = undefined;
-        status.completedBy = undefined;
-      }
-    });
 
-    this.emitStatusChange();
     this.emitValidationStatus();
   }
 
@@ -69,18 +46,8 @@ export class StaffAmendmentValidationComponent implements OnInit {
       if (this.amendmentData.count2ActSectDescTxt || this.amendmentData.count2OtherTxt) this.amendedCounts.push(2);
       if (this.amendmentData.count3ActSectDescTxt || this.amendmentData.count3OtherTxt) this.amendedCounts.push(3);
 
-      // Initialize processing statuses
-      this.amendmentProcessingStatuses = this.amendedCounts.map(countNumber => ({
-        countNumber: countNumber,
-        isCompleted: false
-      }));
-
       this.emitValidationStatus();
     }
-  }
-
-  emitStatusChange(): void {
-    this.amendmentStatusChange.emit(this.amendmentProcessingStatuses);
   }
 
   emitValidationStatus(): void {

@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, TemplateRef } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
 import { JJDisputeService, JJDispute } from '../../../services/jj-dispute.service';
-import { AmendmentProcessingStatus, AmendmentValidationResult } from '../staff-amendment-validation/staff-amendment-validation.component';
+import { AmendmentValidationResult } from '../staff-amendment-validation/staff-amendment-validation.component';
 import { Observable, map } from 'rxjs';
 import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPAppCd, JJDisputeCourtAppearanceRoPCrown, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized, FileMetadata, JJDisputeElectronicTicketYn, JJDisputeNoticeOfHearingYn, TicketImageDataJustinDocumentReportType, DocumentType, JJDisputeContactType, JJDisputedCountRoPFinding, Province, Language, JJDisputeDisputantAttendanceType, JJDisputeAccidentYn, JJDisputeMultipleOfficersYn, JJDisputeSignatoryType, DcfTemplateType, DisputeCaseFileSummary, YesNo, JJDisputeCourtAppearanceAmendments } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
@@ -145,7 +145,6 @@ export class JJDisputeComponent implements OnInit {
 
   // TCVP-3387: Amendment tracking properties
   amendmentData: JJDisputeCourtAppearanceAmendments | null = null;
-  amendmentProcessingStatuses: AmendmentProcessingStatus[] = [];
   amendmentValidationResult: AmendmentValidationResult = {
     amendmentsAcknowledged: false,
   };
