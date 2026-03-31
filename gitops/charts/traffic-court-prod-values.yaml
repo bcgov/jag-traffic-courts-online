@@ -285,7 +285,7 @@ staff-web:
         "apiBaseUrl": "/api",
         "features": {
           "staffDisputeIntake": false,
-          "amendments": false
+          "amendments": true
         }
       }
   courtHouseDataConfig: |
