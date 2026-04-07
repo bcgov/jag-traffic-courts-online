@@ -79,6 +79,8 @@ export class JJCountComponent implements OnInit, OnChanges {
   drivingProhibitionFilteredStatutes: Statute[] = [...this.drivingProhibitionStatutes];
   DisputeStatus = JJDisputeStatus;
 
+  originalDueDate: string;
+
   constructor(
     private lookupsService: LookupsService,
     private formBuilder: FormBuilder
@@ -322,6 +324,8 @@ export class JJCountComponent implements OnInit, OnChanges {
     }
     if (changes?.jjDisputedCount?.currentValue) {
       this.jjDisputedCount = { ...this.jjDisputedCount, ...this.jjDisputedCount };
+      // copy the orignal due date for comparison or reverting the dueDate change later
+      if (!this.originalDueDate) this.originalDueDate = this.jjDisputedCount.dueDate;
       shouldInitFormData = true;
     }
     if (changes?.isSSEditMode?.currentValue) {
@@ -505,10 +509,15 @@ export class JJCountComponent implements OnInit, OnChanges {
     // TCVP-3082 & TCVP-3070 implemented this based on multiple scenarios on findings and time to pay selections
     if (event.value == "no") {
       let today = new Date();
-      this.form.controls.revisedDueDate.setValue(today);
+      // @Note: TCVP-3424: When timeToPay is set to no, instead of changing `revisedDueDate` to today's date, set dueDate to today
+      // if user selects no to timeToPay then we are setting revisedDueDate to null and dueDate to today,
+      // so that we check later if revisedDueDate is null and select no option
+      this.jjDisputedCount.dueDate = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}T00:00:00`;
     } else {
-      this.form.controls.revisedDueDate.setValue(null);
+      // @Note: if the user has changed timeToPay selection to yes then dueDate should not be changed
+      this.jjDisputedCount.dueDate = this.originalDueDate;
     }
+    this.form.controls.revisedDueDate.setValue(null);
   }
 
   // Latest Plea

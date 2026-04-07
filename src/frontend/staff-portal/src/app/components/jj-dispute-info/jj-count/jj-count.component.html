@@ -147,7 +147,9 @@
               <mat-select class="section-grid-text" formControlName="latestPlea"
                 style="width:75%; background:#fffee6">
                 <mat-option [value]="LatestPlea.G">Guilty</mat-option>
-                <mat-option [value]="LatestPlea.N">Not guilty</mat-option>
+                @if (jjDisputedCount?.appearInCourt) {
+                  <mat-option [value]="LatestPlea.N">Not guilty</mat-option>
+                }
               </mat-select>
             } @else {
               @if (jjDisputedCount?.latestPlea === LatestPlea.G) {
@@ -884,7 +886,7 @@
           @if (jjDisputeInfo.status == DisputeStatus.Confirmed || jjDisputeInfo.status == DisputeStatus.Review ||
             jjDisputeInfo.status == DisputeStatus.RequireCourtHearing || jjDisputeInfo.status == DisputeStatus.Concluded) {
             <span class="section-grid-text">
-              {{ jjDisputedCount?.revisedDueDate | date: "dd-MMM-yyyy" : "UTC" }}
+              {{ jjDisputedCount?.revisedDueDate ?  jjDisputedCount?.revisedDueDate: jjDisputedCount?.dueDate | date: "dd-MMM-yyyy" : "UTC" }}
             </span>
           }
         </p>
