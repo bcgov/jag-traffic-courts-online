@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class HearingInboxFilterService {
   filters = {
-    appearanceDate: new Date() as Date | null,
+    appearanceDate: new Date(new Date().setHours(0, 0, 0, 0)) as Date | null,
     courthouseLocation: '',
     appearanceRoomCode: ''
   };
