@@ -8,12 +8,13 @@ import { Observable, forkJoin, map } from 'rxjs';
 import { ToastService } from '@core/services/toast.service';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-update-request-info',
   templateUrl: './update-request-info.component.html',
-  styleUrls: ['./update-request-info.component.scss']
+  styleUrls: ['./update-request-info.component.scss'],
+  standalone: false,
 })
 export class UpdateRequestInfoComponent implements OnInit {
   @Input() disputeInfo: Dispute;

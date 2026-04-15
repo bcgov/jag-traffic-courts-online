@@ -8,7 +8,6 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { JJService, JJDispute as JJDisputeBase, JJDisputeStatus, JJDisputeRemark, DocumentType, JJDisputeCourtAppearanceRoP, DcfTemplateType, PagedDisputeCaseFileSummaryCollection } from 'app/api';
 import { AuthService } from './auth.service';
-import { cloneDeep } from "lodash";
 import { Store } from '@ngrx/store';
 import * as JJDisputeStore from 'app/store/jj-dispute';
 import { LookupsService } from './lookups.service';
@@ -69,15 +68,15 @@ export class JJDisputeService {
     electronicTicketYn?: boolean, submittedFrom?: string, submittedThru?: string,
     ticketNumber?: string, surname?: string, surnameOrOrgName?: string, jjAssignedTo?: string, jjDecisionDtFrom?: string,
     jjDecisionDtThru?: string, disputeStatusCodes?: string, appearanceCourthouseIds?: string,
-    appearanceDtFrom?: string, appearanceDtThru?: string, toBeHeardAtCourthouseIds?: string,
-    hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number }):
+    appearanceDtFrom?: string, appearanceDtThru?: string, appearanceRoomCode?: string, toBeHeardAtCourthouseIds?: string,
+    hearingTypeCd?: string, sortBy?: string, pageNumber?: number, pageSize?: number; fetchPendingAdjournments: boolean }):
     Observable<PagedDisputeCaseFileSummaryCollection> {
     return this.jjApiService.apiJjDisputesSearchGet(null, params.appearances, params.noticeOfHearingYn,
       params.multipleOfficersYn, params.electronicTicketYn, params.submittedFrom,
       params.submittedThru, params.ticketNumber, params.surname, params.surnameOrOrgName, params.jjAssignedTo,
       params.jjDecisionDtFrom, params.jjDecisionDtThru, params.disputeStatusCodes, params.appearanceCourthouseIds,
-      params.appearanceDtFrom, params.appearanceDtThru, params.toBeHeardAtCourthouseIds,
-      params.hearingTypeCd, params.sortBy, params.pageNumber, params.pageSize)
+      params.appearanceDtFrom, params.appearanceDtThru, params.appearanceRoomCode, params.toBeHeardAtCourthouseIds,
+      params.hearingTypeCd, params.sortBy, params.pageNumber, params.pageSize, params.fetchPendingAdjournments)
       .pipe(
         map((response: PagedDisputeCaseFileSummaryCollection) => {
           this.logger.info('jj-DisputeService::getTcoDisputes', response);
@@ -100,7 +99,7 @@ export class JJDisputeService {
      * @param ticketNumber, jjDispute
      */
   public putJJDispute(ticketNumber: string, disputeId: number, jjDispute: JJDispute, checkVTC: boolean, remarks?: string): Observable<JJDispute> {
-    let input = cloneDeep(jjDispute);
+    let input = structuredClone(jjDispute);
     if (remarks) {
       this.addRemarks(input, remarks);
     }

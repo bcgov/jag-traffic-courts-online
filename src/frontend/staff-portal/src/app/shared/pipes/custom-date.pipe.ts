@@ -1,7 +1,10 @@
 import { Pipe, PipeTransform } from "@angular/core";
 import { DatePipe } from "@angular/common";
 
-@Pipe({ name: "date" })
+@Pipe({
+  name: "date",
+  standalone: false,
+})
 export class CustomDatePipe extends DatePipe implements PipeTransform {
   transform(value: Date | string | number, format?: string, timezone?: string, locale?: string): string | null;
   transform(value: null | undefined, format?: string, timezone?: string, locale?: string): null;

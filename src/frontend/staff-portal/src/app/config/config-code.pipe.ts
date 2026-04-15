@@ -5,6 +5,7 @@ import { ConfigService } from '@config/config.service';
 
 @Pipe({
   name: 'configCode',
+  standalone: false,
 })
 export class ConfigCodePipe implements PipeTransform {
   constructor(private config: ConfigService) {}

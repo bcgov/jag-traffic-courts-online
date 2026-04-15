@@ -1,9 +1,10 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'app-ticket-image-container',
-    templateUrl: './ticket-image-container.component.html',
-    styleUrls: ['./ticket-image-container.component.scss']
+  selector: 'app-ticket-image-container',
+  templateUrl: './ticket-image-container.component.html',
+  styleUrls: ['./ticket-image-container.component.scss'],
+  standalone: false,
 })
 export class TicketImageContainerComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() public imageToShow: any;
@@ -76,10 +77,12 @@ export class TicketImageContainerComponent implements OnInit, AfterViewInit, OnD
 
     resetSizeAndPosition(): void {
         const element = document.getElementById('draggable-overlay');
-        element.style.top = '30vh';
-        element.style.left = '5vw';
-        element.style.width = '20vw';
-        element.style.height = '60%';
+        if (element) {
+          element.style.top = '30vh';
+          element.style.left = '5vw';
+          element.style.width = '20vw';
+          element.style.height = '60%';
+        }
     }
 
     handleKeyboardEvent(event: KeyboardEvent) {

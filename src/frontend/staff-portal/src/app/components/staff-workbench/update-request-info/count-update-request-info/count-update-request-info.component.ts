@@ -9,7 +9,8 @@ import { LookupsService } from 'app/services/lookups.service';
 @Component({
   selector: 'app-count-update-request-info',
   templateUrl: './count-update-request-info.component.html',
-  styleUrls: ['./count-update-request-info.component.scss']
+  styleUrls: ['./count-update-request-info.component.scss'],
+  standalone: false,
 })
 export class CountUpdateRequestInfoComponent implements OnInit {
   @Input() public disputeInfo: Dispute;

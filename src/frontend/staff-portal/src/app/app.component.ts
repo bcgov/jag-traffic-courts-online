@@ -9,6 +9,7 @@ import { SnowplowService } from '@core/services/snowplow.service';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  standalone: false,
 })
 export class AppComponent implements OnInit {
   //  debugger;
@@ -34,6 +35,7 @@ export class AppComponent implements OnInit {
         'toaster.dispute_validation_error',
         'toaster.ticket_error',
         'toaster.dispute_create_error',
+        'toaster.dispute_create_duplicate_error',
         'toaster.dispute_error',
         'toaster.statute_error',
         'toaster.language_error'
@@ -57,6 +59,9 @@ export class AppComponent implements OnInit {
         );
         this.configService.dispute_create_error$.next(
           this.translateService.instant('toaster.dispute_create_error')
+        );
+        this.configService.dispute_create_duplicate_error$.next(
+          this.translateService.instant('toaster.dispute_create_duplicate_error')
         );
         this.configService.statute_error$.next(
           this.translateService.instant('toaster.statute_error')

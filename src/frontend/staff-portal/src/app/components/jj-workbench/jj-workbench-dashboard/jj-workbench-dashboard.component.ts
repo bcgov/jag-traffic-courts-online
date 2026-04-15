@@ -2,8 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { AuthService } from 'app/services/auth.service';
-import { MatLegacyTab as MatTab } from '@angular/material/legacy-tabs';
-import { BusyService } from '@core/services/busy.service';
+import { MatTab } from '@angular/material/tabs';
 import { UserGroup } from '@shared/enums/user-group.enum';
 import { TabType } from '@shared/enums/tab-type.enum';
 import { DisputeStatus } from '@shared/consts/DisputeStatus.model';
@@ -13,10 +12,10 @@ import { DisputeCaseFileSummary } from 'app/api';
   selector: 'app-jj-workbench-dashboard',
   templateUrl: './jj-workbench-dashboard.component.html',
   styleUrls: ['./jj-workbench-dashboard.component.scss'],
+  standalone: false,
 })
 export class JjWorkbenchDashboardComponent implements OnInit {
   @ViewChild("DCF") dcfTab: MatTab;
-  busy: Subscription;
   showDispute: boolean = false;
   tabSelected = new FormControl(0);
   jjPage: string = "WR Assignments";
@@ -31,13 +30,11 @@ export class JjWorkbenchDashboardComponent implements OnInit {
   hasDCFPermission: boolean = false;
 
   constructor(
-    private authService: AuthService,
-    private busyService: BusyService
+    private authService: AuthService
   ) {
   }
 
   ngOnInit() {
-    this.busyService.busy$.subscribe(i => this.busy = i);
     this.authService.userProfile$.subscribe(userProfile => {
       if (userProfile) {
         

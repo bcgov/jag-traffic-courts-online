@@ -1,0 +1,226 @@
+meta {
+  name: tco_disputes
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{v2_baseUrl}}/tco_disputes
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/tco_disputes
+    method: GET
+    mode: none
+    params:path: {
+      appr_ctrm_agen_id_eq: 
+      appr_ctrm_agen_id_ge: 
+      appr_ctrm_agen_id_gt: 
+      appr_ctrm_agen_id_in: 
+      appr_ctrm_agen_id_is_not_null: 
+      appr_ctrm_agen_id_is_null: 
+      appr_ctrm_agen_id_le: 
+      appr_ctrm_agen_id_lt: 
+      appr_ctrm_agen_id_ne: 
+      appr_ctrm_agen_id_not_in: 
+      appr_ctrm_room_cd_eq: 
+      appr_ctrm_room_cd_ge: 
+      appr_ctrm_room_cd_gt: 
+      appr_ctrm_room_cd_in: 
+      appr_ctrm_room_cd_is_not_null: 
+      appr_ctrm_room_cd_is_null: 
+      appr_ctrm_room_cd_le: 
+      appr_ctrm_room_cd_lt: 
+      appr_ctrm_room_cd_ne: 
+      appr_ctrm_room_cd_not_in: 
+      appr_tm_eq: 
+      appr_tm_ge: 
+      appr_tm_gt: 
+      appr_tm_in: 
+      appr_tm_is_not_null: 
+      appr_tm_is_null: 
+      appr_tm_le: 
+      appr_tm_lt: 
+      appr_tm_ne: 
+      appr_tm_not_in: 
+      dispute_id_eq: 
+      dispute_id_ge: 
+      dispute_id_gt: 
+      dispute_id_in: 
+      dispute_id_is_not_null: 
+      dispute_id_is_null: 
+      dispute_id_le: 
+      dispute_id_lt: 
+      dispute_id_ne: 
+      dispute_id_not_in: 
+      dispute_status_type_cd_eq: 
+      dispute_status_type_cd_ge: 
+      dispute_status_type_cd_gt: 
+      dispute_status_type_cd_in: 
+      dispute_status_type_cd_is_not_null: 
+      dispute_status_type_cd_is_null: 
+      dispute_status_type_cd_le: 
+      dispute_status_type_cd_lt: 
+      dispute_status_type_cd_ne: 
+      dispute_status_type_cd_not_in: 
+      fetch_rows: 
+      hearing_type_cd_eq: 
+      hearing_type_cd_ge: 
+      hearing_type_cd_gt: 
+      hearing_type_cd_in: 
+      hearing_type_cd_is_not_null: 
+      hearing_type_cd_is_null: 
+      hearing_type_cd_le: 
+      hearing_type_cd_lt: 
+      hearing_type_cd_ne: 
+      hearing_type_cd_not_in: 
+      include: 
+      jj_assigned_to_eq: 
+      jj_assigned_to_ge: 
+      jj_assigned_to_gt: 
+      jj_assigned_to_in: 
+      jj_assigned_to_is_not_null: 
+      jj_assigned_to_is_null: 
+      jj_assigned_to_le: 
+      jj_assigned_to_like: 
+      jj_assigned_to_lt: 
+      jj_assigned_to_ne: 
+      jj_assigned_to_not_in: 
+      jj_assigned_to_regexp_like: 
+      jj_decision_dt_eq: 
+      jj_decision_dt_ge: 
+      jj_decision_dt_gt: 
+      jj_decision_dt_in: 
+      jj_decision_dt_is_not_null: 
+      jj_decision_dt_is_null: 
+      jj_decision_dt_le: 
+      jj_decision_dt_lt: 
+      jj_decision_dt_ne: 
+      jj_decision_dt_not_in: 
+      occam_violation_ticket_upld_id_eq: 
+      occam_violation_ticket_upld_id_ge: 
+      occam_violation_ticket_upld_id_gt: 
+      occam_violation_ticket_upld_id_in: 
+      occam_violation_ticket_upld_id_is_not_null: 
+      occam_violation_ticket_upld_id_is_null: 
+      occam_violation_ticket_upld_id_le: 
+      occam_violation_ticket_upld_id_lt: 
+      occam_violation_ticket_upld_id_ne: 
+      occam_violation_ticket_upld_id_not_in: 
+      offset_rows: 
+      order: 
+      prof_given_1_nm_eq: 
+      prof_given_1_nm_ge: 
+      prof_given_1_nm_gt: 
+      prof_given_1_nm_in: 
+      prof_given_1_nm_is_not_null: 
+      prof_given_1_nm_is_null: 
+      prof_given_1_nm_le: 
+      prof_given_1_nm_like: 
+      prof_given_1_nm_lt: 
+      prof_given_1_nm_ne: 
+      prof_given_1_nm_not_in: 
+      prof_given_1_nm_regexp_like: 
+      prof_org_nm_eq: 
+      prof_org_nm_ge: 
+      prof_org_nm_gt: 
+      prof_org_nm_in: 
+      prof_org_nm_is_not_null: 
+      prof_org_nm_is_null: 
+      prof_org_nm_le: 
+      prof_org_nm_like: 
+      prof_org_nm_lt: 
+      prof_org_nm_ne: 
+      prof_org_nm_not_in: 
+      prof_org_nm_regexp_like: 
+      prof_surname_nm_eq: 
+      prof_surname_nm_ge: 
+      prof_surname_nm_gt: 
+      prof_surname_nm_in: 
+      prof_surname_nm_is_not_null: 
+      prof_surname_nm_is_null: 
+      prof_surname_nm_le: 
+      prof_surname_nm_like: 
+      prof_surname_nm_lt: 
+      prof_surname_nm_ne: 
+      prof_surname_nm_not_in: 
+      prof_surname_nm_or_org_nm_eq: 
+      prof_surname_nm_or_org_nm_ge: 
+      prof_surname_nm_or_org_nm_gt: 
+      prof_surname_nm_or_org_nm_in: 
+      prof_surname_nm_or_org_nm_is_not_null: 
+      prof_surname_nm_or_org_nm_is_null: 
+      prof_surname_nm_or_org_nm_le: 
+      prof_surname_nm_or_org_nm_like: 
+      prof_surname_nm_or_org_nm_lt: 
+      prof_surname_nm_or_org_nm_ne: 
+      prof_surname_nm_or_org_nm_not_in: 
+      prof_surname_nm_or_org_nm_regexp_like: 
+      prof_surname_nm_regexp_like: 
+      submitted_dt_eq: 
+      submitted_dt_ge: 
+      submitted_dt_gt: 
+      submitted_dt_in: 
+      submitted_dt_is_not_null: 
+      submitted_dt_is_null: 
+      submitted_dt_le: 
+      submitted_dt_lt: 
+      submitted_dt_ne: 
+      submitted_dt_not_in: 
+      ticket_number_txt_eq: 
+      ticket_number_txt_ge: 
+      ticket_number_txt_gt: 
+      ticket_number_txt_in: 
+      ticket_number_txt_is_not_null: 
+      ticket_number_txt_is_null: 
+      ticket_number_txt_le: 
+      ticket_number_txt_like: 
+      ticket_number_txt_lt: 
+      ticket_number_txt_ne: 
+      ticket_number_txt_not_in: 
+      ticket_number_txt_regexp_like: 
+      to_be_heard_at_agen_id_eq: 
+      to_be_heard_at_agen_id_ge: 
+      to_be_heard_at_agen_id_gt: 
+      to_be_heard_at_agen_id_in: 
+      to_be_heard_at_agen_id_is_not_null: 
+      to_be_heard_at_agen_id_is_null: 
+      to_be_heard_at_agen_id_le: 
+      to_be_heard_at_agen_id_lt: 
+      to_be_heard_at_agen_id_ne: 
+      to_be_heard_at_agen_id_not_in: 
+      vtc_assigned_to_eq: 
+      vtc_assigned_to_ge: 
+      vtc_assigned_to_gt: 
+      vtc_assigned_to_in: 
+      vtc_assigned_to_is_not_null: 
+      vtc_assigned_to_is_null: 
+      vtc_assigned_to_le: 
+      vtc_assigned_to_like: 
+      vtc_assigned_to_lt: 
+      vtc_assigned_to_ne: 
+      vtc_assigned_to_not_in: 
+      vtc_assigned_to_regexp_like: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

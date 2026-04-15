@@ -3,30 +3,35 @@
     <a href="https://www2.gov.bc.ca/gov/content/home" class="government-of-bc-logo" target="_blank" rel="noopener">
       <img src="/assets/gov_bc_logo.jpg" alt="Government of BC Logo" />
     </a>
-    <span style="padding-left: 0.5rem;">{{ headingText }} {{ environment === 'prod' ? '' : environment }} v{{ version
-      }}</span>
+    <span style="padding-left: 0.5rem;">{{ headingText }} {{ environment === 'prod' ? '' : environment }} v{{ version }}</span>
   </span>
 
   <span class="flex-fill"></span>
 
   <!--
-    <a (click)="onLanguage()" class="language">
-      <mat-icon inline="true" class="me-2">language</mat-icon>
-      <span style="vertical-align: 5px">{{ languageDesc }}</span>
-    </a>
+  <a (click)="onLanguage()" class="language">
+    <mat-icon inline="true" class="me-2">language</mat-icon>
+    <span style="vertical-align: 5px">{{ languageDesc }}</span>
+  </a>
   -->
-  <button mat-button *ngIf="!isLoggedIn" (click)="login()">
-    <mat-icon class="auth" inline="true">login</mat-icon>IDIR Sign in
-  </button>
-  <div fxLayout="column" *ngIf="isLoggedIn">
-    <span fxFlex>{{ fullName }}</span>
-    <span fxFlex class="header-date">{{ todayDate | date:"EEEE, MMMM dd y" }}</span>
-  </div>
-  <button mat-button *ngIf="isLoggedIn" (click)="logout()">
-    <mat-icon class="auth" inline="true">logout</mat-icon>Sign out
-  </button>
+  @if (!isLoggedIn) {
+    <button mat-button (click)="login()">
+      <mat-icon class="auth" inline="true">login</mat-icon>IDIR Sign in
+    </button>
+  }
+  @if (isLoggedIn) {
+    <div fxLayout="column">
+      <span fxFlex>{{ fullName }}</span>
+      <span fxFlex class="header-date">{{ todayDate | date:"EEEE, MMMM dd y" }}</span>
+    </div>
+  }
+  @if (isLoggedIn) {
+    <button mat-button (click)="logout()">
+      <mat-icon class="auth" inline="true">logout</mat-icon>Sign out
+    </button>
+  }
 </mat-toolbar>
 
 <div class="ngx-progress">
-  <ng-progress></ng-progress>
+  <ng-progress ngProgressHttp />
 </div>

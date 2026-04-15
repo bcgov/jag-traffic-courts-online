@@ -1,0 +1,209 @@
+<div class="amendments-container" [ngClass]="{'embedded-mode': !showCheckbox}" *ngIf="!isViewOnly || (isViewOnly && amendmentCheckbox)">
+  <!-- Amendment Checkbox Section (only shown when showCheckbox is true) -->
+  <section class="section-sticky" *ngIf="showCheckbox">
+    <ng-container subHeader>
+      <span>
+        <h3>Amendments</h3>
+      </span>
+    </ng-container>
+    
+    <div class="amendment-checkbox-container">
+      <mat-checkbox 
+        [(ngModel)]="amendmentCheckbox" 
+        (change)="onAmendmentCheckboxChange()"
+        [disabled]="isViewOnly">
+        <strong>This ticket requires amendments</strong>
+      </mat-checkbox>
+      <p class="helper-text" *ngIf="!amendmentCheckbox">
+        Check this box if the Judicial Justice needs to amend any information on the traffic ticket during this hearing.
+      </p>
+    </div>
+  </section>
+
+  <!-- Amendment Forms (shown when checkbox is checked OR in embedded mode) -->
+  <div class="amendment-section" *ngIf="showAmendmentSection || !showCheckbox" [@slideDown]>
+      
+      <!-- Common Amendment Fields (Above Counts) -->
+      <form [formGroup]="commonFieldsForm">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="section-grid-header">Surname</div>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Enter Surname" formControlName="disputantSurnameNm" maxlength="30">
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <div class="section-grid-header">Given Name(s)</div>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Enter given name(s)" formControlName="disputantGivenNamesNm" maxlength="100">
+          </mat-form-field>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-6">
+          <div class="section-grid-header">Violation Date</div>
+          <mat-form-field appearance="outline">
+            <input matInput type="text" class="latest-plea-text"
+              formControlName="violationDateDtm"
+              bsDatepicker placeholder="DD-MMM-YYYY"
+              #violationDatepicker="bsDatepicker"
+              [bsConfig]="{ withTimepicker: false,
+              dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue',
+              isAnimated: true, showWeekNumbers: false, adaptivePosition: true }">
+            <mat-icon matSuffix (click)="violationDatepicker.toggle()" style="cursor: pointer;">calendar_today</mat-icon>
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <div class="section-grid-header">Other</div>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Other amendments" formControlName="otherNotesTxt" maxlength="500">
+          </mat-form-field>
+        </div>
+      </div>
+      </form>
+
+      <mat-divider style="margin: 20px 0;"></mat-divider>
+
+      <!-- Amendment Forms for Each Count -->
+      <div *ngFor="let count of counts; let i = index" class="count-amendment-form">
+        <form [formGroup]="amendmentForms[i]" [ngClass]="{'greyed-out': !isCountDisputed(count)}">
+          
+          <!-- Count Header -->
+          <div class="count-header">
+            <h4>
+              Count {{ getCountNumber(i) }}
+            </h4>
+            <mat-checkbox 
+              [checked]="amendmentForms[i].get('isAmended')?.value"
+              (change)="onCountCheckboxChange(i, $event.checked)"
+              [disabled]="!isCountDisputed(count)"
+              *ngIf="isCountDisputed(count)">
+              Amend this count
+            </mat-checkbox>
+          </div>
+
+          <!-- Original Count Information (Read-only) -->
+          <div class="original-info" *ngIf="isCountDisputed(count)">
+            <div class="info-grid">
+              <div class="info-item">
+                <label class="info-label">Current MVA Section:</label>
+                <span class="info-value">{{ count?.description || 'N/A' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Amendment Input Fields -->
+          <div class="amendment-inputs" *ngIf="isCountDisputed(count) && amendmentForms[i].get('isAmended')?.value">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="section-grid-header">MVA Section</div>
+                <mat-form-field appearance="outline">
+                  <input 
+                    matInput 
+                    formControlName="actSectDescTxt"
+                    placeholder="Start typing section, then select"
+                    [matAutocomplete]="auto"
+                    (keyup)="onAmendedStatuteKeyup(i)"
+                    [matTooltip]="amendmentForms[i].get('actSectDescTxt')?.value"
+                    maxlength="500">
+                  <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option 
+                      *ngFor="let statute of filteredStatutes[i]"
+                      [matTooltip]="statute.__statuteString" 
+                      [value]="statute.__statuteString">
+                      {{ statute.__statuteString }}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <mat-error *ngIf="amendmentForms[i].get('actSectDescTxt')?.hasError('maxlength')">
+                    Maximum 500 characters
+                  </mat-error>
+                </mat-form-field>
+                <mat-hint style="font-size: x-small;">Hover over section to see full description</mat-hint>
+              </div>
+
+              <div class="col-md-6">
+                <div class="section-grid-header">Other</div>
+                <mat-form-field appearance="outline">
+                  <textarea 
+                    matInput 
+                    formControlName="otherTxt"
+                    placeholder="Other amendments"
+                    rows="3"
+                    maxlength="500"></textarea>
+                  <mat-error *ngIf="amendmentForms[i].get('otherTxt')?.hasError('maxlength')">
+                    Maximum 500 characters
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <mat-divider *ngIf="i < counts.length - 1"></mat-divider>
+        </form>
+      </div>
+    </div>
+</div>
+
+<!-- View-Only Mode (for Decision Validation) -->
+<div class="amendments-view-only" *ngIf="isViewOnly && existingAmendmentData">
+  <section class="section-sticky">
+    <ng-container subHeader>
+      <span>
+        <h3>Amendments (View Only)</h3>
+      </span>
+    </ng-container>
+    
+    @if (existingAmendmentData?.count1ActSectDescTxt || existingAmendmentData?.count1OtherTxt) {
+      <div class="count-amendment-view">
+        <div class="amendment-display">
+          <h4>Count 1 - Amended</h4>
+          <div class="amendment-details">
+            <div class="detail-row" *ngIf="existingAmendmentData?.count1ActSectDescTxt">
+              <label class="detail-label">MVA Section:</label>
+              <span class="detail-value">{{ existingAmendmentData?.count1ActSectDescTxt }}</span>
+            </div>
+            <div class="detail-row" *ngIf="existingAmendmentData?.count1OtherTxt">
+              <label class="detail-label">Other:</label>
+              <span class="detail-value">{{ existingAmendmentData?.count1OtherTxt }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+    @if (existingAmendmentData?.count2ActSectDescTxt || existingAmendmentData?.count2OtherTxt) {
+      <div class="count-amendment-view">
+        <div class="amendment-display">
+          <h4>Count 2 - Amended</h4>
+          <div class="amendment-details">
+            <div class="detail-row" *ngIf="existingAmendmentData?.count2ActSectDescTxt">
+              <label class="detail-label">MVA Section:</label>
+              <span class="detail-value">{{ existingAmendmentData?.count2ActSectDescTxt }}</span>
+            </div>
+            <div class="detail-row" *ngIf="existingAmendmentData?.count2OtherTxt">
+              <label class="detail-label">Other:</label>
+              <span class="detail-value">{{ existingAmendmentData?.count2OtherTxt }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+    @if (existingAmendmentData?.count3ActSectDescTxt || existingAmendmentData?.count3OtherTxt) {
+      <div class="count-amendment-view">
+        <div class="amendment-display">
+          <h4>Count 3 - Amended</h4>
+          <div class="amendment-details">
+            <div class="detail-row" *ngIf="existingAmendmentData?.count3ActSectDescTxt">
+              <label class="detail-label">MVA Section:</label>
+              <span class="detail-value">{{ existingAmendmentData?.count3ActSectDescTxt }}</span>
+            </div>
+            <div class="detail-row" *ngIf="existingAmendmentData?.count3OtherTxt">
+              <label class="detail-label">Other:</label>
+              <span class="detail-value">{{ existingAmendmentData?.count3OtherTxt }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </section>
+</div>

@@ -50,63 +50,32 @@ public abstract class EmailVerificationMessage
     public bool IsUpdateEmailVerification { get; set; }
 }
 
+/// <summary>
+/// This event is published when a disputant attempts to verify their email address using a valid token.
+/// </summary>
 public class EmailVerificationSuccessful : EmailVerificationMessage
 {
     public DateTimeOffset VerifiedAt { get; set; }
 }
 
 /// <summary>
-/// Indicates a new dispute has been submitted (created).
-/// </summary>
-public class NoticeOfDisputeSubmitted
-{
-    [Obsolete($"Rely on {nameof(NoticeOfDisputeGuid)} only")]
-    public long? DisputeId { get; set; }
-    public Guid NoticeOfDisputeGuid { get; set; }
-    public string EmailAddress { get; set; } = string.Empty;
-}
-
-/// <summary>
-/// This event is raised when we want to start or 
+/// This command is issued when we want to start or 
 /// restart email verification on a given dispute.
 /// </summary>
-public class RequestEmailVerification : EmailVerificationMessage
-{
-    /// <summary>
-    /// The optional dispute id if we have it already.
-    /// it will be set when re-requesting for email 
-    /// validation.
-    /// </summary>
-    [Obsolete($"Rely on {nameof(NoticeOfDisputeGuid)} only")]
-    public long? DisputeId { get; set; }
-}
-
-public class ResendEmailVerificationEmail : EmailVerificationMessage
-{
-}
+public class RequestEmailVerification : EmailVerificationMessage;
 
 /// <summary>
-/// This event is raised when an email message should be created
-/// and sent to the target email address for email validation.
+/// This command is issued to re-send a verification email.
+/// </summary>
+public class ResendEmailVerificationEmail : EmailVerificationMessage;
+
+/// <summary>
+/// This command is issued to create and send a validation email.
 /// </summary>
 public class SendEmailVerificationEmail : EmailVerificationMessage
 {
     /// <summary>
-    /// The token encoded in the email used to validate the 
-    /// email was received.
+    /// The token used for validation.
     /// </summary>
     public Guid Token { get; set; } = Guid.Empty;
-}
-
-
-/// <summary>
-/// This even is raised when the email could not be sent for 
-/// validating email.
-/// </summary>
-public class SendEmailVerificationFailed : EmailVerificationMessage
-{
-    /// <summary>
-    /// The reason the email could not be set.
-    /// </summary>
-    public string Reason { get; set; } = String.Empty;
 }

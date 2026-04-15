@@ -1,15 +1,21 @@
 td, th {
   vertical-align: middle !important;
   padding-left: 10px !important;
+
+  &.mat-column-assignedIcon {
+    padding-left: 13px !important;
+    padding-right: 13px !important;
+  }
 }
 
 h3, h2 {
   font-weight: bold;
 }
 
-th {
+.mat-mdc-table .mat-mdc-header-cell {
   color: white;
   background-color: #65799e;
+  font-size: 12px;
 }
 
 .mat-button-toggle-appearance-standard {
@@ -33,31 +39,19 @@ th {
   0 1px 3px 0 #003366;
 }
 
+.mat-button-toggle-checked h2 {
+  color: white;
+}
+
 .teamFilterButton {
   padding-top: 10px; height: 50px; width: 230px !important; border-radius: 5px; margin-right: 20px; margin-bottom: 5px; margin-top: 5px; margin-left: 2px;
 }
 
-.mat-row:nth-child(2n+1){
+.mat-mdc-row:nth-child(2n+1){
   background-color: #f2f2f2;
 }
-.mat-row:nth-child(2n){
+.mat-mdc-row:nth-child(2n){
   background-color:#ffffff;
-}
-
-.inputContainer {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-.input[name="searchInput"] {
-  width: 100%;
-  padding-right: 40px;
-}
-
-.inputIcon {
-  position: absolute;
-  right: 10px;
 }
 
 ::ng-deep .mat-sort-header-arrow {

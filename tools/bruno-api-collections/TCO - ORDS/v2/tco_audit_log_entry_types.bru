@@ -1,0 +1,60 @@
+meta {
+  name: tco_audit_log_entry_types
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{v2_baseUrl}}/tco_audit_log_entry_types
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/tco_audit_log_entry_types
+    method: GET
+    mode: none
+    params:path: {
+      active_use_yn_eq: 
+      active_use_yn_ge: 
+      active_use_yn_gt: 
+      active_use_yn_in: 
+      active_use_yn_is_not_null: 
+      active_use_yn_is_null: 
+      active_use_yn_le: 
+      active_use_yn_lt: 
+      active_use_yn_ne: 
+      active_use_yn_not_in: 
+      audit_log_entry_type_cd_eq: 
+      audit_log_entry_type_cd_ge: 
+      audit_log_entry_type_cd_gt: 
+      audit_log_entry_type_cd_in: 
+      audit_log_entry_type_cd_is_not_null: 
+      audit_log_entry_type_cd_is_null: 
+      audit_log_entry_type_cd_le: 
+      audit_log_entry_type_cd_lt: 
+      audit_log_entry_type_cd_ne: 
+      audit_log_entry_type_cd_not_in: 
+      comment_entry_allowed_yn_eq: 
+      order: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

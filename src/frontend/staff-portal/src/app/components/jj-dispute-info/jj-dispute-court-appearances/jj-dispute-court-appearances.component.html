@@ -1,4 +1,4 @@
-<table fxFlex mat-table [dataSource]="dataSource" style="margin-bottom:30px;" class="mat-elevation-z8" matSort
+<table fxFlex mat-table [dataSource]="dataSource" style="margin-bottom:30px; width: auto; max-width: 100%;" class="mat-elevation-z8" matSort
   multiTemplateDataRows>
   <ng-container matColumnDef="appearanceTs">
     <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 200px;">
@@ -99,13 +99,74 @@
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="comments">
-    <td mat-cell *matCellDef="let element" [attr.colspan]="11">
-      <span><b>JJ Endorsements:&nbsp;</b>{{ element.comments }}</span>
+  <ng-container matColumnDef="recordDetails">
+    <td mat-cell *matCellDef="let element; let i = dataIndex" [attr.colspan]="11" class="record-details-cell">
+      <div class="record-details-panel">
+        @if (amendmentsEnabled && hasAmendmentData(element)) {
+          <div class="record-section amendment-section">
+            <div class="record-section-label">Amendments:</div>
+
+            <div class="amendment-meta">
+              @if (element.amendments.disputantSurnameNm) {
+                <span>Surname: <strong>{{ element.amendments.disputantSurnameNm }}</strong></span>
+              }
+              @if (element.amendments.disputantGivenNamesNm) {
+                <span>Given Name(s): <strong>{{ element.amendments.disputantGivenNamesNm }}</strong></span>
+              }
+              @if (element.amendments.violationDateDtm) {
+                <span>Violation Date: <strong>{{ element.amendments.violationDateDtm | date: 'dd-MMM-yyyy' : 'UTC' }}</strong></span>
+              }
+              @if (element.amendments.otherNotesTxt) {
+                <span>Other: <strong>{{ element.amendments.otherNotesTxt }}</strong></span>
+              }
+            </div>
+
+            <div class="count-amendment-list">
+              @if (element.amendments.count1ActSectDescTxt || element.amendments.count1OtherTxt) {
+                <div class="count-amendment-item">
+                  <span class="count-label">Count 1</span>
+                  @if (element.amendments.count1ActSectDescTxt) {
+                    <span>MVA Section: <strong>{{ element.amendments.count1ActSectDescTxt }}</strong></span>
+                  }
+                  @if (element.amendments.count1OtherTxt) {
+                    <span>Other: <strong>{{ element.amendments.count1OtherTxt }}</strong></span>
+                  }
+                </div>
+              }
+              @if (element.amendments.count2ActSectDescTxt || element.amendments.count2OtherTxt) {
+                <div class="count-amendment-item">
+                  <span class="count-label">Count 2</span>
+                  @if (element.amendments.count2ActSectDescTxt) {
+                    <span>MVA Section: <strong>{{ element.amendments.count2ActSectDescTxt }}</strong></span>
+                  }
+                  @if (element.amendments.count2OtherTxt) {
+                    <span>Other: <strong>{{ element.amendments.count2OtherTxt }}</strong></span>
+                  }
+                </div>
+              }
+              @if (element.amendments.count3ActSectDescTxt || element.amendments.count3OtherTxt) {
+                <div class="count-amendment-item">
+                  <span class="count-label">Count 3</span>
+                  @if (element.amendments.count3ActSectDescTxt) {
+                    <span>MVA Section: <strong>{{ element.amendments.count3ActSectDescTxt }}</strong></span>
+                  }
+                  @if (element.amendments.count3OtherTxt) {
+                    <span>Other: <strong>{{ element.amendments.count3OtherTxt }}</strong></span>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
+        <div class="record-section endorsement-section">
+          <div class="record-section-label">JJ Endorsements:</div>
+          <div class="endorsement-text">{{ element.comments }}</div>
+        </div>
+      </div>
     </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  <tr mat-row *matRowDef="let row; columns: ['comments'];"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['recordDetails'];"></tr>
 </table>

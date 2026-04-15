@@ -1,0 +1,16 @@
+meta {
+  name: citizen-api-non-raabbitmq-query
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://dev-route-for-citizen-api-0198bb-prod.apps.silver.devops.gov.bc.ca/api/lookup/statutes
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

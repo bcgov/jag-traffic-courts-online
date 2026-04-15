@@ -1,18 +1,25 @@
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { enableProdMode, provideZoneChangeDetection } from '@angular/core';
+import { platformBrowser } from '@angular/platform-browser';
 import { AppConfigService } from 'app/services/app-config.service';
 
-import { AppModule } from './app/app.module';
+import { createAppModule } from './app/app.module';
 
-fetch('/assets/app.config.json')
-  .then((response) => response.json())
-  .then((config) => {
-    console.log('Is production?', config.production);
-    if (config.production) {
-      enableProdMode();
-    }
+Promise.all([
+  fetch('/assets/app.config.json').then((response) => response.json()),
+  fetch('/assets/config/keycloak.config.json').then((response) =>
+    response.json(),
+  ),
+]).then(([appConfig, keycloakConfig]) => {
+  console.log('Is production?', appConfig.production);
+  if (appConfig.production) {
+    enableProdMode();
+  }
 
-    platformBrowserDynamic([{ provide: AppConfigService, useValue: config }])
-      .bootstrapModule(AppModule)
-      .catch((err) => console.error(err));
-  });
+  platformBrowser([
+    { provide: AppConfigService, useValue: appConfig },
+  ])
+    .bootstrapModule(createAppModule(keycloakConfig.config), {
+      applicationProviders: [provideZoneChangeDetection()],
+    })
+    .catch((err) => console.error(err));
+});

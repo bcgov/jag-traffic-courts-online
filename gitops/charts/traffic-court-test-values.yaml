@@ -10,7 +10,7 @@ arc-dispute-api:
   pdb:
     create: true
   image:
-    tag: "2.19.1"
+    tag: "2.21.3"
     pullPolicy: Always
   env: 
     "Swagger__Enabled": "true"
@@ -20,7 +20,7 @@ citizen-api:
   pdb:
     create: true
   image:
-    tag: "2.19.1"
+    tag: "2.21.3"
     pullPolicy: Always
   env:
     "FormRecognizer__ApiVersion": "2022-08-31"
@@ -39,7 +39,7 @@ citizen-web:
   pdb:
     create: true
   image:
-    tag: "2.19.1"
+    tag: "2.21.3"
     pullPolicy: Always
   route:
     # https://test.justice.gov.bc.ca 
@@ -48,15 +48,14 @@ citizen-web:
     {
         "production": false,
         "environment": "Test",
-        "version": "2.19.1",
+        "version": "2.21.3",
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "understandYourTicketLink": "https://bcmoag--staging.sandbox.my.salesforce-sites.com/?tn=BCTC",
         "paymentOptionsLink": "https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/pay-ticket",
         "resolutionOptionsLink": "https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket",
         "features": {
-          "dispute": true,
-          "staffDisputeIntake": false
+          "dispute": true
         }
       }
   authConfig: |
@@ -206,7 +205,7 @@ oracle-data-api:
   pdb:
     create: true
   image:
-    tag: "2.19.1"
+    tag: "2.21.3"
     pullPolicy: Always
   env:
     "JAVA_OPTS": ""
@@ -223,7 +222,7 @@ staff-api:
   pdb:
     create: true
   image:
-    tag: "2.19.1"
+    tag: "2.21.3"
     pullPolicy: Always
   env:    
     "Jwt__Audience": "staff-api"
@@ -241,7 +240,7 @@ staff-web:
   pdb:
     create: true
   image:
-    tag: "2.19.1"
+    tag: "2.21.3"
     pullPolicy: Always
   route:
     # https://test.jag.gov.bc.ca
@@ -252,19 +251,18 @@ staff-web:
         "url": "https://oidc-0198bb-test.apps.silver.devops.gov.bc.ca/",
         "realm": "traffic-court",
         "clientId": "staff-portal"
-      },
-      "initOptions": {
       }
     }
   appConfig: |
     {
         "production": false,
         "environment": "Test",
-        "version": "2.19.1",
+        "version": "2.21.3",
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "features": {
-          "dispute":true
+          "staffDisputeIntake": true,
+          "amendments": true
         }
       }
   courtHouseDataConfig: |
@@ -323,7 +321,7 @@ workflow-service:
   pdb:
     create: true
   image:
-    tag: "2.19.1"
+    tag: "2.21.3"
     pullPolicy: Always
   env:
     "EmailConfiguration__Sender": "DoNotReply@gov.bc.ca"

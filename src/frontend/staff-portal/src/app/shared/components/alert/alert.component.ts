@@ -3,7 +3,8 @@ import { Component, Input, ContentChildren, QueryList, TemplateRef } from '@angu
 @Component({
   selector: 'app-alert',
   templateUrl: './alert.component.html',
-  styleUrls: ['./alert.component.scss']
+  styleUrls: ['./alert.component.scss'],
+  standalone: false,
 })
 export class AlertComponent {
   @Input() type: 'info' | 'warn' | 'danger';

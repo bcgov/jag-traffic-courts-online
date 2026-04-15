@@ -1,0 +1,70 @@
+@if (hasAmendments) {
+  <div class="block" style="border: 1px solid #ddd;">
+    <p class="section-grid-header" style="color: #d32f2f; font-weight: bold;">
+      Amendment:
+    </p>
+    <div class="block">
+      @if (hasValue(amendmentData?.disputantSurnameNm) || hasValue(amendmentData?.disputantGivenNamesNm) || hasValue(amendmentData?.violationDateDtm) || hasValue(amendmentData?.otherNotesTxt)) {
+        <div style="margin-bottom: 15px;">
+          @if (hasValue(amendmentData?.disputantSurnameNm)) {
+            <span>
+              <span style="font-weight: bold;">Surname:</span> {{ amendmentData?.disputantSurnameNm }}
+            </span>
+          }
+          @if (hasValue(amendmentData?.disputantGivenNamesNm)) {
+            <span style="margin-left: 20px;">
+              <span style="font-weight: bold;">Given Name(s):</span> {{ amendmentData?.disputantGivenNamesNm }}
+            </span>
+          }
+          @if (hasValue(amendmentData?.violationDateDtm)) {
+            <span style="margin-left: 20px;">
+              <span style="font-weight: bold;">Violation Date:</span> {{ amendmentData?.violationDateDtm | date: "dd-MMM-yyyy" : "UTC" }}
+            </span>
+          }
+          @if (hasValue(amendmentData?.otherNotesTxt)) {
+            <span style="margin-left: 20px;">
+              <span style="font-weight: bold;">Other:</span> {{ amendmentData?.otherNotesTxt }}
+            </span>
+          }
+        </div>
+      }
+
+      <!-- Amendment Counts -->
+      @for (countNumber of amendedCounts; track countNumber) {
+        <div style="margin-top: 15px;">
+          <div style="border: 1px solid #ddd; border-radius: 4px; padding: 15px; background-color: #fafafa;">
+            <p style="font-weight: 600; margin-bottom: 15px; font-size: 16px;">Count {{ countNumber }}</p>
+            @if (getAmendmentForCount(countNumber); as amendment) {
+              @if (hasValue(amendment.actSectDescTxt) || hasValue(amendment.otherTxt)) {
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  @if (hasValue(amendment.actSectDescTxt)) {
+                    <div>
+                      <span style="font-weight: bold;">MVA Section:</span> {{ amendment.actSectDescTxt }}
+                    </div>
+                  }
+                  @if (hasValue(amendment.otherTxt)) {
+                    <div>
+                      <span style="font-weight: bold;">Other:</span> {{ amendment.otherTxt }}
+                    </div>
+                  }
+                </div>
+              }
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Acknowledge Checkbox -->
+      <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
+        <mat-checkbox
+          [checked]="isAcknowledged"
+          (change)="onAcknowledgedChange($event.checked)"
+          [disabled]="!hasAmendments"
+          color="primary">
+          Acknowledge
+        </mat-checkbox>
+      </div>
+    </div>
+  </div>
+}
+

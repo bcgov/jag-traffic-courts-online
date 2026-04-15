@@ -266,7 +266,10 @@ export class DisputeService implements IDisputeService {
           return response;
         }),
         catchError((error: any) => {
-          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+          let errorMsg = error?.error?.detail ?? this.configService.dispute_create_error;
+          if (error?.status === 409) {
+            errorMsg = this.configService.dispute_create_duplicate_error;
+          }
           this.toastService.openErrorToast(errorMsg);
           this.logger.error('DisputeService::createDispute error has occurred: ', error);
           throw error;
@@ -561,8 +564,8 @@ export class DisputeService implements IDisputeService {
     let dispute = Dispute;
 
     dispute.contactGivenNames = Dispute.contactGiven1Nm;
-    if (Dispute.contactGiven2Nm) dispute.contactGivenNames = Dispute.contactGivenNames + " " + Dispute.contactGiven1Nm;
-    if (Dispute.contactGiven2Nm) dispute.contactGivenNames = Dispute.contactGivenNames + " " + Dispute.contactGiven3Nm;
+    if (Dispute.contactGiven2Nm) dispute.contactGivenNames = dispute.contactGivenNames + " " + Dispute.contactGiven2Nm;
+    if (Dispute.contactGiven3Nm) dispute.contactGivenNames = dispute.contactGivenNames + " " + Dispute.contactGiven3Nm;
 
     return dispute;
   }
