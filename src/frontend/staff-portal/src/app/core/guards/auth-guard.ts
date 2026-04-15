@@ -24,6 +24,7 @@ const isAccessAllowed = async (
   let permission: boolean;
   if (!authenticated) {
     await authService.login();
+    return true;
   }
 
   // Get the roles required from the route.

@@ -155,7 +155,7 @@ export class AuthService {
   }
 
   async login() {
-    this.keycloak.login({ redirectUri: window.location.toString() });
+    await this.keycloak.login({ redirectUri: window.location.toString() });
   }
 
   async logout() {
