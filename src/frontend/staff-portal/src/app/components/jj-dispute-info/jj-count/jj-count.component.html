@@ -424,7 +424,7 @@
             </div>
             <div class="col-md-7">
               <mat-radio-group [(ngModel)]="timeToPay" [ngModelOptions]="{standalone: true}" layout="row"
-                (change)="updateRevisedDueDate($event)"
+                (change)="updateGrantTimeToPay($event.value)"
                 [disabled]="(!jjDisputedCount || this.form.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty)">
                 <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
                 <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
@@ -886,7 +886,7 @@
           @if (jjDisputeInfo.status == DisputeStatus.Confirmed || jjDisputeInfo.status == DisputeStatus.Review ||
             jjDisputeInfo.status == DisputeStatus.RequireCourtHearing || jjDisputeInfo.status == DisputeStatus.Concluded) {
             <span class="section-grid-text">
-              {{ jjDisputedCount?.revisedDueDate ?  jjDisputedCount?.revisedDueDate: jjDisputedCount?.dueDate | date: "dd-MMM-yyyy" : "UTC" }}
+              {{ ((jjDisputedCount?.revisedDueDate ?? jjDisputedCount?.dueDate) | date: "dd-MMM-yyyy" : "UTC") }}
             </span>
           }
         </p>

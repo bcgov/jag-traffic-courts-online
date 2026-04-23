@@ -66,6 +66,7 @@ export * from './jJDisputeStatus.model';
 export * from './jJDisputedCount.model';
 export * from './jJDisputedCountAppearInCourt.model';
 export * from './jJDisputedCountIncludesSurcharge.model';
+export * from './jJDisputedCountGrantTimeToPay.model';
 export * from './jJDisputedCountLatestPlea.model';
 export * from './jJDisputedCountPlea.model';
 export * from './jJDisputedCountRequestReduction.model';

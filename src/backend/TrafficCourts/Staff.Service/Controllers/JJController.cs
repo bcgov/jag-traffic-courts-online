@@ -2,10 +2,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
-using System.Security.Claims;
 using TrafficCourts.Cdogs.Client;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
@@ -18,6 +16,9 @@ using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
+#if DEBUG
+[AllowAnonymous]
+#endif
 public partial class JJController : StaffControllerBase
 {
     private readonly IPrintDigitalCaseFileService _printService;
@@ -116,9 +117,6 @@ public partial class JJController : StaffControllerBase
     /// <param name="fetch_pending_adjournments">Whether disputes' pending adjournment request info should be retrieved, which requires querying COMS documents.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-#if DEBUG
-    [AllowAnonymous]
-#endif
     [HttpGet("Disputes/Search")]
     [ProducesResponseType(typeof(PagedDisputeCaseFileSummaryCollection), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -219,9 +217,6 @@ public partial class JJController : StaffControllerBase
     /// <response code="403">Forbidden, requires jj-dispute:read permission.</response>
     /// <response code="409">The JJDispute has already been assigned to a user. JJDispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
-#if DEBUG
-    [AllowAnonymous]
-#endif
     [HttpGet("{jjDisputeId}")]
     [ProducesResponseType(typeof(JJDispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
