@@ -1,0 +1,434 @@
+meta {
+  name: Returns generated document. This really should be using the tco_dispute.dispute_id.
+  type: http
+  seq: 16
+  tags: [
+    JJ
+  ]
+}
+
+get {
+  url: {{baseUrl}}/api/jj/:ticketNumber/print
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~type: DcfTemplate
+  ~type: HrDcfTemplate
+  ~type: WrDcfTemplate
+}
+
+params:path {
+  ticketNumber: 
+}
+
+headers {
+  ~X-Timezone: 
+}
+
+example {
+  name: 200 Response
+  description: Generated Document.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/print
+    method: GET
+    mode: none
+    params:query: {
+      ~type: DcfTemplate
+      ~type: HrDcfTemplate
+      ~type: WrDcfTemplate
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/octet-stream
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: The
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/print
+    method: GET
+    mode: none
+    params:query: {
+      ~type: DcfTemplate
+      ~type: HrDcfTemplate
+      ~type: WrDcfTemplate
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/print
+    method: GET
+    mode: none
+    params:query: {
+      ~type: DcfTemplate
+      ~type: HrDcfTemplate
+      ~type: WrDcfTemplate
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/print
+    method: GET
+    mode: none
+    params:query: {
+      ~type: DcfTemplate
+      ~type: HrDcfTemplate
+      ~type: WrDcfTemplate
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/print
+    method: GET
+    mode: none
+    params:query: {
+      ~type: DcfTemplate
+      ~type: HrDcfTemplate
+      ~type: WrDcfTemplate
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/print
+    method: GET
+    mode: none
+    params:query: {
+      ~type: DcfTemplate
+      ~type: HrDcfTemplate
+      ~type: WrDcfTemplate
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/print
+    method: GET
+    mode: none
+    params:query: {
+      ~type: DcfTemplate
+      ~type: HrDcfTemplate
+      ~type: WrDcfTemplate
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/print
+    method: GET
+    mode: none
+    params:query: {
+      ~type: DcfTemplate
+      ~type: HrDcfTemplate
+      ~type: WrDcfTemplate
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 500 Response
+  description: There was a server error that prevented the search from completing successfully or no data found.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/print
+    method: GET
+    mode: none
+    params:query: {
+      ~type: DcfTemplate
+      ~type: HrDcfTemplate
+      ~type: WrDcfTemplate
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 500
+      text: Internal Server Error
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

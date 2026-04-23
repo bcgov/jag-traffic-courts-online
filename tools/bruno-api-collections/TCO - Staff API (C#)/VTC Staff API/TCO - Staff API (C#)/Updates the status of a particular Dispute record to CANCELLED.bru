@@ -1,0 +1,842 @@
+meta {
+  name: Updates the status of a particular Dispute record to CANCELLED.
+  type: http
+  seq: 7
+  tags: [
+    Dispute
+  ]
+}
+
+put {
+  url: {{baseUrl}}/api/dispute/:disputeId/cancel
+  body: multipartForm
+  auth: inherit
+}
+
+params:path {
+  disputeId: 
+}
+
+body:multipart-form {
+  cancelledReason: 
+}
+
+example {
+  name: 200 Response
+  description: The Dispute is updated.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      disputeId: 
+    }
+  
+    body:multipart-form: {
+      cancelledReason: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: The request was not well formed. Check the parameters.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      disputeId: 
+    }
+  
+    body:multipart-form: {
+      cancelledReason: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: The request was not well formed. Check the parameters.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      disputeId: 
+    }
+  
+    body:multipart-form: {
+      cancelledReason: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: The request was not well formed. Check the parameters.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      disputeId: 
+    }
+  
+    body:multipart-form: {
+      cancelledReason: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      disputeId: 
+    }
+  
+    body:multipart-form: {
+      cancelledReason: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      disputeId: 
+    }
+  
+    body:multipart-form: {
+      cancelledReason: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      disputeId: 
+    }
+  
+    body:multipart-form: {
+      cancelledReason: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires dispute:cancel permission.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      disputeId: 
+    }
+  
+    body:multipart-form: {
+      cancelledReason: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires dispute:cancel permission.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      disputeId: 
+    }
+  
+    body:multipart-form: {
+      cancelledReason: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires dispute:cancel permission.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      disputeId: 
+    }
+  
+    body:multipart-form: {
+      cancelledReason: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  description: Dispute record not found. Update failed.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      disputeId: 
+    }
+  
+    body:multipart-form: {
+      cancelledReason: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  description: Dispute record not found. Update failed.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      disputeId: 
+    }
+  
+    body:multipart-form: {
+      cancelledReason: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  description: Dispute record not found. Update failed.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      disputeId: 
+    }
+  
+    body:multipart-form: {
+      cancelledReason: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 405 Response
+  description: A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING.Update failed.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      disputeId: 
+    }
+  
+    body:multipart-form: {
+      cancelledReason: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 405
+      text: Method Not Allowed
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 405 Response
+  description: A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING.Update failed.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      disputeId: 
+    }
+  
+    body:multipart-form: {
+      cancelledReason: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 405
+      text: Method Not Allowed
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 405 Response
+  description: A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING.Update failed.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      disputeId: 
+    }
+  
+    body:multipart-form: {
+      cancelledReason: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 405
+      text: Method Not Allowed
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 409 Response
+  description: The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      disputeId: 
+    }
+  
+    body:multipart-form: {
+      cancelledReason: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 409
+      text: Conflict
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 409 Response
+  description: The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      disputeId: 
+    }
+  
+    body:multipart-form: {
+      cancelledReason: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 409
+      text: Conflict
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 409 Response
+  description: The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      disputeId: 
+    }
+  
+    body:multipart-form: {
+      cancelledReason: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 409
+      text: Conflict
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 500 Response
+  description: There was a server error that prevented the update from completing successfully.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      disputeId: 
+    }
+  
+    body:multipart-form: {
+      cancelledReason: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 500
+      text: Internal Server Error
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

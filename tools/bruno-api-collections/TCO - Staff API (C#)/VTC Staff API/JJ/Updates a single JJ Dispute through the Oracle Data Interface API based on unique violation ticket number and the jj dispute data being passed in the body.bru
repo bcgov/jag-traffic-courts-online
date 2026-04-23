@@ -1,0 +1,6267 @@
+meta {
+  name: Updates a single JJ Dispute through the Oracle Data Interface API based on unique violation ticket number and the jj dispute data being passed in the body.
+  type: http
+  seq: 6
+  tags: [
+    JJ
+  ]
+}
+
+put {
+  url: {{baseUrl}}/api/jj/:ticketNumber?jjDisputeId=488&checkVTC=false
+  body: json
+  auth: none
+}
+
+params:query {
+  jjDisputeId: 488
+  checkVTC: false
+}
+
+params:path {
+  ticketNumber: ET89319207
+}
+
+headers {
+  ~X-Timezone: 
+}
+
+body:json {
+  {
+      "fileData": [],
+      "lockId": "ca60d9cd448a4ebb9af5affcd4564404",
+      "lockedBy": "DAVEKAY",
+      "lockExpiresAtUtc": "2026-04-20T21:00:41.5633675+00:00",
+      "createdBy": "TSTJUSTIN14",
+      "createdTs": "2026-04-08T11:24:17",
+      "modifiedBy": "TCOORDS",
+      "modifiedTs": "2026-04-16T22:15:00",
+      "id": 488,
+      "ticketNumber": "ET89319207",
+      "accidentYn": "N",
+      "addressLine1": "3220 Qadra",
+      "addressLine2": null,
+      "addressLine3": null,
+      "addressCity": "Kelowna",
+      "addressProvince": "British Columbia",
+      "addressCountry": "Canada",
+      "addressPostalCode": "V8X 1G6",
+      "disputantSurname": "1712863079344test",
+      "disputantGivenName1": "User",
+      "disputantGivenName2": null,
+      "disputantGivenName3": null,
+      "disputantBirthdate": null,
+      "driversLicenceNumber": "999999123",
+      "drvLicIssuedProvSeqNo": "1",
+      "drvLicIssuedCtryId": "1",
+      "emailAddress": null,
+      "status": "REVIEW",
+      "hearingType": "COURT_APPEARANCE",
+      "multipleOfficersYn": "N",
+      "noticeOfDisputeGuid": "08dc5a5c-23c0-216f-0a58-0a6101000000",
+      "noticeOfHearingYn": "N",
+      "occamDisputantGiven1Nm": "User",
+      "occamDisputantGiven2Nm": null,
+      "occamDisputantGiven3Nm": null,
+      "occamDisputantSurnameNm": "1712863079344Test",
+      "occamDisputantPhoneNumber": "9999999999",
+      "occamDisputeId": 3466,
+      "occamViolationTicketUpldId": "4325",
+      "occamDisputeCreatedBy": "OCCAMORDS",
+      "submittedTs": "2024-04-11T12:18:16",
+      "issuedTs": "2024-04-11T09:54:00",
+      "violationDate": "2024-04-11T00:00:00",
+      "icbcReceivedDate": "2025-03-21T00:00:00",
+      "enforcementOfficer": null,
+      "electronicTicketYn": "N",
+      "policeDetachment": "ABBOTSFORD MUN",
+      "courthouseLocation": "Abbotsford Law Courts",
+      "offenceLocation": null,
+      "jjAssignedTo": "DAVEKAY",
+      "decisionMadeBy": "DAVEKAY",
+      "jjDecisionDate": "2026-04-16T13:41:25",
+      "vtcAssignedTo": null,
+      "vtcAssignedTs": null,
+      "fineReductionReason": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu",
+      "timeToPayReason": null,
+      "contactLawFirmName": null,
+      "contactGivenName1": null,
+      "contactGivenName2": null,
+      "contactGivenName3": null,
+      "contactSurname": null,
+      "contactType": "INDIVIDUAL",
+      "appearInCourt": "N",
+      "courtAgenId": "9393.0001",
+      "recalled": null,
+      "lawFirmName": null,
+      "lawyerSurname": null,
+      "lawyerGivenName1": null,
+      "lawyerGivenName2": null,
+      "lawyerGivenName3": null,
+      "justinRccId": "51553.0734",
+      "interpreterLanguageCd": null,
+      "witnessNo": 0,
+      "disputantAttendanceType": null,
+      "signatoryType": "D",
+      "signatoryName": "GIVENONE",
+      "remarks": [
+          {
+              "createdBy": "TCOORDS",
+              "createdTs": "2026-04-08T11:32:23",
+              "modifiedBy": null,
+              "modifiedTs": null,
+              "id": 2377,
+              "userFullName": "DAVEKAY",
+              "note": "test",
+              "remarksMadeTs": "0001-01-01T00:00:00",
+              "additionalProperties": {}
+          },
+          {
+              "createdBy": "TCOORDS",
+              "createdTs": "2026-04-09T14:32:58",
+              "modifiedBy": null,
+              "modifiedTs": null,
+              "id": 2397,
+              "userFullName": "DAVEKAY",
+              "note": "\"test\"",
+              "remarksMadeTs": "2026-04-09T14:32:56",
+              "additionalProperties": {}
+          },
+          {
+              "createdBy": "TCOORDS",
+              "createdTs": "2026-04-09T16:33:18",
+              "modifiedBy": null,
+              "modifiedTs": null,
+              "id": 2398,
+              "userFullName": "DAVEKAY",
+              "note": "\"test\"",
+              "remarksMadeTs": "2026-04-09T16:33:16",
+              "additionalProperties": {}
+          },
+          {
+              "createdBy": "TCOORDS",
+              "createdTs": "2026-04-09T16:55:50",
+              "modifiedBy": null,
+              "modifiedTs": null,
+              "id": 2407,
+              "userFullName": "DAVEKAY",
+              "note": "\"test\"",
+              "remarksMadeTs": "2026-04-09T16:55:48",
+              "additionalProperties": {}
+          },
+          {
+              "createdBy": "TCOORDS",
+              "createdTs": "2026-04-09T17:03:56",
+              "modifiedBy": null,
+              "modifiedTs": null,
+              "id": 2408,
+              "userFullName": "DAVEKAY",
+              "note": "\"test\"",
+              "remarksMadeTs": "2026-04-09T17:03:54",
+              "additionalProperties": {}
+          },
+          {
+              "createdBy": "TCOORDS",
+              "createdTs": "2026-04-15T12:44:03",
+              "modifiedBy": null,
+              "modifiedTs": null,
+              "id": 2417,
+              "userFullName": "DAVEKAY",
+              "note": "123123",
+              "remarksMadeTs": "2026-04-15T12:44:02",
+              "additionalProperties": {}
+          },
+          {
+              "createdBy": "TCOORDS",
+              "createdTs": "2026-04-16T13:31:22",
+              "modifiedBy": null,
+              "modifiedTs": null,
+              "id": 2437,
+              "userFullName": "DAVEKAY",
+              "note": "\"fgh\"",
+              "remarksMadeTs": "2026-04-16T13:31:21",
+              "additionalProperties": {}
+          },
+          {
+              "createdBy": "TCOORDS",
+              "createdTs": "2026-04-16T13:36:49",
+              "modifiedBy": null,
+              "modifiedTs": null,
+              "id": 2438,
+              "userFullName": "DAVEKAY",
+              "note": "\"test\"",
+              "remarksMadeTs": "2026-04-16T13:36:49",
+              "additionalProperties": {}
+          },
+          {
+              "createdBy": "TCOORDS",
+              "createdTs": "2026-04-16T13:39:22",
+              "modifiedBy": null,
+              "modifiedTs": null,
+              "id": 2439,
+              "userFullName": "DAVEKAY",
+              "note": "\"test\"",
+              "remarksMadeTs": "2026-04-16T13:39:21",
+              "additionalProperties": {}
+          },
+          {
+              "createdBy": "TCOORDS",
+              "createdTs": "2026-04-16T14:12:17",
+              "modifiedBy": null,
+              "modifiedTs": null,
+              "id": 2440,
+              "userFullName": "DAVEKAY",
+              "note": "\"test\"",
+              "remarksMadeTs": "2026-04-16T14:12:16",
+              "additionalProperties": {}
+          }
+      ],
+      "jjDisputedCounts": [
+          {
+              "createdBy": "TSTJUSTIN14",
+              "createdTs": "2026-04-08T11:24:17",
+              "modifiedBy": "TCOORDS",
+              "modifiedTs": "2026-04-20T13:34:48",
+              "id": 624,
+              "plea": "G",
+              "count": 1,
+              "requestTimeToPay": "N",
+              "requestReduction": "Y",
+              "appearInCourt": "N",
+              "description": "MVA 146(5) Speed Against Area Sign",
+              "dueDate": "2026-04-15T00:00:00",
+              "ticketedFineAmount": 139,
+              "lesserOrGreaterAmount": 100,
+              "includesSurcharge": "Y",
+              "grantTimeToPay": "N",
+              "revisedDueDate": null,
+              "totalFineAmount": 100,
+              "violationDate": "2024-04-11T00:00:00",
+              "comments": "test",
+              "latestPlea": "N",
+              "latestPleaUpdateTs": "2026-04-08T00:00:00",
+              "jjDisputedCountRoP": {
+                  "createdBy": "TSTJUSTIN14",
+                  "createdTs": "2026-04-08T11:24:17",
+                  "modifiedBy": "TCOORDS",
+                  "modifiedTs": "2026-04-20T13:34:48",
+                  "id": 623,
+                  "finding": "GUILTY_LESSER",
+                  "lesserDescription": "MVA 201 Sign as evidence",
+                  "ssProbationDuration": null,
+                  "ssProbationConditions": null,
+                  "jailDuration": null,
+                  "jailIntermittent": "N",
+                  "probationDuration": null,
+                  "probationConditions": null,
+                  "drivingProhibition": null,
+                  "drivingProhibitionMVASection": null,
+                  "dismissed": "N",
+                  "forWantOfProsecution": "N",
+                  "withdrawn": "N",
+                  "abatement": "N",
+                  "stayOfProceedingsBy": null,
+                  "other": null,
+                  "additionalProperties": {}
+              },
+              "additionalProperties": {}
+          }
+      ],
+      "jjDisputeCourtAppearanceRoPs": [
+          {
+              "justinAppearanceId": "122990.0734",
+              "id": 764,
+              "appearanceTs": "2026-04-30T09:00:00",
+              "room": "201",
+              "duration": 0,
+              "reason": "HR",
+              "appCd": "A",
+              "noAppTs": null,
+              "clerkRecord": null,
+              "defenceCounsel": null,
+              "dattCd": null,
+              "crown": null,
+              "jjSeized": "N",
+              "adjudicator": "Kay, Dave AG:EX",
+              "comments": "test",
+              "additionalProperties": {}
+          }
+      ],
+      "additionalProperties": {},
+      "contactName": "null",
+      "contactGivenNames": "null",
+      "occamDisputantName": "1712863079344Test, User",
+      "occamDisputantGivenNames": "User",
+      "ticketDisputantGivenNames": "User",
+      "isEditable": true,
+      "isCompleted": false,
+      "bulkAssign": false,
+      "jjAssignedToName": "Kay, Dave AG:EX",
+      "address": "3220 Qadra, Kelowna, British Columbia, Canada, V8X 1G6",
+      "mostRecentCourtAppearance": {
+          "justinAppearanceId": "122990.0734",
+          "id": 764,
+          "appearanceTs": "2026-04-30T09:00:00",
+          "room": "201",
+          "duration": 0,
+          "reason": "HR",
+          "appCd": "A",
+          "noAppTs": null,
+          "clerkRecord": null,
+          "defenceCounsel": null,
+          "dattCd": null,
+          "crown": null,
+          "jjSeized": "N",
+          "adjudicator": "Kay, Dave AG:EX",
+          "comments": "test",
+          "amendments": null,
+          "additionalProperties": {}
+      },
+      "driversLicenceProvince": "British Columbia",
+      "interpreterLanguage": null
+  }
+}
+
+example {
+  name: 200 Response
+  description: Admin resolution is submitted. The JJ Dispute is updated.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "fileData": [
+            {
+              "fileId": "",
+              "fileName": "",
+              "noticeOfDisputeGuid": "",
+              "documentSource": "Citizen",
+              "documentType": "",
+              "documentStatus": "Filed",
+              "virusScanStatus": "",
+              "staffReviewStatus": "",
+              "ticketNumber": "",
+              "disputeId": 0,
+              "pendingFileStream": "",
+              "deleteRequested": false
+            }
+          ],
+          "lockId": "",
+          "lockedBy": "",
+          "lockExpiresAtUtc": "",
+          "createdBy": "",
+          "createdTs": "",
+          "modifiedBy": "",
+          "modifiedTs": "",
+          "id": 0,
+          "ticketNumber": "",
+          "accidentYn": "UNKNOWN",
+          "addressLine1": "",
+          "addressLine2": "",
+          "addressLine3": "",
+          "addressCity": "",
+          "addressProvince": "",
+          "addressCountry": "",
+          "addressPostalCode": "",
+          "disputantSurname": "",
+          "disputantGivenName1": "",
+          "disputantGivenName2": "",
+          "disputantGivenName3": "",
+          "disputantBirthdate": "",
+          "driversLicenceNumber": "",
+          "drvLicIssuedProvSeqNo": "",
+          "drvLicIssuedCtryId": "",
+          "emailAddress": "",
+          "status": "UNKNOWN",
+          "hearingType": "UNKNOWN",
+          "multipleOfficersYn": "UNKNOWN",
+          "noticeOfDisputeGuid": "",
+          "noticeOfHearingYn": "UNKNOWN",
+          "occamDisputantGiven1Nm": "",
+          "occamDisputantGiven2Nm": "",
+          "occamDisputantGiven3Nm": "",
+          "occamDisputantSurnameNm": "",
+          "occamDisputantPhoneNumber": "",
+          "occamDisputeId": 0,
+          "occamViolationTicketUpldId": "",
+          "occamDisputeCreatedBy": "",
+          "submittedTs": "",
+          "issuedTs": "",
+          "violationDate": "",
+          "icbcReceivedDate": "",
+          "enforcementOfficer": "",
+          "electronicTicketYn": "UNKNOWN",
+          "policeDetachment": "",
+          "courthouseLocation": "",
+          "offenceLocation": "",
+          "jjAssignedTo": "",
+          "decisionMadeBy": "",
+          "jjDecisionDate": "",
+          "vtcAssignedTo": "",
+          "vtcAssignedTs": "",
+          "fineReductionReason": "",
+          "timeToPayReason": "",
+          "contactLawFirmName": "",
+          "contactGivenName1": "",
+          "contactGivenName2": "",
+          "contactGivenName3": "",
+          "contactSurname": "",
+          "contactType": "UNKNOWN",
+          "appearInCourt": "UNKNOWN",
+          "courtAgenId": "",
+          "recalled": false,
+          "lawFirmName": "",
+          "lawyerSurname": "",
+          "lawyerGivenName1": "",
+          "lawyerGivenName2": "",
+          "lawyerGivenName3": "",
+          "justinRccId": "",
+          "interpreterLanguageCd": "",
+          "witnessNo": 0,
+          "disputantAttendanceType": "UNKNOWN",
+          "signatoryType": "U",
+          "signatoryName": "",
+          "remarks": [
+            {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "userFullName": "",
+              "note": "",
+              "remarksMadeTs": "",
+              "additionalProperties": {}
+            }
+          ],
+          "jjDisputedCounts": [
+            {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "plea": "UNKNOWN",
+              "count": 0,
+              "requestTimeToPay": "UNKNOWN",
+              "requestReduction": "UNKNOWN",
+              "appearInCourt": "UNKNOWN",
+              "description": "",
+              "dueDate": "",
+              "ticketedFineAmount": 0,
+              "lesserOrGreaterAmount": 0,
+              "includesSurcharge": "UNKNOWN",
+              "revisedDueDate": "",
+              "totalFineAmount": 0,
+              "violationDate": "",
+              "comments": "",
+              "latestPlea": "UNKNOWN",
+              "latestPleaUpdateTs": "",
+              "jjDisputedCountRoP": {
+                "createdBy": "",
+                "createdTs": "",
+                "modifiedBy": "",
+                "modifiedTs": "",
+                "id": 0,
+                "finding": "UNKNOWN",
+                "lesserDescription": "",
+                "ssProbationDuration": "",
+                "ssProbationConditions": "",
+                "jailDuration": "",
+                "jailIntermittent": "UNKNOWN",
+                "probationDuration": "",
+                "probationConditions": "",
+                "drivingProhibition": "",
+                "drivingProhibitionMVASection": "",
+                "dismissed": "UNKNOWN",
+                "forWantOfProsecution": "UNKNOWN",
+                "withdrawn": "UNKNOWN",
+                "abatement": "UNKNOWN",
+                "stayOfProceedingsBy": "",
+                "other": "",
+                "additionalProperties": {}
+              },
+              "additionalProperties": {}
+            }
+          ],
+          "jjDisputeCourtAppearanceRoPs": [
+            {
+              "justinAppearanceId": "",
+              "id": 0,
+              "appearanceTs": "",
+              "room": "",
+              "duration": 0,
+              "reason": "",
+              "appCd": "UNKNOWN",
+              "noAppTs": "",
+              "clerkRecord": "",
+              "defenceCounsel": "",
+              "dattCd": "UNKNOWN",
+              "crown": "UNKNOWN",
+              "jjSeized": "UNKNOWN",
+              "adjudicator": "",
+              "comments": "",
+              "amendments": {
+                "appearanceAmendmentId": 0,
+                "disputantSurnameNm": "",
+                "disputantGivenNamesNm": "",
+                "violationDateDtm": "",
+                "otherNotesTxt": "",
+                "count1ActSectDescTxt": "",
+                "count1OtherTxt": "",
+                "count2ActSectDescTxt": "",
+                "count2OtherTxt": "",
+                "count3ActSectDescTxt": "",
+                "count3OtherTxt": "",
+                "createdBy": "",
+                "createdTs": "",
+                "modifiedBy": "",
+                "modifiedTs": "",
+                "additionalProperties": {}
+              },
+              "additionalProperties": {}
+            }
+          ],
+          "additionalProperties": {}
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 200 Response
+  description: Admin resolution is submitted. The JJ Dispute is updated.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "fileData": [
+            {
+              "fileId": "",
+              "fileName": "",
+              "noticeOfDisputeGuid": "",
+              "documentSource": "Citizen",
+              "documentType": "",
+              "documentStatus": "Filed",
+              "virusScanStatus": "",
+              "staffReviewStatus": "",
+              "ticketNumber": "",
+              "disputeId": 0,
+              "pendingFileStream": "",
+              "deleteRequested": false
+            }
+          ],
+          "lockId": "",
+          "lockedBy": "",
+          "lockExpiresAtUtc": "",
+          "createdBy": "",
+          "createdTs": "",
+          "modifiedBy": "",
+          "modifiedTs": "",
+          "id": 0,
+          "ticketNumber": "",
+          "accidentYn": "UNKNOWN",
+          "addressLine1": "",
+          "addressLine2": "",
+          "addressLine3": "",
+          "addressCity": "",
+          "addressProvince": "",
+          "addressCountry": "",
+          "addressPostalCode": "",
+          "disputantSurname": "",
+          "disputantGivenName1": "",
+          "disputantGivenName2": "",
+          "disputantGivenName3": "",
+          "disputantBirthdate": "",
+          "driversLicenceNumber": "",
+          "drvLicIssuedProvSeqNo": "",
+          "drvLicIssuedCtryId": "",
+          "emailAddress": "",
+          "status": "UNKNOWN",
+          "hearingType": "UNKNOWN",
+          "multipleOfficersYn": "UNKNOWN",
+          "noticeOfDisputeGuid": "",
+          "noticeOfHearingYn": "UNKNOWN",
+          "occamDisputantGiven1Nm": "",
+          "occamDisputantGiven2Nm": "",
+          "occamDisputantGiven3Nm": "",
+          "occamDisputantSurnameNm": "",
+          "occamDisputantPhoneNumber": "",
+          "occamDisputeId": 0,
+          "occamViolationTicketUpldId": "",
+          "occamDisputeCreatedBy": "",
+          "submittedTs": "",
+          "issuedTs": "",
+          "violationDate": "",
+          "icbcReceivedDate": "",
+          "enforcementOfficer": "",
+          "electronicTicketYn": "UNKNOWN",
+          "policeDetachment": "",
+          "courthouseLocation": "",
+          "offenceLocation": "",
+          "jjAssignedTo": "",
+          "decisionMadeBy": "",
+          "jjDecisionDate": "",
+          "vtcAssignedTo": "",
+          "vtcAssignedTs": "",
+          "fineReductionReason": "",
+          "timeToPayReason": "",
+          "contactLawFirmName": "",
+          "contactGivenName1": "",
+          "contactGivenName2": "",
+          "contactGivenName3": "",
+          "contactSurname": "",
+          "contactType": "UNKNOWN",
+          "appearInCourt": "UNKNOWN",
+          "courtAgenId": "",
+          "recalled": false,
+          "lawFirmName": "",
+          "lawyerSurname": "",
+          "lawyerGivenName1": "",
+          "lawyerGivenName2": "",
+          "lawyerGivenName3": "",
+          "justinRccId": "",
+          "interpreterLanguageCd": "",
+          "witnessNo": 0,
+          "disputantAttendanceType": "UNKNOWN",
+          "signatoryType": "U",
+          "signatoryName": "",
+          "remarks": [
+            {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "userFullName": "",
+              "note": "",
+              "remarksMadeTs": "",
+              "additionalProperties": {}
+            }
+          ],
+          "jjDisputedCounts": [
+            {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "plea": "UNKNOWN",
+              "count": 0,
+              "requestTimeToPay": "UNKNOWN",
+              "requestReduction": "UNKNOWN",
+              "appearInCourt": "UNKNOWN",
+              "description": "",
+              "dueDate": "",
+              "ticketedFineAmount": 0,
+              "lesserOrGreaterAmount": 0,
+              "includesSurcharge": "UNKNOWN",
+              "revisedDueDate": "",
+              "totalFineAmount": 0,
+              "violationDate": "",
+              "comments": "",
+              "latestPlea": "UNKNOWN",
+              "latestPleaUpdateTs": "",
+              "jjDisputedCountRoP": {
+                "createdBy": "",
+                "createdTs": "",
+                "modifiedBy": "",
+                "modifiedTs": "",
+                "id": 0,
+                "finding": "UNKNOWN",
+                "lesserDescription": "",
+                "ssProbationDuration": "",
+                "ssProbationConditions": "",
+                "jailDuration": "",
+                "jailIntermittent": "UNKNOWN",
+                "probationDuration": "",
+                "probationConditions": "",
+                "drivingProhibition": "",
+                "drivingProhibitionMVASection": "",
+                "dismissed": "UNKNOWN",
+                "forWantOfProsecution": "UNKNOWN",
+                "withdrawn": "UNKNOWN",
+                "abatement": "UNKNOWN",
+                "stayOfProceedingsBy": "",
+                "other": "",
+                "additionalProperties": {}
+              },
+              "additionalProperties": {}
+            }
+          ],
+          "jjDisputeCourtAppearanceRoPs": [
+            {
+              "justinAppearanceId": "",
+              "id": 0,
+              "appearanceTs": "",
+              "room": "",
+              "duration": 0,
+              "reason": "",
+              "appCd": "UNKNOWN",
+              "noAppTs": "",
+              "clerkRecord": "",
+              "defenceCounsel": "",
+              "dattCd": "UNKNOWN",
+              "crown": "UNKNOWN",
+              "jjSeized": "UNKNOWN",
+              "adjudicator": "",
+              "comments": "",
+              "amendments": {
+                "appearanceAmendmentId": 0,
+                "disputantSurnameNm": "",
+                "disputantGivenNamesNm": "",
+                "violationDateDtm": "",
+                "otherNotesTxt": "",
+                "count1ActSectDescTxt": "",
+                "count1OtherTxt": "",
+                "count2ActSectDescTxt": "",
+                "count2OtherTxt": "",
+                "count3ActSectDescTxt": "",
+                "count3OtherTxt": "",
+                "createdBy": "",
+                "createdTs": "",
+                "modifiedBy": "",
+                "modifiedTs": "",
+                "additionalProperties": {}
+              },
+              "additionalProperties": {}
+            }
+          ],
+          "additionalProperties": {}
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 200 Response
+  description: Admin resolution is submitted. The JJ Dispute is updated.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "fileData": [
+            {
+              "fileId": "",
+              "fileName": "",
+              "noticeOfDisputeGuid": "",
+              "documentSource": "Citizen",
+              "documentType": "",
+              "documentStatus": "Filed",
+              "virusScanStatus": "",
+              "staffReviewStatus": "",
+              "ticketNumber": "",
+              "disputeId": 0,
+              "pendingFileStream": "",
+              "deleteRequested": false
+            }
+          ],
+          "lockId": "",
+          "lockedBy": "",
+          "lockExpiresAtUtc": "",
+          "createdBy": "",
+          "createdTs": "",
+          "modifiedBy": "",
+          "modifiedTs": "",
+          "id": 0,
+          "ticketNumber": "",
+          "accidentYn": "UNKNOWN",
+          "addressLine1": "",
+          "addressLine2": "",
+          "addressLine3": "",
+          "addressCity": "",
+          "addressProvince": "",
+          "addressCountry": "",
+          "addressPostalCode": "",
+          "disputantSurname": "",
+          "disputantGivenName1": "",
+          "disputantGivenName2": "",
+          "disputantGivenName3": "",
+          "disputantBirthdate": "",
+          "driversLicenceNumber": "",
+          "drvLicIssuedProvSeqNo": "",
+          "drvLicIssuedCtryId": "",
+          "emailAddress": "",
+          "status": "UNKNOWN",
+          "hearingType": "UNKNOWN",
+          "multipleOfficersYn": "UNKNOWN",
+          "noticeOfDisputeGuid": "",
+          "noticeOfHearingYn": "UNKNOWN",
+          "occamDisputantGiven1Nm": "",
+          "occamDisputantGiven2Nm": "",
+          "occamDisputantGiven3Nm": "",
+          "occamDisputantSurnameNm": "",
+          "occamDisputantPhoneNumber": "",
+          "occamDisputeId": 0,
+          "occamViolationTicketUpldId": "",
+          "occamDisputeCreatedBy": "",
+          "submittedTs": "",
+          "issuedTs": "",
+          "violationDate": "",
+          "icbcReceivedDate": "",
+          "enforcementOfficer": "",
+          "electronicTicketYn": "UNKNOWN",
+          "policeDetachment": "",
+          "courthouseLocation": "",
+          "offenceLocation": "",
+          "jjAssignedTo": "",
+          "decisionMadeBy": "",
+          "jjDecisionDate": "",
+          "vtcAssignedTo": "",
+          "vtcAssignedTs": "",
+          "fineReductionReason": "",
+          "timeToPayReason": "",
+          "contactLawFirmName": "",
+          "contactGivenName1": "",
+          "contactGivenName2": "",
+          "contactGivenName3": "",
+          "contactSurname": "",
+          "contactType": "UNKNOWN",
+          "appearInCourt": "UNKNOWN",
+          "courtAgenId": "",
+          "recalled": false,
+          "lawFirmName": "",
+          "lawyerSurname": "",
+          "lawyerGivenName1": "",
+          "lawyerGivenName2": "",
+          "lawyerGivenName3": "",
+          "justinRccId": "",
+          "interpreterLanguageCd": "",
+          "witnessNo": 0,
+          "disputantAttendanceType": "UNKNOWN",
+          "signatoryType": "U",
+          "signatoryName": "",
+          "remarks": [
+            {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "userFullName": "",
+              "note": "",
+              "remarksMadeTs": "",
+              "additionalProperties": {}
+            }
+          ],
+          "jjDisputedCounts": [
+            {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "plea": "UNKNOWN",
+              "count": 0,
+              "requestTimeToPay": "UNKNOWN",
+              "requestReduction": "UNKNOWN",
+              "appearInCourt": "UNKNOWN",
+              "description": "",
+              "dueDate": "",
+              "ticketedFineAmount": 0,
+              "lesserOrGreaterAmount": 0,
+              "includesSurcharge": "UNKNOWN",
+              "revisedDueDate": "",
+              "totalFineAmount": 0,
+              "violationDate": "",
+              "comments": "",
+              "latestPlea": "UNKNOWN",
+              "latestPleaUpdateTs": "",
+              "jjDisputedCountRoP": {
+                "createdBy": "",
+                "createdTs": "",
+                "modifiedBy": "",
+                "modifiedTs": "",
+                "id": 0,
+                "finding": "UNKNOWN",
+                "lesserDescription": "",
+                "ssProbationDuration": "",
+                "ssProbationConditions": "",
+                "jailDuration": "",
+                "jailIntermittent": "UNKNOWN",
+                "probationDuration": "",
+                "probationConditions": "",
+                "drivingProhibition": "",
+                "drivingProhibitionMVASection": "",
+                "dismissed": "UNKNOWN",
+                "forWantOfProsecution": "UNKNOWN",
+                "withdrawn": "UNKNOWN",
+                "abatement": "UNKNOWN",
+                "stayOfProceedingsBy": "",
+                "other": "",
+                "additionalProperties": {}
+              },
+              "additionalProperties": {}
+            }
+          ],
+          "jjDisputeCourtAppearanceRoPs": [
+            {
+              "justinAppearanceId": "",
+              "id": 0,
+              "appearanceTs": "",
+              "room": "",
+              "duration": 0,
+              "reason": "",
+              "appCd": "UNKNOWN",
+              "noAppTs": "",
+              "clerkRecord": "",
+              "defenceCounsel": "",
+              "dattCd": "UNKNOWN",
+              "crown": "UNKNOWN",
+              "jjSeized": "UNKNOWN",
+              "adjudicator": "",
+              "comments": "",
+              "amendments": {
+                "appearanceAmendmentId": 0,
+                "disputantSurnameNm": "",
+                "disputantGivenNamesNm": "",
+                "violationDateDtm": "",
+                "otherNotesTxt": "",
+                "count1ActSectDescTxt": "",
+                "count1OtherTxt": "",
+                "count2ActSectDescTxt": "",
+                "count2OtherTxt": "",
+                "count3ActSectDescTxt": "",
+                "count3OtherTxt": "",
+                "createdBy": "",
+                "createdTs": "",
+                "modifiedBy": "",
+                "modifiedTs": "",
+                "additionalProperties": {}
+              },
+              "additionalProperties": {}
+            }
+          ],
+          "additionalProperties": {}
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: The request was not well formed. Check the parameters.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: The request was not well formed. Check the parameters.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: The request was not well formed. Check the parameters.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires jj-dispute:update permission.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires jj-dispute:update permission.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires jj-dispute:update permission.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  description: The JJ Dispute to update was not found.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  description: The JJ Dispute to update was not found.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  description: The JJ Dispute to update was not found.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 405 Response
+  description: An invalid JJ Dispute status is provided. Update failed.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 405
+      text: Method Not Allowed
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 405 Response
+  description: An invalid JJ Dispute status is provided. Update failed.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 405
+      text: Method Not Allowed
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 405 Response
+  description: An invalid JJ Dispute status is provided. Update failed.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 405
+      text: Method Not Allowed
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 409 Response
+  description: Conflict
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 409
+      text: Conflict
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 409 Response
+  description: Conflict
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 409
+      text: Conflict
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 409 Response
+  description: Conflict
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 409
+      text: Conflict
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 500 Response
+  description: There was a server error that prevented the update from completing successfully.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber
+    method: PUT
+    mode: json
+    params:query: {
+      ~jjDisputeId: 
+      ~checkVTC: 
+    }
+  
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "lockId": "",
+        "lockedBy": "",
+        "lockExpiresAtUtc": "",
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "id": 0,
+        "ticketNumber": "",
+        "accidentYn": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressCountry": "",
+        "addressPostalCode": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "drvLicIssuedProvSeqNo": "",
+        "drvLicIssuedCtryId": "",
+        "emailAddress": "",
+        "status": "UNKNOWN",
+        "hearingType": "UNKNOWN",
+        "multipleOfficersYn": "UNKNOWN",
+        "noticeOfDisputeGuid": "",
+        "noticeOfHearingYn": "UNKNOWN",
+        "occamDisputantGiven1Nm": "",
+        "occamDisputantGiven2Nm": "",
+        "occamDisputantGiven3Nm": "",
+        "occamDisputantSurnameNm": "",
+        "occamDisputantPhoneNumber": "",
+        "occamDisputeId": 0,
+        "occamViolationTicketUpldId": "",
+        "occamDisputeCreatedBy": "",
+        "submittedTs": "",
+        "issuedTs": "",
+        "violationDate": "",
+        "icbcReceivedDate": "",
+        "enforcementOfficer": "",
+        "electronicTicketYn": "UNKNOWN",
+        "policeDetachment": "",
+        "courthouseLocation": "",
+        "offenceLocation": "",
+        "jjAssignedTo": "",
+        "decisionMadeBy": "",
+        "jjDecisionDate": "",
+        "vtcAssignedTo": "",
+        "vtcAssignedTs": "",
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "contactLawFirmName": "",
+        "contactGivenName1": "",
+        "contactGivenName2": "",
+        "contactGivenName3": "",
+        "contactSurname": "",
+        "contactType": "UNKNOWN",
+        "appearInCourt": "UNKNOWN",
+        "courtAgenId": "",
+        "recalled": false,
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "justinRccId": "",
+        "interpreterLanguageCd": "",
+        "witnessNo": 0,
+        "disputantAttendanceType": "UNKNOWN",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "remarks": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "userFullName": "",
+            "note": "",
+            "remarksMadeTs": "",
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputedCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "id": 0,
+            "plea": "UNKNOWN",
+            "count": 0,
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "appearInCourt": "UNKNOWN",
+            "description": "",
+            "dueDate": "",
+            "ticketedFineAmount": 0,
+            "lesserOrGreaterAmount": 0,
+            "includesSurcharge": "UNKNOWN",
+            "revisedDueDate": "",
+            "totalFineAmount": 0,
+            "violationDate": "",
+            "comments": "",
+            "latestPlea": "UNKNOWN",
+            "latestPleaUpdateTs": "",
+            "jjDisputedCountRoP": {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "id": 0,
+              "finding": "UNKNOWN",
+              "lesserDescription": "",
+              "ssProbationDuration": "",
+              "ssProbationConditions": "",
+              "jailDuration": "",
+              "jailIntermittent": "UNKNOWN",
+              "probationDuration": "",
+              "probationConditions": "",
+              "drivingProhibition": "",
+              "drivingProhibitionMVASection": "",
+              "dismissed": "UNKNOWN",
+              "forWantOfProsecution": "UNKNOWN",
+              "withdrawn": "UNKNOWN",
+              "abatement": "UNKNOWN",
+              "stayOfProceedingsBy": "",
+              "other": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "jjDisputeCourtAppearanceRoPs": [
+          {
+            "justinAppearanceId": "",
+            "id": 0,
+            "appearanceTs": "",
+            "room": "",
+            "duration": 0,
+            "reason": "",
+            "appCd": "UNKNOWN",
+            "noAppTs": "",
+            "clerkRecord": "",
+            "defenceCounsel": "",
+            "dattCd": "UNKNOWN",
+            "crown": "UNKNOWN",
+            "jjSeized": "UNKNOWN",
+            "adjudicator": "",
+            "comments": "",
+            "amendments": {
+              "appearanceAmendmentId": 0,
+              "disputantSurnameNm": "",
+              "disputantGivenNamesNm": "",
+              "violationDateDtm": "",
+              "otherNotesTxt": "",
+              "count1ActSectDescTxt": "",
+              "count1OtherTxt": "",
+              "count2ActSectDescTxt": "",
+              "count2OtherTxt": "",
+              "count3ActSectDescTxt": "",
+              "count3OtherTxt": "",
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "additionalProperties": {}
+            },
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    status: {
+      code: 500
+      text: Internal Server Error
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

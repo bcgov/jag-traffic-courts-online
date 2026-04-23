@@ -1,0 +1,662 @@
+meta {
+  name: Updates each JJ Dispute based on the passed in IDs (ticket number) to assign them to a specific JJ or unassign them if JJ not specified.
+  type: http
+  seq: 7
+  tags: [
+    JJ
+  ]
+}
+
+put {
+  url: {{baseUrl}}/api/jj/assign
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ticketNumbers: []
+  ~username: 
+}
+
+example {
+  name: 200 Response
+  description: JJ Disputes are assigned/unassigned to/from a JJ successfully. The JJ Disputes are updated.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/assign
+    method: PUT
+    mode: none
+    params:query: {
+      ticketNumbers: []
+      ~username: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: The request was not well formed. Check the parameters.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/assign
+    method: PUT
+    mode: none
+    params:query: {
+      ticketNumbers: []
+      ~username: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: The request was not well formed. Check the parameters.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/assign
+    method: PUT
+    mode: none
+    params:query: {
+      ticketNumbers: []
+      ~username: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: The request was not well formed. Check the parameters.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/assign
+    method: PUT
+    mode: none
+    params:query: {
+      ticketNumbers: []
+      ~username: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/assign
+    method: PUT
+    mode: none
+    params:query: {
+      ticketNumbers: []
+      ~username: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/assign
+    method: PUT
+    mode: none
+    params:query: {
+      ticketNumbers: []
+      ~username: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/assign
+    method: PUT
+    mode: none
+    params:query: {
+      ticketNumbers: []
+      ~username: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires jj-dispute:assign permission.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/assign
+    method: PUT
+    mode: none
+    params:query: {
+      ticketNumbers: []
+      ~username: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires jj-dispute:assign permission.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/assign
+    method: PUT
+    mode: none
+    params:query: {
+      ticketNumbers: []
+      ~username: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires jj-dispute:assign permission.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/assign
+    method: PUT
+    mode: none
+    params:query: {
+      ticketNumbers: []
+      ~username: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  description: The JJ Dispute(s) to update was not found.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/assign
+    method: PUT
+    mode: none
+    params:query: {
+      ticketNumbers: []
+      ~username: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  description: The JJ Dispute(s) to update was not found.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/assign
+    method: PUT
+    mode: none
+    params:query: {
+      ticketNumbers: []
+      ~username: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  description: The JJ Dispute(s) to update was not found.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/assign
+    method: PUT
+    mode: none
+    params:query: {
+      ticketNumbers: []
+      ~username: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 405 Response
+  description: Method Not Allowed
+  
+  request: {
+    url: {{baseUrl}}/api/jj/assign
+    method: PUT
+    mode: none
+    params:query: {
+      ticketNumbers: []
+      ~username: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 405
+      text: Method Not Allowed
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 405 Response
+  description: Method Not Allowed
+  
+  request: {
+    url: {{baseUrl}}/api/jj/assign
+    method: PUT
+    mode: none
+    params:query: {
+      ticketNumbers: []
+      ~username: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 405
+      text: Method Not Allowed
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 405 Response
+  description: Method Not Allowed
+  
+  request: {
+    url: {{baseUrl}}/api/jj/assign
+    method: PUT
+    mode: none
+    params:query: {
+      ticketNumbers: []
+      ~username: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 405
+      text: Method Not Allowed
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 500 Response
+  description: There was a server error that prevented the update from completing successfully.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/assign
+    method: PUT
+    mode: none
+    params:query: {
+      ticketNumbers: []
+      ~username: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 500
+      text: Internal Server Error
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

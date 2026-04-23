@@ -1,0 +1,325 @@
+meta {
+  name: Returns all Disputes from the Oracle Data API with given parameters. (GET)
+  type: http
+  seq: 17
+  tags: [
+    Dispute
+  ]
+}
+
+get {
+  url: {{baseUrl}}/api/v2/occam/dispute/disputes
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~excludeStatus: UNKNOWN
+  ~excludeStatus: NEW
+  ~excludeStatus: VALIDATED
+  ~excludeStatus: PROCESSING
+  ~excludeStatus: REJECTED
+  ~excludeStatus: CANCELLED
+  ~excludeStatus: CONCLUDED
+  ~ticket: 
+  ~surname: 
+  ~status: UNKNOWN
+  ~status: NEW
+  ~status: VALIDATED
+  ~status: PROCESSING
+  ~status: REJECTED
+  ~status: CANCELLED
+  ~status: CONCLUDED
+  ~from: 
+  ~thru: 
+  ~courthouseId: []
+  ~sortBy: []
+  ~direction: asc
+  ~direction: desc
+  ~DefaultPageSize: 
+  ~pageNumber: 
+  ~pageSize: 
+}
+
+headers {
+  ~X-Timezone: 
+}
+
+example {
+  name: 200 Response
+  description: The Disputes were found.
+  
+  request: {
+    url: {{baseUrl}}/api/v2/occam/dispute/disputes
+    method: GET
+    mode: none
+    params:query: {
+      ~excludeStatus: UNKNOWN
+      ~excludeStatus: NEW
+      ~excludeStatus: VALIDATED
+      ~excludeStatus: PROCESSING
+      ~excludeStatus: REJECTED
+      ~excludeStatus: CANCELLED
+      ~excludeStatus: CONCLUDED
+      ~ticket: 
+      ~surname: 
+      ~status: UNKNOWN
+      ~status: NEW
+      ~status: VALIDATED
+      ~status: PROCESSING
+      ~status: REJECTED
+      ~status: CANCELLED
+      ~status: CONCLUDED
+      ~from: 
+      ~thru: 
+      ~courthouseId: []
+      ~sortBy: []
+      ~direction: asc
+      ~direction: desc
+      ~DefaultPageSize: 
+      ~pageNumber: 
+      ~pageSize: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "items": [
+            {
+              "disputeId": 0,
+              "ticketNumber": "",
+              "submittedTs": "",
+              "disputantSurname": "",
+              "disputantGivenName1": "",
+              "disputantGivenName2": "",
+              "disputantGivenName3": "",
+              "status": "UNKNOWN",
+              "emailAddress": "",
+              "emailAddressVerified": false,
+              "filingDate": "",
+              "requestCourtAppearanceYn": "UNKNOWN",
+              "userAssignedTo": "",
+              "disputantDetectedOcrIssues": "UNKNOWN",
+              "systemDetectedOcrIssues": "UNKNOWN",
+              "interpreterRequired": "UNKNOWN",
+              "violationDate": "",
+              "jjAssignedTo": "",
+              "decisionMadeBy": "",
+              "jjDecisionDate": "",
+              "courtAgenId": "",
+              "courtAgenName": ""
+            }
+          ],
+          "pageNumber": 0,
+          "pageSize": 0,
+          "totalPages": 0,
+          "totalRows": 0
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/v2/occam/dispute/disputes
+    method: GET
+    mode: none
+    params:query: {
+      ~excludeStatus: UNKNOWN
+      ~excludeStatus: NEW
+      ~excludeStatus: VALIDATED
+      ~excludeStatus: PROCESSING
+      ~excludeStatus: REJECTED
+      ~excludeStatus: CANCELLED
+      ~excludeStatus: CONCLUDED
+      ~ticket: 
+      ~surname: 
+      ~status: UNKNOWN
+      ~status: NEW
+      ~status: VALIDATED
+      ~status: PROCESSING
+      ~status: REJECTED
+      ~status: CANCELLED
+      ~status: CONCLUDED
+      ~from: 
+      ~thru: 
+      ~courthouseId: []
+      ~sortBy: []
+      ~direction: asc
+      ~direction: desc
+      ~DefaultPageSize: 
+      ~pageNumber: 
+      ~pageSize: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires dispute:read permission.
+  
+  request: {
+    url: {{baseUrl}}/api/v2/occam/dispute/disputes
+    method: GET
+    mode: none
+    params:query: {
+      ~excludeStatus: UNKNOWN
+      ~excludeStatus: NEW
+      ~excludeStatus: VALIDATED
+      ~excludeStatus: PROCESSING
+      ~excludeStatus: REJECTED
+      ~excludeStatus: CANCELLED
+      ~excludeStatus: CONCLUDED
+      ~ticket: 
+      ~surname: 
+      ~status: UNKNOWN
+      ~status: NEW
+      ~status: VALIDATED
+      ~status: PROCESSING
+      ~status: REJECTED
+      ~status: CANCELLED
+      ~status: CONCLUDED
+      ~from: 
+      ~thru: 
+      ~courthouseId: []
+      ~sortBy: []
+      ~direction: asc
+      ~direction: desc
+      ~DefaultPageSize: 
+      ~pageNumber: 
+      ~pageSize: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 500 Response
+  description: There was a server error that prevented the search from completing successfully or no data found.
+  
+  request: {
+    url: {{baseUrl}}/api/v2/occam/dispute/disputes
+    method: GET
+    mode: none
+    params:query: {
+      ~excludeStatus: UNKNOWN
+      ~excludeStatus: NEW
+      ~excludeStatus: VALIDATED
+      ~excludeStatus: PROCESSING
+      ~excludeStatus: REJECTED
+      ~excludeStatus: CANCELLED
+      ~excludeStatus: CONCLUDED
+      ~ticket: 
+      ~surname: 
+      ~status: UNKNOWN
+      ~status: NEW
+      ~status: VALIDATED
+      ~status: PROCESSING
+      ~status: REJECTED
+      ~status: CANCELLED
+      ~status: CONCLUDED
+      ~from: 
+      ~thru: 
+      ~courthouseId: []
+      ~sortBy: []
+      ~direction: asc
+      ~direction: desc
+      ~DefaultPageSize: 
+      ~pageNumber: 
+      ~pageSize: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 500
+      text: Internal Server Error
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

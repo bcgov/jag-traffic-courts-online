@@ -1,0 +1,362 @@
+meta {
+  name: Returns all File History Records from the Oracle Data API related to a specific ticket number. (GET)
+  type: http
+  seq: 1
+  tags: [
+    FileHistory
+  ]
+}
+
+get {
+  url: {{baseUrl}}/api/filehistory/filehistory
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~ticketNumber: 
+}
+
+headers {
+  ~X-Timezone: 
+}
+
+example {
+  name: 200 Response
+  description: The File history records were found.
+  
+  request: {
+    url: {{baseUrl}}/api/filehistory/filehistory
+    method: GET
+    mode: none
+    params:query: {
+      ~ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+        [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "fileHistoryId": 0,
+            "disputeId": 0,
+            "auditLogEntryType": "UNKNOWN",
+            "description": "",
+            "comment": "",
+            "actionByApplicationUser": "",
+            "additionalProperties": {}
+          }
+        ]
+      '''
+    }
+  }
+}
+
+example {
+  name: 200 Response
+  description: The File history records were found.
+  
+  request: {
+    url: {{baseUrl}}/api/filehistory/filehistory
+    method: GET
+    mode: none
+    params:query: {
+      ~ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "fileHistoryId": 0,
+            "disputeId": 0,
+            "auditLogEntryType": "UNKNOWN",
+            "description": "",
+            "comment": "",
+            "actionByApplicationUser": "",
+            "additionalProperties": {}
+          }
+        ]
+      '''
+    }
+  }
+}
+
+example {
+  name: 200 Response
+  description: The File history records were found.
+  
+  request: {
+    url: {{baseUrl}}/api/filehistory/filehistory
+    method: GET
+    mode: none
+    params:query: {
+      ~ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "fileHistoryId": 0,
+            "disputeId": 0,
+            "auditLogEntryType": "UNKNOWN",
+            "description": "",
+            "comment": "",
+            "actionByApplicationUser": "",
+            "additionalProperties": {}
+          }
+        ]
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Unauthenticated.
+  
+  request: {
+    url: {{baseUrl}}/api/filehistory/filehistory
+    method: GET
+    mode: none
+    params:query: {
+      ~ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires dispute:read permission.
+  
+  request: {
+    url: {{baseUrl}}/api/filehistory/filehistory
+    method: GET
+    mode: none
+    params:query: {
+      ~ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires dispute:read permission.
+  
+  request: {
+    url: {{baseUrl}}/api/filehistory/filehistory
+    method: GET
+    mode: none
+    params:query: {
+      ~ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires dispute:read permission.
+  
+  request: {
+    url: {{baseUrl}}/api/filehistory/filehistory
+    method: GET
+    mode: none
+    params:query: {
+      ~ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 500 Response
+  description: There was a server error that prevented the search from completing successfully or no data found.
+  
+  request: {
+    url: {{baseUrl}}/api/filehistory/filehistory
+    method: GET
+    mode: none
+    params:query: {
+      ~ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 500
+      text: Internal Server Error
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}
