@@ -547,6 +547,9 @@ namespace TrafficCourts.Domain.Models
         [Newtonsoft.Json.JsonProperty("revisedDueDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? RevisedDueDate { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("rsltAppearanceResultCd", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string RsltAppearanceResultCd { get; set; }
+
         [Newtonsoft.Json.JsonProperty("totalFineAmount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public float? TotalFineAmount { get; set; }
 

@@ -135,6 +135,13 @@ public class JJDisputedCount extends Auditable<String> {
 	private Date revisedDueDate;
 
 	/**
+	 * The appearance result code.
+	 */
+	@Column
+	@Schema(nullable = true)
+	private String rsltAppearanceResultCd;
+
+	/**
 	 * The final fine amount to be paid by the disputant.
 	 */
 	@Column(precision = 8, scale = 2)
