@@ -85,6 +85,14 @@ export class JJCountComponent implements OnInit, OnChanges {
   ) {
   }
 
+  get isConcluded(): boolean {
+    return this.jjDisputedCount?.rsltAppearanceResultCd === "END";
+  }
+
+  get isUncontested(): boolean {
+    return !this.jjDisputedCount;
+  }
+
   ngOnInit(): void {
     this.initForm();
     this.initFormData();
@@ -146,7 +154,7 @@ export class JJCountComponent implements OnInit, OnChanges {
 
       // initialize form, radio buttons
       // Assuming `this.jjDisputedCount` is the object you want to patch
-      const jjDisputedCountCopy = { ...this.jjDisputedCount };
+      const jjDisputedCountCopy = structuredClone(this.jjDisputedCount);
 
       // Exclude specific properties
       delete jjDisputedCountCopy.latestPleaUpdateTs;
@@ -251,7 +259,7 @@ export class JJCountComponent implements OnInit, OnChanges {
         this.form.disable();
       }
 
-      const jjDisputedCountFormCopy = { ...this.jjDisputedCount };
+      const jjDisputedCountFormCopy = structuredClone(this.jjDisputedCount);
 
       // Patch the form with the modified object
       this.countForm.patchValue(jjDisputedCountFormCopy);

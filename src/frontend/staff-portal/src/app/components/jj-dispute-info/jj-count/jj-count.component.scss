@@ -296,7 +296,10 @@ section{
   border: none;
 }
 
-.greyed-out {
+.uncontested {
   opacity: 0.5;          /* Makes the content look faded */
-  pointer-events: none;  /* Disables interactions (optional) */
+}
+
+.concluded {
+  opacity: 0.5;          /* Makes the content look faded */
 }
