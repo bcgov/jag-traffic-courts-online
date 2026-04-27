@@ -33,6 +33,7 @@ export interface JJDisputedCount {
     lesserOrGreaterAmount?: number | null;
     includesSurcharge?: JJDisputedCountIncludesSurcharge;
     revisedDueDate?: string | null;
+    rsltAppearanceResultCd?: string | null;
     totalFineAmount?: number | null;
     violationDate?: string | null;
     comments?: string | null;
