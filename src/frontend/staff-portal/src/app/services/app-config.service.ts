@@ -22,6 +22,7 @@ export class AppConfig implements IAppConfig {
   apiBaseUrl: string;
   features: {
     staffDisputeIntake: boolean;
+    amendments: boolean;
   };
 }
 

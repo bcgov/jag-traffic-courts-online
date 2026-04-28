@@ -1,0 +1,79 @@
+meta {
+  name: justin_cities
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{v2_baseUrl}}/justin_cities
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/justin_cities
+    method: GET
+    mode: none
+    params:path: {
+      city_seq_no_eq: 
+      city_seq_no_ge: 
+      city_seq_no_gt: 
+      city_seq_no_in: 
+      city_seq_no_is_not_null: 
+      city_seq_no_is_null: 
+      city_seq_no_le: 
+      city_seq_no_lt: 
+      city_seq_no_ne: 
+      city_seq_no_not_in: 
+      ctry_id_eq: 
+      ctry_id_ge: 
+      ctry_id_gt: 
+      ctry_id_in: 
+      ctry_id_is_not_null: 
+      ctry_id_is_null: 
+      ctry_id_le: 
+      ctry_id_lt: 
+      ctry_id_ne: 
+      ctry_id_not_in: 
+      order: 
+      prov_ctry_id_eq: 
+      prov_ctry_id_ge: 
+      prov_ctry_id_gt: 
+      prov_ctry_id_in: 
+      prov_ctry_id_is_not_null: 
+      prov_ctry_id_is_null: 
+      prov_ctry_id_le: 
+      prov_ctry_id_lt: 
+      prov_ctry_id_ne: 
+      prov_ctry_id_not_in: 
+      prov_seq_no_eq: 
+      prov_seq_no_ge: 
+      prov_seq_no_gt: 
+      prov_seq_no_in: 
+      prov_seq_no_is_not_null: 
+      prov_seq_no_is_null: 
+      prov_seq_no_le: 
+      prov_seq_no_lt: 
+      prov_seq_no_ne: 
+      prov_seq_no_not_in: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

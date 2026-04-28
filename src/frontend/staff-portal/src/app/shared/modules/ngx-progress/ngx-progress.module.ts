@@ -1,12 +1,10 @@
 import { NgModule } from '@angular/core';
 
-import { NgProgressModule } from 'ngx-progressbar';
-import { NgProgressHttpModule } from 'ngx-progressbar/http';
-
-import { ProgressConfig } from '@shared/modules/ngx-progress/ngx-progress.config';
+import { NgProgressbar } from 'ngx-progressbar';
+import { NgProgressHttp } from 'ngx-progressbar/http';
 
 @NgModule({
-  imports: [NgProgressModule.withConfig(ProgressConfig), NgProgressHttpModule],
-  exports: [NgProgressModule],
+  imports: [NgProgressbar, NgProgressHttp],
+  exports: [NgProgressbar, NgProgressHttp],
 })
 export class NgxProgressModule {}

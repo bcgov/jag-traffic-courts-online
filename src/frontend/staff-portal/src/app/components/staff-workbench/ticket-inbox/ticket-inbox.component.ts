@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { Sort } from '@angular/material/sort';
 import { DisputeService, Dispute } from 'app/services/dispute.service';
 import { DisputeRequestCourtAppearanceYn, DisputeDisputantDetectedOcrIssues, DisputeStatus, DisputeSystemDetectedOcrIssues, PagedDisputeListItemCollection, SortDirection, DisputeInterpreterRequired } from 'app/api';
@@ -13,6 +13,7 @@ import { featureType } from 'app/shared/directives/feature-flag.directive';
   selector: 'app-ticket-inbox',
   templateUrl: './ticket-inbox.component.html',
   styleUrls: ['./ticket-inbox.component.scss'],
+  standalone: false,
 })
 export class TicketInboxComponent implements OnInit {
   @Input() tabIndex: number;

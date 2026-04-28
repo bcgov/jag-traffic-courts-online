@@ -1,8 +1,12 @@
 meta {
   name: API_Staff
-  seq: 3
+  seq: 1
 }
 
 auth {
-  mode: inherit
+  mode: bearer
+}
+
+auth:bearer {
+  token: {{staff-api.bearertoken}}
 }

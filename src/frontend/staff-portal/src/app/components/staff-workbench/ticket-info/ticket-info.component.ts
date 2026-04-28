@@ -9,9 +9,9 @@ import {
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
-  MatLegacyDialog as MatDialog,
-  MatLegacyDialogConfig as MatDialogConfig,
-} from '@angular/material/legacy-dialog';
+  MatDialog,
+  MatDialogConfig,
+} from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
@@ -44,6 +44,7 @@ import { TicketImageContainerComponent } from '@shared/dialogs/ticket-image-cont
   selector: 'app-ticket-info',
   templateUrl: './ticket-info.component.html',
   styleUrls: ['./ticket-info.component.scss'],
+  standalone: false,
 })
 export class TicketInfoComponent implements OnInit {
   @Input() public disputeInfo: Dispute;
@@ -89,7 +90,6 @@ export class TicketInfoComponent implements OnInit {
   public collapseObj: any = {
     ticketInformation: true,
     contactInformation: true,
-    imageInformation: true,
   };
   constructor(
     protected route: ActivatedRoute,

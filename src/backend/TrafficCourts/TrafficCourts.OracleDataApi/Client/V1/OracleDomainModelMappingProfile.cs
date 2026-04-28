@@ -126,6 +126,7 @@ public class OracleDomainModelMappingProfile : AutoMapper.Profile
             .ForMember(dest => dest.DisputantBirthdate, opt => opt.MapFrom(src => DefaultMapping(src.DisputantBirthdate)));
 
         CreateMap<Oracle.JJDisputeCourtAppearanceRoP, DomainModel.JJDisputeCourtAppearanceRoP>().ReverseMap();
+        CreateMap<Oracle.JJDisputeCourtAppearanceAmendments, DomainModel.JJDisputeCourtAppearanceAmendments>().ReverseMap();
         CreateMap<Oracle.JJDisputedCount, DomainModel.JJDisputedCount>().ReverseMap();
         CreateMap<Oracle.JJDisputedCountRoP, DomainModel.JJDisputedCountRoP>().ReverseMap();
         CreateMap<Oracle.JJDisputeRemark, DomainModel.JJDisputeRemark>().ReverseMap();

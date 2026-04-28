@@ -707,6 +707,8 @@ components:
           type: string
           format: date
           x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlySerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlyDeserializer.class)"
+        rsltAppearanceResultCd:
+          type: string
         statuteId:
           type: string
         stayOfProceedingsByTxt:
@@ -757,9 +759,39 @@ components:
           format: date-time
           x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer.class)"
         durationHours:
-          type: Integer
+          type: integer
         durationMinutes:
-          type: Integer
+          type: integer
+        amendments:
+          type: object
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)"
+          properties:
+            appearanceAmendmentId:
+              type: string
+            disputantSurnameNm:
+              type: string
+            disputantGivenNamesNm:
+              type: string
+            violationDateDtm:
+              type: string
+              format: date
+              x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlySerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlyDeserializer.class)"
+            otherNotesTxt:
+              type: string
+            count1ActSectDescTxt:
+              type: string
+            count1OtherTxt:
+              type: string
+            count2ActSectDescTxt:
+              type: string
+            count2OtherTxt:
+              type: string
+            count3ActSectDescTxt:
+              type: string
+            count3OtherTxt:
+              type: string
+          allOf:
+            - $ref: '#/components/schemas/AuditBase'
         judgeOrJjNameTxt:
           type: string
         justinAppearanceId:

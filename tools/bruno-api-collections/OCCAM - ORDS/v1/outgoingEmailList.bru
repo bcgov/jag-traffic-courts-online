@@ -1,0 +1,43 @@
+meta {
+  name: outgoingEmailList
+  type: http
+  seq: 15
+}
+
+get {
+  url: {{v1_baseUrl}}/outgoingEmailList
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~ticketNumber: 
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/outgoingEmailList
+    method: GET
+    mode: none
+    params:query: {
+      ~ticketNumber: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

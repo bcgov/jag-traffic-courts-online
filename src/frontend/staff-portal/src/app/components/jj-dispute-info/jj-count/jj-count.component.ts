@@ -2,14 +2,15 @@ import { Component, EventEmitter, Input, Output, OnInit, OnChanges, SimpleChange
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { JJDispute } from '../../../services/jj-dispute.service';
 import { JJDisputedCount, JJDisputedCountAppearInCourt, JJDisputedCountIncludesSurcharge, JJDisputedCountLatestPlea, JJDisputedCountPlea, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputedCountRoPAbatement, JJDisputedCountRoPDismissed, JJDisputedCountRoPFinding, JJDisputedCountRoPForWantOfProsecution, JJDisputedCountRoPJailIntermittent, JJDisputedCountRoPWithdrawn, JJDisputeHearingType, JJDisputeStatus } from 'app/api';
-import { MatLegacyRadioChange as MatRadioChange } from '@angular/material/legacy-radio';
+import { MatRadioChange } from '@angular/material/radio';
 import { LookupsService, Statute } from 'app/services/lookups.service';
 import { TabType } from '@shared/enums/tab-type.enum';
 
 @Component({
   selector: 'app-jj-count',
   templateUrl: './jj-count.component.html',
-  styleUrls: ['./jj-count.component.scss']
+  styleUrls: ['./jj-count.component.scss'],
+  standalone: false,
 })
 export class JJCountComponent implements OnInit, OnChanges {
   @Input() jjDisputeInfo: JJDispute;
@@ -84,6 +85,14 @@ export class JJCountComponent implements OnInit, OnChanges {
   ) {
   }
 
+  get isConcluded(): boolean {
+    return this.jjDisputedCount?.rsltAppearanceResultCd === "END";
+  }
+
+  get isUncontested(): boolean {
+    return !this.jjDisputedCount;
+  }
+
   ngOnInit(): void {
     this.initForm();
     this.initFormData();
@@ -145,7 +154,7 @@ export class JJCountComponent implements OnInit, OnChanges {
 
       // initialize form, radio buttons
       // Assuming `this.jjDisputedCount` is the object you want to patch
-      const jjDisputedCountCopy = { ...this.jjDisputedCount };
+      const jjDisputedCountCopy = structuredClone(this.jjDisputedCount);
 
       // Exclude specific properties
       delete jjDisputedCountCopy.latestPleaUpdateTs;
@@ -250,7 +259,7 @@ export class JJCountComponent implements OnInit, OnChanges {
         this.form.disable();
       }
 
-      const jjDisputedCountFormCopy = { ...this.jjDisputedCount };
+      const jjDisputedCountFormCopy = structuredClone(this.jjDisputedCount);
 
       // Patch the form with the modified object
       this.countForm.patchValue(jjDisputedCountFormCopy);

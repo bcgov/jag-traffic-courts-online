@@ -1,0 +1,59 @@
+meta {
+  name: tco_dispute_status_types
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{v2_baseUrl}}/tco_dispute_status_types
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/tco_dispute_status_types
+    method: GET
+    mode: none
+    params:path: {
+      active_yn_eq: 
+      active_yn_ge: 
+      active_yn_gt: 
+      active_yn_in: 
+      active_yn_is_not_null: 
+      active_yn_is_null: 
+      active_yn_le: 
+      active_yn_lt: 
+      active_yn_ne: 
+      active_yn_not_in: 
+      dispute_status_type_cd_eq: 
+      dispute_status_type_cd_ge: 
+      dispute_status_type_cd_gt: 
+      dispute_status_type_cd_in: 
+      dispute_status_type_cd_is_not_null: 
+      dispute_status_type_cd_is_null: 
+      dispute_status_type_cd_le: 
+      dispute_status_type_cd_lt: 
+      dispute_status_type_cd_ne: 
+      dispute_status_type_cd_not_in: 
+      order: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}
