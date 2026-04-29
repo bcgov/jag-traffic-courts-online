@@ -1,11 +1,11 @@
 meta {
-  name: Create a new record on tco/v1 (5)
+  name: appearanceResultDataInsert
   type: http
-  seq: 10
+  seq: 15
 }
 
 post {
-  url: {{v1_baseUrl}}/processDisputeRemark
+  url: {{v1_baseUrl}}/appearanceResultDataInsert
   body: none
   auth: inherit
 }
@@ -15,7 +15,7 @@ example {
   description: The successfully created record.
   
   request: {
-    url: {{v1_baseUrl}}/processDisputeRemark
+    url: {{v1_baseUrl}}/appearanceResultDataInsert
     method: POST
     mode: none
   }

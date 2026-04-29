@@ -1,11 +1,11 @@
 meta {
-  name: Create a new record on tco/v1 (3)
+  name: unassignDisputeJj
   type: http
-  seq: 8
+  seq: 13
 }
 
 post {
-  url: {{v1_baseUrl}}/disputeStatus
+  url: {{v1_baseUrl}}/unassignDisputeJj
   body: none
   auth: inherit
 }
@@ -15,7 +15,7 @@ example {
   description: The successfully created record.
   
   request: {
-    url: {{v1_baseUrl}}/disputeStatus
+    url: {{v1_baseUrl}}/unassignDisputeJj
     method: POST
     mode: none
   }

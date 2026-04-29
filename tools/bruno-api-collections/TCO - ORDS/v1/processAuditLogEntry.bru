@@ -1,11 +1,11 @@
 meta {
-  name: Create a new record on tco/v1 (6)
+  name: processAuditLogEntry
   type: http
-  seq: 11
+  seq: 9
 }
 
 post {
-  url: {{v1_baseUrl}}/ticketDataInsert
+  url: {{v1_baseUrl}}/processAuditLogEntry
   body: none
   auth: inherit
 }
@@ -15,7 +15,7 @@ example {
   description: The successfully created record.
   
   request: {
-    url: {{v1_baseUrl}}/ticketDataInsert
+    url: {{v1_baseUrl}}/processAuditLogEntry
     method: POST
     mode: none
   }

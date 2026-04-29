@@ -1,11 +1,11 @@
 meta {
-  name: Create a new record on tco/v1 (2)
+  name: ticketImageDataGet
   type: http
-  seq: 7
+  seq: 12
 }
 
 post {
-  url: {{v1_baseUrl}}/assignDisputeVtc
+  url: {{v1_baseUrl}}/ticketImageDataGet
   body: none
   auth: inherit
 }
@@ -15,7 +15,7 @@ example {
   description: The successfully created record.
   
   request: {
-    url: {{v1_baseUrl}}/assignDisputeVtc
+    url: {{v1_baseUrl}}/ticketImageDataGet
     method: POST
     mode: none
   }

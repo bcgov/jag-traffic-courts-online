@@ -1,11 +1,11 @@
 meta {
-  name: Create a new record on tco/v1 (POST)
+  name: ticketDataInsert
   type: http
-  seq: 15
+  seq: 11
 }
 
 post {
-  url: {{v1_baseUrl}}/appearanceResultDataInsert
+  url: {{v1_baseUrl}}/ticketDataInsert
   body: none
   auth: inherit
 }
@@ -15,7 +15,7 @@ example {
   description: The successfully created record.
   
   request: {
-    url: {{v1_baseUrl}}/appearanceResultDataInsert
+    url: {{v1_baseUrl}}/ticketDataInsert
     method: POST
     mode: none
   }
