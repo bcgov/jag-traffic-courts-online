@@ -80,6 +80,8 @@ export class JJCountComponent implements OnInit, OnChanges {
   drivingProhibitionFilteredStatutes: Statute[] = [...this.drivingProhibitionStatutes];
   DisputeStatus = JJDisputeStatus;
 
+  todayDateOnlyString: string = this.getFormattedDateOnlyString(new Date());
+
   originalDueDate: string;
 
   constructor(
@@ -146,7 +148,7 @@ export class JJCountComponent implements OnInit, OnChanges {
         this.jjDisputedCount.totalFineAmount = null;
         this.jjDisputedCount.dueDate = null;
         this.jjDisputedCount.revisedDueDate = null;
-        this.jjDisputedCount.grantTimeToPay = null;
+        this.jjDisputedCount.grantTimeToPay = this.GrantTimeToPay.Unknown;
       }
 
       // initialize form, radio buttons
@@ -155,8 +157,6 @@ export class JJCountComponent implements OnInit, OnChanges {
 
       // Exclude specific properties
       delete jjDisputedCountCopy.latestPleaUpdateTs;
-      delete jjDisputedCountCopy.revisedDueDate;
-      delete jjDisputedCountCopy.grantTimeToPay;
 
       // Patch the form with the modified object
       this.form.patchValue(jjDisputedCountCopy);
@@ -173,8 +173,7 @@ export class JJCountComponent implements OnInit, OnChanges {
           "yes" : "no") : "") : "";
 
       this.updateInclSurcharge(this.inclSurcharge);
-      debugger;
-      this.updateGrantTimeToPay(this.timeToPay);
+      this.bindRevisedDueDate(this.jjDisputedCount.revisedDueDate); // ensure the form field matches our model value
 
       // TCVP-2467
       if (!this.isViewOnly && this.jjDisputedCount.jjDisputedCountRoP?.finding &&
@@ -185,7 +184,8 @@ export class JJCountComponent implements OnInit, OnChanges {
         this.form.controls.revisedDueDate.setValue(null);
         this.jjDisputedCount.lesserOrGreaterAmount = null;
         this.jjDisputedCount.revisedDueDate = null;
-        this.jjDisputedCount.totalFineAmount = null;
+        this.jjDisputedCount.totalFineAmount = null;        
+        this.jjDisputedCount.grantTimeToPay = this.GrantTimeToPay.Unknown;
       }
 
       if (this.jjDisputeInfo.hearingType === this.HearingType.CourtAppearance) {
@@ -259,8 +259,7 @@ export class JJCountComponent implements OnInit, OnChanges {
 
       // Patch the form with the modified object
       this.countForm.patchValue(jjDisputedCountFormCopy);
-      debugger;
-      this.countForm.controls.revisedDueDate.setValue(this.jjDisputedCount.revisedDueDate ? new Date(this.jjDisputedCount.revisedDueDate) : null);
+      //this.countForm.controls.revisedDueDate.setValue(this.jjDisputedCount.revisedDueDate ? new Date(this.jjDisputedCount.revisedDueDate) : null);
 
       if (this.jjDisputedCount.jjDisputedCountRoP) {
         this.countRoPForm.patchValue(this.jjDisputedCount.jjDisputedCountRoP);
@@ -517,9 +516,11 @@ export class JJCountComponent implements OnInit, OnChanges {
 
   updateGrantTimeToPay(eventValue: string) {
     debugger;
-    if (eventValue == "yes") {
-      this.jjDisputedCount.revisedDueDate = null; // clear any values to ensure a clean entry form for JJ when changed to yes
-    }
+    if (eventValue == "no") {
+      this.jjDisputedCount.revisedDueDate = this.todayDateOnlyString; // GrantTimeToPlay is "no" => RevisedDueDate is today
+    } else if (eventValue != "yes") { // GrantTimeToPay is unselected => RevisedDueDate is null
+      this.jjDisputedCount.revisedDueDate = null; 
+    } // else GrantTimeToPay is "yes" => keep the existing RevisedDueDate value
 
     this.bindRevisedDueDate(this.jjDisputedCount.revisedDueDate); // ensure the form field matches our model value
   }
