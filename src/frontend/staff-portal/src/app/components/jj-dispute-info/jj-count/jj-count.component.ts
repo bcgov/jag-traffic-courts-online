@@ -515,7 +515,6 @@ export class JJCountComponent implements OnInit, OnChanges {
   }
 
   updateGrantTimeToPay(eventValue: string) {
-    debugger;
     if (eventValue == "no") {
       this.jjDisputedCount.revisedDueDate = this.todayDateOnlyString; // GrantTimeToPlay is "no" => RevisedDueDate is today
     } else if (eventValue != "yes") { // GrantTimeToPay is unselected => RevisedDueDate is null
