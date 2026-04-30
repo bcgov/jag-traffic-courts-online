@@ -1,0 +1,791 @@
+meta {
+  name: get /api/jj/disputes/search
+  type: http
+  seq: 2
+  tags: [
+    JJ
+  ]
+}
+
+get {
+  url: {{baseUrl}}/api/jj/disputes/search
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~appearances: 
+  ~notice_of_hearing_yn: 
+  ~multiple_officers_yn: 
+  ~electronic_ticket_yn: 
+  ~submitted_from: 
+  ~submitted_thru: 
+  ~ticket_number: 
+  ~surname: 
+  ~surname_or_org_name: 
+  ~jj_assigned_to: 
+  ~jj_decision_dt_from: 
+  ~jj_decision_dt_thru: 
+  ~dispute_status_codes: 
+  ~appearance_courthouse_ids: 
+  ~appearance_dt_from: 
+  ~appearance_dt_thru: 
+  ~appearance_courtroom_code: 
+  ~to_be_heard_at_courthouse_ids: 
+  ~hearing_type_cd: 
+  ~sort_by: 
+  ~page_number: 
+  ~page_size: 
+  ~fetch_pending_adjournments: 
+}
+
+headers {
+  ~X-Timezone: 
+}
+
+example {
+  name: 200 Response
+  description: OK
+  
+  request: {
+    url: {{baseUrl}}/api/jj/disputes/search
+    method: GET
+    mode: none
+    params:query: {
+      ~appearances: 
+      ~notice_of_hearing_yn: 
+      ~multiple_officers_yn: 
+      ~electronic_ticket_yn: 
+      ~submitted_from: 
+      ~submitted_thru: 
+      ~ticket_number: 
+      ~surname: 
+      ~surname_or_org_name: 
+      ~jj_assigned_to: 
+      ~jj_decision_dt_from: 
+      ~jj_decision_dt_thru: 
+      ~dispute_status_codes: 
+      ~appearance_courthouse_ids: 
+      ~appearance_dt_from: 
+      ~appearance_dt_thru: 
+      ~appearance_courtroom_code: 
+      ~to_be_heard_at_courthouse_ids: 
+      ~hearing_type_cd: 
+      ~sort_by: 
+      ~page_number: 
+      ~page_size: 
+      ~fetch_pending_adjournments: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "items": [
+            {
+              "id": 0,
+              "submittedTs": "",
+              "jjDecisionDate": "",
+              "signatoryName": "",
+              "hearingType": "",
+              "ticketNumber": "",
+              "violationDate": "",
+              "violationDateCount": 0,
+              "toBeHeardAtCourthouseId": 0,
+              "toBeHeardAtCourthouseName": "",
+              "disputantSurname": "",
+              "disputantGivenName1": "",
+              "disputantGivenName2": "",
+              "disputantGivenName3": "",
+              "disputantOrganizationName": "",
+              "disputeStatus": {
+                "code": "",
+                "description": ""
+              },
+              "policeDetachment": "",
+              "policeDetachmentId": 0,
+              "accidentYn": "Unknown",
+              "multipleOfficersYn": "Unknown",
+              "noticeOfHearingYn": "Unknown",
+              "electronicTicketYn": "Unknown",
+              "pendingAdjournmentRequestsYn": "Unknown",
+              "jjAssignedTo": "",
+              "vtcAssignedTo": "",
+              "vtcAssignedTs": "",
+              "appearanceCourthouseId": 0,
+              "appearanceCourthouseName": "",
+              "appearanceRoomCode": "",
+              "appearanceTs": "",
+              "appearanceDuration": 0,
+              "timeToPayReason": "",
+              "fineReductionReason": ""
+            }
+          ],
+          "pageNumber": 0,
+          "pageSize": 0,
+          "totalPages": 0,
+          "totalRows": 0
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 200 Response
+  description: OK
+  
+  request: {
+    url: {{baseUrl}}/api/jj/disputes/search
+    method: GET
+    mode: none
+    params:query: {
+      ~appearances: 
+      ~notice_of_hearing_yn: 
+      ~multiple_officers_yn: 
+      ~electronic_ticket_yn: 
+      ~submitted_from: 
+      ~submitted_thru: 
+      ~ticket_number: 
+      ~surname: 
+      ~surname_or_org_name: 
+      ~jj_assigned_to: 
+      ~jj_decision_dt_from: 
+      ~jj_decision_dt_thru: 
+      ~dispute_status_codes: 
+      ~appearance_courthouse_ids: 
+      ~appearance_dt_from: 
+      ~appearance_dt_thru: 
+      ~appearance_courtroom_code: 
+      ~to_be_heard_at_courthouse_ids: 
+      ~hearing_type_cd: 
+      ~sort_by: 
+      ~page_number: 
+      ~page_size: 
+      ~fetch_pending_adjournments: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "items": [
+            {
+              "id": 0,
+              "submittedTs": "",
+              "jjDecisionDate": "",
+              "signatoryName": "",
+              "hearingType": "",
+              "ticketNumber": "",
+              "violationDate": "",
+              "violationDateCount": 0,
+              "toBeHeardAtCourthouseId": 0,
+              "toBeHeardAtCourthouseName": "",
+              "disputantSurname": "",
+              "disputantGivenName1": "",
+              "disputantGivenName2": "",
+              "disputantGivenName3": "",
+              "disputantOrganizationName": "",
+              "disputeStatus": {
+                "code": "",
+                "description": ""
+              },
+              "policeDetachment": "",
+              "policeDetachmentId": 0,
+              "accidentYn": "Unknown",
+              "multipleOfficersYn": "Unknown",
+              "noticeOfHearingYn": "Unknown",
+              "electronicTicketYn": "Unknown",
+              "pendingAdjournmentRequestsYn": "Unknown",
+              "jjAssignedTo": "",
+              "vtcAssignedTo": "",
+              "vtcAssignedTs": "",
+              "appearanceCourthouseId": 0,
+              "appearanceCourthouseName": "",
+              "appearanceRoomCode": "",
+              "appearanceTs": "",
+              "appearanceDuration": 0,
+              "timeToPayReason": "",
+              "fineReductionReason": ""
+            }
+          ],
+          "pageNumber": 0,
+          "pageSize": 0,
+          "totalPages": 0,
+          "totalRows": 0
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 200 Response
+  description: OK
+  
+  request: {
+    url: {{baseUrl}}/api/jj/disputes/search
+    method: GET
+    mode: none
+    params:query: {
+      ~appearances: 
+      ~notice_of_hearing_yn: 
+      ~multiple_officers_yn: 
+      ~electronic_ticket_yn: 
+      ~submitted_from: 
+      ~submitted_thru: 
+      ~ticket_number: 
+      ~surname: 
+      ~surname_or_org_name: 
+      ~jj_assigned_to: 
+      ~jj_decision_dt_from: 
+      ~jj_decision_dt_thru: 
+      ~dispute_status_codes: 
+      ~appearance_courthouse_ids: 
+      ~appearance_dt_from: 
+      ~appearance_dt_thru: 
+      ~appearance_courtroom_code: 
+      ~to_be_heard_at_courthouse_ids: 
+      ~hearing_type_cd: 
+      ~sort_by: 
+      ~page_number: 
+      ~page_size: 
+      ~fetch_pending_adjournments: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "items": [
+            {
+              "id": 0,
+              "submittedTs": "",
+              "jjDecisionDate": "",
+              "signatoryName": "",
+              "hearingType": "",
+              "ticketNumber": "",
+              "violationDate": "",
+              "violationDateCount": 0,
+              "toBeHeardAtCourthouseId": 0,
+              "toBeHeardAtCourthouseName": "",
+              "disputantSurname": "",
+              "disputantGivenName1": "",
+              "disputantGivenName2": "",
+              "disputantGivenName3": "",
+              "disputantOrganizationName": "",
+              "disputeStatus": {
+                "code": "",
+                "description": ""
+              },
+              "policeDetachment": "",
+              "policeDetachmentId": 0,
+              "accidentYn": "Unknown",
+              "multipleOfficersYn": "Unknown",
+              "noticeOfHearingYn": "Unknown",
+              "electronicTicketYn": "Unknown",
+              "pendingAdjournmentRequestsYn": "Unknown",
+              "jjAssignedTo": "",
+              "vtcAssignedTo": "",
+              "vtcAssignedTs": "",
+              "appearanceCourthouseId": 0,
+              "appearanceCourthouseName": "",
+              "appearanceRoomCode": "",
+              "appearanceTs": "",
+              "appearanceDuration": 0,
+              "timeToPayReason": "",
+              "fineReductionReason": ""
+            }
+          ],
+          "pageNumber": 0,
+          "pageSize": 0,
+          "totalPages": 0,
+          "totalRows": 0
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Unauthorized
+  
+  request: {
+    url: {{baseUrl}}/api/jj/disputes/search
+    method: GET
+    mode: none
+    params:query: {
+      ~appearances: 
+      ~notice_of_hearing_yn: 
+      ~multiple_officers_yn: 
+      ~electronic_ticket_yn: 
+      ~submitted_from: 
+      ~submitted_thru: 
+      ~ticket_number: 
+      ~surname: 
+      ~surname_or_org_name: 
+      ~jj_assigned_to: 
+      ~jj_decision_dt_from: 
+      ~jj_decision_dt_thru: 
+      ~dispute_status_codes: 
+      ~appearance_courthouse_ids: 
+      ~appearance_dt_from: 
+      ~appearance_dt_thru: 
+      ~appearance_courtroom_code: 
+      ~to_be_heard_at_courthouse_ids: 
+      ~hearing_type_cd: 
+      ~sort_by: 
+      ~page_number: 
+      ~page_size: 
+      ~fetch_pending_adjournments: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Unauthorized
+  
+  request: {
+    url: {{baseUrl}}/api/jj/disputes/search
+    method: GET
+    mode: none
+    params:query: {
+      ~appearances: 
+      ~notice_of_hearing_yn: 
+      ~multiple_officers_yn: 
+      ~electronic_ticket_yn: 
+      ~submitted_from: 
+      ~submitted_thru: 
+      ~ticket_number: 
+      ~surname: 
+      ~surname_or_org_name: 
+      ~jj_assigned_to: 
+      ~jj_decision_dt_from: 
+      ~jj_decision_dt_thru: 
+      ~dispute_status_codes: 
+      ~appearance_courthouse_ids: 
+      ~appearance_dt_from: 
+      ~appearance_dt_thru: 
+      ~appearance_courtroom_code: 
+      ~to_be_heard_at_courthouse_ids: 
+      ~hearing_type_cd: 
+      ~sort_by: 
+      ~page_number: 
+      ~page_size: 
+      ~fetch_pending_adjournments: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Unauthorized
+  
+  request: {
+    url: {{baseUrl}}/api/jj/disputes/search
+    method: GET
+    mode: none
+    params:query: {
+      ~appearances: 
+      ~notice_of_hearing_yn: 
+      ~multiple_officers_yn: 
+      ~electronic_ticket_yn: 
+      ~submitted_from: 
+      ~submitted_thru: 
+      ~ticket_number: 
+      ~surname: 
+      ~surname_or_org_name: 
+      ~jj_assigned_to: 
+      ~jj_decision_dt_from: 
+      ~jj_decision_dt_thru: 
+      ~dispute_status_codes: 
+      ~appearance_courthouse_ids: 
+      ~appearance_dt_from: 
+      ~appearance_dt_thru: 
+      ~appearance_courtroom_code: 
+      ~to_be_heard_at_courthouse_ids: 
+      ~hearing_type_cd: 
+      ~sort_by: 
+      ~page_number: 
+      ~page_size: 
+      ~fetch_pending_adjournments: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden
+  
+  request: {
+    url: {{baseUrl}}/api/jj/disputes/search
+    method: GET
+    mode: none
+    params:query: {
+      ~appearances: 
+      ~notice_of_hearing_yn: 
+      ~multiple_officers_yn: 
+      ~electronic_ticket_yn: 
+      ~submitted_from: 
+      ~submitted_thru: 
+      ~ticket_number: 
+      ~surname: 
+      ~surname_or_org_name: 
+      ~jj_assigned_to: 
+      ~jj_decision_dt_from: 
+      ~jj_decision_dt_thru: 
+      ~dispute_status_codes: 
+      ~appearance_courthouse_ids: 
+      ~appearance_dt_from: 
+      ~appearance_dt_thru: 
+      ~appearance_courtroom_code: 
+      ~to_be_heard_at_courthouse_ids: 
+      ~hearing_type_cd: 
+      ~sort_by: 
+      ~page_number: 
+      ~page_size: 
+      ~fetch_pending_adjournments: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden
+  
+  request: {
+    url: {{baseUrl}}/api/jj/disputes/search
+    method: GET
+    mode: none
+    params:query: {
+      ~appearances: 
+      ~notice_of_hearing_yn: 
+      ~multiple_officers_yn: 
+      ~electronic_ticket_yn: 
+      ~submitted_from: 
+      ~submitted_thru: 
+      ~ticket_number: 
+      ~surname: 
+      ~surname_or_org_name: 
+      ~jj_assigned_to: 
+      ~jj_decision_dt_from: 
+      ~jj_decision_dt_thru: 
+      ~dispute_status_codes: 
+      ~appearance_courthouse_ids: 
+      ~appearance_dt_from: 
+      ~appearance_dt_thru: 
+      ~appearance_courtroom_code: 
+      ~to_be_heard_at_courthouse_ids: 
+      ~hearing_type_cd: 
+      ~sort_by: 
+      ~page_number: 
+      ~page_size: 
+      ~fetch_pending_adjournments: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden
+  
+  request: {
+    url: {{baseUrl}}/api/jj/disputes/search
+    method: GET
+    mode: none
+    params:query: {
+      ~appearances: 
+      ~notice_of_hearing_yn: 
+      ~multiple_officers_yn: 
+      ~electronic_ticket_yn: 
+      ~submitted_from: 
+      ~submitted_thru: 
+      ~ticket_number: 
+      ~surname: 
+      ~surname_or_org_name: 
+      ~jj_assigned_to: 
+      ~jj_decision_dt_from: 
+      ~jj_decision_dt_thru: 
+      ~dispute_status_codes: 
+      ~appearance_courthouse_ids: 
+      ~appearance_dt_from: 
+      ~appearance_dt_thru: 
+      ~appearance_courtroom_code: 
+      ~to_be_heard_at_courthouse_ids: 
+      ~hearing_type_cd: 
+      ~sort_by: 
+      ~page_number: 
+      ~page_size: 
+      ~fetch_pending_adjournments: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 500 Response
+  description: Internal Server Error
+  
+  request: {
+    url: {{baseUrl}}/api/jj/disputes/search
+    method: GET
+    mode: none
+    params:query: {
+      ~appearances: 
+      ~notice_of_hearing_yn: 
+      ~multiple_officers_yn: 
+      ~electronic_ticket_yn: 
+      ~submitted_from: 
+      ~submitted_thru: 
+      ~ticket_number: 
+      ~surname: 
+      ~surname_or_org_name: 
+      ~jj_assigned_to: 
+      ~jj_decision_dt_from: 
+      ~jj_decision_dt_thru: 
+      ~dispute_status_codes: 
+      ~appearance_courthouse_ids: 
+      ~appearance_dt_from: 
+      ~appearance_dt_thru: 
+      ~appearance_courtroom_code: 
+      ~to_be_heard_at_courthouse_ids: 
+      ~hearing_type_cd: 
+      ~sort_by: 
+      ~page_number: 
+      ~page_size: 
+      ~fetch_pending_adjournments: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 500
+      text: Internal Server Error
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

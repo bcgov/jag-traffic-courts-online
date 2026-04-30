@@ -1,0 +1,74 @@
+meta {
+  name: Deletes a violation ticket count asynchronously.
+  type: http
+  seq: 15
+  tags: [
+    Dispute
+  ]
+}
+
+delete {
+  url: {{baseUrl}}/api/dispute/violationticketcount/:violationTicketCountId
+  body: none
+  auth: inherit
+}
+
+params:path {
+  violationTicketCountId: 
+}
+
+example {
+  name: 204 Response
+  description: No Content
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/violationticketcount/:violationTicketCountId
+    method: DELETE
+    mode: none
+    params:path: {
+      violationTicketCountId: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 204
+      text: No Content
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}
+
+example {
+  name: 500 Response
+  description: Internal Server Error
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/violationticketcount/:violationTicketCountId
+    method: DELETE
+    mode: none
+    params:path: {
+      violationTicketCountId: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 500
+      text: Internal Server Error
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

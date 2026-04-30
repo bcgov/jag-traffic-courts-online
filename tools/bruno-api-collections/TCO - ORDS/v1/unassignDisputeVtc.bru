@@ -1,0 +1,36 @@
+meta {
+  name: unassignDisputeVtc
+  type: http
+  seq: 14
+}
+
+post {
+  url: {{v1_baseUrl}}/unassignDisputeVtc
+  body: none
+  auth: inherit
+}
+
+example {
+  name: 201 Response
+  description: The successfully created record.
+  
+  request: {
+    url: {{v1_baseUrl}}/unassignDisputeVtc
+    method: POST
+    mode: none
+  }
+  
+  response: {
+    status: {
+      code: 201
+      text: Created
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

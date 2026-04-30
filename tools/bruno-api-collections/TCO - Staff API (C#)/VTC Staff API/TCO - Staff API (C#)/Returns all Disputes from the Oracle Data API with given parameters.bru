@@ -1,0 +1,786 @@
+meta {
+  name: Returns all Disputes from the Oracle Data API with given parameters.
+  type: http
+  seq: 1
+  tags: [
+    Dispute
+  ]
+}
+
+get {
+  url: {{baseUrl}}/api/dispute/disputes
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~excludeStatus: UNKNOWN
+  ~excludeStatus: NEW
+  ~excludeStatus: VALIDATED
+  ~excludeStatus: PROCESSING
+  ~excludeStatus: REJECTED
+  ~excludeStatus: CANCELLED
+  ~excludeStatus: CONCLUDED
+  ~ticket: 
+  ~surname: 
+  ~status: UNKNOWN
+  ~status: NEW
+  ~status: VALIDATED
+  ~status: PROCESSING
+  ~status: REJECTED
+  ~status: CANCELLED
+  ~status: CONCLUDED
+  ~from: 
+  ~thru: 
+  ~courtHouse: 
+  ~sortBy: []
+  ~direction: asc
+  ~direction: desc
+  ~DefaultPageSize: 
+  ~pageNumber: 
+  ~pageSize: 
+}
+
+headers {
+  ~X-Timezone: 
+}
+
+example {
+  name: 200 Response
+  description: The Disputes were found.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/disputes
+    method: GET
+    mode: none
+    params:query: {
+      ~excludeStatus: UNKNOWN
+      ~excludeStatus: NEW
+      ~excludeStatus: VALIDATED
+      ~excludeStatus: PROCESSING
+      ~excludeStatus: REJECTED
+      ~excludeStatus: CANCELLED
+      ~excludeStatus: CONCLUDED
+      ~ticket: 
+      ~surname: 
+      ~status: UNKNOWN
+      ~status: NEW
+      ~status: VALIDATED
+      ~status: PROCESSING
+      ~status: REJECTED
+      ~status: CANCELLED
+      ~status: CONCLUDED
+      ~from: 
+      ~thru: 
+      ~courtHouse: 
+      ~sortBy: []
+      ~direction: asc
+      ~direction: desc
+      ~DefaultPageSize: 
+      ~pageNumber: 
+      ~pageSize: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "items": [
+            {
+              "disputeId": 0,
+              "ticketNumber": "",
+              "submittedTs": "",
+              "disputantSurname": "",
+              "disputantGivenName1": "",
+              "disputantGivenName2": "",
+              "disputantGivenName3": "",
+              "status": "UNKNOWN",
+              "emailAddress": "",
+              "emailAddressVerified": false,
+              "filingDate": "",
+              "requestCourtAppearanceYn": "UNKNOWN",
+              "userAssignedTo": "",
+              "userAssignedTs": "",
+              "disputantDetectedOcrIssues": "UNKNOWN",
+              "systemDetectedOcrIssues": "UNKNOWN",
+              "violationDate": "",
+              "jjDisputeStatus": "UNKNOWN",
+              "jjAssignedTo": "",
+              "decisionMadeBy": "",
+              "jjDecisionDate": "",
+              "courtAgenId": "",
+              "additionalProperties": {}
+            }
+          ],
+          "pageNumber": 0,
+          "pageSize": 0,
+          "pageCount": 0,
+          "totalItemCount": 0,
+          "hasPreviousPage": false,
+          "hasNextPage": false,
+          "isFirstPage": false,
+          "isLastPage": false
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 200 Response
+  description: The Disputes were found.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/disputes
+    method: GET
+    mode: none
+    params:query: {
+      ~excludeStatus: UNKNOWN
+      ~excludeStatus: NEW
+      ~excludeStatus: VALIDATED
+      ~excludeStatus: PROCESSING
+      ~excludeStatus: REJECTED
+      ~excludeStatus: CANCELLED
+      ~excludeStatus: CONCLUDED
+      ~ticket: 
+      ~surname: 
+      ~status: UNKNOWN
+      ~status: NEW
+      ~status: VALIDATED
+      ~status: PROCESSING
+      ~status: REJECTED
+      ~status: CANCELLED
+      ~status: CONCLUDED
+      ~from: 
+      ~thru: 
+      ~courtHouse: 
+      ~sortBy: []
+      ~direction: asc
+      ~direction: desc
+      ~DefaultPageSize: 
+      ~pageNumber: 
+      ~pageSize: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "items": [
+            {
+              "disputeId": 0,
+              "ticketNumber": "",
+              "submittedTs": "",
+              "disputantSurname": "",
+              "disputantGivenName1": "",
+              "disputantGivenName2": "",
+              "disputantGivenName3": "",
+              "status": "UNKNOWN",
+              "emailAddress": "",
+              "emailAddressVerified": false,
+              "filingDate": "",
+              "requestCourtAppearanceYn": "UNKNOWN",
+              "userAssignedTo": "",
+              "userAssignedTs": "",
+              "disputantDetectedOcrIssues": "UNKNOWN",
+              "systemDetectedOcrIssues": "UNKNOWN",
+              "violationDate": "",
+              "jjDisputeStatus": "UNKNOWN",
+              "jjAssignedTo": "",
+              "decisionMadeBy": "",
+              "jjDecisionDate": "",
+              "courtAgenId": "",
+              "additionalProperties": {}
+            }
+          ],
+          "pageNumber": 0,
+          "pageSize": 0,
+          "pageCount": 0,
+          "totalItemCount": 0,
+          "hasPreviousPage": false,
+          "hasNextPage": false,
+          "isFirstPage": false,
+          "isLastPage": false
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 200 Response
+  description: The Disputes were found.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/disputes
+    method: GET
+    mode: none
+    params:query: {
+      ~excludeStatus: UNKNOWN
+      ~excludeStatus: NEW
+      ~excludeStatus: VALIDATED
+      ~excludeStatus: PROCESSING
+      ~excludeStatus: REJECTED
+      ~excludeStatus: CANCELLED
+      ~excludeStatus: CONCLUDED
+      ~ticket: 
+      ~surname: 
+      ~status: UNKNOWN
+      ~status: NEW
+      ~status: VALIDATED
+      ~status: PROCESSING
+      ~status: REJECTED
+      ~status: CANCELLED
+      ~status: CONCLUDED
+      ~from: 
+      ~thru: 
+      ~courtHouse: 
+      ~sortBy: []
+      ~direction: asc
+      ~direction: desc
+      ~DefaultPageSize: 
+      ~pageNumber: 
+      ~pageSize: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "items": [
+            {
+              "disputeId": 0,
+              "ticketNumber": "",
+              "submittedTs": "",
+              "disputantSurname": "",
+              "disputantGivenName1": "",
+              "disputantGivenName2": "",
+              "disputantGivenName3": "",
+              "status": "UNKNOWN",
+              "emailAddress": "",
+              "emailAddressVerified": false,
+              "filingDate": "",
+              "requestCourtAppearanceYn": "UNKNOWN",
+              "userAssignedTo": "",
+              "userAssignedTs": "",
+              "disputantDetectedOcrIssues": "UNKNOWN",
+              "systemDetectedOcrIssues": "UNKNOWN",
+              "violationDate": "",
+              "jjDisputeStatus": "UNKNOWN",
+              "jjAssignedTo": "",
+              "decisionMadeBy": "",
+              "jjDecisionDate": "",
+              "courtAgenId": "",
+              "additionalProperties": {}
+            }
+          ],
+          "pageNumber": 0,
+          "pageSize": 0,
+          "pageCount": 0,
+          "totalItemCount": 0,
+          "hasPreviousPage": false,
+          "hasNextPage": false,
+          "isFirstPage": false,
+          "isLastPage": false
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/disputes
+    method: GET
+    mode: none
+    params:query: {
+      ~excludeStatus: UNKNOWN
+      ~excludeStatus: NEW
+      ~excludeStatus: VALIDATED
+      ~excludeStatus: PROCESSING
+      ~excludeStatus: REJECTED
+      ~excludeStatus: CANCELLED
+      ~excludeStatus: CONCLUDED
+      ~ticket: 
+      ~surname: 
+      ~status: UNKNOWN
+      ~status: NEW
+      ~status: VALIDATED
+      ~status: PROCESSING
+      ~status: REJECTED
+      ~status: CANCELLED
+      ~status: CONCLUDED
+      ~from: 
+      ~thru: 
+      ~courtHouse: 
+      ~sortBy: []
+      ~direction: asc
+      ~direction: desc
+      ~DefaultPageSize: 
+      ~pageNumber: 
+      ~pageSize: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/disputes
+    method: GET
+    mode: none
+    params:query: {
+      ~excludeStatus: UNKNOWN
+      ~excludeStatus: NEW
+      ~excludeStatus: VALIDATED
+      ~excludeStatus: PROCESSING
+      ~excludeStatus: REJECTED
+      ~excludeStatus: CANCELLED
+      ~excludeStatus: CONCLUDED
+      ~ticket: 
+      ~surname: 
+      ~status: UNKNOWN
+      ~status: NEW
+      ~status: VALIDATED
+      ~status: PROCESSING
+      ~status: REJECTED
+      ~status: CANCELLED
+      ~status: CONCLUDED
+      ~from: 
+      ~thru: 
+      ~courtHouse: 
+      ~sortBy: []
+      ~direction: asc
+      ~direction: desc
+      ~DefaultPageSize: 
+      ~pageNumber: 
+      ~pageSize: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/disputes
+    method: GET
+    mode: none
+    params:query: {
+      ~excludeStatus: UNKNOWN
+      ~excludeStatus: NEW
+      ~excludeStatus: VALIDATED
+      ~excludeStatus: PROCESSING
+      ~excludeStatus: REJECTED
+      ~excludeStatus: CANCELLED
+      ~excludeStatus: CONCLUDED
+      ~ticket: 
+      ~surname: 
+      ~status: UNKNOWN
+      ~status: NEW
+      ~status: VALIDATED
+      ~status: PROCESSING
+      ~status: REJECTED
+      ~status: CANCELLED
+      ~status: CONCLUDED
+      ~from: 
+      ~thru: 
+      ~courtHouse: 
+      ~sortBy: []
+      ~direction: asc
+      ~direction: desc
+      ~DefaultPageSize: 
+      ~pageNumber: 
+      ~pageSize: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires dispute:read permission.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/disputes
+    method: GET
+    mode: none
+    params:query: {
+      ~excludeStatus: UNKNOWN
+      ~excludeStatus: NEW
+      ~excludeStatus: VALIDATED
+      ~excludeStatus: PROCESSING
+      ~excludeStatus: REJECTED
+      ~excludeStatus: CANCELLED
+      ~excludeStatus: CONCLUDED
+      ~ticket: 
+      ~surname: 
+      ~status: UNKNOWN
+      ~status: NEW
+      ~status: VALIDATED
+      ~status: PROCESSING
+      ~status: REJECTED
+      ~status: CANCELLED
+      ~status: CONCLUDED
+      ~from: 
+      ~thru: 
+      ~courtHouse: 
+      ~sortBy: []
+      ~direction: asc
+      ~direction: desc
+      ~DefaultPageSize: 
+      ~pageNumber: 
+      ~pageSize: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires dispute:read permission.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/disputes
+    method: GET
+    mode: none
+    params:query: {
+      ~excludeStatus: UNKNOWN
+      ~excludeStatus: NEW
+      ~excludeStatus: VALIDATED
+      ~excludeStatus: PROCESSING
+      ~excludeStatus: REJECTED
+      ~excludeStatus: CANCELLED
+      ~excludeStatus: CONCLUDED
+      ~ticket: 
+      ~surname: 
+      ~status: UNKNOWN
+      ~status: NEW
+      ~status: VALIDATED
+      ~status: PROCESSING
+      ~status: REJECTED
+      ~status: CANCELLED
+      ~status: CONCLUDED
+      ~from: 
+      ~thru: 
+      ~courtHouse: 
+      ~sortBy: []
+      ~direction: asc
+      ~direction: desc
+      ~DefaultPageSize: 
+      ~pageNumber: 
+      ~pageSize: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires dispute:read permission.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/disputes
+    method: GET
+    mode: none
+    params:query: {
+      ~excludeStatus: UNKNOWN
+      ~excludeStatus: NEW
+      ~excludeStatus: VALIDATED
+      ~excludeStatus: PROCESSING
+      ~excludeStatus: REJECTED
+      ~excludeStatus: CANCELLED
+      ~excludeStatus: CONCLUDED
+      ~ticket: 
+      ~surname: 
+      ~status: UNKNOWN
+      ~status: NEW
+      ~status: VALIDATED
+      ~status: PROCESSING
+      ~status: REJECTED
+      ~status: CANCELLED
+      ~status: CONCLUDED
+      ~from: 
+      ~thru: 
+      ~courtHouse: 
+      ~sortBy: []
+      ~direction: asc
+      ~direction: desc
+      ~DefaultPageSize: 
+      ~pageNumber: 
+      ~pageSize: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 500 Response
+  description: There was a server error that prevented the search from completing successfully or no data found.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/disputes
+    method: GET
+    mode: none
+    params:query: {
+      ~excludeStatus: UNKNOWN
+      ~excludeStatus: NEW
+      ~excludeStatus: VALIDATED
+      ~excludeStatus: PROCESSING
+      ~excludeStatus: REJECTED
+      ~excludeStatus: CANCELLED
+      ~excludeStatus: CONCLUDED
+      ~ticket: 
+      ~surname: 
+      ~status: UNKNOWN
+      ~status: NEW
+      ~status: VALIDATED
+      ~status: PROCESSING
+      ~status: REJECTED
+      ~status: CANCELLED
+      ~status: CONCLUDED
+      ~from: 
+      ~thru: 
+      ~courtHouse: 
+      ~sortBy: []
+      ~direction: asc
+      ~direction: desc
+      ~DefaultPageSize: 
+      ~pageNumber: 
+      ~pageSize: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 500
+      text: Internal Server Error
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}
