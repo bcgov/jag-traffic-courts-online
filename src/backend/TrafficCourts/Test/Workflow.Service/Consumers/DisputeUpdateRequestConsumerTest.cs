@@ -40,6 +40,7 @@ public class DisputeUpdateRequestConsumerTest
         _updateRequest = new();
         _mockLogger = new();
         _mockMapper = new();
+        _mockMapper.Setup(_ => _.Map<DisputeUpdateRequest>(It.IsAny<Dispute>())).Returns(new DisputeUpdateRequest());
         _oracleDataApiService = new();
 #pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
         _oracleDataApiService.Setup(_ => _.GetDisputeByNoticeOfDisputeGuidAsync(_message.NoticeOfDisputeGuid, It.IsAny<CancellationToken>())).Returns(Task.FromResult(_dispute));
