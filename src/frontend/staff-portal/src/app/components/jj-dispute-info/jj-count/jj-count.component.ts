@@ -259,7 +259,6 @@ export class JJCountComponent implements OnInit, OnChanges {
 
       // Patch the form with the modified object
       this.countForm.patchValue(jjDisputedCountFormCopy);
-      //this.countForm.controls.revisedDueDate.setValue(this.jjDisputedCount.revisedDueDate ? new Date(this.jjDisputedCount.revisedDueDate) : null);
 
       if (this.jjDisputedCount.jjDisputedCountRoP) {
         this.countRoPForm.patchValue(this.jjDisputedCount.jjDisputedCountRoP);

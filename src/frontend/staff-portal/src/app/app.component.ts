@@ -12,7 +12,6 @@ import { SnowplowService } from '@core/services/snowplow.service';
   standalone: false,
 })
 export class AppComponent implements OnInit {
-  //  debugger;
   constructor(
     private translateService: TranslateService,
     private titleService: Title,
