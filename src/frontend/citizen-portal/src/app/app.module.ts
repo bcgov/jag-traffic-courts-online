@@ -46,6 +46,7 @@ import { DisputantFormComponent } from '@components/disputant-form/disputant-for
 import { AuthModule } from './auth/auth.module';
 import { CreateNoticeOfDisputeComponent } from '@components/create-notice-of-dispute/create-notice-of-dispute.component';
 import { UpdateDisputeComponent } from '@components/update-dispute/update-dispute.component';
+import { UpdateDisputeStepperComponent } from '@components/update-dispute-stepper/update-dispute-stepper.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -76,6 +77,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     DisputantFormComponent,
     CreateNoticeOfDisputeComponent,
     UpdateDisputeComponent,
+    UpdateDisputeStepperComponent,
   ],
   imports: [
     CommonModule,

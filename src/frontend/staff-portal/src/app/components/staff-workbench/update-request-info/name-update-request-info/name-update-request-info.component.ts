@@ -41,7 +41,7 @@ export class NameUpdateRequestInfoComponent implements OnInit {
         this.disputeInfo.contactGiven1Nm === this.updateRequested.ContactGiven1Nm &&
         this.disputeInfo.contactGiven2Nm === this.updateRequested.ContactGiven2Nm &&
         this.disputeInfo.contactGiven3Nm === this.updateRequested.ContactGiven3Nm &&
-        this.disputeInfo.contactLawFirmNm === this.updateRequested.ContactLawFirmNm &&
+        this.disputeInfo.contactLawFirmNm === this.updateRequested.ContactLawFirmName &&
         this.disputantUpdateRequest.status === DisputeUpdateRequestStatus2.Pending)  {
         this.disputantUpdateRequest.status = DisputeUpdateRequestStatus2.Accepted;
         this.disputantUpdateRequestStatusChange.emit(this.disputantUpdateRequest);
@@ -69,6 +69,6 @@ export interface nameUpdateJSON {
   ContactGiven1Nm?: string;
   ContactGiven2Nm?: string;
   ContactGiven3Nm?: string;
-  ContactLawFirmNm?: string;
+  ContactLawFirmName?: string;
   ContactType?: DisputeContactTypeCd;
 }

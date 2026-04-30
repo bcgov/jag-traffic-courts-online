@@ -65,4 +65,5 @@ export interface documentsUpdateJSON {
 export interface UploadDocumentRequestJSON {
   DocumentId: string;
   DocumentType: string;
+  FileName?: string;
 }
