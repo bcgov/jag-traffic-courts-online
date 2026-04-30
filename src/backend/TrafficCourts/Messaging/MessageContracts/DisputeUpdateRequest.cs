@@ -9,6 +9,18 @@ namespace TrafficCourts.Messaging.MessageContracts;
 public class DisputeUpdateRequest : DisputeUpdateContactRequest
 {
     /// <summary>
+    /// When true, the citizen explicitly enabled the Contact section. All contact fields
+    /// (including empty values) should be processed by the consumer.
+    /// </summary>
+    public bool ContactSectionEnabled { get; set; } = false;
+
+    /// <summary>
+    /// When true, the citizen explicitly enabled the Additional Information section. All
+    /// additional fields (including empty values) should be processed by the consumer.
+    /// </summary>
+    public bool AdditionalSectionEnabled { get; set; } = false;
+
+    /// <summary>
     /// Drivers Licence Number
     /// </summary>
     public string? DriversLicenceNumber { get; set; }
@@ -142,5 +154,10 @@ public class UploadDocumentRequest
     /// The type of the document uploaded by the disputant ('Other / Supporting Document' OR 'Application for Adjournment')
     /// </summary>
     public string? DocumentType { get; set; }
+
+    /// <summary>
+    /// The original file name of the uploaded document
+    /// </summary>
+    public string? FileName { get; set; }
 
 }

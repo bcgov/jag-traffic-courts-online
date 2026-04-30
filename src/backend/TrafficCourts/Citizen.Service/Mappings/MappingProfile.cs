@@ -28,19 +28,23 @@ public class NoticeOfDisputeToMessageContractMappingProfile : Profile
             .ForMember(dest => dest.Section, opt => opt.MapFrom(src => src.Section));
 
         CreateMap<DisputantContactInformation, Messaging.MessageContracts.DisputeUpdateContactRequest>()
-            .ForMember(dest => dest.ContactType, opt => opt.MapFrom(src => src.ContactTypeCd));
+            .ForMember(dest => dest.ContactType, opt => opt.MapFrom(src => src.ContactTypeCd))
+            .ForMember(dest => dest.ContactLawFirmName, opt => opt.MapFrom(src => src.ContactLawFirmNm));
         CreateMap<Messaging.MessageContracts.DisputeUpdateContactRequest, Messaging.MessageContracts.DisputeUpdateRequest>();
 
         CreateMap<Dispute, Messaging.MessageContracts.DisputeUpdateRequest>()
-            .ForMember(dest => dest.RepresentedByLawyer, opt => opt.MapFrom(src => src.RepresentedByLawyer == Domain.Models.DisputeRepresentedByLawyer.Y ? true : false))
-            .ForMember(dest => dest.InterpreterRequired, opt => opt.MapFrom(src => src.InterpreterRequired == Domain.Models.DisputeInterpreterRequired.Y ? true : false))
+            .ForMember(dest => dest.RepresentedByLawyer, opt => opt.MapFrom(src => src.RepresentedByLawyer == null ? (bool?)null : src.RepresentedByLawyer == Domain.Models.DisputeRepresentedByLawyer.Y))
+            .ForMember(dest => dest.InterpreterRequired, opt => opt.MapFrom(src => src.InterpreterRequired == null ? (bool?)null : src.InterpreterRequired == Domain.Models.DisputeInterpreterRequired.Y))
             .ForMember(dest => dest.DriversLicenceNumber, opt => opt.MapFrom(src => src.DriversLicenceNumber))
             .ForMember(dest => dest.DriversLicenceIssuedCountryId, opt => opt.MapFrom(src => src.DriversLicenceCountryId))
             .ForMember(dest => dest.DriversLicenceIssuedProvinceSeqNo, opt => opt.MapFrom(src => src.DriversLicenceProvinceSeqNo))
             .ForMember(dest => dest.DriversLicenceProvince, opt => opt.MapFrom(src => src.DriversLicenceProvince))
             .ForMember(dest => dest.RequestCourtAppearance, opt => opt.MapFrom(src => src.RequestCourtAppearanceYn))
             .ForMember(dest => dest.DisputeCounts, opt => opt.MapFrom(src => src.DisputeCounts))
-            .ForMember(dest => dest.ContactType, opt => opt.MapFrom(src => src.ContactTypeCd));
+            .ForMember(dest => dest.ContactType, opt => opt.MapFrom(src => src.ContactTypeCd))
+            .ForMember(dest => dest.ContactLawFirmName, opt => opt.MapFrom(src => src.ContactLawFirmNm))
+            .ForMember(dest => dest.ContactSectionEnabled, opt => opt.MapFrom(src => src.ContactSectionEnabled))
+            .ForMember(dest => dest.AdditionalSectionEnabled, opt => opt.MapFrom(src => src.AdditionalSectionEnabled));
 
         CreateMap<Models.Disputes.DisputeCount, Domain.Models.DisputeCount>();
     }
