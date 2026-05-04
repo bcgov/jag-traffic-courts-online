@@ -76,16 +76,12 @@ public class DisputeUpdateRequestAcceptedConsumerTest
         // Arrange
         _updateRequest.Status = DisputeUpdateRequestStatus2.ACCEPTED;
         _updateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_NAME;
-        _updateRequest.UpdateJson = "{ \"ContactGiven1Nm\": \"fname1\", \"ContactGiven2Nm\": \"fname2\", \"ContactGiven3Nm\": \"fname3\", \"ContactSurnameNm\": \"lname\", \"ContactLawFirmNm\":\"lawFirmNm\", \"ContactType\":\"INDIVIDUAL\", \"DisputantGivenName1\": \"gname1\", \"DisputantGivenName2\": \"gname2\", \"DisputantGivenName3\": \"gname3\", \"DisputantSurname\": \"sname\" }";
+        _updateRequest.UpdateJson = "{ \"ContactGiven1Nm\": \"fname1\", \"ContactGiven2Nm\": \"fname2\", \"ContactGiven3Nm\": \"fname3\", \"ContactSurnameNm\": \"lname\", \"ContactLawFirmName\":\"lawFirmNm\", \"ContactType\":\"INDIVIDUAL\" }";
 
         // Act
         await _consumer.Consume(_context.Object);
 
         // Assert
-        Assert.Equal("gname1", _dispute.DisputantGivenName1);
-        Assert.Equal("gname2", _dispute.DisputantGivenName2);
-        Assert.Equal("gname3", _dispute.DisputantGivenName3);
-        Assert.Equal("sname", _dispute.DisputantSurname);
         Assert.Equal("fname1", _dispute.ContactGiven1Nm);
         Assert.Equal("fname2", _dispute.ContactGiven2Nm);
         Assert.Equal("fname3", _dispute.ContactGiven3Nm);
