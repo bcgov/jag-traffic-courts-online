@@ -673,6 +673,8 @@ components:
           type: string
           format: date
           x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlySerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlyDeserializer.class)"
+        grantTimeToPayYn:
+          type: string
         includesSurchargeYn:
           type: string
         jailDurationTxt:

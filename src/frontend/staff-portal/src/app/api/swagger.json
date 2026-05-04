@@ -8534,6 +8534,9 @@
           "includesSurcharge": {
             "$ref": "#/components/schemas/JJDisputedCountIncludesSurcharge"
           },
+          "grantTimeToPay": {
+            "$ref": "#/components/schemas/JJDisputedCountGrantTimeToPay"
+          },
           "revisedDueDate": {
             "type": "string",
             "format": "date-time",
@@ -8585,6 +8588,14 @@
         "type": "string"
       },
       "JJDisputedCountIncludesSurcharge": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "JJDisputedCountGrantTimeToPay": {
         "enum": [
           "UNKNOWN",
           "Y",

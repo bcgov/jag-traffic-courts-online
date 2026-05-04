@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
+#if DEBUG
+    [AllowAnonymous]
+#endif
 [Route("api/[controller]/[action]")]
 public class LookupController : StaffControllerBase
 {
@@ -43,9 +46,6 @@ public class LookupController : StaffControllerBase
     /// <returns></returns>
     /// <response code="200">OK</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
-#if DEBUG
-    [AllowAnonymous]
-#endif
     [HttpGet]
     [Route("/api/[controller]/statutes/v2")]
     [Produces("application/json")]
@@ -85,9 +85,6 @@ public class LookupController : StaffControllerBase
     /// <returns></returns>
     /// <response code="200">OK</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
-#if DEBUG
-    [AllowAnonymous]
-#endif
     [HttpGet]
     [Route("/api/[controller]/languages/v2")]
     [Produces("application/json")]
@@ -127,9 +124,6 @@ public class LookupController : StaffControllerBase
     /// <returns></returns>
     /// <response code="200">OK</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
-#if DEBUG
-    [AllowAnonymous]
-#endif
     [HttpGet]
     [Route("/api/[controller]/agencies/v2")]
     [Produces("application/json")]
@@ -169,9 +163,6 @@ public class LookupController : StaffControllerBase
     /// <returns></returns>
     /// <response code="200">OK</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
-#if DEBUG
-    [AllowAnonymous]
-#endif
     [HttpGet]
     [Route("/api/[controller]/provinces/v2")]
     [Produces("application/json")]
@@ -212,9 +203,6 @@ public class LookupController : StaffControllerBase
     /// <returns></returns>
     /// <response code="200">OK</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
-#if DEBUG
-    [AllowAnonymous]
-#endif
     [HttpGet]
     [Route("/api/[controller]/countries/v2")]
     [Produces("application/json")]
@@ -238,9 +226,6 @@ public class LookupController : StaffControllerBase
     /// <returns></returns>
     /// <response code="200">OK</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
-#if DEBUG
-    [AllowAnonymous]
-#endif
     [HttpGet]
     [Route("/api/[controller]/dispute-case-file-statuses/v2")]
     [Produces("application/json")]

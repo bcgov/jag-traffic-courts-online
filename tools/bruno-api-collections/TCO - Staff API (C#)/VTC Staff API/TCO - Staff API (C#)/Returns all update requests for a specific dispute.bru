@@ -1,0 +1,415 @@
+meta {
+  name: Returns all update requests for a specific dispute
+  type: http
+  seq: 13
+  tags: [
+    Dispute
+  ]
+}
+
+get {
+  url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
+  body: none
+  auth: inherit
+}
+
+params:path {
+  disputeId: 
+}
+
+example {
+  name: 200 Response
+  description: The Update requests were found.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
+    method: GET
+    mode: none
+    params:path: {
+      disputeId: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+        [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "disputeUpdateRequestId": 0,
+            "disputeId": 0,
+            "status": "UNKNOWN",
+            "updateType": "UNKNOWN",
+            "updateJson": "",
+            "currentJson": "",
+            "statusUpdateTs": "",
+            "additionalProperties": {}
+          }
+        ]
+      '''
+    }
+  }
+}
+
+example {
+  name: 200 Response
+  description: The Update requests were found.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
+    method: GET
+    mode: none
+    params:path: {
+      disputeId: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "disputeUpdateRequestId": 0,
+            "disputeId": 0,
+            "status": "UNKNOWN",
+            "updateType": "UNKNOWN",
+            "updateJson": "",
+            "currentJson": "",
+            "statusUpdateTs": "",
+            "additionalProperties": {}
+          }
+        ]
+      '''
+    }
+  }
+}
+
+example {
+  name: 200 Response
+  description: The Update requests were found.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
+    method: GET
+    mode: none
+    params:path: {
+      disputeId: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "disputeUpdateRequestId": 0,
+            "disputeId": 0,
+            "status": "UNKNOWN",
+            "updateType": "UNKNOWN",
+            "updateJson": "",
+            "currentJson": "",
+            "statusUpdateTs": "",
+            "additionalProperties": {}
+          }
+        ]
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
+    method: GET
+    mode: none
+    params:path: {
+      disputeId: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
+    method: GET
+    mode: none
+    params:path: {
+      disputeId: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
+    method: GET
+    mode: none
+    params:path: {
+      disputeId: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires dispute:read permission.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
+    method: GET
+    mode: none
+    params:path: {
+      disputeId: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires dispute:read permission.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
+    method: GET
+    mode: none
+    params:path: {
+      disputeId: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires dispute:read permission.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
+    method: GET
+    mode: none
+    params:path: {
+      disputeId: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 500 Response
+  description: There was a server error that prevented the search from completing successfully or no data found.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
+    method: GET
+    mode: none
+    params:path: {
+      disputeId: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 500
+      text: Internal Server Error
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

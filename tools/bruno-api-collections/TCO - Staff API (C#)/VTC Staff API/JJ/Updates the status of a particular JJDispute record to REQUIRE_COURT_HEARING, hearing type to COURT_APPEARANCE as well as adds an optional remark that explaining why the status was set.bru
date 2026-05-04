@@ -1,0 +1,926 @@
+meta {
+  name: Updates the status of a particular JJDispute record to REQUIRE_COURT_HEARING, hearing type to COURT_APPEARANCE as well as adds an optional remark that explaining why the status was set.
+  type: http
+  seq: 10
+  tags: [
+    JJ
+  ]
+}
+
+put {
+  url: {{baseUrl}}/api/jj/:ticketNumber/requirecourthearing
+  body: multipartForm
+  auth: inherit
+}
+
+params:path {
+  ticketNumber: 
+}
+
+headers {
+  ~X-Timezone: 
+}
+
+body:multipart-form {
+  remark: 
+}
+
+example {
+  name: 200 Response
+  description: The JJDispute is updated.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/requirecourthearing
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:multipart-form: {
+      remark: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: The request was not well formed. Check the parameters.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/requirecourthearing
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:multipart-form: {
+      remark: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: The request was not well formed. Check the parameters.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/requirecourthearing
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:multipart-form: {
+      remark: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: The request was not well formed. Check the parameters.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/requirecourthearing
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:multipart-form: {
+      remark: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/requirecourthearing
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:multipart-form: {
+      remark: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/requirecourthearing
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:multipart-form: {
+      remark: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Request lacks valid authentication credentials.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/requirecourthearing
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:multipart-form: {
+      remark: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires jjdispute:require_court_hearing permission.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/requirecourthearing
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:multipart-form: {
+      remark: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires jjdispute:require_court_hearing permission.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/requirecourthearing
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:multipart-form: {
+      remark: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires jjdispute:require_court_hearing permission.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/requirecourthearing
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:multipart-form: {
+      remark: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  description: JJDispute record not found. Update failed.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/requirecourthearing
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:multipart-form: {
+      remark: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  description: JJDispute record not found. Update failed.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/requirecourthearing
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:multipart-form: {
+      remark: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  description: JJDispute record not found. Update failed.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/requirecourthearing
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:multipart-form: {
+      remark: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 405 Response
+  description: A JJDispute status can only be set to REQUIRE_COURT_HEARING iff status is one of the following: NEW, IN_PROGRESS, REVIEW, REQUIRE_COURT_HEARING and the remark must be less than or equal to 4000 characters. Update failed.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/requirecourthearing
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:multipart-form: {
+      remark: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 405
+      text: Method Not Allowed
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 405 Response
+  description: A JJDispute status can only be set to REQUIRE_COURT_HEARING iff status is one of the following: NEW, IN_PROGRESS, REVIEW, REQUIRE_COURT_HEARING and the remark must be less than or equal to 4000 characters. Update failed.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/requirecourthearing
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:multipart-form: {
+      remark: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 405
+      text: Method Not Allowed
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 405 Response
+  description: A JJDispute status can only be set to REQUIRE_COURT_HEARING iff status is one of the following: NEW, IN_PROGRESS, REVIEW, REQUIRE_COURT_HEARING and the remark must be less than or equal to 4000 characters. Update failed.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/requirecourthearing
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:multipart-form: {
+      remark: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 405
+      text: Method Not Allowed
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 409 Response
+  description: The JJDispute has already been assigned to a different user. JJDispute cannot be modified until assigned time expires.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/requirecourthearing
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:multipart-form: {
+      remark: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 409
+      text: Conflict
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 409 Response
+  description: The JJDispute has already been assigned to a different user. JJDispute cannot be modified until assigned time expires.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/requirecourthearing
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:multipart-form: {
+      remark: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 409
+      text: Conflict
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 409 Response
+  description: The JJDispute has already been assigned to a different user. JJDispute cannot be modified until assigned time expires.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/requirecourthearing
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:multipart-form: {
+      remark: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 409
+      text: Conflict
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 500 Response
+  description: There was a server error that prevented the update from completing successfully.
+  
+  request: {
+    url: {{baseUrl}}/api/jj/:ticketNumber/requirecourthearing
+    method: PUT
+    mode: multipartForm
+    params:path: {
+      ticketNumber: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:multipart-form: {
+      remark: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 500
+      text: Internal Server Error
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

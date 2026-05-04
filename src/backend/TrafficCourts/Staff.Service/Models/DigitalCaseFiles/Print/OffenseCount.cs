@@ -65,6 +65,9 @@ public class OffenseCount
     [JsonProperty("isDueDateRevised")]
     public bool? IsDueDateRevised { get; set; }
 
+    [JsonProperty("grantTimeToPay")]
+    public string GrantTimeToPay { get; set; } = string.Empty;
+
     [JsonProperty("revisedDue")]
     public FormattedDateOnly RevisedDue { get; set; } = FormattedDateOnly.Empty;
 

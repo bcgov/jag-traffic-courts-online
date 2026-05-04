@@ -13,6 +13,7 @@ import { JJDisputedCountLatestPlea } from './jJDisputedCountLatestPlea.model';
 import { JJDisputedCountRequestReduction } from './jJDisputedCountRequestReduction.model';
 import { JJDisputedCountRequestTimeToPay } from './jJDisputedCountRequestTimeToPay.model';
 import { JJDisputedCountIncludesSurcharge } from './jJDisputedCountIncludesSurcharge.model';
+import { JJDisputedCountGrantTimeToPay } from './jJDisputedCountGrantTimeToPay.model';
 import { JJDisputedCountRoP } from './jJDisputedCountRoP.model';
 
 
@@ -32,6 +33,7 @@ export interface JJDisputedCount {
     ticketedFineAmount?: number | null;
     lesserOrGreaterAmount?: number | null;
     includesSurcharge?: JJDisputedCountIncludesSurcharge;
+    grantTimeToPay?: JJDisputedCountGrantTimeToPay;
     revisedDueDate?: string | null;
     rsltAppearanceResultCd?: string | null;
     totalFineAmount?: number | null;

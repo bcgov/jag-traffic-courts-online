@@ -1,0 +1,320 @@
+meta {
+  name: updateDispute
+  type: http
+  seq: 16
+}
+
+put {
+  url: {{v1_baseUrl}}/updateDispute
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "disputeId": "488",
+    "occamViolationTicketUpldId": "4325",
+    "occamDisputeId": "3466",
+    "noticeOfDisputeGuid": "08dc5a5c-23c0-216f-0a58-0a6101000000",
+    "justinRccId": "51553.0734",
+    "disputeStatusTypeCd": "REV",
+    "ticketNumberTxt": "ET89319207",
+    "contactTypeCd": "I",
+    "contactLawFirmNm": null,
+    "occamDisputantSurnameNm": "1712863079344Test",
+    "occamDisputantGiven1Nm": "User",
+    "occamDisputantGiven2Nm": null,
+    "occamDisputantGiven3Nm": null,
+    "occamDisputeCreatedBy": "OCCAMORDS",
+    "contactSurnameNm": null,
+    "contactGiven1Nm": null,
+    "contactGiven2Nm": null,
+    "contactGiven3Nm": null,
+    "disputantSurnameTxt": "1712863079344test",
+    "disputantGiven1Nm": "User",
+    "disputantGiven2Nm": null,
+    "disputantGiven3Nm": null,
+    "disputantPhoneNumberTxt": "9999999999",
+    "offenceLocationTxt": null,
+    "detachmentLocationTxt": "ABBOTSFORD MUN",
+    "courtAgenId": "9393.0001",
+    "issuedTs": "2024-04-11T09:54:00",
+    "submittedDt": "2024-04-11T19:18:16",
+    "icbcReceivedDt": "2025-03-21",
+    "violationDt": "2024-04-11",
+    "disputantBirthDt": "0001-01-01",
+    "disputantDrvLicNumberTxt": "999999123",
+    "drvLicIssuedProvSeqNo": "1",
+    "drvLicIssuedCtryId": "1",
+    "emailAddressTxt": null,
+    "addressLine1Txt": "3220 Qadra",
+    "addressLine2Txt": null,
+    "addressLine3Txt": null,
+    "addressCityTxt": "Kelowna",
+    "addressProvinceTxt": "British Columbia",
+    "addressCountryTxt": "Canada",
+    "addressPostalCodeTxt": "V8X 1G6",
+    "lawyerSurnameNm": null,
+    "lawyerGiven1Nm": null,
+    "lawyerGiven2Nm": null,
+    "lawyerGiven3Nm": null,
+    "lawFirmNm": null,
+    "interpreterLanguageCd": null,
+    "requestCourtAppearanceYn": "N",
+    "fineReductionReasonTxt": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu",
+    "timeToPayReasonTxt": null,
+    "witnessNo": "0",
+    "jjAssignedTo": "DAVEKAY",
+    "decisionMadeBy": "DAVEKAY",
+    "jjDecisionDt": "2026-04-16T20:41:25",
+    "vtcAssignedTo": null,
+    "vtcAssignedDtm": null,
+    "courtHearingTypeCd": "C",
+    "noticeOfHearingYn": "N",
+    "electronicTicketYn": "N",
+    "accidentYn": "N",
+    "multipleOfficersYn": "N",
+    "signatoryTypeCd": "D",
+    "signatoryNameTxt": "GIVENONE",
+    "entDtm": "2026-04-08T11:24:17",
+    "entUserId": "TSTJUSTIN14",
+    "updDtm": "2026-04-16T22:15:00",
+    "updUserId": "TCOORDS",
+    "disputeCounts": [
+      {
+        "disputeCountId": "624",
+        "disputeId": "488",
+        "countNo": "1",
+        "statuteId": "19153",
+        "pleaCd": "G",
+        "latestPleaCd": "N",
+        "latestPleaUpdateDtm": "2026-04-08T07:00:00",
+        "ticketedAmt": "139.00",
+        "fineDueDt": "2026-04-15",
+        "violationDt": "2024-04-11",
+        "adjustedAmt": "100.00",
+        "includesSurchargeYn": "Y",
+        "grantTimeToPayYn": "Y",
+        "revisedDueDt": null,
+        "totalFineAmt": "100.00",
+        "commentsTxt": "test",
+        "requestTimeToPayYn": "N",
+        "requestReductionYn": "Y",
+        "requestCourtAppearanceYn": "N",
+        "entDtm": "2026-04-08T11:24:17",
+        "entUserId": "TSTJUSTIN14",
+        "updDtm": "2026-04-27T13:30:03",
+        "updUserId": "TCOORDS",
+        "appearanceChargeCountId": "623",
+        "courtAppearanceId": "764",
+        "findingResultCd": "GL",
+        "lesserChargeDescTxt": "MVA 201 Sign as evidence",
+        "suspSntcProbationDurtnTxt": null,
+        "suspSntcProbationCondsTxt": null,
+        "jailDurationTxt": null,
+        "jailIntermittentYn": "N",
+        "probationDurationTxt": null,
+        "probationConditionsTxt": null,
+        "drivingProhibDurationTxt": null,
+        "drivingProhibMvaSectionTxt": null,
+        "dismissedYn": "N",
+        "dismissedForWantProsecYn": "N",
+        "withdrawnYn": "N",
+        "abatementYn": "N",
+        "stayOfProceedingsByTxt": null,
+        "otherTxt": null,
+        "remarksTxt": null,
+        "rsltAppearanceResultCd": null,
+        "decisionMadeBy": null,
+        "decisionMadeDt": null,
+        "accEntDtm": "2026-04-08T11:24:17",
+        "accEntUserId": "TSTJUSTIN14",
+        "accUpdDtm": "2026-04-27T13:30:03",
+        "accUpdUserId": "TCOORDS"
+      }
+    ],
+    "courtAppearances": [
+      {
+        "justinAppearanceId": "122990.0734",
+        "courtAppearanceId": "764",
+        "disputeId": "488",
+        "appearanceDtm": "2026-04-30T09:00:00",
+        "courtroomNumberTxt": "201",
+        "appearanceReasonTxt": "HR",
+        "disputantPresenceCd": "A",
+        "disputantNotPresentDtm": null,
+        "recordingClerkNameTxt": null,
+        "defenceCounselNameTxt": null,
+        "crownPresenceCd": null,
+        "seizedYn": "N",
+        "judgeOrJjNameTxt": null,
+        "defenceCounselPresenceCd": null,
+        "commentsTxt": "test",
+        "durationHours": null,
+        "durationMinutes": null
+      }
+    ],
+    "disputeRemarks": [
+      {
+        "disputeRemarkId": "2377",
+        "disputeId": "488",
+        "disputeRemarkTxt": "test",
+        "fullUserNameTxt": "DAVEKAY",
+        "remarksMadeDtm": "0001-01-01T00:00:00",
+        "entDtm": "2026-04-08T11:32:23",
+        "entUserId": "TCOORDS",
+        "updDtm": null,
+        "updUserId": null
+      },
+      {
+        "disputeRemarkId": "2397",
+        "disputeId": "488",
+        "disputeRemarkTxt": "\"test\"",
+        "fullUserNameTxt": "DAVEKAY",
+        "remarksMadeDtm": "2026-04-09T14:32:56",
+        "entDtm": "2026-04-09T14:32:58",
+        "entUserId": "TCOORDS",
+        "updDtm": null,
+        "updUserId": null
+      },
+      {
+        "disputeRemarkId": "2398",
+        "disputeId": "488",
+        "disputeRemarkTxt": "\"test\"",
+        "fullUserNameTxt": "DAVEKAY",
+        "remarksMadeDtm": "2026-04-09T16:33:16",
+        "entDtm": "2026-04-09T16:33:18",
+        "entUserId": "TCOORDS",
+        "updDtm": null,
+        "updUserId": null
+      },
+      {
+        "disputeRemarkId": "2407",
+        "disputeId": "488",
+        "disputeRemarkTxt": "\"test\"",
+        "fullUserNameTxt": "DAVEKAY",
+        "remarksMadeDtm": "2026-04-09T16:55:48",
+        "entDtm": "2026-04-09T16:55:50",
+        "entUserId": "TCOORDS",
+        "updDtm": null,
+        "updUserId": null
+      },
+      {
+        "disputeRemarkId": "2408",
+        "disputeId": "488",
+        "disputeRemarkTxt": "\"test\"",
+        "fullUserNameTxt": "DAVEKAY",
+        "remarksMadeDtm": "2026-04-09T17:03:54",
+        "entDtm": "2026-04-09T17:03:56",
+        "entUserId": "TCOORDS",
+        "updDtm": null,
+        "updUserId": null
+      },
+      {
+        "disputeRemarkId": "2417",
+        "disputeId": "488",
+        "disputeRemarkTxt": "123123",
+        "fullUserNameTxt": "DAVEKAY",
+        "remarksMadeDtm": "2026-04-15T12:44:02",
+        "entDtm": "2026-04-15T12:44:03",
+        "entUserId": "TCOORDS",
+        "updDtm": null,
+        "updUserId": null
+      },
+      {
+        "disputeRemarkId": "2437",
+        "disputeId": "488",
+        "disputeRemarkTxt": "\"fgh\"",
+        "fullUserNameTxt": "DAVEKAY",
+        "remarksMadeDtm": "2026-04-16T13:31:21",
+        "entDtm": "2026-04-16T13:31:22",
+        "entUserId": "TCOORDS",
+        "updDtm": null,
+        "updUserId": null
+      },
+      {
+        "disputeRemarkId": "2438",
+        "disputeId": "488",
+        "disputeRemarkTxt": "\"test\"",
+        "fullUserNameTxt": "DAVEKAY",
+        "remarksMadeDtm": "2026-04-16T13:36:49",
+        "entDtm": "2026-04-16T13:36:49",
+        "entUserId": "TCOORDS",
+        "updDtm": null,
+        "updUserId": null
+      },
+      {
+        "disputeRemarkId": "2439",
+        "disputeId": "488",
+        "disputeRemarkTxt": "\"test\"",
+        "fullUserNameTxt": "DAVEKAY",
+        "remarksMadeDtm": "2026-04-16T13:39:21",
+        "entDtm": "2026-04-16T13:39:22",
+        "entUserId": "TCOORDS",
+        "updDtm": null,
+        "updUserId": null
+      },
+      {
+        "disputeRemarkId": "2440",
+        "disputeId": "488",
+        "disputeRemarkTxt": "\"test\"",
+        "fullUserNameTxt": "DAVEKAY",
+        "remarksMadeDtm": "2026-04-16T14:12:16",
+        "entDtm": "2026-04-16T14:12:17",
+        "entUserId": "TCOORDS",
+        "updDtm": null,
+        "updUserId": null
+      }
+    ]
+  }
+}
+
+example {
+  name: 200 Response
+  description: The successfully updated record.
+  
+  request: {
+    url: {{v1_baseUrl}}/updateDispute
+    method: PUT
+    mode: none
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}
+
+example {
+  name: 201 Response
+  description: The successfully created record.
+  
+  request: {
+    url: {{v1_baseUrl}}/updateDispute
+    method: PUT
+    mode: none
+  }
+  
+  response: {
+    status: {
+      code: 201
+      text: Created
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

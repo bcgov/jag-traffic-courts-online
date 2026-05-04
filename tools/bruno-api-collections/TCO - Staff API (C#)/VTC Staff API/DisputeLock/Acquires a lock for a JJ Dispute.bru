@@ -1,0 +1,282 @@
+meta {
+  name: Acquires a lock for a JJ Dispute.
+  type: http
+  seq: 1
+  tags: [
+    DisputeLock
+  ]
+}
+
+get {
+  url: {{baseUrl}}/api/disputelock
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~ticketNumber: 
+  ~username: 
+}
+
+example {
+  name: 200 Response
+  description: OK
+  
+  request: {
+    url: {{baseUrl}}/api/disputelock
+    method: GET
+    mode: none
+    params:query: {
+      ~ticketNumber: 
+      ~username: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "lockId": "",
+          "ticketNumber": "",
+          "username": "",
+          "expiryTimeUtc": "",
+          "createdAtUtc": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 200 Response
+  description: OK
+  
+  request: {
+    url: {{baseUrl}}/api/disputelock
+    method: GET
+    mode: none
+    params:query: {
+      ~ticketNumber: 
+      ~username: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "lockId": "",
+          "ticketNumber": "",
+          "username": "",
+          "expiryTimeUtc": "",
+          "createdAtUtc": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 200 Response
+  description: OK
+  
+  request: {
+    url: {{baseUrl}}/api/disputelock
+    method: GET
+    mode: none
+    params:query: {
+      ~ticketNumber: 
+      ~username: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "lockId": "",
+          "ticketNumber": "",
+          "username": "",
+          "expiryTimeUtc": "",
+          "createdAtUtc": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 409 Response
+  description: Conflict
+  
+  request: {
+    url: {{baseUrl}}/api/disputelock
+    method: GET
+    mode: none
+    params:query: {
+      ~ticketNumber: 
+      ~username: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 409
+      text: Conflict
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 409 Response
+  description: Conflict
+  
+  request: {
+    url: {{baseUrl}}/api/disputelock
+    method: GET
+    mode: none
+    params:query: {
+      ~ticketNumber: 
+      ~username: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 409
+      text: Conflict
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 409 Response
+  description: Conflict
+  
+  request: {
+    url: {{baseUrl}}/api/disputelock
+    method: GET
+    mode: none
+    params:query: {
+      ~ticketNumber: 
+      ~username: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 409
+      text: Conflict
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 500 Response
+  description: Internal Server Error
+  
+  request: {
+    url: {{baseUrl}}/api/disputelock
+    method: GET
+    mode: none
+    params:query: {
+      ~ticketNumber: 
+      ~username: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 500
+      text: Internal Server Error
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

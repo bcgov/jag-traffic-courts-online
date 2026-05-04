@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "TCO - Staff API (c#)",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
