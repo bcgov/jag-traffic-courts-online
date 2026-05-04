@@ -35,7 +35,7 @@
         <mat-form-field class="w-100">
           <mat-label>Contact Type</mat-label>
           <mat-select formControlName="contact_type" (selectionChange)="onSelectContactType($event.value)">
-            <mat-option [value]="null"> </mat-option>
+            <mat-option *ngIf="mode !== DisputeFormMode.UPDATE" [value]="null"> </mat-option>
             <mat-option [value]="ContactType.Individual">Individual on the ticket</mat-option>
             <mat-option [value]="ContactType.Lawyer">Lawyer</mat-option>
             <mat-option [value]="ContactType.Other">{{ "label.agent_or_other" | translate }}</mat-option>

@@ -139,6 +139,7 @@ public class CitizenDocumentService : ICitizenDocumentService
 
         properties.DocumentSource = TrafficCourts.Domain.Models.DocumentSource.Citizen;
         properties.StaffReviewStatus = DisputeUpdateRequestStatus.PENDING.ToString();
+        properties.DocumentName = fileName;
 
         var metadata = properties.ToMetadata();
         var tags = properties.ToTags();

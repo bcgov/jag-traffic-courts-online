@@ -14,7 +14,8 @@
         <br/>
         @for (doc of updateRequested.UploadedDocuments; track doc.DocumentId) {
           <div>
-            <button type="button" class="linkbutton" (click)="onGetFile(doc.DocumentId)">{{ doc.DocumentType }}</button>&nbsp;
+            <button type="button" class="linkbutton" (click)="onGetFile(doc.DocumentId)">{{ doc.FileName || doc.DocumentType }}</button>
+            <span style="color: #666; font-size: 0.875em;">&nbsp;({{ doc.DocumentType }})</span>
           </div>
         }
         <br />

@@ -2,19 +2,18 @@
   <app-page-header>
     <ng-container header>{{ "label.start_ticket_dispute" | translate }}</ng-container>
     <ng-container subHeader>
-      Enter your contact information, then <strong>choose the
-        action you would like to take for each ticket count.</strong>
+      <strong>Choose the action you would like to take to update your dispute.</strong>
     </ng-container>
   </app-page-header>
 
   <section class="mb-2">
-    <app-resolution-header [ticket]="noticeOfDispute"></app-resolution-header>
+    <app-resolution-header></app-resolution-header>
   </section>
 
-  <app-dispute-stepper *ngIf="isLoaded$ | async" [ticket]="noticeOfDispute"
+  <app-update-dispute-stepper *ngIf="isLoaded$ | async" [ticket]="noticeOfDispute"
     [ticketCounts]="noticeOfDispute.violation_ticket.counts" [disputeCounts]="noticeOfDispute.dispute_counts"
     [ticketType]="ticketType" [fileData$]="fileData$" [mode]="mode"
-    (saveDispute)="submitDispute($event)"></app-dispute-stepper>
+    (saveDispute)="submitDispute($event)"></app-update-dispute-stepper>
 
   <app-resolution-footer></app-resolution-footer>
 </app-page>

@@ -13,7 +13,6 @@ import { EmailVerificationComponent } from '@components/email-verification/email
 import { TicketLandingComponent } from '@components/ticket-landing/ticket-landing.component';
 import { FindDisputeComponent } from '@components/find-dispute/find-dispute.component';
 import { UpdateDisputeLandingComponent } from '@components/update-dispute-landing/update-dispute-landing.component';
-import { UpdateDisputeContactComponent } from '@components/update-dispute-contact/update-dispute-contact.component';
 import { CreateNoticeOfDisputeComponent } from '@components/create-notice-of-dispute/create-notice-of-dispute.component';
 import { UpdateDisputeComponent } from '@components/update-dispute/update-dispute.component';
 
@@ -77,10 +76,6 @@ const routes: Routes = [
           {
             path: AppRoutes.UPDATE_DISPUTE_LANDING,
             component: UpdateDisputeLandingComponent,
-          },
-          {
-            path: AppRoutes.UPDATE_DISPUTE_CONTACT,
-            component: UpdateDisputeContactComponent,
           },
           {
             path: AppRoutes.UPDATE_DISPUTE,

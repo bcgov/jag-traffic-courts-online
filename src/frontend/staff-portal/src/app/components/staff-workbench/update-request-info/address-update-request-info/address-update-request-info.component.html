@@ -96,7 +96,7 @@
             <p class="section-grid-text">{{ updateRequested.PostalCode }}</p>
           </span>
         }
-        @if (updateRequested.DriversLicenceNumber && updateRequested.DriversLicenceNumber !== disputeInfo.driversLicenceNumber) {
+        @if (updateRequested.DriversLicenceNumber !== undefined && updateRequested.DriversLicenceNumber !== disputeInfo.driversLicenceNumber) {
           <span class="section-grid-cell">
             <p class="section-grid-header">Driver's Licence Number</p>
           </span>

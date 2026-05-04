@@ -80,3 +80,7 @@ export const RemoveDocument = createAction(
   ActionTypes.REMOVE_DOCUMENT,
   props<{ file: FileMetadata }>()
 );
+
+export const ClearFileData = createAction(
+  ActionTypes.CLEAR_FILE_DATA
+);

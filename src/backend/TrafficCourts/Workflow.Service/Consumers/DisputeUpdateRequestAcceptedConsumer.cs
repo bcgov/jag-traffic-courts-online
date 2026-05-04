@@ -84,10 +84,10 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
                             dispute.AddressCountryId = patch.AddressCountryId;
                             dispute.AddressProvinceSeqNo = patch.AddressProvinceSeqNo;
                             dispute.AddressProvinceCountryId = patch.AddressProvinceCountryId;
-                            if (patch.DriversLicenceNumber is not null) dispute.DriversLicenceNumber = patch.DriversLicenceNumber;
-                            if (patch.DriversLicenceProvince is not null) dispute.DriversLicenceProvince = patch.DriversLicenceProvince;
-                            if (patch.DriversLicenceIssuedCountryId is not null) dispute.DriversLicenceIssuedCountryId = patch.DriversLicenceIssuedCountryId;
-                            if (patch.DriversLicenceIssuedProvinceSeqNo is not null) dispute.DriversLicenceIssuedProvinceSeqNo = patch.DriversLicenceIssuedProvinceSeqNo;
+                            dispute.DriversLicenceNumber = patch.DriversLicenceNumber;
+                            dispute.DriversLicenceProvince = patch.DriversLicenceProvince;
+                            dispute.DriversLicenceIssuedCountryId = patch.DriversLicenceIssuedCountryId;
+                            dispute.DriversLicenceIssuedProvinceSeqNo = patch.DriversLicenceIssuedProvinceSeqNo;
                             dispute = await _oracleDataApiService.UpdateDisputeAsync(dispute.DisputeId, dispute, false, context.CancellationToken);
                         }
                         break;
@@ -99,21 +99,15 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
                         }
                         break;
                     case DisputeUpdateRequestUpdateType.DISPUTANT_NAME:
-                        if (dispute.DisputantGivenName1 != patch.DisputantGivenName1 || dispute.DisputantGivenName2 != patch.DisputantGivenName2
-                            || dispute.DisputantGivenName3 != patch.DisputantGivenName3 || dispute.DisputantSurname != patch.DisputantSurname 
-                            || dispute.ContactGiven1Nm != patch.ContactGiven1Nm || dispute.ContactGiven2Nm != patch.ContactGiven2Nm
-                            || dispute.ContactGiven3Nm != patch.ContactGiven1Nm || dispute.ContactSurnameNm != patch.ContactSurnameNm
-                            || dispute.ContactLawFirmNm != patch.ContactLawFirmNm || dispute.ContactTypeCd != patch.ContactType)
+                        if (dispute.ContactGiven1Nm != patch.ContactGiven1Nm || dispute.ContactGiven2Nm != patch.ContactGiven2Nm
+                            || dispute.ContactGiven3Nm != patch.ContactGiven3Nm || dispute.ContactSurnameNm != patch.ContactSurnameNm
+                            || dispute.ContactLawFirmNm != patch.ContactLawFirmName || dispute.ContactTypeCd != patch.ContactType)
                         {
-                            dispute.DisputantGivenName1 = patch.DisputantGivenName1;
-                            dispute.DisputantGivenName2 = patch.DisputantGivenName2;
-                            dispute.DisputantGivenName3 = patch.DisputantGivenName3;
-                            dispute.DisputantSurname = patch.DisputantSurname;
                             dispute.ContactGiven1Nm = patch.ContactGiven1Nm;
                             dispute.ContactGiven2Nm = patch.ContactGiven2Nm;
                             dispute.ContactGiven3Nm = patch.ContactGiven3Nm;
                             dispute.ContactSurnameNm = patch.ContactSurnameNm;
-                            dispute.ContactLawFirmNm = patch.ContactLawFirmNm;
+                            dispute.ContactLawFirmNm = patch.ContactLawFirmName;
                             dispute.ContactTypeCd = (DisputeContactTypeCd)(patch.ContactType is null ? DisputeContactTypeCd.UNKNOWN : patch.ContactType);
                             dispute = await _oracleDataApiService.UpdateDisputeAsync(dispute.DisputeId, dispute, false, context.CancellationToken);
                         }
@@ -166,6 +160,8 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
                             || dispute.TimeToPayReason != patch.TimeToPayReason)
                         {
                             dispute.RepresentedByLawyer = patch?.RepresentedByLawyer == true ? DisputeRepresentedByLawyer.Y : DisputeRepresentedByLawyer.N;
+                            if (patch?.ContactType is not null && patch.ContactType != DisputeContactTypeCd.UNKNOWN)
+                                dispute.ContactTypeCd = patch.ContactType.Value;
                             dispute.LawFirmName = patch?.LawFirmName;
                             dispute.LawyerSurname = patch?.LawyerSurname;
                             dispute.LawyerGivenName1 = patch?.LawyerGivenName1;
@@ -271,7 +267,7 @@ public class UpdateRequest
 
     public DisputeContactTypeCd? ContactType { get; set; }
 
-    public string? ContactLawFirmNm { get; set; }
+    public string? ContactLawFirmName { get; set; }
 
     public string? ContactGiven1Nm { get; set; }
 

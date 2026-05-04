@@ -64,7 +64,7 @@ public class Dispute : DisputantContactInformation
     /// The disputant intends to be represented by a lawyer at the hearing.
     /// </summary>
     [JsonPropertyName("represented_by_lawyer")]
-    public DisputeRepresentedByLawyer RepresentedByLawyer { get; set; } = DisputeRepresentedByLawyer.N;
+    public DisputeRepresentedByLawyer? RepresentedByLawyer { get; set; } = null;
 
     /// <summary>
     /// Name of the law firm that will represent the disputant at the hearing.
@@ -136,7 +136,7 @@ public class Dispute : DisputantContactInformation
     /// The number of witnesses that the disputant intends to call.
     /// </summary>
     [JsonPropertyName("witness_no")]
-    public int WitnessNo { get; set; }
+    public int? WitnessNo { get; set; }
 
     /// <summary>
     /// The reason that disputant declares for requesting a fine reduction.
@@ -174,4 +174,18 @@ public class Dispute : DisputantContactInformation
     /// 
     [JsonPropertyName("file_data")]
     public List<TrafficCourts.Domain.Models.FileMetadata>? FileData { get; set; }
+
+    /// <summary>
+    /// When true, the citizen explicitly enabled the Contact section checkbox and all contact
+    /// fields in the payload (including empty values) should be processed.
+    /// </summary>
+    [JsonPropertyName("contact_section_enabled")]
+    public bool ContactSectionEnabled { get; set; } = false;
+
+    /// <summary>
+    /// When true, the citizen explicitly enabled the Additional Information section checkbox and all
+    /// additional fields in the payload (including empty values) should be processed.
+    /// </summary>
+    [JsonPropertyName("additional_section_enabled")]
+    public bool AdditionalSectionEnabled { get; set; } = false;
 }
