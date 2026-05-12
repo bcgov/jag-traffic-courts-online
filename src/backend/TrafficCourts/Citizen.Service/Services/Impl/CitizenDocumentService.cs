@@ -123,7 +123,7 @@ public class CitizenDocumentService : ICitizenDocumentService
                     DocumentSource = properties.DocumentSource,
                     NoticeOfDisputeGuid = properties.NoticeOfDisputeId?.ToString("d"),
                     VirusScanStatus = properties.VirusScanStatus,
-                    DocumentStatus = properties.StaffReviewStatus,
+                    StaffReviewStatus = properties.StaffReviewStatus,
                 };
 
                 fileData.Add(fileMetadata);

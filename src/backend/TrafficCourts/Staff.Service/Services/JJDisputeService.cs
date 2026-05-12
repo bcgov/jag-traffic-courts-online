@@ -286,7 +286,7 @@ public partial class JJDisputeService : IJJDisputeService
 
         // TCVP-2792 Filter files and exclude citizen-uploaded documents whose status is not ACCEPTED if assignVTC=false (requests coming from the jj workbench have this set to false, staff workbench has it set to true)
         if (!assignVTC && dispute.FileData is not null) {
-            dispute.FileData = dispute.FileData.Where(x => x.DocumentSource != TrafficCourts.Domain.Models.DocumentSource.Citizen || x.DocumentStatus == DisputeUpdateRequestStatus.ACCEPTED.ToString()).ToList();
+            dispute.FileData = dispute.FileData.Where(x => x.DocumentSource != TrafficCourts.Domain.Models.DocumentSource.Citizen || x.StaffReviewStatus == DisputeUpdateRequestStatus.ACCEPTED.ToString()).ToList();
         }
 
         // TCVP-2878 Filter files that are corrupt in COMS (missing attributes)

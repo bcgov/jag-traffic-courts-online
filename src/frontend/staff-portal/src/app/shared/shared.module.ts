@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe, TranslateDirective } from '@ngx-translate/core';
 import { ConfigModule } from 'app/config/config.module';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { AlertComponent } from './components/alert/alert.component';
@@ -15,7 +15,6 @@ import { ConfirmReasonDialogComponent } from './dialogs/confirm-reason-dialog/co
 import { DialogContentDirective } from './dialogs/dialog-content.directive';
 import { TicketImageDialogComponent } from './dialogs/ticket-image-dialog/ticket-image-dialog.component';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
-import { NgxBusyModule } from './modules/ngx-busy/ngx-busy.module';
 import { NgxMaterialModule } from './modules/ngx-material/ngx-material.module';
 import { NgxProgressModule } from './modules/ngx-progress/ngx-progress.module';
 import { CapitalizePipe } from './pipes/capitalize.pipe';
@@ -26,7 +25,7 @@ import { ReplacePipe } from './pipes/replace.pipe';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { YesNoPipe } from './pipes/yes-no.pipe';
 import { CustomDatePipe } from './pipes/custom-date.pipe';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { TicketImageContainerComponent } from './dialogs/ticket-image-container/ticket-image-container.component';
 
 @NgModule({
@@ -56,20 +55,19 @@ import { TicketImageContainerComponent } from './dialogs/ticket-image-container/
         CommonModule,
         RouterModule,
         ReactiveFormsModule,
-        NgxBusyModule,
         NgxMaterialModule,
         NgxMaskDirective, 
         NgxMaskPipe,
         NgxProgressModule,
         ConfigModule,
-        TranslateModule,
+        TranslatePipe,
+        TranslateDirective,
         FlexLayoutModule
     ],
     exports: [
         CommonModule,
         RouterModule,
         ReactiveFormsModule,
-        NgxBusyModule,
         NgxMaterialModule,
         NgxMaskDirective, 
         NgxMaskPipe,
@@ -91,7 +89,9 @@ import { TicketImageContainerComponent } from './dialogs/ticket-image-container/
         HeaderComponent,
         FeatureFlagDirective,
         FlexLayoutModule,
-        TicketImageContainerComponent
+        TicketImageContainerComponent,
+        TranslatePipe,
+        TranslateDirective,
     ],
     providers: [provideNgxMask()]
 })

@@ -9,6 +9,15 @@ spec:
   lookupPolicy:
     local: true
   tags:
+    - name: '24'
+      from:
+        kind: DockerImage
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/node:24'
+        imagePullSecret: 'artifacts-default-gpffbq'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
     - name: '20.16'
       from:
         kind: DockerImage

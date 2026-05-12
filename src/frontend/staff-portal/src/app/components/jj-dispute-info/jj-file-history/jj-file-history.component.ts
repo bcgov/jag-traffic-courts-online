@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Input, OnDestroy } from '@angular/core';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { FileHistory, EmailHistory, EmailHistorySuccessfullySent, JJDisputeRemark } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
@@ -10,6 +10,7 @@ import { Observable, Subscription, forkJoin } from 'rxjs';
   selector: 'app-jj-file-history',
   templateUrl: './jj-file-history.component.html',
   styleUrls: ['./jj-file-history.component.scss'],
+  standalone: false,
 })
 export class JJFileHistoryComponent implements OnInit, OnDestroy {
   @Input() ticketNumber: string;

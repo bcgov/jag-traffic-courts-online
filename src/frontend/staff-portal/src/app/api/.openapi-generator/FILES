@@ -1,5 +1,6 @@
 .gitignore
 README.md
+api.base.service.ts
 api.module.ts
 api/api.ts
 api/dispute.service.ts
@@ -51,6 +52,7 @@ model/disputeUpdateRequestStatus2.model.ts
 model/disputeUpdateRequestUpdateType.model.ts
 model/disputeWithUpdates.model.ts
 model/documentSource.model.ts
+model/documentStatus.model.ts
 model/documentType.model.ts
 model/emailHistory.model.ts
 model/emailHistorySuccessfullySent.model.ts
@@ -66,6 +68,7 @@ model/jJDispute.model.ts
 model/jJDisputeAccidentYn.model.ts
 model/jJDisputeAppearInCourt.model.ts
 model/jJDisputeContactType.model.ts
+model/jJDisputeCourtAppearanceAmendments.model.ts
 model/jJDisputeCourtAppearanceRoP.model.ts
 model/jJDisputeCourtAppearanceRoPAppCd.model.ts
 model/jJDisputeCourtAppearanceRoPCrown.model.ts
@@ -127,4 +130,6 @@ model/violationTicketIsYoungPerson.model.ts
 model/violationTicketVersion.model.ts
 model/yesNo.model.ts
 param.ts
+provide-api.ts
+query.params.ts
 variables.ts

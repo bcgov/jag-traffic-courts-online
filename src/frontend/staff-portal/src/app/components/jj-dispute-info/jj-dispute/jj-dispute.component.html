@@ -1,14 +1,14 @@
 <app-page>
   <ng-container stickyToolBar>
-    <div class="app-width" style="padding-top: 1.5vh; padding-bottom: 1.5vh;" fxLayout="row">
+    <div style="padding-top: 1.5vh; padding-bottom: 1.5vh;" fxLayout="row">
       <div fxFlex>
         <button mat-button (click)="onBackClicked()" color="primary">
-          <mat-icon inline="true">arrow_back</mat-icon> Back
+          <mat-icon class="align-text-bottom">arrow_back</mat-icon> Back
         </button>
       </div>
       <ng-template #remarksDialog let-dialogRef="dialogRef">
         <h2 mat-dialog-title>{{ "Add Remark" | translate }}</h2>
-      
+
         <mat-dialog-content>
           <textarea
             matInput
@@ -25,12 +25,14 @@
           </div>
           <!-- Validation error -->
           <div>
-            <mat-error *ngIf="remarkInput.invalid">
-              {{"error.remark_required" | translate }}
-            </mat-error>
+            @if (remarkInput.invalid) {
+              <mat-error>
+                {{"error.remark_required" | translate }}
+              </mat-error>
+            }
           </div>
         </mat-dialog-content>
-      
+
         <mat-dialog-actions align="end">
           <button mat-button (click)="dialogRef.close(false)">
             {{ "common.button.cancel" | translate }}
@@ -40,20 +42,35 @@
           </button>
         </mat-dialog-actions>
       </ng-template>
-      <div>
-        <button mat-raised-button *ngIf="isVTCStaff && !isSSEditMode" (click)="onAddRemarks()"
-        class="form-button">{{ "Add Remark" | translate }}</button>
-        <button mat-raised-button *ngIf="isSupportStaff && !isSSEditMode" (click)="isSSEditMode=true"
-          class="form-button">{{ "common.button.edit" | translate }}</button>
-        <button mat-raised-button *ngIf="isSSEditMode" (click)="onSupportStaffSave()" class="form-button"
-          [disabled]="!ticketInformationForm.valid">{{ "common.button.save" | translate }}</button>
-        <button mat-raised-button *ngIf="isSSEditMode" (click)="onSupportStaffCancel()" class="form-button">{{
-          "common.button.cancel" | translate }}</button>
+      <div class="button-container">
+        @if (isVTCStaff && !isSSEditMode) {
+          <button mat-raised-button (click)="onAddRemarks()" class="form-button">
+            {{ "Add Remark" | translate }}
+          </button>
+        }
+        @if (isSupportStaff && !isSSEditMode) {
+          <button mat-raised-button (click)="isSSEditMode=true" class="form-button">
+            {{ "common.button.edit" | translate }}
+          </button>
+        }
+        @if (isSSEditMode) {
+          <button mat-raised-button (click)="onSupportStaffSave()" class="form-button" [disabled]="!ticketInformationForm.valid">
+            {{ "common.button.save" | translate }}
+          </button>
+        }
+        @if (isSSEditMode) {
+          <button mat-raised-button (click)="onSupportStaffCancel()" class="form-button">
+            {{ "common.button.cancel" | translate }}
+        </button>
+        }
 
         <button mat-raised-button [matMenuTriggerFor]="gotoMenu">Go to</button>
         <mat-menu #gotoMenu="matMenu" yPosition="below">
           <button mat-menu-item (click)="goTo('disputeDetails')">Dispute Details</button>
           <button mat-menu-item (click)="goTo('uploadedDocuments')">Uploaded Documents</button>
+          @if (hasAmendmentData() || type === tabTypes.HEARING_INBOX) {
+            <button mat-menu-item *appFeatureFlag="featureType.amendments" (click)="goTo('amendments')">Amendments</button>
+          }
           <button mat-menu-item (click)="goTo('fileHistory')">Administrative Activity</button>
           <button mat-menu-item (click)="goTo('fileRemarks')">File Remarks</button>
         </mat-menu>
@@ -63,657 +80,907 @@
         </mat-menu>
       </div>
     </div>
+    @if (type === tabTypes.DECISION_VALIDATION && unacknowledgedAmendmentsExist) {
+      <div class="amendment-warning-banner" *appFeatureFlag="featureType.amendments">
+        <mat-icon class="amendment-warning-icon">warning</mat-icon>
+        <span>This dispute has <strong>amendments on file</strong> that require review and acknowledgment.</span>
+      </div>
+    }
   </ng-container>
-  <div [ngClass]="{'contact-info' : (type === tabTypes.DECISION_VALIDATION || type === tabTypes.DCF)}" 
+  <div [ngClass]="{'contact-info' : (type === tabTypes.DECISION_VALIDATION || type === tabTypes.DCF)}"
     style="padding-bottom: 1.5vh;">
-    <div *ngIf="retrieving === true">
-      <span>
-        <h3>Retrieving ticket information...</h3>
-      </span>
-    </div>
+    @if (retrieving === true) {
+      <div>
+        <span>
+          <h3>Retrieving ticket information...</h3>
+        </span>
+      </div>
+    }
 
     <span #disputeDetails></span>
-    <div *ngIf="lastUpdatedJJDispute && retrieving === false">
-      <div style="float:inline">
-        <span style="float:left">
-          <h1><b>
-              <span *ngIf="tcoDisputeInfo.hearingType === HearingTypeCodes.WrittenReasons">Written Reasons
-                Dispute&nbsp;</span>
-              <span
-                *ngIf="tcoDisputeInfo.hearingType === HearingTypeCodes.CourtAppearance && tcoDisputeInfo.disputeStatus.code !== DisputeCaseFileStatus.RequireCourtHearing">Hearing
-                Ticket Dispute</span>
-              <span *ngIf="tcoDisputeInfo.disputeStatus.code === DisputeCaseFileStatus.RequireCourtHearing">REQUIRES COURT HEARING</span>
-              - {{ lastUpdatedJJDispute.occamDisputantName }} </b></h1>
-        </span>
-        <span style="float:right">
-          <span *ngIf="tcoDisputeInfo.multipleOfficersYn===yesNo.Yes"><button class="mo-btn" disabled="true">{{
-              "label.multiple_officers_btn" | translate }}</button></span>
-          <span *ngIf="tcoDisputeInfo.accidentYn===yesNo.Yes"><button class="accident-btn" disabled="true">{{
-              "label.accident_btn" | translate }}</button></span>
-          <span class="ticket-number">Ticket Number: {{ lastUpdatedJJDispute.ticketNumber }}</span>
-        </span>
-      </div> <br /><br />
-      <section class="section-sticky">
-        <ng-container subHeader>
-          <span>
-            <h3>Violation Ticket Information<span class="medium-note"><i> (source Ticket & ICBC)</i></span></h3>
+    @if (lastUpdatedJJDispute && retrieving === false) {
+      <div>
+        <div style="float:inline">
+          <span style="float:left">
+            <h1>
+              <b>
+                @if (tcoDisputeInfo.hearingType === HearingTypeCodes.WrittenReasons) {
+                  <span>Written Reasons Dispute&nbsp;</span>
+                }
+                @if (tcoDisputeInfo.hearingType === HearingTypeCodes.CourtAppearance && tcoDisputeInfo.disputeStatus.code !== DisputeCaseFileStatus.RequireCourtHearing) {
+                  <span>Hearing Ticket Dispute</span>
+                }
+                @if (tcoDisputeInfo.disputeStatus.code === DisputeCaseFileStatus.RequireCourtHearing) {
+                  <span>REQUIRES COURT HEARING</span>
+                }
+                - {{ lastUpdatedJJDispute.occamDisputantName }}
+              </b>
+            </h1>
           </span>
-        </ng-container>
-        <form [formGroup]="ticketInformationForm">
-          <div style="display: grid; grid-template-columns: auto auto auto auto">
-            <span class="section-grid-cell">
-              <p class="section-grid-header">{{ "label.surname" | translate }}</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.disputantSurname }}</p>
+          <span style="float:right">
+            @if (tcoDisputeInfo.multipleOfficersYn===yesNo.Yes) {
+              <span>
+                <button class="mo-btn" disabled="true">{{ "label.multiple_officers_btn" | translate }}</button>
+              </span>
+            }
+            @if (tcoDisputeInfo.accidentYn===yesNo.Yes) {
+              <span>
+                <button class="accident-btn" disabled="true">{{ "label.accident_btn" | translate }}</button>
+              </span>
+            }
+            <span class="ticket-number">Ticket Number: {{ lastUpdatedJJDispute.ticketNumber }}</span>
+          </span>
+        </div>
+        <br />
+        <br />
+        <section class="section-sticky">
+          <ng-container subHeader>
+            <span>
+              <h3>Violation Ticket Information<span class="medium-note"><i> (source Ticket & ICBC)</i></span></h3>
             </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">{{ "label.given_names" | translate }}</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.ticketDisputantGivenNames }}</p>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">Date of Birth</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.disputantBirthdate | date: "dd-MMM-yyyy" : "UTC" }}</p>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">Driver's Licence Number</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceNumber }}</p>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">Violation Date</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "dd-MMM-yyyy" }}</p>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">Violation Time</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "HH:mm" }}</p>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">Online Submission Date</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.submittedTs | date: "dd-MMM-yyyy" }}</p>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">Date Received from ICBC</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.icbcReceivedDate | date: "dd-MMM-yyyy" : "UTC" }}
-              </p>
-            </span>
-            <ng-container *ngIf="type !== tabTypes.DECISION_VALIDATION && type !== tabTypes.DCF">
+          </ng-container>
+          <form [formGroup]="ticketInformationForm">
+            <div style="display: grid; grid-template-columns: auto auto auto auto">
               <span class="section-grid-cell">
-                <p class="section-grid-header">Court Location Code</p>
-                <p class="section-grid-text">{{ lastUpdatedJJDispute.courtAgenId }}</p>
+                <p class="section-grid-header">{{ "label.surname" | translate }}</p>
+                <p class="section-grid-text">{{ lastUpdatedJJDispute.disputantSurname }}</p>
               </span>
               <span class="section-grid-cell">
-                <p class="section-grid-header">Court Location</p>
-                <p class="section-grid-text">{{ lastUpdatedJJDispute.courthouseLocation }}</p>
+                <p class="section-grid-header">{{ "label.given_names" | translate }}</p>
+                <p class="section-grid-text">{{ lastUpdatedJJDispute.ticketDisputantGivenNames }}</p>
+              </span>
+              <span class="section-grid-cell">
+                <p class="section-grid-header">Date of Birth</p>
+                <p class="section-grid-text">{{ lastUpdatedJJDispute.disputantBirthdate | date: "dd-MMM-yyyy" : "UTC" }}</p>
+              </span>
+              <span class="section-grid-cell">
+                <p class="section-grid-header">Driver's Licence Number</p>
+                <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceNumber }}</p>
+              </span>
+              <span class="section-grid-cell">
+                <p class="section-grid-header">Violation Date</p>
+                <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "dd-MMM-yyyy" }}</p>
+              </span>
+              <span class="section-grid-cell">
+                <p class="section-grid-header">Violation Time</p>
+                <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "HH:mm" }}</p>
+              </span>
+              <span class="section-grid-cell">
+                <p class="section-grid-header">Online Submission Date</p>
+                <p class="section-grid-text">{{ lastUpdatedJJDispute.submittedTs | date: "dd-MMM-yyyy" }}</p>
+              </span>
+              <span class="section-grid-cell">
+                <p class="section-grid-header">Date Received from ICBC</p>
+                <p class="section-grid-text">{{ lastUpdatedJJDispute.icbcReceivedDate | date: "dd-MMM-yyyy" : "UTC" }}
+                </p>
+              </span>
+              @if (type !== tabTypes.DECISION_VALIDATION && type !== tabTypes.DCF) {
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">Court Location Code</p>
+                  <p class="section-grid-text">{{ lastUpdatedJJDispute.courtAgenId }}</p>
+                </span>
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">Court Location</p>
+                  <p class="section-grid-text">{{ lastUpdatedJJDispute.courthouseLocation }}</p>
+                </span>
+              }
+              <span class="section-grid-cell">
+                <p class="section-grid-header">Location of Offence</p>
+                <p class="section-grid-text"> {{ lastUpdatedJJDispute.offenceLocation }}</p>
+              </span>
+              <span class="section-grid-cell">
+                <p class="section-grid-header">Organization/Detachment/Location</p>
+                <p class="section-grid-text">{{ lastUpdatedJJDispute.policeDetachment }}</p>
+              </span>
+              <span class="section-grid-cell">
+                <p class="section-grid-header">Online Submission Filed by</p>
+                <p class="section-grid-text">{{ lastUpdatedJJDispute.occamDisputeCreatedBy === "OCCAMORDS" ? "Citizen" : lastUpdatedJJDispute.occamDisputeCreatedBy }}</p>
+              </span>
+            </div>
+          </form>
+        </section>
+        <section class="section-sticky">
+          <ng-container subHeader>
+            <span>
+              <h3>Disputant Provided Information <span class="medium-note"><i>(source Online Portal)</i></span></h3>
+            </span>
+            <span class="section-grid-header">Contact Type: </span>
+            @if (lastUpdatedJJDispute.contactType === ContactType.Individual) {
+              <span class="section-grid-text">Disputant</span>
+            }
+            @if (lastUpdatedJJDispute.contactType === ContactType.Lawyer) {
+              <span class="section-grid-text">Lawyer</span>
+            }
+            @if (lastUpdatedJJDispute.contactType === ContactType.Other) {
+              <span class="section-grid-text">Agent/Other</span>
+            }
+          </ng-container>
+          <form [formGroup]="contactInformationForm">
+            <div style="display: grid; grid-template-columns: auto auto auto auto">
+              <span class="section-grid-cell">
+                <p class="section-grid-header">
+                  @if (lastUpdatedJJDispute.contactType === ContactType.Lawyer) {
+                    <span class="section-grid-header">Lawyer's </span>
+                  }
+                  @if (lastUpdatedJJDispute.contactType === ContactType.Other) {
+                    <span class="section-grid-header">Agent's </span>
+                  }
+                  {{ "label.surname" | translate }}
+                </p>
+                @if (!(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)) {
+                  <p class="section-grid-text">
+                    {{ 
+                      lastUpdatedJJDispute.contactType === ContactType.Individual
+                        ? lastUpdatedJJDispute.occamDisputantSurnameNm
+                        : lastUpdatedJJDispute.contactSurname
+                    }}
+                  </p>
+                }
+                @if ((isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)) {
+                  <mat-form-field appearance="outline">
+                    <input matInput formControlName="contactSurname" />
+                    @if (contactInformationForm.controls.contactSurname.hasError('maxlength')) {
+                      <mat-error>{{ "error.max_length" | translate }}30</mat-error>
+                    }
+                  </mat-form-field>
+                }
+              </span>
+              <span class="section-grid-cell">
+                @if (!(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)) {
+                  <p class="section-grid-header">
+                    @if (lastUpdatedJJDispute.contactType === ContactType.Lawyer) {
+                      <span class="section-grid-header">Lawyer's </span>
+                    }
+                    @if (lastUpdatedJJDispute.contactType === ContactType.Other) {
+                      <span class="section-grid-header">Agent's </span>
+                    }
+                    {{ "label.given_names" | translate }}
+                  </p>
+                }
+                @if (!(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)) {
+                  <p class="section-grid-text">
+                    {{
+                      lastUpdatedJJDispute.contactType === ContactType.Individual
+                        ? lastUpdatedJJDispute.occamDisputantGivenNames
+                        : lastUpdatedJJDispute.contactGivenNames
+                    }}
+                  </p>
+                }
+                @if ((isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)) {
+                  <p class="section-grid-header">{{ "label.given_name_1" | translate }}</p>
+                }
+                @if ((isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)) {
+                  <mat-form-field appearance="outline">
+                    <input matInput formControlName="contactGivenName1" />
+                    @if (contactInformationForm.controls.contactGivenName1.hasError('maxlength')) {
+                      <mat-error>{{ "error.max_length" | translate }}30</mat-error>
+                    }
+                  </mat-form-field>
+                }
+                @if ((isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)) {
+                  <p class="section-grid-header">{{ "label.given_name_2" | translate }}</p>
+                }
+                @if ((isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)) {
+                  <mat-form-field appearance="outline">
+                    <input matInput formControlName="contactGivenName2" />
+                    @if (contactInformationForm.controls.contactGivenName2.hasError('maxlength')) {
+                      <mat-error>{{ "error.max_length" | translate }}30</mat-error>
+                    }
+                  </mat-form-field>
+                }
+                @if ((isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)) {
+                  <p class="section-grid-header">{{ "label.given_name_3" | translate }}</p>
+                }
+                @if ((isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)) {
+                  <mat-form-field appearance="outline">
+                    <input matInput formControlName="contactGivenName3" />
+                    @if (contactInformationForm.controls.contactGivenName3.hasError('maxlength')) {
+                      <mat-error>{{ "error.max_length" | translate }}30</mat-error>
+                    }
+                  </mat-form-field>
+                }
+              </span>
+              <span class="section-grid-cell">
+                <p class="section-grid-header">Disputant's Driver's Licence Number</p>
+                <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceNumber }}</p>
+              </span>
+              <span class="section-grid-cell">
+                <p class="section-grid-header">Disputant's Province / State of Driver's Licence</p>
+                <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceProvince }}</p>
+              </span>
+              <span class="section-grid-cell" style="grid-column: span 3">
+                <p class="section-grid-header">Contact Mailing Address</p>
+                <p class="section-grid-text">{{ lastUpdatedJJDispute.address }}</p>
+              </span>
+              <span class="section-grid-cell">
+                <p class="section-grid-header">Contact Email</p>
+                <p class="section-grid-text">{{ lastUpdatedJJDispute.emailAddress }}</p>
+              </span>
+            </div>
+          </form>
+        </section>
+        @if (tcoDisputeInfo.hearingType === HearingTypeCodes.CourtAppearance) {
+          <section class="section-sticky">
+            <ng-container subHeader>
+              <span>
+                <h3>Court Options</h3>
               </span>
             </ng-container>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">Location of Offence</p>
-              <p class="section-grid-text"> {{ lastUpdatedJJDispute.offenceLocation }}</p>
+            <form [formGroup]="courtOptionsForm">
+              <div style="display: grid; grid-template-columns: auto auto auto auto">
+                <span class="section-grid-cell">
+                  @if (!isSSEditMode) {
+                    <p class="section-grid-header">{{ "label.legal_counsel_name" | translate }}</p>
+                  }
+                  @if (!isSSEditMode) {
+                    <p class="section-grid-text">
+                      {{ lastUpdatedJJDispute.lawyerGivenName1 }}
+                      {{ lastUpdatedJJDispute.lawyerGivenName2 }}
+                      {{ lastUpdatedJJDispute.lawyerGivenName3 }}
+                      {{ lastUpdatedJJDispute.lawyerSurname }}
+                    </p>
+                  }
+                  @if (isSSEditMode) {
+                    <p class="section-grid-header">{{ "label.legal_counsel_given_name_1" | translate }}</p>
+                  }
+                  @if (isSSEditMode) {
+                    <mat-form-field appearance="outline">
+                      <input matInput formControlName="lawyerGivenName1" />
+                      @if (courtOptionsForm.controls.lawyerGivenName1.hasError('maxlength')) {
+                        <mat-error>{{ "error.max_length" | translate }}30</mat-error>
+                      }
+                    </mat-form-field>
+                  }
+                  @if (isSSEditMode) {
+                    <p class="section-grid-header">{{ "label.legal_counsel_given_name_2" | translate }}</p>
+                  }
+                  @if (isSSEditMode) {
+                    <mat-form-field appearance="outline">
+                      <input matInput formControlName="lawyerGivenName2" />
+                      @if (courtOptionsForm.controls.lawyerGivenName2.hasError('maxlength')) {
+                        <mat-error>{{ "error.max_length" | translate }}30</mat-error>
+                      }
+                    </mat-form-field>
+                  }
+                  @if (isSSEditMode) {
+                    <p class="section-grid-header">{{ "label.legal_counsel_given_name_3" | translate }}</p>
+                  }
+                  @if (isSSEditMode) {
+                    <mat-form-field appearance="outline">
+                      <input matInput formControlName="lawyerGivenName3" />
+                      @if (courtOptionsForm.controls.lawyerGivenName3.hasError('maxlength')) {
+                        <mat-error>{{ "error.max_length" | translate }}30</mat-error>
+                      }
+                    </mat-form-field>
+                  }
+                  @if (isSSEditMode) {
+                    <p class="section-grid-header">{{ "label.legal_counsel_surname" | translate }}</p>
+                  }
+                  @if (isSSEditMode) {
+                    <mat-form-field appearance="outline">
+                      <input matInput formControlName="lawyerSurname" />
+                      @if (courtOptionsForm.controls.lawyerSurname.hasError('maxlength')) {
+                        <mat-error>{{ "error.max_length" | translate }}30</mat-error>
+                      }
+                    </mat-form-field>
+                  }
+                </span>
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">{{ "label.legal_counsel_firm" | translate }}</p>
+                  @if (!isSSEditMode) {
+                    <p class="section-grid-text">{{ lastUpdatedJJDispute.lawFirmName }}</p>
+                  }
+                  @if (isSSEditMode) {
+                    <mat-form-field appearance="outline">
+                      <input matInput formControlName="lawFirmName" />
+                      @if (courtOptionsForm.controls.lawFirmName.hasError('maxlength')) {
+                        <mat-error>{{ "error.max_length" | translate }}200</mat-error>
+                      }
+                    </mat-form-field>
+                  }
+                </span>
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">{{ "label.defence_witness" | translate }}</p>
+                  @if (!isSSEditMode) {
+                    <p class="section-grid-text">{{ lastUpdatedJJDispute.witnessNo }}</p>
+                  }
+                  @if (isSSEditMode) {
+                    <mat-form-field appearance="outline">
+                      <input matInput formControlName="witnessNo" maxlength="10" type="number" />
+                      @if (courtOptionsForm.controls.witnessNo.hasError('min')) {
+                        <mat-error>{{ "error.min_value" | translate }}0</mat-error>
+                      }
+                      @if (courtOptionsForm.controls.witnessNo.hasError('max')) {
+                        <mat-error>{{ "error.max_value" | translate }}2147483647</mat-error>
+                      }
+                    </mat-form-field>
+                  }
+                </span>
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">{{ "label.interpreter" | translate }}</p>
+                  @if (!isSSEditMode) {
+                    <p class="section-grid-text">{{ lastUpdatedJJDispute.interpreterLanguage }}</p>
+                  }
+                  @if (isSSEditMode) {
+                    <mat-form-field appearance="outline">
+                      <mat-select formControlName="interpreterLanguageCd" placeholder="Language">
+                        <mat-option [value]=""></mat-option>
+                        @for (lang of languages; track lang.code) {
+                          <mat-option [value]="lang.code">{{ lang.description }}</mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+                  }
+                </span>
+              </div>
+            </form>
+          </section>
+        }
+        @if (tcoDisputeInfo.hearingType === HearingTypeCodes.CourtAppearance) {
+          <section #courtAppearance class="section-sticky">
+            <ng-container subHeader>
+              <span>
+                <h3>Court Appearance</h3>
+              </span>
+            </ng-container>
+            <form [formGroup]="courtAppearanceForm" novalidate>
+              <div
+                style="display: grid; grid-template-columns: auto auto auto auto minmax(210px, 1fr) auto auto auto auto auto auto;">
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">Appearance Date/Time</p>
+                  <p class="section-grid-text">
+                    {{ lastUpdatedJJDispute.mostRecentCourtAppearance?.appearanceTs | date: "dd-MMM-yyyy hh:mm a" : "UTC" }}
+                  </p>
+                </span>
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">Room</p>
+                  <p class="section-grid-text">
+                    <span>{{ courtAppearanceForm?.value.room }}</span>
+                  </p>
+                </span>
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">Reason</p>
+                  <p class="section-grid-text">
+                    <span>{{ courtAppearanceForm?.value.reason }} </span>
+                  </p>
+                </span>
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">APP (P/N/A)<span style="color: red;">*</span></p>
+                  <p class="section-grid-text">
+                    @if (isViewOnly && !isSSEditMode) {
+                      <span>{{ courtAppearanceForm?.value.appCd }}</span>
+                    }
+                    @if (!isViewOnly || isSSEditMode) {
+                      <mat-form-field appearance="outline"
+                        [ngClass]="{'mat-form-field-invalid': courtAppearanceForm.get('appCd')?.invalid && courtAppearanceForm.get('appCd')?.touched}">
+                        <mat-select formControlName="appCd" (selectionChange)="onUpdateAPPCd()" required>
+                          <mat-option [value]="RoPApp.P">{{ RoPApp.P }}</mat-option>
+                          <mat-option [value]="RoPApp.N">{{ RoPApp.N }}</mat-option>
+                          <mat-option [value]="RoPApp.A">{{ RoPApp.A }}</mat-option>
+                        </mat-select>
+                        @if (courtAppearanceForm.get('appCd')?.hasError('required')) {
+                          <mat-error>APP field is required</mat-error>
+                        }
+                      </mat-form-field>
+                    }
+                  </p>
+                </span>
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">No APP</p>
+                  <p class="section-grid-text">
+                    @if (((isViewOnly && !isSSEditMode) || !isNoAppEnabled) && courtAppearanceForm.value.noAppTs) {
+                      <span>
+                        {{ courtAppearanceForm?.value.noAppTs | date: "dd-MMM-yyyy HH:mm" }}
+                      </span>
+                    }
+                    @if ((!isViewOnly || isSSEditMode) && isNoAppEnabled) {
+                      <span>
+                        <input type="text" formControlName="noAppTs" class="p-2 section-grid-text latest-plea-text"
+                  bsDatepicker placeholder="DD-MMM-YYYY HH:mm" [bsConfig]="{ withTimepicker: true, keepDatepickerOpened: true,
+                  dateInputFormat: 'DD-MMM-YYYY HH:mm', containerClass: 'theme-dark-blue', isAnimated: true,
+                  showWeekNumbers: false, adaptivePosition: true }" />
+                        <button mat-raised-button class="form-button-secondary" (click)="updateNoAppTsToNow()">Now</button>
+                      </span>
+                    }
+                  </p>
+                </span>
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">CLERK REC.</p>
+                  <p class="section-grid-text">
+                    @if ((isViewOnly && !isSSEditMode)) {
+                      <span>{{ courtAppearanceForm?.value.clerkRecord }}</span>
+                    }
+                    @if ((!isViewOnly || isSSEditMode)) {
+                      <mat-form-field appearance="outline">
+                        <input matInput formControlName="clerkRecord" maxlength="30" />
+                        @if (courtAppearanceForm.controls.clerkRecord.hasError('maxlength')) {
+                          <mat-error>{{ "error.max_length" | translate }}100</mat-error>
+                        }
+                      </mat-form-field>
+                    }
+                  </p>
+                </span>
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">DEF. COUNSEL</p>
+                  <p class="section-grid-text">
+                    @if ((isViewOnly && !isSSEditMode)) {
+                      <span>{{ courtAppearanceForm?.value.defenceCounsel }}</span>
+                    }
+                    @if ((!isViewOnly || isSSEditMode)) {
+                      <mat-form-field appearance="outline">
+                        <input matInput formControlName="defenceCounsel" maxlength="30" />
+                        @if (courtAppearanceForm.controls.defenceCounsel.hasError('maxlength')) {
+                          <mat-error>{{ "error.max_length" | translate }}100</mat-error>
+                        }
+                      </mat-form-field>
+                    }
+                  </p>
+                </span>
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">Def Att</p>
+                  <p class="section-grid-text">
+                    @if (isViewOnly) {
+                      <span>{{ courtAppearanceForm?.value.dattCd }}</span>
+                    }
+                    @if (!isViewOnly) {
+                      <mat-form-field appearance="outline">
+                        <mat-select formControlName="dattCd">
+                          <mat-option [value]="RoPDatt.A">{{ RoPDatt.A }}</mat-option>
+                          <mat-option [value]="RoPDatt.C">{{ RoPDatt.C }}</mat-option>
+                          <mat-option [value]="RoPDatt.N">{{ RoPDatt.N }}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    }
+                  </p>
+                </span>
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">Crown</p>
+                  <p class="section-grid-text">
+                    @if (isViewOnly && !isSSEditMode) {
+                      <span>{{ courtAppearanceForm?.value.crown }}</span>
+                    }
+                    @if (!isViewOnly || isSSEditMode) {
+                      <mat-form-field appearance="outline">
+                        <mat-select formControlName="crown">
+                          <mat-option [value]="RoPCrown.P">{{ RoPCrown.P }}</mat-option>
+                          <mat-option [value]="RoPCrown.N">{{ RoPCrown.N }}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    }
+                  </p>
+                </span>
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">Seized</p>
+                  <p class="section-grid-text">
+                    @if (!isViewOnly) {
+                      <mat-form-field appearance="outline">
+                        <mat-select formControlName="jjSeized">
+                          <mat-option [value]="RoPSeized.Y">{{ RoPSeized.Y }}</mat-option>
+                          <mat-option [value]="RoPSeized.N">{{ RoPSeized.N }}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    }
+                    @if (isViewOnly) {
+                      <span>{{ courtAppearanceForm?.value.jjSeized }}</span>
+                    }
+                  </p>
+                </span>
+                <span class="section-grid-cell">
+                  <p class="section-grid-header">Judicial Justice</p>
+                  <p class="section-grid-text">
+                    @if (type !== tabTypes.HEARING_INBOX) {
+                      <span>{{ courtAppearanceForm?.value.adjudicator }}</span>
+                    }
+                  </p>
+                </span>
+                <span class="section-grid-cell" style="grid-column: span 11">
+                  <p class="section-grid-header">Language Choice:</p>
+                  <p class="section-grid-text">
+                    <mat-radio-group formControlName="languageChoice" *ngIf="!isViewOnly" style="display: flex; gap: 15px;">
+                      <mat-radio-button value="English">English</mat-radio-button>
+                      <mat-radio-button value="French">French</mat-radio-button>
+                      <mat-radio-button value="Bilingual">Bilingual</mat-radio-button>
+                    </mat-radio-group>
+                    <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.languageChoice }}</span>
+                  </p>
+                </span>                
+                <!-- AMENDMENT CHECKBOX - Under Judicial Justice, for editable views -->
+                @if (!isViewOnly) {
+                <span *appFeatureFlag="featureType.amendments" class="section-grid-cell amendment-embed-cell" style="grid-column: span 11" #amendments>
+                  <p class="section-grid-text">
+                    <mat-checkbox [checked]="showAmendmentSection" (change)="onAmendmentsRequiredChange($event.checked)">
+                      Amendments Required
+                    </mat-checkbox>
+                  </p>
+
+              <p class="section-grid-header">Language Choice:</p>
+                <!-- AMENDMENT CHECKBOX - Under Judicial Justice, for editable views -->
+                @if (!isViewOnly) {
+                <span *appFeatureFlag="featureType.amendments" class="section-grid-cell amendment-embed-cell" style="grid-column: span 11" #amendments>
+                  <p class="section-grid-text">
+                    <mat-checkbox [checked]="showAmendmentSection" (change)="onAmendmentsRequiredChange($event.checked)">
+                      Amendments Required
+                    </mat-checkbox>
+                  </p>
+
+                  <!-- Expandable Amendment Fields -->
+                  @if (showAmendmentSection) {
+                  <div class="amendment-embed-content">
+                    <app-jj-amendments
+                      [jjDisputeInfo]="lastUpdatedJJDispute"
+                      [isViewOnly]="false"
+                      [existingAmendmentData]="amendmentData"
+                      [showCheckbox]="false"
+                      (amendmentDataChange)="onAmendmentDataChange($event)">
+                    </app-jj-amendments>
+                  </div>
+                  }
+                </span>
+                }
+
+                <!-- AMENDMENT LABEL - For View Only (non-Decision-Validation, non-DCF) -->
+                @if (isViewOnly && hasAmendmentData() && type !== tabTypes.DECISION_VALIDATION && type !== tabTypes.DCF) {
+                <span *appFeatureFlag="featureType.amendments" class="section-grid-cell" style="grid-column: span 11">
+                  <p class="section-grid-header" style="color: #d32f2f;">
+                    Amendments:
+                  </p>
+                  <p class="section-grid-text" style="color: #d32f2f; font-weight: 600;">
+                    This dispute has amendments on file
+                  </p>
+                </span>
+                }
+
+                <!-- STAFF AMENDMENT VALIDATION - Inline in Decision Validation -->
+                @if (type === tabTypes.DECISION_VALIDATION && hasAmendmentData()) {
+                <span #amendmentValidation *appFeatureFlag="featureType.amendments" class="section-grid-cell amendment-validation-cell" style="grid-column: span 11;">
+                  <app-staff-amendment-validation
+                    [amendmentData]="amendmentData"
+                    [isViewOnly]="isViewOnly"
+                    (validationStatusChange)="onAmendmentValidationChange($event)">
+                  </app-staff-amendment-validation>
+                </span>
+                }
+
+                <!-- JJ Endorsements - Keep in same card -->
+                <span class="section-grid-cell" style="grid-column: span 11">
+                  <p class="section-grid-header">JJ Endorsements:</p>
+                  <p class="section-grid-text">
+                    @if (!isViewOnly) {
+                      <textarea formControlName="comments" style="width:100%; background:#fffee6" rows="8"> </textarea>
+                    }
+                    @if (isViewOnly) {
+                      <span class="formatComments">{{ courtAppearanceForm.get('comments').value }}</span>
+                    }
+                  </p>
+                </span>
+              </div>
+            </form>
+          </section>
+        }
+        @if (tcoDisputeInfo.hearingType === HearingTypeCodes.CourtAppearance) {
+          <section class="section-sticky">
+            <ng-container subHeader>
+              <span>
+                <h3>Court Appearances History</h3>
+              </span>
+            </ng-container>
+            <app-jj-dispute-court-appearances [data]="lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs">
+            </app-jj-dispute-court-appearances>
+          </section>
+        }
+        @if (tcoDisputeInfo.hearingType === HearingTypeCodes.WrittenReasons || tcoDisputeInfo.hearingType === HearingTypeCodes.CourtAppearance) {
+          <section class="section-sticky">
+            <ng-container subHeader>
+              <span>
+                <h3>Disputant Statement</h3>
+              </span>
+            </ng-container>
+            <!-- Signature Panel -->
+            <h4>{{ "label.signature" | translate }} - {{ "label.signature_subheading" | translate }}</h4>
+            <div class="container signature-box">
+              <div class="row justify-content-start custom-row">
+                <div class="col-2 custom-column">
+                  <strong>{{ "label.signatory_option_1" | translate }}</strong>
+                </div>
+                <div class="col-4 custom-column">
+                  @if (lastUpdatedJJDispute.signatoryType === SignatoryType.D) {
+                    <span style="font-size: small">{{ lastUpdatedJJDispute.signatoryName }}</span>
+                  }
+                </div>
+                <div class="col-4 custom-column">
+                  @if (lastUpdatedJJDispute.signatoryType === SignatoryType.D) {
+                    <span style="font-size: small">{{ lastUpdatedJJDispute.submittedTs | date: "dd-MMM-yyyy HH:mm" }}</span>
+                  }
+                </div>
+              </div>
+              <div class="row justify-content-start">
+                <div class="col-2 custom-column">
+                  <strong>{{ "label.signatory_option_2" | translate }}</strong>
+                </div>
+                <div class="col-4 custom-column">
+                  @if (lastUpdatedJJDispute.signatoryType === SignatoryType.A) {
+                    <span style="font-size: small">{{ lastUpdatedJJDispute.signatoryName }}</span>
+                  }
+                </div>
+                <div class="col-4 custom-column">
+                  @if (lastUpdatedJJDispute.signatoryType === SignatoryType.A) {
+                    <span style="font-size: small">{{ lastUpdatedJJDispute.submittedTs | date: "dd-MMM-yyyy HH:mm" }}</span>
+                  }
+                </div>
+              </div>
+            </div>
+            <!-- Signature Panel End -->
+          </section>
+        }
+        <section class="section-sticky">
+          <ng-container subHeader>
+            <span>
+              <h3>Written Reasons</h3>
             </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">Organization/Detachment/Location</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.policeDetachment }}</p>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">Online Submission Filed by</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.occamDisputeCreatedBy === "OCCAMORDS" ? "Citizen" : lastUpdatedJJDispute.occamDisputeCreatedBy }}</p>
-            </span>
+          </ng-container>
+          <div>
+            <h4>
+              <b>Fine Reduction</b>
+              @if (fineReductionCountsHeading.length > 0) {
+                <span>&nbsp;-&nbsp;{{ fineReductionCountsHeading }}</span>
+              }
+            </h4>
+            <span style="font-size: small">{{ lastUpdatedJJDispute.fineReductionReason }}</span>
+            <br />
+            <br />
           </div>
-        </form>
-      </section>
-      <section class="section-sticky">
-        <ng-container subHeader>
-          <span>
-            <h3>Disputant Provided Information <span class="medium-note"><i>(source Online Portal)</i></span></h3>
-          </span>
-          <span class="section-grid-header">Contact Type: </span>
-          <span class="section-grid-text" *ngIf="lastUpdatedJJDispute.contactType === ContactType.Individual">Disputant</span>
-          <span class="section-grid-text" *ngIf="lastUpdatedJJDispute.contactType === ContactType.Lawyer">Lawyer</span>
-          <span class="section-grid-text" *ngIf="lastUpdatedJJDispute.contactType === ContactType.Other">Agent/Other</span>
-        </ng-container>
-        <form [formGroup]="contactInformationForm">
-          <div style="display: grid; grid-template-columns: auto auto auto auto">
-            <span class="section-grid-cell">
-              <p class="section-grid-header">
-                <span class="section-grid-header" *ngIf="lastUpdatedJJDispute.contactType === ContactType.Lawyer">Lawyer's </span>
-                <span class="section-grid-header" *ngIf="lastUpdatedJJDispute.contactType === ContactType.Other">Agent's </span>
-                {{ "label.surname" | translate }}
-              </p>
-              <p class="section-grid-text"
-                *ngIf="!(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">{{
-                lastUpdatedJJDispute.contactType === ContactType.Individual ?
-                lastUpdatedJJDispute.occamDisputantSurnameNm : lastUpdatedJJDispute.contactSurname }}</p>
-              <mat-form-field appearance="outline"
-                *ngIf="(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">
-                <input matInput formControlName="contactSurname">
-                <mat-error *ngIf="contactInformationForm.controls.contactSurname.hasError('maxlength')">{{
-                  "error.max_length" | translate }}30</mat-error>
-              </mat-form-field>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header"
-                *ngIf="!(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">
-                <span class="section-grid-header" *ngIf="lastUpdatedJJDispute.contactType === ContactType.Lawyer">Lawyer's </span>
-                <span class="section-grid-header" *ngIf="lastUpdatedJJDispute.contactType === ContactType.Other">Agent's </span>
-                {{ "label.given_names" | translate }}
-              </p>
-              <p class="section-grid-text"
-                *ngIf="!(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">{{
-                lastUpdatedJJDispute.contactType === ContactType.Individual ?
-                lastUpdatedJJDispute.occamDisputantGivenNames : lastUpdatedJJDispute.contactGivenNames }}</p>
-              <p class="section-grid-header"
-                *ngIf="(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">{{
-                "label.given_name_1" | translate }}</p>
-              <mat-form-field appearance="outline"
-                *ngIf="(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">
-                <input matInput formControlName="contactGivenName1">
-                <mat-error *ngIf="contactInformationForm.controls.contactGivenName1.hasError('maxlength')">{{
-                  "error.max_length" | translate }}30</mat-error>
-              </mat-form-field>
-              <p class="section-grid-header"
-                *ngIf="(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">{{
-                "label.given_name_2" | translate }}</p>
-              <mat-form-field appearance="outline"
-                *ngIf="(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">
-                <input matInput formControlName="contactGivenName2">
-                <mat-error *ngIf="contactInformationForm.controls.contactGivenName2.hasError('maxlength')">{{
-                  "error.max_length" | translate }}30</mat-error>
-              </mat-form-field>
-              <p class="section-grid-header"
-                *ngIf="(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">{{
-                "label.given_name_3" | translate }}</p>
-              <mat-form-field appearance="outline"
-                *ngIf="(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">
-                <input matInput formControlName="contactGivenName3">
-                <mat-error *ngIf="contactInformationForm.controls.contactGivenName3.hasError('maxlength')">{{
-                  "error.max_length" | translate }}30</mat-error>
-              </mat-form-field>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">Disputant's Driver's Licence Number</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceNumber }}</p>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">Disputant's Province / State of Driver's Licence</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceProvince }}</p>
-            </span>
-            <span class="section-grid-cell" style="grid-column: span 3">
-              <p class="section-grid-header">Contact Mailing Address</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.address }}</p>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">Contact Email</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.emailAddress }}</p>
-            </span>
+          <div>
+            <h4>
+              <b>Time to Pay</b>
+              @if (timeToPayCountsHeading.length>0) {
+                <span>&nbsp;-&nbsp;{{ timeToPayCountsHeading}}</span>
+              }
+            </h4>
+            <span style="font-size: small">{{ lastUpdatedJJDispute.timeToPayReason }}</span>
           </div>
-        </form>
-      </section>
-      <section *ngIf="tcoDisputeInfo.hearingType === HearingTypeCodes.CourtAppearance" class="section-sticky">
-        <ng-container subHeader>
-          <span>
-            <h3>Court Options</h3>
-          </span>
-        </ng-container>
-        <form [formGroup]="courtOptionsForm">
-          <div style="display: grid; grid-template-columns: auto auto auto auto">
-            <span class="section-grid-cell">
-              <p class="section-grid-header" *ngIf="!isSSEditMode">{{ "label.legal_counsel_name" | translate }}</p>
-              <p class="section-grid-text" *ngIf="!isSSEditMode">
-                {{ lastUpdatedJJDispute.lawyerGivenName1 }}
-                {{ lastUpdatedJJDispute.lawyerGivenName2 }}
-                {{ lastUpdatedJJDispute.lawyerGivenName3 }}
-                {{ lastUpdatedJJDispute.lawyerSurname }}
-              </p>
-              <p class="section-grid-header" *ngIf="isSSEditMode">{{ "label.legal_counsel_given_name_1" | translate }}
-              </p>
-              <mat-form-field appearance="outline" *ngIf="isSSEditMode">
-                <input matInput formControlName="lawyerGivenName1">
-                <mat-error *ngIf="courtOptionsForm.controls.lawyerGivenName1.hasError('maxlength')">{{
-                  "error.max_length" | translate }}30</mat-error>
-              </mat-form-field>
-              <p class="section-grid-header" *ngIf="isSSEditMode">{{ "label.legal_counsel_given_name_2" | translate }}
-              </p>
-              <mat-form-field appearance="outline" *ngIf="isSSEditMode">
-                <input matInput formControlName="lawyerGivenName2">
-                <mat-error *ngIf="courtOptionsForm.controls.lawyerGivenName2.hasError('maxlength')">{{
-                  "error.max_length" | translate }}30</mat-error>
-              </mat-form-field>
-              <p class="section-grid-header" *ngIf="isSSEditMode">{{ "label.legal_counsel_given_name_3" | translate }}
-              </p>
-              <mat-form-field appearance="outline" *ngIf="isSSEditMode">
-                <input matInput formControlName="lawyerGivenName3">
-                <mat-error *ngIf="courtOptionsForm.controls.lawyerGivenName3.hasError('maxlength')">{{
-                  "error.max_length" | translate }}30</mat-error>
-              </mat-form-field>
-              <p class="section-grid-header" *ngIf="isSSEditMode">{{ "label.legal_counsel_surname" | translate }}</p>
-              <mat-form-field appearance="outline" *ngIf="isSSEditMode">
-                <input matInput formControlName="lawyerSurname">
-                <mat-error *ngIf="courtOptionsForm.controls.lawyerSurname.hasError('maxlength')">{{ "error.max_length" |
-                  translate }}30</mat-error>
-              </mat-form-field>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">{{ "label.legal_counsel_firm" | translate }}</p>
-              <p class="section-grid-text" *ngIf="!isSSEditMode">{{ lastUpdatedJJDispute.lawFirmName }}</p>
-              <mat-form-field appearance="outline" *ngIf="isSSEditMode">
-                <input matInput formControlName="lawFirmName">
-                <mat-error *ngIf="courtOptionsForm.controls.lawFirmName.hasError('maxlength')">{{ "error.max_length" |
-                  translate }}200</mat-error>
-              </mat-form-field>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">{{ "label.defence_witness" | translate }}</p>
-              <p class="section-grid-text" *ngIf="!isSSEditMode">{{ lastUpdatedJJDispute.witnessNo }}</p>
-              <mat-form-field appearance="outline" *ngIf="isSSEditMode">
-                <input matInput formControlName="witnessNo" maxlength="10" type="number">
-                <mat-error *ngIf="courtOptionsForm.controls.witnessNo.hasError('min')">{{ "error.min_value" | translate
-                  }}0</mat-error>
-                <mat-error *ngIf="courtOptionsForm.controls.witnessNo.hasError('max')">{{ "error.max_value" | translate
-                  }}2147483647</mat-error>
-              </mat-form-field>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">{{ "label.interpreter" | translate }}</p>
-              <p class="section-grid-text" *ngIf="!isSSEditMode">{{ lastUpdatedJJDispute.interpreterLanguage }}</p>
-              <mat-form-field appearance="outline" *ngIf="isSSEditMode">
-                <mat-select formControlName="interpreterLanguageCd" placeholder="Language">
+        </section>
+        <section class="section-sticky">
+          <div style="display: grid; grid-template-columns: 33% 33% 33%">
+            @for (i of [1,2,3]; track i) {
+              <span>
+                <app-jj-count [count]="i" [jjDisputeInfo]="lastUpdatedJJDispute" [jjDisputedCount]="getJJDisputedCount(i)"
+                  (jjDisputedCountUpdate)="updateFinalDispositionCount($event)" [type]="type" [isViewOnly]="isViewOnly"
+                  [isSSEditMode]="isSSEditMode">
+                </app-jj-count>
+              </span>
+            }
+          </div>
+        </section>
+        @if (type === tabTypes.DECISION_VALIDATION || type === tabTypes.DCF) {
+          <section class="section-sticky">
+            <div fxLayout="row" style="padding-bottom: 2rem;">
+              <div fxFlex="40">
+                <div fxFlex>
+                  <h3>Signed By</h3>
+                  <div>{{ lastUpdatedJJDispute.decisionMadeBy }}</div>
+                </div>
+                <div fxFlex></div>
+                <div fxFlex>
+                  <h3>Date Signed</h3>
+                  <div>{{ lastUpdatedJJDispute.jjDecisionDate | date: "dd-MMM-yyyy" }}</div>
+                </div>
+              </div>
+            </div>
+          </section>
+        }
+        <span #uploadedDocuments></span>
+        <mat-accordion multi [togglePosition]="'before'" class="info-expansion-panel">
+          <mat-expansion-panel [expanded]="false">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <span style="color: black;"><b>Documents</b></span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <span><b>JUSTIN Documents</b></span>
+            <br />
+            @if (lastUpdatedJJDispute.electronicTicketYn === ElectronicTicket.N) {
+              <span>Electronic Ticket (not available)</span>
+            }
+            @if (lastUpdatedJJDispute.electronicTicketYn === ElectronicTicket.Y) {
+              <button type="button" class="linkbutton" (click)="onGetJustinDocument(DocumentType.TicketImage)">Electronic Ticket Image</button>
+            }
+            <br />
+            @if (lastUpdatedJJDispute.noticeOfHearingYn === NoticeOfHearing.N) {
+              <span>Notice Of Hearing (not available)</span>
+            }
+            @if (lastUpdatedJJDispute.noticeOfHearingYn === NoticeOfHearing.Y) {
+              <button type="linkbutton" class="linkbutton" (click)="onGetJustinDocument(DocumentType.NoticeOfDispute)">Notice Of Hearing</button>
+            }
+            <br />
+            <br />
+            <div class="mb-3">
+              <div class="mb-1"><b>Uploaded Documents ({{lastUpdatedJJDispute.fileData?.length }})</b></div>
+              @for (doc of lastUpdatedJJDispute.fileData; track doc.fileId) {
+                <div class="border-bottom py-1">
+                  <div fxFlex="50" fxFlex.gt-md="35">
+                    @if (documentManagementAllowed) {
+                      <button fxFlex="none" type="button" class="upload-delete" (click)="onRemoveFile(doc.fileId, doc.fileName)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    }
+                    @if (doc.virusScanStatus === 'clean') {
+                      <button type="button" class="linkbutton" (click)="onGetFile(doc.fileId)">{{ doc.fileName }}</button>
+                    }
+                    @if (doc.virusScanStatus !== 'clean') {
+                      <span>{{ doc.fileName }} {{ doc.virusScanStatus }}</span>
+                    }
+                  </div>
+                  <div fxFlex="50" fxFlex.gt-md="25" fxLayoutAlign="start center" fxLayoutGap="1rem">
+                    <div fxFlex="calc(50% - 0.5rem)" class="mat-caption">{{ doc.documentType }}</div>
+                    @if (doc.documentType === "Adjournment") {
+                      <mat-form-field fxFlex="calc(50% - 0.5rem)" class="py-0"
+                        [appearance]="doc.documentStatus === DocumentStatus.Pending ? 'outline' : 'fill'">
+                        <mat-select [value]="doc.documentStatus" (selectionChange)="onChangeDocumentStatus(doc, $event.value)">
+                          <mat-option [value]="DocumentStatus.Pending">Pending</mat-option>
+                          <mat-option [value]="DocumentStatus.Resolved">Resolved</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    }
+                  </div>
+                </div>
+              }
+              @if (fileUploadError) {
+                <div>{{ fileUploadError }}</div>
+              }
+            </div>
+            @if (documentManagementAllowed) {
+              <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1rem">
+                <label fxFlex="32" fxFlex.gt-md="16">File type for upload:</label>
+                <mat-form-field fxFlex="34" fxFlex.gt-md="17" appearance="outline" style="display: inline-flex;">
+                  <mat-select [(ngModel)]="fileTypeToUpload">
+                    <mat-option value="Certified Extract">Certified Extract</mat-option>
+                    <mat-option value="Adjournment">Adjournment</mat-option>
+                    <mat-option value="Other">Other</mat-option>
+                  </mat-select>
+                </mat-form-field>
+            </div>
+                <button fxFlex="34" fxFlex.gt-md="17" class="mt-0" mat-flat-button type="button" color="primary" onclick="document.getElementById('getFile').click()">
+                  <mat-icon class="align-text-bottom">upload</mat-icon>&nbsp;Upload File
+                </button>
+              </div>
+              <input type="file" id="getFile" style="display:none" accept="image/*,.pdf" (change)="onUpload($event.target.files)" />
+            }
+          </mat-expansion-panel>
+          <span #fileHistory></span>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <span style="color: black;"><b>Administrative Activity </b></span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div>
+              <app-jj-file-history [ticketNumber]="lastUpdatedJJDispute.ticketNumber"></app-jj-file-history>
+          </mat-expansion-panel>
+         <span #disputantUpdates></span>
+          <mat-expansion-panel [expanded]="false">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <span style="color: black;"><b>{{ "label.disputant_updates" | translate }}</b></span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div>
+              <app-jj-dispute-updates [disputeId]="lastUpdatedJJDispute.occamDisputeId"></app-jj-dispute-updates>
+            </div>
+          </mat-expansion-panel>
+          <span #fileRemarks></span>
+          <mat-expansion-panel [expanded]="false" id="file-remarks">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <span style="color: black;"><b>File Remarks </b></span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div>
+              <span class="small-note">
+                <i><span style="color:red;">*</span> Remarks are for internal use only and will be visible to everyone who views this file</i>
+              </span>
+            </div>
+            <div>
+              <app-jj-dispute-remarks [data]="lastUpdatedJJDispute.remarks"></app-jj-dispute-remarks>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+
+        @if (!isViewOnly) {
+          <section class="section-sticky">
+            <ng-container subHeader>
+              <span>
+                <h3>Add Remarks<br />
+                  @if (type !== tabTypes.DECISION_VALIDATION && type !== tabTypes.DCF) {
+                    <span class="small-note">
+                      <i><span style="color:red;">*</span> This is for internal use only</i>
+                    </span>
+                  }
+                </h3>
+              </span>
+            </ng-container>
+            <textarea matInput [(ngModel)]="remarks" maxlength="4000" rows="6"
+            style="background: #fffee6; width: 100%"></textarea>
+          </section>
+        }
+        <div fxLayout="row">
+          @if (type === tabTypes.DECISION_VALIDATION && isViewOnly && lastUpdatedJJDispute.status === DisputeStatus.Confirmed) {
+            <div fxLayoutAlign="start center" fxFlex="40" fxLayout="row">
+              <mat-form-field appearance="outline" class="h-auto return-jj-align">
+                <mat-select [(ngModel)]="selectedJJ" placeholder="choose a JJ" class="return-jj-select">
                   <mat-option [value]=""></mat-option>
-                  <mat-option *ngFor="let lang of languages" [value]="lang.code">{{ lang.description }}</mat-option>
+                  @for (jj of jjList; track jj.idir) {
+                    <mat-option [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i></mat-option>
+                  }
                 </mat-select>
               </mat-form-field>
-            </span>
-          </div>
-        </form>
-      </section>
-      <section *ngIf="tcoDisputeInfo.hearingType === HearingTypeCodes.CourtAppearance" class="section-sticky">
-        <ng-container subHeader>
-          <span>
-            <h3>Court Appearance</h3>
-          </span>
-        </ng-container>
-        <form [formGroup]="courtAppearanceForm" novalidate>
-          <div
-            style="display: grid; grid-template-columns: auto auto auto auto minmax(210px, 1fr) auto auto auto auto auto auto;">
-            <span class="section-grid-cell">
-              <p class="section-grid-header">Appearance Date/Time</p>
-              <p class="section-grid-text">
-                {{ lastUpdatedJJDispute.mostRecentCourtAppearance?.appearanceTs | date: "dd-MMM-yyyy hh:mm a" : "UTC" }}
-              </p>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">Room</p>
-              <p class="section-grid-text">
-                <span>{{ courtAppearanceForm?.value.room }}</span>
-              </p>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">Reason</p>
-              <p class="section-grid-text">
-                <span>{{ courtAppearanceForm?.value.reason }} </span>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">APP (P/N/A)<span style="color: red;">*</span></p>
-              <p class="section-grid-text">
-                <span *ngIf="isViewOnly && !isSSEditMode">{{ courtAppearanceForm?.value.appCd }}</span>
-                <mat-form-field appearance="outline" *ngIf="!isViewOnly || isSSEditMode" 
-                  [ngClass]="{'mat-form-field-invalid': courtAppearanceForm.get('appCd')?.invalid && courtAppearanceForm.get('appCd')?.touched}">
-                  <mat-select formControlName="appCd" (selectionChange)="onUpdateAPPCd()" required>
-                    <mat-option [value]="RoPApp.P">{{ RoPApp.P }}</mat-option>
-                    <mat-option [value]="RoPApp.N">{{ RoPApp.N }}</mat-option>
-                    <mat-option [value]="RoPApp.A">{{ RoPApp.A }}</mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="courtAppearanceForm.get('appCd')?.hasError('required')">
-                    APP field is required
-                  </mat-error>
-                </mat-form-field>
-              </p>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">No APP</p>
-              <p class="section-grid-text">
-                <span *ngIf="((isViewOnly && !isSSEditMode) || !isNoAppEnabled) && courtAppearanceForm.value.noAppTs">
-                  {{ courtAppearanceForm?.value.noAppTs | date: "dd-MMM-yyyy HH:mm" }}
-                </span>
-                <span *ngIf="(!isViewOnly || isSSEditMode) && isNoAppEnabled">
-                  <input type="text" formControlName="noAppTs" class="p-2 section-grid-text latest-plea-text"
-                    bsDatepicker placeholder="DD-MMM-YYYY HH:mm" [bsConfig]="{ withTimepicker: true, keepDatepickerOpened: true, 
-                    dateInputFormat: 'DD-MMM-YYYY HH:mm', containerClass: 'theme-dark-blue', isAnimated: true, 
-                    showWeekNumbers: false, adaptivePosition: true }">
-                  <button mat-raised-button class="form-button-secondary" (click)="updateNoAppTsToNow()">Now</button>
-                </span>
-              </p>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">CLERK REC.</p>
-              <p class="section-grid-text">
-                <span *ngIf="(isViewOnly && !isSSEditMode)">{{ courtAppearanceForm?.value.clerkRecord }}</span>
-                <mat-form-field appearance="outline" *ngIf="(!isViewOnly || isSSEditMode)">
-                  <input matInput formControlName="clerkRecord" maxlength="30">
-                  <mat-error *ngIf="courtAppearanceForm.controls.clerkRecord.hasError('maxlength')">{{
-                    "error.max_length" | translate }}100</mat-error>
-                </mat-form-field>
-              </p>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">DEF. COUNSEL</p>
-              <p class="section-grid-text">
-                <span *ngIf="(isViewOnly && !isSSEditMode)">{{ courtAppearanceForm?.value.defenceCounsel }}</span>
-                <mat-form-field appearance="outline" *ngIf="(!isViewOnly || isSSEditMode)">
-                  <input matInput formControlName="defenceCounsel" maxlength="30">
-                  <mat-error *ngIf="courtAppearanceForm.controls.defenceCounsel.hasError('maxlength')">{{
-                    "error.max_length" | translate }}100</mat-error>
-                </mat-form-field>
-              </p>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">Def Att</p>
-              <p class="section-grid-text">
-                <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.dattCd }}</span>
-                <mat-form-field appearance="outline" *ngIf="!isViewOnly">
-                  <mat-select formControlName="dattCd">
-                    <mat-option [value]="RoPDatt.A">{{ RoPDatt.A }}</mat-option>
-                    <mat-option [value]="RoPDatt.C">{{ RoPDatt.C }}</mat-option>
-                    <mat-option [value]="RoPDatt.N">{{ RoPDatt.N }}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </p>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">Crown</p>
-              <p class="section-grid-text">
-                <span *ngIf="isViewOnly && !isSSEditMode">{{ courtAppearanceForm?.value.crown }}</span>
-                <mat-form-field appearance="outline" *ngIf="!isViewOnly || isSSEditMode">
-                  <mat-select formControlName="crown">
-                    <mat-option [value]="RoPCrown.P">{{ RoPCrown.P }}</mat-option>
-                    <mat-option [value]="RoPCrown.N">{{ RoPCrown.N }}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </p>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">Seized</p>
-              <p class="section-grid-text">
-                <mat-form-field appearance="outline" *ngIf="!isViewOnly">
-                  <mat-select formControlName="jjSeized">
-                    <mat-option [value]="RoPSeized.Y">{{ RoPSeized.Y }}</mat-option>
-                    <mat-option [value]="RoPSeized.N">{{ RoPSeized.N }}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-                <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.jjSeized }}</span>
-              </p>
-            </span>
-            <span class="section-grid-cell">
-              <p class="section-grid-header">Judicial Justice</p>
-              <p class="section-grid-text">
-                <span *ngIf="type !== tabTypes.HEARING_INBOX">{{ courtAppearanceForm?.value.adjudicator }}</span>
-              </p>
-            </span>
-            <span class="section-grid-cell" style="grid-column: span 11">
-              <p class="section-grid-header">Language Choice:</p>
-              <p class="section-grid-text">
-                <mat-radio-group formControlName="languageChoice" *ngIf="!isViewOnly" style="display: flex; gap: 15px;">
-                  <mat-radio-button value="English">English</mat-radio-button>
-                  <mat-radio-button value="French">French</mat-radio-button>
-                  <mat-radio-button value="Bilingual">Bilingual</mat-radio-button>
-                </mat-radio-group>
-                <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.languageChoice }}</span>
-              </p>
-            </span>
-            <span class="section-grid-cell" style="grid-column: span 11">
-              <p class="section-grid-header">JJ Endorsements:</p>
-              <p class="section-grid-text">
-                <textarea *ngIf="!isViewOnly" formControlName="comments" style="width:100%; background:#fffee6"
-                  rows="8"> </textarea>
-                <span class="formatComments" *ngIf="isViewOnly">{{ courtAppearanceForm.get('comments').value }}</span>
-              </p>
-            </span>
-          </div>
-        </form>
-      </section>
-      <section *ngIf="tcoDisputeInfo.hearingType === HearingTypeCodes.CourtAppearance" class="section-sticky">
-        <ng-container subHeader>
-          <span>
-            <h3>Court Appearances History</h3>
-          </span>
-        </ng-container>
-        <app-jj-dispute-court-appearances [data]="lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs">
-        </app-jj-dispute-court-appearances>
-      </section>
-      <section *ngIf="tcoDisputeInfo.hearingType === HearingTypeCodes.WrittenReasons || tcoDisputeInfo.hearingType === HearingTypeCodes.CourtAppearance" class="section-sticky">
-        <ng-container subHeader>
-          <span>
-            <h3>Disputant Statement</h3>
-          </span>
-        </ng-container>
-        <!-- Signature Panel -->
-        <h4>{{ "label.signature" | translate }} - 
-          {{ "label.signature_subheading" | translate }}
-        </h4>
-        <div class="container signature-box">
-          <div class="row justify-content-start custom-row">
-            <div class="col-2 custom-column">
-              <strong>{{ "label.signatory_option_1" | translate }}</strong>
+              <button class="large h-auto" mat-flat-button type="button" color="primary" (click)="returnToJJ()" [disabled]="!selectedJJ">
+                Return to JJ
+              </button>
             </div>
-            <div class="col-4 custom-column">
-              <span *ngIf="lastUpdatedJJDispute.signatoryType === SignatoryType.D" style="font-size: small">
-                {{ lastUpdatedJJDispute.signatoryName }}</span>
-            </div>
-            <div class="col-4 custom-column">
-              <span *ngIf="lastUpdatedJJDispute.signatoryType === SignatoryType.D" style="font-size: small">
-                {{ lastUpdatedJJDispute.submittedTs | date: "dd-MMM-yyyy HH:mm" }}</span>
-            </div>
-          </div>
-          <div class="row justify-content-start">
-            <div class="col-2 custom-column">
-              <strong>{{ "label.signatory_option_2" | translate }}</strong>
-            </div>
-            <div class="col-4 custom-column">
-              <span *ngIf="lastUpdatedJJDispute.signatoryType === SignatoryType.A" style="font-size: small">
-                {{ lastUpdatedJJDispute.signatoryName }}</span>
-            </div>
-            <div class="col-4 custom-column">
-              <span *ngIf="lastUpdatedJJDispute.signatoryType === SignatoryType.A" style="font-size: small">
-                {{ lastUpdatedJJDispute.submittedTs | date: "dd-MMM-yyyy HH:mm" }}</span>
-            </div>
-          </div>
+          }
+          <div fxFlex></div>
+          @if (type !== tabTypes.DCF) {
+            @if (type !== tabTypes.DECISION_VALIDATION && !isOneOf(lastUpdatedJJDispute.status, [DisputeStatus.RequireCourtHearing, DisputeStatus.Accepted, DisputeStatus.Cancelled, DisputeStatus.Concluded]) && concludeStatusOnly === false && cancelStatusOnly === false) {
+              <button fxFlex="30" class="large" mat-flat-button type="button" color="primary" style="margin-right: 20px;" (click)="onRequireCourtHearing()">
+                {{ lastUpdatedJJDispute.hearingType === HearingType.WrittenReasons ? 'Adjourn/Require Hearing' : 'Adjourn/Continue' }}
+              </button>
+            }
+            @if (type !== tabTypes.DECISION_VALIDATION && isOneOf(lastUpdatedJJDispute.status, [DisputeStatus.New, DisputeStatus.InProgress, DisputeStatus.HearingScheduled, DisputeStatus.Review]) && cancelStatusOnly === false && concludeStatusOnly === false) {
+              <button fxFlex="30" class="large" mat-flat-button type="button" color="primary" style="margin-right: 20px;" (click)="onSave()">
+                Save & Finish Later
+              </button>
+            }
+            @if (isOneOf(lastUpdatedJJDispute.status, [DisputeStatus.New, DisputeStatus.HearingScheduled, DisputeStatus.InProgress, DisputeStatus.Review]) && concludeStatusOnly === false && cancelStatusOnly === false && isJJ) {
+              <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConfirm()">
+                Confirm
+              </button>
+            }
+            @if (concludeStatusOnly === true && cancelStatusOnly === false) {
+              <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConcluded()">
+                Conclude
+              </button>
+            }
+            @if (cancelStatusOnly === true && concludeStatusOnly === false) {
+              <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onCancelled()">
+                Cancel
+              </button>
+            }
+            @if (lastUpdatedJJDispute.status === DisputeStatus.Confirmed && cancelStatusOnly === false && concludeStatusOnly === false) {
+              <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onAccept()"
+                [disabled]="unacknowledgedAmendmentsExist"
+                [matTooltip]="unacknowledgedAmendmentsExist ? 'All amendments must be completed in JUSTIN before accepting' : ''"
+                matTooltipPosition="above">
+                Accept
+              </button>
+            }
+            @if (lastUpdatedJJDispute.status === DisputeStatus.RequireCourtHearing || lastUpdatedJJDispute.status === DisputeStatus.Cancelled || lastUpdatedJJDispute.status === DisputeStatus.Concluded) {
+              <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onBackClicked()">
+                Back
+              </button>
+            }
+          }
         </div>
-        <!-- Signature Panel End -->
-      </section>
-      <section class="section-sticky">
-        <ng-container subHeader>
-          <span>
-            <h3>Written Reasons</h3>
-          </span>
-        </ng-container>
-        <div>
-          <h4><b>Fine Reduction</b>
-            <span *ngIf="fineReductionCountsHeading.length>0">&nbsp;-&nbsp;{{ fineReductionCountsHeading }}</span>
-          </h4>
-          <span style="font-size: small">{{ lastUpdatedJJDispute.fineReductionReason }}</span>
-          <br /><br />
-        </div>
-        <div>
-          <h4><b>Time to Pay</b>
-            <span *ngIf="timeToPayCountsHeading.length>0">&nbsp;-&nbsp;{{ timeToPayCountsHeading}}</span>
-          </h4>
-          <span style="font-size: small">{{ lastUpdatedJJDispute.timeToPayReason }}</span>
-        </div>
-      </section>
-      <section class="section-sticky">
-        <div style="display: grid; grid-template-columns: 33% 33% 33%">
-          <span *ngFor="let i of [1,2,3]">
-            <app-jj-count [count]="i" [jjDisputeInfo]="lastUpdatedJJDispute" [jjDisputedCount]="getJJDisputedCount(i)"
-              (jjDisputedCountUpdate)="updateFinalDispositionCount($event)" [type]="type" [isViewOnly]="isViewOnly"
-              [isSSEditMode]="isSSEditMode">
-            </app-jj-count>
-          </span>
-        </div>
-      </section>
-
-      <section *ngIf="type === tabTypes.DECISION_VALIDATION || type === tabTypes.DCF" class="section-sticky">
-        <div fxLayout="row" style="padding-bottom: 2rem;">
-          <div fxFlex="40">
-            <div fxFlex>
-              <h3>Signed By</h3>
-              <div>{{ lastUpdatedJJDispute.decisionMadeBy }}</div>
-            </div>
-            <div fxFlex></div>
-            <div fxFlex>
-              <h3>Date Signed</h3>
-              <div>{{ lastUpdatedJJDispute.jjDecisionDate | date: "dd-MMM-yyyy" }}</div>
-            </div>
-          </div>
-        </div>
-      </section>      
-
-      <span #uploadedDocuments></span>
-      <mat-accordion multi [togglePosition]="'before'" class="info-expansion-panel">
-        <mat-expansion-panel [expanded]="false">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <span style="color: black;"><b>Documents</b></span>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <span><b>JUSTIN Documents</b></span><br />
-          <span *ngIf="lastUpdatedJJDispute.electronicTicketYn === ElectronicTicket.N">Electronic Ticket (not
-            available)</span>
-          <button type="button" class="linkbutton" (click)="onGetJustinDocument(DocumentType.TicketImage)"
-            *ngIf="lastUpdatedJJDispute.electronicTicketYn === ElectronicTicket.Y">Electronic Ticket
-            Image</button><br />
-          <span *ngIf="lastUpdatedJJDispute.noticeOfHearingYn === NoticeOfHearing.N">Notice Of Hearing (not
-            available)</span>
-          <button type="linkbutton" class="linkbutton" (click)="onGetJustinDocument(DocumentType.NoticeOfDispute)"
-            *ngIf="lastUpdatedJJDispute.noticeOfHearingYn === NoticeOfHearing.Y">Notice Of Hearing</button><br /><br />
-          <span><b>Uploaded Documents ({{lastUpdatedJJDispute.fileData?.length }})</b></span><br />
-          <div *ngFor="let doc of lastUpdatedJJDispute.fileData" style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-            <span class="document-type-label" style="background-color: #e3f2fd; color: #1976d2; padding: 1px 3px; border-radius: 3px; font-size: 9px; font-weight: 200; border: 1px solid #bbdefb; white-space: nowrap;">{{ doc.documentType }}</span>
-            <button type="button" class="linkbutton" (click)="onGetFile(doc.fileId)"
-              *ngIf="doc.virusScanStatus === 'clean'">{{ doc.fileName }}</button>
-            <span *ngIf="doc.virusScanStatus !== 'clean'">{{ doc.fileName }} {{ doc.virusScanStatus }}</span>
-            <button *ngIf="!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))" type="button" style="width:50px !important; border:none; background-color:white;"
-              (click)="onRemoveFile(doc.fileId, doc.fileName)"><mat-icon style="color:red">delete</mat-icon></button>
-          </div>
-          <div *ngIf="!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))">
-            <label>File type for upload:</label>
-            <mat-form-field appearance="outline" style="display: inline-flex;">
-              <mat-select [(ngModel)]="fileTypeToUpload">
-                <mat-option value="Certified Extract">Certified Extract</mat-option>
-                <mat-option value="Adjournment">Adjournment</mat-option>
-                <mat-option value="Other">Other</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <button *ngIf="!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))" class="large" mat-flat-button type="button" color="primary"
-            onclick="document.getElementById('getFile').click()">
-            <mat-icon>upload</mat-icon>&nbsp;Upload File
-          </button>
-          <input *ngIf="!(isJJ && isJjBaseAddress() && (type === tabTypes.DCF || type === tabTypes.WR_ASSIGNMENTS || type === tabTypes.WR_INBOX || type === tabTypes.HEARING_INBOX))" type="file" id="getFile" style="display:none" accept="image/*,.pdf"
-            (change)="onUpload($event.target.files)">
-        </mat-expansion-panel>
-
-        <span #fileHistory></span>
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <span style="color: black;"><b>Administrative Activity </b></span>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div>
-            <app-jj-file-history [ticketNumber]="lastUpdatedJJDispute.ticketNumber"></app-jj-file-history>
-          </div>
-        </mat-expansion-panel>
-
-        <span #disputantUpdates></span>
-        <mat-expansion-panel [expanded]="false">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <span style="color: black;"><b>{{ "label.disputant_updates" | translate }}</b></span>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div>
-            <app-jj-dispute-updates [disputeId]="lastUpdatedJJDispute.occamDisputeId"></app-jj-dispute-updates>
-          </div>
-        </mat-expansion-panel>
-
-        <span #fileRemarks></span>
-        <mat-expansion-panel [expanded]="false" id="file-remarks">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <span style="color: black;"><b>File Remarks </b></span>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div>
-            <span class="small-note">
-              <i><span style="color:red;">*</span> Remarks are for internal use only and will be visible to everyone who
-                views this file</i>
-            </span>
-          </div>
-          <div>
-            <app-jj-dispute-remarks [data]="lastUpdatedJJDispute.remarks"></app-jj-dispute-remarks>
-          </div>
-        </mat-expansion-panel>
-      </mat-accordion>
-      <section *ngIf="!isViewOnly" class="section-sticky">
-        <ng-container subHeader>
-          <span>
-            <h3>Add Remarks<br />
-              <span *ngIf="type !== tabTypes.DECISION_VALIDATION && type !== tabTypes.DCF" class="small-note">
-                <i><span style="color:red;">*</span> This is for internal use only</i>
-              </span>
-            </h3>
-          </span>
-        </ng-container>
-        <textarea matInput [(ngModel)]="remarks" maxlength="4000" rows="6"
-          style="background: #fffee6; width: 100%"></textarea>
-      </section>
-      <div fxLayout="row">
-        <div *ngIf="type === tabTypes.DECISION_VALIDATION && isViewOnly && lastUpdatedJJDispute.status === DisputeStatus.Confirmed" 
-          fxLayoutAlign="start center" fxFlex="40" fxLayout="row">
-          <mat-form-field appearance="outline" class="h-auto return-jj-align">
-            <mat-select [(ngModel)]="selectedJJ" placeholder="choose a JJ" class="return-jj-select">
-              <mat-option [value]=""></mat-option>
-              <mat-option *ngFor="let jj of jjList" [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i>
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <button class="large h-auto" mat-flat-button type="button" color="primary" (click)="returnToJJ()"
-            [disabled]="!selectedJJ">
-            Return to JJ
-          </button>
-        </div>
-        <div fxFlex></div>
-        <ng-container *ngIf="type !== tabTypes.DCF">
-          <button fxFlex="30" class="large" mat-flat-button type="button" color="primary" style="margin-right: 20px;"
-            (click)="onRequireCourtHearing()"
-            *ngIf="type !== tabTypes.DECISION_VALIDATION && lastUpdatedJJDispute.status !== DisputeStatus.RequireCourtHearing && lastUpdatedJJDispute.status !== DisputeStatus.Accepted && lastUpdatedJJDispute.status !== DisputeStatus.Cancelled && lastUpdatedJJDispute.status !== DisputeStatus.Concluded && concludeStatusOnly === false && cancelStatusOnly === false">
-            {{ lastUpdatedJJDispute.hearingType === HearingType.WrittenReasons ? 'Adjourn/Require Hearing' :
-            'Adjourn/Continue' }}
-          </button>
-          <button fxFlex="30" class="large" mat-flat-button type="button" color="primary" style="margin-right: 20px;"
-            (click)="onSave()"
-            *ngIf="type !== tabTypes.DECISION_VALIDATION && [DisputeStatus.New, DisputeStatus.InProgress, DisputeStatus.HearingScheduled, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) >= 0 && cancelStatusOnly === false && concludeStatusOnly === false">
-            Save & Finish Later
-          </button>
-          <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConfirm()"
-            *ngIf="[DisputeStatus.New, DisputeStatus.HearingScheduled, DisputeStatus.InProgress, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) >= 0 && concludeStatusOnly === false && cancelStatusOnly === false && isJJ">
-            Confirm
-          </button>
-          <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConcluded()"
-            *ngIf="concludeStatusOnly === true && cancelStatusOnly === false">
-            Conclude
-          </button>
-          <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onCancelled()"
-            *ngIf="cancelStatusOnly === true && concludeStatusOnly === false">
-            Cancel
-          </button>
-          <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onAccept()"
-            *ngIf="lastUpdatedJJDispute.status === DisputeStatus.Confirmed && cancelStatusOnly === false && concludeStatusOnly === false">
-            Accept
-          </button>
-          <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onBackClicked()"
-            *ngIf="lastUpdatedJJDispute.status === DisputeStatus.RequireCourtHearing || lastUpdatedJJDispute.status === DisputeStatus.Cancelled || lastUpdatedJJDispute.status === DisputeStatus.Concluded">
-            Back
-          </button>
-        </ng-container>        
       </div>
-    </div>
+    }
   </div>
 </app-page>
