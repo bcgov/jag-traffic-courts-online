@@ -603,17 +603,7 @@
                     </mat-radio-group>
                     <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.languageChoice }}</span>
                   </p>
-                </span>                
-                <!-- AMENDMENT CHECKBOX - Under Judicial Justice, for editable views -->
-                @if (!isViewOnly) {
-                <span *appFeatureFlag="featureType.amendments" class="section-grid-cell amendment-embed-cell" style="grid-column: span 11" #amendments>
-                  <p class="section-grid-text">
-                    <mat-checkbox [checked]="showAmendmentSection" (change)="onAmendmentsRequiredChange($event.checked)">
-                      Amendments Required
-                    </mat-checkbox>
-                  </p>
-
-              <p class="section-grid-header">Language Choice:</p>
+                </span>                 
                 <!-- AMENDMENT CHECKBOX - Under Judicial Justice, for editable views -->
                 @if (!isViewOnly) {
                 <span *appFeatureFlag="featureType.amendments" class="section-grid-cell amendment-embed-cell" style="grid-column: span 11" #amendments>
@@ -858,7 +848,6 @@
                     <mat-option value="Other">Other</mat-option>
                   </mat-select>
                 </mat-form-field>
-            </div>
                 <button fxFlex="34" fxFlex.gt-md="17" class="mt-0" mat-flat-button type="button" color="primary" onclick="document.getElementById('getFile').click()">
                   <mat-icon class="align-text-bottom">upload</mat-icon>&nbsp;Upload File
                 </button>
@@ -875,8 +864,9 @@
             </mat-expansion-panel-header>
             <div>
               <app-jj-file-history [ticketNumber]="lastUpdatedJJDispute.ticketNumber"></app-jj-file-history>
+            </div>
           </mat-expansion-panel>
-         <span #disputantUpdates></span>
+          <span #disputantUpdates></span>
           <mat-expansion-panel [expanded]="false">
             <mat-expansion-panel-header>
               <mat-panel-title>

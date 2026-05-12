@@ -104,9 +104,10 @@
       Language Choice
     </th>
     <td mat-cell *matCellDef="let element">
-    </td>
       <span>{{ element.languageChoice }}</span>
+    </td>
   </ng-container>
+
   <ng-container matColumnDef="recordDetails">
     <td mat-cell *matCellDef="let element; let i = dataIndex" [attr.colspan]="11" class="record-details-cell">
       <div class="record-details-panel">
