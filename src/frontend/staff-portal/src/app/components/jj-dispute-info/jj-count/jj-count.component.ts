@@ -172,9 +172,12 @@ export class JJCountComponent implements OnInit, OnChanges {
       this.inclSurcharge = (this.jjDisputedCount && this.jjDisputedCount.lesserOrGreaterAmount) ?
         (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.Y ? "yes" :
         (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.N ? "no" : "")) : "";
-      this.timeToPay = (this.jjDisputedCount && this.jjDisputedCount.grantTimeToPay) ?
-        (this.jjDisputedCount.grantTimeToPay == this.GrantTimeToPay.Y ? "yes" :
-        (this.jjDisputedCount.grantTimeToPay == this.GrantTimeToPay.N ? "no" : "")) : "";
+      this.timeToPay =
+        this.jjDisputedCount?.grantTimeToPay === this.GrantTimeToPay.Y
+          ? "yes"
+          : this.jjDisputedCount?.grantTimeToPay === this.GrantTimeToPay.N
+            ? "no"
+            : "";
       this.fineReduction = this.jjDisputedCount ? (this.jjDisputedCount.totalFineAmount &&
           this.jjDisputedCount.lesserOrGreaterAmount ? (this.jjDisputedCount.lesserOrGreaterAmount !== null &&
           this.jjDisputedCount.lesserOrGreaterAmount != this.jjDisputedCount.ticketedFineAmount ?
@@ -308,7 +311,12 @@ export class JJCountComponent implements OnInit, OnChanges {
 
       this.countForm.valueChanges.subscribe(() => {
         this.jjDisputedCount = { ...this.jjDisputedCount, ...this.countForm.value };
-        this.timeToPay = (this.jjDisputedCount.grantTimeToPay === this.GrantTimeToPay.N ? "no" : "yes");
+        this.timeToPay =
+          this.jjDisputedCount?.grantTimeToPay === this.GrantTimeToPay.Y
+            ? "yes"
+            : this.jjDisputedCount?.grantTimeToPay === this.GrantTimeToPay.N
+              ? "no"
+              : "";
         if (this.jjDisputedCount.revisedDueDate) {
           let revisedDueDate = new Date(this.jjDisputedCount.revisedDueDate);
           this.jjDisputedCount.revisedDueDate = this.getFormattedDateOnlyString(revisedDueDate);
@@ -461,7 +469,12 @@ export class JJCountComponent implements OnInit, OnChanges {
         this.form.get('totalFineAmount').setValue(this.jjDisputedCount?.ticketedFineAmount);
         this.form.get('lesserOrGreaterAmount').setValue(this.jjDisputedCount?.ticketedFineAmount);
         this.inclSurcharge = this.jjDisputedCount?.includesSurcharge == this.IncludesSurcharge.N ? "no" : "yes";
-        this.timeToPay = this.jjDisputedCount?.grantTimeToPay == this.GrantTimeToPay.N ? "no" : "yes";
+        this.timeToPay =
+          this.jjDisputedCount?.grantTimeToPay === this.GrantTimeToPay.Y
+            ? "yes"
+            : this.jjDisputedCount?.grantTimeToPay === this.GrantTimeToPay.N
+              ? "no"
+              : "";
         if(this.jjDisputedCount?.revisedDueDate) {
           this.bindRevisedDueDate(this.jjDisputedCount.revisedDueDate);
         } else {
