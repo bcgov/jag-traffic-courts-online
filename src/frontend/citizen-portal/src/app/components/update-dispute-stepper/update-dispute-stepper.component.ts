@@ -78,6 +78,9 @@ export class UpdateDisputeStepperComponent implements OnInit, AfterViewInit {
   // ── Section-enable checkboxes ──────────────────────────────────────────────
   contactSectionEnabled = new FormControl<boolean>(false);
   additionalSectionEnabled = new FormControl<boolean>(false);
+  adjournStepEnabled = new FormControl<boolean>(false);
+  writtenReasonsStepEnabled = new FormControl<boolean>(false);
+  supportingDocsStepEnabled = new FormControl<boolean>(false);
 
   // ── Additional section radio controls (NO_CHANGE | 'N' | 'Y') ────────────
   lawyerRadio = new FormControl<string>('NO_CHANGE');
@@ -471,6 +474,11 @@ export class UpdateDisputeStepperComponent implements OnInit, AfterViewInit {
     } else {
       this.store.dispatch(DisputeStore.Actions.GetDocument({ fileId: file.fileId }));
     }
+  }
+
+  onUploadWithType(type: string): void {
+    this.fileTypeToUpload = type;
+    this.onUploadClicked();
   }
 
   onUploadClicked(): void {

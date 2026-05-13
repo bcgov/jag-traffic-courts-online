@@ -39,16 +39,11 @@
   </mat-step>
 
   <!-- ════════════════════════════════════════════════════════════
-       STEP 2 — Counts (instructional only + file upload)
+       STEP 2 — Adjourn a Hearing
        ════════════════════════════════════════════════════════════ -->
-  <mat-step [completed]="isCountsStepValid()">
-    <ng-template matStepLabel>Counts</ng-template>
+  <mat-step [completed]="true">
+    <ng-template matStepLabel>Adjourn a Hearing</ng-template>
     <app-page>
-      <app-page-header>
-        <ng-container subHeader>
-          <strong>To request a change to your dispute, please follow the steps below.</strong>
-        </ng-container>
-      </app-page-header>
 
       <div class="row">
         <div class="col">
@@ -59,19 +54,6 @@
           </app-alert>
         </div>
       </div>
-
-      <ol class="counts-instructions mt-3">
-        <li>
-          Download the
-          <a target="_blank" href="{{ adjournmentFormLink }}">Application to Adjourn a Hearing</a>
-          or
-          <a target="_blank" href="{{ writtenReasonsFormLink }}">Violation Ticket Statement and Written Reasons</a>
-          form.
-        </li>
-        <li>Complete the form with the changes you are requesting and upload the completed form using the document upload area below.</li>
-        <li>Use the &ldquo;Upload Documents&rdquo; section below to upload any other correspondence or other supporting documents. Use the &ldquo;Other&rdquo; file type to upload these documents.</li>
-        <li>After uploading your documents, click the &ldquo;Next&rdquo; button.</li>
-      </ol>
 
       <!-- Ticket counts summary (read-only reference) -->
       <ng-container *ngIf="ticketCounts?.length > 0">
@@ -94,44 +76,50 @@
         </div>
       </ng-container>
 
-      <!-- File upload -->
-      <div class="alert alert-upload mt-4" *ngIf="fileData$">
-        <div class="row mt-1">
-          <div>* Do not upload evidence (videos, pictures). Evidence may only be presented at the hearing.</div>
-          <div>* Use a meaningful file name for easier identification.</div>
-          <div>* Files will only be uploaded when the request is submitted.</div>
-          <div>* Maximum 4 files, each up to 10 MB.</div>
-        </div>
-        <div class="row vcenter" style="margin-top: 1rem;">
-          <div fxFlex="50" class="vcenter">
-            <mat-form-field fxFlex class="select-box-only" style="margin-right: 1rem;">
-              <mat-label>File type for upload</mat-label>
-              <mat-select [(ngModel)]="fileTypeToUpload" [ngModelOptions]="{ standalone: true }">
-                <mat-option value="Adjournment">Application for Adjournment</mat-option>
-                <mat-option value="Other">Other</mat-option>
-              </mat-select>
-            </mat-form-field>
-            <button class="large" mat-stroked-button type="button" color="primary" style="height: 3rem;"
-              (click)="onUploadClicked()">
-              Upload Documents
-            </button>
-            <input type="file" #fileInput id="fileInput" style="display:none"
-              accept="{{ acceptFileTypes.join(',') }}"
-              (change)="onUploadFile($event.target.files)">
+      <div class="section-toggle-row mb-3 mt-4">
+        <mat-checkbox
+          [formControl]="adjournStepEnabled"
+          color="primary">
+          <strong>I want to upload an Application to Adjourn a Hearing</strong>
+        </mat-checkbox>
+        <p class="section-toggle-hint">
+          Download the <a target="_blank" href="{{ adjournmentFormLink }}">Application to Adjourn a Hearing</a>
+          form, complete it, then upload the completed form below.
+        </p>
+      </div>
+
+      <ng-container *ngIf="adjournStepEnabled.value">
+        <div class="alert alert-upload mt-3" *ngIf="fileData$">
+          <div class="row mt-1">
+            <div>* Do not upload evidence (videos, pictures). Evidence may only be presented at the hearing.</div>
+            <div>* Use a meaningful file name for easier identification.</div>
+            <div>* Files will only be uploaded when the request is submitted.</div>
+            <div>* Maximum 4 files, each up to 10 MB.</div>
+          </div>
+          <div class="row vcenter" style="margin-top: 1rem;">
+            <div fxFlex="50" class="vcenter">
+              <button class="large" mat-stroked-button type="button" color="primary" style="height: 3rem;"
+                (click)="onUploadWithType('Adjournment')">
+                Upload Documents
+              </button>
+              <input type="file" #fileInput id="fileInput" style="display:none"
+                accept="{{ acceptFileTypes.join(',') }}"
+                (change)="onUploadFile($event.target.files)">
+            </div>
+          </div>
+          <div fxLayout="row wrap">
+            <ng-container *ngFor="let file of fileData$ | async">
+              <div *ngIf="!file.deleteRequested" fxFlex="100" class="vcenter">
+                <a href="javascript:void(0);" (click)="onGetFile(file)">{{ file.fileName }}</a>
+                <button type="button" style="width: unset !important; border:none; background-color: transparent"
+                  (click)="onRemoveFile(file)">
+                  <mat-icon color="warn">delete</mat-icon>
+                </button>
+              </div>
+            </ng-container>
           </div>
         </div>
-        <div fxLayout="row wrap">
-          <ng-container *ngFor="let file of fileData$ | async">
-            <div *ngIf="!file.deleteRequested" fxFlex="100" class="vcenter">
-              <a href="javascript:void(0);" (click)="onGetFile(file)">{{ file.fileName }}</a>
-              <button type="button" style="width: unset !important; border:none; background-color: transparent"
-                (click)="onRemoveFile(file)">
-                <mat-icon color="warn">delete</mat-icon>
-              </button>
-            </div>
-          </ng-container>
-        </div>
-      </div>
+      </ng-container>
 
       <app-stepper-footer
         [disableSave]="false"
@@ -146,7 +134,133 @@
   </mat-step>
 
   <!-- ════════════════════════════════════════════════════════════
-       STEP 3 — Additional Information (optional)
+       STEP 3 — Violation Ticket Statement and Written Reasons
+       ════════════════════════════════════════════════════════════ -->
+  <mat-step [completed]="true">
+    <ng-template matStepLabel>Violation Ticket Statement and Written Reasons</ng-template>
+    <app-page>
+
+      <div class="section-toggle-row mb-3">
+        <mat-checkbox
+          [formControl]="writtenReasonsStepEnabled"
+          color="primary">
+          <strong>I want to upload a Violation Ticket Statement and Written Reasons</strong>
+        </mat-checkbox>
+        <p class="section-toggle-hint">
+          Download the <a target="_blank" href="{{ writtenReasonsFormLink }}">Violation Ticket Statement and Written Reasons</a>
+          form, complete it, then upload the completed form below.
+        </p>
+      </div>
+
+      <p class="mt-2">
+        Under Section 15.4(1) of the <em>Offence Act</em>, you may submit a written statement requesting a
+        fine reduction, time to pay, or both — without appearing in person at court.
+      </p>
+
+      <ng-container *ngIf="writtenReasonsStepEnabled.value">
+        <div class="alert alert-upload mt-3" *ngIf="fileData$">
+          <div class="row mt-1">
+            <div>* Do not upload evidence (videos, pictures). Evidence may only be presented at the hearing.</div>
+            <div>* Use a meaningful file name for easier identification.</div>
+            <div>* Files will only be uploaded when the request is submitted.</div>
+            <div>* Maximum 4 files, each up to 10 MB.</div>
+          </div>
+          <div class="row vcenter" style="margin-top: 1rem;">
+            <div fxFlex="50" class="vcenter">
+              <button class="large" mat-stroked-button type="button" color="primary" style="height: 3rem;"
+                (click)="onUploadWithType('Other')">
+                Upload Documents
+              </button>
+            </div>
+          </div>
+          <div fxLayout="row wrap">
+            <ng-container *ngFor="let file of fileData$ | async">
+              <div *ngIf="!file.deleteRequested" fxFlex="100" class="vcenter">
+                <a href="javascript:void(0);" (click)="onGetFile(file)">{{ file.fileName }}</a>
+                <button type="button" style="width: unset !important; border:none; background-color: transparent"
+                  (click)="onRemoveFile(file)">
+                  <mat-icon color="warn">delete</mat-icon>
+                </button>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
+
+      <app-stepper-footer
+        [disableSave]="false"
+        (save)="disputeStepper.next()"
+        (back)="onStepBack()"
+        [secondaryActionButtonIcon]="'keyboard_arrow_left'"
+        [secondaryActionButtonKey]="'stepper.back'"
+        [saveButtonKey]="'stepper.next'"
+        [hasSecondaryAction]="true">
+      </app-stepper-footer>
+    </app-page>
+  </mat-step>
+
+  <!-- ════════════════════════════════════════════════════════════
+       STEP 4 — Supporting Documents
+       ════════════════════════════════════════════════════════════ -->
+  <mat-step [completed]="true">
+    <ng-template matStepLabel>Supporting Documents</ng-template>
+    <app-page>
+
+      <div class="section-toggle-row mb-3">
+        <mat-checkbox
+          [formControl]="supportingDocsStepEnabled"
+          color="primary">
+          <strong>I want to upload supporting documents</strong>
+        </mat-checkbox>
+        <p class="section-toggle-hint">
+          Upload any other correspondence or supporting documents related to your dispute.
+        </p>
+      </div>
+
+      <ng-container *ngIf="supportingDocsStepEnabled.value">
+        <div class="alert alert-upload mt-3" *ngIf="fileData$">
+          <div class="row mt-1">
+            <div>* Do not upload evidence (videos, pictures). Evidence may only be presented at the hearing.</div>
+            <div>* Use a meaningful file name for easier identification.</div>
+            <div>* Files will only be uploaded when the request is submitted.</div>
+            <div>* Maximum 4 files, each up to 10 MB.</div>
+          </div>
+          <div class="row vcenter" style="margin-top: 1rem;">
+            <div fxFlex="50" class="vcenter">
+              <button class="large" mat-stroked-button type="button" color="primary" style="height: 3rem;"
+                (click)="onUploadWithType('Other')">
+                Upload Documents
+              </button>
+            </div>
+          </div>
+          <div fxLayout="row wrap">
+            <ng-container *ngFor="let file of fileData$ | async">
+              <div *ngIf="!file.deleteRequested" fxFlex="100" class="vcenter">
+                <a href="javascript:void(0);" (click)="onGetFile(file)">{{ file.fileName }}</a>
+                <button type="button" style="width: unset !important; border:none; background-color: transparent"
+                  (click)="onRemoveFile(file)">
+                  <mat-icon color="warn">delete</mat-icon>
+                </button>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
+
+      <app-stepper-footer
+        [disableSave]="false"
+        (save)="disputeStepper.next()"
+        (back)="onStepBack()"
+        [secondaryActionButtonIcon]="'keyboard_arrow_left'"
+        [secondaryActionButtonKey]="'stepper.back'"
+        [saveButtonKey]="'stepper.next'"
+        [hasSecondaryAction]="true">
+      </app-stepper-footer>
+    </app-page>
+  </mat-step>
+
+  <!-- ════════════════════════════════════════════════════════════
+       STEP 5 — Additional Information (optional)
        ════════════════════════════════════════════════════════════ -->
   <mat-step [completed]="isAdditionalStepValid()">
     <ng-template matStepLabel>{{ "stepper.additional.heading" | translate }}</ng-template>
@@ -349,7 +463,7 @@
   </mat-step>
 
   <!-- ════════════════════════════════════════════════════════════
-       STEP 4 — Review & Submit
+       STEP 6 — Review & Submit
        ════════════════════════════════════════════════════════════ -->
   <mat-step>
     <ng-template matStepLabel>{{ "stepper.overview.heading" | translate }}</ng-template>
