@@ -14,6 +14,7 @@ export interface AmendmentValidationResult {
 export class StaffAmendmentValidationComponent implements OnInit {
   @Input() amendmentData: JJDisputeCourtAppearanceAmendments;
   @Input() isViewOnly: boolean = false;
+  @Input() showAcknowledge: boolean = false;
   @Output() validationStatusChange = new EventEmitter<AmendmentValidationResult>();
 
   hasAmendments: boolean = false;
