@@ -148,9 +148,9 @@ export class JJCountComponent implements OnInit, OnChanges {
         this.surcharge = this.jjDisputedCount.totalFineAmount / 1.15 * 0.15;
       }
 
-      if (this.isViewOnly && this.jjDisputedCount.jjDisputedCountRoP?.finding &&
-        (this.jjDisputedCount.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.NotGuilty
-          || this.jjDisputedCount.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.Cancelled)) {
+      if (this.isViewOnly &&
+        (this.jjDisputedCount.jjDisputedCountRoP?.finding === JJDisputedCountRoPFinding.NotGuilty
+          || this.jjDisputedCount.jjDisputedCountRoP?.finding === JJDisputedCountRoPFinding.Cancelled)) {
         this.jjDisputedCount.ticketedFineAmount = null;
         this.jjDisputedCount.lesserOrGreaterAmount = null;
         this.jjDisputedCount.totalFineAmount = null;
@@ -171,33 +171,44 @@ export class JJCountComponent implements OnInit, OnChanges {
       if (!this.jjDisputedCount.lesserOrGreaterAmount) {
         this.form.controls.lesserOrGreaterAmount.setValue(this.jjDisputedCount.ticketedFineAmount);
       }
-      this.inclSurcharge = (this.jjDisputedCount && this.jjDisputedCount.lesserOrGreaterAmount) ?
-        (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.Y ? "yes" :
-        (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.N ? "no" : "")) : "";
+
+      this.inclSurcharge = this.jjDisputedCount?.lesserOrGreaterAmount
+        ? this.jjDisputedCount.includesSurcharge === this.IncludesSurcharge.Y
+          ? "yes"
+          : this.jjDisputedCount.includesSurcharge === this.IncludesSurcharge.N
+            ? "no"
+            : ""
+        : "";
+
       this.timeToPay =
         this.jjDisputedCount?.grantTimeToPay === this.GrantTimeToPay.Y
           ? "yes"
           : this.jjDisputedCount?.grantTimeToPay === this.GrantTimeToPay.N
             ? "no"
             : "";
-      this.fineReduction = this.jjDisputedCount ? (this.jjDisputedCount.totalFineAmount &&
-          this.jjDisputedCount.lesserOrGreaterAmount ? (this.jjDisputedCount.lesserOrGreaterAmount !== null &&
-          this.jjDisputedCount.lesserOrGreaterAmount != this.jjDisputedCount.ticketedFineAmount ?
-          "yes" : "no") : "") : "";
+
+      this.fineReduction = this.jjDisputedCount
+        ? this.jjDisputedCount.totalFineAmount && this.jjDisputedCount.lesserOrGreaterAmount
+          ? this.jjDisputedCount.lesserOrGreaterAmount !== null &&
+            this.jjDisputedCount.lesserOrGreaterAmount !== this.jjDisputedCount.ticketedFineAmount
+            ? "yes"
+            : "no"
+          : ""
+        : "";
 
       this.updateInclSurcharge(this.inclSurcharge);
       this.bindRevisedDueDate(this.jjDisputedCount.revisedDueDate); // ensure the form field matches our model value
 
       // TCVP-2467
-      if (!this.isViewOnly && this.jjDisputedCount.jjDisputedCountRoP?.finding &&
-        (this.jjDisputedCount.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.NotGuilty
-          || this.jjDisputedCount.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.Cancelled)) {
+      if (!this.isViewOnly &&
+        (this.jjDisputedCount.jjDisputedCountRoP?.finding === JJDisputedCountRoPFinding.NotGuilty
+          || this.jjDisputedCount.jjDisputedCountRoP?.finding === JJDisputedCountRoPFinding.Cancelled)) {
         this.form.controls.lesserOrGreaterAmount.setValue(null);
         this.form.controls.totalFineAmount.setValue(null);
         this.form.controls.revisedDueDate.setValue(null);
         this.jjDisputedCount.lesserOrGreaterAmount = null;
         this.jjDisputedCount.revisedDueDate = null;
-        this.jjDisputedCount.totalFineAmount = null;        
+        this.jjDisputedCount.totalFineAmount = null;
         this.jjDisputedCount.grantTimeToPay = this.GrantTimeToPay.Unknown;
       }
 
@@ -288,25 +299,32 @@ export class JJCountComponent implements OnInit, OnChanges {
 
   private initListeners() {
     if (this.jjDisputedCount) {
-      const pad = (n: number) => n.toString().padStart(2, '0');
       // listen for form changes
       this.form.valueChanges.subscribe(() => {
         Object.assign(this.jjDisputedCount, this.form.getRawValue()); // get raw value includes disabled fields
         if (this.jjDisputedCount.latestPleaUpdateTs) {
-          var date = new Date(this.jjDisputedCount.latestPleaUpdateTs);
+          const date = new Date(this.jjDisputedCount.latestPleaUpdateTs);
           this.jjDisputedCount.latestPleaUpdateTs = this.getFormattedDateOnlyString(date);
         }
 
-        this.jjDisputedCount.grantTimeToPay  = (this.timeToPay === "yes" ? this.GrantTimeToPay.Y :
-          (this.timeToPay === "no" ? this.GrantTimeToPay.N : this.GrantTimeToPay.Unknown));
+        this.jjDisputedCount.grantTimeToPay =
+          this.timeToPay === "yes"
+            ? this.GrantTimeToPay.Y
+            : this.timeToPay === "no"
+              ? this.GrantTimeToPay.N
+              : this.GrantTimeToPay.Unknown;
 
         if (this.jjDisputedCount.revisedDueDate) {
-          let revisedDueDate = new Date(this.jjDisputedCount.revisedDueDate);
+          const revisedDueDate = new Date(this.jjDisputedCount.revisedDueDate);
           this.jjDisputedCount.revisedDueDate = this.getFormattedDateOnlyString(revisedDueDate);
         }
 
-        this.jjDisputedCount.includesSurcharge = (this.inclSurcharge === "yes" ? this.IncludesSurcharge.Y :
-          (this.inclSurcharge === "no" ? this.IncludesSurcharge.N : this.IncludesSurcharge.Unknown));
+        this.jjDisputedCount.includesSurcharge =
+          this.inclSurcharge === "yes"
+            ? this.IncludesSurcharge.Y
+            : this.inclSurcharge === "no"
+              ? this.IncludesSurcharge.N
+              : this.IncludesSurcharge.Unknown;
 
         this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
       });
@@ -319,22 +337,28 @@ export class JJCountComponent implements OnInit, OnChanges {
             : this.jjDisputedCount?.grantTimeToPay === this.GrantTimeToPay.N
               ? "no"
               : "";
+
         if (this.jjDisputedCount.revisedDueDate) {
-          let revisedDueDate = new Date(this.jjDisputedCount.revisedDueDate);
+          const revisedDueDate = new Date(this.jjDisputedCount.revisedDueDate);
           this.jjDisputedCount.revisedDueDate = this.getFormattedDateOnlyString(revisedDueDate);
         }
-        this.inclSurcharge = (this.jjDisputedCount.includesSurcharge === this.IncludesSurcharge.N ? "no" : "yes");
+
+        this.inclSurcharge = this.jjDisputedCount.includesSurcharge === this.IncludesSurcharge.N ? "no" : "yes";
 
         this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
       });
 
       this.countRoPForm.valueChanges.subscribe(() => {
-        this.jjDisputedCount.jjDisputedCountRoP = { ...this.jjDisputedCount.jjDisputedCountRoP, ...this.countRoPForm.value };
-        this.jjDisputedCount.jjDisputedCountRoP.jailIntermittent = this.countRoPForm.value._jailIntermittent ? this.JailIntermittent.Y : this.JailIntermittent.N;
-        this.jjDisputedCount.jjDisputedCountRoP.dismissed = this.countRoPForm.value._dismissed ? this.Dismissed.Y : this.Dismissed.N;
-        this.jjDisputedCount.jjDisputedCountRoP.forWantOfProsecution = this.countRoPForm.value._forWantOfProsecution ? this.ForWantOfProsecution.Y : this.ForWantOfProsecution.N;
-        this.jjDisputedCount.jjDisputedCountRoP.withdrawn = this.countRoPForm.value._withdrawn ? this.Withdrawn.Y : this.Withdrawn.N;
-        this.jjDisputedCount.jjDisputedCountRoP.abatement = this.countRoPForm.value._abatement ? this.Abatement.Y : this.Abatement.N;
+        this.jjDisputedCount.jjDisputedCountRoP = {
+          ...this.jjDisputedCount.jjDisputedCountRoP,
+          ...this.countRoPForm.value,
+          jailIntermittent: this.countRoPForm.value._jailIntermittent ? this.JailIntermittent.Y : this.JailIntermittent.N,
+          dismissed: this.countRoPForm.value._dismissed ? this.Dismissed.Y : this.Dismissed.N,
+          forWantOfProsecution: this.countRoPForm.value._forWantOfProsecution ? this.ForWantOfProsecution.Y : this.ForWantOfProsecution.N,
+          withdrawn: this.countRoPForm.value._withdrawn ? this.Withdrawn.Y : this.Withdrawn.N,
+          abatement: this.countRoPForm.value._abatement ? this.Abatement.Y : this.Abatement.N,
+        };
+
         this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
       });
     }
@@ -477,7 +501,7 @@ export class JJCountComponent implements OnInit, OnChanges {
             : this.jjDisputedCount?.grantTimeToPay === this.GrantTimeToPay.N
               ? "no"
               : "";
-        if(this.jjDisputedCount?.revisedDueDate) {
+        if (this.jjDisputedCount?.revisedDueDate) {
           this.bindRevisedDueDate(this.jjDisputedCount.revisedDueDate);
         } else {
           this.form.controls.revisedDueDate.setValue(null);
@@ -525,8 +549,8 @@ export class JJCountComponent implements OnInit, OnChanges {
     } else {
       const lesserOrGreaterAmountValue = this.form.get('lesserOrGreaterAmount').value;
       if (lesserOrGreaterAmountValue !== null && lesserOrGreaterAmountValue > 0) {
-        var surcharge = Math.round(lesserOrGreaterAmountValue * 0.15);
-        var newTotalFineAmount = lesserOrGreaterAmountValue + surcharge;
+        const surcharge = Math.round(lesserOrGreaterAmountValue * 0.15);
+        const newTotalFineAmount = lesserOrGreaterAmountValue + surcharge;
         this.form.get('totalFineAmount').setValue(newTotalFineAmount);
       } else {
         this.form.get('totalFineAmount').setValue(this.jjDisputedCount?.totalFineAmount);
@@ -563,7 +587,7 @@ export class JJCountComponent implements OnInit, OnChanges {
 
   // Revised Due Date
   bindRevisedDueDate(value){
-    if(value) {
+    if (value) {
       value = new Date(value);
       this.form.controls.revisedDueDate.setValue(value);
     } else {
