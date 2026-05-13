@@ -168,7 +168,9 @@ export class JJCountComponent implements OnInit, OnChanges {
 
       // Patch the form with the modified object
       this.form.patchValue(jjDisputedCountCopy);
-      this.jjDisputedCount.lesserOrGreaterAmount ?? this.form.controls.lesserOrGreaterAmount.setValue(this.jjDisputedCount.ticketedFineAmount);
+      if (!this.jjDisputedCount.lesserOrGreaterAmount) {
+        this.form.controls.lesserOrGreaterAmount.setValue(this.jjDisputedCount.ticketedFineAmount);
+      }
       this.inclSurcharge = (this.jjDisputedCount && this.jjDisputedCount.lesserOrGreaterAmount) ?
         (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.Y ? "yes" :
         (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.N ? "no" : "")) : "";
