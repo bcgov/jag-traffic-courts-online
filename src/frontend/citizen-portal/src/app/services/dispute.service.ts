@@ -190,4 +190,5 @@ export enum StatusStepType {
 
 export interface FileMetadata extends FileMetadataBase {
   __penfingFile?: Blob;
+  __section?: string;
 }

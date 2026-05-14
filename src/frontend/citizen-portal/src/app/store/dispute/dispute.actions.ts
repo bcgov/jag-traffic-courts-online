@@ -73,7 +73,7 @@ export const GetDocumentFailed = createAction(
 
 export const AddDocument = createAction(
   ActionTypes.ADD_DOCUMENT,
-  props<{ file: File, fileType: string, pendingFileStream: string }>()
+  props<{ file: File, fileType: string, pendingFileStream: string, section?: string }>()
 );
 
 export const RemoveDocument = createAction(

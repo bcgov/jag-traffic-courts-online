@@ -78,6 +78,9 @@ export class UpdateDisputeStepperComponent implements OnInit, AfterViewInit {
   // ── Section-enable checkboxes ──────────────────────────────────────────────
   contactSectionEnabled = new FormControl<boolean>(false);
   additionalSectionEnabled = new FormControl<boolean>(false);
+  adjournStepEnabled = new FormControl<boolean>(false);
+  writtenReasonsStepEnabled = new FormControl<boolean>(false);
+  supportingDocsStepEnabled = new FormControl<boolean>(false);
 
   // ── Additional section radio controls (NO_CHANGE | 'N' | 'Y') ────────────
   lawyerRadio = new FormControl<string>('NO_CHANGE');
@@ -473,6 +476,14 @@ export class UpdateDisputeStepperComponent implements OnInit, AfterViewInit {
     }
   }
 
+  uploadSection: string;
+
+  onUploadWithType(type: string, section: string): void {
+    this.fileTypeToUpload = type;
+    this.uploadSection = section;
+    this.onUploadClicked();
+  }
+
   onUploadClicked(): void {
     if (this.fileTypeToUpload === this.adjournmentFileType.key && this.ticket?.appearance_less_than_14_days) {
       const data: DialogOptions = {
@@ -522,7 +533,7 @@ export class UpdateDisputeStepperComponent implements OnInit, AfterViewInit {
       this.fileUtilsService.readFileAsDataURL(file),
     )) as string;
     this.store.dispatch(
-      DisputeStore.Actions.AddDocument({ file, fileType: this.fileTypeToUpload, pendingFileStream }),
+      DisputeStore.Actions.AddDocument({ file, fileType: this.fileTypeToUpload, pendingFileStream, section: this.uploadSection }),
     );
     this.fileInput.nativeElement.value = null;
     this.fileTypeToUpload = this.adjournmentFileType.key;
