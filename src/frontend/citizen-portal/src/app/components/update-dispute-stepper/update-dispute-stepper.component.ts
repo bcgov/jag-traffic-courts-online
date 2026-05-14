@@ -476,8 +476,11 @@ export class UpdateDisputeStepperComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onUploadWithType(type: string): void {
+  uploadSection: string;
+
+  onUploadWithType(type: string, section: string): void {
     this.fileTypeToUpload = type;
+    this.uploadSection = section;
     this.onUploadClicked();
   }
 
@@ -530,7 +533,7 @@ export class UpdateDisputeStepperComponent implements OnInit, AfterViewInit {
       this.fileUtilsService.readFileAsDataURL(file),
     )) as string;
     this.store.dispatch(
-      DisputeStore.Actions.AddDocument({ file, fileType: this.fileTypeToUpload, pendingFileStream }),
+      DisputeStore.Actions.AddDocument({ file, fileType: this.fileTypeToUpload, pendingFileStream, section: this.uploadSection }),
     );
     this.fileInput.nativeElement.value = null;
     this.fileTypeToUpload = this.adjournmentFileType.key;

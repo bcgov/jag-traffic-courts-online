@@ -11,9 +11,7 @@
     <app-page>
 
       <div class="section-toggle-row mb-3">
-        <mat-checkbox
-          [formControl]="contactSectionEnabled"
-          color="primary"
+        <mat-checkbox [formControl]="contactSectionEnabled" color="primary"
           (change)="onContactSectionToggle($event.checked)">
           <strong>I want to update my contact information</strong>
         </mat-checkbox>
@@ -26,14 +24,9 @@
         <app-disputant-form [form]="form" [mode]="mode"></app-disputant-form>
       </ng-container>
 
-      <app-stepper-footer
-        [disableSave]="!isContactStepValid()"
-        (save)="disputeStepper.next()"
-        (back)="onStepCancel()"
-        [secondaryActionButtonIcon]="'keyboard_arrow_left'"
-        [secondaryActionButtonKey]="'Cancel'"
-        [saveButtonKey]="'stepper.next'"
-        [hasSecondaryAction]="true">
+      <app-stepper-footer [disableSave]="!isContactStepValid()" (save)="disputeStepper.next()" (back)="onStepCancel()"
+        [secondaryActionButtonIcon]="'keyboard_arrow_left'" [secondaryActionButtonKey]="'Cancel'"
+        [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
       </app-stepper-footer>
     </app-page>
   </mat-step>
@@ -42,7 +35,8 @@
        STEP 2 — Adjourn a Hearing
        ════════════════════════════════════════════════════════════ -->
   <mat-step [completed]="true">
-    <ng-template matStepLabel>Adjourn a Hearing</ng-template>
+    <ng-template matStepLabel>Request adjournment of a hearing date
+      (Application to Adjourn a Hearing form) </ng-template>
     <app-page>
 
       <div class="row">
@@ -55,39 +49,22 @@
         </div>
       </div>
 
-      <!-- Ticket counts summary (read-only reference) -->
-      <ng-container *ngIf="ticketCounts?.length > 0">
-        <h3 class="mt-4">Your Current Counts</h3>
-        <div *ngFor="let count of ticketCounts" class="count-summary-row mt-2">
-          <div class="row">
-            <div class="col-md-2">
-              <small class="d-block">Count</small>
-              <strong>{{ count.count_no }}</strong>
-            </div>
-            <div class="col-md-6">
-              <small class="d-block">Description</small>
-              <strong>{{ count.description | titlecase }}</strong>
-            </div>
-            <div class="col-md-4">
-              <small class="d-block">Offence Amount</small>
-              <strong>{{ count.ticketed_amount | currency: 'CAD':'symbol-narrow':'1.2-2':defaultLanguage }}</strong>
-            </div>
-          </div>
-        </div>
-      </ng-container>
+
 
       <div class="section-toggle-row mb-3 mt-4">
-        <mat-checkbox
-          [formControl]="adjournStepEnabled"
-          color="primary">
+        <mat-checkbox [formControl]="adjournStepEnabled" color="primary">
           <strong>I want to upload an Application to Adjourn a Hearing</strong>
         </mat-checkbox>
         <p class="section-toggle-hint">
-          Download the <a target="_blank" href="{{ adjournmentFormLink }}">Application to Adjourn a Hearing</a>
-          form, complete it, then upload the completed form below.
+          If you cannot appear on the date set for the violation ticket hearing, after taking all possible steps to be
+          available, you or someone acting on your behalf (your agent) may apply for an adjournment.
         </p>
       </div>
 
+      <p class="mt-2">
+        Download the <a target="_blank" href="{{ adjournmentFormLink }}">Application to Adjourn a Hearing</a>
+        form, complete it, then upload the completed form below.
+      </p>
       <ng-container *ngIf="adjournStepEnabled.value">
         <div class="alert alert-upload mt-3" *ngIf="fileData$">
           <div class="row mt-1">
@@ -99,17 +76,16 @@
           <div class="row vcenter" style="margin-top: 1rem;">
             <div fxFlex="50" class="vcenter">
               <button class="large" mat-stroked-button type="button" color="primary" style="height: 3rem;"
-                (click)="onUploadWithType('Adjournment')">
+                (click)="onUploadWithType('Adjournment', 'adjournment')">
                 Upload Documents
               </button>
-              <input type="file" #fileInput id="fileInput" style="display:none"
-                accept="{{ acceptFileTypes.join(',') }}"
+              <input type="file" #fileInput id="fileInput" style="display:none" accept="{{ acceptFileTypes.join(',') }}"
                 (change)="onUploadFile($event.target.files)">
             </div>
           </div>
           <div fxLayout="row wrap">
             <ng-container *ngFor="let file of fileData$ | async">
-              <div *ngIf="!file.deleteRequested" fxFlex="100" class="vcenter">
+              <div *ngIf="!file.deleteRequested && file.__section === 'adjournment'" fxFlex="100" class="vcenter">
                 <a href="javascript:void(0);" (click)="onGetFile(file)">{{ file.fileName }}</a>
                 <button type="button" style="width: unset !important; border:none; background-color: transparent"
                   (click)="onRemoveFile(file)">
@@ -121,14 +97,9 @@
         </div>
       </ng-container>
 
-      <app-stepper-footer
-        [disableSave]="false"
-        (save)="disputeStepper.next()"
-        (back)="onStepBack()"
-        [secondaryActionButtonIcon]="'keyboard_arrow_left'"
-        [secondaryActionButtonKey]="'stepper.back'"
-        [saveButtonKey]="'stepper.next'"
-        [hasSecondaryAction]="true">
+      <app-stepper-footer [disableSave]="false" (save)="disputeStepper.next()" (back)="onStepBack()"
+        [secondaryActionButtonIcon]="'keyboard_arrow_left'" [secondaryActionButtonKey]="'stepper.back'"
+        [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
       </app-stepper-footer>
     </app-page>
   </mat-step>
@@ -137,24 +108,25 @@
        STEP 3 — Violation Ticket Statement and Written Reasons
        ════════════════════════════════════════════════════════════ -->
   <mat-step [completed]="true">
-    <ng-template matStepLabel>Violation Ticket Statement and Written Reasons</ng-template>
+    <ng-template matStepLabel>Request a reduction
+      in the ticketed amount and/or additional time to pay the ticketed amount (Violation
+      Ticket Statement and Written Reasons form)</ng-template>
     <app-page>
 
       <div class="section-toggle-row mb-3">
-        <mat-checkbox
-          [formControl]="writtenReasonsStepEnabled"
-          color="primary">
+        <mat-checkbox [formControl]="writtenReasonsStepEnabled" color="primary">
           <strong>I want to upload a Violation Ticket Statement and Written Reasons</strong>
         </mat-checkbox>
         <p class="section-toggle-hint">
-          Download the <a target="_blank" href="{{ writtenReasonsFormLink }}">Violation Ticket Statement and Written Reasons</a>
-          form, complete it, then upload the completed form below.
+          Under sections 15.4(1) and (3) of the Offence Act you may admit you committed the offence(s) and submit a
+          written statement requesting a fine reduction, time to pay, or both - without appearing in person in court.
         </p>
       </div>
 
       <p class="mt-2">
-        Under Section 15.4(1) of the <em>Offence Act</em>, you may submit a written statement requesting a
-        fine reduction, time to pay, or both — without appearing in person at court.
+        Download the <a target="_blank" href="{{ writtenReasonsFormLink }}">Violation Ticket Statement and Written
+          Reasons</a>
+        form, complete it, then upload the completed form below.
       </p>
 
       <ng-container *ngIf="writtenReasonsStepEnabled.value">
@@ -168,14 +140,14 @@
           <div class="row vcenter" style="margin-top: 1rem;">
             <div fxFlex="50" class="vcenter">
               <button class="large" mat-stroked-button type="button" color="primary" style="height: 3rem;"
-                (click)="onUploadWithType('Other')">
+                (click)="onUploadWithType('Other', 'writtenReasons')">
                 Upload Documents
               </button>
             </div>
           </div>
           <div fxLayout="row wrap">
             <ng-container *ngFor="let file of fileData$ | async">
-              <div *ngIf="!file.deleteRequested" fxFlex="100" class="vcenter">
+              <div *ngIf="!file.deleteRequested && file.__section === 'writtenReasons'" fxFlex="100" class="vcenter">
                 <a href="javascript:void(0);" (click)="onGetFile(file)">{{ file.fileName }}</a>
                 <button type="button" style="width: unset !important; border:none; background-color: transparent"
                   (click)="onRemoveFile(file)">
@@ -187,14 +159,9 @@
         </div>
       </ng-container>
 
-      <app-stepper-footer
-        [disableSave]="false"
-        (save)="disputeStepper.next()"
-        (back)="onStepBack()"
-        [secondaryActionButtonIcon]="'keyboard_arrow_left'"
-        [secondaryActionButtonKey]="'stepper.back'"
-        [saveButtonKey]="'stepper.next'"
-        [hasSecondaryAction]="true">
+      <app-stepper-footer [disableSave]="false" (save)="disputeStepper.next()" (back)="onStepBack()"
+        [secondaryActionButtonIcon]="'keyboard_arrow_left'" [secondaryActionButtonKey]="'stepper.back'"
+        [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
       </app-stepper-footer>
     </app-page>
   </mat-step>
@@ -207,9 +174,7 @@
     <app-page>
 
       <div class="section-toggle-row mb-3">
-        <mat-checkbox
-          [formControl]="supportingDocsStepEnabled"
-          color="primary">
+        <mat-checkbox [formControl]="supportingDocsStepEnabled" color="primary">
           <strong>I want to upload supporting documents</strong>
         </mat-checkbox>
         <p class="section-toggle-hint">
@@ -228,14 +193,14 @@
           <div class="row vcenter" style="margin-top: 1rem;">
             <div fxFlex="50" class="vcenter">
               <button class="large" mat-stroked-button type="button" color="primary" style="height: 3rem;"
-                (click)="onUploadWithType('Other')">
+                (click)="onUploadWithType('Other', 'supportingDocs')">
                 Upload Documents
               </button>
             </div>
           </div>
           <div fxLayout="row wrap">
             <ng-container *ngFor="let file of fileData$ | async">
-              <div *ngIf="!file.deleteRequested" fxFlex="100" class="vcenter">
+              <div *ngIf="!file.deleteRequested && file.__section === 'supportingDocs'" fxFlex="100" class="vcenter">
                 <a href="javascript:void(0);" (click)="onGetFile(file)">{{ file.fileName }}</a>
                 <button type="button" style="width: unset !important; border:none; background-color: transparent"
                   (click)="onRemoveFile(file)">
@@ -247,14 +212,9 @@
         </div>
       </ng-container>
 
-      <app-stepper-footer
-        [disableSave]="false"
-        (save)="disputeStepper.next()"
-        (back)="onStepBack()"
-        [secondaryActionButtonIcon]="'keyboard_arrow_left'"
-        [secondaryActionButtonKey]="'stepper.back'"
-        [saveButtonKey]="'stepper.next'"
-        [hasSecondaryAction]="true">
+      <app-stepper-footer [disableSave]="false" (save)="disputeStepper.next()" (back)="onStepBack()"
+        [secondaryActionButtonIcon]="'keyboard_arrow_left'" [secondaryActionButtonKey]="'stepper.back'"
+        [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
       </app-stepper-footer>
     </app-page>
   </mat-step>
@@ -274,9 +234,7 @@
       </app-page-header>
 
       <div class="section-toggle-row mb-3">
-        <mat-checkbox
-          [formControl]="additionalSectionEnabled"
-          color="primary"
+        <mat-checkbox [formControl]="additionalSectionEnabled" color="primary"
           (change)="onAdditionalSectionToggle($event.checked)">
           <strong>I want to update additional information</strong>
         </mat-checkbox>
@@ -285,16 +243,16 @@
         </p>
       </div>
 
-      <form *ngIf="additionalSectionEnabled.value && additionalForm"
-            [formGroup]="additionalForm" novalidate>
+      <form *ngIf="additionalSectionEnabled.value && additionalForm" [formGroup]="additionalForm" novalidate>
 
         <!-- Lawyer or Agent -->
         <section class="mt-3">
           <h4><b>Lawyer or Agent</b></h4>
           <mat-radio-group [formControl]="lawyerRadio" class="radio-group-vertical"
-                           (change)="onLawyerRadioChange($event.value)">
+            (change)="onLawyerRadioChange($event.value)">
             <mat-radio-button value="NO_CHANGE">No change</mat-radio-button>
-            <mat-radio-button value="N">I no longer intend to be represented by a lawyer or agent in court</mat-radio-button>
+            <mat-radio-button value="N">I no longer intend to be represented by a lawyer or agent in
+              court</mat-radio-button>
             <mat-radio-button value="Y">I intend to be represented by a lawyer or agent in court</mat-radio-button>
           </mat-radio-group>
 
@@ -357,8 +315,7 @@
                 <div class="col-md-6">
                   <mat-form-field class="w-100">
                     <mat-label>{{ "stepper.additional.lawyer_agent_email" | translate }}</mat-label>
-                    <input matInput formControlName="lawyer_email" autocomplete="off"
-                      [errorStateMatcher]="matcher" />
+                    <input matInput formControlName="lawyer_email" autocomplete="off" [errorStateMatcher]="matcher" />
                     <mat-error *ngIf="legalRepresentationForm.controls.lawyer_email.hasError('required')">
                       {{ "error.required" | translate }}
                     </mat-error>
@@ -379,7 +336,7 @@
         <section class="mt-3">
           <h4><b>Language Interpreter</b></h4>
           <mat-radio-group [formControl]="interpreterRadio" class="radio-group-vertical"
-                           (change)="onInterpreterRadioChange($event.value)">
+            (change)="onInterpreterRadioChange($event.value)">
             <mat-radio-button value="NO_CHANGE">No change</mat-radio-button>
             <mat-radio-button value="N">I no longer require a language interpreter at the hearing</mat-radio-button>
             <mat-radio-button value="Y">I require a language interpreter at the hearing</mat-radio-button>
@@ -412,7 +369,7 @@
         <section class="mt-3">
           <h4><b>Witnesses</b></h4>
           <mat-radio-group [formControl]="witnessRadio" class="radio-group-vertical"
-                           (change)="onWitnessRadioChange($event.value)">
+            (change)="onWitnessRadioChange($event.value)">
             <mat-radio-button value="NO_CHANGE">No change</mat-radio-button>
             <mat-radio-button value="N">I no longer intend to call a witness</mat-radio-button>
             <mat-radio-button value="Y">I intend to call a witness</mat-radio-button>
@@ -450,14 +407,9 @@
         </section>
       </form>
 
-      <app-stepper-footer
-        [disableSave]="!isAdditionalStepValid()"
-        (save)="disputeStepper.next()"
-        (back)="onStepBack()"
-        [secondaryActionButtonIcon]="'keyboard_arrow_left'"
-        [secondaryActionButtonKey]="'stepper.back'"
-        [saveButtonKey]="'stepper.next'"
-        [hasSecondaryAction]="true">
+      <app-stepper-footer [disableSave]="!isAdditionalStepValid()" (save)="disputeStepper.next()" (back)="onStepBack()"
+        [secondaryActionButtonIcon]="'keyboard_arrow_left'" [secondaryActionButtonKey]="'stepper.back'"
+        [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
       </app-stepper-footer>
     </app-page>
   </mat-step>
@@ -529,6 +481,11 @@
         <ul class="summary-list">
           <ng-container *ngFor="let file of fileData$ | async">
             <li *ngIf="!file.deleteRequested">
+              <span class="summary-key">
+                {{ file.__section === 'adjournment' ? 'Adjourn a Hearing' :
+                file.__section === 'writtenReasons' ? 'Violation Ticket Statement and Written Reasons' :
+                file.__section === 'supportingDocs' ? 'Supporting Documents' : 'Document' }}
+              </span>:
               <a href="javascript:void(0);" (click)="onGetFile(file)">{{ file.fileName }}</a>
             </li>
           </ng-container>
@@ -543,14 +500,9 @@
         </app-alert>
       </div>
 
-      <app-stepper-footer
-        [disableSave]="disableSave"
-        (save)="onSubmitClicked()"
-        (back)="onStepBack()"
-        [secondaryActionButtonIcon]="'keyboard_arrow_left'"
-        [secondaryActionButtonKey]="'stepper.back'"
-        [saveButtonKey]="'stepper.submit'"
-        [hasSecondaryAction]="true">
+      <app-stepper-footer [disableSave]="disableSave" (save)="onSubmitClicked()" (back)="onStepBack()"
+        [secondaryActionButtonIcon]="'keyboard_arrow_left'" [secondaryActionButtonKey]="'stepper.back'"
+        [saveButtonKey]="'stepper.submit'" [hasSecondaryAction]="true">
       </app-stepper-footer>
     </app-page>
   </mat-step>
