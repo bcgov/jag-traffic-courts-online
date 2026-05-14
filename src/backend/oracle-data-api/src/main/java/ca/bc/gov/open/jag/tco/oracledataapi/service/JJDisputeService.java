@@ -166,7 +166,12 @@ public class JJDisputeService {
 		jjDisputeToUpdate.getJjDisputedCounts().stream()
 	    	.filter(jjDisputedCount -> YesNo.UNKNOWN.equals(jjDisputedCount.getIncludesSurcharge()))
 	    	.forEach(jjDisputedCount -> jjDisputedCount.setIncludesSurcharge(null));
-		
+
+		// TCVP-3424: Set all UNKNOWN grantTimeToPay to null since database field does not allow more than 1 character
+		jjDisputeToUpdate.getJjDisputedCounts().stream()
+	     	.filter(jjDisputedCount -> YesNo.UNKNOWN.equals(jjDisputedCount.getGrantTimeToPay()))
+	     	.forEach(jjDisputedCount -> jjDisputedCount.setGrantTimeToPay(null));
+
 		// Remove all existing jj dispute court appearances that are associated to this jj dispute
 		if (jjDisputeToUpdate.getJjDisputeCourtAppearanceRoPs() != null) {
 			jjDisputeToUpdate.getJjDisputeCourtAppearanceRoPs().clear();
