@@ -629,13 +629,14 @@
                 </span>
                 }
 
-                <!-- STAFF AMENDMENT VALIDATION - Inline in Decision Validation -->
-                @if (type === tabTypes.DECISION_VALIDATION && hasAmendmentData()) {
+                <!-- STAFF AMENDMENT VALIDATION - Inline in Decision Validation and DCF (view-only) -->
+                @if ((type === tabTypes.DECISION_VALIDATION || type === tabTypes.DCF) && hasAmendmentData()) {
                 <span #amendmentValidation *appFeatureFlag="featureType.amendments" class="section-grid-cell amendment-validation-cell" style="grid-column: span 11;">
                   <app-staff-amendment-validation
                     [amendmentData]="amendmentData"
                     [isViewOnly]="isViewOnly"
-                    (validationStatusChange)="onAmendmentValidationChange($event)">
+                    [showAcknowledge]="type === tabTypes.DECISION_VALIDATION"
+                    (validationStatusChange)="onAmendmentValidationChange($event)">  
                   </app-staff-amendment-validation>
                 </span>
                 }
