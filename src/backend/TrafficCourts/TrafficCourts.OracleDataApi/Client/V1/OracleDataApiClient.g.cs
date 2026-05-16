@@ -6084,13 +6084,13 @@ namespace TrafficCourts.OracleDataApi.Client.V1
         [Newtonsoft.Json.JsonProperty("lesserOrGreaterAmount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public float? LesserOrGreaterAmount { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("includesSurcharge", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public JJDisputedCountIncludesSurcharge? IncludesSurcharge { get; set; }
-
         [Newtonsoft.Json.JsonProperty("grantTimeToPay", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public JJDisputedCountGrantTimeToPay? GrantTimeToPay { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("includesSurcharge", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public JJDisputedCountIncludesSurcharge? IncludesSurcharge { get; set; }
 
         [Newtonsoft.Json.JsonProperty("revisedDueDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? RevisedDueDate { get; set; }
@@ -6120,6 +6120,15 @@ namespace TrafficCourts.OracleDataApi.Client.V1
         /// </summary>
         [Newtonsoft.Json.JsonProperty("latestPleaUpdateTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? LatestPleaUpdateTs { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("decisionMadeBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string DecisionMadeBy { get; set; }
+
+        /// <summary>
+        /// The date of the JJ's decision.
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("decisionMadeDt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateOnly? DecisionMadeDt { get; set; }
 
         [Newtonsoft.Json.JsonProperty("jjDisputedCountRoP", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public JJDisputedCountRoP JjDisputedCountRoP { get; set; }
@@ -7493,7 +7502,7 @@ namespace TrafficCourts.OracleDataApi.Client.V1
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    internal enum JJDisputedCountIncludesSurcharge
+    internal enum JJDisputedCountGrantTimeToPay
     {
 
         [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
@@ -7508,7 +7517,7 @@ namespace TrafficCourts.OracleDataApi.Client.V1
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    internal enum JJDisputedCountGrantTimeToPay
+    internal enum JJDisputedCountIncludesSurcharge
     {
 
         [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
