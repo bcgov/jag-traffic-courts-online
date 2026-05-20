@@ -27,7 +27,6 @@
             @for (location of lookupsService.courthouseAgencies; track location.id) {
               <mat-option [value]="location.id">{{ location.name }}</mat-option>
             }
-            <mat-option [value]="courthouseLocationFilterAllValue">All Courthouses and Rooms</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field fxFlex="400px" appearance="outline" class="me-0">
@@ -41,6 +40,12 @@
     </div>
     <div class="col-auto" [hidden]="!appearanceRoomCodeFilter.value">
       <app-paging [currentPage]="currentPage" [totalPages]="totalPages" (pageChanged)="onPageChange($event)"></app-paging>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col" style="display:flex; flex-direction: row; justify-content: left; gap: 12px; margin-bottom: 16px;">
+      <mat-checkbox [formControl]="showAllScheduledHearingsFormControl">Show all scheduled hearings</mat-checkbox>
     </div>
   </div>
 </div>
