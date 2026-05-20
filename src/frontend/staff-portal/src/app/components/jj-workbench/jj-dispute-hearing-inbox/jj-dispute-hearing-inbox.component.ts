@@ -30,7 +30,9 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   }
   appearanceDateFilter = new FormControl(null);
   jjAssignedToFilter = new FormControl('');
-  courthouseLocationFilter = new FormControl({ value: '', disabled: true });
+  courthouseLocationFilterDefaultValue = ''; // Default and All values kept separate to allow for empty default with option to select all courthouses (prevents loading all courthouses on init)
+  courthouseLocationFilterAllValue = 'all';
+  courthouseLocationFilter = new FormControl({ value: this.courthouseLocationFilterDefaultValue, disabled: true });
   appearanceRoomCodeFilter = new FormControl('');
   jjList: UserRepresentation[];
   tcoDisputes: DisputeCaseFileSummary[] = [];
@@ -59,6 +61,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   hearingType = HearingType;
   yesNo = YesNo;
 
+
   constructor(
     private jjDisputeService: JJDisputeService,
     private authService: AuthService,
@@ -76,19 +79,19 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     this.appearanceDateFilter.valueChanges
       .subscribe(
         value => {
-          if (value) {
+          // if (value) {
             this.courthouseLocationFilter.enable({ emitEvent: false });
             this.appearanceRoomCodeFilter.setValue('', { emitEvent: false });
             this.dataSource.data = [];
             if (this.courthouseLocationFilter.value) {
               this.getTCODisputes(false); // re-fetch room codes for selected courthouse
             }
-          } else {
-            this.courthouseLocationFilter.setValue('', { emitEvent: false });
-            this.courthouseLocationFilter.disable({ emitEvent: false });
-            this.appearanceRoomCodeFilter.setValue('', { emitEvent: false });
-            this.dataSource.data = [];
-          }
+          // } else {
+          //   this.courthouseLocationFilter.setValue('', { emitEvent: false });
+          //   this.courthouseLocationFilter.disable({ emitEvent: false });
+          //   this.appearanceRoomCodeFilter.setValue('', { emitEvent: false });
+          //   this.dataSource.data = [];
+          // }
         }
       )
 
@@ -96,9 +99,16 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     this.courthouseLocationFilter.valueChanges
       .subscribe(
         value => {
-          // Reset room code when courthouse changes since rooms differ per courthouse
-          this.appearanceRoomCodeFilter.setValue('', { emitEvent: false });
-          this.dataSource.data = [];
+            if (value === this.courthouseLocationFilterAllValue) {
+                // when selecting AllCourthouses, reset and disable room code filter since rooms differ per courthouse and All Courthouses includes all rooms
+                this.appearanceRoomCodeFilter.setValue('', { emitEvent: false });
+                this.appearanceRoomCodeFilter.disable({ emitEvent: false });
+            } else {
+              // Re-enable room code and reset since rooms differ per courthouse
+              this.appearanceRoomCodeFilter.setValue('', { emitEvent: false });
+              this.dataSource.data = [];
+            }
+
           this.getTCODisputes(false); // fetch to repopulate room codes
         }
       )
@@ -151,6 +161,14 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
       pageSize: 25,
       fetchPendingAdjournments: true,
     };
+
+    // if All Courthouses is selected, remove courthouse and room filters to pull all rooms and courthouses since rooms differ per courthouse and All Courthouses includes all rooms
+    const isAllCourthousesSelected = params.appearanceCourthouseIds === this.courthouseLocationFilterAllValue;
+    if(isAllCourthousesSelected) {
+      delete params.appearanceCourthouseIds;
+      delete params.appearanceRoomCode
+    }
+
     this.jjDisputeService.getTCODisputes(params).subscribe((response) => {
       this.tcoDisputes = [];
       this.logger.log('JJDisputeHearingInboxComponent::getTCODisputes response');
@@ -161,7 +179,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
         this.currentPage = 0;
       }
       this.tcoDisputes = response.items;
-      if(bind)
+      if(bind || isAllCourthousesSelected)
       {
         this.dataSource.data = this.tcoDisputes;
       }

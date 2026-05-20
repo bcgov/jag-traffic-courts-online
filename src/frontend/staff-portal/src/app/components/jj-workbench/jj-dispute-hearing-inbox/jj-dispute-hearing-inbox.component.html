@@ -27,6 +27,7 @@
             @for (location of lookupsService.courthouseAgencies; track location.id) {
               <mat-option [value]="location.id">{{ location.name }}</mat-option>
             }
+            <mat-option [value]="courthouseLocationFilterAllValue">All Courthouses and Rooms</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field fxFlex="400px" appearance="outline" class="me-0">
