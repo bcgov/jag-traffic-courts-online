@@ -30,6 +30,10 @@ export interface NoticeOfDispute extends NoticeOfDisputeBase {
   lawyer_full_name?: string;
   __witness_present?: boolean;
   counts?: ViolationTicketCount[]; // for creating notice of dispute
+  /** Set to true when the user has explicitly enabled the Contact section checkbox. */
+  contact_section_enabled?: boolean;
+  /** Set to true when the user has explicitly enabled the Additional Information section checkbox. */
+  additional_section_enabled?: boolean;
 }
 export type NoticeOfDisputeKeys = keyof NoticeOfDispute;
 export type NoticeOfDisputeFormConfigs = {

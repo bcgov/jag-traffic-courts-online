@@ -6088,8 +6088,15 @@ namespace TrafficCourts.OracleDataApi.Client.V1
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public JJDisputedCountIncludesSurcharge? IncludesSurcharge { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("grantTimeToPay", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public JJDisputedCountGrantTimeToPay? GrantTimeToPay { get; set; }
+
         [Newtonsoft.Json.JsonProperty("revisedDueDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? RevisedDueDate { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("rsltAppearanceResultCd", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string RsltAppearanceResultCd { get; set; }
 
         [Newtonsoft.Json.JsonProperty("totalFineAmount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public float? TotalFineAmount { get; set; }
@@ -7487,6 +7494,21 @@ namespace TrafficCourts.OracleDataApi.Client.V1
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     internal enum JJDisputedCountIncludesSurcharge
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Y")]
+        Y = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"N")]
+        N = 2,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    internal enum JJDisputedCountGrantTimeToPay
     {
 
         [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]

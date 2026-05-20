@@ -54,7 +54,8 @@
         </div>
       }
 
-      <!-- Acknowledge Checkbox -->
+      <!-- Acknowledge Checkbox - only shown where acknowledgment is required (e.g. Decision Validation) -->
+      @if (showAcknowledge) {
       <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
         <mat-checkbox
           [checked]="isAcknowledged"
@@ -64,6 +65,7 @@
           Acknowledge
         </mat-checkbox>
       </div>
+      }
     </div>
   </div>
 }

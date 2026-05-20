@@ -364,7 +364,6 @@ public class DisputesController : ControllerBase
     /// <response code="400">The uuid doesn't appear to be a valid UUID.</response>
     /// <response code="404">The dispute was not found.</response>
     /// <response code="500">There was a internal server error.</response>
-    [Authorize]
     [HttpPut("/api/disputes/{guidHash}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -373,12 +372,6 @@ public class DisputesController : ControllerBase
     {
         try
         {
-            var userInfoResponse = await _mediator.Send(GetCurrentUserInfoRequest.Default, cancellationToken);
-            UserInfo? user = userInfoResponse.UserInfo;
-            if (user == null)
-            {
-                return BadRequest("Invalid User");
-            }
 
             if (!_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeGuid))
             {
@@ -404,9 +397,6 @@ public class DisputesController : ControllerBase
             {
                 return NotFound("Dispute not found");
             }
-
-            // Compare Contact Names to BC Services Card
-            if (!CompareNames(response.Message, user)) return BadRequest("Contact names do not match.");
 
             // Submit request to Workflow Service for processing.
             DisputeUpdateRequest request = _mapper.Map<DisputeUpdateRequest>(dispute);
@@ -452,7 +442,7 @@ public class DisputesController : ControllerBase
                     // can throw
                     Guid id = await _documentService.SaveFileAsync(fileMetadata.PendingFileStream!, fileMetadata.FileName, properties, cancellationToken);
 
-                    UploadDocumentRequest uploadDocumentRequest = new() { DocumentId= id, DocumentType = fileMetadata.DocumentType };
+                    UploadDocumentRequest uploadDocumentRequest = new() { DocumentId = id, DocumentType = fileMetadata.DocumentType, FileName = fileMetadata.FileName };
 
                     request.UploadedDocuments?.Add(uploadDocumentRequest);
                 }
@@ -567,7 +557,9 @@ public class DisputesController : ControllerBase
         }
 
         // TCVP-2499
-        if (!(searchResponse.IsEmailVerified is true)) {
+        // IsEmailVerified is null when no email address was provided (opted out of email communication) - allow update.
+        // IsEmailVerified is false when an email was provided but not yet verified - block update.
+        if (searchResponse.IsEmailVerified is false) {
             _logger.LogDebug("Dispute email address has not yet been verified - cannot update Dispute.");
             return BadRequest("Dispute email address must be verified before an update is permitted.");
         }

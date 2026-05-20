@@ -165,14 +165,10 @@ export class DisputeService {
     });
   }
 
-  goToUpdateDisputeContact(params: QueryParamsForSearch, preferEmail: boolean): void {
-    this.router.navigate([AppRoutes.disputePath(AppRoutes.UPDATE_DISPUTE_CONTACT)], {
-      queryParams: { ...params, preferEmail: preferEmail },
-    })
-  }
-
   goToUpdateDispute(params: QueryParamsForSearch): void {
-    this.store.dispatch(AuthStore.Actions.Authorize({ redirectUrl: this.getUpdateDisputeUrl(params) }));
+    this.router.navigate([AppRoutes.disputePath(AppRoutes.UPDATE_DISPUTE)], {
+      queryParams: { ...params },
+    })
   }
 
   private getUpdateDisputeUrl(params: QueryParamsForSearch): string {
@@ -194,4 +190,5 @@ export enum StatusStepType {
 
 export interface FileMetadata extends FileMetadataBase {
   __penfingFile?: Blob;
+  __section?: string;
 }

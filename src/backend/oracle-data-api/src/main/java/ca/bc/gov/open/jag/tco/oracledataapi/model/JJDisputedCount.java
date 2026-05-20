@@ -118,6 +118,15 @@ public class JJDisputedCount extends Auditable<String> {
 	private Float lesserOrGreaterAmount;
 
 	/**
+	 * JJ's decision whether to include Time To Pay
+	 */
+	@Column(nullable = true)
+	@Schema(nullable = true)
+	@Enumerated(EnumType.STRING)
+	private YesNo grantTimeToPay;
+
+
+	/**
 	 * JJ's decision whether to include surcharge in the calculated fine or not. Surcharge is always 15% of the original fine amount.
 	 */
 	@Column(nullable = true)
@@ -133,6 +142,13 @@ public class JJDisputedCount extends Auditable<String> {
 	@JsonSerialize(using = DateTimeSerializer.class)
 	@JsonDeserialize(using = DateTimeDeserializer.class)
 	private Date revisedDueDate;
+
+	/**
+	 * The appearance result code.
+	 */
+	@Column
+	@Schema(nullable = true)
+	private String rsltAppearanceResultCd;
 
 	/**
 	 * The final fine amount to be paid by the disputant.

@@ -1,6 +1,6 @@
-<div class="contact-info">
+<div class="contact-info" [ngClass]="{ 'uncontested': isUncontested, 'concluded': isConcluded }" [inert]="isUncontested || isConcluded">
   <!-- Count Information -->
-  <section class="section-sticky" [ngClass]="{'greyed-out': !jjDisputedCount}">
+  <section class="section-sticky">
     <ng-container subHeader>
       <span class="count-text">
         <h3>Count {{ count }} <span class="medium-note"><i>(source Ticket & ICBC)</i></span></h3>
@@ -29,7 +29,7 @@
   </section>
 
   <!-- Disputant Request -->
-  <section class="section-sticky" [ngClass]="{'greyed-out': !jjDisputedCount}">
+  <section class="section-sticky">
     <ng-container subHeader>
       <span class="count-text">
         <h3>Disputant Request <span class="medium-note"><i>(source Online Portal)</i></span></h3>
@@ -131,7 +131,7 @@
 
   <!-- JJ Latest Change Plea -->
   @if ((jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !(isSSEditMode && jjDisputedCount)) {
-    <section [formGroup]="form" [ngClass]="{'greyed-out': !jjDisputedCount}">
+    <section [formGroup]="form">
       <ng-container subHeader>
         <span class="count-text">
           <h3>{{ "label.jj_decision" | translate }} - Count {{ count }}</h3>
@@ -147,7 +147,9 @@
               <mat-select class="section-grid-text" formControlName="latestPlea"
                 style="width:75%; background:#fffee6">
                 <mat-option [value]="LatestPlea.G">Guilty</mat-option>
-                <mat-option [value]="LatestPlea.N">Not guilty</mat-option>
+                @if (jjDisputedCount?.appearInCourt) {
+                  <mat-option [value]="LatestPlea.N">Not guilty</mat-option>
+                }
               </mat-select>
             } @else {
               @if (jjDisputedCount?.latestPlea === LatestPlea.G) {
@@ -182,7 +184,7 @@
   }
 
   @if ((jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && (isSSEditMode && jjDisputedCount)) {
-    <section [ngClass]="{'greyed-out': !jjDisputedCount}">
+    <section>
       <form [formGroup]="countForm">
         <ng-container subHeader>
           <span class="count-text">
@@ -208,7 +210,7 @@
 
   <!-- JJ RoP for Court Appearance -->
   @if (type !== tabTypes.DECISION_VALIDATION && type !== tabTypes.DCF && (jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !isSSEditMode) {
-    <section [ngClass]="{'greyed-out': !jjDisputedCount}">
+    <section>
       <ng-container subHeader>
         <span class="count-text">
           <h3>{{ "label.findings" | translate }}</h3>
@@ -281,7 +283,7 @@
     </section>
   }
   @if ((type === tabTypes.DECISION_VALIDATION || type === tabTypes.DCF) && (jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && !isSSEditMode) {
-    <section [ngClass]="{'greyed-out': !jjDisputedCount}">
+    <section>
       <ng-container subHeader>
         <span class="count-text">
           <h3>{{ "label.findings" | translate }}</h3>
@@ -315,7 +317,7 @@
 
   <!-- Findings -->
   @if ((jjDisputeInfo.hearingType === HearingType.CourtAppearance || jjDisputeInfo.hearingType === HearingType.WrittenReasons) && isSSEditMode) {
-    <section [ngClass]="{'greyed-out': !jjDisputedCount}">
+    <section>
       <ng-container subHeader>
         <span class="count-text">
           <h3>{{ "label.findings" | translate }}</h3>
@@ -342,7 +344,7 @@
   }
 
   <!-- Final disposition -->
-  <section [ngClass]="{'greyed-out': !jjDisputedCount}">
+  <section>
     <ng-container subHeader>
       <span class="count-text">
         <h3>{{ "label.final_disposition" | translate }}</h3>
@@ -422,7 +424,7 @@
             </div>
             <div class="col-md-7">
               <mat-radio-group [(ngModel)]="timeToPay" [ngModelOptions]="{standalone: true}" layout="row"
-                (change)="updateRevisedDueDate($event)"
+                (change)="updateGrantTimeToPay($event.value)"
                 [disabled]="(!jjDisputedCount || this.form.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty)">
                 <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
                 <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
@@ -884,7 +886,7 @@
           @if (jjDisputeInfo.status == DisputeStatus.Confirmed || jjDisputeInfo.status == DisputeStatus.Review ||
             jjDisputeInfo.status == DisputeStatus.RequireCourtHearing || jjDisputeInfo.status == DisputeStatus.Concluded) {
             <span class="section-grid-text">
-              {{ jjDisputedCount?.revisedDueDate | date: "dd-MMM-yyyy" : "UTC" }}
+              {{ ((jjDisputedCount?.revisedDueDate ?? jjDisputedCount?.dueDate) | date: "dd-MMM-yyyy" : "UTC") }}
             </span>
           }
         </p>

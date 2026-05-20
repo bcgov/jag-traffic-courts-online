@@ -2024,6 +2024,9 @@ namespace TrafficCourts.OrdsDataService.Generated.TCO.Client.V1
         [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
         public System.DateTimeOffset FineDueDt { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("grantTimeToPayYn", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string GrantTimeToPayYn { get; set; }
+
         [Newtonsoft.Json.JsonProperty("includesSurchargeYn", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string IncludesSurchargeYn { get; set; }
 

@@ -118,7 +118,7 @@
             <p class="section-grid-text">{{ updateRequested.ContactGiven3Nm }}</p>
           </span>
         }
-        @if (updateRequested.ContactLawFirmNm && updateRequested.ContactType === ContactTypeCd.Lawyer && updateRequested.ContactLawFirmNm !== disputeInfo.contactLawFirmNm) {
+        @if (updateRequested.ContactLawFirmName !== null && updateRequested.ContactLawFirmName !== undefined && (updateRequested.ContactType === ContactTypeCd.Lawyer || updateRequested.ContactType === ContactTypeCd.Other) && updateRequested.ContactLawFirmName !== disputeInfo.contactLawFirmNm) {
           <span class="section-grid-cell">
             <p class="section-grid-header">Contact Law Firm Name</p>
           </span>
@@ -126,7 +126,7 @@
             <p class="section-grid-text" >{{ disputeInfo.contactLawFirmNm }}</p>
           </span>
           <span class="section-grid-cell">
-            <p class="section-grid-text">{{ updateRequested.ContactLawFirmNm }}</p>
+            <p class="section-grid-text">{{ updateRequested.ContactLawFirmName }}</p>
           </span>
         }
         <br />

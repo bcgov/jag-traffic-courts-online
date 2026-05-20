@@ -17,7 +17,6 @@ public class DisputeUpdateRequestConsumerTest
 {
     private readonly DisputeUpdateRequest _message;
     private readonly Dispute _dispute;
-    private TrafficCourts.Domain.Models.DisputeUpdateRequest _updateRequest;
     private readonly Mock<ILogger<DisputeUpdateRequestConsumer>> _mockLogger;
     private readonly Mock<IOracleDataApiService> _oracleDataApiService;
     private readonly Mock<ConsumeContext<DisputeUpdateRequest>> _context;
@@ -37,14 +36,14 @@ public class DisputeUpdateRequestConsumerTest
         {
             NoticeOfDisputeGuid = new System.Guid(_dispute.NoticeOfDisputeGuid),
         };
-        _updateRequest = new();
         _mockLogger = new();
         _mockMapper = new();
+        _mockMapper.Setup(_ => _.Map<DisputeUpdateRequest>(It.IsAny<Dispute>())).Returns(new DisputeUpdateRequest());
         _oracleDataApiService = new();
 #pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
         _oracleDataApiService.Setup(_ => _.GetDisputeByNoticeOfDisputeGuidAsync(_message.NoticeOfDisputeGuid, It.IsAny<CancellationToken>())).Returns(Task.FromResult(_dispute));
 #pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
-        _oracleDataApiService.Setup(_ => _.SaveDisputeUpdateRequestAsync(_message.NoticeOfDisputeGuid.ToString(), _updateRequest, It.IsAny<CancellationToken>())).Returns(Task.FromResult<long>(1));
+        _oracleDataApiService.Setup(_ => _.SaveDisputeUpdateRequestAsync(It.IsAny<string>(), It.IsAny<TrafficCourts.Domain.Models.DisputeUpdateRequest>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult<long>(1));
         _oracleDataApiService.Setup(_ => _.ResetDisputeEmailAsync(_dispute.DisputeId, It.IsAny<string>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(_dispute));
         _context = new();
         _context.Setup(_ => _.Message).Returns(_message);
@@ -68,6 +67,7 @@ public class DisputeUpdateRequestConsumerTest
     public async Task TestDisputeUpdateRequestConsumer_Email()
     {
         // Arrange
+        _message.ContactSectionEnabled = true;
         _message.EmailAddress = "new-email@somewhere.com";
 
         // Act
@@ -90,6 +90,7 @@ public class DisputeUpdateRequestConsumerTest
     public async Task TestDisputeUpdateRequestConsumer_Name(string? fname1, string? fname2, string? fname3, string lname, DisputeContactTypeCd contactType, string? contactLawFirmName)
     {
         // Arrange
+        _message.ContactSectionEnabled = true;
         _message.DisputantGivenName1 = fname1;
         _message.DisputantGivenName2 = fname2;
         _message.DisputantGivenName3 = fname3;
@@ -134,6 +135,7 @@ public class DisputeUpdateRequestConsumerTest
     public async Task TestDisputeUpdateRequestConsumer_Address(string? addr1, string? addr2, string? addr3, string? city, string? prov, string? postal, int? pid, int? pno, int? aid)
     {
         // Arrange
+        _message.ContactSectionEnabled = true;
         _message.AddressLine1 = addr1;
         _message.AddressLine2 = addr2;
         _message.AddressLine3 = addr3;
@@ -159,6 +161,7 @@ public class DisputeUpdateRequestConsumerTest
     public async Task TestDisputeUpdateRequestConsumer_Phone()
     {
         // Arrange
+        _message.ContactSectionEnabled = true;
         _message.HomePhoneNumber = "2505556666";
 
         // Act

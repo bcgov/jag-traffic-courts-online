@@ -237,6 +237,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		Date fineDueDt =  RandomUtil.randomDate();
 		Date violationDt =  RandomUtil.randomDate();
 		String adjustedAmt = "10.53";
+		YesNo grantTimeToPayYn = YesNo.Y;
 		YesNo includesSurchargeYn = YesNo.Y;
 		Date revisedDueDt =  RandomUtil.randomDate();
 		String totalFineAmt = "123.45";
@@ -285,6 +286,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		disputeCount.setFineDueDt(fineDueDt);
 		disputeCount.setViolationDt(violationDt);
 		disputeCount.setAdjustedAmt(adjustedAmt);
+		disputeCount.setGrantTimeToPayYn(grantTimeToPayYn.toString());
 		disputeCount.setIncludesSurchargeYn(includesSurchargeYn.toString());
 		disputeCount.setRevisedDueDt(revisedDueDt);
 		disputeCount.setTotalFineAmt(totalFineAmt);
@@ -334,6 +336,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(fineDueDt, jjDisputedCount.getDueDate());
 		assertEquals(violationDt, jjDisputedCount.getViolationDate());
 		assertEquals(Float.valueOf(adjustedAmt.toString()), jjDisputedCount.getLesserOrGreaterAmount());
+		assertEquals(grantTimeToPayYn, jjDisputedCount.getGrantTimeToPay());
 		assertEquals(includesSurchargeYn, jjDisputedCount.getIncludesSurcharge());
 		assertEquals(revisedDueDt, jjDisputedCount.getRevisedDueDate());
 		assertEquals(Float.valueOf(totalFineAmt.toString()), jjDisputedCount.getTotalFineAmount());

@@ -1,0 +1,635 @@
+meta {
+  name: Updates document metadata.
+  type: http
+  seq: 3
+  tags: [
+    Document
+  ]
+}
+
+put {
+  url: {{baseUrl}}/api/document
+  body: none
+  auth: inherit
+}
+
+params:query {
+  fileId: 
+}
+
+headers {
+  documentType: 
+  documentStatus: Filed
+  ~documentStatus: Pending
+  ~documentStatus: Resolved
+}
+
+example {
+  name: 200 Response
+  description: The metadata has been updated.
+  
+  request: {
+    url: {{baseUrl}}/api/document
+    method: PUT
+    mode: none
+    params:query: {
+      fileId: 
+    }
+  
+    headers: {
+      documentType: 
+      documentStatus: Filed
+      ~documentStatus: Pending
+      ~documentStatus: Resolved
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: The request was not well formed.
+  
+  request: {
+    url: {{baseUrl}}/api/document
+    method: PUT
+    mode: none
+    params:query: {
+      fileId: 
+    }
+  
+    headers: {
+      documentType: 
+      documentStatus: Filed
+      ~documentStatus: Pending
+      ~documentStatus: Resolved
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: The request was not well formed.
+  
+  request: {
+    url: {{baseUrl}}/api/document
+    method: PUT
+    mode: none
+    params:query: {
+      fileId: 
+    }
+  
+    headers: {
+      documentType: 
+      documentStatus: Filed
+      ~documentStatus: Pending
+      ~documentStatus: Resolved
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: The request was not well formed.
+  
+  request: {
+    url: {{baseUrl}}/api/document
+    method: PUT
+    mode: none
+    params:query: {
+      fileId: 
+    }
+  
+    headers: {
+      documentType: 
+      documentStatus: Filed
+      ~documentStatus: Pending
+      ~documentStatus: Resolved
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Unauthenticated.
+  
+  request: {
+    url: {{baseUrl}}/api/document
+    method: PUT
+    mode: none
+    params:query: {
+      fileId: 
+    }
+  
+    headers: {
+      documentType: 
+      documentStatus: Filed
+      ~documentStatus: Pending
+      ~documentStatus: Resolved
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Unauthenticated.
+  
+  request: {
+    url: {{baseUrl}}/api/document
+    method: PUT
+    mode: none
+    params:query: {
+      fileId: 
+    }
+  
+    headers: {
+      documentType: 
+      documentStatus: Filed
+      ~documentStatus: Pending
+      ~documentStatus: Resolved
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 401 Response
+  description: Unauthenticated.
+  
+  request: {
+    url: {{baseUrl}}/api/document
+    method: PUT
+    mode: none
+    params:query: {
+      fileId: 
+    }
+  
+    headers: {
+      documentType: 
+      documentStatus: Filed
+      ~documentStatus: Pending
+      ~documentStatus: Resolved
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 401
+      text: Unauthorized
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires jjdispute:update permission.
+  
+  request: {
+    url: {{baseUrl}}/api/document
+    method: PUT
+    mode: none
+    params:query: {
+      fileId: 
+    }
+  
+    headers: {
+      documentType: 
+      documentStatus: Filed
+      ~documentStatus: Pending
+      ~documentStatus: Resolved
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires jjdispute:update permission.
+  
+  request: {
+    url: {{baseUrl}}/api/document
+    method: PUT
+    mode: none
+    params:query: {
+      fileId: 
+    }
+  
+    headers: {
+      documentType: 
+      documentStatus: Filed
+      ~documentStatus: Pending
+      ~documentStatus: Resolved
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 403 Response
+  description: Forbidden, requires jjdispute:update permission.
+  
+  request: {
+    url: {{baseUrl}}/api/document
+    method: PUT
+    mode: none
+    params:query: {
+      fileId: 
+    }
+  
+    headers: {
+      documentType: 
+      documentStatus: Filed
+      ~documentStatus: Pending
+      ~documentStatus: Resolved
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 403
+      text: Forbidden
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  description: Not Found
+  
+  request: {
+    url: {{baseUrl}}/api/document
+    method: PUT
+    mode: none
+    params:query: {
+      fileId: 
+    }
+  
+    headers: {
+      documentType: 
+      documentStatus: Filed
+      ~documentStatus: Pending
+      ~documentStatus: Resolved
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  description: Not Found
+  
+  request: {
+    url: {{baseUrl}}/api/document
+    method: PUT
+    mode: none
+    params:query: {
+      fileId: 
+    }
+  
+    headers: {
+      documentType: 
+      documentStatus: Filed
+      ~documentStatus: Pending
+      ~documentStatus: Resolved
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  description: Not Found
+  
+  request: {
+    url: {{baseUrl}}/api/document
+    method: PUT
+    mode: none
+    params:query: {
+      fileId: 
+    }
+  
+    headers: {
+      documentType: 
+      documentStatus: Filed
+      ~documentStatus: Pending
+      ~documentStatus: Resolved
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 500 Response
+  description: There was a server error that prevented the update from completing successfully.
+  
+  request: {
+    url: {{baseUrl}}/api/document
+    method: PUT
+    mode: none
+    params:query: {
+      fileId: 
+    }
+  
+    headers: {
+      documentType: 
+      documentStatus: Filed
+      ~documentStatus: Pending
+      ~documentStatus: Resolved
+    }
+  }
+  
+  response: {
+    status: {
+      code: 500
+      text: Internal Server Error
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

@@ -43,10 +43,10 @@ import { TicketLandingComponent } from './components/ticket-landing/ticket-landi
 import { FindDisputeComponent } from '@components/find-dispute/find-dispute.component';
 import { UpdateDisputeLandingComponent } from '@components/update-dispute-landing/update-dispute-landing.component';
 import { DisputantFormComponent } from '@components/disputant-form/disputant-form.component';
-import { UpdateDisputeContactComponent } from '@components/update-dispute-contact/update-dispute-contact.component';
 import { AuthModule } from './auth/auth.module';
 import { CreateNoticeOfDisputeComponent } from '@components/create-notice-of-dispute/create-notice-of-dispute.component';
 import { UpdateDisputeComponent } from '@components/update-dispute/update-dispute.component';
+import { UpdateDisputeStepperComponent } from '@components/update-dispute-stepper/update-dispute-stepper.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -75,9 +75,9 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     FindDisputeComponent,
     UpdateDisputeLandingComponent,
     DisputantFormComponent,
-    UpdateDisputeContactComponent,
     CreateNoticeOfDisputeComponent,
     UpdateDisputeComponent,
+    UpdateDisputeStepperComponent,
   ],
   imports: [
     CommonModule,

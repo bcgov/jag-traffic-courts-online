@@ -573,6 +573,14 @@ public class DisputeService : IDisputeService,
 
         dispute.FileData = disputeFiles;
 
+        // Only show citizen-uploaded documents that have been accepted by staff
+        if (dispute.FileData is not null)
+        {
+            dispute.FileData = dispute.FileData
+                .Where(x => x.DocumentSource != Domain.Models.DocumentSource.Citizen || x.StaffReviewStatus == DisputeUpdateRequestStatus.ACCEPTED.ToString())
+                .ToList();
+        }
+
         // TCVP-2878 Filter files that are corrupt in COMS (missing attributes)
         if (dispute.FileData is not null)
         {

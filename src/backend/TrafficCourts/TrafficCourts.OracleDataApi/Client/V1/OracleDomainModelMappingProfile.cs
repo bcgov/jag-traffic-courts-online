@@ -78,6 +78,7 @@ public class OracleDomainModelMappingProfile : AutoMapper.Profile
         CreateMap<Oracle.JJDisputeCourtAppearanceRoPJjSeized, DomainModel.JJDisputeCourtAppearanceRoPJjSeized>().ConvertUsing<EnumTypeConverter>();
         CreateMap<Oracle.JJDisputedCountAppearInCourt, DomainModel.JJDisputedCountAppearInCourt>().ConvertUsing<EnumTypeConverter>();
         CreateMap<Oracle.JJDisputedCountIncludesSurcharge, DomainModel.JJDisputedCountIncludesSurcharge>().ConvertUsing<EnumTypeConverter>();
+        CreateMap<Oracle.JJDisputedCountGrantTimeToPay, DomainModel.JJDisputedCountGrantTimeToPay>().ConvertUsing<EnumTypeConverter>();
         CreateMap<Oracle.JJDisputedCountRequestReduction, DomainModel.JJDisputedCountRequestReduction>().ConvertUsing<EnumTypeConverter>();
         CreateMap<Oracle.JJDisputedCountRequestTimeToPay, DomainModel.JJDisputedCountRequestTimeToPay>().ConvertUsing<EnumTypeConverter>();
         CreateMap<Oracle.JJDisputedCountRoPAbatement, DomainModel.JJDisputedCountRoPAbatement>().ConvertUsing<EnumTypeConverter>();
@@ -201,6 +202,7 @@ internal class EnumTypeConverter :
     AutoMapper.ITypeConverter<Oracle.JJDisputeCourtAppearanceRoPJjSeized, DomainModel.JJDisputeCourtAppearanceRoPJjSeized>,
     AutoMapper.ITypeConverter<Oracle.JJDisputedCountAppearInCourt, DomainModel.JJDisputedCountAppearInCourt>,
     AutoMapper.ITypeConverter<Oracle.JJDisputedCountIncludesSurcharge, DomainModel.JJDisputedCountIncludesSurcharge>,
+    AutoMapper.ITypeConverter<Oracle.JJDisputedCountGrantTimeToPay, DomainModel.JJDisputedCountGrantTimeToPay>,
     AutoMapper.ITypeConverter<Oracle.JJDisputedCountRequestReduction, DomainModel.JJDisputedCountRequestReduction>,
     AutoMapper.ITypeConverter<Oracle.JJDisputedCountRequestTimeToPay, DomainModel.JJDisputedCountRequestTimeToPay>,
     AutoMapper.ITypeConverter<Oracle.JJDisputedCountRoPAbatement, DomainModel.JJDisputedCountRoPAbatement>,
@@ -266,6 +268,7 @@ internal class EnumTypeConverter :
     AutoMapper.ITypeConverter<DomainModel.JJDisputeCourtAppearanceRoPJjSeized, Oracle.JJDisputeCourtAppearanceRoPJjSeized>,
     AutoMapper.ITypeConverter<DomainModel.JJDisputedCountAppearInCourt, Oracle.JJDisputedCountAppearInCourt>,
     AutoMapper.ITypeConverter<DomainModel.JJDisputedCountIncludesSurcharge, Oracle.JJDisputedCountIncludesSurcharge>,
+    AutoMapper.ITypeConverter<DomainModel.JJDisputedCountGrantTimeToPay, Oracle.JJDisputedCountGrantTimeToPay>,
     AutoMapper.ITypeConverter<DomainModel.JJDisputedCountRequestReduction, Oracle.JJDisputedCountRequestReduction>,
     AutoMapper.ITypeConverter<DomainModel.JJDisputedCountRequestTimeToPay, Oracle.JJDisputedCountRequestTimeToPay>,
     AutoMapper.ITypeConverter<DomainModel.JJDisputedCountRoPAbatement, Oracle.JJDisputedCountRoPAbatement>,
@@ -1544,6 +1547,28 @@ internal class EnumTypeConverter :
             DomainModel.JJDisputedCountIncludesSurcharge.Y => Oracle.JJDisputedCountIncludesSurcharge.Y,
             DomainModel.JJDisputedCountIncludesSurcharge.N => Oracle.JJDisputedCountIncludesSurcharge.N,
             _ => Oracle.JJDisputedCountIncludesSurcharge.UNKNOWN
+        };
+    }
+
+    public DomainModel.JJDisputedCountGrantTimeToPay Convert(Oracle.JJDisputedCountGrantTimeToPay source, DomainModel.JJDisputedCountGrantTimeToPay destination, AutoMapper.ResolutionContext context)
+    {
+        return source switch
+        {
+            Oracle.JJDisputedCountGrantTimeToPay.UNKNOWN => DomainModel.JJDisputedCountGrantTimeToPay.UNKNOWN,
+            Oracle.JJDisputedCountGrantTimeToPay.Y => DomainModel.JJDisputedCountGrantTimeToPay.Y,
+            Oracle.JJDisputedCountGrantTimeToPay.N => DomainModel.JJDisputedCountGrantTimeToPay.N,
+            _ => DomainModel.JJDisputedCountGrantTimeToPay.UNKNOWN
+        };
+    }
+
+    public Oracle.JJDisputedCountGrantTimeToPay Convert(DomainModel.JJDisputedCountGrantTimeToPay source, Oracle.JJDisputedCountGrantTimeToPay destination, AutoMapper.ResolutionContext context)
+    {
+        return source switch
+        {
+            DomainModel.JJDisputedCountGrantTimeToPay.UNKNOWN => Oracle.JJDisputedCountGrantTimeToPay.UNKNOWN,
+            DomainModel.JJDisputedCountGrantTimeToPay.Y => Oracle.JJDisputedCountGrantTimeToPay.Y,
+            DomainModel.JJDisputedCountGrantTimeToPay.N => Oracle.JJDisputedCountGrantTimeToPay.N,
+            _ => Oracle.JJDisputedCountGrantTimeToPay.UNKNOWN
         };
     }
 

@@ -1,0 +1,43 @@
+meta {
+  name: jjDispute (raw muzzle call)
+  type: http
+  seq: 19
+}
+
+get {
+  url: http://muzzle.bcgov:8080/ords/devj/tcoords/tco/v1//jjDispute?ticketNumber=AC39985013
+  body: none
+  auth: none
+}
+
+params:query {
+  ticketNumber: AC39985013
+}
+
+example {
+  name: 200 Response
+  description: The queried record.
+  
+  request: {
+    url: {{v1_baseUrl}}/jjDispute
+    method: GET
+    mode: none
+    params:query: {
+      ~ticketNumber: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

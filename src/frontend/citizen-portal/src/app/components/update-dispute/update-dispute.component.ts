@@ -5,7 +5,7 @@ import { DisputeService, FileMetadata } from 'app/services/dispute.service';
 import { NoticeOfDispute } from 'app/services/notice-of-dispute.service';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
 import { DisputeStore } from 'app/store';
-import { BehaviorSubject, filter, map, Observable, take } from 'rxjs';
+import { BehaviorSubject, filter, Observable, take } from 'rxjs';
 
 @Component({
   selector: 'app-update-dispute',
@@ -29,28 +29,32 @@ export class UpdateDisputeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.disputeService.checkStoredDispute().pipe(filter(i => !!i), take(1)).subscribe(found => {
-      if (found) {
-        this.store.select(DisputeStore.Selectors.NoticeOfDispute).pipe(filter(i => !!i)).subscribe(noticeOfDispute => {
-          this.noticeOfDispute = noticeOfDispute;
-          this.ticketType = this.violationTicketService.getTicketType(this.noticeOfDispute);
-          this.isLoaded$.next(true);
-        })
-        this.fileData$ = this.store.select(DisputeStore.Selectors.FileData).pipe(
-          map(i => {
-            return i;
-          })
-        );
-        this.store.dispatch(DisputeStore.Actions.Get());
-      }
-    })
+    this.store.dispatch(DisputeStore.Actions.ClearFileData());
+    this.disputeService.checkStoredDispute().pipe(filter(i => !!i), take(1)).subscribe(() => {
+      this.store.select(DisputeStore.Selectors.Params).pipe(filter(i => !!i), take(1)).subscribe(params => {
+        this.noticeOfDispute = {
+          violation_ticket: { counts: [] },
+          dispute_counts: [],
+          ticket_number: params.ticketNumber
+        } as NoticeOfDispute;
+        this.ticketType = this.violationTicketService.getTicketType(this.noticeOfDispute);
+        this.isLoaded$.next(true);
+        this.fileData$ = this.store.select(DisputeStore.Selectors.FileData);
+      });
+    });
   }
 
   /**
    * @description
-   * Submit the dispute
+   * Submit the dispute — forward the payload as built by the stepper (which already handles
+   * section-gating and includes empty values for enabled sections to allow clearing).
    */
-  public submitDispute(noticeOfDispute): void {
-    this.store.dispatch(DisputeStore.Actions.Update({ payload: noticeOfDispute }));
+  public submitDispute(noticeOfDispute: NoticeOfDispute): void {
+    const payload: NoticeOfDispute = {};
+    Object.entries(noticeOfDispute).forEach(([key, val]) => {
+      if (key.startsWith('__') || key === 'violation_ticket') return;
+      payload[key] = val;
+    });
+    this.store.dispatch(DisputeStore.Actions.Update({ payload }));
   }
 }

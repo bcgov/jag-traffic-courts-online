@@ -626,6 +626,17 @@ public class EnumMappingTests : DomainModelMappingTest
         Assert.Equal(Oracle.JJDisputedCountIncludesSurcharge.N, _sut.Map<Oracle.JJDisputedCountIncludesSurcharge>(Domain.Models.JJDisputedCountIncludesSurcharge.N));
         #endregion JJDisputedCountIncludesSurcharge
 
+        #region JJDisputedCountGrantTimeToPay
+        // Oracle => Domain
+        Assert.Equal(Domain.Models.JJDisputedCountGrantTimeToPay.UNKNOWN, _sut.Map<Domain.Models.JJDisputedCountGrantTimeToPay>(Oracle.JJDisputedCountGrantTimeToPay.UNKNOWN));
+        Assert.Equal(Domain.Models.JJDisputedCountGrantTimeToPay.Y, _sut.Map<Domain.Models.JJDisputedCountGrantTimeToPay>(Oracle.JJDisputedCountGrantTimeToPay.Y));
+        Assert.Equal(Domain.Models.JJDisputedCountGrantTimeToPay.N, _sut.Map<Domain.Models.JJDisputedCountGrantTimeToPay>(Oracle.JJDisputedCountGrantTimeToPay.N));
+        // Domain => Oracle
+        Assert.Equal(Oracle.JJDisputedCountGrantTimeToPay.UNKNOWN, _sut.Map<Oracle.JJDisputedCountGrantTimeToPay>(Domain.Models.JJDisputedCountGrantTimeToPay.UNKNOWN));
+        Assert.Equal(Oracle.JJDisputedCountGrantTimeToPay.Y, _sut.Map<Oracle.JJDisputedCountGrantTimeToPay>(Domain.Models.JJDisputedCountGrantTimeToPay.Y));
+        Assert.Equal(Oracle.JJDisputedCountGrantTimeToPay.N, _sut.Map<Oracle.JJDisputedCountGrantTimeToPay>(Domain.Models.JJDisputedCountGrantTimeToPay.N));
+        #endregion JJDisputedCountGrantTimeToPay
+
         #region JJDisputedCountLatestPlea
         // Oracle => Domain
         Assert.Equal(Domain.Models.JJDisputedCountLatestPlea.UNKNOWN, _sut.Map<Domain.Models.JJDisputedCountLatestPlea>(Oracle.JJDisputedCountLatestPlea.UNKNOWN));

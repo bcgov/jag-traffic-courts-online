@@ -15,6 +15,7 @@ export interface IAppConfig {
   courthouseServicesOfBCVisitUsLink: string;
   bcServicesCardInfoLink: string;
   adjournmentFormLink: string;
+  writtenReasonsFormLink: string;
   features: {
     [name: string]: boolean;
   };
@@ -35,6 +36,7 @@ export class AppConfig implements IAppConfig {
   courthouseServicesOfBCVisitUsLink: string;
   bcServicesCardInfoLink: string;
   adjournmentFormLink: string;
+  writtenReasonsFormLink: string;
   features: {
     dispute: boolean;
   };
@@ -68,6 +70,8 @@ export class AppConfigService {
     'https://www2.gov.bc.ca/gov/content/governments/government-id/bcservicescardapp/download-app' as const;
   private ADJOURMENT_FORM_DEFAULT =
     'https://www2.gov.bc.ca/assets/gov/law-crime-and-justice/courthouse-services/court-files-records/court-forms/traffic/ptr818.pdf' as const;
+  private WRITTEN_REASONS_FORM_DEFAULT =
+    'https://www2.gov.bc.ca/assets/gov/law-crime-and-justice/courthouse-services/court-files-records/court-forms/traffic/ptr022.pdf' as const;
 
   constructor(
   ) {
@@ -140,6 +144,11 @@ export class AppConfigService {
   get adjournmentFormLink(): string {
     const link = this.appConfig?.adjournmentFormLink;
     return link ? link : this.ADJOURMENT_FORM_DEFAULT;
+  }
+
+  get writtenReasonsFormLink(): string {
+    const link = this.appConfig?.writtenReasonsFormLink;
+    return link ? link : this.WRITTEN_REASONS_FORM_DEFAULT;
   }
 
   get featureFlagDispute(): boolean {

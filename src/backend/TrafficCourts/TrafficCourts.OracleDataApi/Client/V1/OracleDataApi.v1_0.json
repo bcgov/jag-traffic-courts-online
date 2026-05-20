@@ -2342,9 +2342,18 @@
             "nullable": true,
             "enum": ["UNKNOWN", "Y", "N"]
           },
+          "grantTimeToPay": {
+            "type": "string",
+            "nullable": true,
+            "enum": ["UNKNOWN", "Y", "N"]
+          },
           "revisedDueDate": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          },
+          "rsltAppearanceResultCd": {
+            "type": "string",
             "nullable": true
           },
           "totalFineAmount": {

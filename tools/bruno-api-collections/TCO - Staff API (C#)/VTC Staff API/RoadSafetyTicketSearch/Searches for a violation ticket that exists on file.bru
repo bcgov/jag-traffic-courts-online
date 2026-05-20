@@ -1,0 +1,450 @@
+meta {
+  name: Searches for a violation ticket that exists on file.
+  type: http
+  seq: 1
+  tags: [
+    RoadSafetyTicketSearch
+  ]
+}
+
+get {
+  url: {{baseUrl}}/api/roadsafetyticketsearch
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ticketNumber: 
+  issuedTime: 
+}
+
+example {
+  name: 200 Response
+  description: The violation ticket was found.
+  
+  request: {
+    url: {{baseUrl}}/api/roadsafetyticketsearch
+    method: GET
+    mode: none
+    params:query: {
+      ticketNumber: 
+      issuedTime: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "number": "",
+          "issued": "",
+          "surname": "",
+          "firstGivenName": "",
+          "secondGivenName": "",
+          "counts": [
+            {
+              "number": 0,
+              "ticketedAmount": 0,
+              "amountDue": 0,
+              "discountAmount": 0,
+              "isAct": false,
+              "isRegulation": false,
+              "act": "",
+              "section": "",
+              "subsection": "",
+              "paragraph": "",
+              "subparagraph": "",
+              "description": "",
+              "formNumber": ""
+            }
+          ]
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 200 Response
+  description: The violation ticket was found.
+  
+  request: {
+    url: {{baseUrl}}/api/roadsafetyticketsearch
+    method: GET
+    mode: none
+    params:query: {
+      ticketNumber: 
+      issuedTime: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "number": "",
+          "issued": "",
+          "surname": "",
+          "firstGivenName": "",
+          "secondGivenName": "",
+          "counts": [
+            {
+              "number": 0,
+              "ticketedAmount": 0,
+              "amountDue": 0,
+              "discountAmount": 0,
+              "isAct": false,
+              "isRegulation": false,
+              "act": "",
+              "section": "",
+              "subsection": "",
+              "paragraph": "",
+              "subparagraph": "",
+              "description": "",
+              "formNumber": ""
+            }
+          ]
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 200 Response
+  description: The violation ticket was found.
+  
+  request: {
+    url: {{baseUrl}}/api/roadsafetyticketsearch
+    method: GET
+    mode: none
+    params:query: {
+      ticketNumber: 
+      issuedTime: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "number": "",
+          "issued": "",
+          "surname": "",
+          "firstGivenName": "",
+          "secondGivenName": "",
+          "counts": [
+            {
+              "number": 0,
+              "ticketedAmount": 0,
+              "amountDue": 0,
+              "discountAmount": 0,
+              "isAct": false,
+              "isRegulation": false,
+              "act": "",
+              "section": "",
+              "subsection": "",
+              "paragraph": "",
+              "subparagraph": "",
+              "description": "",
+              "formNumber": ""
+            }
+          ]
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: The request was not well formed. Check the parameters.
+  
+  request: {
+    url: {{baseUrl}}/api/roadsafetyticketsearch
+    method: GET
+    mode: none
+    params:query: {
+      ticketNumber: 
+      issuedTime: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: The request was not well formed. Check the parameters.
+  
+  request: {
+    url: {{baseUrl}}/api/roadsafetyticketsearch
+    method: GET
+    mode: none
+    params:query: {
+      ticketNumber: 
+      issuedTime: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: The request was not well formed. Check the parameters.
+  
+  request: {
+    url: {{baseUrl}}/api/roadsafetyticketsearch
+    method: GET
+    mode: none
+    params:query: {
+      ticketNumber: 
+      issuedTime: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  description: The violation ticket was not found.
+  
+  request: {
+    url: {{baseUrl}}/api/roadsafetyticketsearch
+    method: GET
+    mode: none
+    params:query: {
+      ticketNumber: 
+      issuedTime: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  description: The violation ticket was not found.
+  
+  request: {
+    url: {{baseUrl}}/api/roadsafetyticketsearch
+    method: GET
+    mode: none
+    params:query: {
+      ticketNumber: 
+      issuedTime: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 404 Response
+  description: The violation ticket was not found.
+  
+  request: {
+    url: {{baseUrl}}/api/roadsafetyticketsearch
+    method: GET
+    mode: none
+    params:query: {
+      ticketNumber: 
+      issuedTime: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 404
+      text: Not Found
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 500 Response
+  description: There was a server error that prevented the search from completing successfully.
+  
+  request: {
+    url: {{baseUrl}}/api/roadsafetyticketsearch
+    method: GET
+    mode: none
+    params:query: {
+      ticketNumber: 
+      issuedTime: 
+    }
+  }
+  
+  response: {
+    status: {
+      code: 500
+      text: Internal Server Error
+    }
+  
+    body: {
+      type: text
+      content: '''
+  
+      '''
+    }
+  }
+}

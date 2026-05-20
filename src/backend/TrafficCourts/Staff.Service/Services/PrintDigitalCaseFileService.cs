@@ -418,6 +418,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
                 offenseCount.TotalFineAmount = GetTotalFineAmount(disputedCount, dispute.Status);
                 offenseCount.IsDueDateRevised = IsDueDateRevised(disputedCount);
                 bool reviseDue = IsDueDateRevised(disputedCount) ?? false;
+                offenseCount.GrantTimeToPay = ToString(disputedCount.GrantTimeToPay);
                 offenseCount.RevisedDue = reviseDue ? new FormattedDateOnly(disputedCount.RevisedDueDate) : FormattedDateOnly.Empty;
                 offenseCount.FinalDue = GetFinalDueDate(disputedCount, dispute.Status);
                 offenseCount.Surcharge = offenseCount.RoundLesserOrGreaterAmount != null
@@ -767,6 +768,16 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     private string ToString(JJDisputedCountIncludesSurcharge? value)
     {
         if (value is not null && value != JJDisputedCountIncludesSurcharge.UNKNOWN)
+        {
+            return value.Value.ToString();
+        }
+
+        return string.Empty;
+    }
+
+    private string ToString(JJDisputedCountGrantTimeToPay? value)
+    {
+        if (value is not null && value != JJDisputedCountGrantTimeToPay.UNKNOWN)
         {
             return value.Value.ToString();
         }
