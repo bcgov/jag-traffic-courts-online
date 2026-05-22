@@ -21,6 +21,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlyDeserializer;
+import ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlySerializer;
 import ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeDeserializer;
 import ca.bc.gov.open.jag.tco.oracledataapi.config.DateTimeSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -189,6 +191,22 @@ public class JJDisputedCount extends Auditable<String> {
 	@JsonSerialize(using = DateTimeSerializer.class)
 	@JsonDeserialize(using = DateTimeDeserializer.class)
 	private Date latestPleaUpdateTs;
+
+	/**
+	 * The JJ responsible for the decision.
+	 */
+	@Column
+	@Schema(nullable = true)
+	private String decisionMadeBy;
+	
+	/**
+	 * The date of the JJ's decision.
+	 */
+	@Column
+	@Schema(description = "The date of the JJ's decision.", nullable = true)
+	@JsonSerialize(using = DateOnlySerializer.class)
+	@JsonDeserialize(using = DateOnlyDeserializer.class)
+	private Date decisionMadeDt;
 
 	@JsonBackReference(value = "jj_dispute_count_reference")
 	@ManyToOne(targetEntity = JJDispute.class, fetch = FetchType.LAZY)

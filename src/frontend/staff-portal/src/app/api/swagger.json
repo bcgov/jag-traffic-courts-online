@@ -3294,6 +3294,14 @@
             }
           },
           {
+            "name": "appearance_courtroom_code",
+            "in": "query",
+            "description": "The appearance court room code",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "to_be_heard_at_courthouse_ids",
             "in": "query",
             "description": "The comma separate list of agency ids",
@@ -8227,7 +8235,8 @@
           },
           "createdTs": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "modifiedBy": {
             "type": "string",
@@ -8237,6 +8246,13 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "nullable": true
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -8244,9 +8260,6 @@
       "JJDisputeCourtAppearanceRoP": {
         "type": "object",
         "properties": {
-          "amendments": {
-            "$ref": "#/components/schemas/JJDisputeCourtAppearanceAmendments"
-          },
           "justinAppearanceId": {
             "type": "string",
             "nullable": true
@@ -8308,6 +8321,9 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
+          },
+          "amendments": {
+            "$ref": "#/components/schemas/JJDisputeCourtAppearanceAmendments"
           },
           "additionalProperties": {
             "type": "object",
@@ -8531,15 +8547,19 @@
             "format": "float",
             "nullable": true
           },
-          "includesSurcharge": {
-            "$ref": "#/components/schemas/JJDisputedCountIncludesSurcharge"
-          },
           "grantTimeToPay": {
             "$ref": "#/components/schemas/JJDisputedCountGrantTimeToPay"
+          },
+          "includesSurcharge": {
+            "$ref": "#/components/schemas/JJDisputedCountIncludesSurcharge"
           },
           "revisedDueDate": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          },
+          "rsltAppearanceResultCd": {
+            "type": "string",
             "nullable": true
           },
           "totalFineAmount": {
@@ -8566,6 +8586,15 @@
             "format": "date-time",
             "nullable": true
           },
+          "decisionMadeBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "decisionMadeDt": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
           "jjDisputedCountRoP": {
             "$ref": "#/components/schemas/JJDisputedCountRoP"
           },
@@ -8587,7 +8616,7 @@
         ],
         "type": "string"
       },
-      "JJDisputedCountIncludesSurcharge": {
+      "JJDisputedCountGrantTimeToPay": {
         "enum": [
           "UNKNOWN",
           "Y",
@@ -8595,7 +8624,7 @@
         ],
         "type": "string"
       },
-      "JJDisputedCountGrantTimeToPay": {
+      "JJDisputedCountIncludesSurcharge": {
         "enum": [
           "UNKNOWN",
           "Y",

@@ -655,6 +655,13 @@ components:
           type: string
         courtAppearanceId:
           type: string
+        decisionMadeBy:
+          type: string
+          format: nullable
+        decisionMadeDt:
+          type: string
+          format: date
+          x-field-extra-annotation: "@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlySerializer.class) @com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = ca.bc.gov.open.jag.tco.oracledataapi.config.DateOnlyDeserializer.class)"
         dismissedForWantProsecYn:
           type: string
         dismissedYn:

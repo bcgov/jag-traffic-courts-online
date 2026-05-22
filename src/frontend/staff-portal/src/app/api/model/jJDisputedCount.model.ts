@@ -10,10 +10,10 @@
 import { JJDisputedCountAppearInCourt } from './jJDisputedCountAppearInCourt.model';
 import { JJDisputedCountPlea } from './jJDisputedCountPlea.model';
 import { JJDisputedCountLatestPlea } from './jJDisputedCountLatestPlea.model';
+import { JJDisputedCountGrantTimeToPay } from './jJDisputedCountGrantTimeToPay.model';
 import { JJDisputedCountRequestReduction } from './jJDisputedCountRequestReduction.model';
 import { JJDisputedCountRequestTimeToPay } from './jJDisputedCountRequestTimeToPay.model';
 import { JJDisputedCountIncludesSurcharge } from './jJDisputedCountIncludesSurcharge.model';
-import { JJDisputedCountGrantTimeToPay } from './jJDisputedCountGrantTimeToPay.model';
 import { JJDisputedCountRoP } from './jJDisputedCountRoP.model';
 
 
@@ -32,8 +32,8 @@ export interface JJDisputedCount {
     dueDate?: string | null;
     ticketedFineAmount?: number | null;
     lesserOrGreaterAmount?: number | null;
-    includesSurcharge?: JJDisputedCountIncludesSurcharge;
     grantTimeToPay?: JJDisputedCountGrantTimeToPay;
+    includesSurcharge?: JJDisputedCountIncludesSurcharge;
     revisedDueDate?: string | null;
     rsltAppearanceResultCd?: string | null;
     totalFineAmount?: number | null;
@@ -41,6 +41,8 @@ export interface JJDisputedCount {
     comments?: string | null;
     latestPlea?: JJDisputedCountLatestPlea;
     latestPleaUpdateTs?: string | null;
+    decisionMadeBy?: string | null;
+    decisionMadeDt?: string | null;
     jjDisputedCountRoP?: JJDisputedCountRoP;
     additionalProperties?: { [key: string]: any | null; } | null;
 }

@@ -171,6 +171,8 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "appearanceChargeCountId", target = "jjDisputedCountRoP.id")
 	@Mapping(source = "commentsTxt", target = "comments")
 	@Mapping(source = "countNo", target = "count")
+	@Mapping(source = "decisionMadeBy", target = "decisionMadeBy")
+	@Mapping(source = "decisionMadeDt", target = "decisionMadeDt")
 	@Mapping(source = "dismissedForWantProsecYn", target = "jjDisputedCountRoP.forWantOfProsecution")
 	@Mapping(source = "dismissedYn", target = "jjDisputedCountRoP.dismissed")
 	@Mapping(source = "disputeCountId", target = "id")
