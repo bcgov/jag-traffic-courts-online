@@ -430,8 +430,10 @@ public partial class JJDisputeService : IJJDisputeService
     {
         ArgumentNullException.ThrowIfNull(timeZone);
 
+        // TCVP-3500 - changed Accept from using the assignedto part id (which won't necessarily be the decision maker...) to use the last decision made by user instead
         // Get the assigned JJ's PartId from Keycloak
-        string partId = await GetDisputeAssignToPartIdAsync(ticketNumber, cancellationToken);
+        //string partId = await GetDisputeAssignToPartIdAsync(ticketNumber, cancellationToken);
+        string partId = await GetDisputeDecisionMadeByPartIdAsync(ticketNumber, cancellationToken);
 
         JJDispute dispute = await _oracleDataApi.AcceptJJDisputeAsync(ticketNumber, checkVTC, partId, cancellationToken);
         dispute.UtcToLocalTime(timeZone);
@@ -500,6 +502,13 @@ public partial class JJDisputeService : IJJDisputeService
         // do not use any date fields in this usage
 
         string? assignedTo = jjDispute.JjAssignedTo;
+        string? partId = await GetKeycloakPartIdAsync(ticketNumber, assignedTo, cancellationToken);
+
+        return partId;
+    }
+
+    private async Task<string?> GetKeycloakPartIdAsync(string ticketNumber, string assignedTo, CancellationToken cancellationToken)
+    {
 
         if (string.IsNullOrEmpty(assignedTo))
         {
@@ -580,6 +589,23 @@ public partial class JJDisputeService : IJJDisputeService
         }
 
         return displayName;
+    }
+
+    /// <summary>
+    /// Attempts to retrieve a PartId from Keycloak via the JJDispute's decisionMadeBy IDIR field
+    /// </summary>
+    /// <param name="ticketNumber">JJDispute to retrieve (to reference decisionMadeBy)</param>
+    /// <param name="cancellationToken">pass through param</param>
+    /// <exception cref="DisputeNotAssignedException">The dispute is not assigned</exception>
+    /// <returns></returns>
+    internal async Task<string> GetDisputeDecisionMadeByPartIdAsync(string ticketNumber, CancellationToken cancellationToken)
+    {
+        JJDispute jjDispute = await _oracleDataApi.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
+
+        string? decisionMadeBy = jjDispute.DecisionMadeBy;
+        string? partId = await GetKeycloakPartIdAsync(ticketNumber, decisionMadeBy, cancellationToken);
+
+        return partId;
     }
 
     private void AddUnique(List<TrafficCourts.Domain.Models.FileMetadata> target, List<TrafficCourts.Domain.Models.FileMetadata> files)
