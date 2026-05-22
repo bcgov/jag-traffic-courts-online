@@ -904,5 +904,28 @@
         </p>
       </span>
     </div>
+
+    @if (jjDisputedCount?.decisionMadeBy || jjDisputedCount?.decisionMadeDt) {
+      <div style="display: grid; grid-template-columns: 49% 49%">
+        <span class="section-jj-grid-cell text-center">
+          <p>
+            <span class="section-grid-header">Signed By</span>
+            <br />
+              <span class="section-grid-text">
+                {{ jjDisputedCount?.decisionMadeBy }}
+              </span>
+          </p>
+        </span>
+        <span class="section-grid-cell text-center">
+          <p>
+            <span class="section-grid-header">Date Signed</span>
+            <br />
+              <span class="section-grid-text">
+                {{ (jjDisputedCount?.decisionMadeDt | date: "dd-MMM-yyyy") }}
+              </span>
+          </p>
+        </span>
+      </div>
+    }
   </section>
 </div>

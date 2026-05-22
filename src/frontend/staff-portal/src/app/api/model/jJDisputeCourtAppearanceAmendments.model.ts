@@ -22,8 +22,9 @@ export interface JJDisputeCourtAppearanceAmendments {
     count3ActSectDescTxt?: string | null;
     count3OtherTxt?: string | null;
     createdBy?: string | null;
-    createdTs?: string;
+    createdTs?: string | null;
     modifiedBy?: string | null;
     modifiedTs?: string | null;
+    additionalProperties?: { [key: string]: any | null; } | null;
 }
 

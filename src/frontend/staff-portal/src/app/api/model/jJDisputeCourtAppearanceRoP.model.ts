@@ -15,7 +15,6 @@ import { JJDisputeCourtAppearanceAmendments } from './jJDisputeCourtAppearanceAm
 
 
 export interface JJDisputeCourtAppearanceRoP { 
-    amendments?: JJDisputeCourtAppearanceAmendments;
     justinAppearanceId?: string | null;
     id?: number | null;
     appearanceTs?: string | null;
@@ -31,6 +30,7 @@ export interface JJDisputeCourtAppearanceRoP {
     jjSeized?: JJDisputeCourtAppearanceRoPJjSeized;
     adjudicator?: string | null;
     comments?: string | null;
+    amendments?: JJDisputeCourtAppearanceAmendments;
     additionalProperties?: { [key: string]: any | null; } | null;
 }
 export namespace JJDisputeCourtAppearanceRoP {
