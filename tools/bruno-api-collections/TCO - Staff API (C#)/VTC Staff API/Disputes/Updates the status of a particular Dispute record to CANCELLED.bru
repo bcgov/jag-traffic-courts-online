@@ -1,14 +1,14 @@
 meta {
-  name: Updates the status of a particular Dispute record to REJECTED.
+  name: Updates the status of a particular Dispute record to CANCELLED.
   type: http
-  seq: 5
+  seq: 8
   tags: [
     Dispute
   ]
 }
 
 put {
-  url: {{baseUrl}}/api/dispute/:disputeId/reject
+  url: {{baseUrl}}/api/dispute/:disputeId/cancel
   body: multipartForm
   auth: inherit
 }
@@ -18,7 +18,7 @@ params:path {
 }
 
 body:multipart-form {
-  rejectedReason: 
+  cancelledReason: 
 }
 
 example {
@@ -26,7 +26,7 @@ example {
   description: The Dispute is updated.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/reject
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
     method: PUT
     mode: multipartForm
     params:path: {
@@ -34,7 +34,7 @@ example {
     }
   
     body:multipart-form: {
-      rejectedReason: 
+      cancelledReason: 
     }
   }
   
@@ -58,7 +58,7 @@ example {
   description: The request was not well formed. Check the parameters.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/reject
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
     method: PUT
     mode: multipartForm
     params:path: {
@@ -66,7 +66,7 @@ example {
     }
   
     body:multipart-form: {
-      rejectedReason: 
+      cancelledReason: 
     }
   }
   
@@ -100,7 +100,7 @@ example {
   description: The request was not well formed. Check the parameters.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/reject
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
     method: PUT
     mode: multipartForm
     params:path: {
@@ -108,7 +108,7 @@ example {
     }
   
     body:multipart-form: {
-      rejectedReason: 
+      cancelledReason: 
     }
   }
   
@@ -142,7 +142,7 @@ example {
   description: The request was not well formed. Check the parameters.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/reject
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
     method: PUT
     mode: multipartForm
     params:path: {
@@ -150,7 +150,7 @@ example {
     }
   
     body:multipart-form: {
-      rejectedReason: 
+      cancelledReason: 
     }
   }
   
@@ -184,7 +184,7 @@ example {
   description: Request lacks valid authentication credentials.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/reject
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
     method: PUT
     mode: multipartForm
     params:path: {
@@ -192,7 +192,7 @@ example {
     }
   
     body:multipart-form: {
-      rejectedReason: 
+      cancelledReason: 
     }
   }
   
@@ -226,7 +226,7 @@ example {
   description: Request lacks valid authentication credentials.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/reject
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
     method: PUT
     mode: multipartForm
     params:path: {
@@ -234,7 +234,7 @@ example {
     }
   
     body:multipart-form: {
-      rejectedReason: 
+      cancelledReason: 
     }
   }
   
@@ -268,7 +268,7 @@ example {
   description: Request lacks valid authentication credentials.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/reject
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
     method: PUT
     mode: multipartForm
     params:path: {
@@ -276,7 +276,7 @@ example {
     }
   
     body:multipart-form: {
-      rejectedReason: 
+      cancelledReason: 
     }
   }
   
@@ -307,10 +307,10 @@ example {
 
 example {
   name: 403 Response
-  description: Forbidden, requires dispute:reject permission.
+  description: Forbidden, requires dispute:cancel permission.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/reject
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
     method: PUT
     mode: multipartForm
     params:path: {
@@ -318,7 +318,7 @@ example {
     }
   
     body:multipart-form: {
-      rejectedReason: 
+      cancelledReason: 
     }
   }
   
@@ -349,10 +349,10 @@ example {
 
 example {
   name: 403 Response
-  description: Forbidden, requires dispute:reject permission.
+  description: Forbidden, requires dispute:cancel permission.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/reject
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
     method: PUT
     mode: multipartForm
     params:path: {
@@ -360,7 +360,7 @@ example {
     }
   
     body:multipart-form: {
-      rejectedReason: 
+      cancelledReason: 
     }
   }
   
@@ -391,10 +391,10 @@ example {
 
 example {
   name: 403 Response
-  description: Forbidden, requires dispute:reject permission.
+  description: Forbidden, requires dispute:cancel permission.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/reject
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
     method: PUT
     mode: multipartForm
     params:path: {
@@ -402,7 +402,7 @@ example {
     }
   
     body:multipart-form: {
-      rejectedReason: 
+      cancelledReason: 
     }
   }
   
@@ -436,7 +436,7 @@ example {
   description: Dispute record not found. Update failed.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/reject
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
     method: PUT
     mode: multipartForm
     params:path: {
@@ -444,7 +444,7 @@ example {
     }
   
     body:multipart-form: {
-      rejectedReason: 
+      cancelledReason: 
     }
   }
   
@@ -478,7 +478,7 @@ example {
   description: Dispute record not found. Update failed.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/reject
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
     method: PUT
     mode: multipartForm
     params:path: {
@@ -486,7 +486,7 @@ example {
     }
   
     body:multipart-form: {
-      rejectedReason: 
+      cancelledReason: 
     }
   }
   
@@ -520,7 +520,7 @@ example {
   description: Dispute record not found. Update failed.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/reject
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
     method: PUT
     mode: multipartForm
     params:path: {
@@ -528,7 +528,7 @@ example {
     }
   
     body:multipart-form: {
-      rejectedReason: 
+      cancelledReason: 
     }
   }
   
@@ -559,10 +559,10 @@ example {
 
 example {
   name: 405 Response
-  description: A Dispute status can only be set to REJECTED iff status is NEW, VALIDATED or PROCESSING and the rejected reason must be <= 4000 characters. Update failed.
+  description: A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING.Update failed.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/reject
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
     method: PUT
     mode: multipartForm
     params:path: {
@@ -570,7 +570,7 @@ example {
     }
   
     body:multipart-form: {
-      rejectedReason: 
+      cancelledReason: 
     }
   }
   
@@ -601,10 +601,10 @@ example {
 
 example {
   name: 405 Response
-  description: A Dispute status can only be set to REJECTED iff status is NEW, VALIDATED or PROCESSING and the rejected reason must be <= 4000 characters. Update failed.
+  description: A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING.Update failed.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/reject
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
     method: PUT
     mode: multipartForm
     params:path: {
@@ -612,7 +612,7 @@ example {
     }
   
     body:multipart-form: {
-      rejectedReason: 
+      cancelledReason: 
     }
   }
   
@@ -643,10 +643,10 @@ example {
 
 example {
   name: 405 Response
-  description: A Dispute status can only be set to REJECTED iff status is NEW, VALIDATED or PROCESSING and the rejected reason must be <= 4000 characters. Update failed.
+  description: A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING.Update failed.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/reject
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
     method: PUT
     mode: multipartForm
     params:path: {
@@ -654,7 +654,7 @@ example {
     }
   
     body:multipart-form: {
-      rejectedReason: 
+      cancelledReason: 
     }
   }
   
@@ -688,7 +688,7 @@ example {
   description: The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/reject
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
     method: PUT
     mode: multipartForm
     params:path: {
@@ -696,7 +696,7 @@ example {
     }
   
     body:multipart-form: {
-      rejectedReason: 
+      cancelledReason: 
     }
   }
   
@@ -730,7 +730,7 @@ example {
   description: The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/reject
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
     method: PUT
     mode: multipartForm
     params:path: {
@@ -738,7 +738,7 @@ example {
     }
   
     body:multipart-form: {
-      rejectedReason: 
+      cancelledReason: 
     }
   }
   
@@ -772,7 +772,7 @@ example {
   description: The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/reject
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
     method: PUT
     mode: multipartForm
     params:path: {
@@ -780,7 +780,7 @@ example {
     }
   
     body:multipart-form: {
-      rejectedReason: 
+      cancelledReason: 
     }
   }
   
@@ -814,7 +814,7 @@ example {
   description: There was a server error that prevented the update from completing successfully.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/reject
+    url: {{baseUrl}}/api/dispute/:disputeId/cancel
     method: PUT
     mode: multipartForm
     params:path: {
@@ -822,7 +822,7 @@ example {
     }
   
     body:multipart-form: {
-      rejectedReason: 
+      cancelledReason: 
     }
   }
   
