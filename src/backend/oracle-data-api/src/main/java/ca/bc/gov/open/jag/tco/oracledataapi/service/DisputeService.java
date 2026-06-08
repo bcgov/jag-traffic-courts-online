@@ -174,14 +174,11 @@ public class DisputeService {
 					disputeRepository.deleteViolationTicketCountById(existingVtc.getViolationTicketCountId());
 				}
 			}
-			// Rebuild the update list to only include counts still present in the request (matched by countNo)
-			List<ViolationTicketCount> retainedCounts = new ArrayList<>();
-			for (ViolationTicketCount existingVtc : violationTicketCountsToUpdate) {
-				if (incomingCountNos.contains(existingVtc.getCountNo())) {
-					retainedCounts.add(existingVtc);
-				}
-			}
-			violationTicketCountsToUpdate = retainedCounts;
+			// Remove deleted counts from the collection in place.
+			// Do NOT replace the collection reference — replacing the reference on a JPA-managed entity
+			// with orphanRemoval=true causes Hibernate to schedule DELETE + INSERT for unchanged entities,
+			// resulting in unique constraint violations (the H2/JPA test path).
+			violationTicketCountsToUpdate.removeIf(vtc -> !incomingCountNos.contains(vtc.getCountNo()));
 		}
 
 		// Copy dispute count fields from request into DB objects, matched by countNo
