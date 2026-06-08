@@ -158,38 +158,62 @@ public class DisputeService {
 		// TCVP-2748 Replace null province values with NA if specific province IDs are null since db check constraints expect values if IDs are null for provinces
 		replaceProvinceValuesWithNA(disputeToUpdate);
 		
-		// Copy all new dispute counts data to be saved from the request to disputeCountsToUpdate ignoring the disputeCountId, creation audit fields
-		if (dispute.getDisputeCounts() != null && disputeCountsToUpdate != null) {
-			if (dispute.getDisputeCounts().size() == disputeCountsToUpdate.size()) {
-				for (int i = 0; i < dispute.getDisputeCounts().size(); i++) {
-					BeanUtils.copyProperties(dispute.getDisputeCounts().get(i), disputeCountsToUpdate.get(i), "createdBy", "createdTs", "disputeCountId");
-				}
-			} else {
-				logger.warn("Unexpected number of disputeCounts: {}" +
-						" received from the request whereas updatable number of disputeCounts from database is: {}" +
-						". This should not happen with current dispute update use case unless something has been changed",
-						StructuredArguments.value("disputeCounts", dispute.getDisputeCounts().size()),
-						StructuredArguments.value("disputeCountsFromDatabase", dispute.getDisputeCounts().size()));
-				// TODO - determine what to do if the disputeCount list sizes don't match
+		// Delete any ViolationTicketCounts (and their corresponding DisputeCounts) that were removed by staff.
+		// These are counts present in the DB but absent from the incoming request (matched by countNo).
+		if (violationTicketCountsToUpdate != null && dispute.getViolationTicket() != null
+				&& dispute.getViolationTicket().getViolationTicketCounts() != null) {
+			List<Integer> incomingCountNos = new ArrayList<>();
+			for (ViolationTicketCount vtc : dispute.getViolationTicket().getViolationTicketCounts()) {
+				incomingCountNos.add(vtc.getCountNo());
 			}
+			for (ViolationTicketCount existingVtc : violationTicketCountsToUpdate) {
+				if (!incomingCountNos.contains(existingVtc.getCountNo())) {
+					logger.debug("Deleting ViolationTicketCount with countNo {} and id {} as it was removed from the dispute",
+							StructuredArguments.value("countNo", existingVtc.getCountNo()),
+							StructuredArguments.value("violationTicketCountId", existingVtc.getViolationTicketCountId()));
+					disputeRepository.deleteViolationTicketCountById(existingVtc.getViolationTicketCountId());
+				}
+			}
+			// Rebuild the update list to only include counts still present in the request (matched by countNo)
+			List<ViolationTicketCount> retainedCounts = new ArrayList<>();
+			for (ViolationTicketCount existingVtc : violationTicketCountsToUpdate) {
+				if (incomingCountNos.contains(existingVtc.getCountNo())) {
+					retainedCounts.add(existingVtc);
+				}
+			}
+			violationTicketCountsToUpdate = retainedCounts;
+		}
+
+		// Copy dispute count fields from request into DB objects, matched by countNo
+		if (dispute.getDisputeCounts() != null && disputeCountsToUpdate != null) {
+			for (DisputeCount incomingDc : dispute.getDisputeCounts()) {
+				for (DisputeCount dbDc : disputeCountsToUpdate) {
+					if (incomingDc.getCountNo() == dbDc.getCountNo()) {
+						BeanUtils.copyProperties(incomingDc, dbDc, "createdBy", "createdTs", "disputeCountId");
+						break;
+					}
+				}
+			}
+			// Remove DB dispute counts for deleted counts
+			List<Integer> incomingDcCountNos = new ArrayList<>();
+			for (DisputeCount dc : dispute.getDisputeCounts()) {
+				incomingDcCountNos.add(dc.getCountNo());
+			}
+			disputeCountsToUpdate.removeIf(dc -> !incomingDcCountNos.contains(dc.getCountNo()));
 		}
 
 		if (dispute.getViolationTicket() != null) {
 			BeanUtils.copyProperties(dispute.getViolationTicket(), violationTicketToUpdate, "createdBy", "createdTs", "violationTicketId", "violationTicketCounts");
 
+			// Copy violation ticket count fields from request into DB objects, matched by countNo
 			if (dispute.getViolationTicket().getViolationTicketCounts() != null && violationTicketCountsToUpdate != null) {
-				int violationTicketCountSize = dispute.getViolationTicket().getViolationTicketCounts().size();
-				if (violationTicketCountSize == violationTicketCountsToUpdate.size()) {
-					for (int i = 0; i < violationTicketCountSize; i++) {
-						BeanUtils.copyProperties(dispute.getViolationTicket().getViolationTicketCounts().get(i), violationTicketCountsToUpdate.get(i), "createdBy", "createdTs", "violationTicketCountId");
+				for (ViolationTicketCount incomingVtc : dispute.getViolationTicket().getViolationTicketCounts()) {
+					for (ViolationTicketCount dbVtc : violationTicketCountsToUpdate) {
+						if (incomingVtc.getCountNo() == dbVtc.getCountNo()) {
+							BeanUtils.copyProperties(incomingVtc, dbVtc, "createdBy", "createdTs", "violationTicketCountId");
+							break;
+						}
 					}
-				} else {
-					logger.warn("Unexpected number of violationTicketCounts: " +
-							" received from the request whereas updatable number of violationTicketCounts from database is: " +
-							". This should not happen with current dispute update use case unless something has been changed",
-							StructuredArguments.value("violationTicketCounts", violationTicketCountSize),
-							StructuredArguments.value("violationTicketCountsFromDatabase", violationTicketCountsToUpdate.size()));
-					// TODO - determine what to do if the violationTicketCount list sizes don't match
 				}
 			}
 		}
