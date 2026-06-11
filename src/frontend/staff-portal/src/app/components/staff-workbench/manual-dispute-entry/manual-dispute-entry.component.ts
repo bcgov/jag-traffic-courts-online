@@ -213,7 +213,6 @@ export class ManualDisputeEntryComponent implements OnInit {
       timeToPayReason: [null]
     });
   }
-  
   private initializeLegalRepresentationForm() {
     this.legalRepresentationForm = this.formBuilder.group({
       lawFirmName: [null],
@@ -1351,15 +1350,29 @@ export class ManualDisputeEntryComponent implements OnInit {
     return this.disputeCounts.map((count, index) => {
       const countFormData = this.disputeInfoForm.get(`count${count.countNo}`).value;
       
-      // Skipped counts don't set up actions properly because of how the form is structured, so we need to handle skipped counts here to ensure they are treated as guilty pleas with no action
+      // Determine pleaCode based on skip status and request flags
+      // This logic matches the citizen portal dispute-stepper.component.ts
+      let pleaCode: any;
       const isSkipped = countFormData.__skip;
+      
+      if (isSkipped) {
+        // Skipped counts are treated as guilty plea with no action
+        pleaCode = this.Plea.G;
+      } else if (countFormData.requestTimeToPay === this.RequestTimeToPay.Y || 
+                 countFormData.requestReduction === this.RequestReduction.Y) {
+        // Guilty plea with time to pay or reduction request
+        pleaCode = this.Plea.G;
+      } else {
+        // Not guilty - disputing the charge
+        pleaCode = this.Plea.N;
+      }
       
       return {
         countNo: count.countNo,
-        requestCourtAppearance: isSkipped ? this.RequestCourtAppearance.N : countFormData.requestCourtAppearance,
+        requestCourtAppearance: countFormData.requestCourtAppearance,
         requestReduction: countFormData.requestReduction,
         requestTimeToPay: countFormData.requestTimeToPay,
-        pleaCode: isSkipped ? this.Plea.G : countFormData.pleaCode
+        pleaCode: pleaCode
       };
     });
   }
@@ -1501,19 +1514,11 @@ export class ManualDisputeEntryComponent implements OnInit {
         interpreterRequired: DisputeInterpreterRequired.N,
         witnessNo: 0
       });
-
+      
       // Clear plea codes and remove validators when switching to written reasons
       this.ticketCounts.forEach(count => {
         const countFormGroup = this.disputeInfoForm.get(`count${count.countNo}`);
         if (countFormGroup) {
-
-          // reset form values to defaults for written reasons (no court appearance requested)
-          countFormGroup.patchValue({
-            requestCourtAppearance: DisputeRequestCourtAppearanceYn.N,
-            requestReduction: null,
-            requestTimeToPay: null
-          });
-
           const pleaCodeControl = countFormGroup.get('pleaCode');
           pleaCodeControl.clearValidators();
           pleaCodeControl.setValue(null);
@@ -1525,27 +1530,17 @@ export class ManualDisputeEntryComponent implements OnInit {
       this.ticketCounts.forEach(count => {
         const countFormGroup = this.disputeInfoForm.get(`count${count.countNo}`);
         if (countFormGroup) {
+          countFormGroup.patchValue({
+            requestReduction: DisputeCountRequestReduction.N,
+            requestTimeToPay: DisputeCountRequestTimeToPay.N
+          });
+          
           // Add required validator to pleaCode for court hearing (unless skipped)
           const isSkipped = countFormGroup.get('__skip')?.value;
           const pleaCodeControl = countFormGroup.get('pleaCode');
           if (!isSkipped) {
-
-            // If a hearing is requested at the Dispute level, then any non-skipped counts are automatically requesting a Court Appearance as well as TTP and RFR
-            // this is inconsistent with Citizen submit, but citizen side never shows TTP and RFR selections for Hearing cases, and neither does Staff after it's submitted so it shouldn't matter
-            countFormGroup.patchValue({
-              requestCourtAppearance: DisputeRequestCourtAppearanceYn.Y,
-              requestReduction: DisputeCountRequestReduction.Y,
-              requestTimeToPay: DisputeCountRequestTimeToPay.Y
-            });
-
             pleaCodeControl.setValidators([Validators.required]);
           } else {
-            countFormGroup.patchValue({
-              requestCourtAppearance: null,
-              requestReduction: null,
-              requestTimeToPay: null
-            });
-
             pleaCodeControl.clearValidators();
           }
           pleaCodeControl.updateValueAndValidity();

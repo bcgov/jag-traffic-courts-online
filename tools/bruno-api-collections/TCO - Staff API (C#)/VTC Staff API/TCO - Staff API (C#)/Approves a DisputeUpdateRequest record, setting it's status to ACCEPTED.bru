@@ -1,39 +1,39 @@
 meta {
-  name: Deletes a violation ticket count asynchronously.
+  name: Approves a DisputeUpdateRequest record, setting it's status to ACCEPTED.
   type: http
-  seq: 16
+  seq: 10
   tags: [
     Dispute
   ]
 }
 
-delete {
-  url: {{baseUrl}}/api/dispute/violationticketcount/:violationTicketCountId
+put {
+  url: {{baseUrl}}/api/dispute/updaterequest/:updateStatusId/accept
   body: none
   auth: inherit
 }
 
 params:path {
-  violationTicketCountId: 
+  updateStatusId: 
 }
 
 example {
-  name: 204 Response
-  description: No Content
+  name: 200 Response
+  description: OK
   
   request: {
-    url: {{baseUrl}}/api/dispute/violationticketcount/:violationTicketCountId
-    method: DELETE
+    url: {{baseUrl}}/api/dispute/updaterequest/:updateStatusId/accept
+    method: PUT
     mode: none
     params:path: {
-      violationTicketCountId: 
+      updateStatusId: 
     }
   }
   
   response: {
     status: {
-      code: 204
-      text: No Content
+      code: 200
+      text: OK
     }
   
     body: {
@@ -50,11 +50,11 @@ example {
   description: Internal Server Error
   
   request: {
-    url: {{baseUrl}}/api/dispute/violationticketcount/:violationTicketCountId
-    method: DELETE
+    url: {{baseUrl}}/api/dispute/updaterequest/:updateStatusId/accept
+    method: PUT
     mode: none
     params:path: {
-      violationTicketCountId: 
+      updateStatusId: 
     }
   }
   
