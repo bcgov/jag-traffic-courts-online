@@ -207,7 +207,7 @@ export class ManualDisputeEntryComponent implements OnInit {
       requestCourtAppearance: [null, [Validators.required]],
       representedByLawyer: [DisputeRepresentedByLawyer.N],
       interpreterRequired: [DisputeInterpreterRequired.N],
-      interpreterLanguageCd: [null],
+      interpreterLanguageDesc: [null],
       witnessNo: [0],
       fineReductionReason: [null],
       timeToPayReason: [null]
@@ -1292,7 +1292,7 @@ export class ManualDisputeEntryComponent implements OnInit {
       requestCourtAppearanceYn: disputeData.requestCourtAppearance,
       representedByLawyer: disputeData.representedByLawyer,
       interpreterRequired: disputeData.interpreterRequired,
-      interpreterLanguageCd: disputeData.interpreterLanguageCd,
+      interpreterLanguageCd: this.languages.find(lang => lang.description === disputeData.interpreterLanguageDesc)?.code || null,
       witnessNo: disputeData.witnessNo || 0,
       fineReductionReason: fineReductionReason,
       timeToPayReason: timeToPayReason,
@@ -1604,7 +1604,7 @@ export class ManualDisputeEntryComponent implements OnInit {
     const value = checked ? DisputeInterpreterRequired.Y : DisputeInterpreterRequired.N;
     this.disputeInfoForm.patchValue({ interpreterRequired: value });
     
-    const langControl = this.disputeInfoForm.get('interpreterLanguageCd');
+    const langControl = this.disputeInfoForm.get('interpreterLanguageDesc');
     if (value === DisputeInterpreterRequired.Y) {
       langControl.setValidators([Validators.required]);
     } else {
