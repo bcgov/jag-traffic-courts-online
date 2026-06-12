@@ -1,5 +1,5 @@
 meta {
-  name: Returns generated document.
+  name: Returns all update requests for a specific dispute
   type: http
   seq: 14
   tags: [
@@ -8,51 +8,31 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/api/dispute/:disputeId/print
+  url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
   body: none
   auth: inherit
-}
-
-params:query {
-  ~type: DcfTemplate
-  ~type: HrDcfTemplate
-  ~type: WrDcfTemplate
 }
 
 params:path {
   disputeId: 
 }
 
-headers {
-  ~X-Timezone: 
-}
-
 example {
   name: 200 Response
-  description: Generated Document.
+  description: The Update requests were found.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/print
+    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
     method: GET
     mode: none
-    params:query: {
-      ~type: DcfTemplate
-      ~type: HrDcfTemplate
-      ~type: WrDcfTemplate
-    }
-  
     params:path: {
       disputeId: 
-    }
-  
-    headers: {
-      ~X-Timezone: 
     }
   }
   
   response: {
     headers: {
-      Content-Type: application/octet-stream
+      Content-Type: text/plain
     }
   
     status: {
@@ -63,45 +43,116 @@ example {
     body: {
       type: text
       content: '''
-  
+        [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "disputeUpdateRequestId": 0,
+            "disputeId": 0,
+            "status": "UNKNOWN",
+            "updateType": "UNKNOWN",
+            "updateJson": "",
+            "currentJson": "",
+            "statusUpdateTs": "",
+            "additionalProperties": {}
+          }
+        ]
       '''
     }
   }
 }
 
 example {
-  name: 400 Response
-  description: The
+  name: 200 Response
+  description: The Update requests were found.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/print
+    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
     method: GET
     mode: none
-    params:query: {
-      ~type: DcfTemplate
-      ~type: HrDcfTemplate
-      ~type: WrDcfTemplate
-    }
-  
     params:path: {
       disputeId: 
-    }
-  
-    headers: {
-      ~X-Timezone: 
     }
   }
   
   response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
     status: {
-      code: 400
-      text: Bad Request
+      code: 200
+      text: OK
     }
   
     body: {
-      type: text
+      type: json
       content: '''
+        [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "disputeUpdateRequestId": 0,
+            "disputeId": 0,
+            "status": "UNKNOWN",
+            "updateType": "UNKNOWN",
+            "updateJson": "",
+            "currentJson": "",
+            "statusUpdateTs": "",
+            "additionalProperties": {}
+          }
+        ]
+      '''
+    }
+  }
+}
+
+example {
+  name: 200 Response
+  description: The Update requests were found.
   
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
+    method: GET
+    mode: none
+    params:path: {
+      disputeId: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "disputeUpdateRequestId": 0,
+            "disputeId": 0,
+            "status": "UNKNOWN",
+            "updateType": "UNKNOWN",
+            "updateJson": "",
+            "currentJson": "",
+            "statusUpdateTs": "",
+            "additionalProperties": {}
+          }
+        ]
       '''
     }
   }
@@ -112,21 +163,11 @@ example {
   description: Request lacks valid authentication credentials.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/print
+    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
     method: GET
     mode: none
-    params:query: {
-      ~type: DcfTemplate
-      ~type: HrDcfTemplate
-      ~type: WrDcfTemplate
-    }
-  
     params:path: {
       disputeId: 
-    }
-  
-    headers: {
-      ~X-Timezone: 
     }
   }
   
@@ -160,21 +201,11 @@ example {
   description: Request lacks valid authentication credentials.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/print
+    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
     method: GET
     mode: none
-    params:query: {
-      ~type: DcfTemplate
-      ~type: HrDcfTemplate
-      ~type: WrDcfTemplate
-    }
-  
     params:path: {
       disputeId: 
-    }
-  
-    headers: {
-      ~X-Timezone: 
     }
   }
   
@@ -208,21 +239,11 @@ example {
   description: Request lacks valid authentication credentials.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/print
+    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
     method: GET
     mode: none
-    params:query: {
-      ~type: DcfTemplate
-      ~type: HrDcfTemplate
-      ~type: WrDcfTemplate
-    }
-  
     params:path: {
       disputeId: 
-    }
-  
-    headers: {
-      ~X-Timezone: 
     }
   }
   
@@ -253,24 +274,14 @@ example {
 
 example {
   name: 403 Response
-  description: Forbidden.
+  description: Forbidden, requires dispute:read permission.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/print
+    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
     method: GET
     mode: none
-    params:query: {
-      ~type: DcfTemplate
-      ~type: HrDcfTemplate
-      ~type: WrDcfTemplate
-    }
-  
     params:path: {
       disputeId: 
-    }
-  
-    headers: {
-      ~X-Timezone: 
     }
   }
   
@@ -301,24 +312,14 @@ example {
 
 example {
   name: 403 Response
-  description: Forbidden.
+  description: Forbidden, requires dispute:read permission.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/print
+    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
     method: GET
     mode: none
-    params:query: {
-      ~type: DcfTemplate
-      ~type: HrDcfTemplate
-      ~type: WrDcfTemplate
-    }
-  
     params:path: {
       disputeId: 
-    }
-  
-    headers: {
-      ~X-Timezone: 
     }
   }
   
@@ -349,24 +350,14 @@ example {
 
 example {
   name: 403 Response
-  description: Forbidden.
+  description: Forbidden, requires dispute:read permission.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/print
+    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
     method: GET
     mode: none
-    params:query: {
-      ~type: DcfTemplate
-      ~type: HrDcfTemplate
-      ~type: WrDcfTemplate
-    }
-  
     params:path: {
       disputeId: 
-    }
-  
-    headers: {
-      ~X-Timezone: 
     }
   }
   
@@ -400,21 +391,11 @@ example {
   description: There was a server error that prevented the search from completing successfully or no data found.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/print
+    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
     method: GET
     mode: none
-    params:query: {
-      ~type: DcfTemplate
-      ~type: HrDcfTemplate
-      ~type: WrDcfTemplate
-    }
-  
     params:path: {
       disputeId: 
-    }
-  
-    headers: {
-      ~X-Timezone: 
     }
   }
   

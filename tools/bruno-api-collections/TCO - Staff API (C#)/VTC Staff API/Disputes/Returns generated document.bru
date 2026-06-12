@@ -1,38 +1,58 @@
 meta {
-  name: An endpoint for resending an email to a Disputant.
+  name: Returns generated document.
   type: http
-  seq: 8
+  seq: 15
   tags: [
     Dispute
   ]
 }
 
-put {
-  url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
+get {
+  url: {{baseUrl}}/api/dispute/:disputeId/print
   body: none
   auth: inherit
+}
+
+params:query {
+  ~type: DcfTemplate
+  ~type: HrDcfTemplate
+  ~type: WrDcfTemplate
 }
 
 params:path {
   disputeId: 
 }
 
+headers {
+  ~X-Timezone: 
+}
+
 example {
   name: 200 Response
-  description: OK
+  description: Generated Document.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
-    method: PUT
+    url: {{baseUrl}}/api/dispute/:disputeId/print
+    method: GET
     mode: none
+    params:query: {
+      ~type: DcfTemplate
+      ~type: HrDcfTemplate
+      ~type: WrDcfTemplate
+    }
+  
     params:path: {
       disputeId: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
     }
   }
   
   response: {
     headers: {
-      Content-Type: text/plain
+      Content-Type: application/octet-stream
     }
   
     status: {
@@ -50,87 +70,29 @@ example {
 }
 
 example {
-  name: 200 Response
-  description: OK
-  
-  request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
-    method: PUT
-    mode: none
-    params:path: {
-      disputeId: 
-    }
-  }
-  
-  response: {
-    headers: {
-      Content-Type: application/json
-    }
-  
-    status: {
-      code: 200
-      text: OK
-    }
-  
-    body: {
-      type: json
-      content: '''
-  
-      '''
-    }
-  }
-}
-
-example {
-  name: 200 Response
-  description: OK
-  
-  request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
-    method: PUT
-    mode: none
-    params:path: {
-      disputeId: 
-    }
-  }
-  
-  response: {
-    headers: {
-      Content-Type: text/json
-    }
-  
-    status: {
-      code: 200
-      text: OK
-    }
-  
-    body: {
-      type: json
-      content: '''
-  
-      '''
-    }
-  }
-}
-
-example {
   name: 400 Response
-  description: Bad Request
+  description: The
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
-    method: PUT
+    url: {{baseUrl}}/api/dispute/:disputeId/print
+    method: GET
     mode: none
+    params:query: {
+      ~type: DcfTemplate
+      ~type: HrDcfTemplate
+      ~type: WrDcfTemplate
+    }
+  
     params:path: {
       disputeId: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
     }
   }
   
   response: {
-    headers: {
-      Content-Type: text/plain
-    }
-  
     status: {
       code: 400
       text: Bad Request
@@ -139,89 +101,7 @@ example {
     body: {
       type: text
       content: '''
-        {
-          "type": "",
-          "title": "",
-          "status": 0,
-          "detail": "",
-          "instance": ""
-        }
-      '''
-    }
-  }
-}
-
-example {
-  name: 400 Response
-  description: Bad Request
   
-  request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
-    method: PUT
-    mode: none
-    params:path: {
-      disputeId: 
-    }
-  }
-  
-  response: {
-    headers: {
-      Content-Type: application/json
-    }
-  
-    status: {
-      code: 400
-      text: Bad Request
-    }
-  
-    body: {
-      type: json
-      content: '''
-        {
-          "type": "",
-          "title": "",
-          "status": 0,
-          "detail": "",
-          "instance": ""
-        }
-      '''
-    }
-  }
-}
-
-example {
-  name: 400 Response
-  description: Bad Request
-  
-  request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
-    method: PUT
-    mode: none
-    params:path: {
-      disputeId: 
-    }
-  }
-  
-  response: {
-    headers: {
-      Content-Type: text/json
-    }
-  
-    status: {
-      code: 400
-      text: Bad Request
-    }
-  
-    body: {
-      type: json
-      content: '''
-        {
-          "type": "",
-          "title": "",
-          "status": 0,
-          "detail": "",
-          "instance": ""
-        }
       '''
     }
   }
@@ -229,14 +109,24 @@ example {
 
 example {
   name: 401 Response
-  description: Unauthorized
+  description: Request lacks valid authentication credentials.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
-    method: PUT
+    url: {{baseUrl}}/api/dispute/:disputeId/print
+    method: GET
     mode: none
+    params:query: {
+      ~type: DcfTemplate
+      ~type: HrDcfTemplate
+      ~type: WrDcfTemplate
+    }
+  
     params:path: {
       disputeId: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
     }
   }
   
@@ -267,14 +157,24 @@ example {
 
 example {
   name: 401 Response
-  description: Unauthorized
+  description: Request lacks valid authentication credentials.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
-    method: PUT
+    url: {{baseUrl}}/api/dispute/:disputeId/print
+    method: GET
     mode: none
+    params:query: {
+      ~type: DcfTemplate
+      ~type: HrDcfTemplate
+      ~type: WrDcfTemplate
+    }
+  
     params:path: {
       disputeId: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
     }
   }
   
@@ -305,14 +205,24 @@ example {
 
 example {
   name: 401 Response
-  description: Unauthorized
+  description: Request lacks valid authentication credentials.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
-    method: PUT
+    url: {{baseUrl}}/api/dispute/:disputeId/print
+    method: GET
     mode: none
+    params:query: {
+      ~type: DcfTemplate
+      ~type: HrDcfTemplate
+      ~type: WrDcfTemplate
+    }
+  
     params:path: {
       disputeId: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
     }
   }
   
@@ -343,14 +253,24 @@ example {
 
 example {
   name: 403 Response
-  description: Forbidden
+  description: Forbidden.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
-    method: PUT
+    url: {{baseUrl}}/api/dispute/:disputeId/print
+    method: GET
     mode: none
+    params:query: {
+      ~type: DcfTemplate
+      ~type: HrDcfTemplate
+      ~type: WrDcfTemplate
+    }
+  
     params:path: {
       disputeId: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
     }
   }
   
@@ -381,14 +301,24 @@ example {
 
 example {
   name: 403 Response
-  description: Forbidden
+  description: Forbidden.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
-    method: PUT
+    url: {{baseUrl}}/api/dispute/:disputeId/print
+    method: GET
     mode: none
+    params:query: {
+      ~type: DcfTemplate
+      ~type: HrDcfTemplate
+      ~type: WrDcfTemplate
+    }
+  
     params:path: {
       disputeId: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
     }
   }
   
@@ -419,14 +349,24 @@ example {
 
 example {
   name: 403 Response
-  description: Forbidden
+  description: Forbidden.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
-    method: PUT
+    url: {{baseUrl}}/api/dispute/:disputeId/print
+    method: GET
     mode: none
+    params:query: {
+      ~type: DcfTemplate
+      ~type: HrDcfTemplate
+      ~type: WrDcfTemplate
+    }
+  
     params:path: {
       disputeId: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
     }
   }
   
@@ -457,14 +397,24 @@ example {
 
 example {
   name: 500 Response
-  description: Internal Server Error
+  description: There was a server error that prevented the search from completing successfully or no data found.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
-    method: PUT
+    url: {{baseUrl}}/api/dispute/:disputeId/print
+    method: GET
     mode: none
+    params:query: {
+      ~type: DcfTemplate
+      ~type: HrDcfTemplate
+      ~type: WrDcfTemplate
+    }
+  
     params:path: {
       disputeId: 
+    }
+  
+    headers: {
+      ~X-Timezone: 
     }
   }
   
