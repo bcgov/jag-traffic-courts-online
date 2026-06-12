@@ -1512,8 +1512,8 @@ export class ManualDisputeEntryComponent implements OnInit {
           // reset form values to defaults for written reasons (no court appearance requested)
           countFormGroup.patchValue({
             requestCourtAppearance: DisputeRequestCourtAppearanceYn.N,
-            requestReduction: null,
-            requestTimeToPay: null
+            requestReduction: DisputeCountRequestReduction.N,
+            requestTimeToPay: DisputeCountRequestTimeToPay.N
           });
 
           const pleaCodeControl = countFormGroup.get('pleaCode');
