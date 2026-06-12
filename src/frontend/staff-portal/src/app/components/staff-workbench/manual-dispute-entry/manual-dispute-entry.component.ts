@@ -1359,7 +1359,9 @@ export class ManualDisputeEntryComponent implements OnInit {
         requestCourtAppearance: isSkipped ? this.RequestCourtAppearance.N : countFormData.requestCourtAppearance,
         requestReduction: countFormData.requestReduction,
         requestTimeToPay: countFormData.requestTimeToPay,
-        pleaCode: isSkipped ? this.Plea.G : countFormData.pleaCode
+        pleaCode: isSkipped || countFormData.requestCourtAppearance !== this.RequestCourtAppearance.Y 
+          ? this.Plea.G // Skipped counts or counts without court appearance are treated as guilty pleas
+          : this.Plea.N
       };
     });
   }
