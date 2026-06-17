@@ -98,6 +98,8 @@ public class JJDisputeServiceTest
 
         // create a random dispute
         Fixture fix = new Fixture();
+        fix.Customize<DateOnly>(o => o.FromFactory((DateTime dt) => DateOnly.FromDateTime(dt)));
+
         JJDispute dispute = fix.Create<JJDispute>();
 
         var oracleDataApiClient = Substitute.For<IOracleDataApiService>();

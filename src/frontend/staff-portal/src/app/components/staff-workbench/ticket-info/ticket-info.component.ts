@@ -606,11 +606,15 @@ export class TicketInfoComponent implements OnInit {
         .get('violationTime')
         .value.substring(2, 4);
 
-    // Counts 1,2,3
+    // Rebuild violationTicketCounts only for counts that were not deleted.
+    // Deleted counts are no longer present in lastUpdatedDispute.violationTicket.violationTicketCounts.
+    const survivingCountNos = new Set(
+      this.lastUpdatedDispute.violationTicket.violationTicketCounts.map((x) => x.countNo)
+    );
     putDispute.violationTicket.violationTicketCounts =
       [] as ViolationTicketCount[];
     for (let i = 1; i <= 3; i++) {
-      // stuff 3 violation ticket counts in putDispute
+      if (!survivingCountNos.has(i)) continue;
       let violationTicketCount = this.form
         .get('violationTicket')
         .get('violationTicketCount' + i.toString())
@@ -1299,9 +1303,6 @@ export class TicketInfoComponent implements OnInit {
   }
 
   onDeleteViolationTicketCount(countNumber: number) {
-    let violationTicketCounts =
-      this.lastUpdatedDispute.violationTicket.violationTicketCounts;
-    let count = violationTicketCounts.find((x) => x.countNo == countNumber);
     const data: DialogOptions = {
       titleKey: 'Delete Violation Ticket Count?',
       messageKey:
@@ -1320,30 +1321,19 @@ export class TicketInfoComponent implements OnInit {
             .get('violationTicket')
             .get('violationTicketCount' + countNumber.toString());
           countForm.reset();
-          countForm.get('ticketedAmount').reset();
-          countForm.get('fullDescription').reset();
-          countForm.get('description').reset();
-          countForm.get('actOrRegulationNameCode').reset();
-          countForm.get('section').reset();
-          countForm.get('subsection').reset();
-          countForm.get('paragraph').reset();
-          countForm.get('subparagraph').reset();
           countForm.updateValueAndValidity();
           countForm.markAsTouched();
-          count.ticketedAmount = null;
-          count.description = null;
-          count.actOrRegulationNameCode = null;
-          count.section = null;
-          count.subsection = null;
-          count.paragraph = null;
-          count.subparagraph = null;
+
+          // Remove the count entirely from both violationTicketCounts and disputeCounts
           this.lastUpdatedDispute.violationTicket.violationTicketCounts =
-            violationTicketCounts.filter((x) => x.countNo != countNumber);
-          this.lastUpdatedDispute.violationTicket.violationTicketCounts.splice(
-            countNumber - 1,
-            0,
-            count
-          );
+            this.lastUpdatedDispute.violationTicket.violationTicketCounts.filter(
+              (x) => x.countNo != countNumber
+            );
+          this.lastUpdatedDispute.disputeCounts =
+            this.lastUpdatedDispute.disputeCounts.filter(
+              (x) => x.countNo != countNumber
+            );
+
           this.isViolationTicketCountDeleted = true;
           this.lastUpdatedDispute = { ...this.lastUpdatedDispute };
         }

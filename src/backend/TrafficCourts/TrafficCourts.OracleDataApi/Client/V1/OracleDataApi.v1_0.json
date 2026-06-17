@@ -2337,12 +2337,12 @@
             "format": "float",
             "nullable": true
           },
-          "includesSurcharge": {
+          "grantTimeToPay": {
             "type": "string",
             "nullable": true,
             "enum": ["UNKNOWN", "Y", "N"]
           },
-          "grantTimeToPay": {
+          "includesSurcharge": {
             "type": "string",
             "nullable": true,
             "enum": ["UNKNOWN", "Y", "N"]
@@ -2381,6 +2381,13 @@
           "latestPleaUpdateTs": {
             "type": "string",
             "description": "The timestamp for when the last time disputant changed their plea.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "decisionMadeBy": { "type": "string", "nullable": true },
+          "decisionMadeDt": {
+            "type": "string",
+            "description": "The date of the JJ's decision.",
             "format": "date-time",
             "nullable": true
           },

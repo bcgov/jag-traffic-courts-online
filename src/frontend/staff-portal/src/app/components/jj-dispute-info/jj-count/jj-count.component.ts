@@ -168,9 +168,6 @@ export class JJCountComponent implements OnInit, OnChanges {
 
       // Patch the form with the modified object
       this.form.patchValue(jjDisputedCountCopy);
-      if (!this.jjDisputedCount.lesserOrGreaterAmount) {
-        this.form.controls.lesserOrGreaterAmount.setValue(this.jjDisputedCount.ticketedFineAmount);
-      }
 
       this.inclSurcharge = this.jjDisputedCount?.lesserOrGreaterAmount
         ? this.jjDisputedCount.includesSurcharge === this.IncludesSurcharge.Y
@@ -189,12 +186,12 @@ export class JJCountComponent implements OnInit, OnChanges {
 
       this.fineReduction = this.jjDisputedCount
         ? this.jjDisputedCount.totalFineAmount && this.jjDisputedCount.lesserOrGreaterAmount
-          ? this.jjDisputedCount.lesserOrGreaterAmount !== null &&
-            this.jjDisputedCount.lesserOrGreaterAmount !== this.jjDisputedCount.ticketedFineAmount
-            ? "yes"
-            : "no"
-          : ""
-        : "";
+          ? this.jjDisputedCount.includesSurcharge === this.IncludesSurcharge.N ||
+            (this.jjDisputedCount.lesserOrGreaterAmount !== null && this.jjDisputedCount.lesserOrGreaterAmount !== this.jjDisputedCount.ticketedFineAmount)
+            ? 'yes'
+            : 'no'
+          : ''
+        : '';
 
       this.updateInclSurcharge(this.inclSurcharge);
       this.bindRevisedDueDate(this.jjDisputedCount.revisedDueDate); // ensure the form field matches our model value
@@ -492,9 +489,6 @@ export class JJCountComponent implements OnInit, OnChanges {
         this.surcharge = 0;
         this.lesserOrGreaterAmount = 0;
       } else {
-        this.form.get('totalFineAmount').setValue(this.jjDisputedCount?.ticketedFineAmount);
-        this.form.get('lesserOrGreaterAmount').setValue(this.jjDisputedCount?.ticketedFineAmount);
-        this.inclSurcharge = this.jjDisputedCount?.includesSurcharge == this.IncludesSurcharge.N ? "no" : "yes";
         this.timeToPay =
           this.jjDisputedCount?.grantTimeToPay === this.GrantTimeToPay.Y
             ? "yes"
@@ -506,8 +500,6 @@ export class JJCountComponent implements OnInit, OnChanges {
         } else {
           this.form.controls.revisedDueDate.setValue(null);
         }
-
-        this.updateInclSurcharge(this.inclSurcharge);
       }
     }
   }
@@ -529,15 +521,14 @@ export class JJCountComponent implements OnInit, OnChanges {
     this.updateInclSurcharge(this.inclSurcharge);
   }
 
-  updateFineAmount(event: MatRadioChange) {
-    // if they select no set it back to ticketed Amount & includes surcharge
-    // do nothing if yes
-    if (event.value == "no") {
-      this.form.get('totalFineAmount').setValue(this.jjDisputedCount?.ticketedFineAmount);
-      this.form.get('lesserOrGreaterAmount').setValue(this.jjDisputedCount?.ticketedFineAmount);
-      this.inclSurcharge = "yes";
-      this.updateInclSurcharge("yes");
-    }
+  // fires when Revise Fine radio button is changed in the UI, updating this.fineReduction
+  updateFineAmount(_event: MatRadioChange) {
+    // set the total fine amount, lesser or greater amount, and surcharge properties
+    // to the default: the ticketed fine amount with surcharge included
+    this.form.get('lesserOrGreaterAmount').setValue(this.jjDisputedCount?.ticketedFineAmount);
+    
+    this.inclSurcharge = "yes";
+    this.updateInclSurcharge(this.inclSurcharge);
   }
 
   updateInclSurcharge(eventValue: string) {
@@ -555,8 +546,8 @@ export class JJCountComponent implements OnInit, OnChanges {
       } else {
         this.form.get('totalFineAmount').setValue(this.jjDisputedCount?.totalFineAmount);
       }
-      this.lesserOrGreaterAmount = this.form.get('lesserOrGreaterAmount').value;
-      this.surcharge = Math.round(this.form.get('lesserOrGreaterAmount').value * 0.15);
+      this.lesserOrGreaterAmount = this.form.get('lesserOrGreaterAmount').value ?? 0;
+      this.surcharge = Math.round(this.lesserOrGreaterAmount * 0.15);
     }
   }
 
