@@ -580,10 +580,6 @@ export class ManualDisputeEntryComponent implements OnInit {
 
       if (foundStatute) {
         this.updateCountWithStatute(countNo, foundStatute);
-        // Update the description field to show the full statute string
-        countFormGroup?.patchValue({
-          description: foundStatute.__statuteString
-        });
       } else {
         this.clearCountStatuteFields(countNo);
       }
@@ -649,7 +645,7 @@ export class ManualDisputeEntryComponent implements OnInit {
       subsection: statute.subsectionText,
       paragraph: statute.paragraphText,
       subparagraph: statute.subparagraphText,
-      description: statute.__statuteString || `${statute.actCode} ${statute.code} ${statute.shortDescriptionText}`
+      description: `${statute.actCode} ${statute.code} ${statute.shortDescriptionText}`
     });
   }
 
@@ -1334,9 +1330,15 @@ export class ManualDisputeEntryComponent implements OnInit {
   private buildViolationTicketCounts(): ViolationTicketCount[] {
     return this.ticketCounts.map((count, index) => {
       const countFormData = this.disputeInfoForm.get(`count${count.countNo}`).value;
+
+      // TCVP-3474 and TCVP-3502: HACK - We're mashing ACT/SECT/etc into the Description field on the form to make a single autosuggest picklist for the users to work with
+      // but then we need to split the values out to send to the API in the correct fields, so we need to parse the description field to extract those values
+      // consequently, we're storing the "short description" in the count itself, but a more complete concat of act/code/section/etc/description in the form value for the user to see and select from
+      // that means at this step, we need to make sure we load description from the count (not the form) to avoid sending the full concatenated string to the API (which then glues that stuff on again and creates a mess)
+
       return {
         countNo: count.countNo,
-        description: countFormData.description,
+        description: count.description, // see note above
         actOrRegulationNameCode: countFormData.actOrRegulationNameCode,
         ticketedAmount: countFormData.ticketedAmount,
         section: countFormData.section,
