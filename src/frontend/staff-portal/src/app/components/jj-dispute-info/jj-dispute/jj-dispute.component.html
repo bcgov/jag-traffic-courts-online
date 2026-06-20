@@ -68,7 +68,7 @@
         <mat-menu #gotoMenu="matMenu" yPosition="below">
           <button mat-menu-item (click)="goTo('disputeDetails')">Dispute Details</button>
           <button mat-menu-item (click)="goTo('uploadedDocuments')">Uploaded Documents</button>
-          @if (hasAmendmentData() || type === tabTypes.HEARING_INBOX) {
+          @if (hasAmendmentData() || type === tabTypes.HEARING_INBOX ||  type === tabTypes.RETURNED_DECISIONS) {
             <button mat-menu-item *appFeatureFlag="featureType.amendments" (click)="goTo('amendments')">Amendments</button>
           }
           <button mat-menu-item (click)="goTo('fileHistory')">Administrative Activity</button>
@@ -588,7 +588,7 @@
                 <span class="section-grid-cell">
                   <p class="section-grid-header">Judicial Justice</p>
                   <p class="section-grid-text">
-                    @if (type !== tabTypes.HEARING_INBOX) {
+                    @if (type !== tabTypes.HEARING_INBOX && type !== tabTypes.RETURNED_DECISIONS) {
                       <span>{{ courtAppearanceForm?.value.adjudicator }}</span>
                     }
                   </p>

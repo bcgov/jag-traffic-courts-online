@@ -1,0 +1,168 @@
+<div class="overflow-auto">
+  <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sort.emit($event)">
+    @if (displayedColumns.includes("jjAssignedTo")) {
+      <ng-container matColumnDef="jjAssignedTo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span class="text-start">ASSIGNED TO</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{
+            (element.disputeStatus.code === disputeStatus.InProgress || element.disputeStatus.code === disputeStatus.Review)
+              ? (element.jjAssignedTo ? getName(element.jjAssignedTo) : 'Unassigned')
+              : ''
+          }}
+        </td>
+      </ng-container>
+    }
+
+    @if (displayedColumns.includes("ticketNumber")) {
+      <ng-container matColumnDef="ticketNumber">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span class="text-start">VT NUMBER</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          @if (isEditable(element)) {
+            <span><a (click)="openDispute.emit(element)" href="javascript:void(0)">{{ element.ticketNumber }}</a></span>
+          }
+          @if (!isEditable(element)) {
+            <span>{{ element.ticketNumber }}</span>
+          }
+        </td>
+      </ng-container>
+    }
+
+    @if (displayedColumns.includes("violationDate")) {
+      <ng-container matColumnDef="violationDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span class="text-start">VIOLATION DATE</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <span>{{ element.violationDate | date: "dd-MMM-yyyy" }}</span>
+        </td>
+      </ng-container>
+    }
+
+    @if (displayedColumns.includes("surnameOrOrgName")) {
+      <ng-container matColumnDef="surnameOrOrgName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          SURNAME, GIVEN NAME(S)
+        </th>
+        <td mat-cell *matCellDef="let element">
+          @if (element.disputantSurname) {
+            <span>{{ element.disputantSurname + (element.disputantGivenName1 || 
+              element.disputantGivenName2 || element.disputantGivenName3 ? "," : "") + 
+              (element.disputantGivenName1 ? " " + element.disputantGivenName1 : "") + 
+              (element.disputantGivenName2 ? " " + element.disputantGivenName2 : "") + 
+              (element.disputantGivenName3 ? " " + element.disputantGivenName3 : "") }}</span>
+          } @else {
+            <span>{{ element.disputantOrganizationName }}</span>
+          }
+        </td>
+      </ng-container>
+    }
+
+    @if (displayedColumns.includes("toBeHeardAtCourthouseName")) {
+      <ng-container matColumnDef="toBeHeardAtCourthouseName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span class="text-start">COURT HOUSE</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <span>{{ element.toBeHeardAtCourthouseName }}</span>
+        </td>
+      </ng-container>
+    }
+
+    @if (displayedColumns.includes("appearanceTs")) {
+      <ng-container matColumnDef="appearanceTs">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span class="text-start">DATE / TIME</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <span>{{ element?.appearanceTs | date: "dd-MMM-yyyy hh:mm a" }}</span>
+        </td>
+      </ng-container>
+    }
+    
+    @if (displayedColumns.includes("appearanceRoomCode")) {
+      <ng-container matColumnDef="appearanceRoomCode">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span class="text-start">COURT ROOM</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <span>{{ element.appearanceRoomCode }}</span>
+        </td>
+      </ng-container>
+    }
+
+    @if (displayedColumns.includes("appearanceDuration")) {
+      <ng-container matColumnDef="appearanceDuration">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span class="text-start">DURATION (min)</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <span>{{ element?.appearanceDuration }}</span>
+        </td>
+      </ng-container>
+    }
+
+    @if (displayedColumns.includes("accidentYn")) {
+      <ng-container matColumnDef="accidentYn">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span class="text-start">ACCIDENT</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-checkbox [checked]="element.accidentYn === yesNo.Yes" [disabled]="true"></mat-checkbox>
+        </td>
+      </ng-container>
+    }
+
+    @if (displayedColumns.includes("multipleOfficersYn")) {
+      <ng-container matColumnDef="multipleOfficersYn">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span class="text-start">MULTIPLE OFFICERS</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-checkbox [checked]="element.multipleOfficersYn === yesNo.Yes" [disabled]="true"></mat-checkbox>
+        </td>
+      </ng-container>
+    }
+
+    @if (displayedColumns.includes("pendingAdjournmentRequestsYn")) {
+      <ng-container matColumnDef="pendingAdjournmentRequestsYn">
+        <th mat-header-cell *matHeaderCellDef>
+          <span class="text-start">PENDING ADJOURNMENT</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-checkbox class="red-checkbox" [checked]="element.pendingAdjournmentRequestsYn === yesNo.Yes" [disabled]="true"></mat-checkbox>
+        </td>
+      </ng-container>
+    }
+
+    @if (displayedColumns.includes("status")) {
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span class="text-start">STATUS</span>
+        </th>
+        <td mat-cell *matCellDef="let element" class="status">
+          @if (element.disputeStatus.code === disputeStatus.InProgress) {
+            <span><button mat-rounded-button class="bg-color-in-progress" disabled="true">In Progress</button></span>
+          }
+          @if (element.disputeStatus.code === disputeStatus.Review) {
+            <span><button mat-rounded-button class="bg-color-review" disabled="true">Review</button></span>
+          }
+          @if (element.disputeStatus.code === disputeStatus.HearingScheduled) {
+            <span><button mat-rounded-button class="bg-color-scheduled" disabled="true">Scheduled</button></span>
+          }
+        </td>
+      </ng-container>
+    }
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+        Ticket(s) not found
+      </td>
+    </tr>
+  </table>
+</div>

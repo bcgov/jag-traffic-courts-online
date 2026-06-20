@@ -1,0 +1,9 @@
+<div class="overflow-hidden mb-3">
+  <div class="row">
+    <div class="col"></div>
+    <div class="col-auto" [hidden]="dataSource.filteredData.length === 0">
+      <app-paging [currentPage]="pageNumber()" [totalPages]="totalPages" (pageChanged)="getReturnedDecisions($event)"></app-paging>
+    </div>
+  </div>
+</div>
+<app-jj-hearing-table [dataSource]="dataSource" [displayedColumns]="displayedColumns" (sort)="sortData($event)" (openDispute)="tcoDisputeInfo.emit($event)" />

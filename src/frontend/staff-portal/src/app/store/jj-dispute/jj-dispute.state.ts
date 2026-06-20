@@ -1,13 +1,12 @@
-import { JJDispute } from "app/services/jj-dispute.service";
-import { CustomState } from "../custom-state";
+import { JJDispute } from 'app/services/jj-dispute.service';
+import { RequestState, RequestStatus } from '../common-state';
 
-export interface JJDisputeState extends CustomState {
-    data: JJDispute[],
-    selectedItem: JJDispute
+export interface JJDisputeState extends RequestState<JJDispute[]> {
+  selectedItem: JJDispute | undefined;
 }
 
 export const initialState: JJDisputeState = {
-    loading: false,
-    data: [],
-    selectedItem: null
-}
+  status: RequestStatus.Idle,
+  data: undefined,
+  selectedItem: undefined,
+};

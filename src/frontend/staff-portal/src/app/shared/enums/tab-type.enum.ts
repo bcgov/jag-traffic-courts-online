@@ -6,5 +6,5 @@ export enum TabType {
   WR_ASSIGNMENTS = 'wr-assignments',
   WR_INBOX = 'wr-inbox',
   HEARING_INBOX = 'hearing-inbox',
+  RETURNED_DECISIONS = 'returned-decisions',
 }
- 

@@ -1,69 +1,8 @@
 @use '@angular/material' as mat;
 
-td, th {
-  vertical-align: middle !important;
-  padding-left: 10px !important;
-}
-
-.mat-mdc-table .mat-mdc-header-cell {
-  color: white;
-  background-color: #65799e;
-}
-
-.mat-mdc-row:nth-child(2n+1){
-  background-color: #f2f2f2;
-}
-.mat-mdc-row:nth-child(2n){
-  background-color:#ffffff;
-}
-
 .mat-mdc-button,
 .mat-mdc-unelevated-button,
 .mat-mdc-icon-button,
 .mat-mdc-outlined-button {
   border-radius: 50px;
-}
-
-::ng-deep .mat-sort-header-arrow {
-  color: #fff;
-}
-
-th.header-hearing-inbox{
-  span{
-    text-align: left;
-  }
-}
-
-.status {
-  button {
-    color: white;
-    width: 9.375rem;
-    border-radius: 0.625rem;
-  }
-
-  .bg-color-new, .bg-color-scheduled {
-    background-color:#8fd08f;
-  }
-
-  .bg-color-in-progress {
-    background-color:#fcba19;
-  }
-
-  .bg-color-review {
-    background-color:#f63f3f;
-  }
-}
-
-.w-80{
-  width: 80% !important;
-}
-
-.w-20{
-  width: 20% !important;
-}
-
-.red-checkbox {
-  @include mat.checkbox-overrides((
-    disabled-selected-icon-color: red,
-  ));
 }
