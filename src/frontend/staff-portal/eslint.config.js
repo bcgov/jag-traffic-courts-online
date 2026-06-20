@@ -1,9 +1,10 @@
 // @ts-check
 const eslint = require("@eslint/js");
+const ngrx = require("@ngrx/eslint-plugin/v9");
 const { defineConfig } = require("eslint/config");
+const unusedImports = require("eslint-plugin-unused-imports");
 const tseslint = require("typescript-eslint");
 const angular = require("angular-eslint");
-const ngrx = require('@ngrx/eslint-plugin/v9');
 
 module.exports = defineConfig([
   {
@@ -33,6 +34,18 @@ module.exports = defineConfig([
           style: "kebab-case",
         },
       ],
+      "@typescript-eslint/no-explicit-any": "warn",
+    },
+  },
+  {
+    plugins: { "unused-imports": unusedImports },
+    rules: {
+      "@typescript-eslint/no-unused-vars": "off",
+      "unused-imports/no-unused-imports": "warn",
+      "unused-imports/no-unused-vars": [
+        "warn",
+        { vars: "all", args: "after-used", argsIgnorePattern: "^_" },
+      ],
     },
   },
   {
@@ -42,5 +55,5 @@ module.exports = defineConfig([
       angular.configs.templateAccessibility,
     ],
     rules: {},
-  }
+  },
 ]);
