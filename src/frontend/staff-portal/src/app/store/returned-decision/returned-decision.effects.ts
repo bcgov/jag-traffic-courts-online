@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions as StoreActions, createEffect, ofType } from '@ngrx/effects';
-import { concatLatestFrom } from '@ngrx/operators'
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { concatLatestFrom } from '@ngrx/operators';
+import { catchError, filter, map, switchMap } from 'rxjs/operators';
 import { Actions } from '.';
 import { JJDisputeService } from 'app/services/jj-dispute.service';
 import { of } from 'rxjs';
@@ -23,7 +23,7 @@ export class ReturnedDecisionEffects {
         this.store.select(ReturnedDecisionSelectors.PageNumber),
         this.store.select(ReturnedDecisionSelectors.SortBy),
       ]),
-      switchMap(([{ assignedTo }, pageNumber, sortBy ]) =>
+      switchMap(([{ assignedTo }, pageNumber, sortBy]) =>
         this.jjDisputeService
           .getTCODisputes({
             appearances: true,
@@ -37,9 +37,31 @@ export class ReturnedDecisionEffects {
             fetchPendingAdjournments: true,
           })
           .pipe(
-            map((data) => Actions.GetSuccess({ data })),
+            map((data) => Actions.GetSuccess({ data, assignedTo })),
             catchError((error) => of(Actions.GetFailure({ error }))),
           ),
+      ),
+    );
+  });
+
+  // if the requested page number exceeds the total number of pages, re-query for the last page of results
+  getSuccess$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(Actions.GetSuccess),
+      filter(
+        (props) =>
+          (props.data?.pageNumber ?? 0) > (props.data?.totalPages ?? 0) &&
+          (props.data?.totalPages ?? 0) > 0,
+      ),
+      concatLatestFrom(() =>
+        this.store.select(ReturnedDecisionSelectors.SortBy),
+      ),
+      map(([props, sortBy]) =>
+        Actions.Get({
+          assignedTo: props.assignedTo,
+          pageNumber: props.data.totalPages,
+          sortBy: sortBy,
+        }),
       ),
     );
   });
