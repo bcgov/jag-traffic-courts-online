@@ -2443,31 +2443,38 @@
   dependencies:
     tslib "^2.5.0"
 
-"@ngrx/effects@21.0.1":
-  version "21.0.1"
-  resolved "https://registry.yarnpkg.com/@ngrx/effects/-/effects-21.0.1.tgz#00d6a0fdfb5de2936c339e1289cc743b3ea5dace"
-  integrity sha512-hSdpToAiSYa5FJ/CAygQHpnCaF2S1HO7q/57ob3XvNTWmkofa0VqI/IIe4W57bojh2YOWCJ91SCn3kAjymaV3g==
+"@ngrx/effects@^21.1.1":
+  version "21.1.1"
+  resolved "https://registry.yarnpkg.com/@ngrx/effects/-/effects-21.1.1.tgz#1372a05848cfe82859d116b1cb359fbc11b90f23"
+  integrity sha512-JQUv2tYyjkbdsE40WYtJDsiI+3qtn4V5m0Ybr2CYw9zKpVQshDV5MLLAni+SuijlHAWJkw8x4wwnYmNyG/Rmng==
   dependencies:
     tslib "^2.0.0"
 
-"@ngrx/eslint-plugin@21.0.1":
-  version "21.0.1"
-  resolved "https://registry.yarnpkg.com/@ngrx/eslint-plugin/-/eslint-plugin-21.0.1.tgz#4f01b113c54e8b2ec7bee7cf817eecc9c57a964e"
-  integrity sha512-ZFFb7UFiTF4UzXYaMRmK6hEHFOiFtoJ+Euus4O7i0A+0na+zaYVxS42cdylG/IKe3sfAoLKZWkly/idNnMSaWQ==
+"@ngrx/eslint-plugin@^21.1.1":
+  version "21.1.1"
+  resolved "https://registry.yarnpkg.com/@ngrx/eslint-plugin/-/eslint-plugin-21.1.1.tgz#1b9e19e3a7836a605a17cc06e6b6c1361fcb4ffe"
+  integrity sha512-I2RzaBmEPuSDOE/TCwG8m0mMi7ETKo1j+1GRZ8JuhNDj+sEpzj5hQMnbLoVcRjcz2ctGJF6rFI9qADztzvg5wg==
   dependencies:
     strip-json-comments "3.1.1"
 
-"@ngrx/operators@^21.0.1":
-  version "21.0.1"
-  resolved "https://registry.yarnpkg.com/@ngrx/operators/-/operators-21.0.1.tgz#4ced5db643d6c887af552e94e48f7c7e5b71bf20"
-  integrity sha512-CfSh9MzQoIjbipSJ4q1+ZhcY537I5th4hNdNiWHu/egx2+SgFUZlOcQ6E9c+DJMsVkYOoIYhKX1E/bYlFBqXJw==
+"@ngrx/operators@^21.1.1":
+  version "21.1.1"
+  resolved "https://registry.yarnpkg.com/@ngrx/operators/-/operators-21.1.1.tgz#50d050622407d52ff75eacddb80fe21db8320a44"
+  integrity sha512-2ChT1rVi6w8xHrmIAqRFuvY7YLAJiH7idfmbimjOYHzJ7pgaz0+4WVqyCp9pv2UiDEXuvpUOvs3afgS5m1LDNQ==
   dependencies:
     tslib "^2.3.0"
 
-"@ngrx/store@21.0.1":
-  version "21.0.1"
-  resolved "https://registry.yarnpkg.com/@ngrx/store/-/store-21.0.1.tgz#86103f7080d7f69711657f827e7a5f67827034a2"
-  integrity sha512-2hGnw/c5o8nmKzyx7TrUUM7FXjE2zqjX0EF+wLbw9Oy/L+VdCmx+ZI1BFjuAR4B8PKEWHG2KSbOM13SMNkpZiA==
+"@ngrx/store-devtools@^21.1.1":
+  version "21.1.1"
+  resolved "https://registry.yarnpkg.com/@ngrx/store-devtools/-/store-devtools-21.1.1.tgz#44af0dd7b8e69acefc7ad1355d328fb380efb112"
+  integrity sha512-gNRDPCZZCO2uzdamco6xJ7292cZdVumHqOIAqmJsYaHkRQ4sZIKBjwFyYXAtPvS6a+Y9bnkGkHetxkF1iZzDvA==
+  dependencies:
+    tslib "^2.0.0"
+
+"@ngrx/store@^21.1.1":
+  version "21.1.1"
+  resolved "https://registry.yarnpkg.com/@ngrx/store/-/store-21.1.1.tgz#4102fa28284a0f585df4fd89c8f3f67c8a7d8e7b"
+  integrity sha512-B0/IyBTqBExmwPAmrpcJrhlrn+FeeitvOW8ltf7O3kJb2vRKduV5Oi34GLiwYQ8eAukTbKyWQv/VV02gxLeEMg==
   dependencies:
     tslib "^2.0.0"
 

@@ -52,8 +52,8 @@ import { JJFileHistoryComponent } from '@components/jj-dispute-info/jj-file-hist
 import { JJDisputeDigitalCaseFileComponent } from '@components/jj-workbench/jj-dispute-digital-case-file/jj-dispute-digital-case-file.component';
 import { JJAmendmentsComponent } from '@components/jj-dispute-info/jj-amendments/jj-amendments.component';
 import { StaffAmendmentValidationComponent } from '@components/jj-dispute-info/staff-amendment-validation/staff-amendment-validation.component';
-import { AuthService } from './services/auth.service';
 import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
 import { reducers, JJDisputeStore, ReturnedDecisionStore } from './store';
 import { CourtOptionsUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/court-options-update-request-info/court-options-update-request-info.component';
@@ -68,6 +68,7 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { ProgressOptions } from '@shared/modules/ngx-progress/ngx-progress.options';
 import { progressInterceptor } from 'ngx-progressbar/http';
+import { environment } from '@env/environment';
 
 export function createAppModule(keycloakConfig: KeycloakConfig) {
 
@@ -128,7 +129,8 @@ registerLocaleData(localeFr, 'fr');
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([JJDisputeStore.Effects, ReturnedDecisionStore.Effects]),
     BsDatepickerModule.forRoot(),
-    NgMultiSelectDropDownModule.forRoot()
+    NgMultiSelectDropDownModule.forRoot(),
+    environment.production ? [] : [StoreDevtoolsModule.instrument({ maxAge: 25 })],
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   exports: [],
