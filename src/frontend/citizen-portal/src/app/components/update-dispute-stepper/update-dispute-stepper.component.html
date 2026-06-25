@@ -3,6 +3,9 @@
     <mat-icon>done</mat-icon>
   </ng-template>
 
+  <input type="file" #fileInput id="fileInput" style="display:none" accept="{{ acceptFileTypes.join(',') }}"
+    (change)="onUploadFile($event.target.files)">
+
   <!-- ════════════════════════════════════════════════════════════
        STEP 1 — Contact Information (optional)
        ════════════════════════════════════════════════════════════ -->
@@ -79,8 +82,6 @@
                 (click)="onUploadWithType('Adjournment', 'adjournment')">
                 Upload Documents
               </button>
-              <input type="file" #fileInput id="fileInput" style="display:none" accept="{{ acceptFileTypes.join(',') }}"
-                (change)="onUploadFile($event.target.files)">
             </div>
           </div>
           <div fxLayout="row wrap">
