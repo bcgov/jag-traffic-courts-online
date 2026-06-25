@@ -1,9 +1,9 @@
 @if (!showDispute) {
   <app-page>
     <mat-tab-group class="dashTabs" mat-align-tabs="start" mat-stretch-tabs="false" [selectedIndex]="tabSelected.value"
-      (selectedIndexChange)="tabSelected.setValue($event)">
+      (selectedTabChange)="changeTab($event.index, $event.tab)">
       @if (hasAssignmentsPermission) {
-        <mat-tab>
+        <mat-tab label="WR Assignments">
           <ng-template mat-tab-label>
             <h2>WR Assignments</h2>
           </ng-template>
@@ -12,7 +12,7 @@
         </mat-tab>
       }
       @if (hasWRInboxPermission) {
-        <mat-tab>
+        <mat-tab label="WR Inbox">
           <ng-template mat-tab-label>
             <h2>WR Inbox</h2>
           </ng-template>
@@ -21,21 +21,34 @@
         </mat-tab>
       }
       @if (hasHearingInboxPermission) {
-        <mat-tab>
+        <mat-tab label="Hearing Inbox">
           <ng-template mat-tab-label>
             <h2>Hearing Inbox</h2>
           </ng-template>
           <br />
           <app-jj-dispute-hearing-inbox (tcoDisputeInfo)="changeTCODispute($event, tabTypes.HEARING_INBOX)"></app-jj-dispute-hearing-inbox>
         </mat-tab>
+        <mat-tab label="Returned Decisions">
+          <ng-template mat-tab-label>
+            <h2>
+              @if (returnedDecisionCollection()?.totalRows === null || returnedDecisionCollection()?.totalRows === undefined) {
+                Returned Decisions
+              } @else {
+                Returned Decisions ({{ returnedDecisionCollection()?.totalRows }})
+              }
+            </h2>
+          </ng-template>
+          <br />
+          <app-jj-dispute-returned-decisions (tcoDisputeInfo)="changeTCODispute($event, tabTypes.RETURNED_DECISIONS)"></app-jj-dispute-returned-decisions>
+        </mat-tab>
       }
       @if (hasDCFPermission) {
-        <mat-tab #DCF>
+        <mat-tab label="DCF" #DCF>
           <ng-template mat-tab-label>
             <h2>DCF</h2>
           </ng-template>
           <br />
-          <app-jj-dispute-digital-case-file [tabIndex]="3" (tcoDisputeInfo)="changeTCODispute($event, tabTypes.DCF)"></app-jj-dispute-digital-case-file>
+          <app-jj-dispute-digital-case-file [tabIndex]="4" (tcoDisputeInfo)="changeTCODispute($event, tabTypes.DCF)"></app-jj-dispute-digital-case-file>
         </mat-tab>
       }
     </mat-tab-group>

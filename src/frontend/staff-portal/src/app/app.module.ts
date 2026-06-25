@@ -40,6 +40,8 @@ import { JjWorkbenchDashboardComponent } from '@components/jj-workbench/jj-workb
 import { StaffWorkbenchDashboardComponent } from '@components/staff-workbench/staff-workbench-dashboard/staff-workbench-dashboard.component';
 import { JJDisputeWRInboxComponent } from '@components/jj-workbench/jj-dispute-wr-inbox/jj-dispute-wr-inbox.component';
 import { JJDisputeHearingInboxComponent } from '@components/jj-workbench/jj-dispute-hearing-inbox/jj-dispute-hearing-inbox.component';
+import { JJDisputeReturnedDecisionsComponent } from '@components/jj-workbench/jj-dispute-returned-decisions/jj-dispute-returned-decisions.component';
+import { JJHearingTableComponent } from '@components/jj-workbench/jj-hearing-table/jj-hearing-table.component';
 import { DisputeDecisionInboxComponent } from '@components/staff-workbench/dispute-decision-inbox/dispute-decision-inbox.component';
 import { JJDisputeWRAssignmentsComponent } from '@components/jj-workbench/jj-dispute-wr-assignments/jj-dispute-wr-assignments.component';
 import { JJDisputeComponent } from '@components/jj-dispute-info/jj-dispute/jj-dispute.component';
@@ -50,10 +52,10 @@ import { JJFileHistoryComponent } from '@components/jj-dispute-info/jj-file-hist
 import { JJDisputeDigitalCaseFileComponent } from '@components/jj-workbench/jj-dispute-digital-case-file/jj-dispute-digital-case-file.component';
 import { JJAmendmentsComponent } from '@components/jj-dispute-info/jj-amendments/jj-amendments.component';
 import { StaffAmendmentValidationComponent } from '@components/jj-dispute-info/staff-amendment-validation/staff-amendment-validation.component';
-import { AuthService } from './services/auth.service';
 import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
-import { reducers, JJDisputeStore } from './store';
+import { reducers, JJDisputeStore, ReturnedDecisionStore } from './store';
 import { CourtOptionsUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/court-options-update-request-info/court-options-update-request-info.component';
 import { CountUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/count-update-request-info/count-update-request-info.component';
 import { DocumentUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/document-update-request-info/document-update-request-info.component';
@@ -66,6 +68,7 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { ProgressOptions } from '@shared/modules/ngx-progress/ngx-progress.options';
 import { progressInterceptor } from 'ngx-progressbar/http';
+import { environment } from '@env/environment';
 
 export function createAppModule(keycloakConfig: KeycloakConfig) {
 
@@ -95,6 +98,8 @@ registerLocaleData(localeFr, 'fr');
     StaffWorkbenchDashboardComponent,
     JJDisputeWRInboxComponent,
     JJDisputeHearingInboxComponent,
+    JJDisputeReturnedDecisionsComponent,
+    JJHearingTableComponent,
     DisputeDecisionInboxComponent,
     JJDisputeWRAssignmentsComponent,
     JJDisputeComponent,
@@ -122,9 +127,10 @@ registerLocaleData(localeFr, 'fr');
     BrowserAnimationsModule,
     FormsModule,
     StoreModule.forRoot(reducers),
-    EffectsModule.forRoot([JJDisputeStore.Effects]),
+    EffectsModule.forRoot([JJDisputeStore.Effects, ReturnedDecisionStore.Effects]),
     BsDatepickerModule.forRoot(),
-    NgMultiSelectDropDownModule.forRoot()
+    NgMultiSelectDropDownModule.forRoot(),
+    environment.production ? [] : [StoreDevtoolsModule.instrument({ maxAge: 25 })],
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   exports: [],

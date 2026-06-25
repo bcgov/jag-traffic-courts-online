@@ -270,9 +270,13 @@ export class JJDisputeComponent implements OnInit {
   }
 
   get documentManagementAllowed(): boolean {
-    const onJJPage = this.isJjBaseAddress() &&
-      (this.type === this.tabTypes.DCF || this.type === this.tabTypes.WR_ASSIGNMENTS
-        || this.type === this.tabTypes.WR_INBOX || this.type === this.tabTypes.HEARING_INBOX);
+    const onJJPage =
+      this.isJjBaseAddress() &&
+      (this.type === this.tabTypes.DCF ||
+        this.type === this.tabTypes.WR_ASSIGNMENTS ||
+        this.type === this.tabTypes.WR_INBOX ||
+        this.type === this.tabTypes.HEARING_INBOX ||
+        this.type === this.tabTypes.RETURNED_DECISIONS);
 
     return !(this.isJJ && onJJPage);
   }

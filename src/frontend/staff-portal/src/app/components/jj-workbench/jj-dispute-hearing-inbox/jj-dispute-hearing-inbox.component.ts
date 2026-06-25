@@ -3,7 +3,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
 import { JJDisputeService } from 'app/services/jj-dispute.service';
 import { SortDirection, YesNo, DisputeCaseFileSummary, PagedDisputeCaseFileSummaryCollection } from 'app/api';
-import { AuthService, UserRepresentation } from 'app/services/auth.service';
 import { FormControl } from '@angular/forms';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { DisputeStatus } from '@shared/consts/DisputeStatus.model';
@@ -24,15 +23,10 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
 
   @ViewChild('fauxPicker') private readonly fauxPicker: MatDatepicker<null>; // Temp fix for DatetimePicker styles
 
-  filterValues: any = {
-    jjAssignedTo: '',
-    appearanceTs: new Date()
-  }
   appearanceDateFilter = new FormControl(null);
   jjAssignedToFilter = new FormControl('');
   courthouseLocationFilter = new FormControl({ value: '', disabled: true });
   appearanceRoomCodeFilter = new FormControl('');
-  jjList: UserRepresentation[];
   tcoDisputes: DisputeCaseFileSummary[] = [];
   appearanceRoomCodes: string[] = [];
   tcoDisputesCollection: PagedDisputeCaseFileSummaryCollection = {};
@@ -61,17 +55,11 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
 
   constructor(
     private jjDisputeService: JJDisputeService,
-    private authService: AuthService,
     private logger: LoggerService,
     private readonly changeDetectorRef: ChangeDetectorRef, // Temp fix for DatetimePicker styles
     public lookupsService: LookupsService,
     private hearingInboxFilterService: HearingInboxFilterService
   ) {
-    this.authService.jjList$.subscribe(result => {
-      this.jjList = result;
-    });
-
-
     // listen for changes in appearance Date
     this.appearanceDateFilter.valueChanges
       .subscribe(
@@ -204,13 +192,6 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   onPageChange(event: number) {
     this.currentPage = event;
     this.getTCODisputes(true);
-  }
-
-  getName(jjAssignedTo: string) {
-    if (this.jjList) {
-      const jj = this.jjList.find(j => j.idir === jjAssignedTo);
-      return jj ? jj.jjDisplayName : '';
-    }
   }
 
   isEditable(element: DisputeCaseFileSummary){
