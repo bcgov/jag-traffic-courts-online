@@ -10,7 +10,7 @@
     <br />
     @if (requestReadable === true) {
       <div style="display: grid; grid-template-columns: auto">
-        <span><b>Citizen Uploaded Documents ({{updateRequested.UploadedDocuments.length }})</b></span>
+        <span><b>Disputant Uploaded Documents ({{updateRequested.UploadedDocuments.length }})</b></span>
         <br/>
         @for (doc of updateRequested.UploadedDocuments; track doc.DocumentId) {
           <div>

@@ -156,7 +156,7 @@ public class DisputeService : IDisputeService,
                 savedDispute.NoticeOfDisputeGuid,
                 FileHistoryAuditLogEntryType.FRMK, // VTC staff has added a file remark for saving or updating a dispute in Ticket Validation
                 user.GetUsername(),
-                "Staff have Submitted a Dispute on behalf of a Citizen"
+                "Staff have Submitted a Dispute on behalf of a Disputant"
             ), cancellationToken);
         
         // send notification that a dispute has been created (which will kick off email validation)

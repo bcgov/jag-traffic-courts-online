@@ -1,11 +1,11 @@
 @if (dispute) {
   <div class="ticket-status BC-Gov-15px-black-text">
     <div>Request submitted date: <span>{{ dispute.submittedTs | date:"dd-MMM-yyyy"}}</span></div>
-    <div>Request submitted by: <span>{{ dispute.createdBy === "OCCAMORDS" ? "Citizen" : dispute.createdBy }}</span></div> 
+    <div>Request submitted by: <span>{{ dispute.createdBy === "OCCAMORDS" ? "Disputant" : dispute.createdBy }}</span></div> 
     <div>Status: <span>{{dispute.status}}</span></div>
     <div>Assigned to: <span>{{dispute.userAssignedTo ? dispute.userAssignedTo : "Unassigned"}}</span></div>
     @if (!dispute.emailAddress) {
-      <div><span>Citizen has opted out of email communication for this dispute</span></div>
+      <div><span>Disputant has opted out of email communication for this dispute</span></div>
     }
   </div>
 }

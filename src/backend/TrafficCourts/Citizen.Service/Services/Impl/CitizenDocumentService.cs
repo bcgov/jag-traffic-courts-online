@@ -83,7 +83,7 @@ public class CitizenDocumentService : ICitizenDocumentService
         // Citizen Portal should only have access to Citizen documents
         if (properties.DocumentSource is not null && properties.DocumentSource is not TrafficCourts.Domain.Models.DocumentSource.Citizen) {
             // Should never happen since this file is not even available in the UI for selection.
-            throw new InvalidDataException("Requested file is not a citizen document");
+            throw new InvalidDataException("Requested file was not uploaded by the disputant");
         }
 
         if (!properties.VirusScanIsClean)
