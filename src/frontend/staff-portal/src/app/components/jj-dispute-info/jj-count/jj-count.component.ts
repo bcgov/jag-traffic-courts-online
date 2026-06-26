@@ -120,7 +120,7 @@ export class JJCountComponent implements OnInit, OnChanges {
           ssProbationCheckbox: [{ value: false, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
           ssProbationDuration: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
           ssProbationConditions: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
-          jailCheckbox: [{ value: false, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
+          jailCheckbox: [{ value: false, disabled: true }],
           jailDuration: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
           jailIntermittent: [{ value: null, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
           probationCheckbox: [{ value: false, disabled: !this.jjDisputedCount || this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons }],
