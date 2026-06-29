@@ -735,12 +735,12 @@
                             <div class="col-md-12">
                               <mat-radio-group formControlName="pleaCode" class="plea-radio-group">
                                 <mat-radio-button value="G" class="mb-3"
-                                                  (change)="disputeInfoForm.get('count' + count.countNo).patchValue({__skip: false})">
+                                  (change)="disputeInfoForm.get('count' + count.countNo).patchValue({__skip: false, pleaCode: 'G'})">
                                   The Disputant agrees they committed this offence and would like to request a fine reduction and/or time to pay on this count.
                                 </mat-radio-button>
                                 <div class="or-divider mb-2">or</div>
                                 <mat-radio-button value="N" class="mb-3"
-                                                  (change)="disputeInfoForm.get('count' + count.countNo).patchValue({__skip: false})">
+                                  (change)="disputeInfoForm.get('count' + count.countNo).patchValue({__skip: false, pleaCode: 'N'})">
                                   The Disputant does not agree they committed this offence, but if found guilty, may request a fine reduction and/or time to pay on this count.
                                 </mat-radio-button>
                               </mat-radio-group>
@@ -929,7 +929,7 @@
                               <mat-form-field class="w-100">
                                 <mat-label>Interpreter Language</mat-label>
                                 <input matInput 
-                                      formControlName="interpreterLanguageCd"
+                                      formControlName="interpreterLanguageDesc"
                                       [matAutocomplete]="languageAuto"
                                       (keyup)="onLanguageKeyup($event.target.value)" />
                                 <mat-autocomplete #languageAuto="matAutocomplete">

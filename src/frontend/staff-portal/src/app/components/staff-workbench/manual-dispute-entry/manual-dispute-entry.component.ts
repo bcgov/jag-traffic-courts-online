@@ -207,12 +207,13 @@ export class ManualDisputeEntryComponent implements OnInit {
       requestCourtAppearance: [null, [Validators.required]],
       representedByLawyer: [DisputeRepresentedByLawyer.N],
       interpreterRequired: [DisputeInterpreterRequired.N],
-      interpreterLanguageCd: [null],
+      interpreterLanguageDesc: [null],
       witnessNo: [0],
       fineReductionReason: [null],
       timeToPayReason: [null]
     });
   }
+  
   private initializeLegalRepresentationForm() {
     this.legalRepresentationForm = this.formBuilder.group({
       lawFirmName: [null],
@@ -579,10 +580,6 @@ export class ManualDisputeEntryComponent implements OnInit {
 
       if (foundStatute) {
         this.updateCountWithStatute(countNo, foundStatute);
-        // Update the description field to show the full statute string
-        countFormGroup?.patchValue({
-          description: foundStatute.__statuteString
-        });
       } else {
         this.clearCountStatuteFields(countNo);
       }
@@ -648,7 +645,7 @@ export class ManualDisputeEntryComponent implements OnInit {
       subsection: statute.subsectionText,
       paragraph: statute.paragraphText,
       subparagraph: statute.subparagraphText,
-      description: statute.__statuteString || `${statute.actCode} ${statute.code} ${statute.shortDescriptionText}`
+      description: `${statute.actCode} ${statute.code} ${statute.shortDescriptionText}`
     });
   }
 
@@ -1291,7 +1288,7 @@ export class ManualDisputeEntryComponent implements OnInit {
       requestCourtAppearanceYn: disputeData.requestCourtAppearance,
       representedByLawyer: disputeData.representedByLawyer,
       interpreterRequired: disputeData.interpreterRequired,
-      interpreterLanguageCd: disputeData.interpreterLanguageCd,
+      interpreterLanguageCd: this.languages.find(lang => lang.description === disputeData.interpreterLanguageDesc)?.code || null,
       witnessNo: disputeData.witnessNo || 0,
       fineReductionReason: fineReductionReason,
       timeToPayReason: timeToPayReason,
@@ -1333,9 +1330,15 @@ export class ManualDisputeEntryComponent implements OnInit {
   private buildViolationTicketCounts(): ViolationTicketCount[] {
     return this.ticketCounts.map((count, index) => {
       const countFormData = this.disputeInfoForm.get(`count${count.countNo}`).value;
+
+      // TCVP-3474 and TCVP-3502: HACK - We're mashing ACT/SECT/etc into the Description field on the form to make a single autosuggest picklist for the users to work with
+      // but then we need to split the values out to send to the API in the correct fields, so we need to parse the description field to extract those values
+      // consequently, we're storing the "short description" in the count itself, but a more complete concat of act/code/section/etc/description in the form value for the user to see and select from
+      // that means at this step, we need to make sure we load description from the count (not the form) to avoid sending the full concatenated string to the API (which then glues that stuff on again and creates a mess)
+
       return {
         countNo: count.countNo,
-        description: countFormData.description,
+        description: count.description, // see note above
         actOrRegulationNameCode: countFormData.actOrRegulationNameCode,
         ticketedAmount: countFormData.ticketedAmount,
         section: countFormData.section,
@@ -1350,29 +1353,17 @@ export class ManualDisputeEntryComponent implements OnInit {
     return this.disputeCounts.map((count, index) => {
       const countFormData = this.disputeInfoForm.get(`count${count.countNo}`).value;
       
-      // Determine pleaCode based on skip status and request flags
-      // This logic matches the citizen portal dispute-stepper.component.ts
-      let pleaCode: any;
+      // Skipped counts don't set up actions properly because of how the form is structured, so we need to handle skipped counts here to ensure they are treated as guilty pleas with no action
       const isSkipped = countFormData.__skip;
-      
-      if (isSkipped) {
-        // Skipped counts are treated as guilty plea with no action
-        pleaCode = this.Plea.G;
-      } else if (countFormData.requestTimeToPay === this.RequestTimeToPay.Y || 
-                 countFormData.requestReduction === this.RequestReduction.Y) {
-        // Guilty plea with time to pay or reduction request
-        pleaCode = this.Plea.G;
-      } else {
-        // Not guilty - disputing the charge
-        pleaCode = this.Plea.N;
-      }
       
       return {
         countNo: count.countNo,
-        requestCourtAppearance: countFormData.requestCourtAppearance,
+        requestCourtAppearance: isSkipped ? this.RequestCourtAppearance.N : countFormData.requestCourtAppearance,
         requestReduction: countFormData.requestReduction,
         requestTimeToPay: countFormData.requestTimeToPay,
-        pleaCode: pleaCode
+        pleaCode: isSkipped || countFormData.requestCourtAppearance !== this.RequestCourtAppearance.Y 
+          ? this.Plea.G // Skipped counts or counts without court appearance are treated as guilty pleas
+          : this.Plea.N
       };
     });
   }
@@ -1514,11 +1505,19 @@ export class ManualDisputeEntryComponent implements OnInit {
         interpreterRequired: DisputeInterpreterRequired.N,
         witnessNo: 0
       });
-      
+
       // Clear plea codes and remove validators when switching to written reasons
       this.ticketCounts.forEach(count => {
         const countFormGroup = this.disputeInfoForm.get(`count${count.countNo}`);
         if (countFormGroup) {
+
+          // reset form values to defaults for written reasons (no court appearance requested)
+          countFormGroup.patchValue({
+            requestCourtAppearance: DisputeRequestCourtAppearanceYn.N,
+            requestReduction: DisputeCountRequestReduction.N,
+            requestTimeToPay: DisputeCountRequestTimeToPay.N
+          });
+
           const pleaCodeControl = countFormGroup.get('pleaCode');
           pleaCodeControl.clearValidators();
           pleaCodeControl.setValue(null);
@@ -1530,17 +1529,27 @@ export class ManualDisputeEntryComponent implements OnInit {
       this.ticketCounts.forEach(count => {
         const countFormGroup = this.disputeInfoForm.get(`count${count.countNo}`);
         if (countFormGroup) {
-          countFormGroup.patchValue({
-            requestReduction: DisputeCountRequestReduction.N,
-            requestTimeToPay: DisputeCountRequestTimeToPay.N
-          });
-          
           // Add required validator to pleaCode for court hearing (unless skipped)
           const isSkipped = countFormGroup.get('__skip')?.value;
           const pleaCodeControl = countFormGroup.get('pleaCode');
           if (!isSkipped) {
+
+            // If a hearing is requested at the Dispute level, then any non-skipped counts are automatically requesting a Court Appearance as well as TTP and RFR
+            // this is inconsistent with Citizen submit, but citizen side never shows TTP and RFR selections for Hearing cases, and neither does Staff after it's submitted so it shouldn't matter
+            countFormGroup.patchValue({
+              requestCourtAppearance: DisputeRequestCourtAppearanceYn.Y,
+              requestReduction: DisputeCountRequestReduction.Y,
+              requestTimeToPay: DisputeCountRequestTimeToPay.Y
+            });
+
             pleaCodeControl.setValidators([Validators.required]);
           } else {
+            countFormGroup.patchValue({
+              requestCourtAppearance: null,
+              requestReduction: null,
+              requestTimeToPay: null
+            });
+
             pleaCodeControl.clearValidators();
           }
           pleaCodeControl.updateValueAndValidity();
@@ -1597,7 +1606,7 @@ export class ManualDisputeEntryComponent implements OnInit {
     const value = checked ? DisputeInterpreterRequired.Y : DisputeInterpreterRequired.N;
     this.disputeInfoForm.patchValue({ interpreterRequired: value });
     
-    const langControl = this.disputeInfoForm.get('interpreterLanguageCd');
+    const langControl = this.disputeInfoForm.get('interpreterLanguageDesc');
     if (value === DisputeInterpreterRequired.Y) {
       langControl.setValidators([Validators.required]);
     } else {
