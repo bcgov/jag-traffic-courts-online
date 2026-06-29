@@ -513,8 +513,7 @@
             <!-- Suspended Sentence -->
             <span class="section-grid-cell" style="grid-column: span 3">
               @if (isViewOnly === false) {
-                <mat-checkbox [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"
-                  formControlName="ssProbationCheckbox" (change)="onSuspSentenceCheck($event.checked)">
+                <mat-checkbox formControlName="ssProbationCheckbox" (change)="onSuspSentenceCheck($event.checked)">
                   <span class="count-text" style="font-size: small"><b>Suspended Sentence</b></span>
                 </mat-checkbox>
               }
@@ -534,8 +533,7 @@
             <!-- Jail -->
             <span class="section-grid-cell" style="grid-column: span 3">
               @if (isViewOnly === false) {
-                <mat-checkbox [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons" formControlName="jailCheckbox"
-                  (change)="onJailCheck($event.checked)">
+                <mat-checkbox formControlName="jailCheckbox" (change)="onJailCheck($event.checked)">
                   <span class="count-text" style="font-size: small"><b>Jail</b></span>
                 </mat-checkbox>
               }
@@ -558,8 +556,7 @@
             <!-- Probation -->
             <span class="section-grid-cell" style="grid-column: span 3">
               @if (isViewOnly === false) {
-                <mat-checkbox [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons" formControlName="probationCheckbox"
-                  (change)="onProbationCheck($event.checked)">
+                <mat-checkbox formControlName="probationCheckbox" (change)="onProbationCheck($event.checked)">
                   <span class="count-text" style="font-size: small"><b>Probation</b></span>
                 </mat-checkbox>
               }
@@ -579,8 +576,7 @@
             <!-- Driving Prohibition -->
             <span class="section-grid-cell" style="grid-column: span 3">
               @if (isViewOnly === false) {
-                <mat-checkbox [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"
-                  formControlName="drivingProhibitionCheckbox" (change)="onDrivingProhibitionCheck($event.checked)">
+                <mat-checkbox formControlName="drivingProhibitionCheckbox" (change)="onDrivingProhibitionCheck($event.checked)">
                   <span class="count-text" style="font-size: small"><b>Driving Prohibition</b></span>
                 </mat-checkbox>
               }
@@ -634,8 +630,7 @@
               <br />
               <br />
               @if (isViewOnly === false) {
-                <mat-checkbox [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"
-                  formControlName="stayOfProceedingsByCheckbox" (change)="onStayOfProceedingsByCheck($event.checked)">
+                <mat-checkbox formControlName="stayOfProceedingsByCheckbox" (change)="onStayOfProceedingsByCheck($event.checked)">
                   <span class="count-text" style="font-size: small;display: block;"><b>Stay of Proceedings By</b></span>
                 </mat-checkbox>
               }
@@ -645,8 +640,7 @@
                 <br />
               }
               @if (isViewOnly === false) {
-                <mat-checkbox [disabled]="!jjDisputedCount || jjDisputeInfo.hearingType === HearingType.WrittenReasons"
-                  formControlName="otherCheckbox" (change)="onOtherCheck($event.checked)">
+                <mat-checkbox formControlName="otherCheckbox" (change)="onOtherCheck($event.checked)">
                   <span class="count-text" style="font-size: small"><b>Other</b></span>
                 </mat-checkbox>
               }
