@@ -265,20 +265,16 @@ export class JJDisputeComponent implements OnInit {
     });
   }
 
-  isJjBaseAddress(): boolean {
-    return this.router.url.includes('/jj');
+  get documentUploadAllowed(): boolean {
+    return this.isSSEditMode;
   }
 
-  get documentManagementAllowed(): boolean {
-    const onJJPage =
-      this.isJjBaseAddress() &&
-      (this.type === this.tabTypes.DCF ||
-        this.type === this.tabTypes.WR_ASSIGNMENTS ||
-        this.type === this.tabTypes.WR_INBOX ||
-        this.type === this.tabTypes.HEARING_INBOX ||
-        this.type === this.tabTypes.RETURNED_DECISIONS);
+  get documentRemovalAllowed(): boolean {
+    return this.isSSEditMode;
+  }
 
-    return !(this.isJJ && onJJPage);
+  get documentStatusChangesAllowed(): boolean {
+    return this.isSSEditMode || this.type == this.tabTypes.HEARING_INBOX || this.type == this.tabTypes.RETURNED_DECISIONS;
   }
   
   get unacknowledgedAmendmentsExist(): boolean {
