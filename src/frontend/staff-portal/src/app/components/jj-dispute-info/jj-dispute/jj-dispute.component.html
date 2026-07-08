@@ -43,7 +43,7 @@
         </mat-dialog-actions>
       </ng-template>
       <div class="button-container">
-        @if (isVTCStaff && !isSSEditMode) {
+        @if (isVTCStaff && !isSSEditMode && type !== tabTypes.DCF) {
           <button mat-raised-button (click)="onAddRemarks()" class="form-button">
             {{ "Add Remark" | translate }}
           </button>
@@ -798,7 +798,7 @@
               @for (doc of lastUpdatedJJDispute.fileData; track doc.fileId) {
                 <div class="border-bottom py-1">
                   <div fxFlex="50" fxFlex.gt-md="35">
-                    @if (documentManagementAllowed) {
+                    @if (documentRemovalAllowed) {
                       <button fxFlex="none" type="button" class="upload-delete" (click)="onRemoveFile(doc.fileId, doc.fileName)">
                         <mat-icon>delete</mat-icon>
                       </button>
@@ -813,13 +813,17 @@
                   <div fxFlex="50" fxFlex.gt-md="25" fxLayoutAlign="start center" fxLayoutGap="1rem">
                     <div fxFlex="calc(50% - 0.5rem)" class="mat-caption">{{ doc.documentType }}</div>
                     @if (doc.documentType === "Adjournment") {
-                      <mat-form-field fxFlex="calc(50% - 0.5rem)" class="py-0"
-                        [appearance]="doc.documentStatus === DocumentStatus.Pending ? 'outline' : 'fill'">
-                        <mat-select [value]="doc.documentStatus" (selectionChange)="onChangeDocumentStatus(doc, $event.value)">
-                          <mat-option [value]="DocumentStatus.Pending">Pending</mat-option>
-                          <mat-option [value]="DocumentStatus.Resolved">Resolved</mat-option>
-                        </mat-select>
-                      </mat-form-field>
+                      @if (documentStatusChangesAllowed) {
+                        <mat-form-field fxFlex="calc(50% - 0.5rem)" class="py-0"
+                          [appearance]="doc.documentStatus === DocumentStatus.Pending ? 'outline' : 'fill'">
+                          <mat-select [value]="doc.documentStatus" (selectionChange)="onChangeDocumentStatus(doc, $event.value)">
+                            <mat-option [value]="DocumentStatus.Pending">Pending</mat-option>
+                            <mat-option [value]="DocumentStatus.Resolved">Resolved</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      } @else {
+                        <div fxFlex="calc(50% - 0.5rem)" class="mat-caption">{{ doc.documentStatus }}</div>
+                      }
                     }
                   </div>
                 </div>
@@ -828,7 +832,7 @@
                 <div>{{ fileUploadError }}</div>
               }
             </div>
-            @if (documentManagementAllowed) {
+            @if (documentUploadAllowed) {
               <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1rem">
                 <label fxFlex="32" fxFlex.gt-md="16">File type for upload:</label>
                 <mat-form-field fxFlex="34" fxFlex.gt-md="17" appearance="outline" style="display: inline-flex;">
