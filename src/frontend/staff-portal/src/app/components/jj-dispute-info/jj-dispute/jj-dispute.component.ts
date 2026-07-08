@@ -274,7 +274,12 @@ export class JJDisputeComponent implements OnInit {
   }
 
   get documentStatusChangesAllowed(): boolean {
-    return this.isSSEditMode || this.type == this.tabTypes.HEARING_INBOX || this.type == this.tabTypes.RETURNED_DECISIONS;
+    return (
+      this.isSSEditMode ||
+      this.type == this.tabTypes.HEARING_INBOX ||
+      this.type == this.tabTypes.RETURNED_DECISIONS ||
+      this.type == this.tabTypes.DECISION_VALIDATION
+    );
   }
   
   get unacknowledgedAmendmentsExist(): boolean {
