@@ -171,7 +171,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
             {
                 // Return BadRequest 
                 // - if the file is not an image/pdf of a TrafficViolation (could not read title)
-                // - if the TicketNumber could not be extracted or is invalid (ie doesn't start with an A)
+                // - if the TicketNumber could not be extracted or is invalid (ie doesn't start with an A or B)
                 // - if MVA is not the only checkbox selected under the 'Did commit the offence(s) indicated' section
                 // - if ViolationDate is > 30 days ago
                 ProblemDetails problemDetails = new();
