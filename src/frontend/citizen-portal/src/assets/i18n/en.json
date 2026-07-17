@@ -247,7 +247,7 @@
   },
   "ticket_information_dialog": {
     "text_1": "If you do not get a ticket search result",
-    "text_2": "If you have a handwritten ticket that starts with an A, you need to create your online ticket. Upload an image of your ticket to start. Follow the prompts.",
+    "text_2": "If you have a handwritten ticket that starts with an A or B, you need to create your online ticket. Upload an image of your ticket to start. Follow the prompts.",
     "text_3": "If you have an Intersection Safety Camera or eTicket and you do not get a result with the information on your ticket, contact support at",
     "text_4": "If you lost your ticket",
     "text_5": "If you have lost your physical ticket, call the police detachment you received the ticket from (for intersection camera tickets call the Intersection Safety Camera Program), to get a copy of your ticket."
