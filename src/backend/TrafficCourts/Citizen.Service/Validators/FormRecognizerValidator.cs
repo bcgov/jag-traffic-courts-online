@@ -11,7 +11,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
 {
 
     private static readonly string _ticketTitleRegex = @"^VIOLATION TICKET$";
-    private static readonly string _violationTicketNumberRegex = @"^A[A-Z]\d{8}$"; // 2 uppercase characters followed by 8 digits.
+    private static readonly string _violationTicketNumberRegex = @"^[AB][A-Z]\d{8}$"; // 2 uppercase characters followed by 8 digits.
     private readonly IStatuteLookupService _lookupService;
     private readonly ILogger<FormRecognizerValidator> _logger;
 
