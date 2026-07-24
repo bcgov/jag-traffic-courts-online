@@ -5,8 +5,8 @@ import { TableFilter, UpdateRequestTableStatusDefault, TicketValidationTableStat
   providedIn: 'root',
 })
 export class TableFilterService { // Temp
-  tableFilters: TableFilter[] = Array.from({ length: 4 }, () => new TableFilter());
-  currentPage: number[] = new Array(4).fill(1);
+  tableFilters: TableFilter[] = Array.from({ length: 5 }, () => new TableFilter());
+  currentPage: number[] = new Array(5).fill(1);
   constructor() {
     //default status for Update Request and ticket validation inbox set to 'New'
     this.tableFilters[0].status = TicketValidationTableStatusDefault;

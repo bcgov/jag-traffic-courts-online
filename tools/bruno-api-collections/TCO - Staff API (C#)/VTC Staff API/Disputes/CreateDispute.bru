@@ -1,208 +1,149 @@
 meta {
-  name: Updates the status of a particular Dispute record to VALIDATED.
+  name: CreateDispute
   type: http
-  seq: 6
+  seq: 1
   tags: [
     Dispute
   ]
 }
 
-put {
-  url: {{baseUrl}}/api/dispute/:disputeId/validate
+post {
+  url: {{baseUrl}}/api/dispute
   body: json
   auth: inherit
 }
 
-params:path {
-  disputeId: 
+headers {
+  ~X-Timezone: 
 }
 
 body:json {
   {
-    "fileData": [
-      {
-        "fileId": "",
-        "fileName": "",
-        "noticeOfDisputeGuid": "",
-        "documentSource": "Citizen",
-        "documentType": "",
-        "documentStatus": "Filed",
-        "virusScanStatus": "",
-        "staffReviewStatus": "",
-        "ticketNumber": "",
-        "disputeId": 0,
-        "pendingFileStream": "",
-        "deleteRequested": false
-      }
-    ],
-    "icbcName": {
-      "surname": "",
-      "firstGivenName": "",
-      "secondGivenName": ""
-    },
-    "createdBy": "",
-    "createdTs": "",
-    "modifiedBy": "",
-    "modifiedTs": "",
-    "disputeId": 0,
-    "noticeOfDisputeGuid": "",
-    "ticketNumber": "",
-    "issuedTs": "",
-    "submittedTs": "",
-    "disputantSurname": "",
-    "disputantGivenName1": "",
-    "disputantGivenName2": "",
-    "disputantGivenName3": "",
-    "disputantBirthdate": "",
-    "driversLicenceNumber": "",
-    "disputantOrganization": "",
-    "disputantClientId": "",
-    "driversLicenceIssuedCountryId": 0,
-    "driversLicenceIssuedProvinceSeqNo": 0,
-    "driversLicenceProvince": "",
-    "status": "UNKNOWN",
-    "addressLine1": "",
-    "addressLine2": "",
-    "addressLine3": "",
-    "addressCity": "",
-    "addressProvince": "",
-    "addressProvinceCountryId": 0,
-    "addressProvinceSeqNo": 0,
-    "addressCountryId": 0,
-    "postalCode": "",
-    "homePhoneNumber": "",
-    "workPhoneNumber": "",
+    "ticketNumber": "AX01010112",
+    "issuedTs": "2026-05-25T10:10:00",
+    "submittedTs": "2026-05-28T00:00:00",
+    "disputantSurname": "Zoomington",
+    "disputantGivenName1": "Zen",
+    "disputantGivenName2": null,
+    "disputantGivenName3": null,
+    "driversLicenceNumber": "01010101",
+    "driversLicenceIssuedCountryId": 1,
+    "driversLicenceIssuedProvinceSeqNo": 1,
+    "contactTypeCd": "INDIVIDUAL",
+    "contactSurnameNm": null,
+    "contactGiven1Nm": null,
+    "contactGiven2Nm": null,
+    "contactGiven3Nm": null,
+    "contactLawFirmNm": null,
+    "addressLine1": "123 Test Lane",
+    "addressCity": "Testville",
+    "addressProvince": "British Columbia",
+    "addressProvinceSeqNo": 1,
+    "addressProvinceCountryId": 1,
+    "addressCountryId": 1,
+    "postalCode": "V9V9V9",
     "emailAddress": "",
-    "emailAddressVerified": false,
-    "filingDate": "",
-    "representedByLawyer": "UNKNOWN",
-    "lawFirmName": "",
-    "lawyerSurname": "",
-    "lawyerGivenName1": "",
-    "lawyerGivenName2": "",
-    "lawyerGivenName3": "",
-    "lawyerAddress": "",
-    "lawyerPhoneNumber": "",
-    "lawyerEmail": "",
-    "officerPin": "",
-    "contactTypeCd": "UNKNOWN",
-    "requestCourtAppearanceYn": "UNKNOWN",
-    "contactLawFirmNm": "",
-    "contactGiven1Nm": "",
-    "contactGiven2Nm": "",
-    "contactGiven3Nm": "",
-    "contactSurnameNm": "",
-    "appearanceDtm": "",
-    "appearanceLessThan14DaysYn": "UNKNOWN",
-    "detachmentLocation": "",
-    "courtAgenId": "",
-    "interpreterLanguageCd": "",
-    "interpreterRequired": "UNKNOWN",
+    "homePhoneNumber": "2501234567",
+    "requestCourtAppearanceYn": "Y",
+    "representedByLawyer": "N",
+    "interpreterRequired": "N",
+    "interpreterLanguageCd": null,
     "witnessNo": 0,
-    "fineReductionReason": "",
-    "timeToPayReason": "",
-    "disputantComment": "",
-    "rejectedReason": "",
-    "userAssignedTo": "",
-    "userAssignedTs": "",
-    "disputantDetectedOcrIssues": "UNKNOWN",
-    "disputantOcrIssues": "",
-    "systemDetectedOcrIssues": "UNKNOWN",
-    "ocrTicketFilename": "",
-    "signatoryType": "U",
-    "signatoryName": "",
+    "fineReductionReason": "See uploaded document",
+    "timeToPayReason": "See uploaded document",
+    "signatoryName": null,
+    "signatoryType": null,
+    "lawFirmName": null,
+    "lawyerSurname": null,
+    "lawyerGivenName1": null,
+    "lawyerGivenName2": null,
+    "lawyerGivenName3": null,
+    "lawyerAddress": null,
+    "lawyerPhoneNumber": null,
+    "lawyerEmail": null,
+    "disputantDetectedOcrIssues": "N",
+    "systemDetectedOcrIssues": "N",
+    "status": "NEW",
+    "courtAgenId": "9393.0001",
     "violationTicket": {
-      "createdBy": "",
-      "createdTs": "",
-      "modifiedBy": "",
-      "modifiedTs": "",
-      "violationTicketId": 0,
-      "ticketNumber": "",
-      "disputantOrganizationName": "",
-      "disputantSurname": "",
-      "disputantGivenNames": "",
-      "isYoungPerson": "UNKNOWN",
-      "disputantDriversLicenceNumber": "",
-      "disputantClientNumber": "",
-      "driversLicenceProvince": "",
-      "driversLicenceCountry": "",
-      "driversLicenceIssuedYear": 0,
-      "driversLicenceExpiryYear": 0,
-      "disputantBirthdate": "",
-      "address": "",
-      "addressCity": "",
-      "addressProvince": "",
-      "addressPostalCode": "",
-      "addressCountry": "",
-      "officerPin": "",
-      "detachmentLocation": "",
-      "issuedTs": "",
-      "issuedOnRoadOrHighway": "",
-      "issuedAtOrNearCity": "",
-      "isChangeOfAddress": "UNKNOWN",
-      "isDriver": "UNKNOWN",
-      "isOwner": "UNKNOWN",
-      "courtLocation": "",
+      "ticketNumber": "AX01010112",
+      "disputantSurname": "Zoomington",
+      "disputantGivenNames": "Zen",
+      "disputantDriversLicenceNumber": "01010101",
+      "driversLicenceProvince": "British Columbia",
+      "driversLicenceCountry": "Canada",
+      "issuedTs": "2026-05-25T10:10:00",
+      "courtLocation": "Abbotsford Law Courts",
       "violationTicketCounts": [
         {
-          "createdBy": "",
-          "createdTs": "",
-          "modifiedBy": "",
-          "modifiedTs": "",
-          "violationTicketCountId": 0,
-          "countNo": 0,
-          "description": "",
-          "actOrRegulationNameCode": "",
-          "isAct": "UNKNOWN",
-          "isRegulation": "UNKNOWN",
-          "section": "",
+          "countNo": 1,
+          "description": "MVA 146 Speeding",
+          "actOrRegulationNameCode": "MVA",
+          "ticketedAmount": 189,
+          "section": "146",
           "subsection": "",
           "paragraph": "",
-          "subparagraph": "",
-          "ticketedAmount": 0,
-          "additionalProperties": {}
+          "subparagraph": ""
+        },
+        {
+          "countNo": 2,
+          "description": "MVA 148 Excessive Speeding",
+          "actOrRegulationNameCode": "MVA",
+          "ticketedAmount": 409,
+          "section": "148",
+          "subsection": "",
+          "paragraph": "",
+          "subparagraph": ""
+        },
+        {
+          "countNo": 3,
+          "description": "MVA 147(1) Exceeding 30 km/h in school zone.",
+          "actOrRegulationNameCode": "MVA",
+          "ticketedAmount": 699,
+          "section": "147",
+          "subsection": "1",
+          "paragraph": "",
+          "subparagraph": ""
         }
-      ],
-      "additionalProperties": {},
-      "violationTicketImage": {
-        "image": "",
-        "mimeType": ""
-      },
-      "ocrViolationTicket": {
-        "ticketVersion": "VT1",
-        "imageFilename": "",
-        "globalConfidence": 0,
-        "fields": {}
-      }
+      ]
     },
     "disputeCounts": [
       {
-        "createdBy": "",
-        "createdTs": "",
-        "modifiedBy": "",
-        "modifiedTs": "",
-        "countNo": 0,
-        "pleaCode": "UNKNOWN",
-        "requestTimeToPay": "UNKNOWN",
-        "requestReduction": "UNKNOWN",
-        "requestCourtAppearance": "UNKNOWN",
-        "additionalProperties": {}
+        "countNo": 1,
+        "requestCourtAppearance": "Y",
+        "requestReduction": "Y",
+        "requestTimeToPay": "Y",
+        "pleaCode": "G"
+      },
+      {
+        "countNo": 2,
+        "requestCourtAppearance": "Y",
+        "requestReduction": "Y",
+        "requestTimeToPay": "Y",
+        "pleaCode": "N"
+      },
+      {
+        "countNo": 3,
+        "requestCourtAppearance": "N",
+        "requestReduction": "N",
+        "requestTimeToPay": "N",
+        "pleaCode": "G"
       }
     ],
-    "additionalProperties": {}
+    "disputantBirthdate": "2001-01-01"
   }
 }
 
 example {
   name: 200 Response
-  description: The Dispute is updated.
+  description: The Dispute was created.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/validate
-    method: PUT
+    url: {{baseUrl}}/api/dispute
+    method: POST
     mode: json
-    params:path: {
-      disputeId: 
+    headers: {
+      ~X-Timezone: 
     }
   
     body:json: {
@@ -383,6 +324,10 @@ example {
   }
   
   response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
     status: {
       code: 200
       text: OK
@@ -391,7 +336,939 @@ example {
     body: {
       type: text
       content: '''
+        {
+          "fileData": [
+            {
+              "fileId": "",
+              "fileName": "",
+              "noticeOfDisputeGuid": "",
+              "documentSource": "Citizen",
+              "documentType": "",
+              "documentStatus": "Filed",
+              "virusScanStatus": "",
+              "staffReviewStatus": "",
+              "ticketNumber": "",
+              "disputeId": 0,
+              "pendingFileStream": "",
+              "deleteRequested": false
+            }
+          ],
+          "icbcName": {
+            "surname": "",
+            "firstGivenName": "",
+            "secondGivenName": ""
+          },
+          "createdBy": "",
+          "createdTs": "",
+          "modifiedBy": "",
+          "modifiedTs": "",
+          "disputeId": 0,
+          "noticeOfDisputeGuid": "",
+          "ticketNumber": "",
+          "issuedTs": "",
+          "submittedTs": "",
+          "disputantSurname": "",
+          "disputantGivenName1": "",
+          "disputantGivenName2": "",
+          "disputantGivenName3": "",
+          "disputantBirthdate": "",
+          "driversLicenceNumber": "",
+          "disputantOrganization": "",
+          "disputantClientId": "",
+          "driversLicenceIssuedCountryId": 0,
+          "driversLicenceIssuedProvinceSeqNo": 0,
+          "driversLicenceProvince": "",
+          "status": "UNKNOWN",
+          "addressLine1": "",
+          "addressLine2": "",
+          "addressLine3": "",
+          "addressCity": "",
+          "addressProvince": "",
+          "addressProvinceCountryId": 0,
+          "addressProvinceSeqNo": 0,
+          "addressCountryId": 0,
+          "postalCode": "",
+          "homePhoneNumber": "",
+          "workPhoneNumber": "",
+          "emailAddress": "",
+          "emailAddressVerified": false,
+          "filingDate": "",
+          "representedByLawyer": "UNKNOWN",
+          "lawFirmName": "",
+          "lawyerSurname": "",
+          "lawyerGivenName1": "",
+          "lawyerGivenName2": "",
+          "lawyerGivenName3": "",
+          "lawyerAddress": "",
+          "lawyerPhoneNumber": "",
+          "lawyerEmail": "",
+          "officerPin": "",
+          "contactTypeCd": "UNKNOWN",
+          "requestCourtAppearanceYn": "UNKNOWN",
+          "contactLawFirmNm": "",
+          "contactGiven1Nm": "",
+          "contactGiven2Nm": "",
+          "contactGiven3Nm": "",
+          "contactSurnameNm": "",
+          "appearanceDtm": "",
+          "appearanceLessThan14DaysYn": "UNKNOWN",
+          "detachmentLocation": "",
+          "courtAgenId": "",
+          "interpreterLanguageCd": "",
+          "interpreterRequired": "UNKNOWN",
+          "witnessNo": 0,
+          "fineReductionReason": "",
+          "timeToPayReason": "",
+          "disputantComment": "",
+          "rejectedReason": "",
+          "userAssignedTo": "",
+          "userAssignedTs": "",
+          "disputantDetectedOcrIssues": "UNKNOWN",
+          "disputantOcrIssues": "",
+          "systemDetectedOcrIssues": "UNKNOWN",
+          "ocrTicketFilename": "",
+          "signatoryType": "U",
+          "signatoryName": "",
+          "violationTicket": {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "violationTicketId": 0,
+            "ticketNumber": "",
+            "disputantOrganizationName": "",
+            "disputantSurname": "",
+            "disputantGivenNames": "",
+            "isYoungPerson": "UNKNOWN",
+            "disputantDriversLicenceNumber": "",
+            "disputantClientNumber": "",
+            "driversLicenceProvince": "",
+            "driversLicenceCountry": "",
+            "driversLicenceIssuedYear": 0,
+            "driversLicenceExpiryYear": 0,
+            "disputantBirthdate": "",
+            "address": "",
+            "addressCity": "",
+            "addressProvince": "",
+            "addressPostalCode": "",
+            "addressCountry": "",
+            "officerPin": "",
+            "detachmentLocation": "",
+            "issuedTs": "",
+            "issuedOnRoadOrHighway": "",
+            "issuedAtOrNearCity": "",
+            "isChangeOfAddress": "UNKNOWN",
+            "isDriver": "UNKNOWN",
+            "isOwner": "UNKNOWN",
+            "courtLocation": "",
+            "violationTicketCounts": [
+              {
+                "createdBy": "",
+                "createdTs": "",
+                "modifiedBy": "",
+                "modifiedTs": "",
+                "violationTicketCountId": 0,
+                "countNo": 0,
+                "description": "",
+                "actOrRegulationNameCode": "",
+                "isAct": "UNKNOWN",
+                "isRegulation": "UNKNOWN",
+                "section": "",
+                "subsection": "",
+                "paragraph": "",
+                "subparagraph": "",
+                "ticketedAmount": 0,
+                "additionalProperties": {}
+              }
+            ],
+            "additionalProperties": {},
+            "violationTicketImage": {
+              "image": "",
+              "mimeType": ""
+            },
+            "ocrViolationTicket": {
+              "ticketVersion": "VT1",
+              "imageFilename": "",
+              "globalConfidence": 0,
+              "fields": {}
+            }
+          },
+          "disputeCounts": [
+            {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "countNo": 0,
+              "pleaCode": "UNKNOWN",
+              "requestTimeToPay": "UNKNOWN",
+              "requestReduction": "UNKNOWN",
+              "requestCourtAppearance": "UNKNOWN",
+              "additionalProperties": {}
+            }
+          ],
+          "additionalProperties": {}
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 200 Response
+  description: The Dispute was created.
   
+  request: {
+    url: {{baseUrl}}/api/dispute
+    method: POST
+    mode: json
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "icbcName": {
+          "surname": "",
+          "firstGivenName": "",
+          "secondGivenName": ""
+        },
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "disputeId": 0,
+        "noticeOfDisputeGuid": "",
+        "ticketNumber": "",
+        "issuedTs": "",
+        "submittedTs": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "disputantOrganization": "",
+        "disputantClientId": "",
+        "driversLicenceIssuedCountryId": 0,
+        "driversLicenceIssuedProvinceSeqNo": 0,
+        "driversLicenceProvince": "",
+        "status": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressProvinceCountryId": 0,
+        "addressProvinceSeqNo": 0,
+        "addressCountryId": 0,
+        "postalCode": "",
+        "homePhoneNumber": "",
+        "workPhoneNumber": "",
+        "emailAddress": "",
+        "emailAddressVerified": false,
+        "filingDate": "",
+        "representedByLawyer": "UNKNOWN",
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "lawyerAddress": "",
+        "lawyerPhoneNumber": "",
+        "lawyerEmail": "",
+        "officerPin": "",
+        "contactTypeCd": "UNKNOWN",
+        "requestCourtAppearanceYn": "UNKNOWN",
+        "contactLawFirmNm": "",
+        "contactGiven1Nm": "",
+        "contactGiven2Nm": "",
+        "contactGiven3Nm": "",
+        "contactSurnameNm": "",
+        "appearanceDtm": "",
+        "appearanceLessThan14DaysYn": "UNKNOWN",
+        "detachmentLocation": "",
+        "courtAgenId": "",
+        "interpreterLanguageCd": "",
+        "interpreterRequired": "UNKNOWN",
+        "witnessNo": 0,
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "disputantComment": "",
+        "rejectedReason": "",
+        "userAssignedTo": "",
+        "userAssignedTs": "",
+        "disputantDetectedOcrIssues": "UNKNOWN",
+        "disputantOcrIssues": "",
+        "systemDetectedOcrIssues": "UNKNOWN",
+        "ocrTicketFilename": "",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "violationTicket": {
+          "createdBy": "",
+          "createdTs": "",
+          "modifiedBy": "",
+          "modifiedTs": "",
+          "violationTicketId": 0,
+          "ticketNumber": "",
+          "disputantOrganizationName": "",
+          "disputantSurname": "",
+          "disputantGivenNames": "",
+          "isYoungPerson": "UNKNOWN",
+          "disputantDriversLicenceNumber": "",
+          "disputantClientNumber": "",
+          "driversLicenceProvince": "",
+          "driversLicenceCountry": "",
+          "driversLicenceIssuedYear": 0,
+          "driversLicenceExpiryYear": 0,
+          "disputantBirthdate": "",
+          "address": "",
+          "addressCity": "",
+          "addressProvince": "",
+          "addressPostalCode": "",
+          "addressCountry": "",
+          "officerPin": "",
+          "detachmentLocation": "",
+          "issuedTs": "",
+          "issuedOnRoadOrHighway": "",
+          "issuedAtOrNearCity": "",
+          "isChangeOfAddress": "UNKNOWN",
+          "isDriver": "UNKNOWN",
+          "isOwner": "UNKNOWN",
+          "courtLocation": "",
+          "violationTicketCounts": [
+            {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "violationTicketCountId": 0,
+              "countNo": 0,
+              "description": "",
+              "actOrRegulationNameCode": "",
+              "isAct": "UNKNOWN",
+              "isRegulation": "UNKNOWN",
+              "section": "",
+              "subsection": "",
+              "paragraph": "",
+              "subparagraph": "",
+              "ticketedAmount": 0,
+              "additionalProperties": {}
+            }
+          ],
+          "additionalProperties": {},
+          "violationTicketImage": {
+            "image": "",
+            "mimeType": ""
+          },
+          "ocrViolationTicket": {
+            "ticketVersion": "VT1",
+            "imageFilename": "",
+            "globalConfidence": 0,
+            "fields": {}
+          }
+        },
+        "disputeCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "countNo": 0,
+            "pleaCode": "UNKNOWN",
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "requestCourtAppearance": "UNKNOWN",
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "fileData": [
+            {
+              "fileId": "",
+              "fileName": "",
+              "noticeOfDisputeGuid": "",
+              "documentSource": "Citizen",
+              "documentType": "",
+              "documentStatus": "Filed",
+              "virusScanStatus": "",
+              "staffReviewStatus": "",
+              "ticketNumber": "",
+              "disputeId": 0,
+              "pendingFileStream": "",
+              "deleteRequested": false
+            }
+          ],
+          "icbcName": {
+            "surname": "",
+            "firstGivenName": "",
+            "secondGivenName": ""
+          },
+          "createdBy": "",
+          "createdTs": "",
+          "modifiedBy": "",
+          "modifiedTs": "",
+          "disputeId": 0,
+          "noticeOfDisputeGuid": "",
+          "ticketNumber": "",
+          "issuedTs": "",
+          "submittedTs": "",
+          "disputantSurname": "",
+          "disputantGivenName1": "",
+          "disputantGivenName2": "",
+          "disputantGivenName3": "",
+          "disputantBirthdate": "",
+          "driversLicenceNumber": "",
+          "disputantOrganization": "",
+          "disputantClientId": "",
+          "driversLicenceIssuedCountryId": 0,
+          "driversLicenceIssuedProvinceSeqNo": 0,
+          "driversLicenceProvince": "",
+          "status": "UNKNOWN",
+          "addressLine1": "",
+          "addressLine2": "",
+          "addressLine3": "",
+          "addressCity": "",
+          "addressProvince": "",
+          "addressProvinceCountryId": 0,
+          "addressProvinceSeqNo": 0,
+          "addressCountryId": 0,
+          "postalCode": "",
+          "homePhoneNumber": "",
+          "workPhoneNumber": "",
+          "emailAddress": "",
+          "emailAddressVerified": false,
+          "filingDate": "",
+          "representedByLawyer": "UNKNOWN",
+          "lawFirmName": "",
+          "lawyerSurname": "",
+          "lawyerGivenName1": "",
+          "lawyerGivenName2": "",
+          "lawyerGivenName3": "",
+          "lawyerAddress": "",
+          "lawyerPhoneNumber": "",
+          "lawyerEmail": "",
+          "officerPin": "",
+          "contactTypeCd": "UNKNOWN",
+          "requestCourtAppearanceYn": "UNKNOWN",
+          "contactLawFirmNm": "",
+          "contactGiven1Nm": "",
+          "contactGiven2Nm": "",
+          "contactGiven3Nm": "",
+          "contactSurnameNm": "",
+          "appearanceDtm": "",
+          "appearanceLessThan14DaysYn": "UNKNOWN",
+          "detachmentLocation": "",
+          "courtAgenId": "",
+          "interpreterLanguageCd": "",
+          "interpreterRequired": "UNKNOWN",
+          "witnessNo": 0,
+          "fineReductionReason": "",
+          "timeToPayReason": "",
+          "disputantComment": "",
+          "rejectedReason": "",
+          "userAssignedTo": "",
+          "userAssignedTs": "",
+          "disputantDetectedOcrIssues": "UNKNOWN",
+          "disputantOcrIssues": "",
+          "systemDetectedOcrIssues": "UNKNOWN",
+          "ocrTicketFilename": "",
+          "signatoryType": "U",
+          "signatoryName": "",
+          "violationTicket": {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "violationTicketId": 0,
+            "ticketNumber": "",
+            "disputantOrganizationName": "",
+            "disputantSurname": "",
+            "disputantGivenNames": "",
+            "isYoungPerson": "UNKNOWN",
+            "disputantDriversLicenceNumber": "",
+            "disputantClientNumber": "",
+            "driversLicenceProvince": "",
+            "driversLicenceCountry": "",
+            "driversLicenceIssuedYear": 0,
+            "driversLicenceExpiryYear": 0,
+            "disputantBirthdate": "",
+            "address": "",
+            "addressCity": "",
+            "addressProvince": "",
+            "addressPostalCode": "",
+            "addressCountry": "",
+            "officerPin": "",
+            "detachmentLocation": "",
+            "issuedTs": "",
+            "issuedOnRoadOrHighway": "",
+            "issuedAtOrNearCity": "",
+            "isChangeOfAddress": "UNKNOWN",
+            "isDriver": "UNKNOWN",
+            "isOwner": "UNKNOWN",
+            "courtLocation": "",
+            "violationTicketCounts": [
+              {
+                "createdBy": "",
+                "createdTs": "",
+                "modifiedBy": "",
+                "modifiedTs": "",
+                "violationTicketCountId": 0,
+                "countNo": 0,
+                "description": "",
+                "actOrRegulationNameCode": "",
+                "isAct": "UNKNOWN",
+                "isRegulation": "UNKNOWN",
+                "section": "",
+                "subsection": "",
+                "paragraph": "",
+                "subparagraph": "",
+                "ticketedAmount": 0,
+                "additionalProperties": {}
+              }
+            ],
+            "additionalProperties": {},
+            "violationTicketImage": {
+              "image": "",
+              "mimeType": ""
+            },
+            "ocrViolationTicket": {
+              "ticketVersion": "VT1",
+              "imageFilename": "",
+              "globalConfidence": 0,
+              "fields": {}
+            }
+          },
+          "disputeCounts": [
+            {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "countNo": 0,
+              "pleaCode": "UNKNOWN",
+              "requestTimeToPay": "UNKNOWN",
+              "requestReduction": "UNKNOWN",
+              "requestCourtAppearance": "UNKNOWN",
+              "additionalProperties": {}
+            }
+          ],
+          "additionalProperties": {}
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 200 Response
+  description: The Dispute was created.
+  
+  request: {
+    url: {{baseUrl}}/api/dispute
+    method: POST
+    mode: json
+    headers: {
+      ~X-Timezone: 
+    }
+  
+    body:json: {
+      {
+        "fileData": [
+          {
+            "fileId": "",
+            "fileName": "",
+            "noticeOfDisputeGuid": "",
+            "documentSource": "Citizen",
+            "documentType": "",
+            "documentStatus": "Filed",
+            "virusScanStatus": "",
+            "staffReviewStatus": "",
+            "ticketNumber": "",
+            "disputeId": 0,
+            "pendingFileStream": "",
+            "deleteRequested": false
+          }
+        ],
+        "icbcName": {
+          "surname": "",
+          "firstGivenName": "",
+          "secondGivenName": ""
+        },
+        "createdBy": "",
+        "createdTs": "",
+        "modifiedBy": "",
+        "modifiedTs": "",
+        "disputeId": 0,
+        "noticeOfDisputeGuid": "",
+        "ticketNumber": "",
+        "issuedTs": "",
+        "submittedTs": "",
+        "disputantSurname": "",
+        "disputantGivenName1": "",
+        "disputantGivenName2": "",
+        "disputantGivenName3": "",
+        "disputantBirthdate": "",
+        "driversLicenceNumber": "",
+        "disputantOrganization": "",
+        "disputantClientId": "",
+        "driversLicenceIssuedCountryId": 0,
+        "driversLicenceIssuedProvinceSeqNo": 0,
+        "driversLicenceProvince": "",
+        "status": "UNKNOWN",
+        "addressLine1": "",
+        "addressLine2": "",
+        "addressLine3": "",
+        "addressCity": "",
+        "addressProvince": "",
+        "addressProvinceCountryId": 0,
+        "addressProvinceSeqNo": 0,
+        "addressCountryId": 0,
+        "postalCode": "",
+        "homePhoneNumber": "",
+        "workPhoneNumber": "",
+        "emailAddress": "",
+        "emailAddressVerified": false,
+        "filingDate": "",
+        "representedByLawyer": "UNKNOWN",
+        "lawFirmName": "",
+        "lawyerSurname": "",
+        "lawyerGivenName1": "",
+        "lawyerGivenName2": "",
+        "lawyerGivenName3": "",
+        "lawyerAddress": "",
+        "lawyerPhoneNumber": "",
+        "lawyerEmail": "",
+        "officerPin": "",
+        "contactTypeCd": "UNKNOWN",
+        "requestCourtAppearanceYn": "UNKNOWN",
+        "contactLawFirmNm": "",
+        "contactGiven1Nm": "",
+        "contactGiven2Nm": "",
+        "contactGiven3Nm": "",
+        "contactSurnameNm": "",
+        "appearanceDtm": "",
+        "appearanceLessThan14DaysYn": "UNKNOWN",
+        "detachmentLocation": "",
+        "courtAgenId": "",
+        "interpreterLanguageCd": "",
+        "interpreterRequired": "UNKNOWN",
+        "witnessNo": 0,
+        "fineReductionReason": "",
+        "timeToPayReason": "",
+        "disputantComment": "",
+        "rejectedReason": "",
+        "userAssignedTo": "",
+        "userAssignedTs": "",
+        "disputantDetectedOcrIssues": "UNKNOWN",
+        "disputantOcrIssues": "",
+        "systemDetectedOcrIssues": "UNKNOWN",
+        "ocrTicketFilename": "",
+        "signatoryType": "U",
+        "signatoryName": "",
+        "violationTicket": {
+          "createdBy": "",
+          "createdTs": "",
+          "modifiedBy": "",
+          "modifiedTs": "",
+          "violationTicketId": 0,
+          "ticketNumber": "",
+          "disputantOrganizationName": "",
+          "disputantSurname": "",
+          "disputantGivenNames": "",
+          "isYoungPerson": "UNKNOWN",
+          "disputantDriversLicenceNumber": "",
+          "disputantClientNumber": "",
+          "driversLicenceProvince": "",
+          "driversLicenceCountry": "",
+          "driversLicenceIssuedYear": 0,
+          "driversLicenceExpiryYear": 0,
+          "disputantBirthdate": "",
+          "address": "",
+          "addressCity": "",
+          "addressProvince": "",
+          "addressPostalCode": "",
+          "addressCountry": "",
+          "officerPin": "",
+          "detachmentLocation": "",
+          "issuedTs": "",
+          "issuedOnRoadOrHighway": "",
+          "issuedAtOrNearCity": "",
+          "isChangeOfAddress": "UNKNOWN",
+          "isDriver": "UNKNOWN",
+          "isOwner": "UNKNOWN",
+          "courtLocation": "",
+          "violationTicketCounts": [
+            {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "violationTicketCountId": 0,
+              "countNo": 0,
+              "description": "",
+              "actOrRegulationNameCode": "",
+              "isAct": "UNKNOWN",
+              "isRegulation": "UNKNOWN",
+              "section": "",
+              "subsection": "",
+              "paragraph": "",
+              "subparagraph": "",
+              "ticketedAmount": 0,
+              "additionalProperties": {}
+            }
+          ],
+          "additionalProperties": {},
+          "violationTicketImage": {
+            "image": "",
+            "mimeType": ""
+          },
+          "ocrViolationTicket": {
+            "ticketVersion": "VT1",
+            "imageFilename": "",
+            "globalConfidence": 0,
+            "fields": {}
+          }
+        },
+        "disputeCounts": [
+          {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "countNo": 0,
+            "pleaCode": "UNKNOWN",
+            "requestTimeToPay": "UNKNOWN",
+            "requestReduction": "UNKNOWN",
+            "requestCourtAppearance": "UNKNOWN",
+            "additionalProperties": {}
+          }
+        ],
+        "additionalProperties": {}
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "fileData": [
+            {
+              "fileId": "",
+              "fileName": "",
+              "noticeOfDisputeGuid": "",
+              "documentSource": "Citizen",
+              "documentType": "",
+              "documentStatus": "Filed",
+              "virusScanStatus": "",
+              "staffReviewStatus": "",
+              "ticketNumber": "",
+              "disputeId": 0,
+              "pendingFileStream": "",
+              "deleteRequested": false
+            }
+          ],
+          "icbcName": {
+            "surname": "",
+            "firstGivenName": "",
+            "secondGivenName": ""
+          },
+          "createdBy": "",
+          "createdTs": "",
+          "modifiedBy": "",
+          "modifiedTs": "",
+          "disputeId": 0,
+          "noticeOfDisputeGuid": "",
+          "ticketNumber": "",
+          "issuedTs": "",
+          "submittedTs": "",
+          "disputantSurname": "",
+          "disputantGivenName1": "",
+          "disputantGivenName2": "",
+          "disputantGivenName3": "",
+          "disputantBirthdate": "",
+          "driversLicenceNumber": "",
+          "disputantOrganization": "",
+          "disputantClientId": "",
+          "driversLicenceIssuedCountryId": 0,
+          "driversLicenceIssuedProvinceSeqNo": 0,
+          "driversLicenceProvince": "",
+          "status": "UNKNOWN",
+          "addressLine1": "",
+          "addressLine2": "",
+          "addressLine3": "",
+          "addressCity": "",
+          "addressProvince": "",
+          "addressProvinceCountryId": 0,
+          "addressProvinceSeqNo": 0,
+          "addressCountryId": 0,
+          "postalCode": "",
+          "homePhoneNumber": "",
+          "workPhoneNumber": "",
+          "emailAddress": "",
+          "emailAddressVerified": false,
+          "filingDate": "",
+          "representedByLawyer": "UNKNOWN",
+          "lawFirmName": "",
+          "lawyerSurname": "",
+          "lawyerGivenName1": "",
+          "lawyerGivenName2": "",
+          "lawyerGivenName3": "",
+          "lawyerAddress": "",
+          "lawyerPhoneNumber": "",
+          "lawyerEmail": "",
+          "officerPin": "",
+          "contactTypeCd": "UNKNOWN",
+          "requestCourtAppearanceYn": "UNKNOWN",
+          "contactLawFirmNm": "",
+          "contactGiven1Nm": "",
+          "contactGiven2Nm": "",
+          "contactGiven3Nm": "",
+          "contactSurnameNm": "",
+          "appearanceDtm": "",
+          "appearanceLessThan14DaysYn": "UNKNOWN",
+          "detachmentLocation": "",
+          "courtAgenId": "",
+          "interpreterLanguageCd": "",
+          "interpreterRequired": "UNKNOWN",
+          "witnessNo": 0,
+          "fineReductionReason": "",
+          "timeToPayReason": "",
+          "disputantComment": "",
+          "rejectedReason": "",
+          "userAssignedTo": "",
+          "userAssignedTs": "",
+          "disputantDetectedOcrIssues": "UNKNOWN",
+          "disputantOcrIssues": "",
+          "systemDetectedOcrIssues": "UNKNOWN",
+          "ocrTicketFilename": "",
+          "signatoryType": "U",
+          "signatoryName": "",
+          "violationTicket": {
+            "createdBy": "",
+            "createdTs": "",
+            "modifiedBy": "",
+            "modifiedTs": "",
+            "violationTicketId": 0,
+            "ticketNumber": "",
+            "disputantOrganizationName": "",
+            "disputantSurname": "",
+            "disputantGivenNames": "",
+            "isYoungPerson": "UNKNOWN",
+            "disputantDriversLicenceNumber": "",
+            "disputantClientNumber": "",
+            "driversLicenceProvince": "",
+            "driversLicenceCountry": "",
+            "driversLicenceIssuedYear": 0,
+            "driversLicenceExpiryYear": 0,
+            "disputantBirthdate": "",
+            "address": "",
+            "addressCity": "",
+            "addressProvince": "",
+            "addressPostalCode": "",
+            "addressCountry": "",
+            "officerPin": "",
+            "detachmentLocation": "",
+            "issuedTs": "",
+            "issuedOnRoadOrHighway": "",
+            "issuedAtOrNearCity": "",
+            "isChangeOfAddress": "UNKNOWN",
+            "isDriver": "UNKNOWN",
+            "isOwner": "UNKNOWN",
+            "courtLocation": "",
+            "violationTicketCounts": [
+              {
+                "createdBy": "",
+                "createdTs": "",
+                "modifiedBy": "",
+                "modifiedTs": "",
+                "violationTicketCountId": 0,
+                "countNo": 0,
+                "description": "",
+                "actOrRegulationNameCode": "",
+                "isAct": "UNKNOWN",
+                "isRegulation": "UNKNOWN",
+                "section": "",
+                "subsection": "",
+                "paragraph": "",
+                "subparagraph": "",
+                "ticketedAmount": 0,
+                "additionalProperties": {}
+              }
+            ],
+            "additionalProperties": {},
+            "violationTicketImage": {
+              "image": "",
+              "mimeType": ""
+            },
+            "ocrViolationTicket": {
+              "ticketVersion": "VT1",
+              "imageFilename": "",
+              "globalConfidence": 0,
+              "fields": {}
+            }
+          },
+          "disputeCounts": [
+            {
+              "createdBy": "",
+              "createdTs": "",
+              "modifiedBy": "",
+              "modifiedTs": "",
+              "countNo": 0,
+              "pleaCode": "UNKNOWN",
+              "requestTimeToPay": "UNKNOWN",
+              "requestReduction": "UNKNOWN",
+              "requestCourtAppearance": "UNKNOWN",
+              "additionalProperties": {}
+            }
+          ],
+          "additionalProperties": {}
+        }
       '''
     }
   }
@@ -402,11 +1279,11 @@ example {
   description: The request was not well formed. Check the parameters.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/validate
-    method: PUT
+    url: {{baseUrl}}/api/dispute
+    method: POST
     mode: json
-    params:path: {
-      disputeId: 
+    headers: {
+      ~X-Timezone: 
     }
   
     body:json: {
@@ -616,11 +1493,11 @@ example {
   description: The request was not well formed. Check the parameters.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/validate
-    method: PUT
+    url: {{baseUrl}}/api/dispute
+    method: POST
     mode: json
-    params:path: {
-      disputeId: 
+    headers: {
+      ~X-Timezone: 
     }
   
     body:json: {
@@ -830,11 +1707,11 @@ example {
   description: The request was not well formed. Check the parameters.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/validate
-    method: PUT
+    url: {{baseUrl}}/api/dispute
+    method: POST
     mode: json
-    params:path: {
-      disputeId: 
+    headers: {
+      ~X-Timezone: 
     }
   
     body:json: {
@@ -1044,11 +1921,11 @@ example {
   description: Request lacks valid authentication credentials.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/validate
-    method: PUT
+    url: {{baseUrl}}/api/dispute
+    method: POST
     mode: json
-    params:path: {
-      disputeId: 
+    headers: {
+      ~X-Timezone: 
     }
   
     body:json: {
@@ -1258,11 +2135,11 @@ example {
   description: Request lacks valid authentication credentials.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/validate
-    method: PUT
+    url: {{baseUrl}}/api/dispute
+    method: POST
     mode: json
-    params:path: {
-      disputeId: 
+    headers: {
+      ~X-Timezone: 
     }
   
     body:json: {
@@ -1472,11 +2349,11 @@ example {
   description: Request lacks valid authentication credentials.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/validate
-    method: PUT
+    url: {{baseUrl}}/api/dispute
+    method: POST
     mode: json
-    params:path: {
-      disputeId: 
+    headers: {
+      ~X-Timezone: 
     }
   
     body:json: {
@@ -1683,14 +2560,14 @@ example {
 
 example {
   name: 403 Response
-  description: Forbidden, requires dispute:validate permission.
+  description: Forbidden, requires dispute:update permission.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/validate
-    method: PUT
+    url: {{baseUrl}}/api/dispute
+    method: POST
     mode: json
-    params:path: {
-      disputeId: 
+    headers: {
+      ~X-Timezone: 
     }
   
     body:json: {
@@ -1897,14 +2774,14 @@ example {
 
 example {
   name: 403 Response
-  description: Forbidden, requires dispute:validate permission.
+  description: Forbidden, requires dispute:update permission.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/validate
-    method: PUT
+    url: {{baseUrl}}/api/dispute
+    method: POST
     mode: json
-    params:path: {
-      disputeId: 
+    headers: {
+      ~X-Timezone: 
     }
   
     body:json: {
@@ -2111,14 +2988,14 @@ example {
 
 example {
   name: 403 Response
-  description: Forbidden, requires dispute:validate permission.
+  description: Forbidden, requires dispute:update permission.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/validate
-    method: PUT
+    url: {{baseUrl}}/api/dispute
+    method: POST
     mode: json
-    params:path: {
-      disputeId: 
+    headers: {
+      ~X-Timezone: 
     }
   
     body:json: {
@@ -2306,1290 +3183,6 @@ example {
     status: {
       code: 403
       text: Forbidden
-    }
-  
-    body: {
-      type: json
-      content: '''
-        {
-          "type": "",
-          "title": "",
-          "status": 0,
-          "detail": "",
-          "instance": ""
-        }
-      '''
-    }
-  }
-}
-
-example {
-  name: 404 Response
-  description: Dispute record not found. Update failed.
-  
-  request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/validate
-    method: PUT
-    mode: json
-    params:path: {
-      disputeId: 
-    }
-  
-    body:json: {
-      {
-        "fileData": [
-          {
-            "fileId": "",
-            "fileName": "",
-            "noticeOfDisputeGuid": "",
-            "documentSource": "Citizen",
-            "documentType": "",
-            "documentStatus": "Filed",
-            "virusScanStatus": "",
-            "staffReviewStatus": "",
-            "ticketNumber": "",
-            "disputeId": 0,
-            "pendingFileStream": "",
-            "deleteRequested": false
-          }
-        ],
-        "icbcName": {
-          "surname": "",
-          "firstGivenName": "",
-          "secondGivenName": ""
-        },
-        "createdBy": "",
-        "createdTs": "",
-        "modifiedBy": "",
-        "modifiedTs": "",
-        "disputeId": 0,
-        "noticeOfDisputeGuid": "",
-        "ticketNumber": "",
-        "issuedTs": "",
-        "submittedTs": "",
-        "disputantSurname": "",
-        "disputantGivenName1": "",
-        "disputantGivenName2": "",
-        "disputantGivenName3": "",
-        "disputantBirthdate": "",
-        "driversLicenceNumber": "",
-        "disputantOrganization": "",
-        "disputantClientId": "",
-        "driversLicenceIssuedCountryId": 0,
-        "driversLicenceIssuedProvinceSeqNo": 0,
-        "driversLicenceProvince": "",
-        "status": "UNKNOWN",
-        "addressLine1": "",
-        "addressLine2": "",
-        "addressLine3": "",
-        "addressCity": "",
-        "addressProvince": "",
-        "addressProvinceCountryId": 0,
-        "addressProvinceSeqNo": 0,
-        "addressCountryId": 0,
-        "postalCode": "",
-        "homePhoneNumber": "",
-        "workPhoneNumber": "",
-        "emailAddress": "",
-        "emailAddressVerified": false,
-        "filingDate": "",
-        "representedByLawyer": "UNKNOWN",
-        "lawFirmName": "",
-        "lawyerSurname": "",
-        "lawyerGivenName1": "",
-        "lawyerGivenName2": "",
-        "lawyerGivenName3": "",
-        "lawyerAddress": "",
-        "lawyerPhoneNumber": "",
-        "lawyerEmail": "",
-        "officerPin": "",
-        "contactTypeCd": "UNKNOWN",
-        "requestCourtAppearanceYn": "UNKNOWN",
-        "contactLawFirmNm": "",
-        "contactGiven1Nm": "",
-        "contactGiven2Nm": "",
-        "contactGiven3Nm": "",
-        "contactSurnameNm": "",
-        "appearanceDtm": "",
-        "appearanceLessThan14DaysYn": "UNKNOWN",
-        "detachmentLocation": "",
-        "courtAgenId": "",
-        "interpreterLanguageCd": "",
-        "interpreterRequired": "UNKNOWN",
-        "witnessNo": 0,
-        "fineReductionReason": "",
-        "timeToPayReason": "",
-        "disputantComment": "",
-        "rejectedReason": "",
-        "userAssignedTo": "",
-        "userAssignedTs": "",
-        "disputantDetectedOcrIssues": "UNKNOWN",
-        "disputantOcrIssues": "",
-        "systemDetectedOcrIssues": "UNKNOWN",
-        "ocrTicketFilename": "",
-        "signatoryType": "U",
-        "signatoryName": "",
-        "violationTicket": {
-          "createdBy": "",
-          "createdTs": "",
-          "modifiedBy": "",
-          "modifiedTs": "",
-          "violationTicketId": 0,
-          "ticketNumber": "",
-          "disputantOrganizationName": "",
-          "disputantSurname": "",
-          "disputantGivenNames": "",
-          "isYoungPerson": "UNKNOWN",
-          "disputantDriversLicenceNumber": "",
-          "disputantClientNumber": "",
-          "driversLicenceProvince": "",
-          "driversLicenceCountry": "",
-          "driversLicenceIssuedYear": 0,
-          "driversLicenceExpiryYear": 0,
-          "disputantBirthdate": "",
-          "address": "",
-          "addressCity": "",
-          "addressProvince": "",
-          "addressPostalCode": "",
-          "addressCountry": "",
-          "officerPin": "",
-          "detachmentLocation": "",
-          "issuedTs": "",
-          "issuedOnRoadOrHighway": "",
-          "issuedAtOrNearCity": "",
-          "isChangeOfAddress": "UNKNOWN",
-          "isDriver": "UNKNOWN",
-          "isOwner": "UNKNOWN",
-          "courtLocation": "",
-          "violationTicketCounts": [
-            {
-              "createdBy": "",
-              "createdTs": "",
-              "modifiedBy": "",
-              "modifiedTs": "",
-              "violationTicketCountId": 0,
-              "countNo": 0,
-              "description": "",
-              "actOrRegulationNameCode": "",
-              "isAct": "UNKNOWN",
-              "isRegulation": "UNKNOWN",
-              "section": "",
-              "subsection": "",
-              "paragraph": "",
-              "subparagraph": "",
-              "ticketedAmount": 0,
-              "additionalProperties": {}
-            }
-          ],
-          "additionalProperties": {},
-          "violationTicketImage": {
-            "image": "",
-            "mimeType": ""
-          },
-          "ocrViolationTicket": {
-            "ticketVersion": "VT1",
-            "imageFilename": "",
-            "globalConfidence": 0,
-            "fields": {}
-          }
-        },
-        "disputeCounts": [
-          {
-            "createdBy": "",
-            "createdTs": "",
-            "modifiedBy": "",
-            "modifiedTs": "",
-            "countNo": 0,
-            "pleaCode": "UNKNOWN",
-            "requestTimeToPay": "UNKNOWN",
-            "requestReduction": "UNKNOWN",
-            "requestCourtAppearance": "UNKNOWN",
-            "additionalProperties": {}
-          }
-        ],
-        "additionalProperties": {}
-      }
-    }
-  }
-  
-  response: {
-    headers: {
-      Content-Type: text/plain
-    }
-  
-    status: {
-      code: 404
-      text: Not Found
-    }
-  
-    body: {
-      type: text
-      content: '''
-        {
-          "type": "",
-          "title": "",
-          "status": 0,
-          "detail": "",
-          "instance": ""
-        }
-      '''
-    }
-  }
-}
-
-example {
-  name: 404 Response
-  description: Dispute record not found. Update failed.
-  
-  request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/validate
-    method: PUT
-    mode: json
-    params:path: {
-      disputeId: 
-    }
-  
-    body:json: {
-      {
-        "fileData": [
-          {
-            "fileId": "",
-            "fileName": "",
-            "noticeOfDisputeGuid": "",
-            "documentSource": "Citizen",
-            "documentType": "",
-            "documentStatus": "Filed",
-            "virusScanStatus": "",
-            "staffReviewStatus": "",
-            "ticketNumber": "",
-            "disputeId": 0,
-            "pendingFileStream": "",
-            "deleteRequested": false
-          }
-        ],
-        "icbcName": {
-          "surname": "",
-          "firstGivenName": "",
-          "secondGivenName": ""
-        },
-        "createdBy": "",
-        "createdTs": "",
-        "modifiedBy": "",
-        "modifiedTs": "",
-        "disputeId": 0,
-        "noticeOfDisputeGuid": "",
-        "ticketNumber": "",
-        "issuedTs": "",
-        "submittedTs": "",
-        "disputantSurname": "",
-        "disputantGivenName1": "",
-        "disputantGivenName2": "",
-        "disputantGivenName3": "",
-        "disputantBirthdate": "",
-        "driversLicenceNumber": "",
-        "disputantOrganization": "",
-        "disputantClientId": "",
-        "driversLicenceIssuedCountryId": 0,
-        "driversLicenceIssuedProvinceSeqNo": 0,
-        "driversLicenceProvince": "",
-        "status": "UNKNOWN",
-        "addressLine1": "",
-        "addressLine2": "",
-        "addressLine3": "",
-        "addressCity": "",
-        "addressProvince": "",
-        "addressProvinceCountryId": 0,
-        "addressProvinceSeqNo": 0,
-        "addressCountryId": 0,
-        "postalCode": "",
-        "homePhoneNumber": "",
-        "workPhoneNumber": "",
-        "emailAddress": "",
-        "emailAddressVerified": false,
-        "filingDate": "",
-        "representedByLawyer": "UNKNOWN",
-        "lawFirmName": "",
-        "lawyerSurname": "",
-        "lawyerGivenName1": "",
-        "lawyerGivenName2": "",
-        "lawyerGivenName3": "",
-        "lawyerAddress": "",
-        "lawyerPhoneNumber": "",
-        "lawyerEmail": "",
-        "officerPin": "",
-        "contactTypeCd": "UNKNOWN",
-        "requestCourtAppearanceYn": "UNKNOWN",
-        "contactLawFirmNm": "",
-        "contactGiven1Nm": "",
-        "contactGiven2Nm": "",
-        "contactGiven3Nm": "",
-        "contactSurnameNm": "",
-        "appearanceDtm": "",
-        "appearanceLessThan14DaysYn": "UNKNOWN",
-        "detachmentLocation": "",
-        "courtAgenId": "",
-        "interpreterLanguageCd": "",
-        "interpreterRequired": "UNKNOWN",
-        "witnessNo": 0,
-        "fineReductionReason": "",
-        "timeToPayReason": "",
-        "disputantComment": "",
-        "rejectedReason": "",
-        "userAssignedTo": "",
-        "userAssignedTs": "",
-        "disputantDetectedOcrIssues": "UNKNOWN",
-        "disputantOcrIssues": "",
-        "systemDetectedOcrIssues": "UNKNOWN",
-        "ocrTicketFilename": "",
-        "signatoryType": "U",
-        "signatoryName": "",
-        "violationTicket": {
-          "createdBy": "",
-          "createdTs": "",
-          "modifiedBy": "",
-          "modifiedTs": "",
-          "violationTicketId": 0,
-          "ticketNumber": "",
-          "disputantOrganizationName": "",
-          "disputantSurname": "",
-          "disputantGivenNames": "",
-          "isYoungPerson": "UNKNOWN",
-          "disputantDriversLicenceNumber": "",
-          "disputantClientNumber": "",
-          "driversLicenceProvince": "",
-          "driversLicenceCountry": "",
-          "driversLicenceIssuedYear": 0,
-          "driversLicenceExpiryYear": 0,
-          "disputantBirthdate": "",
-          "address": "",
-          "addressCity": "",
-          "addressProvince": "",
-          "addressPostalCode": "",
-          "addressCountry": "",
-          "officerPin": "",
-          "detachmentLocation": "",
-          "issuedTs": "",
-          "issuedOnRoadOrHighway": "",
-          "issuedAtOrNearCity": "",
-          "isChangeOfAddress": "UNKNOWN",
-          "isDriver": "UNKNOWN",
-          "isOwner": "UNKNOWN",
-          "courtLocation": "",
-          "violationTicketCounts": [
-            {
-              "createdBy": "",
-              "createdTs": "",
-              "modifiedBy": "",
-              "modifiedTs": "",
-              "violationTicketCountId": 0,
-              "countNo": 0,
-              "description": "",
-              "actOrRegulationNameCode": "",
-              "isAct": "UNKNOWN",
-              "isRegulation": "UNKNOWN",
-              "section": "",
-              "subsection": "",
-              "paragraph": "",
-              "subparagraph": "",
-              "ticketedAmount": 0,
-              "additionalProperties": {}
-            }
-          ],
-          "additionalProperties": {},
-          "violationTicketImage": {
-            "image": "",
-            "mimeType": ""
-          },
-          "ocrViolationTicket": {
-            "ticketVersion": "VT1",
-            "imageFilename": "",
-            "globalConfidence": 0,
-            "fields": {}
-          }
-        },
-        "disputeCounts": [
-          {
-            "createdBy": "",
-            "createdTs": "",
-            "modifiedBy": "",
-            "modifiedTs": "",
-            "countNo": 0,
-            "pleaCode": "UNKNOWN",
-            "requestTimeToPay": "UNKNOWN",
-            "requestReduction": "UNKNOWN",
-            "requestCourtAppearance": "UNKNOWN",
-            "additionalProperties": {}
-          }
-        ],
-        "additionalProperties": {}
-      }
-    }
-  }
-  
-  response: {
-    headers: {
-      Content-Type: application/json
-    }
-  
-    status: {
-      code: 404
-      text: Not Found
-    }
-  
-    body: {
-      type: json
-      content: '''
-        {
-          "type": "",
-          "title": "",
-          "status": 0,
-          "detail": "",
-          "instance": ""
-        }
-      '''
-    }
-  }
-}
-
-example {
-  name: 404 Response
-  description: Dispute record not found. Update failed.
-  
-  request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/validate
-    method: PUT
-    mode: json
-    params:path: {
-      disputeId: 
-    }
-  
-    body:json: {
-      {
-        "fileData": [
-          {
-            "fileId": "",
-            "fileName": "",
-            "noticeOfDisputeGuid": "",
-            "documentSource": "Citizen",
-            "documentType": "",
-            "documentStatus": "Filed",
-            "virusScanStatus": "",
-            "staffReviewStatus": "",
-            "ticketNumber": "",
-            "disputeId": 0,
-            "pendingFileStream": "",
-            "deleteRequested": false
-          }
-        ],
-        "icbcName": {
-          "surname": "",
-          "firstGivenName": "",
-          "secondGivenName": ""
-        },
-        "createdBy": "",
-        "createdTs": "",
-        "modifiedBy": "",
-        "modifiedTs": "",
-        "disputeId": 0,
-        "noticeOfDisputeGuid": "",
-        "ticketNumber": "",
-        "issuedTs": "",
-        "submittedTs": "",
-        "disputantSurname": "",
-        "disputantGivenName1": "",
-        "disputantGivenName2": "",
-        "disputantGivenName3": "",
-        "disputantBirthdate": "",
-        "driversLicenceNumber": "",
-        "disputantOrganization": "",
-        "disputantClientId": "",
-        "driversLicenceIssuedCountryId": 0,
-        "driversLicenceIssuedProvinceSeqNo": 0,
-        "driversLicenceProvince": "",
-        "status": "UNKNOWN",
-        "addressLine1": "",
-        "addressLine2": "",
-        "addressLine3": "",
-        "addressCity": "",
-        "addressProvince": "",
-        "addressProvinceCountryId": 0,
-        "addressProvinceSeqNo": 0,
-        "addressCountryId": 0,
-        "postalCode": "",
-        "homePhoneNumber": "",
-        "workPhoneNumber": "",
-        "emailAddress": "",
-        "emailAddressVerified": false,
-        "filingDate": "",
-        "representedByLawyer": "UNKNOWN",
-        "lawFirmName": "",
-        "lawyerSurname": "",
-        "lawyerGivenName1": "",
-        "lawyerGivenName2": "",
-        "lawyerGivenName3": "",
-        "lawyerAddress": "",
-        "lawyerPhoneNumber": "",
-        "lawyerEmail": "",
-        "officerPin": "",
-        "contactTypeCd": "UNKNOWN",
-        "requestCourtAppearanceYn": "UNKNOWN",
-        "contactLawFirmNm": "",
-        "contactGiven1Nm": "",
-        "contactGiven2Nm": "",
-        "contactGiven3Nm": "",
-        "contactSurnameNm": "",
-        "appearanceDtm": "",
-        "appearanceLessThan14DaysYn": "UNKNOWN",
-        "detachmentLocation": "",
-        "courtAgenId": "",
-        "interpreterLanguageCd": "",
-        "interpreterRequired": "UNKNOWN",
-        "witnessNo": 0,
-        "fineReductionReason": "",
-        "timeToPayReason": "",
-        "disputantComment": "",
-        "rejectedReason": "",
-        "userAssignedTo": "",
-        "userAssignedTs": "",
-        "disputantDetectedOcrIssues": "UNKNOWN",
-        "disputantOcrIssues": "",
-        "systemDetectedOcrIssues": "UNKNOWN",
-        "ocrTicketFilename": "",
-        "signatoryType": "U",
-        "signatoryName": "",
-        "violationTicket": {
-          "createdBy": "",
-          "createdTs": "",
-          "modifiedBy": "",
-          "modifiedTs": "",
-          "violationTicketId": 0,
-          "ticketNumber": "",
-          "disputantOrganizationName": "",
-          "disputantSurname": "",
-          "disputantGivenNames": "",
-          "isYoungPerson": "UNKNOWN",
-          "disputantDriversLicenceNumber": "",
-          "disputantClientNumber": "",
-          "driversLicenceProvince": "",
-          "driversLicenceCountry": "",
-          "driversLicenceIssuedYear": 0,
-          "driversLicenceExpiryYear": 0,
-          "disputantBirthdate": "",
-          "address": "",
-          "addressCity": "",
-          "addressProvince": "",
-          "addressPostalCode": "",
-          "addressCountry": "",
-          "officerPin": "",
-          "detachmentLocation": "",
-          "issuedTs": "",
-          "issuedOnRoadOrHighway": "",
-          "issuedAtOrNearCity": "",
-          "isChangeOfAddress": "UNKNOWN",
-          "isDriver": "UNKNOWN",
-          "isOwner": "UNKNOWN",
-          "courtLocation": "",
-          "violationTicketCounts": [
-            {
-              "createdBy": "",
-              "createdTs": "",
-              "modifiedBy": "",
-              "modifiedTs": "",
-              "violationTicketCountId": 0,
-              "countNo": 0,
-              "description": "",
-              "actOrRegulationNameCode": "",
-              "isAct": "UNKNOWN",
-              "isRegulation": "UNKNOWN",
-              "section": "",
-              "subsection": "",
-              "paragraph": "",
-              "subparagraph": "",
-              "ticketedAmount": 0,
-              "additionalProperties": {}
-            }
-          ],
-          "additionalProperties": {},
-          "violationTicketImage": {
-            "image": "",
-            "mimeType": ""
-          },
-          "ocrViolationTicket": {
-            "ticketVersion": "VT1",
-            "imageFilename": "",
-            "globalConfidence": 0,
-            "fields": {}
-          }
-        },
-        "disputeCounts": [
-          {
-            "createdBy": "",
-            "createdTs": "",
-            "modifiedBy": "",
-            "modifiedTs": "",
-            "countNo": 0,
-            "pleaCode": "UNKNOWN",
-            "requestTimeToPay": "UNKNOWN",
-            "requestReduction": "UNKNOWN",
-            "requestCourtAppearance": "UNKNOWN",
-            "additionalProperties": {}
-          }
-        ],
-        "additionalProperties": {}
-      }
-    }
-  }
-  
-  response: {
-    headers: {
-      Content-Type: text/json
-    }
-  
-    status: {
-      code: 404
-      text: Not Found
-    }
-  
-    body: {
-      type: json
-      content: '''
-        {
-          "type": "",
-          "title": "",
-          "status": 0,
-          "detail": "",
-          "instance": ""
-        }
-      '''
-    }
-  }
-}
-
-example {
-  name: 405 Response
-  description: A Dispute status can only be set to VALIDATED iff status is NEW. Update failed.
-  
-  request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/validate
-    method: PUT
-    mode: json
-    params:path: {
-      disputeId: 
-    }
-  
-    body:json: {
-      {
-        "fileData": [
-          {
-            "fileId": "",
-            "fileName": "",
-            "noticeOfDisputeGuid": "",
-            "documentSource": "Citizen",
-            "documentType": "",
-            "documentStatus": "Filed",
-            "virusScanStatus": "",
-            "staffReviewStatus": "",
-            "ticketNumber": "",
-            "disputeId": 0,
-            "pendingFileStream": "",
-            "deleteRequested": false
-          }
-        ],
-        "icbcName": {
-          "surname": "",
-          "firstGivenName": "",
-          "secondGivenName": ""
-        },
-        "createdBy": "",
-        "createdTs": "",
-        "modifiedBy": "",
-        "modifiedTs": "",
-        "disputeId": 0,
-        "noticeOfDisputeGuid": "",
-        "ticketNumber": "",
-        "issuedTs": "",
-        "submittedTs": "",
-        "disputantSurname": "",
-        "disputantGivenName1": "",
-        "disputantGivenName2": "",
-        "disputantGivenName3": "",
-        "disputantBirthdate": "",
-        "driversLicenceNumber": "",
-        "disputantOrganization": "",
-        "disputantClientId": "",
-        "driversLicenceIssuedCountryId": 0,
-        "driversLicenceIssuedProvinceSeqNo": 0,
-        "driversLicenceProvince": "",
-        "status": "UNKNOWN",
-        "addressLine1": "",
-        "addressLine2": "",
-        "addressLine3": "",
-        "addressCity": "",
-        "addressProvince": "",
-        "addressProvinceCountryId": 0,
-        "addressProvinceSeqNo": 0,
-        "addressCountryId": 0,
-        "postalCode": "",
-        "homePhoneNumber": "",
-        "workPhoneNumber": "",
-        "emailAddress": "",
-        "emailAddressVerified": false,
-        "filingDate": "",
-        "representedByLawyer": "UNKNOWN",
-        "lawFirmName": "",
-        "lawyerSurname": "",
-        "lawyerGivenName1": "",
-        "lawyerGivenName2": "",
-        "lawyerGivenName3": "",
-        "lawyerAddress": "",
-        "lawyerPhoneNumber": "",
-        "lawyerEmail": "",
-        "officerPin": "",
-        "contactTypeCd": "UNKNOWN",
-        "requestCourtAppearanceYn": "UNKNOWN",
-        "contactLawFirmNm": "",
-        "contactGiven1Nm": "",
-        "contactGiven2Nm": "",
-        "contactGiven3Nm": "",
-        "contactSurnameNm": "",
-        "appearanceDtm": "",
-        "appearanceLessThan14DaysYn": "UNKNOWN",
-        "detachmentLocation": "",
-        "courtAgenId": "",
-        "interpreterLanguageCd": "",
-        "interpreterRequired": "UNKNOWN",
-        "witnessNo": 0,
-        "fineReductionReason": "",
-        "timeToPayReason": "",
-        "disputantComment": "",
-        "rejectedReason": "",
-        "userAssignedTo": "",
-        "userAssignedTs": "",
-        "disputantDetectedOcrIssues": "UNKNOWN",
-        "disputantOcrIssues": "",
-        "systemDetectedOcrIssues": "UNKNOWN",
-        "ocrTicketFilename": "",
-        "signatoryType": "U",
-        "signatoryName": "",
-        "violationTicket": {
-          "createdBy": "",
-          "createdTs": "",
-          "modifiedBy": "",
-          "modifiedTs": "",
-          "violationTicketId": 0,
-          "ticketNumber": "",
-          "disputantOrganizationName": "",
-          "disputantSurname": "",
-          "disputantGivenNames": "",
-          "isYoungPerson": "UNKNOWN",
-          "disputantDriversLicenceNumber": "",
-          "disputantClientNumber": "",
-          "driversLicenceProvince": "",
-          "driversLicenceCountry": "",
-          "driversLicenceIssuedYear": 0,
-          "driversLicenceExpiryYear": 0,
-          "disputantBirthdate": "",
-          "address": "",
-          "addressCity": "",
-          "addressProvince": "",
-          "addressPostalCode": "",
-          "addressCountry": "",
-          "officerPin": "",
-          "detachmentLocation": "",
-          "issuedTs": "",
-          "issuedOnRoadOrHighway": "",
-          "issuedAtOrNearCity": "",
-          "isChangeOfAddress": "UNKNOWN",
-          "isDriver": "UNKNOWN",
-          "isOwner": "UNKNOWN",
-          "courtLocation": "",
-          "violationTicketCounts": [
-            {
-              "createdBy": "",
-              "createdTs": "",
-              "modifiedBy": "",
-              "modifiedTs": "",
-              "violationTicketCountId": 0,
-              "countNo": 0,
-              "description": "",
-              "actOrRegulationNameCode": "",
-              "isAct": "UNKNOWN",
-              "isRegulation": "UNKNOWN",
-              "section": "",
-              "subsection": "",
-              "paragraph": "",
-              "subparagraph": "",
-              "ticketedAmount": 0,
-              "additionalProperties": {}
-            }
-          ],
-          "additionalProperties": {},
-          "violationTicketImage": {
-            "image": "",
-            "mimeType": ""
-          },
-          "ocrViolationTicket": {
-            "ticketVersion": "VT1",
-            "imageFilename": "",
-            "globalConfidence": 0,
-            "fields": {}
-          }
-        },
-        "disputeCounts": [
-          {
-            "createdBy": "",
-            "createdTs": "",
-            "modifiedBy": "",
-            "modifiedTs": "",
-            "countNo": 0,
-            "pleaCode": "UNKNOWN",
-            "requestTimeToPay": "UNKNOWN",
-            "requestReduction": "UNKNOWN",
-            "requestCourtAppearance": "UNKNOWN",
-            "additionalProperties": {}
-          }
-        ],
-        "additionalProperties": {}
-      }
-    }
-  }
-  
-  response: {
-    headers: {
-      Content-Type: text/plain
-    }
-  
-    status: {
-      code: 405
-      text: Method Not Allowed
-    }
-  
-    body: {
-      type: text
-      content: '''
-        {
-          "type": "",
-          "title": "",
-          "status": 0,
-          "detail": "",
-          "instance": ""
-        }
-      '''
-    }
-  }
-}
-
-example {
-  name: 405 Response
-  description: A Dispute status can only be set to VALIDATED iff status is NEW. Update failed.
-  
-  request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/validate
-    method: PUT
-    mode: json
-    params:path: {
-      disputeId: 
-    }
-  
-    body:json: {
-      {
-        "fileData": [
-          {
-            "fileId": "",
-            "fileName": "",
-            "noticeOfDisputeGuid": "",
-            "documentSource": "Citizen",
-            "documentType": "",
-            "documentStatus": "Filed",
-            "virusScanStatus": "",
-            "staffReviewStatus": "",
-            "ticketNumber": "",
-            "disputeId": 0,
-            "pendingFileStream": "",
-            "deleteRequested": false
-          }
-        ],
-        "icbcName": {
-          "surname": "",
-          "firstGivenName": "",
-          "secondGivenName": ""
-        },
-        "createdBy": "",
-        "createdTs": "",
-        "modifiedBy": "",
-        "modifiedTs": "",
-        "disputeId": 0,
-        "noticeOfDisputeGuid": "",
-        "ticketNumber": "",
-        "issuedTs": "",
-        "submittedTs": "",
-        "disputantSurname": "",
-        "disputantGivenName1": "",
-        "disputantGivenName2": "",
-        "disputantGivenName3": "",
-        "disputantBirthdate": "",
-        "driversLicenceNumber": "",
-        "disputantOrganization": "",
-        "disputantClientId": "",
-        "driversLicenceIssuedCountryId": 0,
-        "driversLicenceIssuedProvinceSeqNo": 0,
-        "driversLicenceProvince": "",
-        "status": "UNKNOWN",
-        "addressLine1": "",
-        "addressLine2": "",
-        "addressLine3": "",
-        "addressCity": "",
-        "addressProvince": "",
-        "addressProvinceCountryId": 0,
-        "addressProvinceSeqNo": 0,
-        "addressCountryId": 0,
-        "postalCode": "",
-        "homePhoneNumber": "",
-        "workPhoneNumber": "",
-        "emailAddress": "",
-        "emailAddressVerified": false,
-        "filingDate": "",
-        "representedByLawyer": "UNKNOWN",
-        "lawFirmName": "",
-        "lawyerSurname": "",
-        "lawyerGivenName1": "",
-        "lawyerGivenName2": "",
-        "lawyerGivenName3": "",
-        "lawyerAddress": "",
-        "lawyerPhoneNumber": "",
-        "lawyerEmail": "",
-        "officerPin": "",
-        "contactTypeCd": "UNKNOWN",
-        "requestCourtAppearanceYn": "UNKNOWN",
-        "contactLawFirmNm": "",
-        "contactGiven1Nm": "",
-        "contactGiven2Nm": "",
-        "contactGiven3Nm": "",
-        "contactSurnameNm": "",
-        "appearanceDtm": "",
-        "appearanceLessThan14DaysYn": "UNKNOWN",
-        "detachmentLocation": "",
-        "courtAgenId": "",
-        "interpreterLanguageCd": "",
-        "interpreterRequired": "UNKNOWN",
-        "witnessNo": 0,
-        "fineReductionReason": "",
-        "timeToPayReason": "",
-        "disputantComment": "",
-        "rejectedReason": "",
-        "userAssignedTo": "",
-        "userAssignedTs": "",
-        "disputantDetectedOcrIssues": "UNKNOWN",
-        "disputantOcrIssues": "",
-        "systemDetectedOcrIssues": "UNKNOWN",
-        "ocrTicketFilename": "",
-        "signatoryType": "U",
-        "signatoryName": "",
-        "violationTicket": {
-          "createdBy": "",
-          "createdTs": "",
-          "modifiedBy": "",
-          "modifiedTs": "",
-          "violationTicketId": 0,
-          "ticketNumber": "",
-          "disputantOrganizationName": "",
-          "disputantSurname": "",
-          "disputantGivenNames": "",
-          "isYoungPerson": "UNKNOWN",
-          "disputantDriversLicenceNumber": "",
-          "disputantClientNumber": "",
-          "driversLicenceProvince": "",
-          "driversLicenceCountry": "",
-          "driversLicenceIssuedYear": 0,
-          "driversLicenceExpiryYear": 0,
-          "disputantBirthdate": "",
-          "address": "",
-          "addressCity": "",
-          "addressProvince": "",
-          "addressPostalCode": "",
-          "addressCountry": "",
-          "officerPin": "",
-          "detachmentLocation": "",
-          "issuedTs": "",
-          "issuedOnRoadOrHighway": "",
-          "issuedAtOrNearCity": "",
-          "isChangeOfAddress": "UNKNOWN",
-          "isDriver": "UNKNOWN",
-          "isOwner": "UNKNOWN",
-          "courtLocation": "",
-          "violationTicketCounts": [
-            {
-              "createdBy": "",
-              "createdTs": "",
-              "modifiedBy": "",
-              "modifiedTs": "",
-              "violationTicketCountId": 0,
-              "countNo": 0,
-              "description": "",
-              "actOrRegulationNameCode": "",
-              "isAct": "UNKNOWN",
-              "isRegulation": "UNKNOWN",
-              "section": "",
-              "subsection": "",
-              "paragraph": "",
-              "subparagraph": "",
-              "ticketedAmount": 0,
-              "additionalProperties": {}
-            }
-          ],
-          "additionalProperties": {},
-          "violationTicketImage": {
-            "image": "",
-            "mimeType": ""
-          },
-          "ocrViolationTicket": {
-            "ticketVersion": "VT1",
-            "imageFilename": "",
-            "globalConfidence": 0,
-            "fields": {}
-          }
-        },
-        "disputeCounts": [
-          {
-            "createdBy": "",
-            "createdTs": "",
-            "modifiedBy": "",
-            "modifiedTs": "",
-            "countNo": 0,
-            "pleaCode": "UNKNOWN",
-            "requestTimeToPay": "UNKNOWN",
-            "requestReduction": "UNKNOWN",
-            "requestCourtAppearance": "UNKNOWN",
-            "additionalProperties": {}
-          }
-        ],
-        "additionalProperties": {}
-      }
-    }
-  }
-  
-  response: {
-    headers: {
-      Content-Type: application/json
-    }
-  
-    status: {
-      code: 405
-      text: Method Not Allowed
-    }
-  
-    body: {
-      type: json
-      content: '''
-        {
-          "type": "",
-          "title": "",
-          "status": 0,
-          "detail": "",
-          "instance": ""
-        }
-      '''
-    }
-  }
-}
-
-example {
-  name: 405 Response
-  description: A Dispute status can only be set to VALIDATED iff status is NEW. Update failed.
-  
-  request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/validate
-    method: PUT
-    mode: json
-    params:path: {
-      disputeId: 
-    }
-  
-    body:json: {
-      {
-        "fileData": [
-          {
-            "fileId": "",
-            "fileName": "",
-            "noticeOfDisputeGuid": "",
-            "documentSource": "Citizen",
-            "documentType": "",
-            "documentStatus": "Filed",
-            "virusScanStatus": "",
-            "staffReviewStatus": "",
-            "ticketNumber": "",
-            "disputeId": 0,
-            "pendingFileStream": "",
-            "deleteRequested": false
-          }
-        ],
-        "icbcName": {
-          "surname": "",
-          "firstGivenName": "",
-          "secondGivenName": ""
-        },
-        "createdBy": "",
-        "createdTs": "",
-        "modifiedBy": "",
-        "modifiedTs": "",
-        "disputeId": 0,
-        "noticeOfDisputeGuid": "",
-        "ticketNumber": "",
-        "issuedTs": "",
-        "submittedTs": "",
-        "disputantSurname": "",
-        "disputantGivenName1": "",
-        "disputantGivenName2": "",
-        "disputantGivenName3": "",
-        "disputantBirthdate": "",
-        "driversLicenceNumber": "",
-        "disputantOrganization": "",
-        "disputantClientId": "",
-        "driversLicenceIssuedCountryId": 0,
-        "driversLicenceIssuedProvinceSeqNo": 0,
-        "driversLicenceProvince": "",
-        "status": "UNKNOWN",
-        "addressLine1": "",
-        "addressLine2": "",
-        "addressLine3": "",
-        "addressCity": "",
-        "addressProvince": "",
-        "addressProvinceCountryId": 0,
-        "addressProvinceSeqNo": 0,
-        "addressCountryId": 0,
-        "postalCode": "",
-        "homePhoneNumber": "",
-        "workPhoneNumber": "",
-        "emailAddress": "",
-        "emailAddressVerified": false,
-        "filingDate": "",
-        "representedByLawyer": "UNKNOWN",
-        "lawFirmName": "",
-        "lawyerSurname": "",
-        "lawyerGivenName1": "",
-        "lawyerGivenName2": "",
-        "lawyerGivenName3": "",
-        "lawyerAddress": "",
-        "lawyerPhoneNumber": "",
-        "lawyerEmail": "",
-        "officerPin": "",
-        "contactTypeCd": "UNKNOWN",
-        "requestCourtAppearanceYn": "UNKNOWN",
-        "contactLawFirmNm": "",
-        "contactGiven1Nm": "",
-        "contactGiven2Nm": "",
-        "contactGiven3Nm": "",
-        "contactSurnameNm": "",
-        "appearanceDtm": "",
-        "appearanceLessThan14DaysYn": "UNKNOWN",
-        "detachmentLocation": "",
-        "courtAgenId": "",
-        "interpreterLanguageCd": "",
-        "interpreterRequired": "UNKNOWN",
-        "witnessNo": 0,
-        "fineReductionReason": "",
-        "timeToPayReason": "",
-        "disputantComment": "",
-        "rejectedReason": "",
-        "userAssignedTo": "",
-        "userAssignedTs": "",
-        "disputantDetectedOcrIssues": "UNKNOWN",
-        "disputantOcrIssues": "",
-        "systemDetectedOcrIssues": "UNKNOWN",
-        "ocrTicketFilename": "",
-        "signatoryType": "U",
-        "signatoryName": "",
-        "violationTicket": {
-          "createdBy": "",
-          "createdTs": "",
-          "modifiedBy": "",
-          "modifiedTs": "",
-          "violationTicketId": 0,
-          "ticketNumber": "",
-          "disputantOrganizationName": "",
-          "disputantSurname": "",
-          "disputantGivenNames": "",
-          "isYoungPerson": "UNKNOWN",
-          "disputantDriversLicenceNumber": "",
-          "disputantClientNumber": "",
-          "driversLicenceProvince": "",
-          "driversLicenceCountry": "",
-          "driversLicenceIssuedYear": 0,
-          "driversLicenceExpiryYear": 0,
-          "disputantBirthdate": "",
-          "address": "",
-          "addressCity": "",
-          "addressProvince": "",
-          "addressPostalCode": "",
-          "addressCountry": "",
-          "officerPin": "",
-          "detachmentLocation": "",
-          "issuedTs": "",
-          "issuedOnRoadOrHighway": "",
-          "issuedAtOrNearCity": "",
-          "isChangeOfAddress": "UNKNOWN",
-          "isDriver": "UNKNOWN",
-          "isOwner": "UNKNOWN",
-          "courtLocation": "",
-          "violationTicketCounts": [
-            {
-              "createdBy": "",
-              "createdTs": "",
-              "modifiedBy": "",
-              "modifiedTs": "",
-              "violationTicketCountId": 0,
-              "countNo": 0,
-              "description": "",
-              "actOrRegulationNameCode": "",
-              "isAct": "UNKNOWN",
-              "isRegulation": "UNKNOWN",
-              "section": "",
-              "subsection": "",
-              "paragraph": "",
-              "subparagraph": "",
-              "ticketedAmount": 0,
-              "additionalProperties": {}
-            }
-          ],
-          "additionalProperties": {},
-          "violationTicketImage": {
-            "image": "",
-            "mimeType": ""
-          },
-          "ocrViolationTicket": {
-            "ticketVersion": "VT1",
-            "imageFilename": "",
-            "globalConfidence": 0,
-            "fields": {}
-          }
-        },
-        "disputeCounts": [
-          {
-            "createdBy": "",
-            "createdTs": "",
-            "modifiedBy": "",
-            "modifiedTs": "",
-            "countNo": 0,
-            "pleaCode": "UNKNOWN",
-            "requestTimeToPay": "UNKNOWN",
-            "requestReduction": "UNKNOWN",
-            "requestCourtAppearance": "UNKNOWN",
-            "additionalProperties": {}
-          }
-        ],
-        "additionalProperties": {}
-      }
-    }
-  }
-  
-  response: {
-    headers: {
-      Content-Type: text/json
-    }
-  
-    status: {
-      code: 405
-      text: Method Not Allowed
     }
   
     body: {
@@ -3609,14 +3202,14 @@ example {
 
 example {
   name: 409 Response
-  description: The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.
+  description: Dispute has already been created for ticket.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/validate
-    method: PUT
+    url: {{baseUrl}}/api/dispute
+    method: POST
     mode: json
-    params:path: {
-      disputeId: 
+    headers: {
+      ~X-Timezone: 
     }
   
     body:json: {
@@ -3823,14 +3416,14 @@ example {
 
 example {
   name: 409 Response
-  description: The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.
+  description: Dispute has already been created for ticket.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/validate
-    method: PUT
+    url: {{baseUrl}}/api/dispute
+    method: POST
     mode: json
-    params:path: {
-      disputeId: 
+    headers: {
+      ~X-Timezone: 
     }
   
     body:json: {
@@ -4037,14 +3630,14 @@ example {
 
 example {
   name: 409 Response
-  description: The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.
+  description: Dispute has already been created for ticket.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/validate
-    method: PUT
+    url: {{baseUrl}}/api/dispute
+    method: POST
     mode: json
-    params:path: {
-      disputeId: 
+    headers: {
+      ~X-Timezone: 
     }
   
     body:json: {
@@ -4254,11 +3847,11 @@ example {
   description: There was a server error that prevented the update from completing successfully.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/validate
-    method: PUT
+    url: {{baseUrl}}/api/dispute
+    method: POST
     mode: json
-    params:path: {
-      disputeId: 
+    headers: {
+      ~X-Timezone: 
     }
   
     body:json: {

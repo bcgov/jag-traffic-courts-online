@@ -1,5 +1,6 @@
 import { createSelector } from "@ngrx/store";
 import { AppState, JJDisputeStore } from "..";
+import { RequestStatus } from "../common-state";
 
 const state = (state: AppState) => state[JJDisputeStore.StoreName];
 
@@ -15,7 +16,7 @@ const selectedJJDispute = createSelector(
 
 const isLoading = createSelector(
   state,
-  (state: JJDisputeStore.State) => state.loading
+  (state: JJDisputeStore.State) => state.status === RequestStatus.Loading
 );
 
 export const JJDisputeSelectors = {
