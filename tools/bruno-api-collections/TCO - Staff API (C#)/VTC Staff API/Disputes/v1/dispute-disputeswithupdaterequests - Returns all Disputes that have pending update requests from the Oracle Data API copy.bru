@@ -1,16 +1,28 @@
 meta {
-  name: Returns all Disputes that have pending update requests from the Oracle Data API
+  name: dispute/disputeswithupdaterequests - Returns all Disputes that have pending update requests from the Oracle Data API copy
   type: http
-  seq: 13
+  seq: 1
   tags: [
     Dispute
   ]
 }
 
 get {
-  url: {{baseUrl}}/api/dispute/disputeswithupdaterequests
+  url: {{baseUrl}}/api/v1/occam/dispute/disputeswithupdaterequests?ticket=AX&status=NEW&requestStatus=ACCEPTED&requestStatus=PENDING&requestStatus=REJECTED&sortBy=updateRequest_OldestDate&direction=desc&pageNumber=1&pageSize=25
   body: none
   auth: inherit
+}
+
+params:query {
+  ticket: AX
+  status: NEW
+  requestStatus: ACCEPTED
+  requestStatus: PENDING
+  requestStatus: REJECTED
+  sortBy: updateRequest_OldestDate
+  direction: desc
+  pageNumber: 1
+  pageSize: 25
 }
 
 headers {

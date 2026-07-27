@@ -1,14 +1,14 @@
 meta {
-  name: Returns all update requests for a specific dispute
+  name: An endpoint for resending an email to a Disputant.
   type: http
-  seq: 14
+  seq: 1
   tags: [
     Dispute
   ]
 }
 
-get {
-  url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
+put {
+  url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
   body: none
   auth: inherit
 }
@@ -19,11 +19,11 @@ params:path {
 
 example {
   name: 200 Response
-  description: The Update requests were found.
+  description: OK
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
-    method: GET
+    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
+    method: PUT
     mode: none
     params:path: {
       disputeId: 
@@ -43,22 +43,7 @@ example {
     body: {
       type: text
       content: '''
-        [
-          {
-            "createdBy": "",
-            "createdTs": "",
-            "modifiedBy": "",
-            "modifiedTs": "",
-            "disputeUpdateRequestId": 0,
-            "disputeId": 0,
-            "status": "UNKNOWN",
-            "updateType": "UNKNOWN",
-            "updateJson": "",
-            "currentJson": "",
-            "statusUpdateTs": "",
-            "additionalProperties": {}
-          }
-        ]
+  
       '''
     }
   }
@@ -66,11 +51,11 @@ example {
 
 example {
   name: 200 Response
-  description: The Update requests were found.
+  description: OK
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
-    method: GET
+    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
+    method: PUT
     mode: none
     params:path: {
       disputeId: 
@@ -90,22 +75,7 @@ example {
     body: {
       type: json
       content: '''
-        [
-          {
-            "createdBy": "",
-            "createdTs": "",
-            "modifiedBy": "",
-            "modifiedTs": "",
-            "disputeUpdateRequestId": 0,
-            "disputeId": 0,
-            "status": "UNKNOWN",
-            "updateType": "UNKNOWN",
-            "updateJson": "",
-            "currentJson": "",
-            "statusUpdateTs": "",
-            "additionalProperties": {}
-          }
-        ]
+  
       '''
     }
   }
@@ -113,11 +83,11 @@ example {
 
 example {
   name: 200 Response
-  description: The Update requests were found.
+  description: OK
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
-    method: GET
+    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
+    method: PUT
     mode: none
     params:path: {
       disputeId: 
@@ -137,22 +107,121 @@ example {
     body: {
       type: json
       content: '''
-        [
-          {
-            "createdBy": "",
-            "createdTs": "",
-            "modifiedBy": "",
-            "modifiedTs": "",
-            "disputeUpdateRequestId": 0,
-            "disputeId": 0,
-            "status": "UNKNOWN",
-            "updateType": "UNKNOWN",
-            "updateJson": "",
-            "currentJson": "",
-            "statusUpdateTs": "",
-            "additionalProperties": {}
-          }
-        ]
+  
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: Bad Request
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
+    method: PUT
+    mode: none
+    params:path: {
+      disputeId: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/plain
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: text
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: Bad Request
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
+    method: PUT
+    mode: none
+    params:path: {
+      disputeId: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: 400 Response
+  description: Bad Request
+  
+  request: {
+    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
+    method: PUT
+    mode: none
+    params:path: {
+      disputeId: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 400
+      text: Bad Request
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "type": "",
+          "title": "",
+          "status": 0,
+          "detail": "",
+          "instance": ""
+        }
       '''
     }
   }
@@ -160,11 +229,11 @@ example {
 
 example {
   name: 401 Response
-  description: Request lacks valid authentication credentials.
+  description: Unauthorized
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
-    method: GET
+    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
+    method: PUT
     mode: none
     params:path: {
       disputeId: 
@@ -198,11 +267,11 @@ example {
 
 example {
   name: 401 Response
-  description: Request lacks valid authentication credentials.
+  description: Unauthorized
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
-    method: GET
+    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
+    method: PUT
     mode: none
     params:path: {
       disputeId: 
@@ -236,11 +305,11 @@ example {
 
 example {
   name: 401 Response
-  description: Request lacks valid authentication credentials.
+  description: Unauthorized
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
-    method: GET
+    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
+    method: PUT
     mode: none
     params:path: {
       disputeId: 
@@ -274,11 +343,11 @@ example {
 
 example {
   name: 403 Response
-  description: Forbidden, requires dispute:read permission.
+  description: Forbidden
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
-    method: GET
+    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
+    method: PUT
     mode: none
     params:path: {
       disputeId: 
@@ -312,11 +381,11 @@ example {
 
 example {
   name: 403 Response
-  description: Forbidden, requires dispute:read permission.
+  description: Forbidden
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
-    method: GET
+    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
+    method: PUT
     mode: none
     params:path: {
       disputeId: 
@@ -350,11 +419,11 @@ example {
 
 example {
   name: 403 Response
-  description: Forbidden, requires dispute:read permission.
+  description: Forbidden
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
-    method: GET
+    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
+    method: PUT
     mode: none
     params:path: {
       disputeId: 
@@ -388,11 +457,11 @@ example {
 
 example {
   name: 500 Response
-  description: There was a server error that prevented the search from completing successfully or no data found.
+  description: Internal Server Error
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/disputeupdaterequests
-    method: GET
+    url: {{baseUrl}}/api/dispute/:disputeId/resendemailverify
+    method: PUT
     mode: none
     params:path: {
       disputeId: 
