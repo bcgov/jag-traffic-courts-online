@@ -480,7 +480,7 @@ public class DisputeService : IDisputeService,
         if (disputeUpdateRequest.UpdateType == DisputeUpdateRequestUpdateType.DISPUTANT_DOCUMENT)
         {
             DocumentUpdateJSON? documentUpdateJSON = JsonSerializer.Deserialize<DocumentUpdateJSON>(disputeUpdateRequest.UpdateJson, ModelJsonSerializerContext.Default.DocumentUpdateJSON);
-            if (documentUpdateJSON is not null && documentUpdateJSON.DocumentType == "Application for Adjournment")
+            if (documentUpdateJSON is not null && documentUpdateJSON.DocumentType == "Adjournment")
             {
                 dispute.AdjournmentDocument = true;
             }

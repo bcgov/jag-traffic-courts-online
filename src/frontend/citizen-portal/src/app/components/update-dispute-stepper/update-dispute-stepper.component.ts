@@ -140,7 +140,7 @@ export class UpdateDisputeStepperComponent implements OnInit, AfterViewInit {
   ]);
 
   // ── File upload ────────────────────────────────────────────────────────────
-  adjournmentFileType = { key: 'Adjournment', value: 'Application for Adjournment' };
+  adjournmentFileType = { key: 'Adjournment', value: 'Adjournment' };
   fileTypes = [this.adjournmentFileType, { key: 'Other', value: 'Other' }];
   fileTypeToUpload: string = this.adjournmentFileType.key;
   acceptFileTypes = [
