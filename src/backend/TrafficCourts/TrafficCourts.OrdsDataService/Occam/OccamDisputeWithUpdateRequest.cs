@@ -7,6 +7,7 @@
 public class OccamDisputeWithUpdateRequest
 {
     public int dispute_id { get; set; }
+    public string notice_of_dispute_guid { get; set; }
     public DateTime submitted_dt { get; set; }
     public string disputant_surname_nm { get; set; }
     public string disputant_given_1_nm { get; set; }
