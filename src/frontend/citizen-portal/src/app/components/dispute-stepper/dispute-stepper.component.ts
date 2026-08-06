@@ -515,7 +515,6 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     let pendingFileStream = await firstValueFrom(this.fileUtilsService.readFileAsDataURL(file)) as string;
     this.store.dispatch(DisputeStore.Actions.AddDocument({ file: file, fileType: this.fileTypeToUpload, pendingFileStream }));
     this.fileInput.nativeElement.value = null;
-    this.fileTypeToUpload = this.adjournmentFileType.key;
   }
 
   private onUploadFileError(err: string): void {
