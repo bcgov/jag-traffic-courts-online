@@ -87,11 +87,14 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
 
   // Upload
   adjournmentFileType = { key: "Adjournment", value: "Adjournment" };
+  violationTicketStatementFileType = { key: "Written Reasons", value: "Written Reasons" };
+  otherFileType = { key: "Other", value: "Other" };
   fileTypes = [
     this.adjournmentFileType,
-    { key: "Other", value: "Other" },
+    this.violationTicketStatementFileType,
+    this.otherFileType
   ]
-  fileTypeToUpload: string = this.adjournmentFileType.key;
+  fileTypeToUpload: string = "";
   acceptFileTypes = [
     "image/jpeg",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",

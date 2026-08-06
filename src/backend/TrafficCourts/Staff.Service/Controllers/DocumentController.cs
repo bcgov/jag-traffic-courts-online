@@ -440,7 +440,7 @@ public class DocumentController : StaffControllerBase
 
         void ValidateParameters()
         {
-            if (documentType is not ("Adjournment" or "Certified Extract" or "Other"))
+            if (documentType is not ("Adjournment" or "Certified Extract" or "Written Reasons" or "Other"))
             {
                 throw new ArgumentException("Unknown document type", nameof(documentType));
             }

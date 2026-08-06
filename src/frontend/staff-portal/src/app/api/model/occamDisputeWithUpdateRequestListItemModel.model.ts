@@ -39,7 +39,7 @@ export interface OccamDisputeWithUpdateRequestListItemModel {
     courtAgenName?: string | null;
     hearingDate?: string | null;
     updateRequest_OldestDate?: string | null;
-    updateRequest_HasChangeOfPlea?: string | null;
+    updateRequest_HasVTWRDocument?: string | null;
     updateRequest_HasAdjournmentDocument?: string | null;
 }
 export namespace OccamDisputeWithUpdateRequestListItemModel {

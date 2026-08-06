@@ -9043,7 +9043,7 @@
             "format": "date-time",
             "nullable": true
           },
-          "updateRequest_HasChangeOfPlea": {
+          "updateRequest_HasVTWRDocument": {
             "type": "string",
             "nullable": true
           },

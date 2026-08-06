@@ -36,7 +36,7 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     'disputantGivenName1',
     // TCVP-3258 - temporarily hiding 'courthouseLocation'
     'hearingDate',
-    'changeOfPlea',
+    'writtenReasonsDocument',
     'adjournmentDocument',
     'status',
     'userAssignedTo'

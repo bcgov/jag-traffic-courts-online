@@ -221,6 +221,7 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
         }
 
         // If some or all count fields have data, send a DISPUTE_COUNT request
+        // This shouldn't happen any more as of 2.24 - Citizens portal no longer allows COUNT changes via fields - uses VTWR document attachment instead
         if (message.DisputeCounts != null && message.DisputeCounts.Count > 0)
         {
             var anyCountUpdated = false;

@@ -1,20 +1,22 @@
 meta {
-  name: disputeUpdateRequestList
+  name: disputeUpdateRequestList2
   type: http
-  seq: 12
+  seq: 30
 }
 
 get {
-  url: {{v1_baseUrl}}/disputeUpdateRequestList?disputeId=5119
+  url: {{v2_baseUrl}}/occam_dispute_update_requests_list?ticket_number_txt_like=AX01010128%25&dispute_update_stat_type_cd_eq =PEND&dispute_status_type_cd_in=NEW&order=-update_request_submitted_dt&fetch_rows=25&offset_rows=0
   body: none
   auth: inherit
 }
 
 params:query {
-  disputeId: 5119
-  ~disputeUpdateReqTypeCd: 
-  ~disputeUpdateStatTypeCd: 
-  ~noticeOfDisputeGuid: 
+  ticket_number_txt_like: AX01010128%25
+  "dispute_update_stat_type_cd_eq ": PEND
+  dispute_status_type_cd_in: NEW
+  order: -update_request_submitted_dt
+  fetch_rows: 25
+  offset_rows: 0
 }
 
 example {

@@ -422,7 +422,8 @@ public class DisputesController : ControllerBase
                         continue;
                     }
 
-                    if (fileMetadata.DocumentType != "Adjournment" && fileMetadata.DocumentType != "Other")
+                    var allowedDocumentTypes = new List<string> { "Adjournment", "Written Reasons", "Other" };
+                    if (fileMetadata.DocumentType is null || !allowedDocumentTypes.Contains(fileMetadata.DocumentType))
                     {
                         _logger.LogWarning("Uploaded file has invalid document type");
                         continue;
