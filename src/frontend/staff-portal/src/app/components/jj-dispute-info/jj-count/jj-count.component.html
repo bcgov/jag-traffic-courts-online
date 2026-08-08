@@ -502,7 +502,7 @@
                 <span class="section-grid-text">{{ timeToPay === 'no' ? 'No' : 'Yes' }}</span>
                 <br />
                 @if ((jjDisputedCount?.revisedDueDate && timeToPay === 'yes')) {
-                  <span class="section-grid-header text-body">{{ jjDisputedCount?.revisedDueDate | date: "dd-MMM-yyyy" : "UTC" }}</span>
+                  <span class="section-grid-text">{{ jjDisputedCount?.revisedDueDate | date: "dd-MMM-yyyy" : "UTC" }}</span>
                 }
               </div>
             }
