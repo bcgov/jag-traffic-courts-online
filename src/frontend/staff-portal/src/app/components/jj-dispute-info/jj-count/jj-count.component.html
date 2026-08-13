@@ -85,46 +85,51 @@
             </mat-form-field>
           }
         </span>
-        <span class="section-grid-cell mr-10px">
-          <p class="section-grid-header">Request fine reduction</p>
-          @if (!isSSEditMode && !jjDisputedCount) {
+        @if (jjDisputedCount?.appearInCourt === AppearInCourt.Y) {
+          <span class="section-grid-cell mr-10px">
+            <p class="section-grid-header">&nbsp;</p>
             <p class="section-grid-text">&nbsp;</p>
-          }
-          @if (!isSSEditMode && jjDisputedCount?.requestReduction === RequestReduction.Y) {
-            <p class="section-grid-text">yes</p>
-          }
-          @if (!isSSEditMode && jjDisputedCount && jjDisputedCount?.requestReduction !== RequestReduction.Y) {
-            <p class="section-grid-text">no</p>
-          }
-          @if (jjDisputedCount && isSSEditMode) {
-            <mat-form-field appearance="outline">
-              <mat-select formControlName="requestReduction">
-                <mat-option [value]="RequestReduction.Y">{{ "yesNo.yes" | translate }}</mat-option>
-                <mat-option [value]="RequestReduction.N">{{ "yesNo.no" | translate }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          }
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Request time to pay</p>
-          @if (!isSSEditMode && !jjDisputedCount) {
-            <p class="section-grid-text">&nbsp;</p>
-          }
-          @if (!isSSEditMode && jjDisputedCount?.requestTimeToPay === RequestTimeToPay.Y) {
-            <p class="section-grid-text">yes</p>
-          }
-          @if (!isSSEditMode && jjDisputedCount && jjDisputedCount?.requestTimeToPay !== RequestTimeToPay.Y) {
-            <p class="section-grid-text">no</p>
-          }
-          @if (jjDisputedCount && isSSEditMode) {
-            <mat-form-field appearance="outline">
-              <mat-select formControlName="requestTimeToPay">
-                <mat-option [value]="RequestTimeToPay.Y">{{ "yesNo.yes" | translate }}</mat-option>
-                <mat-option [value]="RequestTimeToPay.N">{{ "yesNo.no" | translate }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          }
-        </span>
+          </span>
+        } @else {
+          <span class="section-grid-cell mr-10px">
+            <p class="section-grid-header">Request fine reduction</p>
+            @if (!isSSEditMode) {
+              @if (!jjDisputedCount) {
+                <p class="section-grid-text">&nbsp;</p>
+              } @else if (jjDisputedCount?.requestReduction === RequestReduction.Y) {
+                <p class="section-grid-text">yes</p>
+              } @else if (jjDisputedCount && jjDisputedCount?.requestReduction !== RequestReduction.Y) {
+                <p class="section-grid-text">no</p>
+              }
+            } @else if (jjDisputedCount) {
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="requestReduction">
+                  <mat-option [value]="RequestReduction.Y">{{ "yesNo.yes" | translate }}</mat-option>
+                  <mat-option [value]="RequestReduction.N">{{ "yesNo.no" | translate }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            }
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Request time to pay</p>
+            @if (!isSSEditMode) {
+              @if (!jjDisputedCount) {
+                <p class="section-grid-text">&nbsp;</p>
+              } @else if (jjDisputedCount?.requestTimeToPay === RequestTimeToPay.Y) {
+                <p class="section-grid-text">yes</p>
+              } @else if (jjDisputedCount && jjDisputedCount?.requestTimeToPay !== RequestTimeToPay.Y) {
+                <p class="section-grid-text">no</p>
+              }
+            } @else if (jjDisputedCount) {
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="requestTimeToPay">
+                  <mat-option [value]="RequestTimeToPay.Y">{{ "yesNo.yes" | translate }}</mat-option>
+                  <mat-option [value]="RequestTimeToPay.N">{{ "yesNo.no" | translate }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            }
+          </span>
+        }
       </div>
     </form>
   </section>
