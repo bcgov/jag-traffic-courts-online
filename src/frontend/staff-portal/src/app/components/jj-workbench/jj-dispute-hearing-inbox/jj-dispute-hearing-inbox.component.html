@@ -30,7 +30,7 @@
           </mat-select>
         </mat-form-field>
         <mat-form-field fxFlex="400px" appearance="outline" class="me-0">
-          <mat-select [formControl]="appearanceRoomCodeFilter" placeholder="Court Room">
+          <mat-select [formControl]="appearanceRoomCodeFilter" placeholder="Courtroom">
             @for (room of appearanceRoomCodes; track room) {
               <mat-option [value]="room">{{ room }}</mat-option>
             }
