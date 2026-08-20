@@ -88,5 +88,34 @@ namespace TrafficCourts.Core.Test
             // Assert
             Assert.Equal(new DateTime(2023, 11, 4, 21, 0, 0), result); // Adjusted for DST
         }
+
+        [Theory]
+        [InlineData(2023, 3, 12, 9, 59, 0, 2023, 3, 12, 1, 59, 0, -8)]
+        [InlineData(2023, 3, 12, 10, 0, 0, 2023, 3, 12, 3, 0, 0, -7)]
+        [InlineData(2023, 11, 5, 8, 59, 0, 2023, 11, 5, 1, 59, 0, -7)]
+        [InlineData(2023, 11, 5, 9, 0, 0, 2023, 11, 5, 1, 0, 0, -8)]
+        public void UtcToLocalTime_ShouldUseTimezoneRulesAtTransitionBoundary(
+            int utcYear,
+            int utcMonth,
+            int utcDay,
+            int utcHour,
+            int utcMinute,
+            int utcSecond,
+            int localYear,
+            int localMonth,
+            int localDay,
+            int localHour,
+            int localMinute,
+            int localSecond,
+            int expectedOffsetHours)
+        {
+            var utc = new DateTime(utcYear, utcMonth, utcDay, utcHour, utcMinute, utcSecond, DateTimeKind.Utc);
+            var timeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Vancouver");
+
+            var result = ClockExtensions.UtcToLocalTime(utc, timeZone);
+
+            Assert.Equal(new DateTime(localYear, localMonth, localDay, localHour, localMinute, localSecond), result);
+            Assert.Equal(expectedOffsetHours, timeZone.GetUtcOffset(utc).Hours);
+        }
     }
 }
