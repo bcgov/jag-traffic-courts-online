@@ -62,7 +62,7 @@ export class AppConfigService {
   private ICBC_VISIT_US_DEFAULT =
     'https://www.icbc.com/driver-licensing/tickets/Pages/default.aspx' as const;
   private PROV_CRT_VISIT_US_DEFAULT =
-    'https://www.provincialcourt.bc.ca/types-of-cases/traffic-and-bylaw-matters' as const;
+    'https://provincialcourt.bc.ca/navigating-court-case/traffic-ticket-bylaw' as const;
   private CTH_SERV_VISIT_US_DEFAULT =
     'https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments' as const;
 

@@ -115,7 +115,7 @@ describe("Testing the landing page components", () => {
         it("Testing the Provincial Court of BC link and subsection", () => {
             cy.contains('Provincial Court of BC').click().then(() => {
             cy.get('#cdk-accordion-child-2 .landing-card-text').should('contain.text', 'Deals with three types of tickets: Provincial Violation Tickets (including traffic tickets), Federal Contravention Tickets and Municipal Tickets.')
-            cy.get('.useful-links.provincial-court-of-bc').should('contain.text', 'View site').should('have.attr', 'href', 'https://www.provincialcourt.bc.ca/types-of-cases/traffic-and-bylaw-matters')
+            cy.get('.useful-links.provincial-court-of-bc').should('contain.text', 'View site').should('have.attr', 'href', 'https://provincialcourt.bc.ca/navigating-court-case/traffic-ticket-bylaw')
             // cy.contains('View site').click({ force: true });
             cy.contains('Provincial Court of BC').click();
             });      
