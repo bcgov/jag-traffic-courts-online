@@ -43,7 +43,7 @@
         </mat-dialog-actions>
       </ng-template>
       <div class="button-container">
-        @if (isVTCStaff && !isSSEditMode && type !== tabTypes.DCF) {
+        @if (isVTCStaff) {
           <button mat-raised-button (click)="onAddRemarks()" class="form-button">
             {{ "Add Remark" | translate }}
           </button>
