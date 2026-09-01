@@ -13,6 +13,7 @@ export interface IAppConfig {
   icbcVisitUsLink: string;
   provincialCourtOfBCVisitUsLink: string;
   courthouseServicesOfBCVisitUsLink: string;
+  victimSurchargeLevyVisitUsLink: string;
   bcServicesCardInfoLink: string;
   adjournmentFormLink: string;
   writtenReasonsFormLink: string;
@@ -34,6 +35,7 @@ export class AppConfig implements IAppConfig {
   icbcVisitUsLink: string;
   provincialCourtOfBCVisitUsLink: string;
   courthouseServicesOfBCVisitUsLink: string;
+  victimSurchargeLevyVisitUsLink: string;
   bcServicesCardInfoLink: string;
   adjournmentFormLink: string;
   writtenReasonsFormLink: string;
@@ -65,6 +67,8 @@ export class AppConfigService {
     'https://provincialcourt.bc.ca/navigating-court-case/traffic-ticket-bylaw' as const;
   private CTH_SERV_VISIT_US_DEFAULT =
     'https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments' as const;
+  private VICTIM_SURCHARGE_LEVY_VISIT_US_DEFAULT =
+    'https://www2.gov.bc.ca/gov/content/justice/criminal-justice/victims-of-crime/service-providers/legislation-and-policy' as const;
 
   private BC_SERVICES_CARD_APP_INFO_DEFAULT =
     'https://www2.gov.bc.ca/gov/content/governments/government-id/bcservicescardapp/download-app' as const;
@@ -134,6 +138,11 @@ export class AppConfigService {
   get courthouseServicesOfBCVisitUsLink(): string {
     const link = this.appConfig?.courthouseServicesOfBCVisitUsLink;
     return link ? link : this.CTH_SERV_VISIT_US_DEFAULT;
+  }
+
+  get victimSurchargeLevyVisitUsLink(): string {
+    const link = this.appConfig?.victimSurchargeLevyVisitUsLink;
+    return link ? link : this.VICTIM_SURCHARGE_LEVY_VISIT_US_DEFAULT;
   }
 
   get bcServicesCardInfoLink(): string {
