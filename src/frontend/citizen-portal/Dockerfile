@@ -1,8 +1,13 @@
 ARG BUILD_IMAGE=docker.io/node
 ARG RUNTIME_IMAGE=registry.access.redhat.com/ubi8/nginx-120
+ARG BUILD_MODE=Production
 
 # Build image
 FROM $BUILD_IMAGE:18.12 AS build-deps
+
+# Expose the build mode to the build stage
+ARG BUILD_MODE
+ENV BUILD_MODE=${BUILD_MODE}
 
 # set working directory
 ENV NODE_ROOT /usr/src/app
@@ -17,7 +22,13 @@ RUN yarn install
 
 COPY . .
 
-RUN NODE_OPTIONS=--max_old_space_size=4096 yarn run build-prod
+RUN if [ "$BUILD_MODE" = "Debug" ] || [ "$BUILD_MODE" = "debug" ]; then \
+      echo "Building citizen-portal in DEV mode"; \
+      yarn run build-dev; \
+    else \
+      echo "Building citizen-portal in PROD mode"; \
+      yarn run build-prod; \
+    fi
 
 # Runtime image
 FROM $RUNTIME_IMAGE

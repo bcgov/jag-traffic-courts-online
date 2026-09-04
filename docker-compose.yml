@@ -253,6 +253,8 @@ services:
     container_name: citizen-portal
     build:
       context: ./src/frontend/citizen-portal
+      args:
+        BUILD_MODE: ${BUILD_MODE:-Production}
     restart: always
     ports:
       - "8080:8080"
