@@ -5,7 +5,7 @@
     "ng": "ng",
     "debug": "yarn start --configuration debug --port 4200",
     "start": "ng serve --proxy-config proxy.conf.json",
-    "build-dev": "ng build --source-map=false",
+    "build-dev": "ng build --source-map=true",
     "build-prod": "ng build --configuration production --source-map=false",
     "api:clean": "npx del-cli \"src/app/api/**\" \"!src/app/api/templates\"",
     "api:download": "npx download -o src/app/api http://localhost:5090/swagger/v1/swagger.json",
