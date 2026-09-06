@@ -5,15 +5,15 @@ meta {
 }
 
 get {
-  url: https://{{RSI_auth_host}}/ride/paybc/paymentsvc/api/v1/ticket?prn=10006&in=EA85261462&time=15:48
+  url: https://{{RSI_ResourceUrl_Root}}ride/paybc/paymentsvc/api/v1/ticket?in=EA60429634&time=08:25&prn=10006
   body: none
   auth: bearer
 }
 
 params:query {
+  in: EA60429634
+  time: 08:25
   prn: 10006
-  in: EA85261462
-  time: 15:48
 }
 
 headers {
