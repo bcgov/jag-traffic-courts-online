@@ -6,6 +6,9 @@ import { MatRadioChange } from '@angular/material/radio';
 import { LookupsService, Statute } from 'app/services/lookups.service';
 import { TabType } from '@shared/enums/tab-type.enum';
 
+const initialSurchargeRate = 0.15;
+const newSurchargeRate = 0.30;
+
 @Component({
   selector: 'app-jj-count',
   templateUrl: './jj-count.component.html',
@@ -98,6 +101,13 @@ export class JJCountComponent implements OnInit, OnChanges {
     return !this.jjDisputedCount;
   }
 
+  get surchargeRate(): number {
+    const violationDate = this.jjDisputedCount?.violationDate ? new Date(this.jjDisputedCount.violationDate) : null;
+    return violationDate && violationDate >= new Date("2027-07-01T00:00:00")
+      ? newSurchargeRate
+      : initialSurchargeRate;
+  }
+
   ngOnInit(): void {
     this.initForm();
     this.initFormData();
@@ -145,7 +155,8 @@ export class JJCountComponent implements OnInit, OnChanges {
     // initialize if no value
     if (this.jjDisputedCount && this.form) {
       if (this.jjDisputedCount.totalFineAmount != null && this.jjDisputedCount.totalFineAmount > 0) {
-        this.surcharge = this.jjDisputedCount.totalFineAmount / 1.15 * 0.15;
+        const surchargeRate = this.surchargeRate;
+        this.surcharge = this.jjDisputedCount.totalFineAmount / (1 + surchargeRate) * surchargeRate;
       }
 
       if (this.isViewOnly &&
@@ -532,22 +543,23 @@ export class JJCountComponent implements OnInit, OnChanges {
   }
 
   updateInclSurcharge(eventValue: string) {
-    // surcharge is always 15%
+    const surchargeRate = this.surchargeRate;
+
     if (eventValue == "yes") {
       this.form.get('totalFineAmount').setValue(Math.round(this.form.get('lesserOrGreaterAmount').value));
-      this.lesserOrGreaterAmount = this.form.get('lesserOrGreaterAmount').value / 1.15;
-      this.surcharge = 0.15 * this.lesserOrGreaterAmount;
+      this.lesserOrGreaterAmount = this.form.get('lesserOrGreaterAmount').value / (1 + surchargeRate);
+      this.surcharge = surchargeRate * this.lesserOrGreaterAmount;
     } else {
       const lesserOrGreaterAmountValue = this.form.get('lesserOrGreaterAmount').value;
       if (lesserOrGreaterAmountValue !== null && lesserOrGreaterAmountValue > 0) {
-        const surcharge = Math.round(lesserOrGreaterAmountValue * 0.15);
+        const surcharge = Math.round(lesserOrGreaterAmountValue * surchargeRate);
         const newTotalFineAmount = lesserOrGreaterAmountValue + surcharge;
         this.form.get('totalFineAmount').setValue(newTotalFineAmount);
       } else {
         this.form.get('totalFineAmount').setValue(this.jjDisputedCount?.totalFineAmount);
       }
       this.lesserOrGreaterAmount = this.form.get('lesserOrGreaterAmount').value ?? 0;
-      this.surcharge = Math.round(this.lesserOrGreaterAmount * 0.15);
+      this.surcharge = Math.round(this.lesserOrGreaterAmount * surchargeRate);
     }
   }
 
