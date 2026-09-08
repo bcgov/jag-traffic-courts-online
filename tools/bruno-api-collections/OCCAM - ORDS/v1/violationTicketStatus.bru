@@ -5,9 +5,15 @@ meta {
 }
 
 post {
-  url: {{v1_baseUrl}}/violationTicketStatus
+  url: {{v1_baseUrl}}/violationTicketStatus?disputeId=142675&statusCd=REJ&rejectReason=Already filed via ICBC paper process
   body: none
   auth: inherit
+}
+
+params:query {
+  disputeId: 142675
+  statusCd: REJ
+  rejectReason: Already filed via ICBC paper process
 }
 
 example {
