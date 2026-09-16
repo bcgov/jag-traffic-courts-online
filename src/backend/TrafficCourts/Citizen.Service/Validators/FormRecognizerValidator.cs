@@ -14,12 +14,14 @@ public class FormRecognizerValidator : IFormRecognizerValidator
     private static readonly string _violationTicketNumberRegex = @"^A[A-Z]\d{8}$"; // 2 uppercase characters followed by 8 digits.
     private readonly IStatuteLookupService _lookupService;
     private readonly ILogger<FormRecognizerValidator> _logger;
+    private readonly TimeProvider _timeProvider;
 
-    public FormRecognizerValidator(IStatuteLookupService lookupService, ILogger<FormRecognizerValidator> logger)
+    public FormRecognizerValidator(IStatuteLookupService lookupService, ILogger<FormRecognizerValidator> logger, TimeProvider timeProvider)
     {
         ArgumentNullException.ThrowIfNull(lookupService);
         _lookupService = lookupService;
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
     public async Task SanitizeViolationTicketAsync(OcrViolationTicket violationTicket, CancellationToken cancellationToken)
@@ -341,7 +343,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
     }
 
     /// <summary>Applies a set of validation rules to determine if the given violationTicket is valid or not.</summary>
-    private static async Task ApplyGlobalRulesAsync(OcrViolationTicket violationTicket, CancellationToken cancellationToken)
+    private async Task ApplyGlobalRulesAsync(OcrViolationTicket violationTicket, CancellationToken cancellationToken)
     {
         // TCVP-933 A ticket is considered valid iff
         // - TCVP-2559 Ticket Version must not be VT1 (superceded by VT2 and is no longer supported)
@@ -360,7 +362,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
             rules.Add(new CountActRegMustBeMVA(violationTicket.Fields[OcrViolationTicket.Count2ActRegs], 2));
             rules.Add(new CountActRegMustBeMVA(violationTicket.Fields[OcrViolationTicket.Count3ActRegs], 3));
         }
-        rules.Add(new DateOfServiceLT30Rule(violationTicket.Fields[OcrViolationTicket.DateOfService]));
+        rules.Add(new DateOfServiceLT30Rule(violationTicket.Fields[OcrViolationTicket.DateOfService], _timeProvider));
 
         // TCVP-3052 OCR process no longer requires rejecting images when it cannot determine if the MVA or MVR check boxes are checked.
         // LRAFED-2650 Only tickets that have MVA or MVAR checked are permitted.

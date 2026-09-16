@@ -22,6 +22,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
         private readonly HttpClient _httpClient;
         private readonly IOCCAMORDSDataServiceClientV1 _occamORDSDataServiceClientV1;
         private readonly IConfiguration _configuration;
+        private readonly TimeProvider _timeProvider;
 
         private readonly JsonSerializerOptions _jsonOptions = new()
         {
@@ -36,7 +37,8 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             IOCCAMORDSDataServiceClientV1 occamORDSDataServiceClientV1,
             ILogger<Fix_Missing_Counts_On_OCCAM_Violation_Tickets_Hotfix> logger,
             HttpClient httpClient,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            TimeProvider timeProvider)
         {
             _ticketSearchService = ticketSearchService;
             _occamDisputeRepository = occamDisputeRepository;
@@ -44,6 +46,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
             _logger = logger;
             _httpClient = httpClient;
             _configuration = configuration;
+            _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         }
 
         public string Name { get; } = "Fix_Missing_Counts_On_OCCAM_Violation_Tickets";
@@ -1236,7 +1239,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 if (allSqlStatements.Any())
                 {
                     var pagePrefix = context.PageNumber != null ? $"Page_{context.PageNumber}_" : "";
-                    var masterFileName = $"{ticketType}_{pagePrefix}Master_Update_Statements_{DateTime.Now:yyyyMMdd_HHmmss}.sql";
+                    var masterFileName = $"{ticketType}_{pagePrefix}Master_Update_Statements_{_timeProvider.GetLocalNow():yyyyMMdd_HHmmss}.sql";
                     masterSqlFilePath = await WriteSQLToFileAsync(allSqlStatements, masterFileName);
                     _logger.LogInformation("Generated master SQL file: {FilePath} with {StatementCount} total UPDATE statements from {TicketCount} tickets",
                         masterSqlFilePath, allSqlStatements.Count, results.Count);
@@ -1269,7 +1272,7 @@ namespace TrafficCourts.Hotfix.DataMigration.Hotfixes
                 if (results.Any())
                 {
                     var pagePrefix = context.PageNumber != null ? $"Page_{context.PageNumber}_" : "";
-                    var resultsFileName = $"{ticketType}_{pagePrefix}Results_{DateTime.Now:yyyyMMdd_HHmmss}.json";
+                    var resultsFileName = $"{ticketType}_{pagePrefix}Results_{_timeProvider.GetLocalNow():yyyyMMdd_HHmmss}.json";
                     var resultsOutputPath = Path.Combine(Environment.CurrentDirectory, ".local", "Results", Env);
                     Directory.CreateDirectory(resultsOutputPath);
                     resultsFilePath = Path.Combine(resultsOutputPath, resultsFileName);
@@ -1438,7 +1441,7 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
             }
 
             // Generate file name with timestamp if not provided
-            fileName ??= $"Generated_Update_Statements_{DateTime.Now:yyyyMMdd_HHmmss}.sql";
+            fileName ??= $"Generated_Update_Statements_{_timeProvider.GetLocalNow():yyyyMMdd_HHmmss}.sql";
 
             // Use the same directory as the hotfix or a specific output directory
             var outputPath = Path.Combine(Environment.CurrentDirectory, ".local", "GeneratedSQL", Env);
@@ -1449,7 +1452,7 @@ WHERE violation_ticket_count_id = {violationTicketCountId};
             var sqlContent = new StringBuilder();
             sqlContent.AppendLine("-- SQL UPDATE statements for OCCAM violation ticket counts");
             sqlContent.AppendLine("-- This file contains all SQL statements for multiple tickets");
-            sqlContent.AppendLine($"-- Generated at: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+            sqlContent.AppendLine($"-- Generated at: {_timeProvider.GetLocalNow():yyyy-MM-dd HH:mm:ss}");
             sqlContent.AppendLine($"-- Hotfix: {Name} v{FixVersion}");
             sqlContent.AppendLine();
 

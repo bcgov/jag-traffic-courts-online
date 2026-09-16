@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Moq;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Services.Lookups;
@@ -21,7 +22,7 @@ public class FormRecognizerValidatorTest
         var _statuteLookupService = new Mock<IStatuteLookupService>();
         _statuteLookupService.Setup(x => x.GetBySectionAsync("100(1)(a)", CancellationToken.None)).ReturnsAsync(statute);
         var _logger = new Mock<ILogger<FormRecognizerValidator>>();
-        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
+        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object, TimeProvider.System);
 
         OcrViolationTicket violationTicket = new ();
         violationTicket.Fields.Add(OcrViolationTicket.OffenceIsMVA, new Field("unknown"));
@@ -44,7 +45,7 @@ public class FormRecognizerValidatorTest
         var _statuteLookupService = new Mock<IStatuteLookupService>();
         _statuteLookupService.Setup(x => x.GetBySectionAsync("100(1)(a)", CancellationToken.None)).ReturnsAsync(statute);
         var _logger = new Mock<ILogger<FormRecognizerValidator>>();
-        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
+        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object, TimeProvider.System);
 
         OcrViolationTicket violationTicket = new ();
         violationTicket.Fields.Add(OcrViolationTicket.OffenceIsMVA, new Field("unknown"));
@@ -67,7 +68,7 @@ public class FormRecognizerValidatorTest
         var _statuteLookupService = new Mock<IStatuteLookupService>();
         _statuteLookupService.Setup(x => x.GetBySectionAsync("100(1)(a)", CancellationToken.None)).ReturnsAsync(statute);
         var _logger = new Mock<ILogger<FormRecognizerValidator>>();
-        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
+        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object, TimeProvider.System);
 
         OcrViolationTicket violationTicket = new ();
         violationTicket.Fields.Add(OcrViolationTicket.OffenceIsMVAR, new Field("unknown"));
@@ -90,7 +91,7 @@ public class FormRecognizerValidatorTest
         var _statuteLookupService = new Mock<IStatuteLookupService>();
         _statuteLookupService.Setup(x => x.GetBySectionAsync("100(1)(a)", CancellationToken.None)).ReturnsAsync(statute);
         var _logger = new Mock<ILogger<FormRecognizerValidator>>();
-        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
+        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object, TimeProvider.System);
 
         OcrViolationTicket violationTicket = new ();
         violationTicket.Fields.Add(OcrViolationTicket.OffenceIsMVAR, new Field("unknown"));
@@ -109,7 +110,7 @@ public class FormRecognizerValidatorTest
         // Given
         var _statuteLookupService = new Mock<IStatuteLookupService>();
         var _logger = new Mock<ILogger<FormRecognizerValidator>>();
-        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
+        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object, TimeProvider.System);
 
         OcrViolationTicket violationTicket = new();
         violationTicket.Fields.Add(OcrViolationTicket.DriverLicenceNumber, new Field(""));
@@ -129,7 +130,7 @@ public class FormRecognizerValidatorTest
         // Given
         var _statuteLookupService = new Mock<IStatuteLookupService>();
         var _logger = new Mock<ILogger<FormRecognizerValidator>>();
-        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
+        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object, TimeProvider.System);
 
         OcrViolationTicket violationTicket = new();
         violationTicket.Fields.Add(OcrViolationTicket.DriverLicenceNumber, new Field("BC1234567"));
@@ -149,7 +150,7 @@ public class FormRecognizerValidatorTest
         // Given
         var _statuteLookupService = new Mock<IStatuteLookupService>();
         var _logger = new Mock<ILogger<FormRecognizerValidator>>();
-        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
+        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object, TimeProvider.System);
 
         OcrViolationTicket violationTicket = new();
 
@@ -183,7 +184,7 @@ public class FormRecognizerValidatorTest
         // Given
         var _statuteLookupService = new Mock<IStatuteLookupService>();
         var _logger = new Mock<ILogger<FormRecognizerValidator>>();
-        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
+        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object, TimeProvider.System);
 
         OcrViolationTicket violationTicket = new();
         violationTicket.Fields.Add(OcrViolationTicket.DetachmentLocation, new Field(" \t \n some_text \t "));
@@ -206,7 +207,7 @@ public class FormRecognizerValidatorTest
         // Given
         var _statuteLookupService = new Mock<IStatuteLookupService>();
         var _logger = new Mock<ILogger<FormRecognizerValidator>>();
-        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
+        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object, TimeProvider.System);
 
         OcrViolationTicket violationTicket = new();
         violationTicket.Fields.Add(OcrViolationTicket.Count1TicketAmount, new Field("10 0-"));
