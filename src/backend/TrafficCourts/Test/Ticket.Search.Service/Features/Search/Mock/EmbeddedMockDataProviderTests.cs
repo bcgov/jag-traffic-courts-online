@@ -98,7 +98,7 @@ namespace TrafficCourts.Test.Ticket.Search.Service.Features.Search.Mock
             FakeTimeProvider clock = new FakeTimeProvider(new DateTimeOffset(new DateTime(2022, month, 1, 7, 0, 0, DateTimeKind.Utc)));
 
             // validate pre-condiction
-            var june1 = clock.GetCurrentPacificTime();
+            var june1 = clock.GetCurrentConfiguredTime();
             Assert.Equal(2022, june1.Year);
             Assert.Equal(month, june1.Month);
             Assert.Equal(1, june1.Day);

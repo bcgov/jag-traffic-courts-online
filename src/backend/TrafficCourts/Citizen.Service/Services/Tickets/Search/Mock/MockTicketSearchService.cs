@@ -68,7 +68,7 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock
             // the first ticket to be on the previous date based on today's
             // date
             baseViolationDateTime = baseViolationDateTime.Date.AddDays(1);  // May 8 -> May 9
-            var today = _clock.GetCurrentPacificTime().DateTime.Date;       // May 9
+            var today = _clock.GetCurrentConfiguredTime().DateTime.Date;       // May 9
 
             var daysToAdjust = (today - baseViolationDateTime).Days;        // this will be >= 0, bring dates forward
 

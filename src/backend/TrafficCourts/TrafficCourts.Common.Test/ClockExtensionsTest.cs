@@ -11,7 +11,7 @@ public class ClockExtensionsTest
     {
         var expected = new DateTimeOffset(2020, 1, 1, 0, 0, 0, TimeSpan.FromHours(-8));
         FakeTimeProvider clock = new FakeTimeProvider(expected);
-        DateTimeOffset actual = ClockExtensions.GetCurrentPacificTime(clock);
+        DateTimeOffset actual = ClockExtensions.GetCurrentConfiguredTime(clock);
 
         Assert.Equal(expected, actual);
     }
@@ -22,7 +22,7 @@ public class ClockExtensionsTest
         var utc = new DateTime(2020, 1, 1, 8, 0, 0, DateTimeKind.Utc); // 8AM UTC
         var expected = new DateTimeOffset(2020, 1, 1, 0, 0, 0, TimeSpan.FromHours(-8));
         FakeTimeProvider clock = new FakeTimeProvider(utc);
-        DateTimeOffset actual = ClockExtensions.GetCurrentPacificTime(clock);
+        DateTimeOffset actual = ClockExtensions.GetCurrentConfiguredTime(clock);
 
         Assert.Equal(expected, actual);
     }
@@ -32,7 +32,7 @@ public class ClockExtensionsTest
     {
         var expected = new DateTimeOffset(2020, 7, 1, 0, 0, 0, TimeSpan.FromHours(-7));
         FakeTimeProvider clock = new FakeTimeProvider(expected);
-        DateTimeOffset actual = ClockExtensions.GetCurrentPacificTime(clock);
+        DateTimeOffset actual = ClockExtensions.GetCurrentConfiguredTime(clock);
 
         Assert.Equal(expected, actual);
     }
@@ -43,7 +43,7 @@ public class ClockExtensionsTest
         var utc = new DateTime(2020, 7, 1, 7, 0, 0, DateTimeKind.Utc); // 7AM UTC
         var expected = new DateTimeOffset(2020, 7, 1, 0, 0, 0, TimeSpan.FromHours(-7));
         FakeTimeProvider clock = new FakeTimeProvider(utc);
-        DateTimeOffset actual = ClockExtensions.GetCurrentPacificTime(clock);
+        DateTimeOffset actual = ClockExtensions.GetCurrentConfiguredTime(clock);
 
         Assert.Equal(expected, actual);
     }
