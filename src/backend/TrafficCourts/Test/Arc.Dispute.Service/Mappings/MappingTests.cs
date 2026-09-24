@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Time.Testing;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -178,11 +179,19 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
 
             tcoDisputeTicket.DriversLicence = new Random().Next(99999999).ToString(); //must be numeric
 
-            var now = DateTime.Now;
-            DisputeTicketToArcFileRecordListConverter.Now = () => now;
+            var timeProvider = new FakeTimeProvider(DateTimeOffset.UtcNow);
+            timeProvider.SetLocalTimeZone(TimeZoneInfo.Local);
+
+            var configuration = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new MappingProfile());
+            });
+            var mapper = configuration.CreateMapper(type => type == typeof(DisputeTicketToArcFileRecordListConverter)
+                ? new DisputeTicketToArcFileRecordListConverter(timeProvider)
+                : Activator.CreateInstance(type)!);
 
             // Act
-            var actual = _mapper.Map<List<ArcFileRecord>>(tcoDisputeTicket);
+            var actual = mapper.Map<List<ArcFileRecord>>(tcoDisputeTicket);
 
             // Assert
             Assert.NotNull(actual);
@@ -193,7 +202,8 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
             Assert.Equal(3, tcoDisputeTicket.DisputeCounts.Count);
             Assert.Equal(6, actual.Count);
 
-            DateTime expectedTransactionDateTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, DateTimeKind.Local);
+            DateTimeOffset localNow = timeProvider.GetLocalNow();
+            DateTime expectedTransactionDateTime = new DateTime(localNow.Year, localNow.Month, localNow.Day, localNow.Hour, localNow.Minute, localNow.Second, DateTimeKind.Local);
 
             for (int i = 0; i < 3; i++)
             {

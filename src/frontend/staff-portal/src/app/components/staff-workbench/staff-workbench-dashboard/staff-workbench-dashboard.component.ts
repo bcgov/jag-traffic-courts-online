@@ -64,7 +64,8 @@ export class StaffWorkbenchDashboardComponent implements OnInit {
     }
 
     this.disputeInfo = dispute;
-    if (dispute.ticketNumber[0] == 'A') {
+    // why is this inverting A and E? Where's S? This should all probably be rewritten to use enumerations instead of string literals, and fixed to use consistent labels instead of inversions.
+    if (dispute.ticketNumber[0] == 'A' || dispute.ticketNumber[0] == 'B') {
       this.decidePopup = 'E'
     } else {
       this.decidePopup = "A"

@@ -67,7 +67,7 @@ public class DateOfServiceLT30RuleTest
         violationTicket.Fields.Add(OcrViolationTicket.DateOfService, new Field(dateOfServiceStr));
         var _statuteLookupService = new Mock<IStatuteLookupService>();        
         var _logger = new Mock<ILogger<FormRecognizerValidator>>();
-        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
+        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object, TimeProvider.System);
 
         // When
         await formRecognizerValidator.SanitizeAsync(violationTicket, CancellationToken.None);
@@ -86,7 +86,7 @@ public class DateOfServiceLT30RuleTest
         Field dateOfService = new();
         dateOfService.Value = dateStr;
         violationTicket.Fields.Add(OcrViolationTicket.DateOfService, dateOfService);
-        DateOfServiceLT30Rule rule = new(dateOfService);
+        DateOfServiceLT30Rule rule = new(dateOfService, TimeProvider.System);
 
         // When
         await rule.RunAsync(CancellationToken.None);
