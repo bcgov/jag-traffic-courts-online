@@ -266,19 +266,19 @@ export class JJDisputeComponent implements OnInit {
   }
 
   get documentUploadAllowed(): boolean {
-    return this.isSSEditMode;
+    return (this.isSupportStaff || this.isVTCStaff) && (this.type === this.tabTypes.DCF || this.type === this.tabTypes.DECISION_VALIDATION);
   }
 
   get documentRemovalAllowed(): boolean {
-    return this.isSSEditMode;
+    return (this.isSupportStaff || this.isVTCStaff) && (this.type === this.tabTypes.DCF || this.type === this.tabTypes.DECISION_VALIDATION);
   }
 
   get documentStatusChangesAllowed(): boolean {
     return (
-      this.isSSEditMode ||
       this.type == this.tabTypes.HEARING_INBOX ||
       this.type == this.tabTypes.RETURNED_DECISIONS ||
-      this.type == this.tabTypes.DECISION_VALIDATION
+      this.type == this.tabTypes.DECISION_VALIDATION ||
+      (this.isSupportStaff || this.isVTCStaff) && this.type === this.tabTypes.DCF
     );
   }
   

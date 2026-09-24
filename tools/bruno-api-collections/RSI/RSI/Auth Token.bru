@@ -22,6 +22,12 @@ body:form-urlencoded {
   grant_type: client_credentials
 }
 
+script:post-response {
+  let data = res.body;
+  
+  bru.setEnvVar("bearer_token", data.id_token);
+}
+
 settings {
   encodeUrl: true
   timeout: 0

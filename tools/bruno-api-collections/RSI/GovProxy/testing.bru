@@ -1,0 +1,20 @@
+meta {
+  name: testing
+  type: http
+  seq: 5
+}
+
+get {
+  url: https://tco.jag.gov.bc.ca/api/roadsafetyticketsearch?ticketNumber=EA60424537&issuedTime=14%3A21
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ticketNumber: EA60424537
+  issuedTime: 14%3A21
+}
+
+settings {
+  encodeUrl: true
+}
