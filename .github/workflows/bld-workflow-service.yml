@@ -37,7 +37,7 @@ jobs:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
           CONTEXT: ./src/backend/TrafficCourts
-          DOCKERFILE: ./src/backend/TrafficCourts/Workflow.Service/Dockerfile.rhel8
+          DOCKERFILE: ./src/backend/TrafficCourts/Workflow.Service/Dockerfile
           IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/workflow-service
           RELEASE_VERSION: ${{ inputs.RELEASE_VERSION }}
           GIT_REVISION: ${{ inputs.GIT_REVISION }}
