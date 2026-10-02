@@ -58,13 +58,6 @@ public class TicketSearchService : ITicketSearchService
                     activity?.AddTag("unsupported.act.dropped.counts", count - invoices.Count);
                     count = invoices.Count;
                 }
-
-                // TCVP-2563 Filter results to only those whose Form Number is "MV6000E (040924)" or "MV6000E(040924)".
-                invoices = invoices.Where(_ => _.FormNumber is not null).ToList();
-                if (invoices.Count != count) {
-                    _logger.LogDebug("Dropped invalid Form Number violation ticket(s) from the RSI search results");
-                    activity?.AddTag("unsupported.form.number.dropped.counts", count - invoices.Count);
-                }
             }
 
             if (invoices.Count != 0)
