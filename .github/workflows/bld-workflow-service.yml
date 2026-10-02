@@ -5,7 +5,17 @@ name: Build Workflow Service
 
 on:
   workflow_dispatch:
- 
+    inputs:
+      RELEASE_VERSION:
+        description: 'Release version tag (e.g. 1.2.3)'
+        required: true
+        type: string
+      GIT_REVISION:
+        description: 'Git revision to use for the image tag (e.g. abc1234)'
+        required: true
+        type: string
+        default: 'develop'
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,9 +24,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Set Release Version
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
       - name: Login to OpenShift
         uses: docker/login-action@v1
@@ -32,33 +39,29 @@ jobs:
           CONTEXT: ./src/backend/TrafficCourts
           DOCKERFILE: ./src/backend/TrafficCourts/Workflow.Service/Dockerfile.rhel8
           IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/workflow-service
+          RELEASE_VERSION: ${{ inputs.RELEASE_VERSION }}
+          GIT_REVISION: ${{ inputs.GIT_REVISION }}
         run: |
-          git_sha=$(git rev-parse --short HEAD)
-          commit_sha=$(git rev-parse HEAD)
-          commit_date=$(git log -1 --format=%cd --date=iso)
           build_uid=$(cat /proc/sys/kernel/random/uuid | tr -d '-' | cut -c1-8)
 
-          echo "Building workflow-service:${git_sha}-${build_uid}"
+          echo "Building workflow-service:${GIT_REVISION}-${build_uid}"
 
           docker build \
-            --build-arg GIT_COMMIT_DATE=${commit_date} \
-            --build-arg GIT_SHA=${commit_sha} \
-            --build-arg GIT_SHORT_SHA=${git_sha} \
-            --build-arg GIT_VERSION=${GITHUB_REF#refs/*/} \
-            --tag ${IMAGE}:${git_sha}-${build_uid} \
+            --build-arg GIT_SHA=${GIT_REVISION} \
+            --build-arg GIT_SHORT_SHA=${GIT_REVISION} \
+            --build-arg GIT_VERSION=${RELEASE_VERSION} \
+            --tag ${IMAGE}:${GIT_REVISION}-${build_uid} \
             -f ${DOCKERFILE} \
             ${CONTEXT}
 
           # Always push with the unique build tag
-          docker push ${IMAGE}:${git_sha}-${build_uid}
+          docker push ${IMAGE}:${GIT_REVISION}-${build_uid}
 
-          # Tag as latest (equivalent to Tekton oc-tag-push on eventtype=push)
-          docker tag ${IMAGE}:${git_sha}-${build_uid} ${IMAGE}:latest
+          # Tag as latest
+          docker tag ${IMAGE}:${GIT_REVISION}-${build_uid} ${IMAGE}:latest
           docker push ${IMAGE}:latest
 
-          # If triggered by a tag, also tag with the release version (equivalent to Tekton oc-tag-release)
-          if [ -n "${RELEASE_VERSION}" ] && [ "${RELEASE_VERSION}" != "${git_sha}" ]; then
-            docker tag ${IMAGE}:${git_sha}-${build_uid} ${IMAGE}:${RELEASE_VERSION}
-            docker push ${IMAGE}:${RELEASE_VERSION}
-            echo "Tagged: workflow-service:${RELEASE_VERSION}"
-          fi
+          # Tag with the release version
+          docker tag ${IMAGE}:${GIT_REVISION}-${build_uid} ${IMAGE}:${RELEASE_VERSION}
+          docker push ${IMAGE}:${RELEASE_VERSION}
+          echo "Tagged: workflow-service:${RELEASE_VERSION}"
