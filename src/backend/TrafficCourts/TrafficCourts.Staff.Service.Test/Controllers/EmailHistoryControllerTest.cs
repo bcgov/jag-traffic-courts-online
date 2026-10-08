@@ -25,7 +25,7 @@ public class EmailHistoryControllerTest
     public async Task TestGetEmailHistory200Result()
     {
         // Mock the IEmailHistoryService to return a couple File history records, confirm controller returns them.
-        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+        TimeZoneInfo timeZone = ClockExtensions.VancouverTimeZoneInfo;
 
         // Arrange
         EmailHistory emailHistory1 = new();
@@ -43,7 +43,7 @@ public class EmailHistoryControllerTest
         EmailHistoryController EmailHistoryController = new(EmailHistoryService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await EmailHistoryController.GetEmailHistoryRecordsAsync("TestTicket01", "Pacific Standard Time",CancellationToken.None);
+        IActionResult? result = await EmailHistoryController.GetEmailHistoryRecordsAsync("TestTicket01", "British Columbia Standard Time", CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);

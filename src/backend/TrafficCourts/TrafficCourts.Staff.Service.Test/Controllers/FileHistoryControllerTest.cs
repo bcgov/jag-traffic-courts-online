@@ -20,7 +20,7 @@ public class FileHistoryControllerTest
     {
         // Mock the IFileHistoryService to return a couple File history records, confirm controller returns them.
 
-        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+        TimeZoneInfo timeZone = ClockExtensions.VancouverTimeZoneInfo;
 
         // Arrange
         FileHistory fileHistory1 = new();
@@ -38,7 +38,7 @@ public class FileHistoryControllerTest
         FileHistoryController fileHistoryController = new(fileHistoryService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await fileHistoryController.GetFileHistoryRecordsAsync("TestTicket01", "Pacific Standard Time", CancellationToken.None);
+        IActionResult? result = await fileHistoryController.GetFileHistoryRecordsAsync("TestTicket01", "British Columbia Standard Time", CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
