@@ -5831,6 +5831,13 @@ namespace TrafficCourts.OracleDataApi.Client.V1
         [System.ComponentModel.DataAnnotations.StringLength(100)]
         public string SignatoryName { get; set; }
 
+        /// <summary>
+        /// Where the dispute was submitted from: CITZ (Citizen Portal), STAF (Staff Portal) or JSTN (JUSTIN).
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("disputeSourceType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public JJDisputeDisputeSourceType? DisputeSourceType { get; set; }
+
         [Newtonsoft.Json.JsonProperty("remarks", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<JJDisputeRemark> Remarks { get; set; }
 
@@ -6473,6 +6480,13 @@ namespace TrafficCourts.OracleDataApi.Client.V1
         [Newtonsoft.Json.JsonProperty("signatoryName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.StringLength(100)]
         public string SignatoryName { get; set; }
+
+        /// <summary>
+        /// Where the dispute was submitted from: CITZ (Citizen Portal), STAF (Staff Portal) or JSTN (JUSTIN).
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("disputeSourceType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public DisputeDisputeSourceType? DisputeSourceType { get; set; }
 
         [Newtonsoft.Json.JsonProperty("violationTicket", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public ViolationTicket ViolationTicket { get; set; }
@@ -7376,6 +7390,24 @@ namespace TrafficCourts.OracleDataApi.Client.V1
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    internal enum JJDisputeDisputeSourceType
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"CITZ")]
+        CITZ = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"STAF")]
+        STAF = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"JSTN")]
+        JSTN = 3,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     internal enum JJDisputeCourtAppearanceRoPAppCd
     {
 
@@ -7792,6 +7824,24 @@ namespace TrafficCourts.OracleDataApi.Client.V1
 
         [System.Runtime.Serialization.EnumMember(Value = @"A")]
         A = 2,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    internal enum DisputeDisputeSourceType
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"CITZ")]
+        CITZ = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"STAF")]
+        STAF = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"JSTN")]
+        JSTN = 3,
 
     }
 

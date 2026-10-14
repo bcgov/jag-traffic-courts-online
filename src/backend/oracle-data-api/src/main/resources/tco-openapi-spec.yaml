@@ -507,6 +507,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/JJDisputeRemark'
+        disputeSourceTypeCd:
+          type: string
+          format: nullable
         disputeStatusTypeCd:
           type: string
         drvLicIssuedCtryId:

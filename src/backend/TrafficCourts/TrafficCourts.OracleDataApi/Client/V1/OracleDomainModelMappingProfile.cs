@@ -39,6 +39,7 @@ public class OracleDomainModelMappingProfile : AutoMapper.Profile
         CreateMap<Oracle.DisputeResultJjDisputeHearingType, DomainModel.DisputeResultJjDisputeHearingType>().ConvertUsing<EnumTypeConverter>();
         CreateMap<Oracle.DisputeResultJjDisputeStatus, DomainModel.DisputeResultJjDisputeStatus>().ConvertUsing<EnumTypeConverter>();
         CreateMap<Oracle.DisputeSignatoryType, DomainModel.DisputeSignatoryType>().ConvertUsing<EnumTypeConverter>();
+        CreateMap<Oracle.DisputeDisputeSourceType, DomainModel.DisputeDisputeSourceType>().ConvertUsing<EnumTypeConverter>();
         CreateMap<Oracle.DisputeStatus, DomainModel.DisputeStatus>().ConvertUsing<EnumTypeConverter>();
         CreateMap<Oracle.DisputeUpdateRequestStatus, DomainModel.DisputeUpdateRequestStatus>().ConvertUsing<EnumTypeConverter>();
         CreateMap<Oracle.DisputeUpdateRequestStatus2, DomainModel.DisputeUpdateRequestStatus2>().ConvertUsing<EnumTypeConverter>();
@@ -57,6 +58,7 @@ public class OracleDomainModelMappingProfile : AutoMapper.Profile
         CreateMap<Oracle.JJDisputeDisputantAttendanceType, DomainModel.JJDisputeDisputantAttendanceType>().ConvertUsing<EnumTypeConverter>();
         CreateMap<Oracle.JJDisputeHearingType, DomainModel.JJDisputeHearingType>().ConvertUsing<EnumTypeConverter>();
         CreateMap<Oracle.JJDisputeSignatoryType, DomainModel.JJDisputeSignatoryType>().ConvertUsing<EnumTypeConverter>();
+        CreateMap<Oracle.JJDisputeDisputeSourceType, DomainModel.JJDisputeDisputeSourceType>().ConvertUsing<EnumTypeConverter>();
         CreateMap<Oracle.JJDisputeStatus, DomainModel.JJDisputeStatus>().ConvertUsing<EnumTypeConverter>();
         CreateMap<Oracle.Status, DomainModel.Status>().ConvertUsing<EnumTypeConverter>();
         CreateMap<Oracle.TicketImageDataJustinDocumentReportType, DomainModel.TicketImageDataJustinDocumentReportType>().ConvertUsing<EnumTypeConverter>();
@@ -162,6 +164,7 @@ internal class EnumTypeConverter :
     AutoMapper.ITypeConverter<Oracle.DisputeResultJjDisputeHearingType, DomainModel.DisputeResultJjDisputeHearingType>,
     AutoMapper.ITypeConverter<Oracle.DisputeResultJjDisputeStatus, DomainModel.DisputeResultJjDisputeStatus>,
     AutoMapper.ITypeConverter<Oracle.DisputeSignatoryType, DomainModel.DisputeSignatoryType>,
+    AutoMapper.ITypeConverter<Oracle.DisputeDisputeSourceType, DomainModel.DisputeDisputeSourceType>,
     AutoMapper.ITypeConverter<Oracle.DisputeStatus, DomainModel.DisputeStatus>,
     AutoMapper.ITypeConverter<Oracle.DisputeUpdateRequestStatus, DomainModel.DisputeUpdateRequestStatus>,
     AutoMapper.ITypeConverter<Oracle.DisputeUpdateRequestStatus2, DomainModel.DisputeUpdateRequestStatus2>,
@@ -180,6 +183,7 @@ internal class EnumTypeConverter :
     AutoMapper.ITypeConverter<Oracle.JJDisputeDisputantAttendanceType, DomainModel.JJDisputeDisputantAttendanceType>,
     AutoMapper.ITypeConverter<Oracle.JJDisputeHearingType, DomainModel.JJDisputeHearingType>,
     AutoMapper.ITypeConverter<Oracle.JJDisputeSignatoryType, DomainModel.JJDisputeSignatoryType>,
+    AutoMapper.ITypeConverter<Oracle.JJDisputeDisputeSourceType, DomainModel.JJDisputeDisputeSourceType>,
     AutoMapper.ITypeConverter<Oracle.JJDisputeStatus, DomainModel.JJDisputeStatus>,
     AutoMapper.ITypeConverter<Oracle.Status, DomainModel.Status>,
     AutoMapper.ITypeConverter<Oracle.TicketImageDataJustinDocumentReportType, DomainModel.TicketImageDataJustinDocumentReportType>,
@@ -228,6 +232,7 @@ internal class EnumTypeConverter :
     AutoMapper.ITypeConverter<DomainModel.DisputeResultJjDisputeHearingType, Oracle.DisputeResultJjDisputeHearingType>,
     AutoMapper.ITypeConverter<DomainModel.DisputeResultJjDisputeStatus, Oracle.DisputeResultJjDisputeStatus>,
     AutoMapper.ITypeConverter<DomainModel.DisputeSignatoryType, Oracle.DisputeSignatoryType>,
+    AutoMapper.ITypeConverter<DomainModel.DisputeDisputeSourceType, Oracle.DisputeDisputeSourceType>,
     AutoMapper.ITypeConverter<DomainModel.DisputeStatus, Oracle.DisputeStatus>,
     AutoMapper.ITypeConverter<DomainModel.DisputeUpdateRequestStatus, Oracle.DisputeUpdateRequestStatus>,
     AutoMapper.ITypeConverter<DomainModel.DisputeUpdateRequestStatus2, Oracle.DisputeUpdateRequestStatus2>,
@@ -246,6 +251,7 @@ internal class EnumTypeConverter :
     AutoMapper.ITypeConverter<DomainModel.JJDisputeDisputantAttendanceType, Oracle.JJDisputeDisputantAttendanceType>,
     AutoMapper.ITypeConverter<DomainModel.JJDisputeHearingType, Oracle.JJDisputeHearingType>,
     AutoMapper.ITypeConverter<DomainModel.JJDisputeSignatoryType, Oracle.JJDisputeSignatoryType>,
+    AutoMapper.ITypeConverter<DomainModel.JJDisputeDisputeSourceType, Oracle.JJDisputeDisputeSourceType>,
     AutoMapper.ITypeConverter<DomainModel.JJDisputeStatus, Oracle.JJDisputeStatus>,
     AutoMapper.ITypeConverter<DomainModel.Status, Oracle.Status>,
     AutoMapper.ITypeConverter<DomainModel.TicketImageDataJustinDocumentReportType, Oracle.TicketImageDataJustinDocumentReportType>,
@@ -513,6 +519,30 @@ internal class EnumTypeConverter :
             DomainModel.DisputeSignatoryType.D => Oracle.DisputeSignatoryType.D,
             DomainModel.DisputeSignatoryType.A => Oracle.DisputeSignatoryType.A,
             _ => Oracle.DisputeSignatoryType.U
+        };
+    }
+
+    public DomainModel.DisputeDisputeSourceType Convert(Oracle.DisputeDisputeSourceType source, DomainModel.DisputeDisputeSourceType destination, AutoMapper.ResolutionContext context)
+    {
+        return source switch
+        {
+            Oracle.DisputeDisputeSourceType.UNKNOWN => DomainModel.DisputeDisputeSourceType.UNKNOWN,
+            Oracle.DisputeDisputeSourceType.CITZ => DomainModel.DisputeDisputeSourceType.CITZ,
+            Oracle.DisputeDisputeSourceType.STAF => DomainModel.DisputeDisputeSourceType.STAF,
+            Oracle.DisputeDisputeSourceType.JSTN => DomainModel.DisputeDisputeSourceType.JSTN,
+            _ => DomainModel.DisputeDisputeSourceType.UNKNOWN
+        };
+    }
+
+    public Oracle.DisputeDisputeSourceType Convert(DomainModel.DisputeDisputeSourceType source, Oracle.DisputeDisputeSourceType destination, AutoMapper.ResolutionContext context)
+    {
+        return source switch
+        {
+            DomainModel.DisputeDisputeSourceType.UNKNOWN => Oracle.DisputeDisputeSourceType.UNKNOWN,
+            DomainModel.DisputeDisputeSourceType.CITZ => Oracle.DisputeDisputeSourceType.CITZ,
+            DomainModel.DisputeDisputeSourceType.STAF => Oracle.DisputeDisputeSourceType.STAF,
+            DomainModel.DisputeDisputeSourceType.JSTN => Oracle.DisputeDisputeSourceType.JSTN,
+            _ => Oracle.DisputeDisputeSourceType.UNKNOWN
         };
     }
 
@@ -1065,6 +1095,30 @@ internal class EnumTypeConverter :
             DomainModel.JJDisputeSignatoryType.D => Oracle.JJDisputeSignatoryType.D,
             DomainModel.JJDisputeSignatoryType.A => Oracle.JJDisputeSignatoryType.A,
             _ => Oracle.JJDisputeSignatoryType.U
+        };
+    }
+
+    public DomainModel.JJDisputeDisputeSourceType Convert(Oracle.JJDisputeDisputeSourceType source, DomainModel.JJDisputeDisputeSourceType destination, AutoMapper.ResolutionContext context)
+    {
+        return source switch
+        {
+            Oracle.JJDisputeDisputeSourceType.UNKNOWN => DomainModel.JJDisputeDisputeSourceType.UNKNOWN,
+            Oracle.JJDisputeDisputeSourceType.CITZ => DomainModel.JJDisputeDisputeSourceType.CITZ,
+            Oracle.JJDisputeDisputeSourceType.STAF => DomainModel.JJDisputeDisputeSourceType.STAF,
+            Oracle.JJDisputeDisputeSourceType.JSTN => DomainModel.JJDisputeDisputeSourceType.JSTN,
+            _ => DomainModel.JJDisputeDisputeSourceType.UNKNOWN
+        };
+    }
+
+    public Oracle.JJDisputeDisputeSourceType Convert(DomainModel.JJDisputeDisputeSourceType source, Oracle.JJDisputeDisputeSourceType destination, AutoMapper.ResolutionContext context)
+    {
+        return source switch
+        {
+            DomainModel.JJDisputeDisputeSourceType.UNKNOWN => Oracle.JJDisputeDisputeSourceType.UNKNOWN,
+            DomainModel.JJDisputeDisputeSourceType.CITZ => Oracle.JJDisputeDisputeSourceType.CITZ,
+            DomainModel.JJDisputeDisputeSourceType.STAF => Oracle.JJDisputeDisputeSourceType.STAF,
+            DomainModel.JJDisputeDisputeSourceType.JSTN => Oracle.JJDisputeDisputeSourceType.JSTN,
+            _ => Oracle.JJDisputeDisputeSourceType.UNKNOWN
         };
     }
 

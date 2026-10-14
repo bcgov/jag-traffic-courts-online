@@ -1,0 +1,10 @@
+# Workflows
+
+Step-by-step procedures for common tasks. Add one file per procedure and list it here.
+
+| File | Procedure |
+|---|---|
+| [oracle-package-changes.md](oracle-package-changes.md) | Changing PL/SQL packages in the SVN repos: trunk, release tags, `driver.sql`, line endings, read-only files |
+| [angular-apps.md](angular-apps.md) | Installing (yarn, never npm), building and testing the citizen and staff portals, and updating their generated API clients |
+
+Candidates still to write: building and testing the .NET solution, adding a field end to end (DB package → ORDS → .NET → Angular).

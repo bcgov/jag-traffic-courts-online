@@ -145,6 +145,8 @@ public class DisputeService : IDisputeService,
         dispute.NoticeOfDisputeGuid = Guid.NewGuid().ToString("d");
         dispute.LocalToUtcTime(timeZone);
         dispute.CreatedBy = user.GetUsername();
+        // Always set on the server; ignore any source the client sent
+        dispute.DisputeSourceType = DisputeDisputeSourceType.STAF;
         long disputeId = await _oracleDataApi.SaveDisputeAsync(dispute, cancellationToken);
 
         var savedDispute = await _oracleDataApi.GetDisputeAsync(disputeId, false, cancellationToken);

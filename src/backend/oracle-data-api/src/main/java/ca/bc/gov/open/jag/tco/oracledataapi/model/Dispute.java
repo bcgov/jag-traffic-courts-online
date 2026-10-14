@@ -522,7 +522,13 @@ public class Dispute extends Auditable<String> {
 	 */
 	@Schema(description = "Name of the person who signed the dispute.", maxLength = 100, nullable = true)
 	private String signatoryName;
-	
+
+	/**
+	 * Where the dispute was submitted from: CITZ (Citizen Portal), STAF (Staff Portal) or JSTN (JUSTIN). Set by the calling service, not the end user.
+	 */
+	@Schema(description = "Where the dispute was submitted from: CITZ (Citizen Portal), STAF (Staff Portal) or JSTN (JUSTIN).", nullable = true)
+	private DisputeSourceType disputeSourceType;
+
 	@JsonManagedReference
 	@OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "dispute")
 	@Schema(nullable = true)

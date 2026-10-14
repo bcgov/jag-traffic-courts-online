@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeSourceType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceAPP;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceCrown;
@@ -86,6 +87,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		String occamDisputeId = "444";
 		String occamViolationTicketUpldId = "5555";
 		String occamDisputeCreatedBy = "OCCAMORDS";
+		DisputeSourceType disputeSourceType = DisputeSourceType.CITZ;
 		String offenceLocationTxt = "5555";
 		Date submittedDt =  RandomUtil.randomDate();
 		String ticketNumber = "EA90100004";
@@ -151,6 +153,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		source.setOccamDisputantGiven3Nm(occamDisputantGiven3Nm);
 		source.setOccamDisputantSurnameNm(occamDisputantSurnameNm);
 		source.setOccamDisputeCreatedBy(occamDisputeCreatedBy);
+		source.setDisputeSourceTypeCd(disputeSourceType.name());
 		source.setOccamDisputeId(occamDisputeId);
 		source.setOccamViolationTicketUpldId(occamViolationTicketUpldId);
 		source.setOffenceLocationTxt(offenceLocationTxt);
@@ -215,6 +218,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(Long.valueOf(occamDisputeId), target.getOccamDisputeId());
 		assertEquals(occamViolationTicketUpldId, target.getOccamViolationTicketUpldId());
 		assertEquals(occamDisputeCreatedBy, target.getOccamDisputeCreatedBy());
+		assertEquals(disputeSourceType, target.getDisputeSourceType());
 		assertEquals(offenceLocationTxt, target.getOffenceLocation());
 		assertEquals(requestCourtAppearanceYn, target.getAppearInCourt());
 		assertEquals(submittedDt, target.getSubmittedTs());
