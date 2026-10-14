@@ -41,7 +41,8 @@ TCO packages that read OCCAM objects must compile after the OCCAM changes they d
 ### Build file
 
 - **OCCAM:** `build_occam_26.N.xml`. Copy the previous tag's file, change the version in both places, and list `driver.sql` plus every SQL file in `<include>` elements.
-- **TCO:** `build.xml`. Copy `TCO-API-TCO/dbscripts/tags/26.x/26.0/TCO/build.xml` and set `<property name="version" value="26.N"/>`. It zips `*.sql`, so it has no file list.
+- **TCO:** `build.xml`. Copy the newest TCO tag's `build.xml` (for example `TCO-API-TCO/dbscripts/tags/26.x/26.6/TCO/build.xml`), change the zip file name to the new version, and list `driver.sql` plus every SQL file in `<include>` elements. Some older TCO tags (for example `26.0/TCO/`) zip `*.sql` with no file list instead.
+- **Tag copies:** in the TCO repo, create the tag copies with `svn copy trunk/Packages/<file> tags/26.x/26.N/TCO/<file>`. This keeps the file's history and SVN properties, as in the 26.4 tag. The OCCAM tags are plain copies added with `svn add`, which have no properties. Either works.
 - **OCCAMORDS and TCOORDS:** there's no example yet, because these repos have never been tagged. Use the TCO-style `build.xml`, with the project name and zip file name changed to the ORDS repo, and confirm the choice with the user.
 
 ## Editing the files

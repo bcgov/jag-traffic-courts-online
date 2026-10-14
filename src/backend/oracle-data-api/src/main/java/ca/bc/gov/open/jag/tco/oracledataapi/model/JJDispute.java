@@ -470,6 +470,12 @@ public class JJDispute extends Auditable<String> {
 	private String signatoryName;
 
 	/**
+	 * Where the dispute was submitted from: CITZ (Citizen Portal), STAF (Staff Portal) or JSTN (JUSTIN). Read-only.
+	 */
+	@Schema(description = "Where the dispute was submitted from: CITZ (Citizen Portal), STAF (Staff Portal) or JSTN (JUSTIN).", nullable = true)
+	private DisputeSourceType disputeSourceType;
+
+	/**
 	 * All the remarks for this jj dispute that are for internal use of JJs.
 	 */
 	@JsonManagedReference

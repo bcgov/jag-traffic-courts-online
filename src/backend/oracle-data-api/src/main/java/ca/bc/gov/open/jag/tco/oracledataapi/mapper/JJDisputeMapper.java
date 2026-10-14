@@ -78,6 +78,7 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "offenceLocationTxt", target = "offenceLocation")
 	@Mapping(source = "signatoryNameTxt", target = "signatoryName")
 	@Mapping(source = "signatoryTypeCd", target = "signatoryType")
+	@Mapping(source = "disputeSourceTypeCd", target = "disputeSourceType")
 	@Mapping(source = "submittedDt", target = "submittedTs")
 	@Mapping(source = "ticketNumberTxt", target = "ticketNumber")
 	@Mapping(source = "timeToPayReasonTxt", target = "timeToPayReason")
@@ -153,6 +154,7 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "status", target = "disputeStatusTypeCd", qualifiedByName = "mapShortNamedEnum")
 	@Mapping(target = "signatoryNameTxt", ignore = true) // ignore back reference mapping
 	@Mapping(target = "signatoryTypeCd", ignore = true) // ignore back reference mapping
+	@Mapping(target = "disputeSourceTypeCd", ignore = true) // read-only, set when the dispute is created
 	@Mapping(source = "submittedTs", target = "submittedDt")
 	@Mapping(source = "ticketNumber", target = "ticketNumberTxt")
 	@Mapping(source = "timeToPayReason", target = "timeToPayReasonTxt")
