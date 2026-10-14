@@ -11,7 +11,7 @@ This folder is for AI coding agents working on Traffic Courts Online (TCO). Huma
 | [conventions.md](conventions.md) | How to write and maintain the files in this folder |
 | [architecture/overview.md](architecture/overview.md) | What TCO is, the main components, and how they connect |
 | [architecture/repository-map.md](architecture/repository-map.md) | Where things live in this repo |
-| [architecture/related-repositories.md](architecture/related-repositories.md) | Sibling repos (Oracle packages, ORDS) that changes often span |
+| [architecture/related-repositories.md](architecture/related-repositories.md) | The four Oracle SVN repos (one per schema, plus one per schema's ORDS), and which files belong in each |
 | [database/schema-ownership.md](database/schema-ownership.md) | What we own in the TCO/OCCAM schemas, and what another team owns |
 | [workflows/](workflows/README.md) | Step-by-step procedures: building, testing, common change types |
 | [tickets/](tickets/README.md) | Notes for Jira tickets that are in progress |
