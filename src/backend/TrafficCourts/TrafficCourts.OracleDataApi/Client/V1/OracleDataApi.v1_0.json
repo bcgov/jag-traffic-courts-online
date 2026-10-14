@@ -2115,6 +2115,12 @@
             "description": "Name of the person who signed the dispute.",
             "nullable": true
           },
+          "disputeSourceType": {
+            "type": "string",
+            "description": "Where the dispute was submitted from: CITZ (Citizen Portal), STAF (Staff Portal) or JSTN (JUSTIN).",
+            "nullable": true,
+            "enum": ["UNKNOWN", "CITZ", "STAF", "JSTN"]
+          },
           "remarks": {
             "type": "array",
             "items": {
@@ -2726,6 +2732,12 @@
             "type": "string",
             "description": "Name of the person who signed the dispute.",
             "nullable": true
+          },
+          "disputeSourceType": {
+            "type": "string",
+            "description": "Where the dispute was submitted from: CITZ (Citizen Portal), STAF (Staff Portal) or JSTN (JUSTIN).",
+            "nullable": true,
+            "enum": ["UNKNOWN", "CITZ", "STAF", "JSTN"]
           },
           "violationTicket": {
             "$ref": "#/components/schemas/ViolationTicket"

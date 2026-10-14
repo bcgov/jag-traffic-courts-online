@@ -31,6 +31,8 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 _logger.LogDebug("Consuming message");
 
                 Dispute dispute = _mapper.Map<Dispute>(context.Message);
+                // This consumer only handles disputes submitted through the Citizen Portal
+                dispute.DisputeSourceType = DisputeDisputeSourceType.CITZ;
 
                 _logger.LogTrace("TRY CREATING DISPUTE: {@Dispute}", dispute);
 

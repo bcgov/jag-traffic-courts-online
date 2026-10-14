@@ -275,6 +275,19 @@ public class EnumMappingTests : DomainModelMappingTest
         Assert.Equal(Oracle.DisputeSignatoryType.A, _sut.Map<Oracle.DisputeSignatoryType>(Domain.Models.DisputeSignatoryType.A));
         #endregion DisputeSignatoryType
 
+        #region DisputeDisputeSourceType
+        // Oracle => Domain
+        Assert.Equal(Domain.Models.DisputeDisputeSourceType.UNKNOWN, _sut.Map<Domain.Models.DisputeDisputeSourceType>(Oracle.DisputeDisputeSourceType.UNKNOWN));
+        Assert.Equal(Domain.Models.DisputeDisputeSourceType.CITZ, _sut.Map<Domain.Models.DisputeDisputeSourceType>(Oracle.DisputeDisputeSourceType.CITZ));
+        Assert.Equal(Domain.Models.DisputeDisputeSourceType.STAF, _sut.Map<Domain.Models.DisputeDisputeSourceType>(Oracle.DisputeDisputeSourceType.STAF));
+        Assert.Equal(Domain.Models.DisputeDisputeSourceType.JSTN, _sut.Map<Domain.Models.DisputeDisputeSourceType>(Oracle.DisputeDisputeSourceType.JSTN));
+        // Domain => Oracle
+        Assert.Equal(Oracle.DisputeDisputeSourceType.UNKNOWN, _sut.Map<Oracle.DisputeDisputeSourceType>(Domain.Models.DisputeDisputeSourceType.UNKNOWN));
+        Assert.Equal(Oracle.DisputeDisputeSourceType.CITZ, _sut.Map<Oracle.DisputeDisputeSourceType>(Domain.Models.DisputeDisputeSourceType.CITZ));
+        Assert.Equal(Oracle.DisputeDisputeSourceType.STAF, _sut.Map<Oracle.DisputeDisputeSourceType>(Domain.Models.DisputeDisputeSourceType.STAF));
+        Assert.Equal(Oracle.DisputeDisputeSourceType.JSTN, _sut.Map<Oracle.DisputeDisputeSourceType>(Domain.Models.DisputeDisputeSourceType.JSTN));
+        #endregion DisputeDisputeSourceType
+
         #region DisputeStatus
         // Oracle => Domain
         Assert.Equal(Domain.Models.DisputeStatus.UNKNOWN, _sut.Map<Domain.Models.DisputeStatus>(Oracle.DisputeStatus.UNKNOWN));
@@ -826,6 +839,19 @@ public class EnumMappingTests : DomainModelMappingTest
         Assert.Equal(Oracle.JJDisputeSignatoryType.D, _sut.Map<Oracle.JJDisputeSignatoryType>(Domain.Models.JJDisputeSignatoryType.D));
         Assert.Equal(Oracle.JJDisputeSignatoryType.A, _sut.Map<Oracle.JJDisputeSignatoryType>(Domain.Models.JJDisputeSignatoryType.A));
         #endregion JJDisputeSignatoryType
+
+        #region JJDisputeDisputeSourceType
+        // Oracle => Domain
+        Assert.Equal(Domain.Models.JJDisputeDisputeSourceType.UNKNOWN, _sut.Map<Domain.Models.JJDisputeDisputeSourceType>(Oracle.JJDisputeDisputeSourceType.UNKNOWN));
+        Assert.Equal(Domain.Models.JJDisputeDisputeSourceType.CITZ, _sut.Map<Domain.Models.JJDisputeDisputeSourceType>(Oracle.JJDisputeDisputeSourceType.CITZ));
+        Assert.Equal(Domain.Models.JJDisputeDisputeSourceType.STAF, _sut.Map<Domain.Models.JJDisputeDisputeSourceType>(Oracle.JJDisputeDisputeSourceType.STAF));
+        Assert.Equal(Domain.Models.JJDisputeDisputeSourceType.JSTN, _sut.Map<Domain.Models.JJDisputeDisputeSourceType>(Oracle.JJDisputeDisputeSourceType.JSTN));
+        // Domain => Oracle
+        Assert.Equal(Oracle.JJDisputeDisputeSourceType.UNKNOWN, _sut.Map<Oracle.JJDisputeDisputeSourceType>(Domain.Models.JJDisputeDisputeSourceType.UNKNOWN));
+        Assert.Equal(Oracle.JJDisputeDisputeSourceType.CITZ, _sut.Map<Oracle.JJDisputeDisputeSourceType>(Domain.Models.JJDisputeDisputeSourceType.CITZ));
+        Assert.Equal(Oracle.JJDisputeDisputeSourceType.STAF, _sut.Map<Oracle.JJDisputeDisputeSourceType>(Domain.Models.JJDisputeDisputeSourceType.STAF));
+        Assert.Equal(Oracle.JJDisputeDisputeSourceType.JSTN, _sut.Map<Oracle.JJDisputeDisputeSourceType>(Domain.Models.JJDisputeDisputeSourceType.JSTN));
+        #endregion JJDisputeDisputeSourceType
 
         #region JJDisputeStatus
         // Oracle => Domain

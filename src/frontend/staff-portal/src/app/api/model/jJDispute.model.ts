@@ -8,6 +8,7 @@
  * Do not edit the class manually.
  */
 import { JJDisputeSignatoryType } from './jJDisputeSignatoryType.model';
+import { JJDisputeDisputeSourceType } from './jJDisputeDisputeSourceType.model';
 import { JJDisputeRemark } from './jJDisputeRemark.model';
 import { JJDisputeNoticeOfHearingYn } from './jJDisputeNoticeOfHearingYn.model';
 import { JJDisputeDisputantAttendanceType } from './jJDisputeDisputantAttendanceType.model';
@@ -100,6 +101,7 @@ export interface JJDispute {
     disputantAttendanceType?: JJDisputeDisputantAttendanceType;
     signatoryType?: JJDisputeSignatoryType;
     signatoryName?: string | null;
+    disputeSourceType?: JJDisputeDisputeSourceType;
     remarks?: Array<JJDisputeRemark> | null;
     jjDisputedCounts?: Array<JJDisputedCount> | null;
     jjDisputeCourtAppearanceRoPs?: Array<JJDisputeCourtAppearanceRoP> | null;

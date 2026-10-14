@@ -42,35 +42,35 @@
           @if (!jjDisputedCount) {
             <p class="section-grid-text">&nbsp;</p>
           }
-          <!-- First person wording when created by citizen (OCCAMORDS) -->
-          @if (jjDisputedCount && jjDisputedCount.plea === Plea.G && jjDisputeInfo.occamDisputeCreatedBy === 'OCCAMORDS') {
+          <!-- First person wording when submitted through the Citizen Portal -->
+          @if (jjDisputedCount && jjDisputedCount.plea === Plea.G && isCitizenSubmitted) {
             <p class="section-grid-text">{{ 'label.plea_guilty' | translate }}</p>
           }
-          @if (jjDisputedCount && jjDisputedCount.plea !== Plea.G && jjDisputeInfo.occamDisputeCreatedBy === 'OCCAMORDS') {
+          @if (jjDisputedCount && jjDisputedCount.plea !== Plea.G && isCitizenSubmitted) {
             <p class="section-grid-text">{{ 'label.plea_not_guilty' | translate }}</p>
           }
-          <!-- Third person wording when created by staff (not OCCAMORDS) -->
-          @if (jjDisputedCount && jjDisputedCount.plea === Plea.G && jjDisputeInfo.occamDisputeCreatedBy !== 'OCCAMORDS') {
+          <!-- Third person wording when submitted any other way (Staff Portal, JUSTIN) -->
+          @if (jjDisputedCount && jjDisputedCount.plea === Plea.G && !isCitizenSubmitted) {
             <p class="section-grid-text">{{ 'label.plea_guilty_third_person' | translate }}</p>
           }
-          @if (jjDisputedCount && jjDisputedCount.plea !== Plea.G && jjDisputeInfo.occamDisputeCreatedBy !== 'OCCAMORDS') {
+          @if (jjDisputedCount && jjDisputedCount.plea !== Plea.G && !isCitizenSubmitted) {
             <p class="section-grid-text">{{ 'label.plea_not_guilty_third_person' | translate }}</p>
           }
         </span>
         <span class="section-grid-cell" style="grid-column: span 2">
           <p class="section-grid-header">{{ "label.appearInCourt" | translate }}</p>
-          <!-- First person wording when created by citizen (OCCAMORDS) -->
-          @if (!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.Y && jjDisputeInfo.occamDisputeCreatedBy === 'OCCAMORDS') {
+          <!-- First person wording when submitted through the Citizen Portal -->
+          @if (!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.Y && isCitizenSubmitted) {
             <p class="section-grid-text">{{ 'appearInCourtType.yes' | translate }}</p>
           }
-          @if (!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.N && jjDisputeInfo.occamDisputeCreatedBy === 'OCCAMORDS') {
+          @if (!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.N && isCitizenSubmitted) {
             <p class="section-grid-text">{{ 'appearInCourtType.no' | translate }}</p>
           }
-          <!-- Third person wording when created by staff (not OCCAMORDS) -->
-          @if (!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.Y && jjDisputeInfo.occamDisputeCreatedBy !== 'OCCAMORDS') {
+          <!-- Third person wording when submitted any other way (Staff Portal, JUSTIN) -->
+          @if (!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.Y && !isCitizenSubmitted) {
             <p class="section-grid-text">{{ 'appearInCourtType.yes_third_person' | translate }}</p>
           }
-          @if (!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.N && jjDisputeInfo.occamDisputeCreatedBy !== 'OCCAMORDS') {
+          @if (!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.N && !isCitizenSubmitted) {
             <p class="section-grid-text">{{ 'appearInCourtType.no_third_person' | translate }}</p>
           }
           @if (!isSSEditMode && !jjDisputedCount) {

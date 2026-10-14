@@ -9,6 +9,7 @@
  */
 import { DisputeContactTypeCd } from './disputeContactTypeCd.model';
 import { DisputeSignatoryType } from './disputeSignatoryType.model';
+import { DisputeDisputeSourceType } from './disputeDisputeSourceType.model';
 import { DisputeSystemDetectedOcrIssues } from './disputeSystemDetectedOcrIssues.model';
 import { FileMetadata } from './fileMetadata.model';
 import { DisputeStatus } from './disputeStatus.model';
@@ -96,6 +97,7 @@ export interface Dispute {
     ocrTicketFilename?: string | null;
     signatoryType?: DisputeSignatoryType;
     signatoryName?: string | null;
+    disputeSourceType?: DisputeDisputeSourceType;
     violationTicket?: ViolationTicket;
     disputeCounts?: Array<DisputeCount> | null;
     additionalProperties?: { [key: string]: any | null; } | null;
