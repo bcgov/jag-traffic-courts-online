@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Services.Lookups;
@@ -56,7 +57,7 @@ public class CountActRegMustBeMVATest
         CountActRegMustBeMVA rule = new(actRegField, 1);
         var _statuteLookupService = new Mock<IStatuteLookupService>();
         var _logger = new Mock<ILogger<FormRecognizerValidator>>();
-        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
+        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object, TimeProvider.System);
 
         // When
         await formRecognizerValidator.SanitizeAsync(violationTicket, CancellationToken.None);
