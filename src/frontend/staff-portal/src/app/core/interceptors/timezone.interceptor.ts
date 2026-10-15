@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class TimezoneInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone ?? "America/Vancouver";
     const clonedRequest = req.clone({
       setHeaders: {
         'X-Timezone': timeZone
