@@ -8,12 +8,20 @@ public static class ClockExtensions
     /// <summary>
     /// America/Vancouver <see cref="https://nodatime.org/TimeZones"/>
     /// </summary>
-    private static readonly TimeZoneInfo _vancouver = TimeZoneInfo.FindSystemTimeZoneById("America/Vancouver");
+    public static readonly TimeZoneInfo VancouverTimeZoneInfo = FindPacificTimeZone();
+    private static TimeZoneInfo FindPacificTimeZone()
+    {
+        // currently, "America/Vancouver" maps to the right time zone in Unix but to "Pacific Standard Time" in Windows
+        // once this is fixed, we can remove this logic and use "America/Vancouver" for both operating systems
+        return TimeZoneInfo.TryFindSystemTimeZoneById("British Columbia Standard Time", out TimeZoneInfo? timeZone)
+            ? timeZone
+            : TimeZoneInfo.FindSystemTimeZoneById("America/Vancouver");
+    }
 
     public static DateTimeOffset GetCurrentPacificTime(this TimeProvider clock)
     {
         ArgumentNullException.ThrowIfNull(clock);
-        DateTimeOffset pacificTime = TimeZoneInfo.ConvertTime(clock.GetUtcNow(), _vancouver);
+        DateTimeOffset pacificTime = TimeZoneInfo.ConvertTime(clock.GetUtcNow(), VancouverTimeZoneInfo);
         return pacificTime;
     }
 
@@ -27,12 +35,7 @@ public static class ClockExtensions
     {
         ArgumentNullException.ThrowIfNull(timeZone);
 
-        if (dateTime == null)
-        {
-            return null;
-        }
-
-        return dateTime.Value.UtcToLocalTime(timeZone);
+        return dateTime?.UtcToLocalTime(timeZone);
     }
 
     public static DateTime UtcToLocalTime(this DateTime dateTime, TimeZoneInfo timeZone)
@@ -50,12 +53,8 @@ public static class ClockExtensions
     public static DateTime? LocalToUtcTime(this DateTime? dateTime, TimeZoneInfo timeZone)
     {
         ArgumentNullException.ThrowIfNull(timeZone);
-        if (dateTime == null)
-        {
-            return null;
-        }
 
-        return dateTime.Value.LocalToUtcTime(timeZone);
+        return dateTime?.LocalToUtcTime(timeZone);
     }
 
     public static DateTime LocalToUtcTime(this DateTime dateTime, TimeZoneInfo timeZone)

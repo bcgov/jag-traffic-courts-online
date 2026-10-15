@@ -152,7 +152,7 @@ public class JJDisputeServiceTest
         var _statuteLookupService = new Mock<IStatuteLookupService>();
         var _logger = new Mock<ILogger<JJDisputeService>>();
 
-        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+        TimeZoneInfo timeZone = ClockExtensions.VancouverTimeZoneInfo;
 
         JJDisputeService jJDisputeService = new(_oracleDataApiClient.Object, _bus.Object, _staffDocumentService.Object, _keycloakService.Object, _statuteLookupService.Object, _logger.Object);
 
