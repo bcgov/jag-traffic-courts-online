@@ -43,7 +43,7 @@ public class EmailHistoryControllerTest
         EmailHistoryController EmailHistoryController = new(EmailHistoryService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await EmailHistoryController.GetEmailHistoryRecordsAsync("TestTicket01", "British Columbia Standard Time", CancellationToken.None);
+        IActionResult? result = await EmailHistoryController.GetEmailHistoryRecordsAsync("TestTicket01", timeZone.Id, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);

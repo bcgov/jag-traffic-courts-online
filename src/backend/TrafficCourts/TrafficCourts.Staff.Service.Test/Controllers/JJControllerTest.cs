@@ -231,7 +231,7 @@ public class JJControllerTest
         JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(ticketnumber, "British Columbia Standard Time",CancellationToken.None);
+        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(ticketnumber, timeZone.Id, CancellationToken.None);
 
         // Assert
         var methodNotAllowedResult = Assert.IsType<HttpError>(result);

@@ -38,7 +38,7 @@ public class FileHistoryControllerTest
         FileHistoryController fileHistoryController = new(fileHistoryService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await fileHistoryController.GetFileHistoryRecordsAsync("TestTicket01", "British Columbia Standard Time", CancellationToken.None);
+        IActionResult? result = await fileHistoryController.GetFileHistoryRecordsAsync("TestTicket01", timeZone.Id, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
