@@ -27,3 +27,11 @@ Status: Accepted
 Recorded: 2026-10-20
 
 Table DDL and seed scripts for the OCCAM and TCO schemas are applied by another team. Application repositories own only the PL/SQL packages and ORDS modules they call. Changes here must work against the existing schema. Changes that need new tables or columns must be requested from the schema owners rather than scripted in this repo. The `.dbml` files under `docs/oracle-data-model/` are reference snapshots and not the source of truth.
+
+## 004. `develop` is the main branch; releases flow through `release/#.##.##`
+
+Status: Accepted
+
+Recorded: 2026-10-20
+
+`develop` is the main branch, and `main` is not used. Work branches are created from `develop`. Each release gets a `release/#.##.##` branch, and pending work branches are pull-requested into it with squash merges. The release branch is deployed to DEV, then TEST, then PROD. After PROD is validated, it is pull-requested back into `develop` with a merge commit. The full procedure is in `CONTRIBUTING.md`.

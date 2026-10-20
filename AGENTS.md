@@ -22,6 +22,13 @@ The system has Angular portals (`src/frontend/`), .NET services (`src/backend/Tr
 - **When using developer tooling (API collections, ticket generator, SQL helpers):** READ `tools/README.md`.
 - **When reviewing a change or pull request:** ADOPT `.agents/personas/pr-reviewer.md`.
 
+## Build and test
+
+- `develop` is the main branch, and `main` is unused. Branch from `develop`. Pull requests go into the target `release/#.##.##` branch (squash merge), never directly into `develop` or `main`. See `CONTRIBUTING.md`.
+- **Backend (.NET):** `dotnet build` and `dotnet test` on `src/backend/TrafficCourts/TrafficCourts.sln`. **oracle-data-api:** `./mvnw -B clean verify` with JDK 11. Details: `src/backend/README.md`.
+- **Frontend:** `yarn lint` and `yarn coverage` in each portal; citizen-portal and staff-portal need different Node versions. Details: `src/frontend/README.md`.
+- Run the checks for every component you change before reporting work as done.
+
 ## Safety
 
 - Never commit secrets. Local secrets belong in `.env` (git-ignored); copy from `.env.template`.

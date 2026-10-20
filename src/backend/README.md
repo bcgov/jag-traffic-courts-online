@@ -10,9 +10,23 @@ After running `docker-compose up` from the project root, these services should b
 | --------------------- | -------------------------------------------- | --------------------------------------------
 | oracle-data-api       | http://localhost:5010/swagger-ui/index.html  | The tool to query the API
 |                       | http://localhost:5010/h2-console             | A database tool to execute manual SQL queries
-| staff-api             | http://localhost:5005/swagger/index.html     | A bearer token is required to access the api
-| TrafficCourts         | http://localhost:5000/swagger/index.html     | 
-| Splunk                | http://localhost:8000                        | login with admin/password
+| citizen-api           | http://localhost:5080/swagger/index.html     |
+| staff-api             | http://localhost:5090/swagger/index.html     | A bearer token is required to access the api
+| arc-dispute-api       | http://localhost:5030/swagger/index.html     |
+| workflow-service      | http://localhost:5020                        | No Swagger UI; driven by RabbitMQ messages
+| Splunk                | http://localhost:8001                        | Only with `.docker/docker-compose.splunk.yml`; login with admin/password
+
+Swagger UI is enabled for the .NET services by `appsettings.Development.json`, and docker-compose runs them with `ASPNETCORE_ENVIRONMENT=Development` by default. The full port list is in the [root README](../../README.md#application-services).
+
+## Build and test
+
+| Component | Location | Build and test | Toolchain |
+| --------- | -------- | -------------- | --------- |
+| .NET services | `TrafficCourts/` | `dotnet build TrafficCourts.sln` then `dotnet test TrafficCourts.sln` | .NET 8 SDK or later, plus the .NET 8 runtime |
+| oracle-data-api | `oracle-data-api/` | `./mvnw -B clean verify` (or `mvnw.cmd` on Windows) | JDK 11 |
+| virus-scan-service | `bc-gov-virus-scan/` | `dotnet build BCGov.VirusScan.sln` | .NET SDK |
+
+CI runs the same commands on pull requests (`.github/workflows/pr-citizen-api.yml`, `pr-oracle-api.yml`). Tests that call live ORDS endpoints, such as those in `TrafficCourts.OrdsDataService.Test`, are marked `Skip` and do not run by default. `TrafficCourts.Messaging.Test` is not part of the solution and does not currently compile.
 
 ## Description
 
