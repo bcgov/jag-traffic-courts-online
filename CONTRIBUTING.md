@@ -13,6 +13,16 @@ All Contributions to this repository start with a Jira Item associated with the 
 1. If some changes are required, you will be notified in the PR, address any change requested and push to the same branch.
 1. When your change is meeting the requirement, the reviewer will merge the code into master, you can celebrate! 
 
+## AI agent context
+
+`AGENTS.md` at the repository root routes AI coding agents to the documentation they need for a task. Agent-only resources, such as review personas and skills, live under `.agents/`. Shared documentation stays in this file, `README.md`, and `docs/`. See `docs/decisions.md` (001, 002).
+
+When you move or rename a document that `AGENTS.md` references, update the route. Then run the validator from Git Bash or another POSIX shell:
+
+```bash
+.agents/skills/validate-context-routes/scripts/validate.sh
+```
+
 ## Open a new bug in jira
 
 - When a bug is detected in the application, a jira bug must be open

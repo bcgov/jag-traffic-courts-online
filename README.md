@@ -9,6 +9,7 @@ Welcome to Traffic Courts Online
 ## Project Structure
 
 ```
+    ├── .agents                                  # Agent-only personas and skills (routed from AGENTS.md)
     ├── .docker
     │   └── keycloak-realms
     ├── .github
@@ -19,6 +20,10 @@ Welcome to Traffic Courts Online
     │       ├── jaeger-aio
     │       └── traffic-court-online
     ├── docs
+    │   ├── decisions.md                         # Architecture decision records
+    │   ├── terminology.md                       # Domain glossary (OCCAM, JUSTIN, VTC, JJ, ...)
+    │   ├── jira-tickets                         # Per-ticket working notes
+    │   └── oracle-data-model
     ├── infrastructure
     │   ├── certificates
     │   ├── keycloak
@@ -37,6 +42,7 @@ Welcome to Traffic Courts Online
     │   ├── network-tester
     │   ├── performance-testing
     │   └── ticket-generator
+    ├── AGENTS.md                                # Entry point / router for AI coding agents
     ├── COMPLIANCE.yaml
     ├── CONTRIBUTING.md
     ├── docker-compose.yml

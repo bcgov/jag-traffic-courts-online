@@ -78,3 +78,6 @@ package-lock.json
 
 # Hotfix Data Migration
 .local
+# Agent-generated local state
+.agents/logs/
+.agents/memory/
