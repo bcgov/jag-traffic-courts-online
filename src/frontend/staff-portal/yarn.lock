@@ -467,10 +467,10 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/router@^21.1.5":
-  version "21.1.5"
-  resolved "https://registry.yarnpkg.com/@angular/router/-/router-21.1.5.tgz#516cb6886dd71e85492b123485b6170c40abe089"
-  integrity sha512-OjFn6Nw51CU712CMbl2U9TxlCkzOmjMLYPAfnV4+RdG7o+/eOS2nV0oapJ88RNCw7Yl04PA1amc3ql3agDFd4A==
+"@angular/router@^21.2.25":
+  version "21.2.25"
+  resolved "https://registry.yarnpkg.com/@angular/router/-/router-21.2.25.tgz#fd712cc3a3d3a19b7e53108f5de67ce8271781ca"
+  integrity sha512-85ZwJCBEpaXBmezusZLlgW2JzEEByzerlWT34I6IK/ZN4AKG8m2B/vlbTkKmHuzCOGWx1L7xFtPg/URkGGKwSA==
   dependencies:
     tslib "^2.3.0"
 
