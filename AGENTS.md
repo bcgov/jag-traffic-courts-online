@@ -24,7 +24,11 @@ The system has Angular portals (`src/frontend/`), .NET services (`src/backend/Tr
 
 ## Build and test
 
-- `develop` is the main branch, and `main` is unused. Branch from `develop`. Pull requests go into the target `release/#.##.##` branch (squash merge), never directly into `develop` or `main`. See `CONTRIBUTING.md`.
+- `develop` is the main branch, and `main` is unused. Branch from `develop`.
+- Feature and fix PRs go into the target `release/#.##` branch (MAJOR.MINOR) (squash merge).
+- Only hotfixes and non-release changes (docs, dev tooling, DevOps) go directly to `develop`.
+- Never create git tags or GitHub releases. A GitHub release generates the version tag and triggers the image build and registration pipeline (GitHub Actions → OpenShift Tekton → Artifactory).
+- See `CONTRIBUTING.md` for the full process.
 - **Backend (.NET):** `dotnet build` and `dotnet test` on `src/backend/TrafficCourts/TrafficCourts.sln`. **oracle-data-api:** `./mvnw -B clean verify` with JDK 11. Details: `src/backend/README.md`.
 - **Frontend:** `yarn lint` and `yarn coverage` in each portal; citizen-portal and staff-portal need different Node versions. Details: `src/frontend/README.md`.
 - Run the checks for every component you change before reporting work as done.

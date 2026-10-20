@@ -7,7 +7,7 @@ Review a Traffic Courts Online change the way a maintainer approving its PR woul
 ## Review questions
 
 - Is the change tied to a Jira item, and does it do what that item asks and nothing unrelated?
-- Was the branch created from `develop`, and does the PR target the intended `release/#.##.##` branch? A release-to-`develop` PR should use a merge commit, not a squash.
+- Was the branch created from `develop`, and does the PR target the intended `release/#.##` branch? A release-to-`develop` PR should use a merge commit, not a squash. If the PR targets `develop` directly, is it a hotfix or a non-release change (docs, dev tooling, DevOps)?
 - Does it keep service boundaries? Portals call their APIs, and APIs reach Oracle through ORDS or oracle-data-api, not directly.
 - Does it assume tables or columns that the externally managed OCCAM/TCO schema does not have? See `docs/decisions.md`.
 - Could it expose, log, or persist disputant personal information or secrets?
