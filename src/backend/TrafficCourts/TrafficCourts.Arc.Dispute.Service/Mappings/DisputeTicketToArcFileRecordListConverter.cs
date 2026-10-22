@@ -11,6 +11,17 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
     /// </summary>
     public class DisputeTicketToArcFileRecordListConverter : ITypeConverter<TcoDisputeTicket, List<ArcFileRecord>>
     {
+        private readonly TimeProvider _timeProvider;
+
+        public DisputeTicketToArcFileRecordListConverter() : this(TimeProvider.System)
+        {
+        }
+
+        public DisputeTicketToArcFileRecordListConverter(TimeProvider timeProvider)
+        {
+            _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
+        }
+
         public List<ArcFileRecord> Convert(TcoDisputeTicket source, List<ArcFileRecord> destination, ResolutionContext context)
         {
             ArgumentNullException.ThrowIfNull(source);
@@ -149,17 +160,10 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
             return false;
         }
 
-        /// <summary>
-        /// Function to get curent date and time, set in unit tests
-        /// </summary>
-        internal static Func<DateTime> Now = () => DateTime.Now;
-        private readonly ILogger<DisputeTicketToArcFileRecordListConverter> _logger;
-
-        private static DateTime GetCurrentDate()
+        private DateTime GetCurrentDate()
         {
-            DateTime now = Now();
-            now = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, DateTimeKind.Local);
-            return now;
+            DateTimeOffset localNow = _timeProvider.GetLocalNow();
+            return new DateTime(localNow.Year, localNow.Month, localNow.Day, localNow.Hour, localNow.Minute, localNow.Second, DateTimeKind.Local);
         }
 
         /// <summary>

@@ -7,9 +7,11 @@ namespace TrafficCourts.Citizen.Service.Validators.Rules;
 /// </summary>
 public class DateOfServiceLT30Rule : ValidationRule
 {
+    private readonly TimeProvider _timeProvider;
 
-    public DateOfServiceLT30Rule(Field field) : base(field)
+    public DateOfServiceLT30Rule(Field field, TimeProvider timeProvider) : base(field)
     {
+        _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
     public override Task RunAsync(CancellationToken cancellationToken)
@@ -24,7 +26,7 @@ public class DateOfServiceLT30Rule : ValidationRule
             // Format the Field Value as recognized by the validator
             Field.Value = dateOfService.Value.ToString("yyyy-MM-dd");
 
-            DateTime dateTime = DateTime.Now;
+            DateTime dateTime = _timeProvider.GetLocalNow().DateTime;
             // remove time portion (which may affect the below calculations)
             DateTime now = new(dateTime.Year, dateTime.Month, dateTime.Day);
             if (dateOfService > now)

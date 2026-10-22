@@ -4,7 +4,7 @@ ARG RUNTIME_IMAGE=eclipse-temurin
 #############################################################################################
 ###              Stage where Docker is building spring boot app using maven               ###
 #############################################################################################
-FROM $BUILD_IMAGE:3.8.6-jdk-11 AS build
+FROM $BUILD_IMAGE:3.9-eclipse-temurin-11 AS build
 
 ARG SKIP_TESTS=true
 
@@ -25,7 +25,7 @@ RUN mvn -B clean package \
 #############################################################################################
 ### Stage where Docker is running a java process to run a service built in previous stage ###
 #############################################################################################
-FROM $RUNTIME_IMAGE:11
+FROM $RUNTIME_IMAGE:11-jre
 ARG PROMETHEUS_AGENT_VERSION=0.18.0
 ARG OPENTELEMETRY_AGENT_VERSION=1.26.0
 
