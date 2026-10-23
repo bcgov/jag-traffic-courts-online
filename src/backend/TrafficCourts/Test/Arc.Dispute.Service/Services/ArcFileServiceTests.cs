@@ -62,7 +62,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
                             // single digit times
                             yield return [record, new DateTime(year, month, day, 1, 2, 3, DateTimeKind.Local)];
                             // double digit times
-                            yield return [record, new DateTime(year, month, day, 10, 11, 12, DateTimeKind.Local)];
+                            yield return [record, new DateTime(year, month, day, 21, 22, 23, DateTimeKind.Local)];
                         }
                     }
                 }
