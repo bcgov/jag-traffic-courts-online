@@ -40,8 +40,8 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
         {
             get
             {
-                yield return new object[] { new AdnotatedTicket() };
-                yield return new object[] { new DisputedTicket() };
+                yield return [new AdnotatedTicket()];
+                yield return [new DisputedTicket()];
             }
         }
 
@@ -49,7 +49,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
         {
             get
             {
-                var year = 2024; // pick a leap year
+                int year = 2024; // pick a leap year
 
                 foreach (var item in EachArcFileRecordType)
                 {
@@ -60,9 +60,9 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
                         for (int day = 1; day <= DateTime.DaysInMonth(year, month); day++)
                         {
                             // single digit times
-                            yield return new object[] { record, new DateTime(year, month, day, 1, 2, 3, DateTimeKind.Local) };
+                            yield return [record, new DateTime(year, month, day, 1, 2, 3, DateTimeKind.Local)];
                             // double digit times
-                            yield return new object[] { record, new DateTime(year, month, day, 10, 11, 12, DateTimeKind.Local) };
+                            yield return [record, new DateTime(year, month, day, 10, 11, 12, DateTimeKind.Local)];
                         }
                     }
                 }
@@ -83,7 +83,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
                     {
                         for (int day = 1; day <= DateTime.DaysInMonth(year, month); day++)
                         {
-                            yield return new object[] { record, new DateTime(year, month, day, 0, 0, 0, DateTimeKind.Local) };
+                            yield return [record, new DateTime(year, month, day, 0, 0, 0, DateTimeKind.Local)];
                         }
                     }
                 }
@@ -117,17 +117,25 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
 
         [Theory]
         [MemberData(nameof(EachArcFileRecordTypeWithDateAndTime))]
-        public async Task transaction_date_and_time_should_be_correct(ArcFileRecord record, DateTime date)
+        public async Task transaction_date_and_time_should_be_correct(ArcFileRecord record, DateTime expectedDate)
         {
-            record.TransactionDateTime = date;
+            // Arrange
+            string expectedDateString = expectedDate.ToString("yyyyMMdd");
+            string expectedTimeString = expectedDate.ToString("HHmmss");
+            
+            record.TransactionDateTime = expectedDate;
+            
+            // Act
+            string actual = await CreateFileAsStringAsync(record);
 
-            var actual = await CreateFileAsStringAsync(record);
-
+            // Assert
             // 2-   9      Transaction Date (yyyymmdd)
-            Assert.Equal(date.ToString("yyyyMMdd"), Get(actual, 2, 9));
+            string actualDateString = Get(actual, 2, 9);
+            Assert.Equal(expectedDateString, actualDateString);
 
             // 10-  15      Transaction Time
-            Assert.Equal(date.ToString("HHmmss"), Get(actual, 10, 15));
+            string actualTimeString = Get(actual, 10, 15);
+            Assert.Equal(expectedTimeString, actualTimeString);
         }
 
         [Theory]
