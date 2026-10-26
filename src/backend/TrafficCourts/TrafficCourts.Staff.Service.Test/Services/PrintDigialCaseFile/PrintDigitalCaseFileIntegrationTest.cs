@@ -91,7 +91,7 @@ namespace TrafficCourts.Staff.Service.Test.Services.PrintDigialCaseFile
 
             _mapper.Map<JJDispute>(oracle).Returns(jjDispute);
 
-            TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+            TimeZoneInfo timeZone = ClockExtensions.VancouverTimeZoneInfo;
 
             Models.DigitalCaseFiles.Print.DigitalCaseFile dcf = await _sut.GetDigitalCaseFileAsync("EA03148599", timeZone, CancellationToken.None);
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(dcf);
@@ -111,7 +111,7 @@ namespace TrafficCourts.Staff.Service.Test.Services.PrintDigialCaseFile
 
             _mapper.Map<Dispute>(oracle).Returns(dispute);
 
-            TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+            TimeZoneInfo timeZone = ClockExtensions.VancouverTimeZoneInfo;
 
             Models.DigitalCaseFiles.Print.DigitalCaseFile dcf = await _sut.GetDigitalCaseFileAsync(3354, timeZone, CancellationToken.None);
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(dcf);
