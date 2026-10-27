@@ -21,7 +21,7 @@ namespace TrafficCourts.Staff.Service.Test.Controllers;
 
 public class JJControllerTest
 {
-    private readonly TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+    private readonly TimeZoneInfo timeZone = ClockExtensions.VancouverTimeZoneInfo;
 
     [Fact]
     public async Task TestAcceptJJDispute200Result()
@@ -135,7 +135,6 @@ public class JJControllerTest
     public async Task TestUpdateCourtAppearanceAndRequireCourtHearing200Result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with ticket number (AJ201092461) to set its status to REQUIRE_COURT_HEARING, confirm controller updates the status.
-        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
 
         // Arrange
         JJDispute dispute = new();
@@ -162,7 +161,6 @@ public class JJControllerTest
     public async Task TestUpdateCourtAppearanceAndRequireCourtHearing400result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with no ticket number to set its status to REQUIRE_COURT_HEARING, confirm controller returns 400 when updating.
-        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
 
         // Arrange
         JJDispute dispute = new();
@@ -190,7 +188,6 @@ public class JJControllerTest
     public async Task TestUpdateCourtAppearanceAndRequireCourtHearing404result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with an invalid ticket number to set its status to REQUIRE_COURT_HEARING, confirm controller returns 404 when updating.
-        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
 
         // Arrange
         JJDispute dispute = new();
@@ -218,7 +215,6 @@ public class JJControllerTest
     public async Task TestUpdateCourtAppearanceAndRequireCourtHearing405result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with ticket number (AJ201092461) to set its status to REQUIRE_COURT_HEARING that has invalid status and returns 405, confirm controller returns 405 when updating.
-        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
 
         // Arrange
         JJDispute dispute = new();
@@ -235,7 +231,7 @@ public class JJControllerTest
         JJController jjDisputeController = new(mediator, jjDisputeService.Object, printService, lockService, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(ticketnumber, "Pacific Standard Time",CancellationToken.None);
+        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(ticketnumber, timeZone.Id, CancellationToken.None);
 
         // Assert
         var methodNotAllowedResult = Assert.IsType<HttpError>(result);
@@ -246,7 +242,6 @@ public class JJControllerTest
     public async Task TestUpdateCourtAppearanceAndConfirm200Result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with ticket number (AJ201092461) to set its status to CONFIRMED, confirm controller updates the status.
-        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
 
         // Arrange
         JJDispute dispute = new();
@@ -272,7 +267,6 @@ public class JJControllerTest
     public async Task TestUpdateCourtAppearanceAndConfirm400result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with no ticket number to set its status to CONFIRMED, confirm controller returns 400 when updating.
-        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
 
         // Arrange
         JJDispute dispute = new();
@@ -300,7 +294,6 @@ public class JJControllerTest
     public async Task TestUpdateCourtAppearanceAndConfirm404result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with an invalid ticket number to set its status to CONFIRMED, confirm controller returns 404 when updating.
-        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
 
         // Arrange
         JJDispute dispute = new();

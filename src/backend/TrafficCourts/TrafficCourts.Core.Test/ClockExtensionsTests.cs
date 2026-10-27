@@ -4,32 +4,24 @@ namespace TrafficCourts.Core.Test
 {
     public class ClockExtensionsTests
     {
-        [Fact]
-        public void GetCurrentPacificTime_ShouldReturnPacificTime_DuringDaylightSavings()
+        [Theory]
+        [InlineData(2025,  1, -8)]
+        [InlineData(2025,  7, -7)] // DST
+        [InlineData(2025, 12, -8)]
+        [InlineData(2026,  1, -8)]
+        [InlineData(2026,  7, -7)] // start of permanent DST
+        [InlineData(2026, 12, -7)]
+        [InlineData(2027,  1, -7)]
+        [InlineData(2027,  7, -7)]
+        [InlineData(2027, 12, -7)]
+        public void GetCurrentPacificTime_ShouldReturnSpecifiedUtcOffsetAtDate(int year, int month, int utcOffset)
         {
-            // Arrange
-            var fakeUtcNow = new DateTimeOffset(2023, 7, 1, 12, 0, 0, TimeSpan.Zero); // Summer date
-            var fakeTimeProvider = new FakeTimeProvider(fakeUtcNow);
+            DateTimeOffset fakeUtcNow = new(year, month, 1, 12, 0, 0, TimeSpan.Zero);
+            DateTimeOffset expected = fakeUtcNow.ToOffset(TimeSpan.FromHours(utcOffset));
+            DateTimeOffset actual = new FakeTimeProvider(fakeUtcNow).GetCurrentPacificTime();
 
-            // Act
-            var pacificTime = fakeTimeProvider.GetCurrentPacificTime();
-
-            // Assert
-            Assert.Equal(new DateTimeOffset(2023, 7, 1, 5, 0, 0, TimeSpan.FromHours(-7)), pacificTime); // DST offset
-        }
-
-        [Fact]
-        public void GetCurrentPacificTime_ShouldReturnPacificTime_OutsideDaylightSavings()
-        {
-            // Arrange
-            var fakeUtcNow = new DateTimeOffset(2023, 12, 1, 12, 0, 0, TimeSpan.Zero); // Winter date
-            var fakeTimeProvider = new FakeTimeProvider(fakeUtcNow);
-
-            // Act
-            var pacificTime = fakeTimeProvider.GetCurrentPacificTime();
-
-            // Assert
-            Assert.Equal(new DateTimeOffset(2023, 12, 1, 4, 0, 0, TimeSpan.FromHours(-8)), pacificTime); // Standard offset
+            Assert.Equal(expected, actual);
+            Assert.Equal(expected.Offset, actual.Offset);
         }
 
         [Theory]
@@ -39,16 +31,15 @@ namespace TrafficCourts.Core.Test
         public void UtcToLocalTime_ShouldConvertToSpecifiedTimeZone(DateTimeKind kind)
         {
             // Arrange
-            var utc = new DateTime(2023, 10, 1, 12, 0, 0, kind);
+            var utc = new DateTime(2027, 10, 1, 12, 0, 0, kind);
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Vancouver");
             
             // Act
             var convertedDateTime = ClockExtensions.UtcToLocalTime(utc, timeZone);
             
             // Assert
-            Assert.NotNull(convertedDateTime);
             Assert.Equal(DateTimeKind.Unspecified, convertedDateTime.Kind);
-            Assert.Equal(new DateTime(2023, 10, 1, 5, 0, 0), convertedDateTime);
+            Assert.Equal(new DateTime(2027, 10, 1, 5, 0, 0), convertedDateTime);
         }
 
         [Fact]
