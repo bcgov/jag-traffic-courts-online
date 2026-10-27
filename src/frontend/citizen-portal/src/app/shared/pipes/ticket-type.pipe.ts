@@ -13,7 +13,7 @@ export class TicketTypePipe implements PipeTransform {
       return TicketTypes.CAMERA_TICKET;
     } else if (firstLetter === 'E') {
       return TicketTypes.ELECTRONIC_TICKET;
-    } else if (firstLetter === 'A') {
+    } else if (firstLetter === 'A' || firstLetter === 'B') {
       return TicketTypes.HANDWRITTEN_TICKET;
     }
     return null;
