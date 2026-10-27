@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
+using TrafficCourts.Domain.Enums;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Services;
@@ -66,16 +67,14 @@ public class DocumentController : StaffControllerBase
 
         try
         {
+            bool isAdjournment = EnumExtensions.TryParseDescription(documentType, out UploadedDocumentType type) && type == UploadedDocumentType.Adjournment;
+
             Domain.Models.DocumentProperties properties = new()
             {
                 NoticeOfDisputeId = new Guid(noticeOfDisputeId),
                 TcoDisputeId = disputeId,
                 DocumentType = documentType,
-                DocumentStatus = documentType switch
-                {
-                    "Adjournment" => DocumentStatus.Pending,
-                    _ => DocumentStatus.Filed,
-                },
+                DocumentStatus = isAdjournment ? DocumentStatus.Pending : DocumentStatus.Filed,
             };
             FileMetadata metadata = await _documentService.SaveFileAsync(file, properties, User, cancellationToken);
             return Ok(metadata);
@@ -440,14 +439,14 @@ public class DocumentController : StaffControllerBase
 
         void ValidateParameters()
         {
-            if (documentType is not ("Adjournment" or "Certified Extract" or "Written Reasons" or "Other"))
+            if (!EnumExtensions.TryParseDescription(documentType, out UploadedDocumentType type))
             {
                 throw new ArgumentException("Unknown document type", nameof(documentType));
             }
 
-            bool documentStatusIsValid = (documentType, documentStatus) switch
+            bool documentStatusIsValid = (type, documentStatus) switch
             {
-                ("Adjournment", DocumentStatus.Pending or DocumentStatus.Resolved) => true,
+                (UploadedDocumentType.Adjournment, DocumentStatus.Pending or DocumentStatus.Resolved) => true,
                 (_, DocumentStatus.Filed) => true,
                 _ => false,
             };

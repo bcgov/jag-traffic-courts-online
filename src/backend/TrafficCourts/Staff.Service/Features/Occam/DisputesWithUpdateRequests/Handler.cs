@@ -1,5 +1,4 @@
 using MediatR;
-using System.ComponentModel;
 using System.Globalization;
 using System.Text;
 using TrafficCourts.Domain.Models;
@@ -335,18 +334,6 @@ public class Handler : IRequestHandler<Request, Response>
         };
     }
 
-    private enum DocumentType
-    {
-        [Description("Other")]
-        Other = 1,
-
-        [Description("Adjournment")]
-        Adjournment = 2,
-
-        [Description("Written Reasons")]
-        WrittenReasons = 3,
-    }
-
     private OccamDisputeWithUpdateRequestListItemModel Map(OccamDisputeWithUpdateRequest dispute, TimeZoneInfo timeZone)
     {
         // HACK - I didn't bubble the CancellationToken or Async for the search service up through Map and the Handler... maybe they should be?
@@ -354,13 +341,16 @@ public class Handler : IRequestHandler<Request, Response>
 
         var docSearchProperties = new DocumentProperties { NoticeOfDisputeId = new Guid(dispute.notice_of_dispute_guid) };
 
-        docSearchProperties.DocumentType = DocumentType.Adjournment.GetDescription();
-        var adjournmentDocuments = Task.Run(async () => await _staffDocumentService.FindFilesAsync(docSearchProperties, CancellationToken.None)).GetAwaiter().GetResult();
-        var disputeHasAdjournmentFile = adjournmentDocuments.Any(f => f.DocumentType == DocumentType.Adjournment.GetDescription());
+        string adjournmentDocumentType = UploadedDocumentType.Adjournment.GetDescription();
+        string writtenReasonsDocumentType = UploadedDocumentType.WrittenReasons.GetDescription();
 
-        docSearchProperties.DocumentType = DocumentType.WrittenReasons.GetDescription();
+        docSearchProperties.DocumentType = adjournmentDocumentType;
+        var adjournmentDocuments = Task.Run(async () => await _staffDocumentService.FindFilesAsync(docSearchProperties, CancellationToken.None)).GetAwaiter().GetResult();
+        var disputeHasAdjournmentFile = adjournmentDocuments.Any(f => f.DocumentType == adjournmentDocumentType);
+
+        docSearchProperties.DocumentType = writtenReasonsDocumentType;
         var writtenReasonsDocuments = Task.Run(async () => await _staffDocumentService.FindFilesAsync(docSearchProperties, CancellationToken.None)).GetAwaiter().GetResult();
-        var disputeHasVtwrFile = writtenReasonsDocuments.Any(f => f.DocumentType == DocumentType.WrittenReasons.GetDescription());
+        var disputeHasVtwrFile = writtenReasonsDocuments.Any(f => f.DocumentType == writtenReasonsDocumentType);
 
         // all of the == "Y" stuff is a temporary hack to maintain V1 support in the front-end - should probably all be YesNo properties instead of unique enums
         var listItem = new OccamDisputeWithUpdateRequestListItemModel
