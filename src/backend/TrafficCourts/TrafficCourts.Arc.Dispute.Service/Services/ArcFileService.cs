@@ -78,7 +78,7 @@ public class ArcFileService : IArcFileService
 
         mapper.Property(_ => _.LockoutFlag, new Window(1)).ColumnName("lockout_flag");
         mapper.Property(_ => _.TransactionDate, new Window(8)).ColumnName("transaction_date").OutputFormat("yyyyMMdd");
-        mapper.Property(_ => _.TransactionTime, new Window(6)).ColumnName("transaction_time").OutputFormat("hhmmss");
+        mapper.Property(_ => _.TransactionTime, new Window(6)).ColumnName("transaction_time").OutputFormat("HHmmss");
         mapper.Property(_ => _.TransactionLocation, new Window(5)).ColumnName("transaction_location");
         mapper.Property(_ => _.TransactionType, new Window(3)).ColumnName("transaction_type");
         mapper.Property(_ => _.EffectiveDate, new Window(8)).ColumnName("effective_date").OutputFormat("yyyyMMdd");
@@ -110,7 +110,7 @@ public class ArcFileService : IArcFileService
 
         mapper.Property(_ => _.LockoutFlag, new Window(1)).ColumnName("lockout_flag");
         mapper.Property(_ => _.TransactionDate, new Window(8)).ColumnName("transaction_date").OutputFormat("yyyyMMdd");
-        mapper.Property(_ => _.TransactionTime, new Window(6)).ColumnName("transaction_time").OutputFormat("hhmmss");
+        mapper.Property(_ => _.TransactionTime, new Window(6)).ColumnName("transaction_time").OutputFormat("HHmmss");
         mapper.Property(_ => _.TransactionLocation, new Window(5)).ColumnName("transaction_location");
         mapper.Property(_ => _.TransactionType, new Window(3)).ColumnName("transaction_type");
         mapper.Property(_ => _.EffectiveDate, new Window(8)).ColumnName("effective_date").OutputFormat("yyyyMMdd");
