@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
@@ -49,6 +50,9 @@ public class DisputeService {
 
 	@Autowired
 	private DisputeUpdateRequestRepository disputeUpdateRequestRepository;
+
+	@Value("${cronjob.dispute.unassign.timeout-minutes:30}")
+	private int unassignTimeoutMinutes;
 	
 	private static final String NA = "N/A";
 
@@ -363,10 +367,10 @@ public class DisputeService {
 	}
 
 	/**
-	 * Unassigns all Disputes whose assignedTs is older than 1 hour ago, resetting the assignedTo and assignedTs fields.
+	 * Unassigns all Disputes whose assignedTs is older than cronjob.dispute.unassign.timeout-minutes ago, resetting the assignedTo and assignedTs fields.
 	 */
 	public void unassignDisputes() {
-		disputeRepository.unassignDisputes(DateUtils.addMinutes(new Date(), -30));
+		disputeRepository.unassignDisputes(DateUtils.addMinutes(new Date(), -unassignTimeoutMinutes));
 	}
 
 	/**
