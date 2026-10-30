@@ -9,34 +9,46 @@ Welcome to Traffic Courts Online
 ## Project Structure
 
 ```
-    ├── .docker
-    │   └── keycloak-realms
+    ├── .agents                                  # Agent-only personas and skills (routed from AGENTS.md)
+    ├── .docker                                  # docker-compose overrides (splunk, seq, jaeger, redis, ocr)
     ├── .github
-    │   └── workflows
-    ├── .gitops
-    │   ├── azure
-    │   └── charts
-    │       ├── jaeger-aio
-    │       └── traffic-court-online
+    │   └── workflows
+    ├── automation-tests                         # Java/Cucumber UI tests
+    ├── database                                 # Oracle schema DDL snapshots (reference only; see database/README.md)
     ├── docs
+    │   ├── business-process.md                  # Dispute lifecycle from submission to decision
+    │   ├── datetimes                            # Datetime and time zone traces
+    │   ├── decisions.md                         # Architecture decision records
+    │   ├── terminology.md                       # Domain glossary (OCCAM, JUSTIN, VTC, JJ, ...)
+    │   ├── jira-tickets                         # Per-ticket working notes
+    │   └── oracle-data-model
+    ├── gitops                                   # Helm charts and OpenShift/Azure deployment
+    │   ├── azure
+    │   ├── charts
+    │   ├── monitoring
+    │   ├── openshift
+    │   └── vault
     ├── infrastructure
-    │   ├── certificates
-    │   ├── keycloak
-    │   └── openshift
+    │   ├── certificates
+    │   ├── keycloak
+    │   ├── openshift
+    │   └── static-site                          # maintenance-site
     ├── splunk-dash-board
     ├── src
-    │   ├── backend
-    │   │   ├── TrafficCourts
-    │   │   └── oracle-data-api
-    │   └── frontend
-    │       ├── citizen-portal
-    │       └── staff-portal
-    └── tools
+    │   ├── backend
+    │   │   ├── TrafficCourts                    # .NET 8 solution (citizen-api, staff-api, workflow-service, arc-dispute-api)
+    │   │   ├── bc-gov-virus-scan                # virus-scan-service
+    │   │   └── oracle-data-api                  # Java 11 / Spring Boot
+    │   └── frontend
+    │       ├── citizen-portal                   # Angular 16
+    │       └── staff-portal                     # Angular 21
+    ├── tools
     │   ├── form-recognizer
     │   ├── minio
     │   ├── network-tester
     │   ├── performance-testing
     │   └── ticket-generator
+    ├── AGENTS.md                                # Entry point / router for AI coding agents
     ├── COMPLIANCE.yaml
     ├── CONTRIBUTING.md
     ├── docker-compose.yml
@@ -229,7 +241,7 @@ keycloak.config.json
 
 Copy the `.env.template` to `.env` and then run docker-compose up.
 Add the configuration for token and password for splunk.
-Default user is `admin`. Password is what is configured in `.env`
+Default user is `admin`. Password is what is configured in `.env`. Splunk and Seq both use host port 8001, so run only one of them at a time.
 
 REDIS__HOST will be `redis` which is the service name.
 ```
@@ -247,7 +259,7 @@ Develop the `citizen-portal`. Run the associated API, `citizen-api`.  This start
 docker-compose -f docker-compose.yml up -d citizen-api
 ```
 
-Run `citizen-api` and have the backend logs go to [local Splunk](http://localhost:8000)
+Run `citizen-api` and have the backend logs go to [local Splunk](http://localhost:8001)
 
 Note, this is currently getting an error: "Error response from daemon: network ... not found"
 
@@ -281,9 +293,10 @@ docker-compose down
 | Service | Host Port | Container Port | Notes |
 | ------- | ---------:| --------------:|------ |
 | arc-dispute-api | 5030 | 8080 |
+| maintenance-site | 8100 | 8080 | Static maintenance page |
 | citizen-api | 5080 | 8080 | 
 | citizen-portal | 8080 | 8080 | 
-| oracle-data-api | 5010 | 8080 | 
+| oracle-data-api | 5010 | 8080 | Port 8000 is the Java remote-debug port | 
 | staff-api | 5090 | 8080 | 
 | staff-portal | 8090 | 8080 | 
 | workflow-service | 5020 | 8080 |
@@ -299,9 +312,11 @@ Whenever possible, the forwarded ports for infrastructure services should match 
 | Service | Host Port | Container Port | Notes |
 | ------- | ---------:| --------------:|------ |
 | coms | 3000 | 3000 | |
+| app-db | 5433 | 5432 | Postgres (application); +1 to avoid conflict with coms-db |
+| clamav | 3310 | 3310 | ClamAV daemon |
 | coms-db | 5432 | 5432 | Postgres | 
-| form-recognizer | 5200 | 5200 | |
-| jaeger | 14250 | 14250 | accept model.proto directly from clients | 
+| form-recognizer | 5000 | 5000 | Only with `.docker/docker-compose-ocr.yml` |
+| jaeger | 14250 | 14250 | accept model.proto directly from clients; only with `.docker/docker-compose.jaeger.yml` | 
 | jaeger | 14268 | 14268 | accept jaeger.thrift directly from clients | 
 | jaeger | 16686 | 16686 | Jaeger UI |
 | minio <sup>1</sup> | 9100 | 9000 | API Server (coms) |
@@ -309,11 +324,12 @@ Whenever possible, the forwarded ports for infrastructure services should match 
 | rabbitmq | 5672 | 5672 | AMQP 0-9-1 and AMQP 1.0 clients (masstransit clients) | 
 | rabbitmq | 15672 | 15672 | HTTP API clients, management UI and rabbitmqadmin |
 | redis | 6379 | 6379 | cache clients | 
-| redis-ui | 8082 | 8082 | redis-commander
+| redis-ui | 8081 | 8081 | redis-commander (8082 when using `.docker/docker-compose.redis.yml`)
 | sftp | 22000 | 22 | Port 22 is protected and requires admin, avoid low port numbers
-| splunk | 8000 | 8000 | Web Console | 
+| seq | 8001 | 80 | Web Console; only with `.docker/docker-compose.seq.yml` |
+| splunk | 8001 | 8000 | Web Console; only with `.docker/docker-compose.splunk.yml` | 
 | splunk | 8088 | 8088 | HTTP Event Collector | 
-| virus-scan-service | 5040 | 8080 |
+| virus-scan-service | 5040 | 8080 | Not in `docker-compose.yml`; source in `src/backend/bc-gov-virus-scan` |
 | smtp-server | 5125 | 8080 | Web Application
 | smtp-server | 5025 | 5025 | SMTP Server
 
@@ -334,7 +350,7 @@ you can include a docker-compose override to configure Splunk for the requested 
 docker-compose -f docker-compose.yml -f ./.docker/docker-compose.splunk.yml up
 ```
 
-Open [Local Splunk](http://localhost:8000) to view logs.  Login with username: admin, password: password.
+Open [Local Splunk](http://localhost:8001) to view logs.  Login with username: admin, password: password.
 
 #### Splunk 
 A custom configuration file, `./.docker/splunk-dev-config.yaml`

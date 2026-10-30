@@ -1,84 +1,50 @@
 # AGENTS.md
 
-## Business Overview
+## Project purpose
 
-This repo contains the source code and database definitions for two related Traffic Courts Online web applications: the citizen portal and the staff portal.
+You are working on **Traffic Courts Online (TCO)**, the BC Government system that lets people dispute violation tickets online and lets court staff and judicial justices (JJs) process those disputes.
 
-The citizen portal is publicly available and citizens use it to submit disputes relating to traffic tickets they've received.
+Citizens submit disputes in the citizen portal. Staff approve them in the staff portal's Staff Workbench, which sends them to ARC, and schedule them in JUSTIN. A JJ decides each dispute in the JJ Workbench, by written reasons or at a hearing, and staff then validate the decision. The full flow is in `docs/business-process.md`.
 
-The staff portal is used by government staff to validate and process these disputes.
+The system has Angular portals (`src/frontend/`), .NET services (`src/backend/TrafficCourts/`), and a Java `oracle-data-api` (`src/backend/oracle-data-api/`). These read and write the OCCAM and TCO Oracle schemas through ORDS. Prioritize correctness of dispute data, safe handling of personal information, and consistency with existing service boundaries.
 
-### Business Process
+## Context routing
 
-Citizens submit disputes using the citizen portal. These disputes appear in the Staff Workbench section of the staff portal, where Traffic Court staff approve or reject them. Once approved, disputes are submitted to a separate system, ARC. After doing this, Traffic Court staff use the JUSTIN application to schedule these disputes to be adjudicated by a judicial justice (JJ). If the dispute does not require the JJ to hear from the disputant in-person, the JJ adjudicates it as a written reason (WR) submission. Otherwise, a court date is scheduled and the dispute is adjudicated via a hearing. In either case, the JJ submits their decision using the JJ Workbench section of the staff portal. Traffic Court staff then validate the decision in the Staff Workbench section of the staff portal, concluding the dispute.
+- **Before running, configuring, or debugging services locally:** READ `README.md`.
+- **Before opening a pull request or changing workflow:** READ `CONTRIBUTING.md` and `.github/pull_request_template.md`.
+- **When a task depends on where a dispute is in its lifecycle:** READ `docs/business-process.md`.
+- **When working out how a request flows from portal to Oracle:** READ `src/README.md`.
+- **When changing a backend service or its configuration:** READ `src/backend/README.md`.
+- **When changing an ORDS or oracle-data-api OpenAPI spec, or a generated client:** READ the "Generated clients" section of `src/backend/README.md`.
+- **When changing a frontend portal:** READ `src/frontend/README.md`.
+- **When querying or changing ORDS data access (filters, paging, includes):** READ `docs/ords-data-access.md`.
+- **When working with Oracle tables or columns:** CONSULT `docs/oracle-data-model/` (`occam.dbml`, `tco.dbml`).
+- **When reading PL/SQL packages, ORDS modules, or schema DDL:** READ `database/README.md`.
+- **When handling dates, times, time zones, or the current time:** READ `docs/datetimes/README.md`.
+- **When you meet an unfamiliar domain term or acronym:** READ `docs/terminology.md`.
+- **When making a structural, ownership, or schema decision:** CONSULT `docs/decisions.md`.
+- **When working on a specific Jira ticket:** CHECK `docs/jira-tickets/README.md`.
+- **When changing deployment or OpenShift configuration:** READ `gitops/README.md`.
+- **When using developer tooling (API collections, ticket generator, SQL helpers):** READ `tools/README.md`.
+- **When reviewing a change or pull request:** ADOPT `.agents/personas/pr-reviewer.md`.
 
-## Project Overview
+## Build and test
 
-### Angular Applications
+- `develop` is the main branch, and `main` is unused. Branch from `develop`.
+- Feature and fix PRs go into the target `release/#.##` branch (MAJOR.MINOR) (squash merge).
+- Only hotfixes and non-release changes (docs, dev tooling, DevOps) go directly to `develop`.
+- Never create git tags or GitHub releases. A GitHub release generates the version tag and triggers the image build and registration pipeline (GitHub Actions → OpenShift Tekton → Artifactory).
+- See `CONTRIBUTING.md` for the full process.
+- **Backend (.NET):** `dotnet build` and `dotnet test` on `src/backend/TrafficCourts/TrafficCourts.sln`. **oracle-data-api:** `./mvnw -B clean verify` with JDK 11. Details: `src/backend/README.md`.
+- **Frontend:** `yarn lint` and `yarn coverage` in each portal; citizen-portal and staff-portal need different Node versions. Details: `src/frontend/README.md`.
+- Run the checks for every component you change before reporting work as done.
 
-- /src/frontend/citizen-portal
-- /src/frontend/staff-portal
+## Safety
 
-The citizen-portal front-end communicates with the Citizen.Service .NET web service.
+- Never commit secrets. Local secrets belong in `.env` (git-ignored); copy from `.env.template`.
+- Tickets, disputes, and disputant details are personal information. Do not paste real records into commits, docs, or logs.
+- Table DDL and seed data are applied by another team. Do not author schema migrations here (see `docs/decisions.md`).
 
-The staff-portal front-end communicates with the Staff.Service .NET web service.
+## Validation
 
-### .NET Services
-
-- /src/backend/TrafficCourts/Citizen.Service
-- /src/backend/TrafficCourts/Staff.Service
-- /src/backend/TrafficCourts/Workflow.Service
-
-The .NET services may contact external services, queue messages for RabbitMQ (consumed by Workflow.Service), or access the Oracle database.
-
-### Java Service
-
-- /src/backend/oracle-data-api
-
-### Oracle Databases
-
-The databases are accessed through ORDS directly via .NET or indirectly via Java.
-
-- The .NET project TrafficCourts.OrdsDataService accesses ORDS directly.
-- The .NET project TrafficCourts.OracleDataApi accesses the Java project oracle-data-api, which then accesses ORDS.
-
-The databases' OpenAPI specs are used to generate C# code (through NSwag) in TrafficCourts.OrdsDataService or Java code (through openapi-generator-maven-plugin) in oracle-data-api:
-
-- /src/backend/oracle-data-api/src/main/resources/occm-openapi-spec.yaml
-- /src/backend/oracle-data-api/src/main/resources/tco-openapi-spec.yaml
-
-The Java service is consumed only through /src/backend/TrafficCourts/TrafficCourts.OracleDataApi, which generates C# code for the Java service's OpenAPI spec using NSwag:
-
-- /src/backend/TrafficCourts/TrafficCourts.OracleDataApi/Client/V1/OracleDataApi.v1_0.json
-
-## Database Details
-
-There are 5 database schema.
-
-- /src/database/occam
-- /src/database/tco
-- /src/database/occamords
-- /src/database/tcoords
-- /src/database/justin
-
-Each folder contains a .ddl file for the schema and may contain a definitions folder for packages, procedures, and triggers.
-
-### occam
-
-The occam database stores information about disputes submitted by citizens.
-
-### tco
-
-The tco database stores information about dispute adjudication. Once dispute adjudication has been scheduled in the JUSTIN application, information about the appearance is copied into the tco database, using data from both the tco and justin databases.
-
-### occamords
-
-The occamords database is the only way data from the occam database can be accessed by the citizen and staff portals.
-
-### tcoords
-
-The tcoords database is the only way data from the tco database can be accessed by the citizen and staff portals.
-
-### justin
-
-The justin database is primarily used by the JUSTIN application and deals with all types of court appearances. It is not under the control of this project.
+- After changing this router or any routed file, use `.agents/skills/validate-context-routes/SKILL.md`.
