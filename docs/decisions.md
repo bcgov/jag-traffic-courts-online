@@ -41,3 +41,13 @@ Versions roughly follow SemVer. Release branches are named `release/MAJOR.MINOR`
 Hotfixes merge directly into `develop`: by pull request where possible, or by direct merge in an emergency. Changes not tied to a release may go directly to `develop`, but only as an exception. Examples are supplemental documentation, dev-only tooling, and DevOps.
 
 The full procedure is in `CONTRIBUTING.md`.
+
+## 005. Keep schema reference snapshots in `database/`; link PL/SQL from sibling checkouts
+
+Status: Accepted
+
+Recorded: 2026-10-30
+
+The root `database/` folder holds one `.ddl` snapshot for each schema: `occam`, `occamords`, `tco`, `tcoords`, and `justin`. These give agents and developers exact column definitions next to the code. Like the `.dbml` files (see 003), they are reference copies and not the source of truth. They are refreshed from the live schemas, never edited to drive a change.
+
+The PL/SQL packages and ORDS modules stay in their own SVN repositories (`TCO-API-OCCAM`, `TCO-API-OCCAMORDS`, `TCO-API-TCO`, `TCO-API-TCOORDS`) and are not copied here. `database/create-definitions-symlinks.sh` links each schema's `definitions` folder to a sibling checkout. The links are git-ignored, so the definitions exist only on machines that have those checkouts. Details are in `database/README.md`.

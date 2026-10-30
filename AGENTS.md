@@ -4,17 +4,23 @@
 
 You are working on **Traffic Courts Online (TCO)**, the BC Government system that lets people dispute violation tickets online and lets court staff and judicial justices (JJs) process those disputes.
 
+Citizens submit disputes in the citizen portal. Staff approve them in the staff portal's Staff Workbench, which sends them to ARC, and schedule them in JUSTIN. A JJ decides each dispute in the JJ Workbench, by written reasons or at a hearing, and staff then validate the decision. The full flow is in `docs/business-process.md`.
+
 The system has Angular portals (`src/frontend/`), .NET services (`src/backend/TrafficCourts/`), and a Java `oracle-data-api` (`src/backend/oracle-data-api/`). These read and write the OCCAM and TCO Oracle schemas through ORDS. Prioritize correctness of dispute data, safe handling of personal information, and consistency with existing service boundaries.
 
 ## Context routing
 
 - **Before running, configuring, or debugging services locally:** READ `README.md`.
 - **Before opening a pull request or changing workflow:** READ `CONTRIBUTING.md` and `.github/pull_request_template.md`.
+- **When a task depends on where a dispute is in its lifecycle:** READ `docs/business-process.md`.
 - **When working out how a request flows from portal to Oracle:** READ `src/README.md`.
 - **When changing a backend service or its configuration:** READ `src/backend/README.md`.
+- **When changing an ORDS or oracle-data-api OpenAPI spec, or a generated client:** READ the "Generated clients" section of `src/backend/README.md`.
 - **When changing a frontend portal:** READ `src/frontend/README.md`.
 - **When querying or changing ORDS data access (filters, paging, includes):** READ `docs/ords-data-access.md`.
 - **When working with Oracle tables or columns:** CONSULT `docs/oracle-data-model/` (`occam.dbml`, `tco.dbml`).
+- **When reading PL/SQL packages, ORDS modules, or schema DDL:** READ `database/README.md`.
+- **When handling dates, times, time zones, or the current time:** READ `docs/datetimes/README.md`.
 - **When you meet an unfamiliar domain term or acronym:** READ `docs/terminology.md`.
 - **When making a structural, ownership, or schema decision:** CONSULT `docs/decisions.md`.
 - **When working on a specific Jira ticket:** CHECK `docs/jira-tickets/README.md`.

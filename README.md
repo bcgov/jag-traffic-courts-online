@@ -14,7 +14,10 @@ Welcome to Traffic Courts Online
     ├── .github
     │   └── workflows
     ├── automation-tests                         # Java/Cucumber UI tests
+    ├── database                                 # Oracle schema DDL snapshots (reference only; see database/README.md)
     ├── docs
+    │   ├── business-process.md                  # Dispute lifecycle from submission to decision
+    │   ├── datetimes                            # Datetime and time zone traces
     │   ├── decisions.md                         # Architecture decision records
     │   ├── terminology.md                       # Domain glossary (OCCAM, JUSTIN, VTC, JJ, ...)
     │   ├── jira-tickets                         # Per-ticket working notes
@@ -173,6 +176,7 @@ app.config.json
 | SPLUNK_URL | Yes | 
 | UNASSIGN_DISPUTES_CRON
 | UNASSIGN_DISPUTES_ENABLED
+| UNASSIGN_DISPUTES_TIMEOUT_MINUTES
 
 ## staff-api
 

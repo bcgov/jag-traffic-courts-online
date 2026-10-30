@@ -81,3 +81,6 @@ package-lock.json
 # Agent-generated local state
 .agents/logs/
 .agents/memory/
+
+# Local symlinks to sibling PL/SQL checkouts (database/create-definitions-symlinks.sh)
+database/*/definitions

@@ -23,7 +23,7 @@ namespace TrafficCourts.Staff.Service.Test.Controllers;
 
 public class DisputeControllerTest
 {
-    private readonly TimeZoneInfo _timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+    private readonly TimeZoneInfo _timeZone = ClockExtensions.VancouverTimeZoneInfo;
 
     [Fact]
     public async Task TestGetDisputes200Result()

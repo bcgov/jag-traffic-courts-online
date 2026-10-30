@@ -10,6 +10,9 @@ Domain terms and acronyms used across Traffic Courts Online code, data, and tick
 - **Disputant:** The person disputing a ticket.
 - **VTC:** Violation Ticket Centre, the staff group that validates and processes disputes in the staff portal.
 - **JJ:** Judicial Justice, the judicial officer who decides disputes. A *JJ dispute* is the dispute record as seen in the JJ workspace. A JJ can have disputes assigned to them and can reopen them for review.
+- **Staff Workbench:** The staff portal section where staff approve or reject submitted disputes and later validate JJ decisions.
+- **JJ Workbench:** The staff portal section where JJs record their decisions.
+- **WR:** Written reasons. A dispute the JJ decides without hearing from the disputant in person. The alternative is a hearing on a scheduled court date. See `docs/business-process.md`.
 
 ## Systems and data stores
 

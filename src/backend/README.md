@@ -28,6 +28,22 @@ Swagger UI is enabled for the .NET services by `appsettings.Development.json`, a
 
 CI runs the same commands on pull requests (`.github/workflows/pr-citizen-api.yml`, `pr-oracle-api.yml`). Tests that call live ORDS endpoints, such as those in `TrafficCourts.OrdsDataService.Test`, are marked `Skip` and do not run by default. `TrafficCourts.Messaging.Test` is not part of the solution and does not currently compile.
 
+## Generated clients
+
+Oracle access code is generated from OpenAPI specs. Edit the spec, regenerate, and commit the spec and generated code together. Do not hand-edit generated files (`*.g.cs`).
+
+| Spec | Generator | Generated into |
+| ---- | --------- | -------------- |
+| `oracle-data-api/src/main/resources/occm-openapi-spec.yaml` (OCCAM ORDS) | openapi-generator-maven-plugin (`oracle-data-api/pom.xml`), at build time | oracle-data-api Java client |
+| | NSwag (`TrafficCourts/TrafficCourts.OrdsDataService/Generated/OCCAM/Client/V1/occam-ords-data-service.nswag`) | `OccamOrdsDataService.Client.v1.g.cs` |
+| `oracle-data-api/src/main/resources/tco-openapi-spec.yaml` (TCO ORDS) | openapi-generator-maven-plugin (`oracle-data-api/pom.xml`), at build time | oracle-data-api Java client |
+| | NSwag (`TrafficCourts/TrafficCourts.OrdsDataService/Generated/TCO/Client/V1/tco-ords-data-service.nswag`) | `TcoOrdsDataService.Client.v1.g.cs` |
+| `TrafficCourts/TrafficCourts.OracleDataApi/Client/V1/OracleDataApi.v1_0.json` (oracle-data-api's own API) | NSwag (`oracle-data-api.nswag` in the same folder) | `OracleDataApiClient.g.cs` |
+
+NSwag is not part of the .NET build. Run it manually (NSwagStudio or the `nswag run <file>.nswag` CLI) after changing a spec.
+
+The two ORDS specs are shared: the Java service and `TrafficCourts.OrdsDataService` both generate from the same files, so a change to either spec affects both. The Java service is consumed only through `TrafficCourts.OracleDataApi`. When you change its endpoints, update `OracleDataApi.v1_0.json` from the running service's Swagger and regenerate the C# client.
+
 ## Description
 
 ### oracle-data-api
