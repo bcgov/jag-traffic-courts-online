@@ -2,7 +2,6 @@ using MediatR;
 using System.Globalization;
 using System.Text;
 using TrafficCourts.Domain.Models;
-using TrafficCourts.Domain.Enums;
 using TrafficCourts.OrdsDataService.Occam;
 using TrafficCourts.Staff.Service.Services;
 
@@ -12,13 +11,11 @@ public class Handler : IRequestHandler<Request, Response>
 {
     private readonly IOccamDisputeWithUpdateRequestRepository _repository;
     private readonly Serilog.ILogger _logger;
-    private readonly IStaffDocumentService _staffDocumentService;
 
-    public Handler(IOccamDisputeWithUpdateRequestRepository repository, Serilog.ILogger logger, IStaffDocumentService documentService)
+    public Handler(IOccamDisputeWithUpdateRequestRepository repository, Serilog.ILogger logger)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _staffDocumentService = documentService ?? throw new ArgumentNullException(nameof(documentService));
     }
 
     public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -39,7 +36,6 @@ public class Handler : IRequestHandler<Request, Response>
                 timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("America/Vancouver");
             }
 
-            // note that this processing updates some values from non-DB sources - applicable only to the current page, not the entire set, so we don't support filtering or sorting on those fields
             var response = CreateResponse(pagedCollection, timeZoneInfo);
 
             return response;
@@ -57,6 +53,7 @@ public class Handler : IRequestHandler<Request, Response>
         }
     }
 
+
     private Response CreateResponse(OrdsDataService.OrdsDataServicePagedCollectionResponse<OccamDisputeWithUpdateRequest> pagedCollection, TimeZoneInfo timeZone)
     {
         if (pagedCollection.Rows is not null)
@@ -71,7 +68,6 @@ public class Handler : IRequestHandler<Request, Response>
             int totalPages = (int)Math.Ceiling((double)totalRows / pageSize);
 
             var pagedList = new PagedOccamDisputeWithUpdateRequestListItemCollection(items, pageNumber, pageSize, pagedCollection.TotalRows);
-
             return new Response(pagedList);
         }
 
@@ -251,7 +247,7 @@ public class Handler : IRequestHandler<Request, Response>
                 "courthouseLocation"                    => "court_agen_nm",
                 "hearingDate"                           => "hearing_dt",
                 "updateRequest_OldestDate"              => "update_request_submitted_dt",
-                "updateRequest_HasVTWRDocument"         => "update_request_change_of_plea_yn",
+                "updateRequest_HasChangeOfPlea"         => "update_request_change_of_plea_yn",
                 "updateRequest_HasAdjournmentDocument"  => "update_request_adjournment_document_yn",
                 _                                       => null
             };
@@ -336,22 +332,6 @@ public class Handler : IRequestHandler<Request, Response>
 
     private OccamDisputeWithUpdateRequestListItemModel Map(OccamDisputeWithUpdateRequest dispute, TimeZoneInfo timeZone)
     {
-        // HACK - I didn't bubble the CancellationToken or Async for the search service up through Map and the Handler... maybe they should be?
-        // because the docs aren't in the database, they're in COMS, we have to collect them separately here after the fact, and update the response model
-
-        var docSearchProperties = new DocumentProperties { NoticeOfDisputeId = new Guid(dispute.notice_of_dispute_guid) };
-
-        string adjournmentDocumentType = UploadedDocumentType.Adjournment.GetDescription();
-        string writtenReasonsDocumentType = UploadedDocumentType.WrittenReasons.GetDescription();
-
-        docSearchProperties.DocumentType = adjournmentDocumentType;
-        var adjournmentDocuments = Task.Run(async () => await _staffDocumentService.FindFilesAsync(docSearchProperties, CancellationToken.None)).GetAwaiter().GetResult();
-        var disputeHasAdjournmentFile = adjournmentDocuments.Any(f => f.DocumentType == adjournmentDocumentType);
-
-        docSearchProperties.DocumentType = writtenReasonsDocumentType;
-        var writtenReasonsDocuments = Task.Run(async () => await _staffDocumentService.FindFilesAsync(docSearchProperties, CancellationToken.None)).GetAwaiter().GetResult();
-        var disputeHasVtwrFile = writtenReasonsDocuments.Any(f => f.DocumentType == writtenReasonsDocumentType);
-
         // all of the == "Y" stuff is a temporary hack to maintain V1 support in the front-end - should probably all be YesNo properties instead of unique enums
         var listItem = new OccamDisputeWithUpdateRequestListItemModel
         {
@@ -379,8 +359,8 @@ public class Handler : IRequestHandler<Request, Response>
             courtAgenName = dispute.court_agen_nm,
             hearingDate = dispute.hearing_dt,
             updateRequest_OldestDate = dispute.update_request_submitted_dt,
-            updateRequest_HasVTWRDocument = disputeHasVtwrFile ? "Y" : "N",
-            updateRequest_HasAdjournmentDocument = disputeHasAdjournmentFile ? "Y" : "N",
+            updateRequest_HasChangeOfPlea = dispute.update_request_change_of_plea_yn,
+            updateRequest_HasAdjournmentDocument = dispute.update_request_adjournment_document_yn,
         };
 
         listItem.UtcToLocalTime(timeZone);

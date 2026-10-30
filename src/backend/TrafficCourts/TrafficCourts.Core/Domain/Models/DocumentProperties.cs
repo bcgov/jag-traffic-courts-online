@@ -1,6 +1,4 @@
-﻿using TrafficCourts.Domain.Enums;
-
-namespace TrafficCourts.Domain.Models;
+﻿namespace TrafficCourts.Domain.Models;
 
 
 /// <summary>
@@ -109,11 +107,12 @@ public class DocumentProperties : FileProperties
         NoticeOfDisputeId = GetGuidProperty(PropertyName.Metadata.NoticeOfDisputeId, metadata);
     }
 
-    private static DocumentStatus InferDocumentStatus(string? documentType)
-    {
-        bool isAdjournment = documentType == UploadedDocumentType.Adjournment.GetDescription();
-        return isAdjournment ? Models.DocumentStatus.Resolved : Models.DocumentStatus.Filed;
-    }
+    private static DocumentStatus InferDocumentStatus(string? documentType) =>
+        documentType switch
+        {
+            "Adjournment" => Models.DocumentStatus.Resolved,
+            _ => Models.DocumentStatus.Filed,
+        };
 
     protected override void SetTags(Dictionary<string, string> properties)
     {

@@ -36,7 +36,7 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     'disputantGivenName1',
     // TCVP-3258 - temporarily hiding 'courthouseLocation'
     'hearingDate',
-    'writtenReasonsDocument',
+    'changeOfPlea',
     'adjournmentDocument',
     'status',
     'userAssignedTo'
@@ -109,23 +109,18 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     );
   }
 
-  // the ng component was built using inline template typeless data and I hate it but don't have time to rewrite it all
-  // so I built a method to check if a field exists and has the expected value to allow for debugger; injection
-  checkModelFieldValue(value: any, fieldName: string, expectedValue: any): boolean {
-    return value.hasOwnProperty(fieldName) && value[fieldName] === expectedValue;
-  }
-
-  sortData(sort: Sort){
-    this.sortBy = [sort.active];
-    this.sortDirection = [sort.direction ? sort.direction as SortDirection : SortDirection.Desc];
-    this.currentPage = 1;
-    this.tableFilterService.currentPage[this.tabIndex] = 1;
-    this.getAllDisputesWithPendingUpdates();
-  }
+    sortData(sort: Sort){
+      this.sortBy = [sort.active];
+      this.sortDirection = [sort.direction ? sort.direction as SortDirection : SortDirection.Desc];
+      this.currentPage = 1;
+      this.tableFilterService.currentPage[this.tabIndex] = 1;
+      this.getAllDisputesWithPendingUpdates();
+    }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.tickTbSort;
   }
+
 
   onApplyFilter(dataFilters: TableFilter) {
     if (JSON.stringify(this.previousFilters) !== JSON.stringify(dataFilters)) { // Add this line

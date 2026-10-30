@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Text;
 using TrafficCourts.Coms.Client;
-using TrafficCourts.Domain.Enums;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.OrdsDataService;
 using TrafficCourts.OrdsDataService.Tco;
@@ -401,8 +400,6 @@ public class Handler : IRequestHandler<Request, Response>
 
     private DisputeCaseFileSummary Map(OrdsDisputeCaseFileSummary dispute, IList<DocumentProperties>? documentProperties, TimeZoneInfo timeZone)
     {
-        string adjournmentDocumentType = UploadedDocumentType.Adjournment.GetDescription();
-
         var summary = new DisputeCaseFileSummary
         {
             Id = dispute.dispute_id,
@@ -434,7 +431,7 @@ public class Handler : IRequestHandler<Request, Response>
             MultipleOfficersYn = ToYesNo(dispute.multiple_officers_yn),
             ElectronicTicketYn = ToYesNo(dispute.electronic_ticket_yn),
             PendingAdjournmentRequestsYn = ToYesNo(
-                documentProperties?.Any(f => f.DocumentType == adjournmentDocumentType && f.DocumentStatus == DocumentStatus.Pending)
+                documentProperties?.Any(f => f is { DocumentType: "Adjournment", DocumentStatus: DocumentStatus.Pending })
             ),
             JjAssignedTo = dispute.jj_assigned_to,
             VtcAssignedTo = dispute.vtc_assigned_to,

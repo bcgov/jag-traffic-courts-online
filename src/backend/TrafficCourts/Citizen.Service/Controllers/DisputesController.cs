@@ -14,7 +14,6 @@ using TrafficCourts.Citizen.Service.Models.OAuth;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Features.EmailVerificationToken;
-using TrafficCourts.Domain.Enums;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Messaging.Models;
@@ -423,20 +422,21 @@ public class DisputesController : ControllerBase
                         continue;
                     }
 
-                    if (!EnumExtensions.TryParseDescription(fileMetadata.DocumentType, out UploadedDocumentType documentType)
-                        || documentType is not (UploadedDocumentType.Adjournment or UploadedDocumentType.WrittenReasons or UploadedDocumentType.Other))
+                    if (fileMetadata.DocumentType != "Adjournment" && fileMetadata.DocumentType != "Other")
                     {
                         _logger.LogWarning("Uploaded file has invalid document type");
                         continue;
                     }
-
-                    bool isAdjournment = documentType == UploadedDocumentType.Adjournment;
-
+                    
                     Domain.Models.DocumentProperties properties = new()
                     {
                         NoticeOfDisputeId = noticeOfDisputeGuid,
-                        DocumentType = documentType.GetDescription(),
-                        DocumentStatus = isAdjournment ? DocumentStatus.Pending : DocumentStatus.Filed,
+                        DocumentType = fileMetadata.DocumentType,
+                        DocumentStatus = fileMetadata.DocumentType switch
+                        {
+                            "Adjournment" => DocumentStatus.Pending,
+                            _ => DocumentStatus.Filed,
+                        },
                     };
 
                     // can throw
