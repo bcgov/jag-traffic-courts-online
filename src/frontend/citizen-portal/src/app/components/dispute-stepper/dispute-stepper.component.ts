@@ -86,12 +86,15 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   disableSave = false;
 
   // Upload
-  adjournmentFileType = { key: "Adjournment", value: "Application for Adjournment" };
+  adjournmentFileType = { key: "Adjournment", value: "Adjournment" };
+  violationTicketStatementFileType = { key: "Written Reasons", value: "Written Reasons" };
+  otherFileType = { key: "Other", value: "Other" };
   fileTypes = [
     this.adjournmentFileType,
-    { key: "Other", value: "Other" },
+    this.violationTicketStatementFileType,
+    this.otherFileType
   ]
-  fileTypeToUpload: string = this.adjournmentFileType.key;
+  fileTypeToUpload: string = "";
   acceptFileTypes = [
     "image/jpeg",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -512,7 +515,6 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     let pendingFileStream = await firstValueFrom(this.fileUtilsService.readFileAsDataURL(file)) as string;
     this.store.dispatch(DisputeStore.Actions.AddDocument({ file: file, fileType: this.fileTypeToUpload, pendingFileStream }));
     this.fileInput.nativeElement.value = null;
-    this.fileTypeToUpload = this.adjournmentFileType.key;
   }
 
   private onUploadFileError(err: string): void {

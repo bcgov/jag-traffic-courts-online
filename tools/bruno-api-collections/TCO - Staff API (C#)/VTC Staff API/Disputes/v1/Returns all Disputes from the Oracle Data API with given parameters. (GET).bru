@@ -1,14 +1,14 @@
 meta {
-  name: Returns all Disputes that have pending update requests from the Oracle Data API (GET)
+  name: Returns all Disputes from the Oracle Data API with given parameters. (GET)
   type: http
-  seq: 18
+  seq: 1
   tags: [
     Dispute
   ]
 }
 
 get {
-  url: {{baseUrl}}/api/v2/occam/dispute/disputeswithupdaterequests
+  url: {{baseUrl}}/api/v2/occam/dispute/disputes
   body: none
   auth: inherit
 }
@@ -33,10 +33,6 @@ params:query {
   ~from: 
   ~thru: 
   ~courthouseId: []
-  ~requestStatus: UNKNOWN
-  ~requestStatus: ACCEPTED
-  ~requestStatus: PENDING
-  ~requestStatus: REJECTED
   ~sortBy: []
   ~direction: asc
   ~direction: desc
@@ -54,7 +50,7 @@ example {
   description: The Disputes were found.
   
   request: {
-    url: {{baseUrl}}/api/v2/occam/dispute/disputeswithupdaterequests
+    url: {{baseUrl}}/api/v2/occam/dispute/disputes
     method: GET
     mode: none
     params:query: {
@@ -77,10 +73,6 @@ example {
       ~from: 
       ~thru: 
       ~courthouseId: []
-      ~requestStatus: UNKNOWN
-      ~requestStatus: ACCEPTED
-      ~requestStatus: PENDING
-      ~requestStatus: REJECTED
       ~sortBy: []
       ~direction: asc
       ~direction: desc
@@ -131,11 +123,7 @@ example {
               "decisionMadeBy": "",
               "jjDecisionDate": "",
               "courtAgenId": "",
-              "courtAgenName": "",
-              "hearingDate": "",
-              "updateRequest_OldestDate": "",
-              "updateRequest_HasChangeOfPlea": "",
-              "updateRequest_HasAdjournmentDocument": ""
+              "courtAgenName": ""
             }
           ],
           "pageNumber": 0,
@@ -153,7 +141,7 @@ example {
   description: Request lacks valid authentication credentials.
   
   request: {
-    url: {{baseUrl}}/api/v2/occam/dispute/disputeswithupdaterequests
+    url: {{baseUrl}}/api/v2/occam/dispute/disputes
     method: GET
     mode: none
     params:query: {
@@ -176,10 +164,6 @@ example {
       ~from: 
       ~thru: 
       ~courthouseId: []
-      ~requestStatus: UNKNOWN
-      ~requestStatus: ACCEPTED
-      ~requestStatus: PENDING
-      ~requestStatus: REJECTED
       ~sortBy: []
       ~direction: asc
       ~direction: desc
@@ -223,7 +207,7 @@ example {
   description: Forbidden, requires dispute:read permission.
   
   request: {
-    url: {{baseUrl}}/api/v2/occam/dispute/disputeswithupdaterequests
+    url: {{baseUrl}}/api/v2/occam/dispute/disputes
     method: GET
     mode: none
     params:query: {
@@ -246,10 +230,6 @@ example {
       ~from: 
       ~thru: 
       ~courthouseId: []
-      ~requestStatus: UNKNOWN
-      ~requestStatus: ACCEPTED
-      ~requestStatus: PENDING
-      ~requestStatus: REJECTED
       ~sortBy: []
       ~direction: asc
       ~direction: desc
@@ -293,7 +273,7 @@ example {
   description: There was a server error that prevented the search from completing successfully or no data found.
   
   request: {
-    url: {{baseUrl}}/api/v2/occam/dispute/disputeswithupdaterequests
+    url: {{baseUrl}}/api/v2/occam/dispute/disputes
     method: GET
     mode: none
     params:query: {
@@ -316,10 +296,6 @@ example {
       ~from: 
       ~thru: 
       ~courthouseId: []
-      ~requestStatus: UNKNOWN
-      ~requestStatus: ACCEPTED
-      ~requestStatus: PENDING
-      ~requestStatus: REJECTED
       ~sortBy: []
       ~direction: asc
       ~direction: desc

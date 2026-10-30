@@ -45,7 +45,7 @@ public class OccamDisputeWithUpdateRequestListItemModel
     public string courtAgenName { get; set; }
     public DateTime? hearingDate { get; set; }
     public DateTime? updateRequest_OldestDate { get; set; }
-    public string updateRequest_HasChangeOfPlea { get; set; }
+    public string updateRequest_HasVTWRDocument { get; set; }
     public string updateRequest_HasAdjournmentDocument { get; set; }
 }
 

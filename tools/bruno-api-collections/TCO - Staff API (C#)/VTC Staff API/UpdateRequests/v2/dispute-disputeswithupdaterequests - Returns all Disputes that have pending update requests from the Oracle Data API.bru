@@ -1,26 +1,28 @@
 meta {
-  name: Returns generated document.
+  name: dispute/disputeswithupdaterequests - Returns all Disputes that have pending update requests from the Oracle Data API
   type: http
-  seq: 15
+  seq: 13
   tags: [
     Dispute
   ]
 }
 
 get {
-  url: {{baseUrl}}/api/dispute/:disputeId/print
+  url: {{baseUrl}}/api/v2/occam/dispute/disputeswithupdaterequests?ticket=AX&status=NEW&requestStatus=ACCEPTED&requestStatus=PENDING&requestStatus=REJECTED&sortBy=updateRequest_OldestDate&direction=desc&pageNumber=1&pageSize=25
   body: none
   auth: inherit
 }
 
 params:query {
-  ~type: DcfTemplate
-  ~type: HrDcfTemplate
-  ~type: WrDcfTemplate
-}
-
-params:path {
-  disputeId: 
+  ticket: AX
+  status: NEW
+  requestStatus: ACCEPTED
+  requestStatus: PENDING
+  requestStatus: REJECTED
+  sortBy: updateRequest_OldestDate
+  direction: desc
+  pageNumber: 1
+  pageSize: 25
 }
 
 headers {
@@ -29,22 +31,12 @@ headers {
 
 example {
   name: 200 Response
-  description: Generated Document.
+  description: The Disputes were found.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/print
+    url: {{baseUrl}}/api/dispute/disputeswithupdaterequests
     method: GET
     mode: none
-    params:query: {
-      ~type: DcfTemplate
-      ~type: HrDcfTemplate
-      ~type: WrDcfTemplate
-    }
-  
-    params:path: {
-      disputeId: 
-    }
-  
     headers: {
       ~X-Timezone: 
     }
@@ -52,7 +44,7 @@ example {
   
   response: {
     headers: {
-      Content-Type: application/octet-stream
+      Content-Type: text/plain
     }
   
     status: {
@@ -63,45 +55,125 @@ example {
     body: {
       type: text
       content: '''
-  
+        [
+          {
+            "disputeId": 0,
+            "ticketNumber": "",
+            "submittedTs": "",
+            "disputantSurname": "",
+            "disputantGivenName1": "",
+            "disputantGivenName2": "",
+            "disputantGivenName3": "",
+            "status": "UNKNOWN",
+            "userAssignedTo": "",
+            "userAssignedTs": "",
+            "adjournmentDocument": false,
+            "changeOfPlea": false,
+            "hearingDate": "",
+            "emailAddress": "",
+            "emailAddressVerified": false
+          }
+        ]
       '''
     }
   }
 }
 
 example {
-  name: 400 Response
-  description: The
+  name: 200 Response
+  description: The Disputes were found.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/print
+    url: {{baseUrl}}/api/dispute/disputeswithupdaterequests
     method: GET
     mode: none
-    params:query: {
-      ~type: DcfTemplate
-      ~type: HrDcfTemplate
-      ~type: WrDcfTemplate
-    }
-  
-    params:path: {
-      disputeId: 
-    }
-  
     headers: {
       ~X-Timezone: 
     }
   }
   
   response: {
+    headers: {
+      Content-Type: application/json
+    }
+  
     status: {
-      code: 400
-      text: Bad Request
+      code: 200
+      text: OK
     }
   
     body: {
-      type: text
+      type: json
       content: '''
+        [
+          {
+            "disputeId": 0,
+            "ticketNumber": "",
+            "submittedTs": "",
+            "disputantSurname": "",
+            "disputantGivenName1": "",
+            "disputantGivenName2": "",
+            "disputantGivenName3": "",
+            "status": "UNKNOWN",
+            "userAssignedTo": "",
+            "userAssignedTs": "",
+            "adjournmentDocument": false,
+            "changeOfPlea": false,
+            "hearingDate": "",
+            "emailAddress": "",
+            "emailAddressVerified": false
+          }
+        ]
+      '''
+    }
+  }
+}
+
+example {
+  name: 200 Response
+  description: The Disputes were found.
   
+  request: {
+    url: {{baseUrl}}/api/dispute/disputeswithupdaterequests
+    method: GET
+    mode: none
+    headers: {
+      ~X-Timezone: 
+    }
+  }
+  
+  response: {
+    headers: {
+      Content-Type: text/json
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        [
+          {
+            "disputeId": 0,
+            "ticketNumber": "",
+            "submittedTs": "",
+            "disputantSurname": "",
+            "disputantGivenName1": "",
+            "disputantGivenName2": "",
+            "disputantGivenName3": "",
+            "status": "UNKNOWN",
+            "userAssignedTo": "",
+            "userAssignedTs": "",
+            "adjournmentDocument": false,
+            "changeOfPlea": false,
+            "hearingDate": "",
+            "emailAddress": "",
+            "emailAddressVerified": false
+          }
+        ]
       '''
     }
   }
@@ -112,19 +184,9 @@ example {
   description: Request lacks valid authentication credentials.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/print
+    url: {{baseUrl}}/api/dispute/disputeswithupdaterequests
     method: GET
     mode: none
-    params:query: {
-      ~type: DcfTemplate
-      ~type: HrDcfTemplate
-      ~type: WrDcfTemplate
-    }
-  
-    params:path: {
-      disputeId: 
-    }
-  
     headers: {
       ~X-Timezone: 
     }
@@ -160,19 +222,9 @@ example {
   description: Request lacks valid authentication credentials.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/print
+    url: {{baseUrl}}/api/dispute/disputeswithupdaterequests
     method: GET
     mode: none
-    params:query: {
-      ~type: DcfTemplate
-      ~type: HrDcfTemplate
-      ~type: WrDcfTemplate
-    }
-  
-    params:path: {
-      disputeId: 
-    }
-  
     headers: {
       ~X-Timezone: 
     }
@@ -208,19 +260,9 @@ example {
   description: Request lacks valid authentication credentials.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/print
+    url: {{baseUrl}}/api/dispute/disputeswithupdaterequests
     method: GET
     mode: none
-    params:query: {
-      ~type: DcfTemplate
-      ~type: HrDcfTemplate
-      ~type: WrDcfTemplate
-    }
-  
-    params:path: {
-      disputeId: 
-    }
-  
     headers: {
       ~X-Timezone: 
     }
@@ -253,22 +295,12 @@ example {
 
 example {
   name: 403 Response
-  description: Forbidden.
+  description: Forbidden, requires dispute:read permission.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/print
+    url: {{baseUrl}}/api/dispute/disputeswithupdaterequests
     method: GET
     mode: none
-    params:query: {
-      ~type: DcfTemplate
-      ~type: HrDcfTemplate
-      ~type: WrDcfTemplate
-    }
-  
-    params:path: {
-      disputeId: 
-    }
-  
     headers: {
       ~X-Timezone: 
     }
@@ -301,22 +333,12 @@ example {
 
 example {
   name: 403 Response
-  description: Forbidden.
+  description: Forbidden, requires dispute:read permission.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/print
+    url: {{baseUrl}}/api/dispute/disputeswithupdaterequests
     method: GET
     mode: none
-    params:query: {
-      ~type: DcfTemplate
-      ~type: HrDcfTemplate
-      ~type: WrDcfTemplate
-    }
-  
-    params:path: {
-      disputeId: 
-    }
-  
     headers: {
       ~X-Timezone: 
     }
@@ -349,22 +371,12 @@ example {
 
 example {
   name: 403 Response
-  description: Forbidden.
+  description: Forbidden, requires dispute:read permission.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/print
+    url: {{baseUrl}}/api/dispute/disputeswithupdaterequests
     method: GET
     mode: none
-    params:query: {
-      ~type: DcfTemplate
-      ~type: HrDcfTemplate
-      ~type: WrDcfTemplate
-    }
-  
-    params:path: {
-      disputeId: 
-    }
-  
     headers: {
       ~X-Timezone: 
     }
@@ -400,19 +412,9 @@ example {
   description: There was a server error that prevented the search from completing successfully or no data found.
   
   request: {
-    url: {{baseUrl}}/api/dispute/:disputeId/print
+    url: {{baseUrl}}/api/dispute/disputeswithupdaterequests
     method: GET
     mode: none
-    params:query: {
-      ~type: DcfTemplate
-      ~type: HrDcfTemplate
-      ~type: WrDcfTemplate
-    }
-  
-    params:path: {
-      disputeId: 
-    }
-  
     headers: {
       ~X-Timezone: 
     }
