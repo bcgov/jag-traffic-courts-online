@@ -974,6 +974,9 @@ components:
           type: string
         disputeId:
           type: string
+        disputeSourceTypeCd:
+          type: string
+          format: nullable
         disputeStatusTypeCd:
           type: string
         drvLicIssuedCtryId:

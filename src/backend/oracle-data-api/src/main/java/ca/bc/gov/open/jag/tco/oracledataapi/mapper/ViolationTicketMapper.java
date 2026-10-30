@@ -13,6 +13,7 @@ import org.mapstruct.factory.Mappers;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeSourceType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ShortNamedEnum;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
@@ -98,6 +99,7 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "dispute.ocrTicketJsonFilenameTxt", source = "ocrTicketFilename")
 	@Mapping(target = "dispute.signatoryTypeCd", source = "signatoryType")
 	@Mapping(target = "dispute.signatoryNameTxt", source = "signatoryName")
+	@Mapping(target = "dispute.disputeSourceTypeCd", source = "disputeSourceType", qualifiedByName="mapDisputeSourceType")
 	// If these IDs are passed as null, then the actual string value of the field such as (drvLicIssuedIntlProvTxt) will be saved based on the logic in the database
 	@Mapping(target = "dispute.drvLicIssuedCtryId", source = "driversLicenceIssuedCountryId")
 	@Mapping(target = "dispute.drvLicIssuedProvSeqNo", source = "driversLicenceIssuedProvinceSeqNo")
@@ -180,6 +182,17 @@ public interface ViolationTicketMapper {
 	@Named("mapShortNamedEnum")
 	default String mapShortNamedEnum(ShortNamedEnum code) {
 		return code.getShortName();
+	}
+
+	/**
+	 * Maps UNKNOWN (or null) to null so that it is never sent to the database, where it would fail the foreign key.
+	 */
+	@Named("mapDisputeSourceType")
+	default String mapDisputeSourceType(DisputeSourceType sourceType) {
+		if (sourceType == null || DisputeSourceType.UNKNOWN.equals(sourceType)) {
+			return null;
+		}
+		return sourceType.name();
 	}
 
 	/**

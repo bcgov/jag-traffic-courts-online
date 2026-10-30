@@ -24,6 +24,7 @@ import { PostalPipe } from './pipes/postal.pipe';
 import { ReplacePipe } from './pipes/replace.pipe';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { YesNoPipe } from './pipes/yes-no.pipe';
+import { DisputeSourcePipe } from './pipes/dispute-source.pipe';
 import { CustomDatePipe } from './pipes/custom-date.pipe';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { TicketImageContainerComponent } from './dialogs/ticket-image-container/ticket-image-container.component';
@@ -38,6 +39,7 @@ import { TicketImageContainerComponent } from './dialogs/ticket-image-container/
         SafeHtmlPipe,
         YesNoPipe,
         PostalPipe,
+        DisputeSourcePipe,
         ConfirmDialogComponent,
         MoreOptionsDialogComponent,
         ConfirmReasonDialogComponent,
@@ -80,6 +82,7 @@ import { TicketImageContainerComponent } from './dialogs/ticket-image-container/
         SafeHtmlPipe,
         YesNoPipe,
         PostalPipe,
+        DisputeSourcePipe,
         DialogContentDirective,
         PageComponent,
         PageHeaderComponent,

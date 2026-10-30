@@ -6763,6 +6763,9 @@
             "type": "string",
             "nullable": true
           },
+          "disputeSourceType": {
+            "$ref": "#/components/schemas/DisputeDisputeSourceType"
+          },
           "violationTicket": {
             "$ref": "#/components/schemas/ViolationTicket"
           },
@@ -7224,6 +7227,15 @@
           "U",
           "D",
           "A"
+        ],
+        "type": "string"
+      },
+      "DisputeDisputeSourceType": {
+        "enum": [
+          "UNKNOWN",
+          "CITZ",
+          "STAF",
+          "JSTN"
         ],
         "type": "string"
       },
@@ -8124,6 +8136,9 @@
             "type": "string",
             "nullable": true
           },
+          "disputeSourceType": {
+            "$ref": "#/components/schemas/JJDisputeDisputeSourceType"
+          },
           "remarks": {
             "type": "array",
             "items": {
@@ -8466,6 +8481,15 @@
           "U",
           "D",
           "A"
+        ],
+        "type": "string"
+      },
+      "JJDisputeDisputeSourceType": {
+        "enum": [
+          "UNKNOWN",
+          "CITZ",
+          "STAF",
+          "JSTN"
         ],
         "type": "string"
       },

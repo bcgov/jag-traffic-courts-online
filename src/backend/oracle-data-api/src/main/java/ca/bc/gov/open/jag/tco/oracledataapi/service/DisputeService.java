@@ -153,7 +153,8 @@ public class DisputeService {
 			}
 		}
 
-		BeanUtils.copyProperties(dispute, disputeToUpdate, "createdBy", "createdTs", "disputeId", "disputeCounts", "violationTicket");
+		// disputeSourceType is set when the dispute is created and must not change afterwards
+		BeanUtils.copyProperties(dispute, disputeToUpdate, "createdBy", "createdTs", "disputeId", "disputeCounts", "violationTicket", "disputeSourceType");
 		
 		// TCVP-2748 Replace null province values with NA if specific province IDs are null since db check constraints expect values if IDs are null for provinces
 		replaceProvinceValuesWithNA(disputeToUpdate);

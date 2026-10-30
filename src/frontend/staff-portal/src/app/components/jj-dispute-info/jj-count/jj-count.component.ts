@@ -5,6 +5,7 @@ import { JJDisputedCount, JJDisputedCountAppearInCourt, JJDisputedCountIncludesS
 import { MatRadioChange } from '@angular/material/radio';
 import { LookupsService, Statute } from 'app/services/lookups.service';
 import { TabType } from '@shared/enums/tab-type.enum';
+import { isCitizenSubmitted } from '@shared/pipes/dispute-source.pipe';
 
 const initialSurchargeRate = 0.15;
 const newSurchargeRate = 0.30;
@@ -41,6 +42,11 @@ export class JJCountComponent implements OnInit, OnChanges {
   Finding = JJDisputedCountRoPFinding;
   LatestPlea = JJDisputedCountLatestPlea;
   tabTypes = TabType;
+
+  /** True when the dispute came from the Citizen Portal, so the disputant's statements use first person wording. */
+  get isCitizenSubmitted(): boolean {
+    return isCitizenSubmitted(this.jjDisputeInfo?.disputeSourceType, this.jjDisputeInfo?.occamDisputeCreatedBy);
+  }
 
   // Variables
   form: FormGroup;

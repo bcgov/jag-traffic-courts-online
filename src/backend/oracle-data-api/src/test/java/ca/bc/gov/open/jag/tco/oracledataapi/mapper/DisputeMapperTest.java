@@ -1,12 +1,14 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeSourceType;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicket;
 
@@ -37,5 +39,27 @@ public class DisputeMapperTest extends BaseTestSuite{
 		assertEquals("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce accumsan nulla quam, non aliquam erat porttitor eu. "
 				+ "Vivamus ornare ante nec eros luctus, non tincidunt ipsum interdum. Aliquam felis felis, ullamcorper non rutrum sit amet, sollicitudin sit amet lectus. "
 				+ "Quisque non massa dolor porttitor.", result.getLawyerAddress());
+	}
+
+	@Test
+	void testMapToDispute_shouldMapDisputeSourceType() {
+		ViolationTicket testViolationTicket = new ViolationTicket();
+		Dispute testDispute = new Dispute();
+		testDispute.setDisputeSourceTypeCd("STAF");
+		testViolationTicket.setDispute(testDispute);
+
+		ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute result = disputeMapper.convertViolationTicketDtoToDispute(testViolationTicket);
+
+		assertEquals(DisputeSourceType.STAF, result.getDisputeSourceType());
+	}
+
+	@Test
+	void testMapToDispute_shouldMapNullDisputeSourceTypeToNull() {
+		ViolationTicket testViolationTicket = new ViolationTicket();
+		testViolationTicket.setDispute(new Dispute());
+
+		ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute result = disputeMapper.convertViolationTicketDtoToDispute(testViolationTicket);
+
+		assertNull(result.getDisputeSourceType());
 	}
 }
