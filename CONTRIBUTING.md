@@ -6,7 +6,7 @@ All Contributions to this repository start with a Jira Item associated with the 
 
 `develop` is the project's main branch. `main` is not used. It has not been updated since release 2.3 (September 2024), so do not branch from it or target it.
 
-1. **Work branch.** Implement every change on a branch created from `develop`. Name it after the Jira item, for example `fix/TCVP-1234`.
+1. **Work branch.** Implement every change on a branch created from `develop`. Name it `task/` plus the Jira key, for example `task/TCVP-1234`, whether the work is a fix, a feature, or both. Hotfixes are the exception (see [Hotfixes](#hotfixes)).
 1. **Release branch.** When preparing a release, create a branch `release/MAJOR.MINOR` (for example `release/2.29`) from `develop`.
 1. **Into the release.** Raise a pull request from each work branch that is pending for the release into the release branch. Complete it with **Squash merge**.
 1. **Validation.** Deploy the release branch to DEV, then TEST, for validation passes.
@@ -16,7 +16,7 @@ All Contributions to this repository start with a Jira Item associated with the 
 ```text
 develop ──┬──────────────────────────────────────────────┬──▶
           │ branch                     merge commit (PR) │
-          ├─▶ fix/TCVP-1234 ──┐                          │
+          ├─▶ task/TCVP-1234 ─┐                          │
           │                   │ squash (PR)              │
           └─▶ release/#.## ◀──┘ ─▶ DEV ─▶ TEST ─▶ PROD ──┘
               (tags #.##.#)
@@ -34,6 +34,8 @@ Release images are built by **creating a release in GitHub** from the release br
 Do not create version tags by hand. Create the GitHub release and let it generate the tag. There are plans to move all of these build processes into GitHub Actions, but that has not been implemented yet.
 
 ### Hotfixes
+
+Name hotfix branches `hotfix/` plus the Jira key, for example `hotfix/TCVP-1234`. The different prefix marks that the branch skips the normal release-branch process.
 
 Merge hotfixes directly into `develop`, through a pull request whenever possible. In an emergency, a direct merge is acceptable. Raise the pull request or record the change in the Jira item afterwards so it can still be reviewed.
 
