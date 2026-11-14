@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="AutoMapper" Version="15.1.4" />
     <PackageReference Include="MailKitLite" Version="4.9.0" />
     <PackageReference Include="MassTransit" Version="8.3.3" />
     <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.3.3" />
