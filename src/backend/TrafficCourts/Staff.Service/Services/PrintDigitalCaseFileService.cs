@@ -289,12 +289,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     /// </summary>
     internal async Task<DigitalCaseFile> GetDigitalCaseFileAsync(string ticketNumber, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
-        // JavaScript: Intl.DateTimeFormat().resolvedOptions().timeZone
-        // Time Zone from the browser is either a time zone identifier from the IANA Time Zone Database or a UTC offset in ISO 8601 extended format.
-        // https://tc39.es/ecma402/#sec-properties-of-intl-datetimeformat-instances
-
         var dispute = await _jjDisputeService.GetJJDisputeAsync(ticketNumber, false, timeZone, cancellationToken);
-        dispute.UtcToLocalTime(timeZone);
 
         Domain.Models.Province? driversLicenceProvince = null;
 

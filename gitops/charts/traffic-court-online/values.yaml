@@ -73,6 +73,7 @@ oracle-data-api:
     "SPLUNK_URL": "https://hec.monitoring.ag.gov.bc.ca:8088"
     "UNASSIGN_DISPUTES_CRON": "0 0/5 * * * *"
     "UNASSIGN_DISPUTES_ENABLED": "true"
+    "UNASSIGN_DISPUTES_TIMEOUT_MINUTES": "30"
 
 staff-api:
   image:

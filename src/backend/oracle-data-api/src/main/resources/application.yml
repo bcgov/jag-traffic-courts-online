@@ -77,11 +77,13 @@ cronjob:
       cron: ${CODETABLE_REFRESH_CRON:0 0 3 * * *}
 
   dispute:
-    # If enabled, this unassign cronjob will clear the assignedTo and assignedTs fields on all Disputes whose assignedTs is older than 1 hour
+    # If enabled, this unassign cronjob will clear the assignedTo and assignedTs fields on all Disputes whose assignedTs is older than timeout-minutes
     unassign:
       enabled: ${UNASSIGN_DISPUTES_ENABLED:false}
       # A cron-like expression (defaulting to once every 5 minutes), extending the usual UN*X definition to include triggers on the second, minute, hour, day of month, month, and day of week.
       cron: ${UNASSIGN_DISPUTES_CRON:0 */5 * * * *}
+      # The number of minutes a Dispute may remain assigned before it is unassigned by this cronjob (defaulting to 30 minutes)
+      timeout-minutes: ${UNASSIGN_DISPUTES_TIMEOUT_MINUTES:30}
       
   jj-dispute:
     # If enabled, this unassign cronjob will clear the assignedTo and assignedTs fields on all jj-Disputes whose assignedTs is older than 1 hour

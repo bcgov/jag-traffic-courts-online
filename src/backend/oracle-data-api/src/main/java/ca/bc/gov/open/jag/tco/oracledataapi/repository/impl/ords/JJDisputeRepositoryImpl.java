@@ -64,7 +64,7 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 
 	@Override
 	public void unassignJJDisputeVtc(String ticketNumber, Date assignedBeforeTs) {
-		assertNoExceptionsGeneric(() -> jjDisputeApi.unassignDisputeVtcPost(EmptyObject.instance, DateUtil.formatAsDateTimeUTC(assignedBeforeTs), ticketNumber));
+		assertNoExceptionsGeneric(() -> jjDisputeApi.unassignDisputeVtcPost(EmptyObject.instance, DateUtil.formatAsDateTime(assignedBeforeTs), ticketNumber));
 	}
 
 	@Override

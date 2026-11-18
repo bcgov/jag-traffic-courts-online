@@ -37,22 +37,4 @@ public class DateUtil {
 		return DateFormatUtils.format(date, DATE_FORMAT);
 	}
 
-	// Legacy methods for backward compatibility - now timezone neutral
-	
-	/**
-	 * @deprecated Use formatAsHourMinute instead. This method is now timezone neutral.
-	 */
-	@Deprecated
-	public static String formatAsHourMinuteUTC(Date date) {
-		return formatAsHourMinute(date);
-	}
-
-	/**
-	 * @deprecated Use formatAsDateTime instead. This method is now timezone neutral.
-	 */
-	@Deprecated
-	public static String formatAsDateTimeUTC(Date date) {
-		return formatAsDateTime(date);
-	}
-
 }
