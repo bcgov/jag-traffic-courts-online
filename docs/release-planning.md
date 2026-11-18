@@ -4,6 +4,8 @@ What is planned for each upcoming release: which Jira tickets, which database ta
 
 Update this page when a ticket is added to or moved out of a release, a database tag is committed, or a release moves to the next stage. Once a release is merged back to `develop`, move it to [Released](#released) and keep only its summary row.
 
+Refer to work by branch name, pull request number, SVN revision or Helm revision, not by git commit hash. A branch's commit hashes change whenever it is rebased, so a recorded hash soon points at the wrong commit.
+
 ## Promotion path
 
 Every release is validated in this order. A release moves on only after the checks for its current stage pass.
@@ -30,8 +32,8 @@ Status values: Not started, In development, In release branch, Validated on DEV,
 
 - **Status:** Not started.
 - **Theme:** Hearings functionality.
-- **Branch:** `release/2.31`, to be created from `develop`. 2.30 was merged back on 2026-11-18 (`2f46bd9f6`), so it can be created now.
-- **Ticket branches:** created 2026-11-10 from the tip of `release/2.30` (`a8867c3fa`), not `develop`. 2.30 was merged back to `develop` with a merge commit, so these branches descend from `develop` without a rebase.
+- **Branch:** `release/2.31`, to be created from `develop`. 2.30 was merged back on 2026-11-18 (#2341), so it can be created now.
+- **Ticket branches:** local only, branched from `develop`.
 - **Database tags:** none expected. Confirm for each ticket.
 
 | Ticket | Branch | Summary | Database change? |
@@ -57,7 +59,7 @@ Status values: Not started, In development, In release branch, Validated on DEV,
 |---|---|---|---|
 | TCVP-3538 | Adjournment document flag on update requests; document types as an enum through the stack | Merged into 2.30 as #2328, then reverted. To be re-landed | Commit notes say the ORDS endpoint now returns the dispute GUID. Confirm whether a tag is needed |
 | TCVP-3549 | | | |
-| TCVP-3600 | VTC lock lasted about 8 h instead of 1 h. `VTC_ASSIGNED_DTM` now uses `SYSDATE`. JJ unassign timeout is configurable (`UNASSIGN_JJDISPUTES_TIMEOUT_MINUTES`). Inbox "Assigned" tooltip shows the expected unlock time | Validated on localdev. Committed as `11732893c` on the local branch `task/TCVP-3600`, not yet pushed | Yes: TCO 26.6, OCCAM 26.6 |
+| TCVP-3600 | VTC lock lasted about 8 h instead of 1 h. `VTC_ASSIGNED_DTM` now uses `SYSDATE`. JJ unassign timeout is configurable (`UNASSIGN_JJDISPUTES_TIMEOUT_MINUTES`). Inbox "Assigned" tooltip shows the expected unlock time | Validated on localdev. Committed on the local branch `task/TCVP-3600` (branched from `develop`), not yet pushed | Yes: TCO 26.6, OCCAM 26.6 |
 | TCVP-3480 (maybe) | Dispute source type (`DISPUTE_SOURCE_TYPE_CD`) through the stack, and its child tickets | App code on `bcgov/fix/tcvp-3480`. Inclusion not decided | Yes: TCO 26.6, OCCAM 26.6 |
 
 **Database tags**
@@ -80,7 +82,6 @@ Status values: Not started, In development, In release branch, Validated on DEV,
 - Staff.Service now needs `UNASSIGN_DISPUTES_TIMEOUT_MINUTES` and `UNASSIGN_JJDISPUTES_TIMEOUT_MINUTES`. They are set once in Helm `global.env` and shared with oracle-data-api.
 - After TCO 26.6 is deployed to an environment, clear VTC locks set under the old UTC rule once: `tco.tco_dispute.pDisputeUnassignVtc(SYSDATE, NULL)`.
 - TCVP-3538 and TCVP-3600 both change `Staff.Service/Features/CourtFiles/Summaries/Handler.cs` and `Staff.Service/Features/Occam/DisputesWithUpdateRequests/Handler.cs`. Expect a small merge conflict for whichever lands second.
-- `task/TCVP-3600` is based on the tip of `release/2.30`, so after the 2.30 and 2.31 merge-backs it descends from `develop` and `release/2.32` without a rebase.
 
 **Checklist**
 
@@ -149,4 +150,4 @@ Copy this when adding a release.
 
 | Release | PROD date | Notes |
 |---|---|---|
-| 2.30 | 2026-11-18 | Helm revision 57. Merged to `develop` in #2341 (`2f46bd9f6`). Planned: TCVP-3583, TCVP-3586, TCVP-3597. Also shipped: TCVP-3596, TCVP-3599, TCVP-3601, #2329, #2330 and the agent docs (`tcvp/3587`). TCVP-3538 was reverted out of 2.30 and moved to 2.32. No database tags. See [Open follow-ups](#open-follow-ups) |
+| 2.30 | 2026-11-18 | Helm revision 57. Merged to `develop` in #2341. Planned: TCVP-3583, TCVP-3586, TCVP-3597. Also shipped: TCVP-3596, TCVP-3599, TCVP-3601, #2329, #2330 and the agent docs (`tcvp/3587`). TCVP-3538 was reverted out of 2.30 and moved to 2.32. No database tags. See [Open follow-ups](#open-follow-ups) |
