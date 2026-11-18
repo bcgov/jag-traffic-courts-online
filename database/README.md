@@ -32,3 +32,7 @@ The PL/SQL packages, procedures, triggers, and ORDS modules live in separate SVN
 - On Windows, creating real symlinks needs Developer Mode or an elevated shell.
 - The script skips any schema whose sibling checkout is missing, so a `definitions` folder may not exist on every machine. Don't assume it does.
 - The links are local only and are git-ignored. Don't commit them.
+
+## Changing packages and ORDS
+
+To change a package or ORDS script, or to tag one for a release, follow [svn-package-changes.md](svn-package-changes.md). It covers which SVN repo owns which files, the tag folder layout and numbering, `driver.sql` and build files, and the editing pitfalls (read-only files, CRLF line endings, adding parameters).
