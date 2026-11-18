@@ -31,7 +31,11 @@ Versions roughly follow [SemVer](https://semver.org/).
 
 Release images are built by **creating a release in GitHub** from the release branch, not by commits or merges. Creating the GitHub release generates the version tag. The new tag triggers GitHub Actions (for example `.github/workflows/bld-oracle-data-api.yml`), which cascade to OpenShift. There, Tekton pipelines build the images and register them in Artifactory. The Tekton pipelines are not in this repository.
 
-Do not create version tags by hand. Create the GitHub release and let it generate the tag. There are plans to move all of these build processes into GitHub Actions, but that has not been implemented yet.
+Do not create version tags by hand. Create the GitHub release and let it generate the tag.
+
+Create the GitHub release as a **pre-release** when the release branch is ready to build. Publishing it generates the version tag, which starts the build. Once the version is deployed and validated on PROD and the release branch has been merged back to `develop`, edit the release, clear **Set as a pre-release**, and select **Set as the latest release**. The "Latest" badge then always shows the version running in PROD.
+
+There are plans to move all of these build processes into GitHub Actions, but that has not been implemented yet.
 
 ### Hotfixes
 

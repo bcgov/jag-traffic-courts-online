@@ -11,7 +11,7 @@ Every release is validated in this order. A release moves on only after the chec
 1. **localdev**: the docker-compose stack, pointed at the DEV databases.
 2. **DEV**: `gitops/charts/deploy.ps1 dev`, against the DEV databases.
 3. **TEST**: `deploy.ps1 test`, against the TEST databases.
-4. **PROD**: `deploy.ps1 prod`, then merge the release branch back to `develop`.
+4. **PROD**: point the citizen portal route (`citizen-web-for-justice-proxy`) at `maintenance-site`, run `deploy.ps1 prod`, and watch the rollout under Workloads > Deployments. Validate on PROD, point the route back at `traffic-court-online-citizen-web`, merge the release branch back to `develop`, then change the GitHub release from pre-release to latest (see `CONTRIBUTING.md`).
 
 Database tags go to an environment's databases before (or with) the app release that needs them. localdev and DEV share the DEV databases, so a tag on DEV affects both.
 
@@ -19,7 +19,6 @@ Database tags go to an environment's databases before (or with) the app release 
 
 | Release | Status | Target | Tickets | Database tags |
 |---|---|---|---|---|
-| [2.30](#230) | Validated on TEST, PROD booked | 2026-11-12 08:00 (tentative) | TCVP-3583, TCVP-3586, TCVP-3597 | None |
 | [2.31](#231) | Not started | — | TCVP-3598, TCVP-3589, TCVP-3602 | None expected |
 | [2.32](#232) | In development | — | TCVP-3538, TCVP-3549, TCVP-3600, maybe TCVP-3480 | TCO 26.6, OCCAM 26.6 |
 
@@ -27,44 +26,12 @@ Status values: Not started, In development, In release branch, Validated on DEV,
 
 ---
 
-## 2.30
-
-- **Status:** Validated on TEST. PROD release booked for 2026-11-12 08:00 (tentative).
-- **Branch:** `release/2.30`.
-- **Database tags:** none.
-
-| Ticket | Summary |
-|---|---|
-| TCVP-3583 | |
-| TCVP-3586 | |
-| TCVP-3597 | `Fix/tcvp 3597 (#2331)` |
-
-Commits in `release/2.30` that are not identified by the tickets above. Confirm which ticket each belongs to:
-
-| Commit | Change |
-|---|---|
-| 99252f971 | TCVP-3599: Fix format of transaction_time sent to ARC (#2324) |
-| 6f4858a53 | TCVP-3596: Fix double time zone conversion on printed disputes (#2325) |
-| 71cc1ba6d | TCVP-3601: Remove deprecated UTC format methods in Java project (#2326) |
-| 5ea4dc9b1 | Unassign cron job reads its timeout from config, `UNASSIGN_DISPUTES_TIMEOUT_MINUTES` (#2330) |
-| 092fb431c | Remove "Filename" display from Citizen Portal (#2329) |
-| 1fdf0ac82 | Merge of `tcvp/3587`: `AGENTS.md`, database DDL files, `docs/datetimes/` |
-| 611ffa017, 6cab82684 | TCVP-3538 (#2328), merged and then reverted. Moved to [2.32](#232) |
-
-**PROD checklist**
-
-- [ ] Deploy to PROD
-- [ ] Validate on PROD
-- [ ] Pull request `release/2.30` into `develop` (merge commit)
-
----
-
 ## 2.31
 
 - **Status:** Not started.
 - **Theme:** Hearings functionality.
-- **Branch:** `release/2.31`, to be created from `develop` after 2.30 is merged back.
-- **Ticket branches:** created 2026-11-10 from the tip of `release/2.30` (`a8867c3fa`), not `develop`. 2.30 is frozen and merges back to `develop` with a merge commit, so these branches will descend from `develop` without a rebase.
+- **Branch:** `release/2.31`, to be created from `develop`. 2.30 was merged back on 2026-11-18 (`2f46bd9f6`), so it can be created now.
+- **Ticket branches:** created 2026-11-10 from the tip of `release/2.30` (`a8867c3fa`), not `develop`. 2.30 was merged back to `develop` with a merge commit, so these branches descend from `develop` without a rebase.
 - **Database tags:** none expected. Confirm for each ticket.
 
 | Ticket | Branch | Summary | Database change? |
@@ -143,6 +110,11 @@ The DEV databases have TCO and OCCAM 26.6 from 2026-11-10, ahead of 2.32. Until 
 
 TEST and PROD do not have 26.6, so 2.30 and 2.31 behave normally there.
 
+### Open follow-ups
+
+- **TCVP-3583 and TCVP-3586:** planned for 2.30, but no commits for either are in the release. Confirm in Jira whether they shipped earlier, need moving to a later release, or need no code.
+- **Stale Redis node on PROD:** each oracle-data-api pod logs one or two `Unable to connect to [10.97.41.84:6379]` warnings at startup. That address is not one of the current `redis-0` to `redis-5` pods, so the Redis cluster most likely still lists an old node. Seen 2026-11-18 during the 2.30 deploy; not caused by 2.30.
+
 ---
 
 ## Template
@@ -177,3 +149,4 @@ Copy this when adding a release.
 
 | Release | PROD date | Notes |
 |---|---|---|
+| 2.30 | 2026-11-18 | Helm revision 57. Merged to `develop` in #2341 (`2f46bd9f6`). Planned: TCVP-3583, TCVP-3586, TCVP-3597. Also shipped: TCVP-3596, TCVP-3599, TCVP-3601, #2329, #2330 and the agent docs (`tcvp/3587`). TCVP-3538 was reverted out of 2.30 and moved to 2.32. No database tags. See [Open follow-ups](#open-follow-ups) |
