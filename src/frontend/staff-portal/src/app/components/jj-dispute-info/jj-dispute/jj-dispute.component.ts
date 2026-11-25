@@ -113,7 +113,7 @@ export class JJDisputeComponent implements OnInit {
     jjSeized: [null],
     adjudicator: [null],
     comments: [null],
-    dattCd: [null],
+    dattCd: [null, Validators.required],
     adjudicatorName: [{ value: null, disabled: true }]
   });
 
@@ -234,6 +234,8 @@ export class JJDisputeComponent implements OnInit {
 
       if (this.lastUpdatedJJDispute?.mostRecentCourtAppearance) {
         if (!this.lastUpdatedJJDispute.mostRecentCourtAppearance.jjSeized) this.lastUpdatedJJDispute.mostRecentCourtAppearance.jjSeized = JJDisputeCourtAppearanceRoPJjSeized.N;
+        // JUSTIN requires Def Att, so default it to N where the JJ can still change it. View-only tabs show what was saved.
+        if (!this.isViewOnly && !this.lastUpdatedJJDispute.mostRecentCourtAppearance.dattCd) this.lastUpdatedJJDispute.mostRecentCourtAppearance.dattCd = JJDisputeCourtAppearanceRoPDattCd.N;
 
         if (this.type !== TabType.DCF) {
           this.lastUpdatedJJDispute.mostRecentCourtAppearance.adjudicator = this.jjName; // Temporarily force to show the name of the JJ who opened the dipsute in the Court Appearance grid.
@@ -335,15 +337,18 @@ export class JJDisputeComponent implements OnInit {
 
   /**
    * Validates that mandatory fields in Court Appearance section are completed
-   * Shows warning dialog if APP field is blank for Court Appearance hearing types
+   * Shows warning dialog if APP (or, when editable, Def Att) is blank for Court Appearance hearing types
    */
   private validateCourtAppearanceFields(): boolean {
     // Only validate for Court Appearance hearing types
     if (this.tcoDisputeInfo.hearingType === this.HearingTypeCodes.CourtAppearance) {
       const appCdControl = this.courtAppearanceForm.get('appCd');
-      if (!appCdControl?.value) {
-        // Mark the field as touched to show validation errors
+      // Only the JJ can edit Def Att, so don't block staff on a value they can't change
+      const dattCdControl = this.isViewOnly ? null : this.courtAppearanceForm.get('dattCd');
+      if (!appCdControl?.value || (dattCdControl && !dattCdControl.value)) {
+        // Mark the fields as touched to show validation errors
         appCdControl?.markAsTouched();
+        dattCdControl?.markAsTouched();
         
         const data: DialogOptions = {
           titleKey: "Mandatory Data Missing",

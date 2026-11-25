@@ -543,12 +543,16 @@
                       <span>{{ courtAppearanceForm?.value.dattCd }}</span>
                     }
                     @if (!isViewOnly) {
-                      <mat-form-field appearance="outline">
-                        <mat-select formControlName="dattCd">
+                      <mat-form-field appearance="outline"
+                        [ngClass]="{'mat-form-field-invalid': courtAppearanceForm.get('dattCd')?.invalid && courtAppearanceForm.get('dattCd')?.touched}">
+                        <mat-select formControlName="dattCd" required>
                           <mat-option [value]="RoPDatt.A">{{ RoPDatt.A }}</mat-option>
                           <mat-option [value]="RoPDatt.C">{{ RoPDatt.C }}</mat-option>
                           <mat-option [value]="RoPDatt.N">{{ RoPDatt.N }}</mat-option>
                         </mat-select>
+                        @if (courtAppearanceForm.get('dattCd')?.hasError('required')) {
+                          <mat-error>Def Att field is required</mat-error>
+                        }
                       </mat-form-field>
                     }
                   </p>
