@@ -84,3 +84,6 @@ package-lock.json
 
 # Local symlinks to sibling PL/SQL checkouts (database/create-definitions-symlinks.sh)
 database/*/definitions
+
+# Local-only working notes (for example release planning); never committed
+.local/

@@ -24,7 +24,6 @@ The system has Angular portals (`src/frontend/`), .NET services (`src/backend/Tr
 - **When you meet an unfamiliar domain term or acronym:** READ `docs/terminology.md`.
 - **When making a structural, ownership, or schema decision:** CONSULT `docs/decisions.md`.
 - **When working on a specific Jira ticket:** CHECK `docs/jira-tickets/README.md`.
-- **When deciding which release a change belongs to, or planning or promoting a release:** READ `docs/release-planning.md`.
 - **When changing deployment or OpenShift configuration:** READ `gitops/README.md`.
 - **When using developer tooling (API collections, ticket generator, SQL helpers):** READ `tools/README.md`.
 - **When reviewing a change or pull request:** ADOPT `.agents/personas/pr-reviewer.md`.

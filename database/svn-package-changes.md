@@ -66,7 +66,7 @@ When the release is deployed, each repo's driver runs in order:
 
 TCO packages that read OCCAM objects must compile after the OCCAM changes they depend on.
 
-Which tags a release needs, and which environments they have reached, is tracked in [release-planning.md](../docs/release-planning.md).
+Record each tag and its SVN revision on the Jira ticket it belongs to.
 
 ### Choosing the tag number
 
