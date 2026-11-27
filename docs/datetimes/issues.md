@@ -118,6 +118,7 @@ Event timestamps such as assignments, decisions, and status changes are therefor
   5. Java's regex rejects anything except `yyyy-MM-ddTHH:mm:ss` ([DateTimeDeserializer.java](../../src/backend/oracle-data-api/src/main/java/ca/bc/gov/open/jag/tco/oracledataapi/config/DateTimeDeserializer.java#L32)).
 - **Effect:** saving a JJ dispute whose current appearance has a no-app time fails. If the value were accepted, it would be a UTC instant stored in a Local column, unlike `APPEARANCE_DTM`.
 - **Fix:** format `noAppTs` in the browser as a local offset-less string, as is done for `jjDecisionDate`. Alternatively, normalize it in Staff.Service with `X-Timezone`: convert to Vancouver and set `Kind=Unspecified`.
+- **Status:** fixed by TCVP-3602. The staff portal now sends `noAppTs` as the browser's local time, `yyyy-MM-ddTHH:mm:ss` with no offset (`DateUtil.toLocalDateTimeString`). A typed value that is not a valid date/time shows an error and disables the save buttons. An Edmonton user's no-app time is stored as Edmonton digits; see [I-8](#i-8).
 
 <a id="i-8"></a>
 ### I-8 `X-Timezone` is applied to only some fields, so Edmonton users see mixed zones

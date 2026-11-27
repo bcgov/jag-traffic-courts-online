@@ -150,15 +150,15 @@ Read only: ORDS date-only ([tco_rest_body.sql](../../database/tco/definitions/Pa
 
 ## 10. Disputant-not-present (no-app) timestamp
 
-**Storage:** `TCO_COURT_APPEARANCES.DISPUTANT_NOT_PRESENT_DTM`. **Intended convention: Local** (the same table and endpoint as the appearance time).
+**Storage:** `TCO_COURT_APPEARANCES.DISPUTANT_NOT_PRESENT_DTM`. **Convention: Local** (the same table and endpoint as the appearance time). Before TCVP-3602 the save failed whenever a no-app time was set ([I-7](issues.md#i-7)).
 
 | # | Stage | Field | Zone in → out | Notes |
 |---|---|---|---|---|
-| 1 | staff-portal | `courtAppearanceForm.noAppTs` is a **JS `Date`**: `new Date()` ("now"), a picker value, or `new Date(existing)`. It is merged into `JJDisputeCourtAppearanceRoP` | — → **UTC** (`JSON.stringify` → `…Z`, with milliseconds) | [jj-dispute.component.ts](../../src/frontend/staff-portal/src/app/components/jj-dispute-info/jj-dispute/jj-dispute.component.ts#L459), [jj-dispute.component.ts](../../src/frontend/staff-portal/src/app/components/jj-dispute-info/jj-dispute/jj-dispute.component.ts#L891), [jj-dispute.component.ts](../../src/frontend/staff-portal/src/app/components/jj-dispute-info/jj-dispute/jj-dispute.component.ts#L600) |
-| 2 | Staff.Service | `JJDisputeCourtAppearanceRoP.NoAppTs` (`Kind=Utc`) | UTC → UTC | **Not converted** (it is not in `ModelExtensions`) |
-| 3 | OracleDataApi client | Newtonsoft writes `…Z` | UTC → UTC | B4 |
-| 4 | Java | `DateTimeDeserializer` regex | **Rejected** | Static analysis shows the JJ save fails whenever `noAppTs` is not null ([I-7](issues.md#i-7)). [DateTimeDeserializer.java](../../src/backend/oracle-data-api/src/main/java/ca/bc/gov/open/jag/tco/oracledataapi/config/DateTimeDeserializer.java#L32) |
-| 5 | ORDS (if it were reached) | `TO_DATE(DT-mask)` → `DISPUTANT_NOT_PRESENT_DTM` | — | [tco_rest_body.sql](../../database/tco/definitions/Packages/tco_rest_body.sql#L1076) |
+| 1 | staff-portal | `courtAppearanceForm.noAppTs` is a **JS `Date`**: `new Date()` ("now"), a picker value, or `new Date(existing)`. On save it is formatted with `DateUtil.toLocalDateTimeString` and merged into `JJDisputeCourtAppearanceRoP` | — → **Local (browser zone)** (`yyyy-MM-ddTHH:mm:ss`, no offset) | [jj-dispute.component.ts](../../src/frontend/staff-portal/src/app/components/jj-dispute-info/jj-dispute/jj-dispute.component.ts#L460), [jj-dispute.component.ts](../../src/frontend/staff-portal/src/app/components/jj-dispute-info/jj-dispute/jj-dispute.component.ts#L908), [jj-dispute.component.ts](../../src/frontend/staff-portal/src/app/components/jj-dispute-info/jj-dispute/jj-dispute.component.ts#L480), [date-util.ts](../../src/frontend/staff-portal/src/app/shared/utils/date-util.ts#L60) |
+| 2 | Staff.Service | `JJDisputeCourtAppearanceRoP.NoAppTs` (`Kind=Unspecified`) | Local → Local | **Not converted** (it is not in `ModelExtensions`). An Edmonton user's value stays in Edmonton digits ([I-8](issues.md#i-8)) |
+| 3 | OracleDataApi client | Newtonsoft writes `yyyy-MM-ddTHH:mm:ss` | Local → Local | B4 |
+| 4 | Java | `DateTimeDeserializer` regex | Local → Local | Accepted. [DateTimeDeserializer.java](../../src/backend/oracle-data-api/src/main/java/ca/bc/gov/open/jag/tco/oracledataapi/config/DateTimeDeserializer.java#L32) |
+| 5 | ORDS | `TO_DATE(DT-mask)` → `DISPUTANT_NOT_PRESENT_DTM` | Local → Local | [tco_rest_body.sql](../../database/tco/definitions/Packages/tco_rest_body.sql#L1076) |
 | Read | ORDS DT mask → Java → Staff.Service (not converted) → `new Date(value)` (browser-local) | Local → Local (browser) | Print `Appearance.NoApp` ([PrintDigitalCaseFileService.cs](../../src/backend/TrafficCourts/Staff.Service/Services/PrintDigitalCaseFileService.cs#L515)) |
 
 ---

@@ -86,7 +86,7 @@ Abbreviations: **OCCAM** = `occam` schema, **TCO** = `tco` schema. Issue IDs ref
 | Decision made date (count) | Derived from JUSTIN `APPR_TM` | Date-only (Local) | JUSTIN | Nothing | Correct |
 | Remark made | `TCO_DISPUTE_REMARKS.REMARKS_MADE_DTM` | Local | Java `new Date()` | Nothing (the UI shows `createdTs`) | Correct. [I-8](issues.md#i-8) |
 | Court appearance date/time | JUSTIN `APPR_TM` / `APPR_DT`, `TCO_COURT_APPEARANCES.APPEARANCE_DTM` | Local | JUSTIN | Nothing | Correct. [I-8](issues.md#i-8) |
-| Disputant not present (no-app) | `TCO_COURT_APPEARANCES.DISPUTANT_NOT_PRESENT_DTM` | Intended Local | JJ, staff-portal JS `Date` | Nothing | **[I-7](issues.md#i-7)** |
+| Disputant not present (no-app) | `TCO_COURT_APPEARANCES.DISPUTANT_NOT_PRESENT_DTM` | Local (browser zone) | JJ, staff-portal JS `Date` sent as local time | Nothing | Fixed by TCVP-3602 ([I-7](issues.md#i-7)). [I-8](issues.md#i-8) |
 | Amended violation date | `TCO_APPEARANCE_AMENDMENTS.VIOLATION_DATE_DTM` | Date-only | JJ (date in the browser's zone) | Nothing | Correct |
 | Email sent / filtered | `OCCAM_OUTGOING_EMAILS.EMAIL_SENT_DTM` | UTC | Workflow.Service clock | Staff.Service `UtcToLocalTime` | [I-3](issues.md#i-3), [I-15](issues.md#i-15) |
 | Update-request status timestamp | `OCCAM_DISPUTE_UPDATE_REQUESTS.STATUS_UPDATE_DTM` | Local | Java `new Date()` | Nothing | Correct |

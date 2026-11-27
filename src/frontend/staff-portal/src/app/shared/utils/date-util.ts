@@ -51,4 +51,18 @@ export class DateUtil {
         return !isNaN(Date.parse(value));
     }
 
+    /**
+     * Formats a Date as the browser's local wall-clock time, with no offset or 'Z' (ie, yyyy-MM-ddTHH:mm:ss).
+     * This is the only datetime format oracle-data-api accepts.
+     * @param date the Date to format
+     * @returns the formatted string, or null if the date is missing or invalid
+     */
+    static toLocalDateTimeString(date: Date): string | null {
+        if (!(date instanceof Date) || isNaN(date.getTime())) {
+            return null;
+        }
+        const pad = (n: number) => n.toString().padStart(2, '0');
+        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+    }
+
 }
