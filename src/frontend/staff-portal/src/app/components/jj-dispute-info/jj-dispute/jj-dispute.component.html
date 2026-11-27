@@ -54,7 +54,7 @@
           </button>
         }
         @if (isSSEditMode) {
-          <button mat-raised-button (click)="onSupportStaffSave()" class="form-button" [disabled]="!ticketInformationForm.valid">
+          <button mat-raised-button (click)="onSupportStaffSave()" class="form-button" [disabled]="!ticketInformationForm.valid || isNoAppTsInvalid">
             {{ "common.button.save" | translate }}
           </button>
         }
@@ -501,6 +501,9 @@
                   showWeekNumbers: false, adaptivePosition: true }" />
                         <button mat-raised-button class="form-button-secondary" (click)="updateNoAppTsToNow()">Now</button>
                       </span>
+                      @if (isNoAppTsInvalid) {
+                        <mat-error style="display: block;">Enter a valid date and time (DD-MMM-YYYY HH:mm, 24-hour)</mat-error>
+                      }
                     }
                   </p>
                 </span>
@@ -925,27 +928,27 @@
           <div fxFlex></div>
           @if (type !== tabTypes.DCF) {
             @if (type !== tabTypes.DECISION_VALIDATION && !isOneOf(lastUpdatedJJDispute.status, [DisputeStatus.RequireCourtHearing, DisputeStatus.Accepted, DisputeStatus.Cancelled, DisputeStatus.Concluded]) && concludeStatusOnly === false && cancelStatusOnly === false) {
-              <button fxFlex="30" class="large" mat-flat-button type="button" color="primary" style="margin-right: 20px;" (click)="onRequireCourtHearing()">
+              <button fxFlex="30" class="large" mat-flat-button type="button" color="primary" style="margin-right: 20px;" (click)="onRequireCourtHearing()" [disabled]="isNoAppTsInvalid">
                 {{ lastUpdatedJJDispute.hearingType === HearingType.WrittenReasons ? 'Adjourn/Require Hearing' : 'Adjourn/Continue' }}
               </button>
             }
             @if (type !== tabTypes.DECISION_VALIDATION && isOneOf(lastUpdatedJJDispute.status, [DisputeStatus.New, DisputeStatus.InProgress, DisputeStatus.HearingScheduled, DisputeStatus.Review]) && cancelStatusOnly === false && concludeStatusOnly === false) {
-              <button fxFlex="30" class="large" mat-flat-button type="button" color="primary" style="margin-right: 20px;" (click)="onSave()">
+              <button fxFlex="30" class="large" mat-flat-button type="button" color="primary" style="margin-right: 20px;" (click)="onSave()" [disabled]="isNoAppTsInvalid">
                 Save & Finish Later
               </button>
             }
             @if (isOneOf(lastUpdatedJJDispute.status, [DisputeStatus.New, DisputeStatus.HearingScheduled, DisputeStatus.InProgress, DisputeStatus.Review]) && concludeStatusOnly === false && cancelStatusOnly === false && isJJ) {
-              <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConfirm()">
+              <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConfirm()" [disabled]="isNoAppTsInvalid">
                 Confirm
               </button>
             }
             @if (concludeStatusOnly === true && cancelStatusOnly === false) {
-              <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConcluded()">
+              <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConcluded()" [disabled]="isNoAppTsInvalid">
                 Conclude
               </button>
             }
             @if (cancelStatusOnly === true && concludeStatusOnly === false) {
-              <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onCancelled()">
+              <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onCancelled()" [disabled]="isNoAppTsInvalid">
                 Cancel
               </button>
             }

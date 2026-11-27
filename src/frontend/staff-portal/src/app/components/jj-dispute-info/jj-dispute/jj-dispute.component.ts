@@ -25,6 +25,7 @@ import { AppConfigService } from 'app/services/app-config.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { ToastService } from '@core/services/toast.service';
 import { Router } from '@angular/router';
+import { DateUtil } from '@shared/utils/date-util';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -464,6 +465,22 @@ export class JJDisputeComponent implements OnInit {
     this.updateNoAppTs(new Date());
   }
 
+  /**
+   * True when the No APP field holds text that is not a valid date/time (the datepicker reports it as a bsDate error).
+   * Saving is blocked until it is corrected or cleared.
+   */
+  get isNoAppTsInvalid(): boolean {
+    return (!this.isViewOnly || this.isSSEditMode) && this.isNoAppEnabled && !!this.courtAppearanceForm.controls.noAppTs.errors?.bsDate;
+  }
+
+  /**
+   * The No APP time as local time with no offset (yyyy-MM-ddTHH:mm:ss). The form holds a JS Date, which
+   * serializes as UTC with a 'Z' suffix; oracle-data-api rejects that format, so the save failed (TCVP-3602).
+   */
+  private noAppTsForSave(): string | null {
+    return DateUtil.toLocalDateTimeString(this.courtAppearanceForm.value.noAppTs);
+  }
+
   onSave(): void {
     // Update status to in progress unless status is set to review in which case do not change
     if (this.lastUpdatedJJDispute.status !== this.DisputeStatus.Review) {
@@ -492,7 +509,7 @@ export class JJDisputeComponent implements OnInit {
    */
   onSupportStaffSave(): void {
     this.lastUpdatedJJDispute = { ...this.lastUpdatedJJDispute, ...this.ticketInformationForm.value, ...this.contactInformationForm.value, ...this.courtOptionsForm.value };
-    this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0] = { ...this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0], ...this.courtAppearanceForm.value };
+    this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0] = { ...this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0], ...this.courtAppearanceForm.value, noAppTs: this.noAppTsForSave() };
 
     this.jjDisputeService.apiJjTicketNumberCascadePut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe(response => {
       this.isSSEditMode = false;
@@ -600,6 +617,7 @@ export class JJDisputeComponent implements OnInit {
       this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0] = {
         ...this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0],
         ...this.courtAppearanceForm.value,
+        noAppTs: this.noAppTsForSave(),
         amendments: this.amendmentData ?? undefined
       };
     }
